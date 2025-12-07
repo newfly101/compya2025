@@ -11,6 +11,7 @@
 .content {
   flex: 1;
   padding: 2rem 1rem;
+  overflow-y: auto;
 }
 
 .header, .footer {
