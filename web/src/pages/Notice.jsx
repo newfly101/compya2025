@@ -1,10 +1,21 @@
 import React from "react";
+import { useSearchParams } from "react-router-dom";
+import Tabs from "@/components/Tabs.jsx";
 
 const Notice = () => {
+  const [params] = useSearchParams();
+  const tab = params.get("tab") ?? "";
+
   return (
-    <div>
-      <h2>공지사항</h2>
+    <div className="noticePage">
+      <h1>공지사항</h1>
       <p>공식/컴투스프로야구 공지, 이벤트, 쿠폰을 한 곳에서 확인하세요.</p>
+
+      <Tabs />
+
+      {tab === "notice" && <div>📢 공지사항 리스트</div>}
+      {tab === "event" && <div>🎉 이벤트 리스트</div>}
+      {tab === "coupons" && <div>🎁 쿠폰 리스트</div>}
     </div>
   );
 };
