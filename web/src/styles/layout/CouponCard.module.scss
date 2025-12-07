@@ -49,7 +49,7 @@
   background: linear-gradient(135deg, #000000, #cfb6f3);
   opacity: 0.4;
   cursor: not-allowed;
-  pointer-events: none;
+  pointer-events: unset;
 }
 
 .reward {
