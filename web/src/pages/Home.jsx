@@ -15,12 +15,12 @@ const Home = () => {
       {/* 기능 섹션 */}
       <section className={styles.features}>
         <div className={styles.grid}>
-          <div className={styles.card}>데미지 계산기</div>
-          <div className={styles.card}>스킬트리 계산기</div>
+          {/*<div className={styles.card}>데미지 계산기</div>*/}
+          {/*<div className={styles.card}>스킬트리 계산기</div>*/}
           <div className={styles.card}>이벤트 정보</div>
           <div className={styles.card}>쿠폰 코드</div>
           <div className={styles.card}>성장 가이드</div>
-          <div className={styles.card}>커뮤니티</div>
+          {/*<div className={styles.card}>커뮤니티</div>*/}
         </div>
       </section>
 

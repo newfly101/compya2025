@@ -20,6 +20,9 @@
   display: flex;
   justify-content: center;
 
+  flex-shrink: 0;
+  white-space: nowrap;
+
   &:hover {
     background: $surface3;
   }

@@ -1,7 +1,9 @@
 @use "@/styles/variables/colors" as *;
 
 .homePage {
-  user-select: none;
+  user-select: none; /* text */
+  white-space: nowrap;
+  flex-shrink: 0;
 
   .hero {
     padding: 10rem 2rem;
@@ -19,6 +21,7 @@
 
     .heroInner {
       width: 30%;
+      min-width: 27rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -35,7 +38,7 @@
   }
 
   .features {
-    margin-top: -3rem;
+    margin-top: 3rem;
     padding: 2rem;
 
     .grid {

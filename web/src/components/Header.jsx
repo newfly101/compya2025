@@ -6,7 +6,7 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <nav className={styles.nav}>
-          <Link to="/" >컴프야펀</Link>
+          <Link to="/" >홈</Link>
           {/*<Link to="/damage">데미지 계산기</Link>*/}
           {/*<Link to="/skill">스킬 계산기</Link>*/}
           <Link to="/events">이벤트</Link>
