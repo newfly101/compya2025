@@ -1,10 +1,21 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
 import Tabs from "@/components/Tabs.jsx";
+import FunNoticeList from "@/pages/notice/FunNoticeList.jsx";
+import OfficialNoticeList from "@/pages/notice/OfficialNoticeList.jsx";
+import EventList from "@/pages/notice/EventList.jsx";
+import CouponList from "@/pages/notice/CouponList.jsx";
 
 const Notice = () => {
   const [params] = useSearchParams();
   const tab = params.get("tab") ?? "";
+
+  const tabComponents = {
+    "": <FunNoticeList />,
+    notice: <OfficialNoticeList />,
+    event: <EventList />,
+    coupons: <CouponList />,
+  };
 
   return (
     <div className="noticePage">
@@ -20,9 +31,9 @@ const Notice = () => {
         ]}
       />
 
-      {tab === "notice" && <div>📢 공지사항 리스트</div>}
-      {tab === "event" && <div>🎉 이벤트 리스트</div>}
-      {tab === "coupons" && <div>🎁 쿠폰 리스트</div>}
+      <div style={{ marginTop: "2rem" }}>
+        {tabComponents[tab] ?? null}
+      </div>
     </div>
   );
 };
