@@ -1,10 +1,11 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import Tabs from "@/components/Tabs.jsx";
+import Tabs from "@/components/common/Tabs.jsx";
 import FunNoticeList from "@/pages/notice/FunNoticeList.jsx";
 import OfficialNoticeList from "@/pages/notice/OfficialNoticeList.jsx";
 import EventList from "@/pages/notice/EventList.jsx";
 import CouponList from "@/pages/notice/CouponList.jsx";
+import coupons from "@/data/Coupon.js";
 
 const Notice = () => {
   const [params] = useSearchParams();
@@ -14,7 +15,7 @@ const Notice = () => {
     "": <FunNoticeList />,
     notice: <OfficialNoticeList />,
     event: <EventList />,
-    coupons: <CouponList />,
+    coupons: <CouponList data={coupons}/>,
   };
 
   return (
