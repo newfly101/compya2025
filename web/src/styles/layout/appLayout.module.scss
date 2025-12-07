@@ -1,0 +1,22 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.content {
+  flex: 1;
+  padding: 2rem 1rem;
+}
+
+.header, .footer {
+  width: 100%;
+  background: #629ce8;
+}
+
+.inner {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}

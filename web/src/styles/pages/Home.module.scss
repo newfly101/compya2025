@@ -1,0 +1,36 @@
+.homePage {
+  .hero {
+    background: linear-gradient(135deg, #4a90e2, #7b4dff);
+    padding: 6rem 2rem;
+    text-align: center;
+
+    .heroInner {
+
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #fff;
+    }
+  }
+
+  .features {
+    margin-top: -3rem;
+    padding: 2rem;
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.6rem;
+
+      .card {
+        background: #1f2937;
+        padding: 2rem;
+        border-radius: 1.2rem;
+        color: #fff;
+        text-align: center;
+        font-size: 1.4rem;
+      }
+    }
+  }
+}

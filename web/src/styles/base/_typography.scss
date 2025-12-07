@@ -1,0 +1,11 @@
+@use "../variables/colors" as *;
+
+body {
+  font-family: "Pretendard", sans-serif;
+  color: $gray-900;
+}
+
+h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+}
