@@ -1,9 +1,12 @@
+@use "../variables/colors" as *;
+
 .container {
   width: 100%;
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
 }
 .content {
   flex: 1;
@@ -12,11 +15,45 @@
 
 .header, .footer {
   width: 100%;
-  background: #629ce8;
+  background: $surface2;
+  border-bottom: 1px solid $border-strong;
+  display: flex;
+  justify-content: center;
+
+  &:hover {
+    background: $surface3;
+  }
 }
 
 .inner {
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  color: $text-primary;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  justify-content: center;
+  margin: 1.6rem;
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 2.4rem;
+    margin-left: 1rem;
+    flex: 1;
+
+    a {
+      font-size: 1.6rem;
+      color: $text-secondary;
+      text-decoration: none;
+      padding: 0.8rem 0;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $text-primary;
+      }
+    }
+  }
+
+
 }

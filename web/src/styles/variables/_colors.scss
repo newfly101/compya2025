@@ -27,39 +27,41 @@ $primary9: #eeeaf1;
 
 
 // Background
-$background: #08040b;
-$background-subtle: #110917;
+$background: #0f0a14;
+$background-subtle: #15101c;
 
 // Surface
-$surface1: #190d22;
-$surface2: #21112e;
-$surface3: #2a1639;
+$surface1: #18141f;
+$surface2: #1f1a29;
+$surface3: #272033;
 
 // Border
-$border: rgba(255, 255, 255, 0.08);
-$border-strong: rgba(255, 255, 255, 0.16);
+$border: rgba(255, 255, 255, 0.06);
+$border-strong: rgba(255, 255, 255, 0.12);
+
 
 // Text
 $text-primary: rgba(255, 255, 255, 0.92);
-$text-secondary: rgba(255, 255, 255, 0.65);
-$text-muted: rgba(255, 255, 255, 0.40);
+$text-secondary: rgba(255, 255, 255, 0.60);
+$text-muted: rgba(255, 255, 255, 0.38);
 
 // Primary Palette (Brand)
-$primary: #876b9c;
-$primary-hover: #75558e;
-$primary-active: #644080;
-$primary-bg: rgba(#876b9c, 0.14);
-$primary-text: #ddd5e3;
+$primary: #7c6f8f;
+$primary-hover: #6e617f;
+$primary-active: #5a4d6a;
+$primary-bg: rgba(#7c6f8f, 0.12);
+$primary-text: #d9d3e0;
+
 
 // Secondary Palette
-$secondary: #42225b;
-$secondary-hover: #4b2767;
+$secondary: #3a3149;
+$secondary-hover: #443858;
 
 // States
-$success: #3CCF4E;
-$warning: #FFD166;
-$error:   #EF476F;
+$success: #2fb73f;
+$warning: #e6c155;
+$error:   #d84563;
 
-$success-bg: rgba($success, 0.15);
-$warning-bg: rgba($warning, 0.15);
-$error-bg:   rgba($error, 0.15);
+$success-bg: rgba($success, 0.12);
+$warning-bg: rgba($warning, 0.12);
+$error-bg:   rgba($error, 0.12);
