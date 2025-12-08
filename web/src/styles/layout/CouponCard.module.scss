@@ -91,6 +91,13 @@
   width: 100%;
   margin-top: 2rem;
 }
+.shortListGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); // ★ 3열
+  gap: 2rem; // 카드 사이 간격
+  width: 100%;
+  margin-top: 2rem;
+}
 
 /* 모바일에서 1열 */
 @media (max-width: 768px) {
