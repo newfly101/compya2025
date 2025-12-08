@@ -47,12 +47,17 @@
       gap: 1.6rem;
 
       .card {
-        background: #1f2937;
+        background: $primary-bg;
         padding: 2rem;
         border-radius: 1.2rem;
         color: #fff;
         text-align: center;
         font-size: 1.4rem;
+
+        &:hover {
+          background: $primary-hover;
+          transition: background 0.25s ease;
+        }
       }
     }
   }

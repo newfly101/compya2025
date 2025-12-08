@@ -22,10 +22,10 @@ const Home = () => {
       <section className={styles.features}>
         <div className={styles.grid}>
           {/*<div className={styles.card}>데미지 계산기</div>*/}
-          {/*<div className={styles.card}>스킬트리 계산기</div>*/}
-          <div className={styles.card}>이벤트 정보</div>
-          <div className={styles.card}>쿠폰 코드</div>
           <div className={styles.card}>성장 가이드</div>
+          <div className={styles.card}>덱 구성 가이드</div>
+          <div className={styles.card}>플레이 가이드</div>
+          <div className={styles.card}>선수 카드 도감</div>
           {/*<div className={styles.card}>커뮤니티</div>*/}
         </div>
       </section>
