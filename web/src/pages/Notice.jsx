@@ -6,6 +6,7 @@ import OfficialNoticeList from "@/pages/notice/OfficialNoticeList.jsx";
 import EventList from "@/pages/notice/EventList.jsx";
 import CouponList from "@/pages/notice/CouponList.jsx";
 import coupons from "@/data/Coupon.js";
+import events from "@/data/Events.js";
 
 const Notice = () => {
   const [params] = useSearchParams();
@@ -14,7 +15,7 @@ const Notice = () => {
   const tabComponents = {
     "": <FunNoticeList />,
     notice: <OfficialNoticeList />,
-    event: <EventList />,
+    event: <EventList data={events}/>,
     coupons: <CouponList data={coupons}/>,
   };
 
