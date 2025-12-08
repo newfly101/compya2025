@@ -78,3 +78,10 @@
   justify-items: center;
   padding: 2rem 0;
 }
+.shortGrid {
+  display: grid;
+  gap: 2.4rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  justify-items: center;
+  padding: 2rem 0;
+}

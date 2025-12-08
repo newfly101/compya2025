@@ -2,10 +2,10 @@ import React from "react";
 import EventCard from "@/components/common/EventCard.jsx";
 import styles from "@/styles/layout/EventCard.module.scss";
 
-const EventList = ({data}) => {
+const EventList = ({data, short=false}) => {
   return (
-    <div>🎉 이벤트 리스트
-      <div className={styles.grid}>
+    <div>{!short && "🎉 이벤트 리스트"}
+      <div className={`${short ? styles.shortGrid : styles.grid}`}>
         {data.map(ev => (
           <EventCard
             key={ev.id}
@@ -13,6 +13,7 @@ const EventList = ({data}) => {
             image={ev.image}
             dateRange={ev.dateRange}
             link={ev.link}
+            short={short}
           />
         ))}
       </div>

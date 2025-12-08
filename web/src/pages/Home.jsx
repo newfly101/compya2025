@@ -2,6 +2,9 @@ import styles from "@/styles/pages/Home.module.scss";
 import coupons from "@/data/Coupon.js";
 import CouponList from "@/pages/notice/CouponList.jsx";
 import { Link } from "react-router-dom";
+import EventList from "@/pages/notice/EventList.jsx";
+import events from "@/data/Events.js";
+import React from "react";
 
 const Home = () => {
   return (
@@ -29,11 +32,11 @@ const Home = () => {
 
       {/* 최신 이벤트 */}
       <section className={styles.homeSection}>
-        <h2>최신 이벤트</h2>
-        <div className={styles.eventList}>
-          <div className={styles.eventCard}>이벤트 1</div>
-          <div className={styles.eventCard}>이벤트 2</div>
+        <div className={styles.subTitle}>
+          <h2>🎉 최신 이벤트</h2>
+          <span><Link to="/notice?tab=event">전체 보기 →</Link></span>
         </div>
+        <EventList data={events} short={true}/>
       </section>
 
       {/* 최신 쿠폰 */}
