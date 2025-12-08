@@ -57,3 +57,26 @@
     }
   }
 }
+
+.subTitle {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+
+  & h2 {
+    display: inline-block;
+  }
+  & > span {
+    color: $primary;
+    cursor: pointer;
+
+    &:hover {
+      color: $text-secondary;
+    }
+    & a{
+      font-size: 2rem;
+    }
+  }
+}

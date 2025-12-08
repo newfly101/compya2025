@@ -1,4 +1,7 @@
 import styles from "@/styles/pages/Home.module.scss";
+import coupons from "@/data/Coupon.js";
+import CouponList from "@/pages/notice/CouponList.jsx";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   return (
@@ -25,7 +28,7 @@ const Home = () => {
       </section>
 
       {/* 최신 이벤트 */}
-      <section className={styles.eventsSection}>
+      <section className={styles.homeSection}>
         <h2>최신 이벤트</h2>
         <div className={styles.eventList}>
           <div className={styles.eventCard}>이벤트 1</div>
@@ -34,11 +37,12 @@ const Home = () => {
       </section>
 
       {/* 최신 쿠폰 */}
-      <section className={styles.couponSection}>
-        <h2>최신 쿠폰</h2>
-        <div className={styles.couponList}>
-          <div className={styles.couponCard}>쿠폰 1</div>
+      <section className={styles.homeSection}>
+        <div className={styles.subTitle}>
+          <h2>🎁 최신 쿠폰</h2>
+          <span><Link to="/notice?tab=coupons">전체 보기 →</Link></span>
         </div>
+        <CouponList data={coupons} limit={3} short={true}/>
       </section>
 
     </div>
