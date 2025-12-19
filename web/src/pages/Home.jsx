@@ -36,7 +36,7 @@ const Home = () => {
           <h2>🎉 최신 이벤트</h2>
           <span><Link to="/notice?tab=event">전체 보기 →</Link></span>
         </div>
-        <EventList data={events} short={true}/>
+        <EventList data={events} limit={3} short={true}/>
       </section>
 
       {/* 최신 쿠폰 */}
