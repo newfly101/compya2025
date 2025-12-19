@@ -1,0 +1,51 @@
+@use "../variables/colors" as *;
+
+.card {
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 1.2rem;
+  padding: 2rem;
+  //margin-top: 1.5rem;
+  overflow: hidden;
+  min-width: 340px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+
+  &:hover {
+    transition: transform 0.25s ease, background-color 0.25s ease;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    background-color: $primary-hover;
+    cursor: pointer;
+
+    & > .header > span{
+      color: $secondary;
+    }
+    //& > .info {
+    //  color: $secondary-hover;
+    //}
+  }
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: $noticeHeader;
+    font-weight: 700;
+    font-size: 1.4rem;
+
+    & > span {
+      color: $text-secondary;
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.info {
+  //background: rgba($primary, 0.2);
+  color: $primary-text;
+  //padding: 0.6rem 1.2rem;
+  margin: 2rem 0;
+  border-radius: 0.6rem;
+  font-weight: 700;
+  font-size: 3rem;
+}
