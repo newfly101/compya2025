@@ -13,7 +13,7 @@ const FunNoticePage = () => {
   }
 
   if(!data) return <>공지사항을 찾을 수 없습니다.</>;
-  console.log("data get!!! :\n",data);
+  // console.log("data get!!! :\n",data);
 
   return (
     <main className={styles.container}>
