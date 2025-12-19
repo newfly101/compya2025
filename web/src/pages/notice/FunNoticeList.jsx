@@ -9,7 +9,7 @@ const FunNoticeList = () => {
       📢 공지사항 리스트
       <div className={styles.listGrid}>
         {funNotice.map((item) => (
-          <NoticeCard id={item.id} title={item.title} date={item.updateDate} info={item.titleName} />
+          <NoticeCard key={item.id} id={item.id} title={item.title} date={item.updateDate} info={item.titleName} />
         ))}
       </div>
     </>
