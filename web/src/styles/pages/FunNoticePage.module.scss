@@ -18,6 +18,12 @@
   font-size: 1.5rem;
   color: #60a5fa;
   margin-bottom: 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    color: #89bcfb;
+    font-weight: 700;
+  }
 }
 
 .title {

@@ -1,11 +1,16 @@
 import styles from "@/styles/pages/FunNoticePage.module.scss";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import funNotice from "@/data/FunNotice.js";
 
 const FunNoticePage = () => {
   const {id} = useParams();
+  const navigate = useNavigate();
 
   const data = funNotice.find(item => item.id === Number(id));
+
+  const handleClick = () => {
+    navigate(`/notice/`);
+  }
 
   if(!data) return <>공지사항을 찾을 수 없습니다.</>;
   console.log("data get!!! :\n",data);
@@ -13,7 +18,7 @@ const FunNoticePage = () => {
   return (
     <main className={styles.container}>
       <header className={styles.header}>
-        <span className={styles.category}>{data.category}</span>
+        <span className={styles.category} onClick={handleClick}>{data.category}</span>
         <h1 className={styles.title}>{data.titleName}</h1>
 
         <div className={styles.meta}>
