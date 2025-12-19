@@ -10,16 +10,12 @@ const CouponList = ({data, limit, short=false}) => {
   const now = new Date();
 
   const finalList = limit ? sorted.slice(0, limit) : sorted;
-  console.log("finalList",finalList);
 
   return (
     <div>{!short && "🎁 쿠폰 리스트"}
       <div className={`${short ? styles.shortListGrid : styles.listGrid}`}>
         {finalList.map((item) => {
           const expired = parseDate(item.expireDate) < now;
-
-          console.log(parseDate(item.expireDate), now);
-
           return (
             <CouponCard
               key={item.code}
