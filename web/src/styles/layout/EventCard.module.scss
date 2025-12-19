@@ -40,6 +40,17 @@
   color: white;
   font-weight: 600;
 }
+.disableBadge {
+  background: linear-gradient(135deg, #000000, #cfb6f3);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0 1rem 0 1rem;
+  font-size: 1.2rem;
+  color: white;
+  font-weight: 600;
+}
 
 .content {
   padding: 1.4rem;

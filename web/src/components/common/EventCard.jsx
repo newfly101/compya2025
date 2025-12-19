@@ -1,12 +1,12 @@
 import React from "react";
 import styles from "@/styles/layout/EventCard.module.scss";
 
-const EventCard = ({ title, dateRange, image, link, short }) => {
+const EventCard = ({ title, dateRange, image, link, short, disabled }) => {
   return (
     <div className={styles.card}>
       <div className={styles.thumbnail}>
         <img src={image} alt={title} />
-        <span className={styles.badge}>이벤트 기간</span>
+        <span className={`${disabled ? styles.disableBadge : styles.badge}`}>{disabled ? "종료된 이벤트" : "이벤트 기간"}</span>
       </div>
 
       <div className={styles.content}>
