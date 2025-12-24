@@ -121,7 +121,13 @@ const coupons = [
     rewardTitle: "고유능력 변경권 3개 + 300스타",
     rewardDetail: "블랙프라이데이 쿠폰",
     expireDate: "2025. 12. 31 23:59"
-  }
+  },
+  {
+    code: "MERRYCPBXMAS",
+    rewardTitle: "1000스타",
+    rewardDetail: "크리스마스 쿠폰",
+    expireDate: "2026. 01. 31 23:59"
+  },
 ];
 
 export default coupons;
