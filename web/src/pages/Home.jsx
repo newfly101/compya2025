@@ -1,12 +1,17 @@
 import styles from "@/styles/pages/Home.module.scss";
 import coupons from "@/data/Coupon.js";
 import CouponList from "@/pages/notice/CouponList.jsx";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import EventList from "@/pages/notice/EventList.jsx";
 import events from "@/data/Events.js";
 import React from "react";
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const handleClick = (url) => {
+    navigate(`/${url}`);
+  }
   return (
     <div className={styles.homePage}>
 
@@ -22,11 +27,11 @@ const Home = () => {
       <section className={styles.features}>
         <div className={styles.grid}>
           {/*<div className={styles.card}>데미지 계산기</div>*/}
-          <div className={styles.card}>성장 가이드</div>
-          <div className={styles.card}>덱 구성 가이드</div>
-          <div className={styles.card}>플레이 가이드</div>
-          <div className={styles.card}>선수 카드 도감</div>
-          {/*<div className={styles.card}>커뮤니티</div>*/}
+          {/*<div className={styles.card}>성장 가이드</div>*/}
+          {/*<div className={styles.card}>덱 구성 가이드</div>*/}
+          {/*<div className={styles.card}>플레이 가이드</div>*/}
+          {/*<div className={styles.card}>선수 카드 도감</div>*/}
+          <div className={styles.card} onClick={() => handleClick("simulate")}>고스변 시뮬레이터</div>
         </div>
       </section>
 
