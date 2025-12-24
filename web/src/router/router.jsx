@@ -4,6 +4,7 @@ import Home from "@/pages/Home.jsx";
 import Login from "@/pages/Login.jsx";
 import Notice from "@/pages/Notice.jsx";
 import FunNoticePage from "@/components/common/page/FunNoticePage.jsx";
+import SkillChange from "@/pages/skillChange/SkillChange.jsx";
 
 const router = createBrowserRouter([
   {
@@ -19,7 +20,8 @@ const router = createBrowserRouter([
         element: <Login />,
       },
       {path: "notice", element: <Notice />},
-      {path: "notice/:id", element: <FunNoticePage />}
+      {path: "notice/:id", element: <FunNoticePage />},
+      {path: "simulate", element: <SkillChange />}
     ],
   },
 ]);
