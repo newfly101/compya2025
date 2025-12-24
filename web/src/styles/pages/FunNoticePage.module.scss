@@ -11,33 +11,35 @@
   border-bottom: 1px solid #1f2937;
   padding-bottom: 2.4rem;
   margin-bottom: 3.2rem;
-}
 
-.category {
-  display: inline-block;
-  font-size: 1.5rem;
-  color: #60a5fa;
-  margin-bottom: 0.8rem;
-  cursor: pointer;
+  & > .category {
+    display: inline-block;
+    font-size: 1.5rem;
+    color: #60a5fa;
+    margin-bottom: 0.8rem;
+    cursor: pointer;
 
-  &:hover {
-    color: #89bcfb;
+    &:hover {
+      color: #89bcfb;
+      font-weight: 700;
+    }
+  }
+
+  & > .title {
+    font-size: 2.8rem;
     font-weight: 700;
+    margin-bottom: 1.2rem;
+  }
+
+  & > .meta {
+    font-size: 2.8rem;
+    color: $primary8;
+    display: flex;
+    gap: 1rem;
   }
 }
 
-.title {
-  font-size: 2.8rem;
-  font-weight: 700;
-  margin-bottom: 1.2rem;
-}
 
-.meta {
-  font-size: 2.8rem;
-  color: $primary8;
-  display: flex;
-  gap: 1rem;
-}
 
 /* 요약 */
 .summary {
