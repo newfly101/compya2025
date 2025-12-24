@@ -93,10 +93,11 @@
 }
 .shortListGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); // ★ 3열
+  grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
   gap: 2rem; // 카드 사이 간격
   width: 100%;
   margin-top: 2rem;
+  justify-content: center;
 }
 
 /* 모바일에서 1열 */
