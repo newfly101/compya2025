@@ -1,0 +1,203 @@
+@use "@/styles/variables/colors" as *;
+
+.container {
+  max-width: 90rem;
+  margin: 6rem auto;
+  padding: 0 2.4rem;
+}
+/* 헤더 */
+.header {
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 2.4rem;
+  margin-bottom: 3.2rem;
+
+  & > .title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+  }
+  & > .meta {
+    font-size: 2.8rem;
+    color: $primary8;
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.category {
+  display: inline-block;
+  font-size: 1.5rem;
+  color: #60a5fa;
+  margin-bottom: 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    color: #89bcfb;
+    font-weight: 700;
+  }
+}
+
+.cardSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  max-width: 300px;
+}
+.skillCard {
+  position: relative; // ⭐ 기준점
+  width: 170px;       // 실제 이미지 비율에 맞게
+  height: 260px;
+  margin: 0 auto;
+  padding: 0;
+
+  background-image: url("@/assets/legend/skillChanger.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: left top;
+}
+
+/* 슬롯 전체 영역 */
+.slotWrap {
+  position: absolute;
+  top: 160px;      // 첫 슬롯 Y 기준
+  left: 7px;    // 슬롯 X 기준
+  width: 156px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 3.5px;      // 슬롯 간 간격 → 여기서 조절
+}
+
+.slot {
+  height: 22.5px;
+  padding: 0 12px;   // ⭐ 여기서 내부 여백 조절
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 15px;
+  color: #fff;
+
+  border: 1px solid transparent;
+  border-radius: 2px;
+
+  //box-shadow:
+  //        inset 0 2px 0 rgba(255,255,255,0.35),
+  //        inset 0 -2px 0 rgba(0,0,0,0.35),
+  //        0 2px 6px rgba(0,0,0,0.35);
+
+  & > strong {
+    color: #fff;
+  }
+}
+
+/* 스킬 변경 버튼 */
+.itemButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  width: 170px;
+  height: 64px;
+  padding: 8px 16px;
+
+  background: linear-gradient(
+                  to bottom,
+                  #3f4b5f 0%,
+                  #2b3445 50%,
+                  #1f2633 100%
+  );
+
+  border: 1px solid #5c6a80;
+  border-radius: 6px;
+
+  box-shadow:
+          inset 0 1px 0 rgba(255,255,255,0.25),
+          inset 0 -2px 0 rgba(0,0,0,0.6),
+          0 3px 8px rgba(0,0,0,0.6);
+
+  cursor: pointer;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+  &:active {
+    transform: translateY(1px);
+    box-shadow:
+            inset 0 3px 6px rgba(0,0,0,0.7);
+  }
+}
+.textBox {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  .title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #e5e7eb;
+  }
+
+  .count {
+    font-size: 18px;
+    font-weight: 800;
+    color: #ffd86a;
+    text-shadow: 0 0 4px rgba(255, 216, 106, 0.6);
+  }
+}
+
+/* 등급 텍스트 */
+.grade {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* 등급별 색상 (선택) */
+.legend {
+  background: linear-gradient(
+                  to bottom,
+                  #8f86ff 0%,
+                  #6f64f7 45%,
+                  #5a4de0 100%
+  );
+
+  border: 1px solid #4c43c7;
+  color: #ffffff;
+
+}
+.platinum {
+  background: linear-gradient(
+                  to bottom,
+                  #ffe37a 0%,
+                  #f2c94c 45%,
+                  #d4a900 100%
+  );
+
+  border-color: #b89100;
+  color: #2b2100;
+}
+.hero {
+  background: linear-gradient(
+                  to bottom,
+                  #5bff9c 0%,
+                  #2ecc71 45%,
+                  #1e9f55 100%
+  );
+
+  border-color: #198f4a;
+  color: #0f2f1d;
+}
+.normal {
+  background: linear-gradient(
+                  to bottom,
+                  #cfd3da 0%,
+                  #aeb4bf 50%,
+                  #8e95a3 100%
+  );
+
+  border-color: #6f7684;
+  color: #1f2937;
+}
