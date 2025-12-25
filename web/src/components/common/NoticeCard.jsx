@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 const NoticeCard = ({id, title, date, info}) => {
   const navigate = useNavigate();
 
-  const titleValue = title === 0 ? "메키펀 공지사항" : "공식 공지사항";
+  const titleValue = title === 0 ? "컴프야펀 공지사항" : "공식 공지사항";
 
   const handleClick = () => {
     navigate(`/notice/${id}`);
