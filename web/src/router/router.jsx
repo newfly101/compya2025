@@ -6,6 +6,7 @@ import Notice from "@/pages/Notice.jsx";
 import FunNoticePage from "@/components/common/page/FunNoticePage.jsx";
 import SkillChange from "@/pages/skillChange/SkillChange.jsx";
 import TipPage from "@/pages/TipPage.jsx";
+import TipDataParserPage from "@/pages/utils/TipDataParserPage.jsx";
 
 const router = createBrowserRouter([
   {
@@ -23,7 +24,8 @@ const router = createBrowserRouter([
       {path: "notice", element: <Notice />},
       {path: "notice/:id", element: <FunNoticePage />},
       {path: "simulate", element: <SkillChange />},
-      {path: "tips", element: <TipPage />}
+      {path: "tips", element: <TipPage />},
+      {path: "tipdataparserpage", element: <TipDataParserPage />}
     ],
   },
 ]);

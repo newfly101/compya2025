@@ -1,40 +1,46 @@
 import React from "react";
 import styles from "@/styles/pages/TipPage.module.scss";
-
-const posts = [
-  {
-    id: 1,
-    title: "홈런더비 점수 계산 고찰2",
-    author: "dprian",
-    writtenAt: "2025-10-14",
-    updatedAt: "2025-12-28",
-    tags: ["홈런더비", "초보자"],
-    url: "https://cafe.naver.com/xxxx"
-  },
-  {
-    id: 2,
-    title: "홈런더비 점수 계산 고찰1",
-    author: "리룬지우",
-    writtenAt: "2025-08-24",
-    updatedAt: "2025-12-28",
-    tags: [],
-    url: "https://cafe.naver.com/yyyy"
-  },
-  {
-    id: 3,
-    title: "홈런더비 점수 공식 완전정리",
-    author: "baseball",
-    writtenAt: "2025-07-02",
-    updatedAt: "2025-12-28",
-    tags: ["공식", "계산법", "필독"],
-    url: "https://cafe.naver.com/zzzz"
-  }
-];
+import { postData, posts } from "@/data/board/TipBoard.js";
+// const posts = [
+//   {
+//     id: 1,
+//     title: "홈런더비 점수 계산 고찰2",
+//     author: "dprian",
+//     writtenAt: "2025-10-14",
+//     updatedAt: "2025-12-28",
+//     tags: ["홈런더비", "초보자"],
+//     url: "https://cafe.naver.com/com2usbaseball2015/1240813"
+//   },
+//   {
+//     id: 2,
+//     title: "홈런더비 점수 계산 고찰1",
+//     author: "리룬지우",
+//     writtenAt: "2025-08-24",
+//     updatedAt: "2025-12-28",
+//     tags: [],
+//     url: "https://cafe.naver.com/yyyy"
+//   },
+//   {
+//     id: 3,
+//     title: "홈런더비 점수 공식 완전정리",
+//     author: "baseball",
+//     writtenAt: "2025-07-02",
+//     updatedAt: "2025-12-28",
+//     tags: ["공식", "계산법", "필독"],
+//     url: "https://cafe.naver.com/zzzz"
+//   }
+// ];
+const namedUser = [
+  "리룬지우", "C2X", "환이박사", "dprian", "린드블럼MVP"
+]
 
 const TipPage = () => {
+
+  const sortedPosts = posts(postData);
+
   return (
     <main className={styles.container}>
-      <h1 className={styles.title}>팁 게시판</h1>
+      <h1 className={styles.title}>팁 모아보기</h1>
 
       <table className={styles.table}>
         <colgroup>
@@ -53,7 +59,7 @@ const TipPage = () => {
         </tr>
         </thead>
 
-        {posts.map(post => (
+        {sortedPosts.map(post => (
           <tbody
             key={post.id}
             className={styles.group}
@@ -62,12 +68,12 @@ const TipPage = () => {
           <tr>
             {post.tags.length === 0 ?
               <td className={styles.titleCell}>
-                {post.title}
+                {post.title} {namedUser.includes(post.author) && (<span className={styles.star}>추천</span>)}
               </td>
               :
               <td className={styles.titleCell}>
                 <div className={styles.titleRow}>
-                  {post.title}
+                  {post.title} {namedUser.includes(post.author) && (<span className={styles.star}>추천</span>)}
                 </div>
                 <div className={styles.tagRow}>
                   {post.tags.map(tag => (
