@@ -20,7 +20,7 @@ const Notice = () => {
   };
 
   return (
-    <div className="noticePage">
+    <div>
       <h1>공지사항</h1>
       <p>공식/컴투스프로야구 공지, 이벤트, 쿠폰을 한 곳에서 확인하세요.</p>
 

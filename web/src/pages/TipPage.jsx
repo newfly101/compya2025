@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import styles from "@/styles/pages/TipPage.module.scss";
 import { postData, posts } from "@/data/board/TipBoard.js";
 import Tabs from "@/components/common/Tabs.jsx";
@@ -29,7 +29,7 @@ const TipPage = () => {
   }, [currentData]);
 
   return (
-    <main className={styles.container}>
+    <main>
       <h1>팁 모아보기</h1>
       <p>공식/컴투스프로야구 카페의 팁(분석/공략)을 확인하세요.</p>
 
