@@ -12,7 +12,7 @@ export default function Header() {
           <Link to="/notice?tab=event">이벤트</Link>
           <Link to="/notice?tab=coupons">쿠폰 코드</Link>
           <Link to="/notice">공지사항</Link>
-          {/*<Link to="/community">커뮤니티</Link>*/}
+          <Link to="/tips">팁 모아보기</Link>
         </nav>
       </div>
     </header>
