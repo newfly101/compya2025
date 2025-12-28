@@ -1,11 +1,11 @@
 @use "@/styles/mixins/table" as *;
 
-.container {
-  max-width: 960px;
-  margin: 60px auto;
-  padding: 0 20px;
-  color: #eaeaf0;
-}
+//.container {
+//  max-width: 960px;
+//  margin: 60px auto;
+//  padding: 0 20px;
+//  color: #eaeaf0;
+//}
 
 .colAuthor {
   @include columW(10rem);

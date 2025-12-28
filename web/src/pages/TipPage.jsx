@@ -1,46 +1,46 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
 import styles from "@/styles/pages/TipPage.module.scss";
 import { postData, posts } from "@/data/board/TipBoard.js";
-// const posts = [
-//   {
-//     id: 1,
-//     title: "홈런더비 점수 계산 고찰2",
-//     author: "dprian",
-//     writtenAt: "2025-10-14",
-//     updatedAt: "2025-12-28",
-//     tags: ["홈런더비", "초보자"],
-//     url: "https://cafe.naver.com/com2usbaseball2015/1240813"
-//   },
-//   {
-//     id: 2,
-//     title: "홈런더비 점수 계산 고찰1",
-//     author: "리룬지우",
-//     writtenAt: "2025-08-24",
-//     updatedAt: "2025-12-28",
-//     tags: [],
-//     url: "https://cafe.naver.com/yyyy"
-//   },
-//   {
-//     id: 3,
-//     title: "홈런더비 점수 공식 완전정리",
-//     author: "baseball",
-//     writtenAt: "2025-07-02",
-//     updatedAt: "2025-12-28",
-//     tags: ["공식", "계산법", "필독"],
-//     url: "https://cafe.naver.com/zzzz"
-//   }
-// ];
+import Tabs from "@/components/common/Tabs.jsx";
+import { tip2025data } from "@/data/board/tips2025.js";
+import { useSearchParams } from "react-router-dom";
+
 const namedUser = [
   "리룬지우", "C2X", "환이박사", "dprian", "린드블럼MVP"
 ]
 
 const TipPage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const sortedPosts = posts(postData);
+  const activeTab = searchParams.get("tab");
+
+  const currentData = useMemo(() => {
+    switch (activeTab) {
+      case "newbie":
+        return postData;
+      case "2025":
+      default:
+        return tip2025data;
+    }
+  }, [activeTab]);
+
+  const sortedPosts = useMemo(() => {
+    return posts(currentData);
+  }, [currentData]);
 
   return (
     <main className={styles.container}>
-      <h1 className={styles.title}>팁 모아보기</h1>
+      <h1>팁 모아보기</h1>
+      <p>공식/컴투스프로야구 카페의 팁(분석/공략)을 확인하세요.</p>
+
+      <Tabs
+        value={activeTab}
+        onChange={(key) => setSearchParams({ tab: key })}
+        tabs={[
+          { key: "2025", label: "2025년 팁 모아보기" },
+          { key: "newbie", label: "뉴비 팁 모아보기" },
+        ]}
+      />
 
       <table className={styles.table}>
         <colgroup>
