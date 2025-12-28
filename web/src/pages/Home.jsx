@@ -28,6 +28,7 @@ const Home = () => {
         <div className={styles.grid}>
           {/*<div className={styles.card}>데미지 계산기</div>*/}
           {/*<div className={styles.card}>성장 가이드</div>*/}
+          <div className={styles.card} onClick={() => handleClick("tips")}>팁 모아보기</div>
           {/*<div className={styles.card}>덱 구성 가이드</div>*/}
           {/*<div className={styles.card}>플레이 가이드</div>*/}
           {/*<div className={styles.card}>선수 카드 도감</div>*/}
