@@ -28,7 +28,38 @@
     background: $surface3;
   }
 }
+.footer > .inner {
+  width: 100%;
+  max-width: 1200px;
+  color: $text-primary;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  justify-content: space-between;
+  margin: 1.6rem;
 
+  & > .legal {
+    display: flex;
+    flex-direction: row;
+    font-size: 1.6rem;
+
+    p {
+      margin-right: 2rem;
+      cursor: pointer;
+
+      &:hover {
+        color: #60a5fa;
+      }
+    }
+    .disabled {
+      cursor: default;
+
+      &:hover {
+        color: $text-primary;
+      }
+    }
+  }
+}
 .inner {
   width: 100%;
   max-width: 1200px;
