@@ -12,7 +12,7 @@ const CouponCard = ({ code, rewardTitle, rewardDetail, expireDate, disabled, sho
 
       <div className={styles.header}>
         <span className={styles.code}>{code}</span>
-        <button className={`${styles.copyBtn} ${disabled ? styles.disabled : ""}`}
+        <button data-gtm={"coupon_click"} data-coupon-code={code} className={`${styles.copyBtn} ${disabled ? styles.disabled : ""}`}
                 onClick={copy} disabled={disabled}>
           바로가기
         </button>
