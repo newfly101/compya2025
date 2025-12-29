@@ -15,6 +15,7 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+        handle: {title: "컴프야펀 | 홈"}
       },
       {
         path: "login",
@@ -22,8 +23,8 @@ const router = createBrowserRouter([
       },
       {path: "notice", element: <Notice />},
       {path: "notice/:id", element: <FunNoticePage />},
-      {path: "simulate", element: <SkillChange />},
-      {path: "tips", element: <TipPage />},
+      {path: "simulate", element: <SkillChange />, handle: { title: "컴프야펀 | 고스변 시뮬레이터" }},
+      {path: "tips", element: <TipPage />, handle: { title: "컴프야펀 | 팁 모아보기" }},
     ],
   },
 ]);

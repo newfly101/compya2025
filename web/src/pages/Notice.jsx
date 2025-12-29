@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Tabs from "@/components/common/Tabs.jsx";
 import FunNoticeList from "@/pages/notice/FunNoticeList.jsx";
@@ -18,6 +18,22 @@ const Notice = () => {
     event: <EventList data={events}/>,
     coupons: <CouponList data={coupons}/>,
   };
+
+  useEffect(() => {
+    switch (tab) {
+      case "coupons":
+        document.title = "컴프야펀 | 쿠폰 모아보기";
+        break;
+      case "event":
+        document.title = "컴프야펀 | 이벤트 안내";
+        break;
+      case "notice":
+        document.title = "컴프야펀 | 공식 공지사항";
+        break;
+      default:
+        document.title = "컴프야펀 | 펀 공지사항";
+    }
+  }, [tab]);
 
   return (
     <div>
