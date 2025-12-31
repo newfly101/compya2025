@@ -128,6 +128,12 @@ const coupons = [
     rewardDetail: "크리스마스 쿠폰",
     expireDate: "2026. 01. 31 23:59"
   },
+  {
+    code: "",
+    rewardTitle: "1월 5일 12:00 공개",
+    rewardDetail: "병오년 쿠폰",
+    expireDate: "2026. 02. 28 23:59"
+  },
 ];
 
 export default coupons;
