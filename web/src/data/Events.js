@@ -69,7 +69,7 @@ const events = [
     startDate: "2026. 01. 01 12:00",
     expireDate: "2026. 01. 14 23:59",
     image: img7,
-    link: "https://cafe.naver.com/com2usbaseball2015/27851354"
+    link: "https://cafe.naver.com/com2usbaseball2015/1934677"
   },
   {
     id: 8,
@@ -78,7 +78,7 @@ const events = [
     startDate: "2026. 01. 01 12:00",
     expireDate: "2026. 01. 28 23:59",
     image: img8,
-    link: "https://cafe.naver.com/com2usbaseball2015/27851354"
+    link: "https://cafe.naver.com/com2usbaseball2015/1934677"
   },
 ]
 export default events;
