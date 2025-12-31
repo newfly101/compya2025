@@ -4,6 +4,8 @@ import img3 from "@/assets/events/Spot the Difference.jpg";
 import img4 from "@/assets/events/compya2draft.jpg";
 import img5 from "@/assets/events/compyachrithmas.jpg";
 import img6 from "@/assets/events/compyamymixture.png";
+import img7 from "@/assets/events/newyear1.jpg";
+import img8 from "@/assets/events/newyear2.jpg";
 
 const events = [
   {
@@ -59,6 +61,24 @@ const events = [
     expireDate: "2025. 12. 31 23:59",
     image: img6,
     link: "https://cafe.naver.com/com2usbaseball2015/1931766"
+  },
+  {
+    id: 7,
+    title: "[이벤트] 수여니와 새해 다짐 이벤트",
+    dateRange: "2026년 01월 01일 12:00 ~ 2026년 01월 14일 23:59",
+    startDate: "2026. 01. 01 12:00",
+    expireDate: "2026. 01. 14 23:59",
+    image: img7,
+    link: "https://cafe.naver.com/com2usbaseball2015/27851354"
+  },
+  {
+    id: 8,
+    title: "[이벤트] 새해 맞이 불꽃놀이 빙고 이벤트",
+    dateRange: "2026년 01월 01일 12:00 ~ 2026년 01월 28일 23:59",
+    startDate: "2026. 01. 01 12:00",
+    expireDate: "2026. 01. 28 23:59",
+    image: img8,
+    link: "https://cafe.naver.com/com2usbaseball2015/27851354"
   },
 ]
 export default events;
