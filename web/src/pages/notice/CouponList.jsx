@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import CouponCard from "@/components/common/CouponCard.jsx";
 import styles from "@/styles/layout/CouponCard.module.scss";
 
@@ -6,10 +6,22 @@ import { parseDate } from "@/utils/parseDate.js";
 import { sortCoupons } from "@/utils/sortCoupons.js";
 
 const CouponList = ({data, limit, short=false}) => {
-  const sorted = sortCoupons(data);
   const now = new Date();
 
-  const finalList = limit ? sorted.slice(0, limit) : sorted;
+  // const finalList = limit ? sorted.slice(0, limit) : sorted;
+  // const sorted = sortCoupons(data);
+
+  const finalList = useMemo(() => {
+    const sorted = sortCoupons(data);
+
+    const filtered = short
+      ? sorted.filter(
+        (item) => parseDate(item.expireDate) >= now
+      )
+      : sorted;
+
+    return limit ? filtered.slice(0, limit) : filtered;
+  }, [data, limit, short]);
 
   return (
     <div>{!short && "🎁 쿠폰 리스트"}
@@ -23,7 +35,7 @@ const CouponList = ({data, limit, short=false}) => {
               rewardTitle={item.rewardTitle}
               rewardDetail={item.rewardDetail}
               expireDate={item.expireDate}
-              disabled={expired}
+              disabled={expired || item.code.length === 0}
               short={short}
             />
           );
