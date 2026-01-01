@@ -13,6 +13,7 @@ const SkillDictionary = ({ onSelect }) => {
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasRecommend, setHasRecommend] = useState(true);
+  const [hasReady, setHasReady] = useState(false);
 
   const handleMoveUrl = () => {
     navigate(`/`);
@@ -104,10 +105,13 @@ const SkillDictionary = ({ onSelect }) => {
         />
       )}
 
-      {isModalOpen && !hasRecommend && (
+      {/*{isModalOpen && !hasRecommend && (*/}
+      // {isModalOpen && !hasReady && (
         <NoRecommendSkillCard
           skill={selectedSkill}
           onClose={handleCloseModal}
+          mainText={`현재 준비중인 기능입니다.`}
+          subText={"업데이트 이후에 시도 부탁드립니다."}
         />
       )}
 
