@@ -12,8 +12,8 @@ const SkillDictionary = ({ onSelect }) => {
   const [standard, setStandard] = useState("레전드"); // LEGEND | PLATINUM
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hasRecommend, setHasRecommend] = useState(true);
-  const [hasReady, setHasReady] = useState(false);
+  const [modalType, setModalType] = useState(null);
+
 
   const handleMoveUrl = () => {
     navigate(`/`);
@@ -22,21 +22,53 @@ const SkillDictionary = ({ onSelect }) => {
   const handleClick = (skill) => {
     const skillName = skill.name;
 
+    setSelectedSkill(skillName);
+    setIsModalOpen(true);
+
+    // 🔥 PLATINUM 기준은 전부 준비중
+    if (standard === "플래티넘") {
+      setModalType("PREPARE");
+      return;
+    }
+
+    // 🔥 LEGEND 기준
     const hasCombo = filteredCombos.some(combo =>
       combo.skills.includes(skillName)
     );
 
-    setSelectedSkill(skillName);
-    setHasRecommend(hasCombo);
-    setIsModalOpen(true);
-    onSelect?.(skill);
+    if (hasCombo) {
+      setModalType("RECOMMEND");
+      return;
+    }
+
+    // hero / normal → 변경 추천
+    if (isLowTierSkill(skillName)) {
+      setModalType("CHANGE");
+      return;
+    }
+
+    // 안전망
+    setModalType("PREPARE");
   };
+
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedSkill(null);
-    setHasRecommend(true);
+    setModalType(null);
   };
+
+
+  const isLegendSkill = (skillName) =>
+    PITCHER_SKILLS.legend.some(s => s.name === skillName);
+
+  const isPlatinumSkill = (skillName) =>
+    PITCHER_SKILLS.platinum.some(s => s.name === skillName);
+
+  const isLowTierSkill = (skillName) =>
+    PITCHER_SKILLS.hero.some(s => s.name === skillName) ||
+    PITCHER_SKILLS.normal.some(s => s.name === skillName);
+
 
 
 
@@ -96,22 +128,30 @@ const SkillDictionary = ({ onSelect }) => {
           플래티넘 스킬 추천
         </button>
       </div>
-      {isModalOpen && hasRecommend && (
+      {isModalOpen && modalType === "RECOMMEND" && (
         <RecommendSkillCard
-          isOpen={isModalOpen}
+          isOpen
           selectedSkill={selectedSkill}
           combos={filteredCombos}
           onClose={handleCloseModal}
         />
       )}
 
-      {/*{isModalOpen && !hasRecommend && (*/}
-      {isModalOpen && !hasReady && (
+      {isModalOpen && modalType === "CHANGE" && (
         <NoRecommendSkillCard
           skill={selectedSkill}
           onClose={handleCloseModal}
-          mainText={`현재 준비중인 기능입니다.`}
-          subText={"업데이트 이후에 시도 부탁드립니다."}
+          mainText="잘 사용되지 않는 스킬입니다."
+          subText="다른 스킬로 변경을 추천드립니다."
+        />
+      )}
+
+      {isModalOpen && modalType === "PREPARE" && (
+        <NoRecommendSkillCard
+          skill={selectedSkill}
+          onClose={handleCloseModal}
+          mainText="현재 준비중인 기능입니다."
+          subText="업데이트 이후에 시도 부탁드립니다."
         />
       )}
 
