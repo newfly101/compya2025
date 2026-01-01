@@ -1,0 +1,126 @@
+import React, { useState } from "react";
+import { PITCHER_SKILLS } from "@/data/skill/PITCKER_SKILLS.js";
+import styles from "@/styles/pages/SkillDictionary.module.scss";
+import RecommendSkillCard from "@/components/common/page/RecommendSkillCard.jsx";
+import { PITCHER_RECOMMEND } from "@/data/skill/PITCHER_RECOMMEND.js";
+import NoRecommendSkillCard from "@/components/common/page/NoRecommendSkillCard.jsx";
+import { useNavigate } from "react-router-dom";
+
+const SkillDictionary = ({ onSelect }) => {
+  const navigate = useNavigate();
+
+  const [standard, setStandard] = useState("레전드"); // LEGEND | PLATINUM
+  const [selectedSkill, setSelectedSkill] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [hasRecommend, setHasRecommend] = useState(true);
+
+  const handleMoveUrl = () => {
+    navigate(`/`);
+  }
+
+  const handleClick = (skill) => {
+    const skillName = skill.name;
+
+    const hasCombo = filteredCombos.some(combo =>
+      combo.skills.includes(skillName)
+    );
+
+    setSelectedSkill(skillName);
+    setHasRecommend(hasCombo);
+    setIsModalOpen(true);
+    onSelect?.(skill);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedSkill(null);
+    setHasRecommend(true);
+  };
+
+
+
+
+  const filteredCombos = PITCHER_RECOMMEND.filter(combo => {
+    if (standard === "플래티넘") {
+      return combo.skills.every(skill =>
+        !PITCHER_SKILLS.legend.some(l => l.name === skill)
+      );
+    }
+    return true;
+  });
+
+
+  const renderGroup = (title, grade, skills) => (
+    <section className={styles.group}>
+      <h3 className={styles.groupTitle}>{title}</h3>
+      <div className={styles.buttonGrid}>
+        {skills.map((skill) => (
+          <button
+            key={skill.id}
+            className={`${styles.skillBtn} ${styles[grade]} ${
+              selectedSkill === skill.name ? styles.active : ""
+            }`}
+            onClick={() => handleClick(skill)}
+          >
+            {skill.name}
+          </button>
+        ))}
+      </div>
+    </section>
+  );
+
+  return (
+    <main className={styles.container}>
+      <header className={styles.header}>
+        <span className={styles.category} onClick={handleMoveUrl}>← 메인으로</span>
+        <h1 className={styles.title}>🕮 스킬 백과사전</h1>
+
+        <div className={styles.meta}>
+          <span>2026-01-02</span>
+          <span>v0.1.3</span>
+        </div>
+      </header>
+      <div className={styles.standardTabs}>
+        <button
+          className={`${standard === "레전드" ? styles.active : ""}`}
+          onClick={() => setStandard("레전드")}
+        >
+          레전드 스킬 추천
+        </button>
+
+        <button
+          className={`${standard === "플래티넘" ? styles.active : ""}`}
+          onClick={() => setStandard("플래티넘")}
+        >
+          플래티넘 스킬 추천
+        </button>
+      </div>
+      {isModalOpen && hasRecommend && (
+        <RecommendSkillCard
+          isOpen={isModalOpen}
+          selectedSkill={selectedSkill}
+          combos={filteredCombos}
+          onClose={handleCloseModal}
+        />
+      )}
+
+      {isModalOpen && !hasRecommend && (
+        <NoRecommendSkillCard
+          skill={selectedSkill}
+          onClose={handleCloseModal}
+        />
+      )}
+
+      <div className={styles.panel}>
+        {standard === "레전드" && renderGroup("레전드", "legend", PITCHER_SKILLS.legend)}
+        {renderGroup("플레티넘", "platinum", PITCHER_SKILLS.platinum)}
+        {renderGroup("히어로", "hero", PITCHER_SKILLS.hero)}
+        {renderGroup("노말", "normal", PITCHER_SKILLS.normal)}
+      </div>
+
+
+    </main>
+  );
+};
+
+export default SkillDictionary;

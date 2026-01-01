@@ -1,0 +1,296 @@
+@use "@/styles/variables/colors" as *;
+
+.container {
+  max-width: 90rem;
+  margin: 6rem auto;
+  padding: 0 2.4rem;
+}
+/* 헤더 */
+.header {
+  border-bottom: 1px solid #1f2937;
+  padding-bottom: 2.4rem;
+  margin-bottom: 3.2rem;
+
+  & > .title {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+  }
+  & > .meta {
+    font-size: 2.8rem;
+    color: $primary8;
+    display: flex;
+    gap: 1rem;
+  }
+}
+
+.category {
+  display: inline-block;
+  font-size: 1.5rem;
+  color: #60a5fa;
+  margin-bottom: 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    color: #89bcfb;
+    font-weight: 700;
+  }
+}
+.standardTabs {
+  display: flex;
+  gap: 1rem;
+  margin: 2rem 0;
+
+  button {
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    background: $surface2;
+    color: $text-secondary;
+    border: 1px solid $border;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+
+    &:hover {
+      background: $surface3;
+      color: $text-primary;
+    }
+  }
+
+  .active {
+    background: $primary-bg;
+    border-color: $primary;
+    color: $primary-text;
+  }
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.groupTitle {
+  font-size: 1.5rem;
+  color: #aaa;
+  letter-spacing: 0.08em;
+}
+
+.buttonGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skillBtn {
+  padding: 1rem 1.2rem;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  border: 1px solid transparent;
+  background: #1e1e2e;
+  width: 12rem;
+  color: #ccc;
+  white-space: nowrap;
+}
+
+.skillBtn:active {
+  transform: scale(0.97);
+}
+
+/* 등급별 색상 (선택) */
+.legend {
+  background: linear-gradient(
+                  to bottom,
+                  #8f86ff 0%,
+                  #6f64f7 45%,
+                  #5a4de0 100%
+  );
+
+  border: 1px solid #4c43c7;
+  color: #302a82;
+}
+.platinum {
+  background: linear-gradient(
+                  to bottom,
+                  #ffe37a 0%,
+                  #f2c94c 45%,
+                  #d4a900 100%
+  );
+
+  border-color: #b89100;
+  color: #2b2100;
+}
+.hero {
+  background: linear-gradient(
+                  to bottom,
+                  #5bff9c 0%,
+                  #2ecc71 45%,
+                  #1e9f55 100%
+  );
+
+  border-color: #198f4a;
+  color: #0f2f1d;
+}
+.normal {
+  background: linear-gradient(
+                  to bottom,
+                  #cfd3da 0%,
+                  #aeb4bf 50%,
+                  #8e95a3 100%
+  );
+
+  border-color: #6f7684;
+  color: #1f2937;
+}
+
+/* 선택 상태 */
+.active {
+  //background: currentColor;
+  color: white;
+  font-weight: 700;
+}
+
+
+/* 카드 뷰 */
+.grade {
+  font-weight: 600;
+  color: #f5c542;
+}
+
+.comboGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.comboCard {
+  background: #1b1b2a;
+  border-radius: 12px;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 1px solid $border-strong;
+}
+
+.comboHeader {
+  display: flex;
+  justify-content: space-between;
+  font-size: 2.4rem;
+  color: #bbb;
+}
+
+/* modal view */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 중앙 모달 */
+.centerModal {
+  width: min(92vw, 50rem);
+  max-height: 80vh;
+  background: #1b1b2a;
+  border-radius: 16px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 타이틀 */
+.modalTitle {
+  font-size: 1.8rem;
+  margin-bottom: 0.75rem;
+}
+
+/* 내용 스크롤 */
+.modalBody {
+  flex: 1;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* 닫기 버튼 */
+.modalClose {
+  margin-top: 0.75rem;
+  padding: 0.7rem;
+  border-radius: 10px;
+  background: #2c2c44;
+  color: #fff;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+
+.skillList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  & > li {
+    font-size: 1.5rem;
+  }
+}
+
+.highlight {
+  color: #f5c542;
+  font-weight: 600;
+}
+
+.score {
+  margin-top: 0.25rem;
+  font-size: 1.5rem;
+  color: #aaa;
+  text-align: right;
+}
+
+
+/* NoRecommendSkillCard 전용 */
+
+.noRecommendText {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #f5c542;
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 0.4rem;
+}
+
+.noRecommendText strong {
+  font-weight: 700;
+}
+
+.noRecommendSub {
+  font-size: 1.5rem;
+  color: #9aa0b4;
+  text-align: center;
+  line-height: 1.4;
+}
+.noRecommendIcon {
+  font-size: 2.4rem;
+  text-align: center;
+  margin-bottom: 0.4rem;
+  opacity: 0.9;
+}
+
+/* 모달 바디 여백 보정 */
+.modalBody {
+  padding: 0.6rem 0.2rem 0.2rem;
+}
