@@ -106,7 +106,7 @@ const SkillDictionary = ({ onSelect }) => {
       )}
 
       {/*{isModalOpen && !hasRecommend && (*/}
-      // {isModalOpen && !hasReady && (
+      {isModalOpen && !hasReady && (
         <NoRecommendSkillCard
           skill={selectedSkill}
           onClose={handleCloseModal}
