@@ -32,6 +32,7 @@ const Home = () => {
           {/*<div className={styles.card}>덱 구성 가이드</div>*/}
           {/*<div className={styles.card}>플레이 가이드</div>*/}
           {/*<div className={styles.card}>선수 카드 도감</div>*/}
+          <div className={styles.card} onClick={() => handleClick("dictionary/pitcher")}>투수 스킬 조합 추천</div>
           <div className={styles.card} onClick={() => handleClick("simulate")}>고스변 시뮬레이터</div>
         </div>
       </section>
