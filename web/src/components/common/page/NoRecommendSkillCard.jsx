@@ -1,6 +1,6 @@
 import styles from "@/styles/pages/SkillDictionary.module.scss";
 
-const NoRecommendSkillCard = ({ skill, onClose }) => {
+const NoRecommendSkillCard = ({ skill, onClose, mainText="", subText="" }) => {
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
       <div
@@ -13,12 +13,11 @@ const NoRecommendSkillCard = ({ skill, onClose }) => {
           <div className={styles.noRecommendIcon}>⚠️</div>
 
           <p className={styles.noRecommendText}>
-            현재 기준에서<br />
-            잘 사용되지 않는 스킬입니다.
+            {mainText}
           </p>
 
           <p className={styles.noRecommendSub}>
-            다른 스킬로 변경을 추천합니다.
+            {subText}
           </p>
 
           <button className={styles.modalClose} onClick={onClose}>
