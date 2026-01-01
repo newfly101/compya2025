@@ -3,7 +3,7 @@ export const PITCHER_SKILLS = {
     { id: "L1", name: "슈퍼스타", desc: "", position:"선발" },
     { id: "L2", name: "팔색조", desc: "", position:"선발" },
     { id: "L3", name: "라이징 패스트볼", desc: "", position:"선발" },
-    { id: "L4", name: "배테랑", desc: "", position:"선발" },
+    { id: "L4", name: "베테랑", desc: "", position:"선발" },
     { id: "L5", name: "캡틴", desc: "", position:"선발" },
     { id: "L6", name: "투혼", desc: "", position:"선발" },
     { id: "L7", name: "닥터K", desc: "", position:"선발" }
