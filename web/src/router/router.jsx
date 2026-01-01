@@ -7,6 +7,7 @@ import FunNoticePage from "@/components/common/page/FunNoticePage.jsx";
 import SkillChange from "@/pages/skillChange/SkillChange.jsx";
 import TipPage from "@/pages/TipPage.jsx";
 import PrivacyPolicy from "@/pages/legal/PrivacyPolicy.jsx";
+import SkillDictionary from "@/components/common/page/SkillDictionary.jsx";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,7 @@ const router = createBrowserRouter([
       {path: "notice/:id", element: <FunNoticePage />},
       {path: "simulate", element: <SkillChange />, handle: { title: "컴프야펀 | 고스변 시뮬레이터" }},
       {path: "tips", element: <TipPage />, handle: { title: "컴프야펀 | 팁 모아보기" }},
+      {path: "dictionary", element: <SkillDictionary />, handle: { title: "컴프야펀 | 스킬백과사전" }},
       {path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" }},
     ],
   },
