@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
 
+const gradeClassMap = {
+  "졸업": styles.gradeGraduate,
+  "준졸업": styles.gradeSemi,
+  "타협": styles.gradeAcceptable,
+  "변경": styles.gradeChange,
+};
+
+
 // SAMPLE_RECOMMEND_COMBOS = combos
 const RecommendSkillCard = ({ isOpen, selectedSkill, combos, onClose }) => {
 
@@ -11,6 +19,7 @@ const RecommendSkillCard = ({ isOpen, selectedSkill, combos, onClose }) => {
   );
 
   if (filtered.length === 0) return null;
+
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
@@ -28,7 +37,9 @@ const RecommendSkillCard = ({ isOpen, selectedSkill, combos, onClose }) => {
               <div key={idx} className={styles.comboCard}>
                 <div className={styles.comboHeader}>
                   <span>{combo.position}</span>
-                  <span className={styles.grade}>{combo.grade}</span>
+                  <span className={`${styles.grade} ${
+                    gradeClassMap[combo.grade] ?? ""
+                  }`}>{combo.grade}</span>
                 </div>
 
                 <ul className={styles.skillList}>

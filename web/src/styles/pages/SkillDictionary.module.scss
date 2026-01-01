@@ -166,7 +166,7 @@
 
 .comboGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
@@ -185,6 +185,7 @@
   justify-content: space-between;
   font-size: 2.4rem;
   color: #bbb;
+  padding-bottom: 0.5rem;
 }
 
 /* modal view */
@@ -213,6 +214,7 @@
 .modalTitle {
   font-size: 1.8rem;
   margin-bottom: 0.75rem;
+  text-align: center;
 }
 
 /* 내용 스크롤 */
@@ -221,6 +223,8 @@
   overflow-y: auto;
   margin-top: 0.5rem;
   -webkit-overflow-scrolling: touch;
+  padding: 0.6rem 0.2rem 0.2rem;
+  text-align: center;
 }
 
 /* 닫기 버튼 */
@@ -232,6 +236,7 @@
   color: #fff;
   font-size: 1.5rem;
   flex-shrink: 0;
+  text-align: center;
 }
 
 
@@ -250,7 +255,7 @@
 }
 
 .highlight {
-  color: #f5c542;
+  color: $primary4;
   font-weight: 600;
 }
 
@@ -290,7 +295,24 @@
   opacity: 0.9;
 }
 
-/* 모달 바디 여백 보정 */
-.modalBody {
-  padding: 0.6rem 0.2rem 0.2rem;
+
+
+/* 졸업 */
+.gradeGraduate {
+  color: $primary-text;
+}
+
+/* 준졸업 */
+.gradeSemi {
+  color: $warning;
+}
+
+/* 타협 */
+.gradeAcceptable {
+  color: $success;
+}
+
+/* 변경 */
+.gradeChange {
+  color: $error;
 }
