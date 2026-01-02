@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import EventList from "@/pages/notice/EventList.jsx";
 import events from "@/data/Events.js";
 import React from "react";
+import quizImg from "@/assets/quiz/quiz875.png";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -37,13 +38,19 @@ const Home = () => {
         </div>
       </section>
 
+      <section className={styles.homeSection}>
+        <div>
+          <h2>🎉 컴프야 퀴즈 이벤트 875회 정답</h2>
+          <img className={styles.quiz} src={quizImg} alt="quiz-875" />
+        </div>
+      </section>
       {/* 최신 이벤트 */}
       <section className={styles.homeSection}>
         <div className={styles.subTitle}>
           <h2>🎉 최신 이벤트</h2>
           <span><Link to="/notice?tab=event">전체 보기 →</Link></span>
         </div>
-        <EventList data={events} limit={3} short={true}/>
+        <EventList data={events} limit={3} short={true} />
       </section>
 
       {/* 최신 쿠폰 */}
@@ -52,7 +59,7 @@ const Home = () => {
           <h2>🎁 최신 쿠폰</h2>
           <span><Link to="/notice?tab=coupons">전체 보기 →</Link></span>
         </div>
-        <CouponList data={coupons} limit={3} short={true}/>
+        <CouponList data={coupons} limit={3} short={true} />
       </section>
 
     </div>
