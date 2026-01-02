@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { PITCHER_SKILLS } from "@/data/skill/PITCKER_SKILLS.js";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
 import RecommendSkillCard from "@/components/common/page/RecommendSkillCard.jsx";
@@ -6,7 +6,7 @@ import { PITCHER_RECOMMEND } from "@/data/skill/PITCHER_RECOMMEND.js";
 import NoRecommendSkillCard from "@/components/common/page/NoRecommendSkillCard.jsx";
 import { useNavigate } from "react-router-dom";
 
-const SkillDictionary = ({ onSelect }) => {
+const SkillDictionary = () => {
   const navigate = useNavigate();
 
   const [standard, setStandard] = useState("레전드"); // 레전드 | 플래티넘
@@ -55,14 +55,13 @@ const SkillDictionary = ({ onSelect }) => {
 
     const finalCombos =
       standard === "플래티넘"
-        ? matchedCombos.filter((combo) =>
+        ? matchedCombos.filter(() =>
           skillsNow.every(
             (skill) => !PITCHER_SKILLS.legend.some((l) => l.name === skill)
           )
         )
         : matchedCombos;
 
-    // console.log("finalCombos",finalCombos);
     setRecommendCombos(finalCombos);
     setHasRecommend(finalCombos.length > 0);
     setIsModalOpen(true);
