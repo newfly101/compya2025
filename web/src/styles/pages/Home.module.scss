@@ -2,8 +2,8 @@
 
 .homePage {
   user-select: none; /* text */
-  white-space: nowrap;
-  flex-shrink: 0;
+  //white-space: nowrap;
+  //flex-shrink: 0;
 
   .hero {
     padding: 10rem 2rem;
@@ -30,7 +30,9 @@
       padding: 1rem;
     }
 
-
+    & > h1, p {
+      white-space: nowrap;
+    }
     h1 {
       font-size: 3rem;
       color: #fff;
