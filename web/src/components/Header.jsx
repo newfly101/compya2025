@@ -13,7 +13,7 @@ export default function Header() {
           <Link to="/notice?tab=coupons">쿠폰 코드</Link>
           <Link to="/notice">공지사항</Link>
           <Link to="/tips">팁 모아보기</Link>
-          <Link to="/dictionary">📌조합 추천 백과사전</Link>
+          <Link to="/dictionary">📌추천 백과사전</Link>
         </nav>
       </div>
     </header>
