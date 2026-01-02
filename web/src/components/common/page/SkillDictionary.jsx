@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { PITCHER_SKILLS } from "@/data/skill/PITCKER_SKILLS.js";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
 import RecommendSkillCard from "@/components/common/page/RecommendSkillCard.jsx";
@@ -9,43 +9,74 @@ import { useNavigate } from "react-router-dom";
 const SkillDictionary = ({ onSelect }) => {
   const navigate = useNavigate();
 
-  const [standard, setStandard] = useState("레전드"); // LEGEND | PLATINUM
-  const [selectedSkill, setSelectedSkill] = useState(null);
+  const [standard, setStandard] = useState("레전드"); // 레전드 | 플래티넘
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const selectedSkillsRef = useRef([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasRecommend, setHasRecommend] = useState(true);
+  const [recommendCombos, setRecommendCombos] = useState([]);
 
   const handleMoveUrl = () => {
-    navigate(`/`);
+    navigate("/");
   };
 
-  const handleClick = (skill) => {
+  const handleToggleSkill = (skill) => {
     const skillName = skill.name;
 
-    const hasCombo = filteredCombos.some(combo =>
-      combo.skills.includes(skillName),
+    setSelectedSkills((prev) => {
+      let next = prev;
+
+      if (prev.includes(skillName)) {
+        next = prev.filter((s) => s !== skillName);
+      } else {
+        if (prev.length >= 2) return prev;
+        next = [...prev, skillName];
+      }
+
+      selectedSkillsRef.current = next; // ✅ 여기서 즉시 최신화
+      return next;
+    });
+  };
+
+  const initSelected = (type) => {
+    setSelectedSkills([]);
+    setStandard(type);
+    setRecommendCombos([]);
+  }
+
+  const handleOpenRecommend = () => {
+    const skillsNow = selectedSkillsRef.current; // ✅ 최신값
+
+    if (skillsNow.length === 0) return;
+
+    const matchedCombos = PITCHER_RECOMMEND.filter((combo) =>
+      skillsNow.every((skill) => combo.skills.includes(skill))
     );
 
-    setSelectedSkill(skillName);
-    setHasRecommend(hasCombo);
+    const finalCombos =
+      standard === "플래티넘"
+        ? matchedCombos.filter((combo) =>
+          skillsNow.every(
+            (skill) => !PITCHER_SKILLS.legend.some((l) => l.name === skill)
+          )
+        )
+        : matchedCombos;
+
+    // console.log("finalCombos",finalCombos);
+    setRecommendCombos(finalCombos);
+    setHasRecommend(finalCombos.length > 0);
     setIsModalOpen(true);
-    onSelect?.(skill);
   };
+
+
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedSkill(null);
+    setSelectedSkills([]);
+    selectedSkillsRef.current = []; // ✅ 동기화
+    setRecommendCombos([]);
     setHasRecommend(true);
   };
-
-
-  const filteredCombos = PITCHER_RECOMMEND.filter(combo => {
-    if (standard === "플래티넘") {
-      return combo.skills.every(skill =>
-        !PITCHER_SKILLS.legend.some(l => l.name === skill),
-      );
-    }
-    return true;
-  });
 
 
   const renderGroup = (title, grade, skills) => (
@@ -56,9 +87,9 @@ const SkillDictionary = ({ onSelect }) => {
           <button
             key={skill.id}
             className={`${styles.skillBtn} ${styles[grade]} ${
-              selectedSkill === skill.name ? styles.active : ""
+              selectedSkills.includes(skill.name) ? styles.active : ""
             }`}
-            onClick={() => handleClick(skill)}
+            onClick={() => handleToggleSkill(skill)}
           >
             {skill.name}
           </button>
@@ -78,38 +109,52 @@ const SkillDictionary = ({ onSelect }) => {
           <span>v0.1.4</span>
         </div>
       </header>
-      <div className={styles.standardTabs}>
-        <button
-          className={`${standard === "레전드" ? styles.active : ""}`}
-          onClick={() => setStandard("레전드")}
-        >
-          레전드 스킬 추천
-        </button>
+      <div className={styles.skillToggleHeader}>
+        <div className={styles.standardTabs}>
+          <button
+            className={`${standard === "레전드" ? styles.active : ""}`}
+            onClick={() => initSelected("레전드")}
+          >
+            레전드 스킬 추천
+          </button>
 
-        <button
-          className={`${standard === "플래티넘" ? styles.active : ""}`}
-          onClick={() => setStandard("플래티넘")}
-        >
-          플래티넘 스킬 추천
-        </button>
+          <button
+            className={`${standard === "플래티넘" ? styles.active : ""}`}
+            onClick={() => initSelected("플래티넘")}
+          >
+            플래티넘 스킬 추천
+          </button>
+        </div>
+        <div className={styles.standardTabs}>
+          <button
+            className={styles.recommendBtn}
+            disabled={selectedSkills.length === 0}
+            onClick={handleOpenRecommend}
+          >
+            추천 스킬 조합 보기
+            {selectedSkills.length > 0 && (
+              <span>({selectedSkills.length}/2)</span>
+            )}
+          </button>
+        </div>
       </div>
 
-      {isModalOpen && hasRecommend && (
-        <RecommendSkillCard
-          isOpen={isModalOpen}
-          selectedSkill={selectedSkill}
-          combos={filteredCombos}
-          onClose={handleCloseModal}
-        />
-      )}
-
-      {isModalOpen && !hasRecommend && (
-        <NoRecommendSkillCard
-          skill={selectedSkill}
-          onClose={handleCloseModal}
-          mainText="잘 사용되지 않는 스킬입니다."
-          subText="다른 스킬로 변경을 추천드립니다."
-        />
+      {isModalOpen && (
+        hasRecommend ? (
+          <RecommendSkillCard
+            isOpen
+            selectedSkills={selectedSkills}
+            combos={recommendCombos}
+            onClose={handleCloseModal}
+          />
+        ) : (
+          <NoRecommendSkillCard
+            skill={selectedSkills.join(" + ")}
+            onClose={handleCloseModal}
+            mainText="해당 스킬 조합은 잘 사용되지 않습니다."
+            subText="다른 스킬 조합을 추천드립니다."
+          />
+        )
       )}
 
       <div className={styles.panel}>

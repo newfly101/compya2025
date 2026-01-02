@@ -36,6 +36,11 @@
     font-weight: 700;
   }
 }
+.skillToggleHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
 .standardTabs {
   display: flex;
   gap: 1rem;
@@ -98,10 +103,10 @@
   width: 12rem;
   color: #ccc;
   white-space: nowrap;
-}
-
-.skillBtn:active {
-  transform: scale(0.97);
+  & > .active {
+    outline: 2px solid #f5c542;
+    transform: scale(0.97);
+  }
 }
 
 /* 등급별 색상 (선택) */
@@ -315,4 +320,10 @@
 /* 변경 */
 .gradeChange {
   color: $error;
+}
+
+
+.recommendBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }

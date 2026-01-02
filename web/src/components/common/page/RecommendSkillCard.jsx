@@ -7,18 +7,29 @@ const gradeClassMap = {
   "타협": styles.gradeAcceptable,
   "변경": styles.gradeChange,
 };
-
+const gradePriority = {
+  "졸업": 4,
+  "준졸업": 3,
+  "타협": 2,
+  "변경": 1,
+};
 
 // SAMPLE_RECOMMEND_COMBOS = combos
-const RecommendSkillCard = ({ isOpen, selectedSkill, combos, onClose }) => {
+const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
+  if (!isOpen || combos.length === 0) return null;
 
-  if (!isOpen || !selectedSkill) return null;
+  const sortedCombos = [...combos].sort((a, b) => {
+    // 1️⃣ 점수 내림차순
+    if (b.totalPoint !== a.totalPoint) {
+      return b.totalPoint - a.totalPoint;
+    }
 
-  const filtered = combos.filter(combo =>
-    combo.skills.includes(selectedSkill),
-  );
-
-  if (filtered.length === 0) return null;
+    // 2️⃣ 등급 우선순위
+    return (
+      (gradePriority[b.grade] ?? 0) -
+      (gradePriority[a.grade] ?? 0)
+    );
+  });
 
 
   return (
@@ -28,26 +39,30 @@ const RecommendSkillCard = ({ isOpen, selectedSkill, combos, onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className={styles.modalTitle}>
-          {selectedSkill} 추천 조합
+          {selectedSkills.join(" + ")} 추천 조합
         </h2>
 
         <div className={styles.modalBody}>
           <div className={styles.comboGrid}>
-            {filtered.map((combo, idx) => (
+            {sortedCombos.map((combo, idx) => (
               <div key={idx} className={styles.comboCard}>
                 <div className={styles.comboHeader}>
                   <span>{combo.position}</span>
-                  <span className={`${styles.grade} ${
-                    gradeClassMap[combo.grade] ?? ""
-                  }`}>{combo.grade}</span>
+                  <span
+                    className={`${styles.grade} ${
+                      gradeClassMap[combo.grade] ?? ""
+                    }`}
+                  >
+                    {combo.grade}
+                  </span>
                 </div>
 
                 <ul className={styles.skillList}>
-                {combo.skills.map((skill, i) => (
+                  {combo.skills.map((skill, i) => (
                     <li
                       key={i}
                       className={
-                        skill === selectedSkill
+                        selectedSkills.includes(skill)
                           ? styles.highlight
                           : ""
                       }
@@ -64,10 +79,8 @@ const RecommendSkillCard = ({ isOpen, selectedSkill, combos, onClose }) => {
             ))}
           </div>
         </div>
-        <button
-          className={styles.modalClose}
-          onClick={onClose}
-        >
+
+        <button className={styles.modalClose} onClick={onClose}>
           닫기
         </button>
       </div>
