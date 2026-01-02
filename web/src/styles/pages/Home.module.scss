@@ -54,6 +54,11 @@
         text-align: center;
         font-size: 1.4rem;
 
+        min-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         &:hover {
           background: $primary-hover;
           transition: background 0.25s ease;
@@ -62,6 +67,21 @@
     }
   }
 }
+@media (max-width: 768px) {
+  .features {
+    .grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+//@media (max-width: 480px) {
+//  .features {
+//    .grid {
+//      grid-template-columns: 1fr;
+//    }
+//  }
+//}
 
 .subTitle {
   display: flex;
