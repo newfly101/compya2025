@@ -73,25 +73,21 @@
 @media (max-width: 768px) {
   .skillToggleHeader {
     flex-direction: column;
-    align-items: stretch; // 버튼 풀 너비
+    align-items: center;
     gap: 1rem;
-  }
-
-  /* 추천 버튼 영역 */
-  .standardTabs:last-child {
-    margin-top: 0;
   }
 
   .standardTabs {
     justify-content: center;
-    flex-wrap: wrap;
+    margin: 0;
   }
 
   .recommendBtn {
-    width: 100%;
-    text-align: center;
+    width: auto;
+    min-width: unset;
   }
 }
+
 
 .panel {
   display: flex;
