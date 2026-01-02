@@ -101,7 +101,7 @@ const SkillDictionary = () => {
     <main className={styles.container}>
       <header className={styles.header}>
         <span className={styles.category} onClick={handleMoveUrl}>← 조합 홈으로</span>
-        <h1 className={styles.title}>📖 투수 스킬 백과사전</h1>
+        <h1 className={styles.title}>📖 투수 스킬 백과사전 (공사중)</h1>
 
         <div className={styles.meta}>
           <span>2026-01-02</span>

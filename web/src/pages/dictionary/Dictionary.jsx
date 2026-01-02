@@ -40,7 +40,7 @@ const Dictionary = () => {
           desc={["레전드 타자 스킬 조합", "플레티넘 타자 스킬 조합" ,"포지션 별 추천 조합"]}
           link="/dictionary/batter"
           image={hitterImg}
-          disabled={true}
+          disabled={false}
         />
         <DictionaryCard
           icon="🧠"
