@@ -54,10 +54,24 @@ const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
         className={styles.centerModal}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className={styles.modalTitle}>
-          {selectedSkills.join(" + ")} 추천 조합
-          {getBattingOrderLabel(selectedSkills)}
-        </h2>
+        <div className={styles.modalHeader}>
+          <h2 className={styles.modalTitle}>
+            {selectedSkills.join(" + ")} 추천 조합
+            {getBattingOrderLabel(selectedSkills)}
+          </h2>
+
+          <button
+            className={styles.modalCloseIcon}
+            onClick={onClose}
+            aria-label="닫기"
+          >
+            ✕
+          </button>
+        </div>
+        {/*<h2 className={styles.modalTitle}>*/}
+        {/*  {selectedSkills.join(" + ")} 추천 조합*/}
+        {/*  {getBattingOrderLabel(selectedSkills)}*/}
+        {/*</h2>*/}
 
         <div className={styles.modalBody}>
           <div className={styles.comboGrid}>
@@ -97,9 +111,9 @@ const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
           </div>
         </div>
 
-        <button className={styles.modalClose} onClick={onClose}>
-          닫기
-        </button>
+        {/*<button className={styles.modalClose} onClick={onClose}>*/}
+        {/*  닫기*/}
+        {/*</button>*/}
       </div>
     </div>
   );
