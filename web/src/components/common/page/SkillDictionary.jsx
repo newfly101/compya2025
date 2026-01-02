@@ -75,7 +75,7 @@ const SkillDictionary = ({ onSelect }) => {
 
         <div className={styles.meta}>
           <span>2026-01-02</span>
-          <span>v0.1.3</span>
+          <span>v0.1.4</span>
         </div>
       </header>
       <div className={styles.standardTabs}>
