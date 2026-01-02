@@ -232,4 +232,95 @@ export const PITCHER_RECOMMEND = [
   { position:"마무리", skills:["수호신","투혼","자이언트 킬러"], totalPoint:23, grade:"타협" },
 
   { position:"마무리", skills:["수호신","닥터K","자이언트 킬러"], totalPoint:22, grade:"타협" },
+
+  { position: "선발", skills: ["끝판왕", "언터처블", "이닝이터"], totalPoint: 16, grade: "졸업" },
+  { position: "선발", skills: ["끝판왕", "언터처블", "각성"], totalPoint: 16, grade: "졸업" },
+
+  { position: "선발", skills: ["끝판왕", "언터처블", "뒷심"], totalPoint: 16, grade: "타협" },
+  { position: "선발", skills: ["끝판왕", "언터처블", "결자해지"], totalPoint: 16, grade: "타협" },
+
+  { position: "선발", skills: ["끝판왕", "자이언트 킬러", "이닝이터"], totalPoint: 16, grade: "변경" },
+  { position: "선발", skills: ["끝판왕", "자이언트 킬러", "각성"], totalPoint: 16, grade: "변경" },
+
+  { position: "선발", skills: ["끝판왕", "에이스", "이닝이터"], totalPoint: 15, grade: "타협" },
+  { position: "선발", skills: ["끝판왕", "에이스", "각성"], totalPoint: 15, grade: "타협" },
+
+  { position: "선발", skills: ["언터처블", "에이스", "이닝이터"], totalPoint: 14, grade: "타협" },
+  { position: "선발", skills: ["언터처블", "에이스", "각성"], totalPoint: 14, grade: "타협" },
+
+  { position: "선발", skills: ["끝판왕", "언터처블", "투지"], totalPoint: 15, grade: "변경" },
+  { position: "선발", skills: ["끝판왕", "언터처블", "강철체력"], totalPoint: 15, grade: "변경" },
+  { position: "선발", skills: ["끝판왕", "언터처블", "피칭머신"], totalPoint: 15, grade: "변경" },
+  { position: "선발", skills: ["끝판왕", "언터처블", "우타킬러"], totalPoint: 15, grade: "변경" },
+
+  { position: "중계", skills: ["끝판왕", "언터쳐블", "투지"], totalPoint: 16, grade: "졸업" },
+  { position: "중계", skills: ["끝판왕", "언터쳐블", "각성"], totalPoint: 16, grade: "졸업" },
+  { position: "중계", skills: ["끝판왕", "언터쳐블", "버닝"], totalPoint: 17, grade: "졸업" },
+  { position: "중계", skills: ["끝판왕", "언터쳐블", "에이스"], totalPoint: 18, grade: "졸업" },
+  { position: "중계", skills: ["끝판왕", "언터쳐블", "벌떼야구"], totalPoint: 18, grade: "졸업" },
+  { position: "중계", skills: ["끝판왕", "언터쳐블", "뒷심"], totalPoint: 18, grade: "변경" },
+
+  { position: "중계", skills: ["언터쳐블", "자이언트 킬러", "투지"], totalPoint: 15, grade: "준졸업" },
+  { position: "중계", skills: ["언터쳐블", "자이언트 킬러", "각성"], totalPoint: 15, grade: "준졸업" },
+  { position: "중계", skills: ["언터쳐블", "자이언트 킬러", "버닝"], totalPoint: 16, grade: "준졸업" },
+  { position: "중계", skills: ["언터쳐블", "자이언트 킬러", "에이스"], totalPoint: 17, grade: "준졸업" },
+  { position: "중계", skills: ["언터쳐블", "자이언트 킬러", "벌떼야구"], totalPoint: 17, grade: "준졸업" },
+  { position: "중계", skills: ["언터쳐블", "자이언트 킬러", "뒷심"], totalPoint: 16, grade: "변경" },
+
+  { position: "중계", skills: ["끝판왕", "투지", "각성"], totalPoint: 13, grade: "타협" },
+  { position: "중계", skills: ["끝판왕", "투지", "버닝"], totalPoint: 14, grade: "타협" },
+  { position: "중계", skills: ["끝판왕", "각성", "에이스"], totalPoint: 15, grade: "타협" },
+  { position: "중계", skills: ["끝판왕", "버닝", "벌떼야구"], totalPoint: 16, grade: "타협" },
+
+  { position: "중계", skills: ["언터쳐블", "투지", "각성"], totalPoint: 12, grade: "타협" },
+  { position: "중계", skills: ["언터쳐블", "투지", "버닝"], totalPoint: 13, grade: "타협" },
+  { position: "중계", skills: ["언터쳐블", "각성", "에이스"], totalPoint: 14, grade: "타협" },
+  { position: "중계", skills: ["언터쳐블", "벌떼야구", "자이언트 킬러"], totalPoint: 17, grade: "타협" },
+
+  { position:"중계", skills:["투지","각성","뒷심"], totalPoint:9, grade:"변경" },
+  { position:"중계", skills:["투지","각성","버닝"], totalPoint:10, grade:"변경" },
+  { position:"중계", skills:["투지","각성","에이스"], totalPoint:11, grade:"변경" },
+  { position:"중계", skills:["투지","각성","벌떼야구"], totalPoint:11, grade:"변경" },
+  { position:"중계", skills:["투지","버닝","에이스"], totalPoint:12, grade:"변경" },
+  { position:"중계", skills:["투지","버닝","벌떼야구"], totalPoint:12, grade:"변경" },
+  { position:"중계", skills:["투지","에이스","벌떼야구"], totalPoint:13, grade:"변경" },
+  { position:"중계", skills:["각성","버닝","에이스"], totalPoint:12, grade:"변경" },
+  { position:"중계", skills:["각성","버닝","벌떼야구"], totalPoint:12, grade:"변경" },
+  { position:"중계", skills:["각성","에이스","벌떼야구"], totalPoint:13, grade:"변경" },
+  { position:"중계", skills:["버닝","에이스","벌떼야구"], totalPoint:14, grade:"변경" },
+  { position:"중계", skills:["투지","각성","자이언트 킬러"], totalPoint:12, grade:"변경" },
+  { position:"중계", skills:["버닝","에이스","자이언트 킬러"], totalPoint:15, grade:"변경" },
+  { position:"중계", skills:["벌떼야구","에이스","자이언트 킬러"], totalPoint:16, grade:"변경" },
+
+  { position:"마무리", skills:["수호신","끝판왕","언터쳐블"], totalPoint:21, grade:"졸업" },
+  { position:"마무리", skills:["수호신","벌떼야구","끝판왕"], totalPoint:21, grade:"졸업" },
+  { position:"마무리", skills:["수호신","벌떼야구","언터쳐블"], totalPoint:20, grade:"졸업" },
+
+  { position:"마무리", skills:["수호신","끝판왕","에이스"], totalPoint:20, grade:"준졸업" },
+  { position:"마무리", skills:["수호신","끝판왕","버닝"], totalPoint:19, grade:"준졸업" },
+  { position:"마무리", skills:["수호신","끝판왕","투지"], totalPoint:18, grade:"준졸업" },
+  { position:"마무리", skills:["수호신","언터쳐블","에이스"], totalPoint:19, grade:"준졸업" },
+  { position:"마무리", skills:["수호신","언터쳐블","버닝"], totalPoint:18, grade:"준졸업" },
+  { position:"마무리", skills:["수호신","언터쳐블","투지"], totalPoint:17, grade:"준졸업" },
+  { position:"마무리", skills:["수호신","벌떼야구","에이스"], totalPoint:19, grade:"준졸업" },
+  { position:"마무리", skills:["수호신","벌떼야구","버닝"], totalPoint:18, grade:"준졸업" },
+  { position:"마무리", skills:["수호신","벌떼야구","투지"], totalPoint:17, grade:"준졸업" },
+
+  { position:"마무리", skills:["수호신","에이스","버닝"], totalPoint:17, grade:"타협" },
+  { position:"마무리", skills:["수호신","에이스","투지"], totalPoint:16, grade:"타협" },
+  { position:"마무리", skills:["수호신","에이스","자이언트 킬러"], totalPoint:19, grade:"타협" },
+  { position:"마무리", skills:["수호신","에이스","결정구"], totalPoint:15, grade:"타협" },
+  { position:"마무리", skills:["수호신","버닝","투지"], totalPoint:15, grade:"타협" },
+  { position:"마무리", skills:["수호신","버닝","자이언트 킬러"], totalPoint:18, grade:"타협" },
+  { position:"마무리", skills:["수호신","버닝","결정구"], totalPoint:14, grade:"타협" },
+  { position:"마무리", skills:["수호신","투지","자이언트 킬러"], totalPoint:17, grade:"타협" },
+  { position:"마무리", skills:["수호신","투지","결정구"], totalPoint:13, grade:"타협" },
+
+  { position:"마무리", skills:["수호신","각성","뒷심"], totalPoint:12, grade:"변경" },
+  { position:"마무리", skills:["수호신","각성","이닝이터"], totalPoint:14, grade:"변경" },
+  { position:"마무리", skills:["수호신","각성","결자해지"], totalPoint:13, grade:"변경" },
+  { position:"마무리", skills:["수호신","뒷심","이닝이터"], totalPoint:12, grade:"변경" },
+  { position:"마무리", skills:["수호신","뒷심","결정구"], totalPoint:11, grade:"변경" },
+  { position:"마무리", skills:["수호신","이닝이터","결자해지"], totalPoint:13, grade:"변경" },
+  { position:"마무리", skills:["수호신","결자해지","결정구"], totalPoint:12, grade:"변경" }
 ];
