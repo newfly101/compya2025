@@ -1,0 +1,170 @@
+@use "@/styles/variables/colors" as *;
+
+
+.container {
+  max-width: 90rem;
+  margin: 6rem auto;
+  padding: 0 2.4rem;
+
+
+  & > .header {
+    border-bottom: 1px solid #1f2937;
+    padding-bottom: 2.4rem;
+    margin-bottom: 3.2rem;
+
+    & > .title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+    & > .meta {
+      font-size: 2.8rem;
+      color: $primary8;
+      display: flex;
+      gap: 1rem;
+    }
+
+    & > .category {
+      display: inline-block;
+      font-size: 1.5rem;
+      color: #60a5fa;
+      margin-bottom: 0.8rem;
+      cursor: pointer;
+
+      &:hover {
+        color: #89bcfb;
+        font-weight: 700;
+      }
+    }
+  }
+}
+
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  max-width: 1000px;
+  margin: 3rem auto;
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .cardGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+.card {
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 1.2rem;
+  overflow: hidden;
+  min-width: 280px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin: 2rem;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    background-color: $surface2;
+    border-color: $border;
+    cursor: pointer;
+
+    .header span {
+      color: $secondary;
+    }
+  }
+  &:not(.disabled):hover {
+    .imageZone {
+      background-color: $surface2;
+    }
+  }
+}
+
+/* 카드 상단 이미지 슬롯 */
+.imageZone {
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $surface2;
+  border-bottom: 1px solid $border;
+
+  .image {
+    max-height: 120px;
+    max-width: 80%;
+    object-fit: contain;
+  }
+}
+
+
+
+/* 내용 영역 */
+.content {
+  padding: 2rem;
+  & > .header {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    color: $noticeHeader;
+    font-weight: 700;
+    font-size: 1.4rem;
+
+    span {
+      color: $text-secondary;
+      font-size: 1.2rem;
+    }
+
+    .icon {
+
+    }
+  }
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.desc {
+  margin: 1.4rem 0 1.6rem;
+  list-style: none;
+  padding: 0;
+  color: $primary-text;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.footer {
+  text-align: right;
+}
+
+.enter {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $text-secondary;
+}
+
+/* 비활성 카드 */
+.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+
+  &:hover {
+    //transform: none;
+    background-color: $surface2;
+    //box-shadow: none;
+  }
+
+  .enter {
+    color: $text-secondary;
+  }
+
+  .image {
+    filter: grayscale(1);
+    opacity: 0.5;
+  }
+}
