@@ -13,6 +13,11 @@ const gradePriority = {
   "타협": 2,
   "변경": 1,
 };
+const BATTING_ORDER_MAP = {
+  "리드오프": "1타선",
+  "파워히터": "4타선",
+  "클러치 히터": "5,6타선",
+};
 
 // SAMPLE_RECOMMEND_COMBOS = combos
 const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
@@ -31,6 +36,17 @@ const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
     );
   });
 
+  const getBattingOrderLabel = (selectedSkills = []) => {
+    const orders = selectedSkills
+      .map((skill) => BATTING_ORDER_MAP[skill])
+      .filter(Boolean); // undefined 제거
+
+    if (orders.length === 0) return "";
+
+    return ` (${orders.join(", ")})`;
+  };
+
+
 
   return (
     <div className={styles.modalOverlay} onClick={onClose}>
@@ -40,6 +56,7 @@ const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
       >
         <h2 className={styles.modalTitle}>
           {selectedSkills.join(" + ")} 추천 조합
+          {getBattingOrderLabel(selectedSkills)}
         </h2>
 
         <div className={styles.modalBody}>
