@@ -46,8 +46,20 @@ const HitterSkillDictionary = () => {
   };
 
   const initSelected = (type) => {
-    setSelectedSkills([]);
     setStandard(type);
+
+    if (type === "플래티넘") {
+      setSelectedSkills((prev) =>
+        prev.filter(
+          (skill) => !HITTER_SKILLS.legend.some((l) => l.name === skill)
+        )
+      );
+      selectedSkillsRef.current = [];
+    } else {
+      setSelectedSkills([]);
+      selectedSkillsRef.current = [];
+    }
+
     setRecommendCombos([]);
   };
 
@@ -73,12 +85,16 @@ const HitterSkillDictionary = () => {
 
     const finalCombos =
       standard === "플래티넘"
-        ? matchedCombos.filter(() =>
-          skillsNow.every(
-            (skill) => !HITTER_SKILLS.legend.some((l) => l.name === skill),
-          ),
+        ? matchedCombos.filter(
+          (combo) =>
+            combo.skills.every(
+              (skill) =>
+                !HITTER_SKILLS.legend.some((l) => l.name === skill)
+            )
         )
         : matchedCombos;
+
+    console.log("finalCombos",finalCombos);
 
     setRecommendCombos(finalCombos);
     setHasRecommend(finalCombos.length > 0);
@@ -89,12 +105,13 @@ const HitterSkillDictionary = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedSkills([]);
-    selectedSkillsRef.current = []; // ✅ 동기화
+    selectedSkillsRef.current = [];
     setRecommendCombos([]);
     setHasRecommend(true);
   };
 
   const isSkillDisabled = (skillName, selectedSkills) => {
+    if (selectedSkills.includes(skillName)) return false;
     if (selectedSkills.length === 0) return false;
 
     return selectedSkills.some(
@@ -134,8 +151,8 @@ const HitterSkillDictionary = () => {
         <h1 className={styles.title}>📖 타자 스킬 백과사전</h1>
 
         <div className={styles.meta}>
-          <span>2026-01-02</span>
-          <span>v0.1.5</span>
+          <span>2026-01-03</span>
+          <span>v0.1.6</span>
         </div>
       </header>
       <div className={styles.skillToggleHeader}>
@@ -185,6 +202,7 @@ const HitterSkillDictionary = () => {
           />
         )
       )}
+
 
       <div className={styles.panel}>
         {standard === "레전드" && renderGroup("레전드", "legend", HITTER_SKILLS.legend)}
