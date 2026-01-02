@@ -12,71 +12,36 @@ const SkillDictionary = ({ onSelect }) => {
   const [standard, setStandard] = useState("레전드"); // LEGEND | PLATINUM
   const [selectedSkill, setSelectedSkill] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalType, setModalType] = useState(null);
-
+  const [hasRecommend, setHasRecommend] = useState(true);
 
   const handleMoveUrl = () => {
     navigate(`/`);
-  }
+  };
 
   const handleClick = (skill) => {
     const skillName = skill.name;
 
-    setSelectedSkill(skillName);
-    setIsModalOpen(true);
-
-    // 🔥 PLATINUM 기준은 전부 준비중
-    if (standard === "플래티넘") {
-      setModalType("PREPARE");
-      return;
-    }
-
-    // 🔥 LEGEND 기준
     const hasCombo = filteredCombos.some(combo =>
-      combo.skills.includes(skillName)
+      combo.skills.includes(skillName),
     );
 
-    if (hasCombo) {
-      setModalType("RECOMMEND");
-      return;
-    }
-
-    // hero / normal → 변경 추천
-    if (isLowTierSkill(skillName)) {
-      setModalType("CHANGE");
-      return;
-    }
-
-    // 안전망
-    setModalType("PREPARE");
+    setSelectedSkill(skillName);
+    setHasRecommend(hasCombo);
+    setIsModalOpen(true);
+    onSelect?.(skill);
   };
-
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedSkill(null);
-    setModalType(null);
+    setHasRecommend(true);
   };
-
-
-  const isLegendSkill = (skillName) =>
-    PITCHER_SKILLS.legend.some(s => s.name === skillName);
-
-  const isPlatinumSkill = (skillName) =>
-    PITCHER_SKILLS.platinum.some(s => s.name === skillName);
-
-  const isLowTierSkill = (skillName) =>
-    PITCHER_SKILLS.hero.some(s => s.name === skillName) ||
-    PITCHER_SKILLS.normal.some(s => s.name === skillName);
-
-
-
 
 
   const filteredCombos = PITCHER_RECOMMEND.filter(combo => {
     if (standard === "플래티넘") {
       return combo.skills.every(skill =>
-        !PITCHER_SKILLS.legend.some(l => l.name === skill)
+        !PITCHER_SKILLS.legend.some(l => l.name === skill),
       );
     }
     return true;
@@ -128,30 +93,22 @@ const SkillDictionary = ({ onSelect }) => {
           플래티넘 스킬 추천
         </button>
       </div>
-      {isModalOpen && modalType === "RECOMMEND" && (
+
+      {isModalOpen && hasRecommend && (
         <RecommendSkillCard
-          isOpen
+          isOpen={isModalOpen}
           selectedSkill={selectedSkill}
           combos={filteredCombos}
           onClose={handleCloseModal}
         />
       )}
 
-      {isModalOpen && modalType === "CHANGE" && (
+      {isModalOpen && !hasRecommend && (
         <NoRecommendSkillCard
           skill={selectedSkill}
           onClose={handleCloseModal}
           mainText="잘 사용되지 않는 스킬입니다."
           subText="다른 스킬로 변경을 추천드립니다."
-        />
-      )}
-
-      {isModalOpen && modalType === "PREPARE" && (
-        <NoRecommendSkillCard
-          skill={selectedSkill}
-          onClose={handleCloseModal}
-          mainText="현재 준비중인 기능입니다."
-          subText="업데이트 이후에 시도 부탁드립니다."
         />
       )}
 
