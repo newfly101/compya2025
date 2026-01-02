@@ -92,3 +92,14 @@
 
 
 }
+
+
+@media (max-width: 768px) {
+  .header {
+    display: none;
+  }
+
+  .content {
+    padding-bottom: 80px; // 하단 Nav 가림 방지
+  }
+}

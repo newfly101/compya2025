@@ -4,6 +4,7 @@ import Header from "@/components/Header.jsx";
 import Footer from "@/components/Footer.jsx";
 import styles from "@/styles/layout/appLayout.module.scss";
 import { useEffect } from "react";
+import MobileNav from "@/components/MobileNav.jsx";
 
 const App = () => {
   const location = useLocation();
@@ -36,6 +37,7 @@ const App = () => {
         <main className={styles.content}> <Outlet /> </main>
       </div>
       <Footer />
+      <MobileNav />
     </div>
   );
 };
