@@ -17,7 +17,7 @@ const SkillDictionary = () => {
   const [recommendCombos, setRecommendCombos] = useState([]);
 
   const handleMoveUrl = () => {
-    navigate("/");
+    navigate("/dictionary");
   };
 
   const handleToggleSkill = (skill) => {
@@ -100,12 +100,12 @@ const SkillDictionary = () => {
   return (
     <main className={styles.container}>
       <header className={styles.header}>
-        <span className={styles.category} onClick={handleMoveUrl}>← 메인으로</span>
+        <span className={styles.category} onClick={handleMoveUrl}>← 조합 홈으로</span>
         <h1 className={styles.title}>📖 투수 스킬 백과사전</h1>
 
         <div className={styles.meta}>
           <span>2026-01-02</span>
-          <span>v0.1.4</span>
+          <span>v0.1.5</span>
         </div>
       </header>
       <div className={styles.skillToggleHeader}>
