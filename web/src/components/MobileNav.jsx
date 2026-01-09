@@ -18,6 +18,10 @@ const MobileNav = () => {
         팁
       </NavLink>
 
+      <NavLink to="/notice" onClick={scrollTop}>
+        공지사항
+      </NavLink>
+
       <NavLink to="/notice?tab=coupons" onClick={scrollTop}>
         쿠폰
       </NavLink>
