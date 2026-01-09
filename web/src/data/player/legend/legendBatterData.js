@@ -596,7 +596,7 @@ export const legendBatterData = [
   },
   {
     "id": "DOO_3B_KIM_DONGJOO",
-    "name": "김동주",
+    "name": "김동주B",
     "team": "두산 베어스",
     "teamCode": "DOO",
     "grade": "LEGEND",
@@ -1051,7 +1051,7 @@ export const legendBatterData = [
   },
   {
     "id": "DOO_LF_KIM_HYUNSOO",
-    "name": "김현수",
+    "name": "김현수B",
     "team": "두산 베어스",
     "teamCode": "DOO",
     "grade": "LEGEND",
