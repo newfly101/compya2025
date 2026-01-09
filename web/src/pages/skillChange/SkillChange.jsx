@@ -47,7 +47,7 @@ const SkillChange = () => {
 
   const handleClick = () => {
     navigate(`/`);
-  }
+  };
 
 
   return (
@@ -84,6 +84,8 @@ const SkillChange = () => {
       {selectedPitcher && (
         <section className={styles.cardSection}>
           <div className={styles.skillCard}>
+
+            {/* 이 영역은 absolute라 변경 x */}
             <div className={styles.slotWrap}>
               {[0, 1, 2].map(i => (
                 <div
@@ -117,6 +119,76 @@ const SkillChange = () => {
           </button>
         </section>
       )}
+
+      <div className={styles.skillCard2}>
+        {/* 팀명 */}
+        <div className={styles.teamName}>정민태</div>
+
+        {/* 기본 정보 */}
+        <div className={styles.metaBlock}>
+          <div className={styles.metaGrid}> 소속팀 <strong>현대 유니콘스</strong></div>
+          <div className={styles.metaGrid}> 포지션 <strong>SP</strong></div>
+          <div className={styles.metaGrid}>등번호 <strong>등번호 20번</strong></div>
+          <div className={styles.metaGrid}>생년월일 <strong>1970년 3월 1일</strong></div>
+          <div className={styles.metaGrid}>투타 <strong>우투/우타</strong></div>
+        </div>
+
+        {/* 상단 정보 그리드 존 */}
+        <div className={styles.infoGrid}>
+
+          {/* 기록 */}
+          <div className={styles.statBlock}>
+            <div className={styles.statHeader}>
+              <span>시즌</span> <span>경기수</span> <span>방어율</span> <span>승</span> <span>패</span>
+              <span>세이브</span><span>삼진</span>
+            </div>
+            <div className={styles.statValue}>
+              <span>15</span><span>290</span><span>3.48</span>
+              <span>124</span><span>96</span><span>3</span><span>1278</span>
+            </div>
+          </div>
+
+          {/* 능력치 */}
+          <div className={styles.attrBlock}>
+            <div className={styles.attrHeader}>
+              <span>제구</span><span>구위</span><span>체력</span><span>직구</span><span>변화</span>
+            </div>
+            <div className={styles.attrValue}>
+              <span>92</span><span>89</span><span>89</span><span>95</span><span>89</span>
+            </div>
+          </div>
+
+          {/* 특성 */}
+          <div className={styles.cardInfo}>
+            고유능력 <span>강화 횟수  0/7</span>
+          </div>
+
+        </div>
+
+        {/* 슬롯 */}
+        <div className={styles.slotWrap}>
+          {[0, 1, 2].map(i => (
+            <div
+              key={i}
+              className={`${styles.slot} ${
+                skills[i] ? styles[skills[i].grade.toLowerCase()] : ""
+              }`}
+            >
+              {skills[i] && <strong>{skills[i].name} {skills[i].upgrade}</strong>}
+            </div>
+          ))}
+
+        </div>
+
+        {/* 특성 */}
+        <div className={styles.traits}>
+          <div className={styles.option}>
+            <span className={styles.option1}>특이폼</span>
+            <span className={styles.option2}>페이스</span>
+          </div>
+          <span>LEGEND</span>
+        </div>
+      </div>
 
 
     </main>
