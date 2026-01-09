@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import EventList from "@/pages/notice/EventList.jsx";
 import events from "@/data/Events.js";
 import React from "react";
-import quizImg from "@/assets/quiz/quiz875.png";
+import quizImg from "@/assets/quiz/quiz876.png";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -40,7 +40,7 @@ const Home = () => {
 
       <section className={styles.homeSection}>
         <div>
-          <h2>🎉 컴프야 퀴즈 이벤트 875회 정답</h2>
+          <h2>🎉 컴프야 퀴즈 이벤트 876회 정답</h2>
           <img className={styles.quiz} src={quizImg} alt="quiz-875" />
         </div>
       </section>
