@@ -58,10 +58,12 @@ const SkillChange = () => {
         <h1 className={styles.title}>🎲 고급 고유능력 변경권 시뮬레이터</h1>
 
         <div className={styles.meta}>
-          <span>2025-12-25</span>
-          <span>v0.1.1</span>
+          <span>2026-01-09</span>
+          <span>v0.1.7</span>
         </div>
       </header>
+
+      <h6>선수 이미지는 저작권 문제로 인해 변경하였습니다.</h6>
 
       <section className={styles.pitcherSelectSection}>
         <h2 className={styles.subTitle}>⚾ 투수 선택</h2>
@@ -76,7 +78,6 @@ const SkillChange = () => {
               onClick={() => setSelectedPitcher(p)}
             >
               <strong>{p.name}</strong>
-              {/*<span className={styles.team}>{p.team}</span>*/}
             </button>
           ))}
         </div>
@@ -84,29 +85,10 @@ const SkillChange = () => {
 
       {selectedPitcher && (
         <section className={styles.cardSection}>
-          <div className={styles.skillCard}>
-
-            {/* 이 영역은 absolute라 변경 x */}
-            <div className={styles.slotWrap}>
-              {[0, 1, 2].map(i => (
-                <div
-                  key={i}
-                  className={`${styles.slot} ${
-                    skills[i] ? styles[skills[i].grade.toLowerCase()] : ""
-                  }`}
-                >
-                  {skills[i] && <strong>{skills[i].name} {skills[i].upgrade}</strong>}
-                </div>
-              ))}
-
-            </div>
-          </div>
-          {/*<button className={styles.itemButton} onClick={rollOnce}>*/}
-          {/*  <div className={styles.textBox}>*/}
-          {/*    <span className={styles.title}>고급 고유능력 변경권</span>*/}
-          {/*    <span className={styles.count}>{skillChangeCount}</span>*/}
-          {/*  </div>*/}
-          {/*</button>*/}
+          <PitcherSkillCard
+            pitcher={selectedPitcher}
+            skills={skills}
+          />
 
           <button
             className={styles.itemButton}
@@ -120,18 +102,8 @@ const SkillChange = () => {
           </button>
         </section>
       )}
-
-      {selectedPitcher && (
-        <PitcherSkillCard
-          pitcher={selectedPitcher}
-          skills={skills}
-        />
-      )}
-
-
     </main>
-  )
-    ;
+  );
 };
 
 export default SkillChange;
