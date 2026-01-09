@@ -47,15 +47,15 @@ const HitterSkillChange = () => {
   }, [selectedBatter]);
 
   const handleClick = () => {
-    navigate(`/`);
+    navigate(`/simulate`);
   };
 
 
   return (
     <main className={styles.container}>
       <header className={styles.header}>
-        <span className={styles.category} onClick={handleClick}>← 메인으로</span>
-        <h1 className={styles.title}>🎲 고급 고유능력 변경권 시뮬레이터</h1>
+        <span className={styles.category} onClick={handleClick}>← 스킬 시뮬레이터로</span>
+        <h1 className={styles.title}>🎲 타자 고스변 시뮬레이터</h1>
 
         <div className={styles.meta}>
           <span>2026-01-09</span>
