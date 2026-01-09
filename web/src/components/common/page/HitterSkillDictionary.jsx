@@ -94,7 +94,7 @@ const HitterSkillDictionary = () => {
         )
         : matchedCombos;
 
-    console.log("finalCombos",finalCombos);
+    // console.log("finalCombos",finalCombos);
 
     setRecommendCombos(finalCombos);
     setHasRecommend(finalCombos.length > 0);

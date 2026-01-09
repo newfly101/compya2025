@@ -38,7 +38,7 @@ const Dictionary = () => {
           icon="⚾"
           title="타자 스킬 백과사전"
           desc={["레전드 타자 스킬 조합", "플레티넘 타자 스킬 조합" ,"포지션 별 추천 조합"]}
-          link="/dictionary/batter"
+          link="/dictionary/hitter"
           image={hitterImg}
           disabled={false}
         />
