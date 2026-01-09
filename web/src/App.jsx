@@ -3,7 +3,7 @@ import { Outlet, useLocation, useMatches } from "react-router-dom";
 import Header from "@/components/Header.jsx";
 import Footer from "@/components/Footer.jsx";
 import styles from "@/styles/layout/appLayout.module.scss";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import MobileNav from "@/components/MobileNav.jsx";
 
 const App = () => {
@@ -34,7 +34,7 @@ const App = () => {
     <div className={styles.container}>
       <Header />
       <div className={styles.inner}>
-        <main className={styles.content}> <Outlet /> </main>
+        <main className={styles.content}> <Suspense fallback={<div>로딩중...</div>}> <Outlet /> </Suspense> </main>
       </div>
       <Footer />
       <MobileNav />

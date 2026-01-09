@@ -1,42 +1,47 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App.jsx";
-import Home from "@/pages/Home.jsx";
-import Login from "@/pages/Login.jsx";
-import Notice from "@/pages/Notice.jsx";
-import FunNoticePage from "@/components/common/page/FunNoticePage.jsx";
-import PitcherSkillChange from "@/pages/skillChange/PitcherSkillChange.jsx";
-import TipPage from "@/pages/TipPage.jsx";
-import PrivacyPolicy from "@/pages/legal/PrivacyPolicy.jsx";
-import SkillDictionary from "@/components/common/page/SkillDictionary.jsx";
-import Dictionary from "@/pages/dictionary/Dictionary.jsx";
-import HitterSkillDictionary from "@/components/common/page/HitterSkillDictionary.jsx";
-import SkillSimulator from "@/pages/skillChange/SkillSimulator.jsx";
-import HitterSkillChange from "@/pages/skillChange/HitterSkillChange.jsx";
+import { lazy } from "react";
+const Home = lazy(() => import("@/pages/Home.jsx"));
+const Login = lazy(() => import("@/pages/Login.jsx"));
+const Notice = lazy(() => import("@/pages/Notice.jsx"));
+const FunNoticePage = lazy(() => import("@/components/common/page/FunNoticePage.jsx"));
+
+const SkillSimulator = lazy(() => import("@/pages/skillChange/SkillSimulator.jsx"));
+const PitcherSkillChange = lazy(() => import("@/pages/skillChange/PitcherSkillChange.jsx"));
+const HitterSkillChange = lazy(() => import("@/pages/skillChange/HitterSkillChange.jsx"));
+
+const Dictionary = lazy(() => import("@/pages/dictionary/Dictionary.jsx"));
+const SkillDictionary = lazy(() => import("@/components/common/page/SkillDictionary.jsx"));
+const HitterSkillDictionary = lazy(() => import("@/components/common/page/HitterSkillDictionary.jsx"));
+
+const TipPage = lazy(() => import("@/pages/TipPage.jsx"));
+const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy.jsx"));
 
 const router = createBrowserRouter([
   {
     path: "/",
+
     element: <App />,
     children: [
       {
         index: true,
         element: <Home />,
-        handle: {title: "컴프야펀 | 홈"}
+        handle: { title: "컴프야펀 | 홈" },
       },
       {
         path: "login",
         element: <Login />,
       },
-      {path: "notice", element: <Notice />},
-      {path: "notice/:id", element: <FunNoticePage />},
-      {path: "simulate", element: <SkillSimulator />, handle: { title: "컴프야펀 | 스킬 변경 시뮬레이터" }},
-      {path: "simulate/pitcher", element: <PitcherSkillChange />, handle: { title: "컴프야펀 | 투수 고스변 시뮬레이터" }},
-      {path: "simulate/hitter", element: <HitterSkillChange />, handle: { title: "컴프야펀 | 타자 고스변 시뮬레이터" }},
-      {path: "tips", element: <TipPage />, handle: { title: "컴프야펀 | 팁 모아보기" }},
-      {path: "dictionary/pitcher", element: <SkillDictionary />, handle: { title: "컴프야펀 | 투수 스킬 백과사전" }},
-      {path: "dictionary/batter", element: <HitterSkillDictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" }},
-      {path: "dictionary", element: <Dictionary />, handle: { title: "컴프야펀 | 백과사전 홈" }},
-      {path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" }},
+      { path: "notice", element: <Notice /> },
+      { path: "notice/:id", element: <FunNoticePage /> },
+      { path: "simulate", element: <SkillSimulator />, handle: { title: "컴프야펀 | 스킬 변경 시뮬레이터" } },
+      { path: "simulate/pitcher", element: <PitcherSkillChange />, handle: { title: "컴프야펀 | 투수 고스변 시뮬레이터" } },
+      { path: "simulate/hitter", element: <HitterSkillChange />, handle: { title: "컴프야펀 | 타자 고스변 시뮬레이터" } },
+      { path: "tips", element: <TipPage />, handle: { title: "컴프야펀 | 팁 모아보기" } },
+      { path: "dictionary/pitcher", element: <SkillDictionary />, handle: { title: "컴프야펀 | 투수 스킬 백과사전" } },
+      { path: "dictionary/hitter", element: <HitterSkillDictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
+      { path: "dictionary", element: <Dictionary />, handle: { title: "컴프야펀 | 백과사전 홈" } },
+      { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
     ],
   },
 ]);
