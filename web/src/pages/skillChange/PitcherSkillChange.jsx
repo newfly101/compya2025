@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { legendPitcherData } from "@/data/player/legend/legendPitcherData.js";
 import PitcherSkillCard from "@/pages/skillChange/PitcherSkillCard.jsx";
 
-const SkillChange = () => {
+const PitcherSkillChange = () => {
   const navigate = useNavigate();
   const [selectedPitcher, setSelectedPitcher] = useState(null);
   const [skills, setSkills] = useState([]);
@@ -106,4 +106,4 @@ const SkillChange = () => {
   );
 };
 
-export default SkillChange;
+export default PitcherSkillChange;

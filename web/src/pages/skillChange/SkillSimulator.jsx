@@ -36,7 +36,7 @@ const SkillSimulator = () => {
           icon="⚾"
           title="타자 고스변 시뮬레이터"
           desc={["레전드 타자 스킬 시뮬레이터", "타자 선택 가능", ]}
-          link="/simulate/batter"
+          link="/simulate/hitter"
           image={hitterImg}
           disabled={false}
         />
