@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { pickSkillsByCombo } from "@/utils/skill/skillPicker.js";
+import { pickSkillsByCombo } from "@/utils/skill/pitcherSkillPicker.js";
 import { pickByProbability, PROB_LEGEND } from "@/utils/skill/skillProbability.js";
 import styles from "@/styles/pages/skillCard.module.scss";
 import { useNavigate } from "react-router-dom";

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { PITCHER_SKILLS } from "@/data/skill/PITCKER_SKILLS.js";
+import { PITCHER_SKILLS } from "@/data/skill/PITCHER_SKILLS.js";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
 import RecommendSkillCard from "@/components/common/page/RecommendSkillCard.jsx";
 import { PITCHER_RECOMMEND } from "@/data/skill/PITCHER_RECOMMEND.js";
