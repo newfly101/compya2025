@@ -7,12 +7,21 @@ import events from "@/data/Events.js";
 import React from "react";
 import quizImg from "@/assets/quiz/quiz876.png";
 
+const CLUB_GUIDE_URL = "https://cafe.naver.com/com2usbaseball2015/1785997";
+
 const Home = () => {
   const navigate = useNavigate();
 
   const handleClick = (url) => {
     navigate(`/${url}`);
   }
+  const handleLinkTo = (url) => {
+    window.open(
+      url,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
   return (
     <div className={styles.homePage}>
 
@@ -32,9 +41,9 @@ const Home = () => {
           <div className={styles.card} onClick={() => handleClick("tips")}>팁 모아보기</div>
           {/*<div className={styles.card}>덱 구성 가이드</div>*/}
           {/*<div className={styles.card}>플레이 가이드</div>*/}
-          {/*<div className={styles.card}>선수 카드 도감</div>*/}
           <div className={styles.card} onClick={() => handleClick("dictionary")}>📌추천 백과사전</div>
           <div className={styles.card} onClick={() => handleClick("simulate")}>고스변 시뮬레이터</div>
+          <div className={styles.card} onClick={() => handleLinkTo(CLUB_GUIDE_URL)}>클럽 대전 가이드</div>
         </div>
       </section>
 
