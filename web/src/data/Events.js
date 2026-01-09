@@ -6,6 +6,7 @@ import img5 from "@/assets/events/compyachrithmas.jpg";
 import img6 from "@/assets/events/compyamymixture.png";
 import img7 from "@/assets/events/newyear1.jpg";
 import img8 from "@/assets/events/newyear2.jpg";
+import img9 from "@/assets/events/1937313missionChallenge.jpg";
 
 const events = [
   {
@@ -79,6 +80,15 @@ const events = [
     expireDate: "2026. 01. 28 23:59",
     image: img8,
     link: "https://cafe.naver.com/com2usbaseball2015/1934677"
+  },
+  {
+    id: 9,
+    title: "[이벤트] 국제대회 준비 미션 챌린지 이벤트",
+    dateRange: "2026년 01월 09일 12:00 ~ 2026년 02월 27일 23:59",
+    startDate: "2026. 01. 09 12:00",
+    expireDate: "2026. 02. 27 23:59",
+    image: img9,
+    link: "https://cafe.naver.com/com2usbaseball2015/1937313"
   },
 ]
 export default events;
