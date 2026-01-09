@@ -1,0 +1,263 @@
+@use "@/styles/variables/colors" as *;
+
+.skillCard {
+  position: relative;
+  width: 170px;
+  height: 250px;
+  margin: 0 auto;
+  padding: 0;
+  border: 1px solid #a89a96;
+  background: linear-gradient(
+                  210deg,
+                  #736990,
+                  #3f3950,
+                  #262235
+  );
+}
+
+/* 팀명 */
+.teamName {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 700;
+  padding: 4px;
+  background-color: #2a2634;
+  margin: 2px;
+}
+
+/* 기본 정보 */
+.metaBlock {
+  background-color: #3b364a;
+  margin: 0 6px;
+
+  .metaGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    text-align: center;
+    color: $text-secondary;
+  }
+  & > div {
+    font-size: 8px;
+    line-height: 1.3;
+
+    & > strong {
+      font-size: 8px;
+      line-height: 1.3;
+      font-weight: bold;
+    }
+  }
+
+}
+
+
+.infoGrid {
+  display: grid;
+  grid-template-rows: auto auto;
+  margin-top: 2px;
+  gap: 2px;
+
+  .attrBlock {
+    display: grid;
+    margin: 0 0.6rem;
+
+    .attrHeader,
+    .attrValue {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      text-align: center;
+    }
+
+    span {
+      font-size: 9px;
+      padding: 0.3rem 0;
+      //border: 1px solid #ffffff;
+      -webkit-text-stroke: 0.3px rgba(0, 0, 0, 0.85);
+      background-color: rgba(255, 255, 255, 0.1);
+      border: 1px solid #3f3950;
+    }
+  }
+  .statBlock {
+    display: grid;
+    //border: 1px solid #ffffff;
+    background-color: #211e2a;
+    margin: 0 0.6rem;
+
+    .statHeader,
+    .statValue {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      padding: 0.3rem 0;
+
+      & > span {
+        font-size: 8px;
+      }
+    }
+    .statHeader {
+      color: black;
+      background-color: #d7d7db;
+      font-weight: bold;
+    }
+  }
+}
+
+
+
+/* 특성 */
+.cardInfo {
+  font-size: 9px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 10px;
+  font-weight: bold;
+
+  & > span {
+    font-size: 9px;
+  }
+}
+/* 특성 */
+.traits {
+  position: absolute;
+  bottom: 2px;
+  left: 6px;
+  right: 6px;
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .option {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    & > span {
+      padding: 1px 2.5px;
+      border-radius: 1px;
+      margin: 0 1px;
+      border-color: black;
+    }
+
+    .option1 {
+      font-size: 8px;
+      background-color: $noticeHeader;
+    }
+    .option2 {
+      font-size: 8px;
+      background-color: $primary0;
+    }
+  }
+  & > span {
+    font-size: 10px;
+    margin-right: 2px;
+    font-style: oblique;
+    letter-spacing: -0.065em;
+    padding-right: 0.15em;
+
+    background: linear-gradient(
+                    180deg,
+                    rgba(255,255,255,0.95),
+                    rgba(217, 165, 250, 0.6),
+                    rgba(153, 88, 235, 0.6)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+/* 슬롯 전체 영역 */
+.slotWrap {
+  position: absolute;
+  top: 160px;
+  left: 7px;
+  width: 156px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 3.5px;
+}
+
+.slot {
+  height: 22.5px;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 15px;
+  color: #fff;
+
+  border: 1px solid transparent;
+  border-radius: 2px;
+
+  & > strong {
+    color: #fff;
+  }
+}
+
+/* 등급 텍스트 */
+.grade {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* 등급별 색상 (선택) */
+.legend {
+  background: linear-gradient(
+                  to bottom,
+                  #8f86ff 0%,
+                  #6f64f7 45%,
+                  #5a4de0 100%
+  );
+
+  border: 1px solid #4c43c7;
+  color: #ffffff;
+
+}
+
+.platinum {
+  background: linear-gradient(
+                  to bottom,
+                  #ffe37a 0%,
+                  #f2c94c 45%,
+                  #d4a900 100%
+  );
+
+  border-color: #b89100;
+  color: #2b2100;
+}
+
+.hero {
+  background: linear-gradient(
+                  to bottom,
+                  #5bff9c 0%,
+                  #2ecc71 45%,
+                  #1e9f55 100%
+  );
+
+  border-color: #198f4a;
+  color: #0f2f1d;
+}
+
+.normal {
+  background: linear-gradient(
+                  to bottom,
+                  #cfd3da 0%,
+                  #aeb4bf 50%,
+                  #8e95a3 100%
+  );
+
+  border-color: #6f7684;
+  color: #1f2937;
+}
+
+/* 80 ~ 89 */
+.attrMid {
+  color: $overallMid; // 주황
+  font-weight: bold;
+}
+
+/* 90 이상 */
+.attrHigh {
+  color: $overallHigh;   // 빨강
+  font-weight: bold;
+}
