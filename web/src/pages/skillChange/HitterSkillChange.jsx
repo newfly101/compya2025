@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { pickSkillsByCombo } from "@/utils/skill/skillPicker.js";
+import { pickSkillsByCombo } from "@/utils/skill/hitterSkillPicker.js";
 import { pickByProbability, PROB_LEGEND } from "@/utils/skill/skillProbability.js";
 import styles from "@/styles/pages/skillCard.module.scss";
 import { useNavigate } from "react-router-dom";
 import { legendBatterData } from "@/data/player/legend/legendBatterData.js";
-import BatterSkillCard from "@/pages/skillChange/BatterSkillCard.jsx";
+import BatterSkillCard from "@/pages/skillChange/HitterSkillCard.jsx";
 
-const BatterSkillChange = () => {
+const HitterSkillChange = () => {
   const navigate = useNavigate();
   const [selectedBatter, setSelectedBatter] = useState(null);
   const [skills, setSkills] = useState([]);
@@ -86,7 +86,7 @@ const BatterSkillChange = () => {
       {selectedBatter && (
         <section className={styles.cardSection}>
           <BatterSkillCard
-            pitcher={selectedBatter}
+            hitter={selectedBatter}
             skills={skills}
           />
 
@@ -106,4 +106,4 @@ const BatterSkillChange = () => {
   );
 };
 
-export default BatterSkillChange;
+export default HitterSkillChange;

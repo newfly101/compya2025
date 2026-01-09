@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "@/styles/pages/skillChange/skillCard.module.scss";
 
-const PitcherSkillCard = ({ pitcher, skills }) => {
+const HitterSkillCard = ({ hitter, skills }) => {
   const {
     name,
     team,
@@ -12,7 +12,7 @@ const PitcherSkillCard = ({ pitcher, skills }) => {
     traits,
     attributes,
     careerStats,
-  } = pitcher;
+  } = hitter;
 
   const calcAttrClass = (value) => {
     if (value >= 90) return styles.attrHigh;   // 빨강
@@ -45,31 +45,31 @@ const PitcherSkillCard = ({ pitcher, skills }) => {
         {/* 기록 */}
         <div className={styles.statBlock}>
           <div className={styles.statHeader}>
-            <span>시즌</span><span>경기수</span><span>방어율</span>
-            <span>승</span><span>패</span><span>세이브</span><span>삼진</span>
+            <span>시즌</span><span>경기수</span><span>타율</span>
+            <span>타수</span><span>안타</span><span>홈런</span><span>도루</span>
           </div>
           <div className={styles.statValue}>
             <span>{careerStats.seasons}</span>
             <span>{careerStats.games}</span>
-            <span>{careerStats.era}</span>
-            <span>{careerStats.wins}</span>
-            <span>{careerStats.losses}</span>
-            <span>{careerStats.saves}</span>
-            <span>{careerStats.strikeouts}</span>
+            <span>{careerStats.avg}</span>
+            <span>{careerStats.atBats}</span>
+            <span>{careerStats.hits}</span>
+            <span>{careerStats.homeRuns}</span>
+            <span>{careerStats.steals}</span>
           </div>
         </div>
 
         {/* 능력치 */}
         <div className={styles.attrBlock}>
           <div className={styles.attrHeader}>
-            <span>제구</span><span>구위</span><span>체력</span><span>직구</span><span>변화</span>
+            <span>정확</span><span>파워</span><span>선구</span><span>주력</span><span>수비</span>
           </div>
           <div className={styles.attrValue}>
-            <span className={calcAttrClass(attributes.control)}>{attributes.control}</span>
-            <span className={calcAttrClass(attributes.breaking)}>{attributes.breaking}</span>
-            <span className={calcAttrClass(attributes.stamina)}>{attributes.stamina}</span>
-            <span className={calcAttrClass(attributes.velocity)}>{attributes.velocity}</span>
-            <span className={calcAttrClass(attributes.movement)}>{attributes.movement}</span>
+            <span className={calcAttrClass(attributes.accuracy)}>{attributes.accuracy}</span>
+            <span className={calcAttrClass(attributes.power)}>{attributes.power}</span>
+            <span className={calcAttrClass(attributes.contact)}>{attributes.contact}</span>
+            <span className={calcAttrClass(attributes.speed)}>{attributes.speed}</span>
+            <span className={calcAttrClass(attributes.defense)}>{attributes.defense}</span>
           </div>
         </div>
 
@@ -100,10 +100,10 @@ const PitcherSkillCard = ({ pitcher, skills }) => {
             <span key={t} className={calcOptionClass(t)}>{t}</span>
           ))}
         </div>
-        <span>{pitcher.grade}</span>
+        <span>{hitter.grade}</span>
       </div>
     </div>
   );
 };
 
-export default PitcherSkillCard;
+export default HitterSkillCard;

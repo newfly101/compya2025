@@ -1,13 +1,13 @@
-import { PITCHER_SKILLS } from "@/data/skill/PITCKER_SKILLS.js";
+import { HITTER_SKILLS } from "@/data/skill/HITTER_SKILLS.js";
 
 
 // 노말 + 히어로 합산 풀
 const NORMAL_POOL = [
-  ...PITCHER_SKILLS.normal.map(skill => ({
+  ...HITTER_SKILLS.normal.map(skill => ({
     ...skill,
     tier: "NORMAL"
   })),
-  ...PITCHER_SKILLS.hero.map(skill => ({
+  ...HITTER_SKILLS.hero.map(skill => ({
     ...skill,
     tier: "HERO"
   }))
@@ -50,8 +50,8 @@ const shuffle = (arr) => {
 
 
 export const pickSkillsByCombo = (combo) => {
-  const legendPool = [...PITCHER_SKILLS.legend];
-  const platinumPool = [...PITCHER_SKILLS.platinum];
+  const legendPool = [...HITTER_SKILLS.legend];
+  const platinumPool = [...HITTER_SKILLS.platinum];
   const normalPool = [...NORMAL_POOL];
 
   const result = [];
