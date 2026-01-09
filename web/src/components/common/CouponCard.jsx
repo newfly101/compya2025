@@ -19,7 +19,11 @@ const CouponCard = ({ code, rewardTitle, rewardDetail, expireDate, disabled, sho
       </div>
 
       <div className={styles.reward}>
-        <div className={styles.title}>{rewardTitle}</div>
+        <div className={styles.title}>
+          {rewardTitle.split(" + ").map((item, idx) => (
+            <div key={idx}>{item}</div>
+          ))}
+        </div>
         {short === false &&
           <div className={styles.detail}>{rewardDetail}</div>
         }

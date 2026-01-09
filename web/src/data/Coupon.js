@@ -129,9 +129,15 @@ const coupons = [
     expireDate: "2026. 01. 31 23:59"
   },
   {
-    code: "",
-    rewardTitle: "1월 5일 12:00 공개",
+    code: "CPB2026START",
+    rewardTitle: "리그 하드 볼 교환권 x2 + 리그 하드모드 위임장 x20 + 얼티밋 포인트 부스트 2배 x2 + 플래티넘 장비 x10",
     rewardDetail: "병오년 쿠폰",
+    expireDate: "2026. 02. 28 23:59"
+  },
+  {
+    code: "LETSGOMDJ2026",
+    rewardTitle: "에픽 선수팩 x1",
+    rewardDetail: "문동주 모델 쿠폰",
     expireDate: "2026. 02. 28 23:59"
   },
 ];
