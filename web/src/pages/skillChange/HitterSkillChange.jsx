@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { pickSkillsByCombo } from "@/utils/skill/hitterSkillPicker.js";
 import { pickByProbability, PROB_LEGEND } from "@/utils/skill/skillProbability.js";
 import styles from "@/styles/pages/skillCard.module.scss";
@@ -13,6 +13,10 @@ const HitterSkillChange = () => {
   const [skillChangeCount, setSkillChangeCount] = useState(-1);
   const [isInitialRoll, setIsInitialRoll] = useState(true);
 
+  // 자동 3보라 옵션 뽑기
+  const [isRolling, setIsRolling] = useState(false);
+  const intervalRef = useRef(null);
+
   const isTripleLegend = (result) =>
     result.length === 3 &&
     result.every(skill => skill.grade === "LEGEND");
@@ -26,16 +30,28 @@ const HitterSkillChange = () => {
     });
 
     const result = pickSkillsByCombo(combo);
-
-    // ✅ 최초 자동 실행 + 3LEGEND일 때만 한 번 더
-    if (isInitialRoll && isTripleLegend(result)) {
-      setIsInitialRoll(false); // 최초 조건 소진
-      return rollOnce();
-    }
+    // console.log(result.filter(skill => skill.grade === "LEGEND").length);
 
     setIsInitialRoll(false);     // 최초 실행 종료
     setSkillChangeCount(prev => prev + 1);
     setSkills(result);
+
+    return result;
+  };
+
+  const startRollingUntil3Legend = () => {
+    if (intervalRef.current || !selectedBatter) return;
+
+    setIsRolling(true);
+
+    intervalRef.current = setInterval(() => {
+      const result = rollOnce();
+      if (!result) return;
+
+      if (result.filter(skill => skill.grade === "LEGEND").length === 3) {
+        stopRolling();
+      }
+    }, 100);
   };
 
   useEffect(() => {
@@ -45,6 +61,23 @@ const HitterSkillChange = () => {
     setSkillChangeCount(-1);
     rollOnce();
   }, [selectedBatter]);
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, []);
+
+  const stopRolling = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setIsRolling(false);
+  };
 
   const handleClick = () => {
     navigate(`/simulate`);
@@ -100,6 +133,20 @@ const HitterSkillChange = () => {
               <span className={styles.count}>{skillChangeCount}</span>
             </div>
           </button>
+
+          {/*<button*/}
+          {/*  className={styles.itemButton}*/}
+          {/*  onClick={() => {*/}
+          {/*    if (isRolling) {*/}
+          {/*      stopRolling(); */}
+          {/*    } else {*/}
+          {/*      startRollingUntil3Legend(); */}
+          {/*    }*/}
+          {/*  }}*/}
+          {/*  disabled={!selectedBatter}*/}
+          {/*>*/}
+          {/*  {isRolling ? "연속 변경 중지" : "3 LEGEND 나올 때까지 변경"}*/}
+          {/*</button>*/}
         </section>
       )}
     </main>
