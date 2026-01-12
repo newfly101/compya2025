@@ -1,11 +1,11 @@
 import React from "react";
-import styles from "@/shared/ui/cafeLinkCard/CafeLinkCard.module.scss";
+import styles from "./OfficialNoticeList.module.scss";
 import CafeLinkCard from "@/shared/ui/cafeLinkCard/CafeLinkCard.jsx";
 
 const OfficialNoticeList = ({data}) => {
   return (
-    <div>
-      <h3>📢 컴프야 공식 카페 공지사항</h3>
+    <section aria-labelledby="cafeNotice-list-title">
+      <h3 id="cafeNotice-list-title">📢 컴프야 공식 카페 공지사항</h3>
       <div className={styles.grid}>
         {data.map((item) => (
           <CafeLinkCard
@@ -16,7 +16,7 @@ const OfficialNoticeList = ({data}) => {
           />
         ))}
       </div>
-    </div>
+    </section>
 
   );
 };
