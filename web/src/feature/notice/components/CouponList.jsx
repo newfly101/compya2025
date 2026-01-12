@@ -8,9 +8,6 @@ import { sortCoupons } from "@/utils/sortCoupons.js";
 const CouponList = ({data, limit, short=false}) => {
   const now = new Date();
 
-  // const finalList = limit ? sorted.slice(0, limit) : sorted;
-  // const sorted = sortCoupons(data);
-
   const finalList = useMemo(() => {
     const sorted = sortCoupons(data);
 
