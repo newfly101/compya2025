@@ -9,8 +9,8 @@ const Notice = lazy(() => import("@/pages/notice/Notice.jsx"));
 const FunNoticePage = lazy(() => import("@/components/common/page/FunNoticePage.jsx"));
 
 const SkillSimulator = lazy(() => import("@/pages/skillSimulate/SkillSimulator.jsx"));
-const PitcherSkillChange = lazy(() => import("@/pages/skillChange/PitcherSkillChange.jsx"));
-const HitterSkillChange = lazy(() => import("@/pages/skillChange/HitterSkillChange.jsx"));
+const PitcherSkillChange = lazy(() => import("@/pages/skillSimulate/skillChange/PitcherSkillChange.jsx"));
+const HitterSkillChange = lazy(() => import("@/pages/skillSimulate/skillChange/HitterSkillChange.jsx"));
 
 const Dictionary = lazy(() => import("@/pages/dictionary/Dictionary.jsx"));
 const SkillDictionary = lazy(() => import("@/components/common/page/SkillDictionary.jsx"));

@@ -1,0 +1,111 @@
+import React, { useEffect, useState } from "react";
+import { pickSkillsByCombo } from "@/utils/skill/pitcherSkillPicker.js";
+import { pickByProbability, PROB_LEGEND } from "@/utils/skill/skillProbability.js";
+import styles from "./SkillChange.module.scss";
+import { useNavigate } from "react-router-dom";
+import { legendPitcherData } from "@/data/player/legend/legendPitcherData.js";
+import PitcherSkillCard from "@/feature/skillSimulate/components/cards/PitcherSkillCard.jsx";
+import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
+import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
+
+const PitcherSkillChange = () => {
+  const navigate = useNavigate();
+  const [selectedPitcher, setSelectedPitcher] = useState(null);
+  const [skills, setSkills] = useState([]);
+  const [skillChangeCount, setSkillChangeCount] = useState(-1);
+  const [isInitialRoll, setIsInitialRoll] = useState(true);
+
+  const { moveTo } = useContentPageHeader();
+
+  const isTripleLegend = (result) =>
+    result.length === 3 &&
+    result.every(skill => skill.grade === "LEGEND");
+
+  const rollOnce = () => {
+    if (!selectedPitcher) return;
+
+    const combo = pickByProbability(PROB_LEGEND, {
+      pitcherId: selectedPitcher.id,
+      pitchTypes: selectedPitcher.pitchTypes,
+    });
+
+    const result = pickSkillsByCombo(combo);
+
+    // ✅ 최초 자동 실행 + 3LEGEND일 때만 한 번 더
+    if (isInitialRoll && isTripleLegend(result)) {
+      setIsInitialRoll(false); // 최초 조건 소진
+      return rollOnce();
+    }
+
+    setIsInitialRoll(false);     // 최초 실행 종료
+    setSkillChangeCount(prev => prev + 1);
+    setSkills(result);
+  };
+
+  useEffect(() => {
+    if (!selectedPitcher) return;
+
+    setIsInitialRoll(true); // 🔥 투수 변경 → 최초 상태
+    setSkillChangeCount(-1);
+    rollOnce();
+  }, [selectedPitcher]);
+
+  const handleClick = () => {
+    navigate(`/simulate`);
+  };
+
+
+  return (
+    <ContentPageLayout
+      header={<ContentPageHeader title={"🎲 투수 고스변 시뮬레이터"}
+                                 meta={["2026-01-09", "v0.1.7"]}
+                                 backLabel={"스킬 시뮬레이터로"}
+                                 onBack={() => moveTo("/simulate")}
+      />}
+      children={
+        <section>
+          <h6>선수 이미지는 저작권 문제로 인해 변경하였습니다.</h6>
+
+          <section className={styles.pitcherSelectSection}>
+            <h2 className={styles.subTitle}>🧤 투수 선택</h2>
+
+            <div className={styles.pitcherGrid}>
+              {legendPitcherData.map((p) => (
+                <button
+                  key={p.id}
+                  className={`${styles.pitcherButton} ${
+                    selectedPitcher?.id === p.id ? styles.active : ""
+                  }`}
+                  onClick={() => setSelectedPitcher(p)}
+                >
+                  <strong>{p.name}</strong>
+                </button>
+              ))}
+            </div>
+          </section>
+
+          {selectedPitcher && (
+            <section className={styles.cardSection}>
+              <PitcherSkillCard
+                pitcher={selectedPitcher}
+                skills={skills}
+              />
+
+              <button
+                className={styles.itemButton}
+                onClick={rollOnce}
+                disabled={!selectedPitcher}
+              >
+                <div className={styles.textBox}>
+                  <span className={styles.title}>고급 고유능력 변경권</span>
+                  <span className={styles.count}>{skillChangeCount}</span>
+                </div>
+              </button>
+            </section>
+          )}
+        </section>
+      } />
+  );
+};
+
+export default PitcherSkillChange;
