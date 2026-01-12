@@ -1,4 +1,4 @@
-@use "../variables/colors" as *;
+@use "../../../../styles/variables/colors" as *;
 
 .card {
   background: $surface2;
@@ -81,28 +81,4 @@
 .infoText {
   font-size: 1.2rem;
   color: $text-muted;
-}
-
-
-.listGrid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); // ★ 2열
-  gap: 2rem; // 카드 사이 간격
-  width: 100%;
-  margin-top: 2rem;
-}
-.shortListGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
-  gap: 2rem; // 카드 사이 간격
-  width: 100%;
-  margin-top: 2rem;
-  justify-content: center;
-}
-
-/* 모바일에서 1열 */
-@media (max-width: 768px) {
-  .listGrid {
-    grid-template-columns: 1fr;
-  }
 }

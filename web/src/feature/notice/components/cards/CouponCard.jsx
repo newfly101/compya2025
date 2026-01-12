@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/styles/layout/CouponCard.module.scss";
+import styles from "./CouponCard.module.scss";
 
 const CouponCard = ({ code, rewardTitle, rewardDetail, expireDate, disabled, short=false }) => {
   const copy = () => {
