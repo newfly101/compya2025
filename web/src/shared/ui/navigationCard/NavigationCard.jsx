@@ -1,7 +1,7 @@
-import styles from "./DictionaryCard.module.scss";
-import { useDictionaryCard } from "./useDictionaryCard.jsx";
+import styles from "./NavigationCard.module.scss";
+import { useNavigationCard } from "./useNavigationCard.jsx";
 
-const DictionaryCard = ({
+const NavigationCard = ({
                           icon,
                           title,
                           desc = [],
@@ -11,7 +11,7 @@ const DictionaryCard = ({
                         }) => {
   const {
     moveTo
-  } = useDictionaryCard({link, disabled});
+  } = useNavigationCard({link, disabled});
 
   return (
     <div
@@ -55,4 +55,4 @@ const DictionaryCard = ({
 
 
 
-export default DictionaryCard;
+export default NavigationCard;

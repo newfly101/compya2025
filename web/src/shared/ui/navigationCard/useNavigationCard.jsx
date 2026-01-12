@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-export const useDictionaryCard = ({link, disabled}) => {
+export const useNavigationCard = ({link, disabled}) => {
   const navigate = useNavigate();
 
   const moveTo = (link) => {
