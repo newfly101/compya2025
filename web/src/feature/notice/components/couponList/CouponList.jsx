@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import CouponCard from "@/feature/notice/components/cards/CouponCard.jsx";
-import styles from "@/styles/layout/CouponCard.module.scss";
+import styles from "./CouponList.module.scss";
 
 import { parseDate } from "@/utils/parseDate.js";
 import { sortCoupons } from "@/utils/sortCoupons.js";
@@ -21,7 +21,8 @@ const CouponList = ({data, limit, short=false}) => {
   }, [data, limit, short]);
 
   return (
-    <div>{!short && "🎁 쿠폰 리스트"}
+    <section aria-labelledby="coupon-list-title">
+      <h3 id="coupon-list-title">{!short && "🎁 쿠폰 리스트"}</h3>
       <div className={`${short ? styles.shortListGrid : styles.listGrid}`}>
         {finalList.map((item) => {
           const expired = parseDate(item.expireDate) < now;
@@ -38,7 +39,7 @@ const CouponList = ({data, limit, short=false}) => {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 };
 
