@@ -1,59 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { pickSkillsByCombo } from "@/utils/skill/pitcherSkillPicker.js";
-import { pickByProbability, PROB_LEGEND } from "@/utils/skill/skillProbability.js";
 import styles from "./SkillChange.module.scss";
-import { useNavigate } from "react-router-dom";
 import { legendPitcherData } from "@/data/player/legend/legendPitcherData.js";
 import PitcherSkillCard from "@/feature/skillSimulate/components/cards/PitcherSkillCard.jsx";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
+import { usePitcherSkillChange } from "@/feature/skillSimulate/hooks/usePitcherSkillChange.js";
 
 const PitcherSkillChange = () => {
-  const navigate = useNavigate();
   const [selectedPitcher, setSelectedPitcher] = useState(null);
-  const [skills, setSkills] = useState([]);
-  const [skillChangeCount, setSkillChangeCount] = useState(-1);
-  const [isInitialRoll, setIsInitialRoll] = useState(true);
-
+  const {rollOnce, skillChangeCount, skills} = usePitcherSkillChange(selectedPitcher);
   const { moveTo } = useContentPageHeader();
-
-  const isTripleLegend = (result) =>
-    result.length === 3 &&
-    result.every(skill => skill.grade === "LEGEND");
-
-  const rollOnce = () => {
-    if (!selectedPitcher) return;
-
-    const combo = pickByProbability(PROB_LEGEND, {
-      pitcherId: selectedPitcher.id,
-      pitchTypes: selectedPitcher.pitchTypes,
-    });
-
-    const result = pickSkillsByCombo(combo);
-
-    // ✅ 최초 자동 실행 + 3LEGEND일 때만 한 번 더
-    if (isInitialRoll && isTripleLegend(result)) {
-      setIsInitialRoll(false); // 최초 조건 소진
-      return rollOnce();
-    }
-
-    setIsInitialRoll(false);     // 최초 실행 종료
-    setSkillChangeCount(prev => prev + 1);
-    setSkills(result);
-  };
-
-  useEffect(() => {
-    if (!selectedPitcher) return;
-
-    setIsInitialRoll(true); // 🔥 투수 변경 → 최초 상태
-    setSkillChangeCount(-1);
-    rollOnce();
-  }, [selectedPitcher]);
-
-  const handleClick = () => {
-    navigate(`/simulate`);
-  };
-
 
   return (
     <ContentPageLayout
