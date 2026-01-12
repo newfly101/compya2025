@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styles from "./SkillChange.module.scss";
 import { legendPitcherData } from "@/data/player/legend/legendPitcherData.js";
 import PitcherSkillCard from "@/feature/skillSimulate/components/cards/PitcherSkillCard.jsx";
