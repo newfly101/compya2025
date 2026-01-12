@@ -43,6 +43,7 @@ const Home = () => {
           {/*<div className={styles.card}>플레이 가이드</div>*/}
           <div className={styles.card} onClick={() => handleClick("dictionary")}>📌추천 백과사전</div>
           <div className={styles.card} onClick={() => handleClick("simulate")}>고스변 시뮬레이터</div>
+          <div className={styles.card} onClick={() => handleClick("mode/history")}>히스토리 래전드 재료</div>
           {/*<div className={styles.card} onClick={() => handleLinkTo(CLUB_GUIDE_URL)}>클럽 대전 가이드</div>*/}
         </div>
       </section>

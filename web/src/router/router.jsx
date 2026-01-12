@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App.jsx";
 import { lazy } from "react";
+
+const LegendCalendar = lazy(() => import("@/pages/historyMode/LegendCalendar.jsx"));
 const Home = lazy(() => import("@/pages/Home.jsx"));
 const Login = lazy(() => import("@/pages/Login.jsx"));
 const Notice = lazy(() => import("@/pages/Notice.jsx"));
@@ -40,6 +42,7 @@ const router = createBrowserRouter([
       { path: "tips", element: <TipPage />, handle: { title: "컴프야펀 | 팁 모아보기" } },
       { path: "dictionary/pitcher", element: <SkillDictionary />, handle: { title: "컴프야펀 | 투수 스킬 백과사전" } },
       { path: "dictionary/hitter", element: <HitterSkillDictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
+      { path: "mode/history", element: <LegendCalendar />, handle: { title: "컴프야펀 | 히스토리 모드 레전드 재료" } },
       { path: "dictionary", element: <Dictionary />, handle: { title: "컴프야펀 | 백과사전 홈" } },
       { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
     ],

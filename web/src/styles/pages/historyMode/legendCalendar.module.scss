@@ -1,0 +1,94 @@
+.legendWrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  font-family: system-ui, sans-serif;
+}
+
+/* 검색 */
+.legendSearch {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* 검색 결과 */
+.legendResult {
+  margin-bottom: 1.5rem;
+}
+
+.legendResultItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.legendResultItem:hover {
+  background: #f3f4f6;
+}
+
+/* 캘린더 */
+.calendarGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.75rem;
+}
+
+.calendarCell {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  min-height: 80px;
+  //background: #fff;
+
+  & > .active {
+    border-color: #2563eb;
+    background: #eff6ff;
+  }
+}
+
+.dayLabel {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+}
+
+/* 이벤트 점 */
+.dot {
+  font-size: 0.8rem;
+  color: #2563eb;
+}
+
+
+.autoComplete {
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  //background: #fff;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.autoCompleteItem {
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    background: #f3f4f6;
+  }
+}
+
+.calendarCell {
+  /* 기존 */
+}
+
+.active {
+  border-color: #60a5fa;
+  background: #eff6ff;
+}
+
+.focused {
+  border-color: #2563eb;
+  background: #dbeafe;
+}
