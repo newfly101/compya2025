@@ -1,7 +1,7 @@
-import FunNoticeList from "@/pages/notice/FunNoticeList.jsx";
-import OfficialNoticeList from "@/pages/notice/OfficialNoticeList.jsx";
-import EventList from "@/pages/notice/EventList.jsx";
-import CouponList from "@/pages/notice/CouponList.jsx";
+import FunNoticeList from "@/feature/notice/components/FunNoticeList.jsx";
+import OfficialNoticeList from "@/feature/notice/components/OfficialNoticeList.jsx";
+import EventList from "@/feature/notice/components/EventList.jsx";
+import CouponList from "@/feature/notice/components/CouponList.jsx";
 import { cafeNotice } from "@/data/CafeNotice.js";
 import coupons from "@/data/Coupon.js";
 import events from "@/data/Events.js";

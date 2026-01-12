@@ -1,8 +1,8 @@
 import styles from "@/styles/pages/Home.module.scss";
 import coupons from "@/data/Coupon.js";
-import CouponList from "@/pages/notice/CouponList.jsx";
+import CouponList from "@/feature/notice/components/CouponList.jsx";
 import { Link, useNavigate } from "react-router-dom";
-import EventList from "@/pages/notice/EventList.jsx";
+import EventList from "@/feature/notice/components/EventList.jsx";
 import events from "@/data/Events.js";
 import React from "react";
 import quizImg from "@/assets/quiz/quiz876.png";
