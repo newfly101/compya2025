@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/styles/pages/skillChange/skillCard.module.scss";
+import styles from "./SkillCard.module.scss";
 
 const HitterSkillCard = ({ hitter, skills }) => {
   const {
@@ -27,23 +27,23 @@ const HitterSkillCard = ({ hitter, skills }) => {
   };
 
   return (
-    <div className={styles.skillCard}>
+    <article className={styles.skillCard}>
       {/* 이름 */}
-      <div className={styles.teamName}>{name}</div>
+      <header className={styles.teamName}>{name}</header>
 
       {/* 기본 정보 */}
-      <div className={styles.metaBlock}>
+      <section className={styles.metaBlock}>
         <div className={styles.metaGrid}>소속팀 <strong>{team}</strong></div>
         <div className={styles.metaGrid}>포지션 <strong>{positions.join(", ")}</strong></div>
         <div className={styles.metaGrid}>등번호 <strong>{backNumber}번</strong></div>
         <div className={styles.metaGrid}>생년월일 <strong>{birth}</strong></div>
         <div className={styles.metaGrid}>투타 <strong>{batThrow}</strong></div>
-      </div>
+      </section>
 
       {/* 상단 정보 그리드 */}
-      <div className={styles.infoGrid}>
+      <section className={styles.infoGrid}>
         {/* 기록 */}
-        <div className={styles.statBlock}>
+        <section className={styles.statBlock}>
           <div className={styles.statHeader}>
             <span>시즌</span><span>경기수</span><span>타율</span>
             <span>타수</span><span>안타</span><span>홈런</span><span>도루</span>
@@ -57,10 +57,10 @@ const HitterSkillCard = ({ hitter, skills }) => {
             <span>{careerStats.homeRuns}</span>
             <span>{careerStats.steals}</span>
           </div>
-        </div>
+        </section>
 
         {/* 능력치 */}
-        <div className={styles.attrBlock}>
+        <section className={styles.attrBlock}>
           <div className={styles.attrHeader}>
             <span>정확</span><span>파워</span><span>선구</span><span>주력</span><span>수비</span>
           </div>
@@ -71,16 +71,16 @@ const HitterSkillCard = ({ hitter, skills }) => {
             <span className={calcAttrClass(attributes.speed)}>{attributes.speed}</span>
             <span className={calcAttrClass(attributes.defense)}>{attributes.defense}</span>
           </div>
-        </div>
+        </section>
 
         {/* 고유능력 */}
-        <div className={styles.cardInfo}>
+        <section className={styles.cardInfo}>
           고유능력 <span>강화 횟수 0 / 7</span>
-        </div>
-      </div>
+        </section>
+      </section>
 
       {/* 슬롯 */}
-      <div className={styles.slotWrap}>
+      <section className={styles.slotWrap}>
         {[0, 1, 2].map(i => (
           <div
             key={i}
@@ -91,18 +91,18 @@ const HitterSkillCard = ({ hitter, skills }) => {
             {skills?.[i] && <strong>{skills[i].name} {skills[i].upgrade}</strong>}
           </div>
         ))}
-      </div>
+      </section>
 
       {/* 특성 */}
-      <div className={styles.traits}>
+      <footer className={styles.traits}>
         <div className={styles.option}>
           {traits.map(t => (
             <span key={t} className={calcOptionClass(t)}>{t}</span>
           ))}
         </div>
         <span>{hitter.grade}</span>
-      </div>
-    </div>
+      </footer>
+    </article>
   );
 };
 
