@@ -57,7 +57,7 @@ const HitterSkillChange = () => {
   useEffect(() => {
     if (!selectedBatter) return;
 
-    setIsInitialRoll(true); // 🔥 투수 변경 → 최초 상태
+    setIsInitialRoll(true); // 🔥 타자 변경 → 최초 상태
     setSkillChangeCount(-1);
     rollOnce();
   }, [selectedBatter]);
@@ -99,7 +99,7 @@ const HitterSkillChange = () => {
       <h6>선수 이미지는 저작권 문제로 인해 변경하였습니다.</h6>
 
       <section className={styles.pitcherSelectSection}>
-        <h2 className={styles.subTitle}>⚾ 투수 선택</h2>
+        <h2 className={styles.subTitle}>⚾ 타자 선택</h2>
 
         <div className={styles.pitcherGrid}>
           {legendBatterData.map((p) => (

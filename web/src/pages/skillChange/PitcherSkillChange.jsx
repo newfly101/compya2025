@@ -66,7 +66,7 @@ const PitcherSkillChange = () => {
       <h6>선수 이미지는 저작권 문제로 인해 변경하였습니다.</h6>
 
       <section className={styles.pitcherSelectSection}>
-        <h2 className={styles.subTitle}>⚾ 투수 선택</h2>
+        <h2 className={styles.subTitle}>🧤 투수 선택</h2>
 
         <div className={styles.pitcherGrid}>
           {legendPitcherData.map((p) => (
