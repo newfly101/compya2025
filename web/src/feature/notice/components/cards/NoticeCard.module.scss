@@ -1,5 +1,3 @@
-@use "../variables/colors" as *;
-
 .card {
   background: $surface2;
   border: 1px solid $border;
@@ -12,16 +10,13 @@
   &:hover {
     transition: transform 0.25s ease, background-color 0.25s ease;
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
     background-color: $primary-hover;
     cursor: pointer;
 
-    & > .header > span{
+    & > .header > span {
       color: $secondary;
     }
-    //& > .info {
-    //  color: $secondary-hover;
-    //}
   }
 
   .header {
@@ -32,21 +27,17 @@
     font-weight: 700;
     font-size: 1.4rem;
 
-    & > span {
+    & > time {
       color: $text-secondary;
       font-size: 1.2rem;
     }
   }
-}
 
-.info {
-  color: $primary-text;
-  margin: 1.6rem 0 1rem 0;
-  border-radius: 0.6rem;
-  font-weight: 700;
-  font-size: clamp(1.6rem, 4.5vw, 2.8rem);
-}
-
-.newBadge {
-
+  .info {
+    color: $primary-text;
+    margin: 1.6rem 0 1rem 0;
+    border-radius: 0.6rem;
+    font-weight: 700;
+    font-size: clamp(1.6rem, 4.5vw, 1.85rem);
+  }
 }

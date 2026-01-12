@@ -1,24 +1,24 @@
 import React from "react";
-import styles from "@/styles/layout/NoticeCard.module.scss";
-import { useNavigate } from "react-router-dom";
+import styles from "@/feature/notice/components/cards/NoticeCard.module.scss";
+import { useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
 
 const NoticeCard = ({id, title, date, info}) => {
-  const navigate = useNavigate();
-
+  const {moveTo} = useContentPageHeader();
   const titleValue = title === 0 ? "컴프야펀 공지사항" : "공식 공지사항";
 
-  const handleClick = () => {
-    navigate(`/notice/${id}`);
-  }
-
   return (
-    <div className={styles.card} onClick={handleClick}>
-      <div className={styles.header}>
+    <article
+      className={styles.card}
+      onClick={() => moveTo(`/notice/${id}`)}
+      aria-label={`${titleValue} 상세 페이지로 이동`}
+      role="link"
+    >
+      <header className={styles.header}>
         {titleValue}
-        <span>게시일: {date}</span>
-      </div>
-      <div className={styles.info}>{info}</div>
-    </div>
+        <time>게시일: {date}</time>
+      </header>
+      <p className={styles.info}>{info}</p>
+    </article>
   );
 };
 
