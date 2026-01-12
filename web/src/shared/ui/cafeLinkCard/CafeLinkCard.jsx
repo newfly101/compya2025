@@ -12,12 +12,10 @@ const CafeLinkCard = ({ title, dateRange, image, link, short, disabled }) => {
       </figure>
 
       <div className={styles.content}>
-        <header>
-          <h3 className={styles.title}>{title}</h3>
-          {!short &&
-            <p className={styles.date}>{dateRange}</p>
-          }
-        </header>
+        <h3 className={styles.title}>{title}</h3>
+        {!short &&
+          <p className={styles.date}>{dateRange}</p>
+        }
         <a href={link} className={styles.detail} target="_blank" rel="noreferrer">
           상세 정보 →
         </a>
