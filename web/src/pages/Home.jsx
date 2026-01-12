@@ -2,7 +2,7 @@ import styles from "@/styles/pages/Home.module.scss";
 import coupons from "@/data/Coupon.js";
 import CouponList from "@/feature/notice/components/CouponList.jsx";
 import { Link, useNavigate } from "react-router-dom";
-import EventList from "@/feature/notice/components/EventList.jsx";
+import EventList from "@/feature/notice/components/eventList/EventList.jsx";
 import events from "@/data/Events.js";
 import React from "react";
 import quizImg from "@/assets/quiz/quiz876.png";
