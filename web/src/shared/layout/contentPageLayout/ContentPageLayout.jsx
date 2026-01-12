@@ -3,10 +3,10 @@ import styles from "./ContentPageLayout.module.scss";
 
 const ContentPageLayout = ({header, children}) => {
   return (
-    <main className={styles.container}>
+    <section className={styles.container}>
       {header}
       {children}
-    </main>
+    </section>
   );
 };
 
