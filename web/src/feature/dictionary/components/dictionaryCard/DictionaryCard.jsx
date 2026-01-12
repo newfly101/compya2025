@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import styles from "@/styles/pages/dictionary/Dictionary.module.scss";
+import styles from "./DictionaryCard.module.scss";
+import { useDictionaryCard } from "./useDictionaryCard.jsx";
 
 const DictionaryCard = ({
                           icon,
@@ -9,16 +9,14 @@ const DictionaryCard = ({
                           image,
                           disabled = false,
                         }) => {
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    if (!disabled) navigate(link);
-  };
+  const {
+    moveTo
+  } = useDictionaryCard({link, disabled});
 
   return (
     <div
       className={`${styles.card} ${disabled ? styles.disabled : ""}`}
-      onClick={handleClick}
+      onClick={() => moveTo(link)}
     >
       {/* 🔼 상단 이미지 고정 영역 */}
       <div className={styles.imageZone}>
