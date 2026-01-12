@@ -26,6 +26,9 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         includePaths: [path.resolve(__dirname, "src")],
+        additionalData: `
+          @use "@/styles/variables/colors.scss" as *;
+        `,
       },
     },
   }
