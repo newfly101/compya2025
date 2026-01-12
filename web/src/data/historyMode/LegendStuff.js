@@ -88,6 +88,7 @@ export const legendStuff = [
       { legend: "이만수", player: "김시진", years: 1987 },
       { legend: "양준혁", player: "양일환", years: 1987 },
       { legend: "류중일", player: "오대석", years: 1987 },
+      { legend: "양의지", player: "이만수", years: 1987 },
     ],
   },
 
@@ -97,6 +98,7 @@ export const legendStuff = [
     roaster: 1,
     item: [
       { legend: "심정수", player: "장종훈", years: 1988 },
+      { legend: "김광현", player: "김성갑", years: 1988 },
     ],
   },
   {
@@ -166,6 +168,7 @@ export const legendStuff = [
     roaster: 3,
     item: [
       { legend: "김원형", player: "김민호S", years: 1993 },
+      { legend: "양의지", player: "김태형B", years: 1993 },
     ],
   },
   {
@@ -304,6 +307,7 @@ export const legendStuff = [
     item: [
       { legend: "정민태", player: "임선동", years: 2000 },
       { legend: "정민태", player: "김수경", years: 2000 },
+      { legend: "박병호", player: "염경엽", years: 2000 },
     ],
   },
   {
@@ -344,7 +348,8 @@ export const legendStuff = [
     item: [
       { legend: "심정수", player: "이승엽", years: 2003 },
       { legend: "한대화", player: "김한수", years: 2003 },
-      { legend: "임찬용", player: "배영수", years: 2003 },
+      { legend: "배영수", player: "임찬용", years: 2003 },
+      { legend: "임기효", player: "배영수", years: 2003 },
     ],
   },
   {
@@ -352,7 +357,7 @@ export const legendStuff = [
     name: "2004년 현대 유니콘스 마지막 우승",
     roaster: 2,
     item: [
-      { legend: "심정수", player: "박진만", years: 2004 },
+      { legend: "김재박", player: "박진만", years: 2004 },
       { legend: "박진만", player: "심정수", years: 2004 },
     ],
   },
@@ -378,7 +383,8 @@ export const legendStuff = [
     name: "2007년 SK 와이번스 첫 우승",
     roaster: 5,
     item: [
-      {}
+      { legend: "김광현", player: "박경완", years: 2007 },
+      { legend: "양현종", player: "김광현", years: 2007 },
     ],
   },
 
@@ -416,6 +422,7 @@ export const legendStuff = [
       { legend: "김성한", player: "나지완", years: 2009 },
       { legend: "김성한", player: "김상현S", years: 2009 },
       { legend: "정근우", player: "서재응", years: 2009 },
+      { legend: "류현진", player: "윤석민", years: 2009 },
     ],
   },
   {
@@ -463,6 +470,8 @@ export const legendStuff = [
     roaster: 4,
     item: [
       { legend: "류중일", player: "장원삼", years: 2011 },
+      { legend: "오승환", player: "진갑용", years: 2011 },
+      { legend: "최형우", player: "조동찬", years: 2011 },
     ],
   },
   {
@@ -472,6 +481,7 @@ export const legendStuff = [
     item: [
       { legend: "전준호", player: "이종범", years: 2011 },
       { legend: "구대성", player: "윤석민", years: 2011 },
+      { legend: "김광현", player: "양현종", years: 2011 },
     ],
   },
 
@@ -483,6 +493,7 @@ export const legendStuff = [
     item: [
       { legend: "이대호", player: "김태균S", years: 2012 },
       { legend: "한대화", player: "최진행", years: 2012 },
+      { legend: "류현진", player: "박찬호", years: 2012 },
     ],
   },
   {
@@ -506,7 +517,7 @@ export const legendStuff = [
     name: "2014년 SK 레전드 박경완 은퇴식",
     roaster: 4,
     item: [
-      {}
+      { legend: "최형우", player: "박정권", years: 2014 },
     ],
   },
   {
@@ -516,6 +527,7 @@ export const legendStuff = [
     item: [
       { legend: "정근우", player: "서건창", years: 2014 },
       { legend: "박한이", player: "한현희", years: 2014 },
+      { legend: "박병호", player: "강정호", years: 2014 },
     ],
   },
 
@@ -526,6 +538,7 @@ export const legendStuff = [
     roaster: 1,
     item: [
       { legend: "박경완", player: "나바로", years: 2014 },
+      { legend: "최정", player: "이승엽", years: 2014 },
     ],
   },
   {
@@ -542,8 +555,9 @@ export const legendStuff = [
     name: "2016년 판타스틱 4 두산 베에스 우승",
     roaster: 3,
     item: [
-      { legend: "임창용", player: "이지욱", years: 2016 },
       { legend: "이병규", player: "니퍼트", years: 2016 },
+      { legend: "임기효", player: "오지욱", years: 2016 },
+      { legend: "김현수", player: "양의지", years: 2016 },
     ],
   },
   {
@@ -551,7 +565,7 @@ export const legendStuff = [
     name: "2017년 롯데 자이언츠 5년 만에 가을 야구 진출",
     roaster: 4,
     item: [
-      {}
+      { legend: "양의지", player: "강민호", years: 2017 },
     ],
   },
   {
@@ -571,6 +585,7 @@ export const legendStuff = [
     item: [
       { legend: "이상훈", player: "양현종", years: 2017 },
       { legend: "이범호", player: "헥터", years: 2017 },
+      { legend: "양현종", player: "이범호", years: 2017 },
     ],
   },
   {
@@ -578,7 +593,7 @@ export const legendStuff = [
     name: "2018년 한화 이글스 11년 만의 가을야구",
     roaster: 2,
     item: [
-      {}
+      { legend: "강민호", player: "김태균", years: 2018 },
     ],
   },
   {
@@ -587,6 +602,7 @@ export const legendStuff = [
     roaster: 3,
     item: [
       { legend: "김동주", player: "김동엽", years: 2018 },
+      { legend: "손아섭", player: "한유섬", years: 2018 },
     ],
   },
   {
@@ -606,6 +622,7 @@ export const legendStuff = [
     item: [
       { legend: "우즈", player: "페르난데스", years: 2020 },
       { legend: "박한이", player: "박용택", years: 2020 },
+      { legend: "강민호", player: "양의지", years: 2020 },
     ],
   },
 
@@ -623,7 +640,7 @@ export const legendStuff = [
     name: "2020년 NC 다이노스 첫번째 우승",
     roaster: 2,
     item: [
-      {}
+      { legend: "강민호", player: "양의지", years: 2020 },
     ],
   },
   {
@@ -631,7 +648,7 @@ export const legendStuff = [
     name: "2021년 KT 위즈 첫번째 우승",
     roaster: 3,
     item: [
-      {}
+      { legend: "손아섭", player: "황재균", years: 2021 },
     ],
   },
   {
@@ -639,7 +656,8 @@ export const legendStuff = [
     name: "2022년 SSG 랜더스 와이어 투 와이어 우승",
     roaster: 4,
     item: [
-      {}
+      { legend: "오승환", player: "추신수", years: 2022 },
+      { legend: "최정", player: "김광현", years: 2022 },
     ],
   },
   {
@@ -647,7 +665,7 @@ export const legendStuff = [
     name: "2023년 LG 트윈스 29년 만의 우승",
     roaster: 5,
     item: [
-      {}
+      { legend: "김현수", player: "오지환", years: 2023 },
     ],
   },
 ];
