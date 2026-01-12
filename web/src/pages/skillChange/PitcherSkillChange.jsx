@@ -4,7 +4,7 @@ import { pickByProbability, PROB_LEGEND } from "@/utils/skill/skillProbability.j
 import styles from "@/styles/pages/skillCard.module.scss";
 import { useNavigate } from "react-router-dom";
 import { legendPitcherData } from "@/data/player/legend/legendPitcherData.js";
-import PitcherSkillCard from "@/pages/skillChange/PitcherSkillCard.jsx";
+import PitcherSkillCard from "@/feature/skillSimulate/components/cards/PitcherSkillCard.jsx";
 
 const PitcherSkillChange = () => {
   const navigate = useNavigate();

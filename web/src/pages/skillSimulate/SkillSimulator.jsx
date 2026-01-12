@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/pages/dictionary/Dictionary.module.scss";
+import styles from "./SkillSimulator.module.scss";
 import pitcherImg from "@/assets/dictionary/pitcherImg.png";
 import hitterImg from "@/assets/dictionary/hitterImg.png";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
