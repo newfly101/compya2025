@@ -1,7 +1,7 @@
 import React from "react";
 import NoticeCard from "@/feature/notice/components/cards/NoticeCard.jsx";
 import funNotice from "@/data/FunNotice.js";
-import styles from "./FunNoticeList,module.scss";
+import styles from "./FunNoticeList.module.scss";
 
 const FunNoticeList = () => {
   return (
