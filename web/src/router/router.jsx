@@ -5,7 +5,7 @@ import { lazy } from "react";
 const LegendCalendar = lazy(() => import("@/pages/historyMode/LegendCalendar.jsx"));
 const Home = lazy(() => import("@/pages/Home.jsx"));
 const Login = lazy(() => import("@/pages/Login.jsx"));
-const Notice = lazy(() => import("@/pages/Notice.jsx"));
+const Notice = lazy(() => import("@/pages/notice/Notice.jsx"));
 const FunNoticePage = lazy(() => import("@/components/common/page/FunNoticePage.jsx"));
 
 const SkillSimulator = lazy(() => import("@/pages/skillChange/SkillSimulator.jsx"));
