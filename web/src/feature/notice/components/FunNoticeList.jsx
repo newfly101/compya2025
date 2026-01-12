@@ -1,5 +1,5 @@
 import React from "react";
-import NoticeCard from "@/components/common/NoticeCard.jsx";
+import NoticeCard from "@/feature/notice/components/cards/NoticeCard.jsx";
 import funNotice from "@/data/FunNotice.js";
 import styles from "@/styles/layout/CouponCard.module.scss";
 

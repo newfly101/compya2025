@@ -1,6 +1,6 @@
 import React from "react";
-import styles from "@/styles/layout/EventCard.module.scss";
-import EventCard from "@/components/common/EventCard.jsx";
+import styles from "@/shared/ui/cafeLinkCard/CafeLinkCard.module.scss";
+import CafeLinkCard from "@/shared/ui/cafeLinkCard/CafeLinkCard.jsx";
 
 const OfficialNoticeList = ({data}) => {
   return (
@@ -8,7 +8,7 @@ const OfficialNoticeList = ({data}) => {
       <h3>📢 컴프야 공식 카페 공지사항</h3>
       <div className={styles.grid}>
         {data.map((item) => (
-          <EventCard
+          <CafeLinkCard
             key={item.id}
             title={item.title}
             image={item.image}

@@ -1,8 +1,8 @@
 import React, { useMemo } from "react";
-import EventCard from "@/components/common/EventCard.jsx";
-import styles from "@/styles/layout/EventCard.module.scss";
+import styles from "@/shared/ui/cafeLinkCard/CafeLinkCard.module.scss";
 import { parseDate } from "@/utils/parseDate.js";
 import { sortCoupons } from "@/utils/sortCoupons.js";
+import CafeLinkCard from "@/shared/ui/cafeLinkCard/CafeLinkCard.jsx";
 
 const EventList = ({ data, limit, short = false }) => {
   const sorted = sortCoupons(data);
@@ -35,7 +35,7 @@ const EventList = ({ data, limit, short = false }) => {
       <h3>{!short && "🎉 이벤트 리스트"}</h3>
       <div className={`${short ? styles.shortGrid : styles.grid}`}>
         {activeEvents.map((item) => (
-          <EventCard
+          <CafeLinkCard
             key={item.id}
             title={item.title}
             image={item.image}
@@ -51,7 +51,7 @@ const EventList = ({ data, limit, short = false }) => {
           <h3>🎉 종료된 리스트</h3>
           <div className={styles.grid}>
             {expiredEvents.map((item) => (
-              <EventCard
+              <CafeLinkCard
                 key={item.id}
                 title={item.title}
                 image={item.image}

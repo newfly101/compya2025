@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import CouponCard from "@/components/common/CouponCard.jsx";
+import CouponCard from "@/feature/notice/components/cards/CouponCard.jsx";
 import styles from "@/styles/layout/CouponCard.module.scss";
 
 import { parseDate } from "@/utils/parseDate.js";
