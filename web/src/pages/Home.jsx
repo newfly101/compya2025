@@ -1,6 +1,6 @@
 import styles from "@/styles/pages/Home.module.scss";
 import coupons from "@/data/Coupon.js";
-import CouponList from "@/feature/notice/components/CouponList.jsx";
+import CouponList from "@/feature/notice/components/couponList/CouponList.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import EventList from "@/feature/notice/components/eventList/EventList.jsx";
 import events from "@/data/Events.js";

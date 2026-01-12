@@ -1,10 +1,10 @@
 import { cafeNotice } from "@/data/CafeNotice.js";
 import coupons from "@/data/Coupon.js";
 import events from "@/data/Events.js";
-import FunNoticeList from "@/feature/notice/components/FunNoticeList.jsx";
+import FunNoticeList from "@/feature/notice/components/FunNoticeList/FunNoticeList.jsx";
 import OfficialNoticeList from "@/feature/notice/components/officialNoticeList/OfficialNoticeList.jsx";
 import EventList from "@/feature/notice/components/eventList/EventList.jsx";
-import CouponList from "@/feature/notice/components/CouponList.jsx";
+import CouponList from "@/feature/notice/components/couponList/CouponList.jsx";
 
 export const NOTICE_TABS = {
   "": {
