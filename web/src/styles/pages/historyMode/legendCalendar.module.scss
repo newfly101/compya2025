@@ -1,36 +1,139 @@
+@use "@/styles/variables/colors" as *;
+
+.container {
+  max-width: 90rem;
+  margin: 6rem auto;
+  padding: 0 2.4rem;
+
+
+  & > .header {
+    border-bottom: 1px solid #1f2937;
+    padding-bottom: 2.4rem;
+    margin-bottom: 3.2rem;
+
+    & > .title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      margin-bottom: 1.2rem;
+    }
+    & > .meta {
+      font-size: 2.8rem;
+      color: $primary8;
+      display: flex;
+      gap: 1rem;
+    }
+
+    & > .category {
+      display: inline-block;
+      font-size: 1.5rem;
+      color: #60a5fa;
+      margin-bottom: 0.8rem;
+      cursor: pointer;
+
+      &:hover {
+        color: #89bcfb;
+        font-weight: 700;
+      }
+    }
+  }
+}
+/* =========================
+   Wrapper
+========================= */
 .legendWrapper {
   max-width: 900px;
   margin: 0 auto;
   padding: 1.5rem;
   font-family: system-ui, sans-serif;
+  color: $text-primary;
 }
 
-/* 검색 */
-.legendSearch {
+/* =========================
+   Search
+========================= */
+
+.searchWrapper {
+  position: relative;
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
+  max-width: 15rem;
   margin-bottom: 1rem;
 }
 
-/* 검색 결과 */
-.legendResult {
-  margin-bottom: 1.5rem;
-}
-
-.legendResultItem {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.6rem 0.8rem;
-  border-radius: 6px;
+.clearButton {
+  position: absolute;
+  right: 0.6rem;
+  top: 1.3rem;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: $text-muted;
+  font-size: 0.9rem;
   cursor: pointer;
+  padding: 0.2rem;
+
+  &:hover {
+    color: $text-primary;
+  }
 }
 
-.legendResultItem:hover {
-  background: #f3f4f6;
+.legendSearch {
+  width: 100%;
+  max-width: 15rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+
+  background: $surface2;
+  color: $text-primary;
+  border: 1px solid $border;
+  border-radius: 6px;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    background: $surface3;
+  }
 }
 
-/* 캘린더 */
+/* =========================
+   Autocomplete
+========================= */
+.autoComplete {
+  position: absolute;
+  top: calc(100% + 2px); // input 바로 아래
+  left: 0;
+  z-index: 50;
+  //overflow: hidden;
+
+  border: 1px solid $border;
+  border-radius: 6px;
+  background: rgba(31, 26, 41, 0.8);
+  max-width: 15rem;
+  width: 100%;
+}
+
+.autoCompleteItem {
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  color: $text-secondary;
+  font-size: clamp(0.65rem, 1.3vw, 1.2rem);
+
+  &:hover {
+    background: $primary-bg;
+    color: $text-primary;
+  }
+}
+.highlighted {
+  background: $primary-hover;
+  color: $text-primary;
+}
+
+/* =========================
+   Calendar Grid
+========================= */
 .calendarGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
@@ -38,57 +141,94 @@
 }
 
 .calendarCell {
-  border: 1px solid #e5e7eb;
+  border: 1px solid $border;
   border-radius: 8px;
   padding: 0.75rem;
-  min-height: 80px;
-  //background: #fff;
-
-  & > .active {
-    border-color: #2563eb;
-    background: #eff6ff;
-  }
+  min-height: 90px;
+  background: $surface1;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
+/* =========================
+   Day Labels
+========================= */
 .dayLabel {
   font-weight: 600;
   margin-bottom: 0.4rem;
+  font-size: clamp(0.65rem, 1.3vw, 1rem);
+  color: $text-secondary;
+  white-space: nowrap;
 }
 
-/* 이벤트 점 */
-.dot {
-  font-size: 0.8rem;
-  color: #2563eb;
+.subLabel {
+  margin-top: 0.2rem;
+  font-size: clamp(0.55rem, 1.1vw, 0.8rem);
+  line-height: 1;
+  color: $text-muted;
+  letter-spacing: 0.02em;
 }
 
-
-.autoComplete {
-  border: 1px solid #e5e7eb;
-  border-radius: 6px;
-  //background: #fff;
-  margin-top: 4px;
-  overflow: hidden;
-}
-
-.autoCompleteItem {
-  padding: 0.6rem 0.8rem;
-  cursor: pointer;
-
-  &:hover {
-    background: #f3f4f6;
-  }
-}
-
-.calendarCell {
-  /* 기존 */
-}
-
+/* =========================
+   States
+========================= */
 .active {
-  border-color: #60a5fa;
-  background: #eff6ff;
+  border-color: $primary;
+  background: $primary-bg;
 }
 
 .focused {
-  border-color: #2563eb;
-  background: #dbeafe;
+  border-color: $primary-active;
+  background: rgba($primary, 0.25);
+}
+
+/* =========================
+   Dot (Desktop only)
+========================= */
+.dot {
+  font-size: clamp(0.6rem, 2.4vw, 0.75rem);
+  color: $noticeHeader;
+  margin-top: 0.4rem;
+}
+
+/* =========================
+   Player List
+========================= */
+.playerList {
+  margin-top: 0.4rem;
+  padding-left: 1rem;
+  color: $text-primary;
+
+  li {
+    list-style: disc;
+    margin-bottom: 0.25rem;
+    font-size: clamp(0.6rem, 1.4vw, 0.85rem);
+    white-space: nowrap;
+  }
+}
+
+/* =========================
+   Mobile
+========================= */
+@media (max-width: 768px) {
+  .legendWrapper {
+    padding: 0;
+    margin: 0;
+  }
+
+  .calendarGrid {
+    gap: 0.5rem;
+  }
+
+  .subLabel {
+    margin-bottom: 0.5rem;
+  }
+
+  .playerList {
+    margin: 0;
+    padding: 0;
+
+    li {
+      list-style: none;
+    }
+  }
 }
