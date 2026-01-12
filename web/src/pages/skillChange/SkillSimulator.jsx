@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "@/pages/dictionary/Dictionary.module.scss";
 import pitcherImg from "@/assets/dictionary/pitcherImg.png";
-import NavigationCard from "@/shared/ui/navigationCard/NavigationCard.jsx";
 import hitterImg from "@/assets/dictionary/hitterImg.png";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
+import { NavigationCard } from "@/shared/ui/navigationCard/index.js";
 
 const SkillSimulator = () => {
   const {
