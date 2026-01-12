@@ -110,3 +110,15 @@
   width: 90%;
   margin: 3rem 5%;
 }
+
+
+@media (max-width: 768px) {
+  .homePage {
+    .hero {
+      padding: 5rem 2rem;
+    }
+    .features {
+      margin-top: 0;
+    }
+  }
+}

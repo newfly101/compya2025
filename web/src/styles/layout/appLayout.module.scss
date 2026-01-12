@@ -9,6 +9,7 @@
   align-items: center;
   overflow-x: hidden;
 }
+
 .content {
   flex: 1;
   padding: 2rem 1rem;
@@ -29,6 +30,7 @@
     background: $surface3;
   }
 }
+
 .footer > .inner {
   width: 100%;
   max-width: 1200px;
@@ -38,29 +40,55 @@
   flex: 1;
   justify-content: space-between;
   margin: 1.6rem;
+  gap: 2rem;
+  align-items: center;
 
   & > .legal {
     display: flex;
     flex-direction: row;
     font-size: 1.6rem;
+    gap: 2rem;
 
-    p {
-      margin-right: 2rem;
-      cursor: pointer;
-
-      &:hover {
-        color: #60a5fa;
-      }
-    }
-    .disabled {
-      cursor: default;
+    a {
+      color: $text-secondary;
+      text-decoration: none;
 
       &:hover {
         color: $text-primary;
       }
     }
+
+    .disabled {
+      color: $text-muted;
+      cursor: default;
+    }
+  }
+
+  & > .copy {
+    font-size: 1.4rem;
+    color: $text-muted;
+  }
+
+  & > .actions {
+    display: flex;
+    gap: 1rem;
+
+    .kakao {
+      background: #fee500;
+      color: #000;
+      border: none;
+      border-radius: 999px;
+      padding: 0.8rem 1.4rem;
+      font-size: 1.4rem;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
   }
 }
+
 .inner {
   width: 100%;
   max-width: 1200px;
@@ -103,6 +131,36 @@
   }
 
   .content {
-    padding-bottom: 80px; // 하단 Nav 가림 방지
+    padding-bottom: 80px;
+  }
+
+  .footer {
+    margin-bottom: 6.4rem;
+
+    & > .inner {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+      gap: 1.2rem;
+
+      & > .copy {
+        font-size: 1.3rem;
+      }
+
+      & > .legal {
+        justify-content: center;
+        gap: 1.6rem;
+      }
+
+      & > .actions {
+        width: 100%;
+
+        .kakao {
+          width: 100%;
+          padding: 1rem;
+          font-size: 1.5rem;
+        }
+      }
+    }
   }
 }
