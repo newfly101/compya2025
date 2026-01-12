@@ -1,44 +1,49 @@
 import React from "react";
 import styles from "./CouponCard.module.scss";
 
-const CouponCard = ({ code, rewardTitle, rewardDetail, expireDate, disabled, short=false }) => {
-  const copy = () => {
+const CouponCard = ({ code, rewardTitle, rewardDetail, expireDate, disabled, short = false }) => {
+  const openCoupon = () => {
     const url = `http://withhive.me/399/${code}`;
     window.open(url, "_blank");
   };
 
   return (
-    <div className={styles.card}>
-
-      <div className={styles.header}>
-        <span className={styles.code}>{code}</span>
-        <button data-gtm={"coupon_click"} data-coupon-code={code} className={`${styles.copyBtn} ${disabled ? styles.disabled : ""}`}
-                onClick={copy} disabled={disabled}>
+    <article className={styles.card} aria-disabled={disabled}>
+      <header className={styles.header}>
+        <code className={styles.code}>{code}</code>
+        <button
+          type="button"
+          data-gtm={"coupon_click"}
+          data-coupon-code={code}
+          aria-label={`쿠폰 ${code} 바로가기`}
+          className={`${styles.copyBtn} ${disabled ? styles.disabled : ""}`}
+          onClick={openCoupon}
+          disabled={disabled}>
           바로가기
         </button>
-      </div>
+      </header>
 
-      <div className={styles.reward}>
-        <div className={styles.title}>
+      <section className={styles.reward}>
+        <h3 className={styles.title}>
           {rewardTitle.split(" + ").map((item, idx) => (
             <div key={idx}>{item}</div>
           ))}
-        </div>
+        </h3>
         {short === false &&
-          <div className={styles.detail}>{rewardDetail}</div>
+          <p className={styles.detail}>{rewardDetail}</p>
         }
-      </div>
+      </section>
 
-      <div className={styles.expire}>
-        ⏱ <span>유효기간 {expireDate}</span>
-      </div>
+      <footer className={styles.expire}>
+        ⏱ <time>유효기간 {expireDate}</time>
+      </footer>
 
       {short === false &&
-        <div className={styles.infoText}>
+        <p className={styles.infoText}>
           바로가기 버튼을 누르면 게임이 실행되며 쿠폰을 수령합니다.
-        </div>
+        </p>
       }
-    </div>
+    </article>
   );
 };
 
