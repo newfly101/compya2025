@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "@/pages/dictionary/Dictionary.module.scss";
-import DictionaryCard from "@/feature/dictionary/components/dictionaryCard/DictionaryCard.jsx";
+import NavigationCard from "@/shared/ui/navigationCard/NavigationCard.jsx";
 import pitcherImg from "@/assets/dictionary/pitcherImg.png";
 import hitterImg from "@/assets/dictionary/hitterImg.png";
 import coachImg from "@/assets/dictionary/coachImg.png";
@@ -22,7 +22,7 @@ const Dictionary = () => {
         onBack={moveHome}
       />}
       children={<div className={styles.cardGrid}>
-        <DictionaryCard
+        <NavigationCard
           icon="🧤"
           title="투수 스킬 백과사전"
           desc={["레전드 투수 스킬 조합", "플래티넘 투수 스킬 조합", "선발/중계/마무리 조합"]}
@@ -30,7 +30,7 @@ const Dictionary = () => {
           image={pitcherImg}
           disabled={false}
         />
-        <DictionaryCard
+        <NavigationCard
           icon="⚾"
           title="타자 스킬 백과사전"
           desc={["레전드 타자 스킬 조합", "플레티넘 타자 스킬 조합", "포지션 별 추천 조합"]}
@@ -38,7 +38,7 @@ const Dictionary = () => {
           image={hitterImg}
           disabled={false}
         />
-        <DictionaryCard
+        <NavigationCard
           icon="🧠"
           title="코치 스킬 백과사전"
           desc={["코치 스킬 메타 추천", "코치 스킬별 설명", "마스터 코치 추천 스킬"]}
@@ -46,7 +46,7 @@ const Dictionary = () => {
           image={coachImg}
           disabled={true}
         />
-        <DictionaryCard
+        <NavigationCard
           icon="🧠"
           title="구단 선수 백과사전"
           desc={["구단별 선수 백과사전", "추천 시그니처 백과사전"]}
