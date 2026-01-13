@@ -1,5 +1,5 @@
 import React from "react";
-import RecommendSkillCard from "@/feature/dictionary/components/cards/RecommendSkillCard.jsx";
+import RecommendCard from "@/feature/dictionary/components/cards/recommendCard/RecommendCard.jsx";
 import NoRecommendSkillCard from "@/feature/dictionary/components/cards/NoRecommendSkillCard.jsx";
 
 const RecommendModal = ({
@@ -12,7 +12,7 @@ const RecommendModal = ({
   if (!isOpen) return null;
 
   return matched ? (
-    <RecommendSkillCard
+    <RecommendCard
       isOpen
       selected={selected}
       combos={combos}
