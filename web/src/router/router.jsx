@@ -13,8 +13,8 @@ const PitcherSkillChange = lazy(() => import("@/pages/skillSimulate/skillChange/
 const HitterSkillChange = lazy(() => import("@/pages/skillSimulate/skillChange/v2/HitterSkillChange.jsx"));
 
 const Dictionary = lazy(() => import("@/pages/dictionary/Dictionary.jsx"));
-const SkillDictionary = lazy(() => import("@/pages/dictionary/components/PitcherSkillDictionary.jsx"));
-const HitterSkillDictionary = lazy(() => import("@/pages/dictionary/components/HitterSkillDictionary.jsx"));
+const PitcherDictionary = lazy(() => import("@/pages/dictionary/PitcherDictionary.jsx"));
+const HitterDictionary = lazy(() => import("@/pages/dictionary/HitterDictionary.jsx"));
 
 const TipPage = lazy(() => import("@/pages/TipPage.jsx"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy.jsx"));
@@ -40,8 +40,8 @@ const router = createBrowserRouter([
       { path: "simulate/pitcher", element: <PitcherSkillChange />, handle: { title: "컴프야펀 | 투수 고스변 시뮬레이터" } },
       { path: "simulate/hitter", element: <HitterSkillChange />, handle: { title: "컴프야펀 | 타자 고스변 시뮬레이터" } },
       { path: "tips", element: <TipPage />, handle: { title: "컴프야펀 | 팁 모아보기" } },
-      { path: "dictionary/pitcher", element: <SkillDictionary />, handle: { title: "컴프야펀 | 투수 스킬 백과사전" } },
-      { path: "dictionary/hitter", element: <HitterSkillDictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
+      { path: "dictionary/pitcher", element: <PitcherDictionary />, handle: { title: "컴프야펀 | 투수 스킬 백과사전" } },
+      { path: "dictionary/hitter", element: <HitterDictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
       { path: "mode/history", element: <LegendCalendar />, handle: { title: "컴프야펀 | 히스토리 모드 레전드 재료" } },
       { path: "dictionary", element: <Dictionary />, handle: { title: "컴프야펀 | 백과사전 홈" } },
       { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
