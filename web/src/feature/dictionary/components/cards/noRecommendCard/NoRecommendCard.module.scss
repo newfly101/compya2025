@@ -1,0 +1,102 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+
+  /* 중앙 모달 */
+  .centerModal {
+    width: min(92vw, 50rem);
+    max-height: 80vh;
+    background: #1b1b2a;
+    border-radius: 16px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    margin-top: 4rem;
+
+    .modalHeader {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      .modalTitle {
+        font-size: 1.8rem;
+        text-align: center;
+        margin-bottom: 0.75rem;
+        flex: 1;
+      }
+
+      .modalCloseIcon {
+        background: transparent;
+        border: none;
+        color: #aaa;
+        font-size: 2rem;
+        cursor: pointer;
+        padding: 0.2rem 0.6rem;
+        line-height: 1;
+
+        &:hover {
+          color: #fff;
+        }
+      }
+    }
+
+    .modalBody {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 0.2rem 0.4rem 0.2rem;
+      text-align: center;
+
+      .noRecommendIcon {
+        font-size: 2.4rem;
+        text-align: center;
+        margin-bottom: 0.4rem;
+        opacity: 0.9;
+      }
+
+      .noRecommendText {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #f5c542;
+        text-align: center;
+        line-height: 1.5;
+        margin-bottom: 0.4rem;
+
+        & > strong {
+          font-weight: 700;
+        }
+      }
+
+      .noRecommendSub {
+        font-size: 1.5rem;
+        color: #9aa0b4;
+        text-align: center;
+        line-height: 1.4;
+      }
+
+      .modalClose {
+        margin-top: 0.75rem;
+        padding: 0.7rem 2.4rem ;
+        border-radius: 10px;
+        background: #2c2c44;
+        color: #fff;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+
+        position: sticky;
+        bottom: 0;
+        z-index: 10;
+
+        &:hover {
+          background: #3d3d59;
+        }
+      }
+    }
+  }
+}
