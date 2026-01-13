@@ -1,0 +1,35 @@
+.summary {
+  background: $primary-bg;
+  border-radius: 0.8rem;
+  padding: 2rem;
+  margin-bottom: 3.2rem;
+  & > ul {
+    list-style: disc;
+    padding-left: 2rem;
+
+    & > li {
+      line-height: 2;
+      font-size: 1.6rem;
+    }
+  }
+}
+
+.body > ol {
+  padding-left: 2rem;
+  & > li {
+    font-size: 1.6rem;
+    line-height: 1.8;
+    margin-bottom: 1.4rem;
+    font-weight: lighter;
+  }
+}
+
+.footer {
+  margin-top: 48px;
+
+  & > p {
+    font-size: 1.6rem;
+    line-height: 1.8;
+    color: $primary;
+  }
+}

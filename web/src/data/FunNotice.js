@@ -2,7 +2,7 @@ const funNotice = [
   {
     id: 1,
     title: 0,
-    category: "← 공지사항",
+    category: "공지사항",
     titleName: "📢 컴프야펀 소프트런칭 안내",
     version: "v0.1.0",
     updateDate: "2025-12-19",
@@ -23,7 +23,7 @@ const funNotice = [
   {
     id: 2,
     title: 0,
-    category: "← 공지사항",
+    category: "공지사항",
     titleName: "📢 고스변 시뮬레이터 업데이트",
     version: "v0.1.1",
     updateDate: "2025-12-25",
@@ -47,7 +47,7 @@ const funNotice = [
   {
     id: 3,
     title: 0,
-    category: "← 공지사항",
+    category: "공지사항",
     titleName: "📢 팁 모아보기 업데이트",
     version: "v0.1.2",
     updateDate: "2025-12-29",
@@ -71,7 +71,7 @@ const funNotice = [
   {
     id: 4,
     title: 0,
-    category: "← 공지사항",
+    category: "공지사항",
     titleName: "📃 2026 패치노트 - 투수 스킬 조합 백과사전 추가",
     version: "v0.1.4",
     updateDate: "2026-01-02",
@@ -105,7 +105,7 @@ const funNotice = [
   {
     id: 5,
     title: 0,
-    category: "← 공지사항",
+    category: "공지사항",
     titleName: "👀 2026 업데이트 예정사항",
     version: "v0.1.5",
     updateDate: "2026-01-03",
@@ -147,7 +147,7 @@ const funNotice = [
   {
     id: 6,
     title: 0,
-    category: "← 공지사항",
+    category: "공지사항",
     titleName: "📢 투수 및 타자 고스변 시뮬레이터 업데이트",
     version: "v0.1.7",
     updateDate: "2026-01-09",
@@ -177,7 +177,7 @@ const funNotice = [
   {
     id: 7,
     title: 0,
-    category: "← 공지사항",
+    category: "공지사항",
     titleName: "📢 히스토리모드 재료 탐색기",
     version: "v0.1.8",
     updateDate: "2026-01-12",
