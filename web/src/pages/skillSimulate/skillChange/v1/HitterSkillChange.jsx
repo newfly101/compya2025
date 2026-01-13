@@ -58,21 +58,6 @@ const HitterSkillChange = () => {
                   <span className={styles.count}>{skillChangeCount}</span>
                 </div>
               </button>
-
-              {/* 개발자 모드 자동 돌리기 기능 */}
-              {/*<button*/}
-              {/*  className={styles.itemButton}*/}
-              {/*  onClick={() => {*/}
-              {/*    if (isRolling) {*/}
-              {/*      stopRolling();*/}
-              {/*    } else {*/}
-              {/*      startRollingUntil3Legend();*/}
-              {/*    }*/}
-              {/*  }}*/}
-              {/*  disabled={!selectedHitter}*/}
-              {/*>*/}
-              {/*  {isRolling ? "연속 변경 중지" : "3 LEGEND 나올 때까지 변경"}*/}
-              {/*</button>*/}
             </section>
           )}
         </section>} />
