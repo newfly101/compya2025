@@ -1,142 +1,26 @@
-import React, { useRef, useState } from "react";
-import styles from "@/styles/pages/SkillDictionary.module.scss";
+import React from "react";
 import RecommendSkillCard from "@/feature/dictionary/components/cards/RecommendSkillCard.jsx";
 import NoRecommendSkillCard from "@/feature/dictionary/components/cards/NoRecommendSkillCard.jsx";
-import { HITTER_SKILLS } from "@/data/skill/HITTER_SKILLS.js";
-import { HITTER_RECOMMEND } from "@/data/skill/HITTER_RECOMMEND.js";
-import { HITTER_SKILL_EXCLUSIVE } from "@/feature/dictionary/config/skillExclusive.js";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
 import SkillGradeToggle from "@/feature/dictionary/components/SkillGradeToggle.jsx";
 import SkillPanels from "@/feature/dictionary/components/SkillPanels.jsx";
+import { usePlayerSkillChange } from "@/feature/dictionary/hooks/usePlayerSkillChange.js";
+import { HITTER_SKILLS } from "@/data/skill/HITTER_SKILLS.js";
 
 
 const HitterSkillDictionary = () => {
   const { moveTo } = useContentPageHeader();
-
-  const [standard, setStandard] = useState("레전드"); // 레전드 | 플래티넘
-  const [selectedSkills, setSelectedSkills] = useState([]);
-  const selectedSkillsRef = useRef([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hasRecommend, setHasRecommend] = useState(true);
-  const [recommendCombos, setRecommendCombos] = useState([]);
-
-  const handleToggleSkill = (skill) => {
-    const skillName = skill.name;
-
-    setSelectedSkills((prev) => {
-      let next = prev;
-
-      if (prev.includes(skillName)) {
-        next = prev.filter((s) => s !== skillName);
-      } else {
-        if (prev.length >= 2) return prev;
-        next = [...prev, skillName];
-      }
-
-      selectedSkillsRef.current = next;
-      return next;
-    });
-  };
-
-  const initSelected = (type) => {
-    setStandard(type);
-
-    if (type === "플래티넘") {
-      setSelectedSkills((prev) =>
-        prev.filter(
-          (skill) => !HITTER_SKILLS.legend.some((l) => l.name === skill),
-        ),
-      );
-      selectedSkillsRef.current = [];
-    } else {
-      setSelectedSkills([]);
-      selectedSkillsRef.current = [];
-    }
-
-    setRecommendCombos([]);
-  };
-
-  const handleOpenRecommend = () => {
-    const skillsNow = selectedSkillsRef.current;
-
-    if (skillsNow.length === 0) return;
-
-    if (
-      standard === "레전드" &&
-      skillsNow.includes("슈퍼스타") &&
-      skillsNow.some((skillName) => HITTER_SKILLS.platinum.some((s) => s.name === skillName))
-    ) {
-      setHasRecommend(false);
-      setIsModalOpen(true);
-      return;
-    }
-
-
-    const matchedCombos = HITTER_RECOMMEND.filter((combo) =>
-      skillsNow.every((skill) => combo.skills.includes(skill)),
-    );
-
-    const finalCombos =
-      standard === "플래티넘"
-        ? matchedCombos.filter(
-          (combo) =>
-            combo.skills.every(
-              (skill) =>
-                !HITTER_SKILLS.legend.some((l) => l.name === skill),
-            ),
-        )
-        : matchedCombos;
-
-    // console.log("finalCombos",finalCombos);
-
-    setRecommendCombos(finalCombos);
-    setHasRecommend(finalCombos.length > 0);
-    setIsModalOpen(true);
-  };
-
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedSkills([]);
-    selectedSkillsRef.current = [];
-    setRecommendCombos([]);
-    setHasRecommend(true);
-  };
-
-  const isSkillDisabled = (skillName, selectedSkills) => {
-    if (selectedSkills.includes(skillName)) return false;
-    if (selectedSkills.length === 0) return false;
-
-    return selectedSkills.some(
-      (selected) =>
-        HITTER_SKILL_EXCLUSIVE[selected]?.includes(skillName),
-    );
-  };
-
-
-  const renderGroup = (title, grade, skills) => (
-    <section className={styles.group}>
-      <h3 className={styles.groupTitle}>{title}</h3>
-      <div className={styles.buttonGrid}>
-        {skills.map((skill) => (
-          <button
-            key={skill.id}
-            disabled={isSkillDisabled(skill.name, selectedSkills)}
-            className={`
-                      ${styles.skillBtn}
-                      ${styles[grade]}
-                      ${selectedSkills.includes(skill.name) ? styles.active : ""}
-                      ${isSkillDisabled(skill.name, selectedSkills) ? styles.disabled : ""}
-                    `}
-            onClick={() => handleToggleSkill(skill)}
-          >
-            {skill.name}
-          </button>
-        ))}
-      </div>
-    </section>
-  );
+  const { standard,
+    selectedSkills,
+    isModalOpen,
+    hasRecommend,
+    recommendCombos,
+    handleToggleSkill,
+    initSelected,
+    handleOpenRecommend,
+    handleCloseModal,
+    isSkillDisabled} = usePlayerSkillChange();
 
   return (
     <ContentPageLayout
@@ -171,9 +55,12 @@ const HitterSkillDictionary = () => {
               />
             )
           )}
-
-          <SkillPanels standard={standard} renderGroup={renderGroup} />
-
+          <SkillPanels standard={standard}
+                       selectedSkills={selectedSkills}
+                       isSkillDisabled={isSkillDisabled}
+                       handleToggleSkill={handleToggleSkill}
+                       data={HITTER_SKILLS}
+          />
 
         </>}
     />);
