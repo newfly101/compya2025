@@ -1,17 +1,17 @@
 import { useRef, useState } from "react";
 
 export const usePlayerSkillChange = () => {
-  const [standard, setStandard] = useState("레전드"); // 레전드 | 플래티넘
-  const [selectedSkills, setSelectedSkills] = useState([]);
-  const selectedSkillsRef = useRef([]);
-  const [hasRecommend, setHasRecommend] = useState(true);
-  const [recommendCombos, setRecommendCombos] = useState([]);
+  const [tier, setTier] = useState("레전드"); // 레전드 | 플래티넘
+  const [selected, setSelected] = useState([]);
+  const selectedRef = useRef([]);
+  const [matched, setMatched] = useState(true);
+  const [matchedCombos, setMatchedCombos] = useState([]);
 
   /** common function **/
-  const handleToggleSkill = (skill) => {
+  const skillToggle = (skill) => {
     const skillName = skill.name;
 
-    setSelectedSkills((prev) => {
+    setSelected((prev) => {
       let next = prev;
 
       if (prev.includes(skillName)) {
@@ -21,7 +21,7 @@ export const usePlayerSkillChange = () => {
         next = [...prev, skillName];
       }
 
-      selectedSkillsRef.current = next;
+      selectedRef.current = next;
       return next;
     });
   };
@@ -29,36 +29,36 @@ export const usePlayerSkillChange = () => {
   // 초기화
   const initSelected = (type, player) => {
     // ex) initSelected(type, HITTER_SKILLS);
-    setStandard(type);
+    setTier(type);
 
     if (type === "플래티넘") {
-      setSelectedSkills((prev) =>
+      setSelected((prev) =>
         prev.filter(
           (skill) => !player.legend.some((l) => l.name === skill),
         ),
       );
-      selectedSkillsRef.current = [];
+      selectedRef.current = [];
     } else {
-      setSelectedSkills([]);
-      selectedSkillsRef.current = [];
+      setSelected([]);
+      selectedRef.current = [];
     }
 
-    setRecommendCombos([]);
+    setMatchedCombos([]);
   }
 
   // 스킬 추천 조합
-  const recommendSkills = (player, recommend) => {
-    // recommendSkills(HITTER_SKILLS, HITTER_RECOMMEND)
-    const skillsNow = selectedSkillsRef.current;
+  const skillCombo = (player, recommend) => {
+    // skillCombo(HITTER_SKILLS, HITTER_RECOMMEND)
+    const skillsNow = selectedRef.current;
 
     if (skillsNow.length === 0) return;
 
     if (
-      standard === "레전드" &&
+      tier === "레전드" &&
       skillsNow.includes("슈퍼스타") &&
       skillsNow.some((skillName) => player.platinum.some((s) => s.name === skillName))
     ) {
-      setHasRecommend(false);
+      setMatched(false);
       return;
     }
 
@@ -67,7 +67,7 @@ export const usePlayerSkillChange = () => {
     );
 
     const finalCombos =
-      standard === "플래티넘"
+      tier === "플래티넘"
         ? matchedCombos.filter(
           (combo) =>
             combo.skills.every(
@@ -77,40 +77,39 @@ export const usePlayerSkillChange = () => {
         )
         : matchedCombos;
 
-    setRecommendCombos(finalCombos);
-    setHasRecommend(finalCombos.length > 0);
+    setMatchedCombos(finalCombos);
+    setMatched(finalCombos.length > 0);
 
-    // 결과 값 recommendCombos 에 저장
+    // 결과 값 matchedCombos 에 저장
   }
 
-  const isSkillDisabled = (skillName, selectedSkills, ex) => {
-    // isSkillDisabled(skill.name, selectedSkills, HITTER_SKILL_EXCLUSIVE)
-    if (selectedSkills.includes(skillName)) return false;
-    if (selectedSkills.length === 0) return false;
+  const isSkillDisabled = (skillName, selected, ex) => {
+    // isSkillDisabled(skill.name, selected, HITTER_SKILL_EXCLUSIVE)
+    if (selected.includes(skillName)) return false;
+    if (selected.length === 0) return false;
 
-    return selectedSkills.some(
+    return selected.some(
       (selected) =>
         ex[selected]?.includes(skillName),
     );
   };
 
-  const resetRecommendSkills = () => {
-    setSelectedSkills([]);
-    selectedSkillsRef.current = [];
-    setRecommendCombos([]);
-    setHasRecommend(true);
+  const clearCombo = () => {
+    setSelected([]);
+    selectedRef.current = [];
+    setMatchedCombos([]);
+    setMatched(true);
   };
 
   return {
-    standard,
-    selectedSkills,
-    hasRecommend,
-    recommendCombos,
-    handleToggleSkill,
+    tier,
+    selected,
+    matched,
+    matchedCombos,
     initSelected,
-    recommendSkills,
+    skillToggle,
+    skillCombo,
     isSkillDisabled,
-
-    resetRecommendSkills,
+    clearCombo,
   }
 }

@@ -4,23 +4,23 @@ import NoRecommendSkillCard from "@/feature/dictionary/components/cards/NoRecomm
 
 const RecommendModal = ({
                           isOpen,
-                          hasRecommend,
-                          selectedSkills,
+                          matched,
+                          selected,
                           combos,
                           onClose,
                         }) => {
   if (!isOpen) return null;
 
-  return hasRecommend ? (
+  return matched ? (
     <RecommendSkillCard
       isOpen
-      selectedSkills={selectedSkills}
+      selected={selected}
       combos={combos}
       onClose={onClose}
     />
   ) : (
     <NoRecommendSkillCard
-      skill={selectedSkills.join(" + ")}
+      skill={selected.join(" + ")}
       onClose={onClose}
       mainText="해당 스킬 조합은 잘 사용되지 않습니다."
       subText="다른 스킬 조합을 추천드립니다."

@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
 
-const SkillPanels = ({standard, isSkillDisabled, handleToggleSkill,selectedSkills, data}) => {
+const SkillPanels = ({tier, selected, onCheckDisabled, onToggleSkill, skills}) => {
 
   const renderGroup = (title, grade, skills) => {
     return (
@@ -9,7 +9,7 @@ const SkillPanels = ({standard, isSkillDisabled, handleToggleSkill,selectedSkill
         <h3 className={styles.groupTitle}>{title}</h3>
         <div className={styles.buttonGrid}>
           {skills.map((skill) => {
-            const disabled = isSkillDisabled(skill.name);
+            const disabled = onCheckDisabled(skill.name);
 
             return (
             <button
@@ -18,10 +18,10 @@ const SkillPanels = ({standard, isSkillDisabled, handleToggleSkill,selectedSkill
               className={`
                       ${styles.skillBtn}
                       ${styles[grade]}
-                      ${selectedSkills.includes(skill.name) ? styles.active : ""}
+                      ${selected.includes(skill.name) ? styles.active : ""}
                       ${disabled ? styles.disabled : ""}
                     `}
-              onClick={() => handleToggleSkill(skill)}
+              onClick={() => onToggleSkill(skill)}
             >
               {skill.name}
             </button>
@@ -32,10 +32,10 @@ const SkillPanels = ({standard, isSkillDisabled, handleToggleSkill,selectedSkill
 
   return (
     <footer className={styles.panel}>
-      {standard === "레전드" && renderGroup("레전드", "legend", data.legend)}
-      {renderGroup("플레티넘", "platinum", data.platinum)}
-      {renderGroup("히어로", "hero", data.hero)}
-      {renderGroup("노말", "normal", data.normal)}
+      {tier === "레전드" && renderGroup("레전드", "legend", skills.legend)}
+      {renderGroup("플레티넘", "platinum", skills.platinum)}
+      {renderGroup("히어로", "hero", skills.hero)}
+      {renderGroup("노말", "normal", skills.normal)}
     </footer>
   );
 };

@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
-import { useCardModal } from "@/feature/dictionary/hooks/useCardModal.js";
 
 const gradeClassMap = {
   "졸업": styles.gradeGraduate,
@@ -21,7 +20,7 @@ const BATTING_ORDER_MAP = {
 };
 
 // SAMPLE_RECOMMEND_COMBOS = combos
-const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
+const RecommendSkillCard = ({ isOpen, selected=[], combos, onClose }) => {
   if (!isOpen || combos.length === 0) return null;
 
   const sortedCombos = [...combos].sort((a, b) => {
@@ -37,8 +36,8 @@ const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
     );
   });
 
-  const getBattingOrderLabel = (selectedSkills = []) => {
-    const orders = selectedSkills
+  const getBattingOrderLabel = (selected = []) => {
+    const orders = selected
       .map((skill) => BATTING_ORDER_MAP[skill])
       .filter(Boolean); // undefined 제거
 
@@ -57,8 +56,8 @@ const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
       >
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>
-            {selectedSkills.join(" + ")} 추천 조합
-            {getBattingOrderLabel(selectedSkills)}
+            {selected.join(" + ")} 추천 조합
+            {getBattingOrderLabel(selected)}
           </h2>
 
           <button
@@ -70,8 +69,8 @@ const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
           </button>
         </div>
         {/*<h2 className={styles.modalTitle}>*/}
-        {/*  {selectedSkills.join(" + ")} 추천 조합*/}
-        {/*  {getBattingOrderLabel(selectedSkills)}*/}
+        {/*  {selected.join(" + ")} 추천 조합*/}
+        {/*  {getBattingOrderLabel(selected)}*/}
         {/*</h2>*/}
 
         <div className={styles.modalBody}>
@@ -94,7 +93,7 @@ const RecommendSkillCard = ({ isOpen, selectedSkills=[], combos, onClose }) => {
                     <li
                       key={i}
                       className={
-                        selectedSkills.includes(skill)
+                        selected.includes(skill)
                           ? styles.highlight
                           : ""
                       }

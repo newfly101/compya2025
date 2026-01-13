@@ -16,14 +16,14 @@ const PlayerSkillDictionary = ({
                                }) => {
   const { moveTo } = useContentPageHeader();
   const {
-    standard,
-    selectedSkills,
-    hasRecommend,
-    recommendCombos,
+    tier,
+    selected,
+    matched,
+    matchedCombos,
     initSelected,
-    recommendSkills,
-    handleToggleSkill,
-    resetRecommendSkills,
+    skillCombo,
+    skillToggle,
+    clearCombo,
     isSkillDisabled,
   } = usePlayerSkillChange();
 
@@ -34,13 +34,13 @@ const PlayerSkillDictionary = ({
   };
 
   const onRecommend = () => {
-    recommendSkills(skillData, recommendData);
+    skillCombo(skillData, recommendData);
     modal.open();
   };
 
   const onSkillDisabled = skillExclusive
     ? (skillName) =>
-      isSkillDisabled(skillName, selectedSkills, skillExclusive)
+      isSkillDisabled(skillName, selected, skillExclusive)
     : () => false;
 
   return (
@@ -55,29 +55,29 @@ const PlayerSkillDictionary = ({
       }
     >
       <SkillGradeToggle
-        standard={standard}
+        tier={tier}
         initSelected={onInitSkills}
-        handleOpenRecommend={onRecommend}
-        selectedSkills={selectedSkills}
+        onRecommend={onRecommend}
+        selected={selected}
       />
 
       <RecommendModal
         isOpen={modal.isOpen}
-        hasRecommend={hasRecommend}
-        selectedSkills={selectedSkills}
-        combos={recommendCombos}
+        matched={matched}
+        selected={selected}
+        combos={matchedCombos}
         onClose={() => {
           modal.close();
-          resetRecommendSkills();
+          clearCombo();
         }}
       />
 
       <SkillPanels
-        standard={standard}
-        selectedSkills={selectedSkills}
-        isSkillDisabled={onSkillDisabled}
-        handleToggleSkill={handleToggleSkill}
-        data={skillData}
+        tier={tier}
+        selected={selected}
+        onCheckDisabled={onSkillDisabled}
+        onToggleSkill={skillToggle}
+        skills={skillData}
       />
     </ContentPageLayout>
   );
