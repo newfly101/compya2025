@@ -1,9 +1,9 @@
 import React, { useRef, useState } from "react";
 import { PITCHER_SKILLS } from "@/data/skill/PITCHER_SKILLS.js";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
-import RecommendSkillCard from "@/feature/dictionary/components/RecommendSkillCard.jsx";
+import RecommendSkillCard from "@/feature/dictionary/components/cards/RecommendSkillCard.jsx";
 import { PITCHER_RECOMMEND } from "@/data/skill/PITCHER_RECOMMEND.js";
-import NoRecommendSkillCard from "@/feature/dictionary/components/NoRecommendSkillCard.jsx";
+import NoRecommendSkillCard from "@/feature/dictionary/components/cards/NoRecommendSkillCard.jsx";
 import { useNavigate } from "react-router-dom";
 
 const PitcherSkillDictionary = () => {

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
-import RecommendSkillCard from "@/feature/dictionary/components/RecommendSkillCard.jsx";
-import NoRecommendSkillCard from "@/feature/dictionary/components/NoRecommendSkillCard.jsx";
+import RecommendSkillCard from "@/feature/dictionary/components/cards/RecommendSkillCard.jsx";
+import NoRecommendSkillCard from "@/feature/dictionary/components/cards/NoRecommendSkillCard.jsx";
 import { HITTER_SKILLS } from "@/data/skill/HITTER_SKILLS.js";
 import { HITTER_RECOMMEND } from "@/data/skill/HITTER_RECOMMEND.js";
 import { HITTER_SKILL_EXCLUSIVE } from "@/feature/dictionary/config/skillExclusive.js";
