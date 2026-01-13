@@ -16,7 +16,7 @@ const isValidSkillMap = (data) =>
       typeof v.count === "number",
   );
 
-export const useHitterSkillChange = (selectedHitter) => {
+export const useHitterSkillChange = () => {
   const [skillStateMap, setSkillStateMap] = useState({});
 
   /** 3레전드 스킬인지 확인하는 코드 **/
