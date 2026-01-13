@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import styles from "@/styles/layout/MobileNav.module.scss";
+import styles from "@/shared/layout/appLayout/MobileNav.module.scss";
 
 const MobileNav = () => {
   const scrollTop = () => {

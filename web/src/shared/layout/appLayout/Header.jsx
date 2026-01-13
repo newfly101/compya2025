@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import styles from "@/styles/layout/appLayout.module.scss";
+import styles from "@/shared/layout/appLayout/appLayout.module.scss";
 
 export default function Header() {
   return (

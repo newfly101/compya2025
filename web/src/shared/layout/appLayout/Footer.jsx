@@ -1,4 +1,4 @@
-import styles from "@/styles/layout/appLayout.module.scss";
+import styles from "@/shared/layout/appLayout/appLayout.module.scss";
 import { Link } from "react-router-dom";
 
 export default function Footer() {

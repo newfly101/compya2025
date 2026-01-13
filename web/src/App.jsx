@@ -2,7 +2,7 @@ import { Outlet, useLocation, useMatches } from "react-router-dom";
 
 import Header from "@/shared/layout/appLayout/Header.jsx";
 import Footer from "@/shared/layout/appLayout/Footer.jsx";
-import styles from "@/styles/layout/appLayout.module.scss";
+import styles from "@/shared/layout/appLayout/appLayout.module.scss";
 import { Suspense, useEffect } from "react";
 import MobileNav from "@/shared/layout/appLayout/MobileNav.jsx";
 
