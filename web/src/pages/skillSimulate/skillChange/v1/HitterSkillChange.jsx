@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import styles from "./SkillChange.module.scss";
 import { legendBatterData } from "@/data/player/legend/legendBatterData.js";
-import HitterSkillCard from "@/feature/skillSimulate/components/cards/HitterSkillCard.jsx";
+import HitterSkillCard from "@/feature/skillSimulate/components/cards/v1/HitterSkillCard.jsx";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
-import { useHitterSkillChange } from "@/feature/skillSimulate/hooks/useHitterSkillChange.js";
+import { useHitterSkillChange } from "@/feature/skillSimulate/hooks/v1/useHitterSkillChange.js";
 
 const HitterSkillChange = () => {
   const [selectedHitter, setSelectedHitter] = useState(null);

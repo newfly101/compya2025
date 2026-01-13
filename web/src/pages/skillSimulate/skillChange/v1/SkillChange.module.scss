@@ -461,3 +461,38 @@
     }
   }
 }
+
+
+
+/* ===============================
+   swiper sample code
+================================ */
+.cardSwiper {
+  width: 100%;
+  padding: 2rem 0;
+}
+
+.slide {
+  width: 180px; // SkillCard width
+  display: flex;
+  justify-content: center;
+}
+
+/* 기본 */
+.swiperSlide {
+  opacity: 0.5;
+  transform: scale(0.9);
+  transition: all 0.25s ease;
+}
+
+.swiperSlideActive {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+/* 모바일 */
+@media (max-width: 768px) {
+  .swiperSlideActive {
+    transform: scale(1.02);
+  }
+}
