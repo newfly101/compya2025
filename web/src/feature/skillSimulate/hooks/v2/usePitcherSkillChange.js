@@ -2,8 +2,19 @@ import { useEffect, useState } from "react";
 import { pickByProbability, PROB_LEGEND } from "@/utils/skill/skillProbability.js";
 import { pickSkillsByCombo } from "@/utils/skill/pitcherSkillPicker.js";
 import { legendPitcherData } from "@/data/player/legend/legendPitcherData.js";
+import { decrypt, encrypt } from "@/utils/crypto/storageCrypto.js";
 
-const STORAGE_KEY = "COMPYAFUN-PITCHER-SKILL-V1";
+const STORAGE_KEY = "COMPYAFUN-PITCHER-SKILL";
+
+/** 구조 검증 (조작 방지) **/
+const isValidSkillMap = (data) =>
+  typeof data === "object" &&
+  data !== null &&
+  Object.values(data).every(
+    v =>
+      Array.isArray(v.skills) &&
+      typeof v.count === "number",
+  );
 
 export const usePitcherSkillChange = () => {
   const [skillStateMap, setSkillStateMap] = useState({});
@@ -39,7 +50,11 @@ export const usePitcherSkillChange = () => {
         },
       };
 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+      // 🔐 암호화 저장
+      localStorage.setItem(
+        STORAGE_KEY,
+        encrypt(next)
+      );
 
       return next;
     });
@@ -49,12 +64,15 @@ export const usePitcherSkillChange = () => {
     const saved = localStorage.getItem(STORAGE_KEY);
 
     if (saved) {
-      try {
-        setSkillStateMap(JSON.parse(saved));
+      const decoded = decrypt(saved);
+
+      if (decoded && isValidSkillMap(decoded)) {
+        setSkillStateMap(decoded);
         return;
-      } catch {
-        localStorage.removeItem(STORAGE_KEY);
       }
+
+      // ❌ 복호화 실패 or 구조 이상
+      localStorage.removeItem(STORAGE_KEY);
     }
 
     const initialMap = {};
@@ -73,7 +91,10 @@ export const usePitcherSkillChange = () => {
     });
 
     setSkillStateMap(initialMap);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(initialMap));
+    localStorage.setItem(
+      STORAGE_KEY,
+      encrypt(initialMap)
+    );
   }, []);
 
 
