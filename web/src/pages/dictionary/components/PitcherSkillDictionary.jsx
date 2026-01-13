@@ -1,12 +1,12 @@
 import React, { useRef, useState } from "react";
 import { PITCHER_SKILLS } from "@/data/skill/PITCHER_SKILLS.js";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
-import RecommendSkillCard from "@/components/common/page/RecommendSkillCard.jsx";
+import RecommendSkillCard from "@/feature/dictionary/components/RecommendSkillCard.jsx";
 import { PITCHER_RECOMMEND } from "@/data/skill/PITCHER_RECOMMEND.js";
-import NoRecommendSkillCard from "@/components/common/page/NoRecommendSkillCard.jsx";
+import NoRecommendSkillCard from "@/feature/dictionary/components/NoRecommendSkillCard.jsx";
 import { useNavigate } from "react-router-dom";
 
-const SkillDictionary = () => {
+const PitcherSkillDictionary = () => {
   const navigate = useNavigate();
 
   const [standard, setStandard] = useState("레전드"); // 레전드 | 플래티넘
@@ -168,4 +168,4 @@ const SkillDictionary = () => {
   );
 };
 
-export default SkillDictionary;
+export default PitcherSkillDictionary;

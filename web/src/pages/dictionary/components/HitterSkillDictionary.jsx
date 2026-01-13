@@ -1,20 +1,18 @@
 import React, { useRef, useState } from "react";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
-import RecommendSkillCard from "@/components/common/page/RecommendSkillCard.jsx";
-import NoRecommendSkillCard from "@/components/common/page/NoRecommendSkillCard.jsx";
-import { useNavigate } from "react-router-dom";
+import RecommendSkillCard from "@/feature/dictionary/components/RecommendSkillCard.jsx";
+import NoRecommendSkillCard from "@/feature/dictionary/components/NoRecommendSkillCard.jsx";
 import { HITTER_SKILLS } from "@/data/skill/HITTER_SKILLS.js";
 import { HITTER_RECOMMEND } from "@/data/skill/HITTER_RECOMMEND.js";
+import { HITTER_SKILL_EXCLUSIVE } from "@/feature/dictionary/config/skillExclusive.js";
+import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
+import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
+import SkillGradeToggle from "@/feature/dictionary/components/SkillGradeToggle.jsx";
+import SkillPanels from "@/feature/dictionary/components/SkillPanels.jsx";
 
-const HITTER_SKILL_EXCLUSIVE = {
-  "리드오프": ["파워히터", "슈퍼스타", "클러치 히터"],
-  "파워히터": ["리드오프", "슈퍼스타", "클러치 히터"],
-  "클러치 히터": ["리드오프", "슈퍼스타", "파워히터"],
-  "슈퍼스타": ["게스히터","레전드","리드오프","배팅머신","스프레이 히터","슬러거","에이스킬러","예지력","주루도사","카리스마","클러치 히터","파워히터","호타준족"]
-};
 
 const HitterSkillDictionary = () => {
-  const navigate = useNavigate();
+  const { moveTo } = useContentPageHeader();
 
   const [standard, setStandard] = useState("레전드"); // 레전드 | 플래티넘
   const [selectedSkills, setSelectedSkills] = useState([]);
@@ -22,10 +20,6 @@ const HitterSkillDictionary = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasRecommend, setHasRecommend] = useState(true);
   const [recommendCombos, setRecommendCombos] = useState([]);
-
-  const handleMoveUrl = () => {
-    navigate("/dictionary");
-  };
 
   const handleToggleSkill = (skill) => {
     const skillName = skill.name;
@@ -51,8 +45,8 @@ const HitterSkillDictionary = () => {
     if (type === "플래티넘") {
       setSelectedSkills((prev) =>
         prev.filter(
-          (skill) => !HITTER_SKILLS.legend.some((l) => l.name === skill)
-        )
+          (skill) => !HITTER_SKILLS.legend.some((l) => l.name === skill),
+        ),
       );
       selectedSkillsRef.current = [];
     } else {
@@ -89,8 +83,8 @@ const HitterSkillDictionary = () => {
           (combo) =>
             combo.skills.every(
               (skill) =>
-                !HITTER_SKILLS.legend.some((l) => l.name === skill)
-            )
+                !HITTER_SKILLS.legend.some((l) => l.name === skill),
+            ),
         )
         : matchedCombos;
 
@@ -145,75 +139,44 @@ const HitterSkillDictionary = () => {
   );
 
   return (
-    <main className={styles.container}>
-      <header className={styles.header}>
-        <span className={styles.category} onClick={handleMoveUrl}>← 조합 홈으로</span>
-        <h1 className={styles.title}>📖 타자 스킬 백과사전</h1>
-
-        <div className={styles.meta}>
-          <span>2026-01-03</span>
-          <span>v0.1.6</span>
-        </div>
-      </header>
-      <div className={styles.skillToggleHeader}>
-        <div className={styles.standardTabs}>
-          <button
-            className={`${standard === "레전드" ? styles.active : ""}`}
-            onClick={() => initSelected("레전드")}
-          >
-            레전드 스킬 추천
-          </button>
-
-          <button
-            className={`${standard === "플래티넘" ? styles.active : ""}`}
-            onClick={() => initSelected("플래티넘")}
-          >
-            플래티넘 스킬 추천
-          </button>
-        </div>
-        <div className={styles.standardTabs}>
-          <button
-            className={styles.recommendBtn}
-            disabled={selectedSkills.length === 0}
-            onClick={handleOpenRecommend}
-          >
-            추천 스킬 조합 보기
-            {selectedSkills.length > 0 && (
-              <span>({selectedSkills.length}/2)</span>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {isModalOpen && (
-        hasRecommend ? (
-          <RecommendSkillCard
-            isOpen
-            selectedSkills={selectedSkills}
-            combos={recommendCombos}
-            onClose={handleCloseModal}
+    <ContentPageLayout
+      header={<ContentPageHeader
+        title={"📖 타자 스킬 백과사전"}
+        meta={["2026-01-03", "v0.1.6"]}
+        backLabel={"조합 홈으로"}
+        onBack={() => moveTo("/dictionary")}
+      />}
+      children={
+        <>
+          <SkillGradeToggle standard={standard}
+                            initSelected={initSelected}
+                            handleOpenRecommend={handleOpenRecommend}
+                            selectedSkills={selectedSkills}
           />
-        ) : (
-          <NoRecommendSkillCard
-            skill={selectedSkills.join(" + ")}
-            onClose={handleCloseModal}
-            mainText="해당 스킬 조합은 잘 사용되지 않습니다."
-            subText="다른 스킬 조합을 추천드립니다."
-          />
-        )
-      )}
+
+          {isModalOpen && (
+            hasRecommend ? (
+              <RecommendSkillCard
+                isOpen
+                selectedSkills={selectedSkills}
+                combos={recommendCombos}
+                onClose={handleCloseModal}
+              />
+            ) : (
+              <NoRecommendSkillCard
+                skill={selectedSkills.join(" + ")}
+                onClose={handleCloseModal}
+                mainText="해당 스킬 조합은 잘 사용되지 않습니다."
+                subText="다른 스킬 조합을 추천드립니다."
+              />
+            )
+          )}
+
+          <SkillPanels standard={standard} renderGroup={renderGroup} />
 
 
-      <div className={styles.panel}>
-        {standard === "레전드" && renderGroup("레전드", "legend", HITTER_SKILLS.legend)}
-        {renderGroup("플레티넘", "platinum", HITTER_SKILLS.platinum)}
-        {renderGroup("히어로", "hero", HITTER_SKILLS.hero)}
-        {renderGroup("노말", "normal", HITTER_SKILLS.normal)}
-      </div>
-
-
-    </main>
-  );
+        </>}
+    />);
 };
 
 export default HitterSkillDictionary;
