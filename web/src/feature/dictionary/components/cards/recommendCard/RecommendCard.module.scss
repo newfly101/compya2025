@@ -1,12 +1,3 @@
-.dialog {
-  border: none;
-  padding: 0;
-  background: transparent;
-  &::backdrop {
-    background: transparent;
-  }
-}
-
 /* modal view */
 .modalOverlay {
   position: fixed;
