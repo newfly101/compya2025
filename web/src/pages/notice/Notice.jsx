@@ -1,5 +1,5 @@
 import React from "react";
-import Tabs from "@/components/common/Tabs.jsx";
+import Tabs from "@/feature/notice/components/Tabs.jsx";
 import { useNoticePage } from "@/feature/notice/index.js";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";

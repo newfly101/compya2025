@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import styles from "@/styles/pages/TipPage.module.scss";
 import { postData, posts } from "@/data/board/TipBoard.js";
-import Tabs from "@/components/common/Tabs.jsx";
+import Tabs from "@/feature/notice/components/Tabs.jsx";
 import { tip2025data } from "@/data/board/tips2025.js";
 import { useSearchParams } from "react-router-dom";
 
