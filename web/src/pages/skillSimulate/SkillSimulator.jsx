@@ -14,7 +14,7 @@ const SkillSimulator = () => {
   return (
     <ContentPageLayout
       header={<ContentPageHeader title={"📌 스킬 시뮬레이터"}
-                                 meta={["2026-01-09", "v0.1.6"]}
+                                 meta={["2026-01-14", "v0.1.9"]}
                                  backLabel={"메인으로"}
                                  onBack={moveHome}
       />}

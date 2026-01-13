@@ -21,7 +21,7 @@ const PitcherSkillChange = () => {
   return (
     <ContentPageLayout
       header={<ContentPageHeader title={"🎲 투수 고스변 시뮬레이터"}
-                                 meta={["2026-01-13", "v0.1.7"]}
+                                 meta={["2026-01-14", "v0.1.9"]}
                                  backLabel={"스킬 시뮬레이터로"}
                                  onBack={() => moveTo("/simulate")}
       />}
