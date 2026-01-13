@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./SkillGradeToggle,module.scss";
+import styles from "./SkillGradeToggle.module.scss";
 
 const SkillGradeToggle = ({tier, selected, initSelected, onRecommend}) => {
   return (
