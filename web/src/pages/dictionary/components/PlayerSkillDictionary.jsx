@@ -2,7 +2,7 @@ import React from "react";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
 import { usePlayerSkillChange } from "@/feature/dictionary/hooks/usePlayerSkillChange.js";
 import { useCardModal } from "@/feature/dictionary/hooks/useCardModal.js";
-import SkillPanels from "@/feature/dictionary/components/SkillPanels.jsx";
+import SkillPanels from "@/feature/dictionary/components/skillPanels/SkillPanels.jsx";
 import RecommendModal from "@/feature/dictionary/components/RecommendModal.jsx";
 import SkillGradeToggle from "@/feature/dictionary/components/skillGradeToggle/SkillGradeToggle.jsx";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
