@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./SkillChange.module.scss";
-import { legendBatterData } from "@/data/player/legend/legendBatterData.js";
+import { legendHitterData } from "@/data/player/legend/legendHitterData.js";
 import HitterSkillCard from "@/feature/skillSimulate/components/cards/v1/HitterSkillCard.jsx";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
@@ -27,7 +27,7 @@ const HitterSkillChange = () => {
             <h2 className={styles.subTitle}>⚾ 타자 선택</h2>
 
             <div className={styles.pitcherGrid}>
-              {legendBatterData.map((p) => (
+              {legendHitterData.map((p) => (
                 <button
                   key={p.id}
                   className={`${styles.pitcherButton} ${
