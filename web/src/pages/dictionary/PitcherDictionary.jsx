@@ -6,7 +6,7 @@ import { PITCHER_RECOMMEND } from "@/data/skill/PITCHER_RECOMMEND.js";
 const PitcherDictionary = () => {
   return (
     <PlayerSkillDictionary
-      title="📖 타자 스킬 백과사전"
+      title="📖 투수 스킬 백과사전"
       meta={["2026-01-03", "v0.1.6"]}
       skillData={PITCHER_SKILLS}
       recommendData={PITCHER_RECOMMEND}
