@@ -1,28 +1,31 @@
 import React from "react";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
 
-const SkillPanels = ({standard, isSkillDisabled, handleToggleSkill,selectedSkills, data, ex}) => {
+const SkillPanels = ({standard, isSkillDisabled, handleToggleSkill,selectedSkills, data}) => {
 
   const renderGroup = (title, grade, skills) => {
     return (
       <section className={styles.group}>
         <h3 className={styles.groupTitle}>{title}</h3>
         <div className={styles.buttonGrid}>
-          {skills.map((skill) => (
+          {skills.map((skill) => {
+            const disabled = isSkillDisabled(skill.name);
+
+            return (
             <button
               key={skill.id}
-              disabled={isSkillDisabled(skill.name, selectedSkills, ex)}
+              disabled={disabled}
               className={`
                       ${styles.skillBtn}
                       ${styles[grade]}
                       ${selectedSkills.includes(skill.name) ? styles.active : ""}
-                      ${isSkillDisabled(skill.name, selectedSkills) ? styles.disabled : ""}
+                      ${disabled ? styles.disabled : ""}
                     `}
               onClick={() => handleToggleSkill(skill)}
             >
               {skill.name}
             </button>
-          ))}
+          )})}
         </div>
       </section>
     )};

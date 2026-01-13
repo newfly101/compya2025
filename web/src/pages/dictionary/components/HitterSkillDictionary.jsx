@@ -1,13 +1,13 @@
 import React from "react";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
+import { useCardModal } from "@/feature/dictionary/hooks/useCardModal.js";
+import RecommendModal from "@/feature/dictionary/components/RecommendModal.jsx";
 import SkillGradeToggle from "@/feature/dictionary/components/SkillGradeToggle.jsx";
 import SkillPanels from "@/feature/dictionary/components/SkillPanels.jsx";
 import { usePlayerSkillChange } from "@/feature/dictionary/hooks/usePlayerSkillChange.js";
 import { HITTER_SKILLS } from "@/data/skill/HITTER_SKILLS.js";
 import { HITTER_RECOMMEND } from "@/data/skill/HITTER_RECOMMEND.js";
-import RecommendModal from "@/feature/dictionary/components/RecommendModal.jsx";
-import { useCardModal } from "@/feature/dictionary/hooks/useCardModal.js";
 import { HITTER_SKILL_EXCLUSIVE } from "@/feature/dictionary/config/skillExclusive.js";
 
 
@@ -21,20 +21,26 @@ const HitterSkillDictionary = () => {
     initSelected,
     recommendSkills,
     handleToggleSkill,
-    isSkillDisabled,
     resetRecommendSkills,
+    isSkillDisabled,
   } = usePlayerSkillChange();
   const modal = useCardModal();
 
+  const skillData = HITTER_SKILLS;
+
   const initHitterSkills = (type) => {
-    initSelected(type, HITTER_SKILLS);
+    initSelected(type, skillData);
   };
   const hitterSkills = () => {
-    recommendSkills(HITTER_SKILLS, HITTER_RECOMMEND);
+    recommendSkills(skillData, HITTER_RECOMMEND);
     modal.open();
   };
-  const hitterSkillDisabled = () => {
-    // isSkillDisabled(skill.name, selectedSkills, HITTER_SKILL_EXCLUSIVE);
+  const hitterSkillDisabled = (skillName) => {
+    return isSkillDisabled(
+      skillName,
+      selectedSkills,
+      HITTER_SKILL_EXCLUSIVE
+    );
   };
 
   return (
@@ -67,10 +73,9 @@ const HitterSkillDictionary = () => {
 
           <SkillPanels standard={standard}
                        selectedSkills={selectedSkills}
-                       isSkillDisabled={isSkillDisabled}
+                       isSkillDisabled={hitterSkillDisabled}
                        handleToggleSkill={handleToggleSkill}
-                       data={HITTER_SKILLS}
-                       ex={HITTER_SKILL_EXCLUSIVE}
+                       data={skillData}
           />
         </>}
     />);

@@ -1,171 +1,74 @@
-import React, { useRef, useState } from "react";
+import React from "react";
+import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
+import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
+import { useCardModal } from "@/feature/dictionary/hooks/useCardModal.js";
+import RecommendModal from "@/feature/dictionary/components/RecommendModal.jsx";
+import SkillGradeToggle from "@/feature/dictionary/components/SkillGradeToggle.jsx";
+import SkillPanels from "@/feature/dictionary/components/SkillPanels.jsx";
+import { usePlayerSkillChange } from "@/feature/dictionary/hooks/usePlayerSkillChange.js";
 import { PITCHER_SKILLS } from "@/data/skill/PITCHER_SKILLS.js";
-import styles from "@/styles/pages/SkillDictionary.module.scss";
-import RecommendSkillCard from "@/feature/dictionary/components/cards/RecommendSkillCard.jsx";
 import { PITCHER_RECOMMEND } from "@/data/skill/PITCHER_RECOMMEND.js";
-import NoRecommendSkillCard from "@/feature/dictionary/components/cards/NoRecommendSkillCard.jsx";
-import { useNavigate } from "react-router-dom";
+
 
 const PitcherSkillDictionary = () => {
-  const navigate = useNavigate();
+  const { moveTo } = useContentPageHeader();
+  const {
+    standard,
+    selectedSkills,
+    hasRecommend,
+    recommendCombos,
+    initSelected,
+    recommendSkills,
+    handleToggleSkill,
+    resetRecommendSkills,
+  } = usePlayerSkillChange();
+  const modal = useCardModal();
 
-  const [standard, setStandard] = useState("레전드"); // 레전드 | 플래티넘
-  const [selectedSkills, setSelectedSkills] = useState([]);
-  const selectedSkillsRef = useRef([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [hasRecommend, setHasRecommend] = useState(true);
-  const [recommendCombos, setRecommendCombos] = useState([]);
-
-  const handleMoveUrl = () => {
-    navigate("/dictionary");
+  const initPitcherSkills = (type) => {
+    initSelected(type, PITCHER_SKILLS);
   };
 
-  const handleToggleSkill = (skill) => {
-    const skillName = skill.name;
-
-    setSelectedSkills((prev) => {
-      let next = prev;
-
-      if (prev.includes(skillName)) {
-        next = prev.filter((s) => s !== skillName);
-      } else {
-        if (prev.length >= 2) return prev;
-        next = [...prev, skillName];
-      }
-
-      selectedSkillsRef.current = next; // ✅ 여기서 즉시 최신화
-      return next;
-    });
-  };
-
-  const initSelected = (type) => {
-    setSelectedSkills([]);
-    setStandard(type);
-    setRecommendCombos([]);
+  const pitcherSkills = () => {
+    recommendSkills(PITCHER_SKILLS ,PITCHER_RECOMMEND);
+    modal.open();
   }
-
-  const handleOpenRecommend = () => {
-    const skillsNow = selectedSkillsRef.current; // ✅ 최신값
-
-    if (skillsNow.length === 0) return;
-
-    const matchedCombos = PITCHER_RECOMMEND.filter((combo) =>
-      skillsNow.every((skill) => combo.skills.includes(skill))
-    );
-
-    const finalCombos =
-      standard === "플래티넘"
-        ? matchedCombos.filter(() =>
-          skillsNow.every(
-            (skill) => !PITCHER_SKILLS.legend.some((l) => l.name === skill)
-          )
-        )
-        : matchedCombos;
-
-    setRecommendCombos(finalCombos);
-    setHasRecommend(finalCombos.length > 0);
-    setIsModalOpen(true);
-  };
-
-
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedSkills([]);
-    selectedSkillsRef.current = []; // ✅ 동기화
-    setRecommendCombos([]);
-    setHasRecommend(true);
-  };
-
-
-  const renderGroup = (title, grade, skills) => (
-    <section className={styles.group}>
-      <h3 className={styles.groupTitle}>{title}</h3>
-      <div className={styles.buttonGrid}>
-        {skills.map((skill) => (
-          <button
-            key={skill.id}
-            className={`${styles.skillBtn} ${styles[grade]} ${
-              selectedSkills.includes(skill.name) ? styles.active : ""
-            }`}
-            onClick={() => handleToggleSkill(skill)}
-          >
-            {skill.name}
-          </button>
-        ))}
-      </div>
-    </section>
-  );
+  const pitcherSkillDisabled = (skillName) => false;
 
   return (
-    <main className={styles.container}>
-      <header className={styles.header}>
-        <span className={styles.category} onClick={handleMoveUrl}>← 조합 홈으로</span>
-        <h1 className={styles.title}>📖 투수 스킬 백과사전 (공사중)</h1>
+    <ContentPageLayout
+      header={<ContentPageHeader
+        title={"📖 투수 스킬 백과사전"}
+        meta={["2026-01-02", "v0.1.5"]}
+        backLabel={"조합 홈으로"}
+        onBack={() => moveTo("/dictionary")}
+      />}
+      children={
+        <>
+          <SkillGradeToggle standard={standard}
+                            initSelected={initPitcherSkills}
+                            handleOpenRecommend={pitcherSkills}
+                            selectedSkills={selectedSkills}
+          />
 
-        <div className={styles.meta}>
-          <span>2026-01-02</span>
-          <span>v0.1.5</span>
-        </div>
-      </header>
-      <div className={styles.skillToggleHeader}>
-        <div className={styles.standardTabs}>
-          <button
-            className={`${standard === "레전드" ? styles.active : ""}`}
-            onClick={() => initSelected("레전드")}
-          >
-            레전드 스킬 추천
-          </button>
-
-          <button
-            className={`${standard === "플래티넘" ? styles.active : ""}`}
-            onClick={() => initSelected("플래티넘")}
-          >
-            플래티넘 스킬 추천
-          </button>
-        </div>
-        <div className={styles.standardTabs}>
-          <button
-            className={styles.recommendBtn}
-            disabled={selectedSkills.length === 0}
-            onClick={handleOpenRecommend}
-          >
-            추천 스킬 조합 보기
-            {selectedSkills.length > 0 && (
-              <span>({selectedSkills.length}/2)</span>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {isModalOpen && (
-        hasRecommend ? (
-          <RecommendSkillCard
-            isOpen
+          <RecommendModal
+            isOpen={modal.isOpen}
+            hasRecommend={hasRecommend}
             selectedSkills={selectedSkills}
             combos={recommendCombos}
-            onClose={handleCloseModal}
+            onClose={() => {
+              modal.close();
+              resetRecommendSkills();
+            }}
           />
-        ) : (
-          <NoRecommendSkillCard
-            skill={selectedSkills.join(" + ")}
-            onClose={handleCloseModal}
-            mainText="해당 스킬 조합은 잘 사용되지 않습니다."
-            subText="다른 스킬 조합을 추천드립니다."
+
+          <SkillPanels standard={standard}
+                       selectedSkills={selectedSkills}
+                       isSkillDisabled={pitcherSkillDisabled}
+                       handleToggleSkill={handleToggleSkill}
+                       data={PITCHER_SKILLS}
           />
-        )
-      )}
-
-      <div className={styles.panel}>
-        {standard === "레전드" && renderGroup("레전드", "legend", PITCHER_SKILLS.legend)}
-        {renderGroup("플레티넘", "platinum", PITCHER_SKILLS.platinum)}
-        {renderGroup("히어로", "hero", PITCHER_SKILLS.hero)}
-        {renderGroup("노말", "normal", PITCHER_SKILLS.normal)}
-      </div>
-
-
-    </main>
-  );
+        </>}
+    />);
 };
 
 export default PitcherSkillDictionary;
