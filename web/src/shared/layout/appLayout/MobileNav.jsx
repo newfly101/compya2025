@@ -4,7 +4,6 @@ import styles from "@/styles/layout/MobileNav.module.scss";
 
 const MobileNav = () => {
   const scrollTop = () => {
-    // const content = document.querySelector("main");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

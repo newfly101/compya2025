@@ -1,10 +1,10 @@
 import { Outlet, useLocation, useMatches } from "react-router-dom";
 
-import Header from "@/components/Header.jsx";
-import Footer from "@/components/Footer.jsx";
+import Header from "@/shared/layout/appLayout/Header.jsx";
+import Footer from "@/shared/layout/appLayout/Footer.jsx";
 import styles from "@/styles/layout/appLayout.module.scss";
 import { Suspense, useEffect } from "react";
-import MobileNav from "@/components/MobileNav.jsx";
+import MobileNav from "@/shared/layout/appLayout/MobileNav.jsx";
 
 const App = () => {
   const location = useLocation();
