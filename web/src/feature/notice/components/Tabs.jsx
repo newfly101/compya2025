@@ -1,6 +1,6 @@
 import React from "react";
 import { useSearchParams } from "react-router-dom";
-import styles from "@/styles/layout/Tabs.module.scss";
+import styles from "@/feature/notice/components/Tabs.module.scss";
 
 const Tabs = ({tabs}) => {
   const [params, setParams] = useSearchParams();
