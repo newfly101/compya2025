@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "@/styles/pages/SkillDictionary.module.scss";
+import styles from "./SkillPanels.module.scss";
 
 const SkillPanels = ({tier, selected, onCheckDisabled, onToggleSkill, skills}) => {
 
@@ -17,8 +17,8 @@ const SkillPanels = ({tier, selected, onCheckDisabled, onToggleSkill, skills}) =
               disabled={disabled}
               className={`
                       ${styles.skillBtn}
-                      ${styles[grade]}
                       ${selected.includes(skill.name) ? styles.active : ""}
+                      ${styles[grade]}
                       ${disabled ? styles.disabled : ""}
                     `}
               onClick={() => onToggleSkill(skill)}

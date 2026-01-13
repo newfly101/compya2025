@@ -1,0 +1,83 @@
+// skillPanels.jsx
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .groupTitle {
+    font-size: 1.5rem;
+    color: #aaa;
+    letter-spacing: 0.08em;
+  }
+
+  .buttonGrid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+.skillBtn {
+  padding: 1rem 1.2rem;
+  border-radius: 0.5rem;
+  font-size: 1.2rem;
+  border: 1px solid transparent;
+  background: #1e1e2e;
+  width: 12rem;
+  color: #ccc;
+  white-space: nowrap;
+  &.legend {
+    background: linear-gradient(
+                    to bottom,
+                    #8f86ff 0%,
+                    #6f64f7 45%,
+                    #5a4de0 100%
+    );
+
+    border: 1px solid #4c43c7;
+    color: #302a82;
+  }
+  &.platinum {
+    background: linear-gradient(
+                    to bottom,
+                    #ffe37a 0%,
+                    #f2c94c 45%,
+                    #d4a900 100%
+    );
+
+    border-color: #b89100;
+    color: #2b2100;
+  }
+  &.hero {
+    background: linear-gradient(
+                    to bottom,
+                    #5bff9c 0%,
+                    #2ecc71 45%,
+                    #1e9f55 100%
+    );
+
+    border-color: #198f4a;
+    color: #0f2f1d;
+  }
+  &.normal {
+    background: linear-gradient(
+                    to bottom,
+                    #cfd3da 0%,
+                    #aeb4bf 50%,
+                    #8e95a3 100%
+    );
+
+    border-color: #6f7684;
+    color: #1f2937;
+  }
+  &.active {
+    outline: 2px solid #ccc;
+    color: white;
+    transform: scale(0.97);
+  }
+  &:disabled {
+    opacity: 0.35 !important;
+    cursor: not-allowed !important;
+    filter: grayscale(1) !important;
+  }
+}
