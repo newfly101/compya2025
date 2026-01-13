@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
+import { useCardModal } from "@/feature/dictionary/hooks/useCardModal.js";
 
 const gradeClassMap = {
   "졸업": styles.gradeGraduate,

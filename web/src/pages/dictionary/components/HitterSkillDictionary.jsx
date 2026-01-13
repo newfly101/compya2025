@@ -1,26 +1,41 @@
 import React from "react";
-import RecommendSkillCard from "@/feature/dictionary/components/cards/RecommendSkillCard.jsx";
-import NoRecommendSkillCard from "@/feature/dictionary/components/cards/NoRecommendSkillCard.jsx";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
 import SkillGradeToggle from "@/feature/dictionary/components/SkillGradeToggle.jsx";
 import SkillPanels from "@/feature/dictionary/components/SkillPanels.jsx";
 import { usePlayerSkillChange } from "@/feature/dictionary/hooks/usePlayerSkillChange.js";
 import { HITTER_SKILLS } from "@/data/skill/HITTER_SKILLS.js";
+import { HITTER_RECOMMEND } from "@/data/skill/HITTER_RECOMMEND.js";
+import RecommendModal from "@/feature/dictionary/components/RecommendModal.jsx";
+import { useCardModal } from "@/feature/dictionary/hooks/useCardModal.js";
+import { HITTER_SKILL_EXCLUSIVE } from "@/feature/dictionary/config/skillExclusive.js";
 
 
 const HitterSkillDictionary = () => {
   const { moveTo } = useContentPageHeader();
-  const { standard,
+  const {
+    standard,
     selectedSkills,
-    isModalOpen,
     hasRecommend,
     recommendCombos,
-    handleToggleSkill,
     initSelected,
-    handleOpenRecommend,
-    handleCloseModal,
-    isSkillDisabled} = usePlayerSkillChange();
+    recommendSkills,
+    handleToggleSkill,
+    isSkillDisabled,
+    resetRecommendSkills,
+  } = usePlayerSkillChange();
+  const modal = useCardModal();
+
+  const initHitterSkills = (type) => {
+    initSelected(type, HITTER_SKILLS);
+  };
+  const hitterSkills = () => {
+    recommendSkills(HITTER_SKILLS, HITTER_RECOMMEND);
+    modal.open();
+  };
+  const hitterSkillDisabled = () => {
+    // isSkillDisabled(skill.name, selectedSkills, HITTER_SKILL_EXCLUSIVE);
+  };
 
   return (
     <ContentPageLayout
@@ -33,35 +48,30 @@ const HitterSkillDictionary = () => {
       children={
         <>
           <SkillGradeToggle standard={standard}
-                            initSelected={initSelected}
-                            handleOpenRecommend={handleOpenRecommend}
+                            initSelected={initHitterSkills}
+                            handleOpenRecommend={hitterSkills}
                             selectedSkills={selectedSkills}
+                            modal={modal}
           />
 
-          {isModalOpen && (
-            hasRecommend ? (
-              <RecommendSkillCard
-                isOpen
-                selectedSkills={selectedSkills}
-                combos={recommendCombos}
-                onClose={handleCloseModal}
-              />
-            ) : (
-              <NoRecommendSkillCard
-                skill={selectedSkills.join(" + ")}
-                onClose={handleCloseModal}
-                mainText="해당 스킬 조합은 잘 사용되지 않습니다."
-                subText="다른 스킬 조합을 추천드립니다."
-              />
-            )
-          )}
+          <RecommendModal
+            isOpen={modal.isOpen}
+            hasRecommend={hasRecommend}
+            selectedSkills={selectedSkills}
+            combos={recommendCombos}
+            onClose={() => {
+              modal.close();
+              resetRecommendSkills();
+            }}
+          />
+
           <SkillPanels standard={standard}
                        selectedSkills={selectedSkills}
                        isSkillDisabled={isSkillDisabled}
                        handleToggleSkill={handleToggleSkill}
                        data={HITTER_SKILLS}
+                       ex={HITTER_SKILL_EXCLUSIVE}
           />
-
         </>}
     />);
 };

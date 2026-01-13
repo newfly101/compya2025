@@ -23,7 +23,7 @@ const SkillGradeToggle = ({standard, initSelected, handleOpenRecommend, selected
         <button
           className={styles.recommendBtn}
           disabled={selectedSkills.length === 0}
-          onClick={handleOpenRecommend}
+          onClick={() => handleOpenRecommend()}
         >
           추천 스킬 조합 보기
           {selectedSkills.length > 0 && (

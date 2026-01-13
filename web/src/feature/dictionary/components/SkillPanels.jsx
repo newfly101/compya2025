@@ -1,12 +1,9 @@
 import React from "react";
 import styles from "@/styles/pages/SkillDictionary.module.scss";
-import { HITTER_SKILLS } from "@/data/skill/HITTER_SKILLS.js";
 
-const SkillPanels = ({standard, isSkillDisabled, handleToggleSkill,selectedSkills, data}) => {
+const SkillPanels = ({standard, isSkillDisabled, handleToggleSkill,selectedSkills, data, ex}) => {
 
   const renderGroup = (title, grade, skills) => {
-    console.log("title, grade, skills",title, grade, skills);
-
     return (
       <section className={styles.group}>
         <h3 className={styles.groupTitle}>{title}</h3>
@@ -14,7 +11,7 @@ const SkillPanels = ({standard, isSkillDisabled, handleToggleSkill,selectedSkill
           {skills.map((skill) => (
             <button
               key={skill.id}
-              disabled={isSkillDisabled(skill.name, selectedSkills)}
+              disabled={isSkillDisabled(skill.name, selectedSkills, ex)}
               className={`
                       ${styles.skillBtn}
                       ${styles[grade]}

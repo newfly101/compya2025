@@ -1,16 +1,13 @@
 import { useRef, useState } from "react";
-import { HITTER_SKILLS } from "@/data/skill/HITTER_SKILLS.js";
-import { HITTER_RECOMMEND } from "@/data/skill/HITTER_RECOMMEND.js";
-import { HITTER_SKILL_EXCLUSIVE } from "@/feature/dictionary/config/skillExclusive.js";
 
 export const usePlayerSkillChange = () => {
   const [standard, setStandard] = useState("레전드"); // 레전드 | 플래티넘
   const [selectedSkills, setSelectedSkills] = useState([]);
   const selectedSkillsRef = useRef([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasRecommend, setHasRecommend] = useState(true);
   const [recommendCombos, setRecommendCombos] = useState([]);
 
+  /** common function **/
   const handleToggleSkill = (skill) => {
     const skillName = skill.name;
 
@@ -29,13 +26,15 @@ export const usePlayerSkillChange = () => {
     });
   };
 
-  const initSelected = (type) => {
+  // 초기화
+  const initSelected = (type, player) => {
+    // ex) initSelected(type, HITTER_SKILLS);
     setStandard(type);
 
     if (type === "플래티넘") {
       setSelectedSkills((prev) =>
         prev.filter(
-          (skill) => !HITTER_SKILLS.legend.some((l) => l.name === skill),
+          (skill) => !player.legend.some((l) => l.name === skill),
         ),
       );
       selectedSkillsRef.current = [];
@@ -45,9 +44,11 @@ export const usePlayerSkillChange = () => {
     }
 
     setRecommendCombos([]);
-  };
+  }
 
-  const handleOpenRecommend = () => {
+  // 스킬 추천 조합
+  const recommendSkills = (player, recommend) => {
+    // recommendSkills(HITTER_SKILLS, HITTER_RECOMMEND)
     const skillsNow = selectedSkillsRef.current;
 
     if (skillsNow.length === 0) return;
@@ -55,15 +56,13 @@ export const usePlayerSkillChange = () => {
     if (
       standard === "레전드" &&
       skillsNow.includes("슈퍼스타") &&
-      skillsNow.some((skillName) => HITTER_SKILLS.platinum.some((s) => s.name === skillName))
+      skillsNow.some((skillName) => player.platinum.some((s) => s.name === skillName))
     ) {
       setHasRecommend(false);
-      setIsModalOpen(true);
       return;
     }
 
-
-    const matchedCombos = HITTER_RECOMMEND.filter((combo) =>
+    const matchedCombos = recommend.filter((combo) =>
       skillsNow.every((skill) => combo.skills.includes(skill)),
     );
 
@@ -73,47 +72,45 @@ export const usePlayerSkillChange = () => {
           (combo) =>
             combo.skills.every(
               (skill) =>
-                !HITTER_SKILLS.legend.some((l) => l.name === skill),
+                !player.legend.some((l) => l.name === skill),
             ),
         )
         : matchedCombos;
 
-    // console.log("finalCombos",finalCombos);
-
     setRecommendCombos(finalCombos);
     setHasRecommend(finalCombos.length > 0);
-    setIsModalOpen(true);
+
+    // 결과 값 recommendCombos 에 저장
+  }
+
+  const isSkillDisabled = (skillName, selectedSkills, ex) => {
+    // isSkillDisabled(skill.name, selectedSkills, HITTER_SKILL_EXCLUSIVE)
+    if (selectedSkills.includes(skillName)) return false;
+    if (selectedSkills.length === 0) return false;
+
+    return selectedSkills.some(
+      (selected) =>
+        ex[selected]?.includes(skillName),
+    );
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const resetRecommendSkills = () => {
     setSelectedSkills([]);
     selectedSkillsRef.current = [];
     setRecommendCombos([]);
     setHasRecommend(true);
   };
 
-  const isSkillDisabled = (skillName, selectedSkills) => {
-    if (selectedSkills.includes(skillName)) return false;
-    if (selectedSkills.length === 0) return false;
-
-    return selectedSkills.some(
-      (selected) =>
-        HITTER_SKILL_EXCLUSIVE[selected]?.includes(skillName),
-    );
-  };
-
-
   return {
     standard,
     selectedSkills,
-    isModalOpen,
     hasRecommend,
     recommendCombos,
     handleToggleSkill,
     initSelected,
-    handleOpenRecommend,
-    handleCloseModal,
-    isSkillDisabled
+    recommendSkills,
+    isSkillDisabled,
+
+    resetRecommendSkills,
   }
 }
