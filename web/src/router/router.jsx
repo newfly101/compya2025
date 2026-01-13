@@ -16,7 +16,7 @@ const Dictionary = lazy(() => import("@/pages/dictionary/Dictionary.jsx"));
 const PitcherDictionary = lazy(() => import("@/pages/dictionary/PitcherDictionary.jsx"));
 const HitterDictionary = lazy(() => import("@/pages/dictionary/HitterDictionary.jsx"));
 
-const TipPage = lazy(() => import("@/pages/TipPage.jsx"));
+const TipPage = lazy(() => import("@/pages/tipCollection/TipPage.jsx"));
 const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy.jsx"));
 
 const router = createBrowserRouter([

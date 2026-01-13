@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import styles from "@/styles/pages/TipPage.module.scss";
+import styles from "@/pages/tipCollection/TipPage.module.scss";
 import { postData, posts } from "@/data/board/TipBoard.js";
 import Tabs from "@/feature/notice/components/Tabs.jsx";
 import { tip2025data } from "@/data/board/tips2025.js";
