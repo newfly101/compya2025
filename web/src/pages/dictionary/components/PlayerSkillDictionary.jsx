@@ -4,7 +4,7 @@ import { usePlayerSkillChange } from "@/feature/dictionary/hooks/usePlayerSkillC
 import { useCardModal } from "@/feature/dictionary/hooks/useCardModal.js";
 import SkillPanels from "@/feature/dictionary/components/SkillPanels.jsx";
 import RecommendModal from "@/feature/dictionary/components/RecommendModal.jsx";
-import SkillGradeToggle from "@/feature/dictionary/components/SkillGradeToggle.jsx";
+import SkillGradeToggle from "@/feature/dictionary/components/skillGradeToggle/SkillGradeToggle.jsx";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
 
 const PlayerSkillDictionary = ({

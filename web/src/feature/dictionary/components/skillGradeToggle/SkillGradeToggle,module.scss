@@ -1,0 +1,52 @@
+.skillToggleHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .standardTabs {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+
+    button {
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      background: $surface2;
+      color: $text-secondary;
+      border: 1px solid $border;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+
+      &:hover {
+        background: $surface3;
+        color: $text-primary;
+      }
+    }
+
+    .active {
+      background: $primary-bg;
+      border-color: $primary;
+      color: $primary-text;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .skillToggleHeader {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    .standardTabs {
+      justify-content: center;
+      margin: 0;
+
+      .recommendBtn {
+        width: auto;
+        min-width: unset;
+      }
+    }
+  }
+}
