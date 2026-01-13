@@ -1,4 +1,4 @@
-export const legendBatterData = [
+export const legendHitterData = [
   {
     "id": "SAM_C_LEE_MANSOO",
     "name": "이만수",
