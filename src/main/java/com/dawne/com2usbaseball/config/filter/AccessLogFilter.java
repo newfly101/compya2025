@@ -23,12 +23,15 @@ public class AccessLogFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         String ua = ClientInfoExtractor.safe(request.getHeader("User-Agent"));
         String referer = ClientInfoExtractor.safe(request.getHeader("Referer"));
+        String pagePath = ClientInfoExtractor.safe(
+                request.getHeader("X-Page-Path")
+        );
 
         try {
             filterChain.doFilter(request, response);
         } finally {
-            log.info("[ACCESS] ip={} country={} method={} uri={} ua=\"{}\" ref=\"{}\"",
-                    ip, country, method, uri, ua, referer);
+            log.info("[ACCESS] ip={} country={} page={} method={} uri={} ua=\"{}\" ref=\"{}\"",
+                    ip, country, pagePath, method, uri, ua, referer);
         }
     }
 
