@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.dawne'
-version = '0.0.1-SNAPSHOT'
+version = ''
 description = '컴투스프로야구 팬 사이트'
 
 java {
@@ -29,4 +29,12 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+bootJar {
+	archiveFileName = "${rootProject.name}.jar"   // 👉 compyfun-web.jar
+}
+
+jar {
+	enabled = false
 }

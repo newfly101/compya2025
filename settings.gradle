@@ -4,4 +4,4 @@ pluginManagement {
 		gradlePluginPortal()
 	}
 }
-rootProject.name = 'com2usbaseball'
+rootProject.name = 'compyfun-web'
