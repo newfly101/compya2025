@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.config;
 
 import com.dawne.com2usbaseball.config.filter.AccessLogFilter;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -8,7 +9,16 @@ import org.springframework.context.annotation.Configuration;
 public class AccessLogConfig {
 
     @Bean
-    public AccessLogFilter accessLogFilter() {
-        return new AccessLogFilter();
+    public FilterRegistrationBean<AccessLogFilter> accessLogFilter() {
+        FilterRegistrationBean<AccessLogFilter> bean =
+                new FilterRegistrationBean<>();
+
+        bean.setFilter(new AccessLogFilter());
+        bean.setOrder(1);
+        bean.addUrlPatterns("/*");
+
+        return bean;
     }
+
+
 }

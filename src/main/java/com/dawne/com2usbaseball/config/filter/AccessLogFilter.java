@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.config.filter;
 
 import com.dawne.com2usbaseball.statistic.ClientInfoExtractor;
 import io.micrometer.common.lang.NonNull;
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -52,5 +53,10 @@ public class AccessLogFilter extends OncePerRequestFilter {
         return uri.startsWith("/swagger")
                 || uri.startsWith("/v3/api-docs")
                 || uri.startsWith("/favicon");
+    }
+
+    @PostConstruct
+    public void init() {
+        log.info("🔥 AccessLogFilter initialized");
     }
 }
