@@ -29,11 +29,10 @@ const App = () => {
       page_location: window.location.href,
       page_title: document.title,
     });
-  }, [location.pathname, matches]);
 
-  useEffect(() => {
     fetchHealth();
-  }, []);
+
+  }, [location.pathname, matches]);
 
 
   return (
