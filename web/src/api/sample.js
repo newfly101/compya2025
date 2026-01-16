@@ -1,13 +1,13 @@
 import axios from "axios";
 
 const api = axios.create({
-  // baseURL: "http://localhost:8080/api",
+  // baseURL: "http://localhost/api",
   baseURL: window.__CONFIG__.API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
     // "X-Page-Path": window.location.pathname
   },
-  timeout: 5000,
+  timeout: 30000,
   withCredentials: true,
 });
 
