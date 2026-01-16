@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import EventList from "@/feature/notice/components/lists/eventList/EventList.jsx";
 import events from "@/data/Events.js";
 import React from "react";
-import quizImg from "@/assets/quiz/quiz876.png";
+import quizImg from "@/assets/quiz/quiz877.png";
 
 const CLUB_GUIDE_URL = "https://cafe.naver.com/com2usbaseball2015/1785997";
 
@@ -50,7 +50,7 @@ const Home = () => {
 
       <section className={styles.homeSection}>
         <div>
-          <h2>🎉 컴프야 퀴즈 이벤트 876회 정답</h2>
+          <h2>🎉 컴프야 퀴즈 이벤트 877회 정답</h2>
           <img className={styles.quiz} src={quizImg} alt="quiz-875" />
         </div>
       </section>
