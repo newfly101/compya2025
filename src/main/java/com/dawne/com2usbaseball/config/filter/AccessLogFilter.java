@@ -20,18 +20,29 @@ public class AccessLogFilter extends OncePerRequestFilter {
         String ip = ClientInfoExtractor.getClientIp(request);
         String country = ClientInfoExtractor.getCountry(request);
         String method = request.getMethod();
-        String uri = request.getRequestURI();
         String ua = ClientInfoExtractor.safe(request.getHeader("User-Agent"));
+        String pageUrl = ClientInfoExtractor.safe(
+                request.getHeader("X-Page-Url")
+        );
+
+        /* 페이지 설정 구 버전 */
+        String uri = request.getRequestURI();
         String referer = ClientInfoExtractor.safe(request.getHeader("Referer"));
         String pagePath = ClientInfoExtractor.safe(
                 request.getHeader("X-Page-Path")
         );
 
+        String refBase = referer.endsWith("/")
+                ? referer.substring(0, referer.length() - 1)
+                : referer;
+
+        String fullRef = refBase + pagePath;
+
         try {
             filterChain.doFilter(request, response);
         } finally {
-            log.info("[ACCESS] ip={} country={} page={} method={} uri={} ua=\"{}\" ref=\"{}\"",
-                    ip, country, pagePath, method, uri, ua, referer);
+            log.info("[ACCESS] ref=\"{}\" ip={} country={}  method={}  ua=\"{}\"",
+                    pageUrl, ip, country, method, ua);
         }
     }
 
