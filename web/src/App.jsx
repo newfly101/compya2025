@@ -5,7 +5,6 @@ import Footer from "@/shared/layout/appLayout/Footer.jsx";
 import styles from "@/shared/layout/appLayout/appLayout.module.scss";
 import { Suspense, useEffect } from "react";
 import MobileNav from "@/shared/layout/appLayout/MobileNav.jsx";
-import { fetchHealth } from "@/api/sample.js";
 
 const App = () => {
   const location = useLocation();
@@ -29,8 +28,6 @@ const App = () => {
       page_location: window.location.href,
       page_title: document.title,
     });
-
-    fetchHealth();
 
   }, [location.pathname, matches]);
 
