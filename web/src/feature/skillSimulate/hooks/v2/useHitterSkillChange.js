@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { pickByProbability, PROB_LEGEND } from "@/utils/skill/skillProbability.js";
-import { pickSkillsByCombo } from "@/utils/skill/hitterSkillPicker.js";
+import { pickSkillsByCombo } from "@/utils/skill/playerSkillPicker.js";
 import { decrypt, encrypt } from "@/utils/crypto/storageCrypto.js";
 import { legendHitterData } from "@/data/player/legend/legendHitterData.js";
+import { useDispatch, useSelector } from "react-redux";
+import { requestPlayerSkillSet } from "@/store/modules/dictionary/index.js";
 
 const STORAGE_KEY = "COMPYAFUN-HITTER-SKILL";
 
@@ -18,6 +20,12 @@ const isValidSkillMap = (data) =>
 
 export const useHitterSkillChange = () => {
   const [skillStateMap, setSkillStateMap] = useState({});
+  const dispatch = useDispatch();
+  const { playerSkills } = useSelector((state) => state.dictionary);
+
+  useEffect(() => {
+    dispatch(requestPlayerSkillSet("HITTER"));
+  }, [dispatch]);
 
   /** 3레전드 스킬인지 확인하는 코드 **/
   const isTripleLegend = (result) =>
@@ -26,7 +34,7 @@ export const useHitterSkillChange = () => {
 
   /** 투수 Map으로 실행해서, 선수 스킬 독립시행 **/
   const rollSkills = (hitter) =>
-    pickSkillsByCombo(
+    pickSkillsByCombo(playerSkills,
       pickByProbability(PROB_LEGEND, {
         hitterId: hitter.id,
         pitchTypes: hitter.pitchTypes,
