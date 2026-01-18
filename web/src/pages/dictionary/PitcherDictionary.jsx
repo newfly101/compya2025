@@ -1,9 +1,20 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PlayerSkillDictionary from "@/pages/dictionary/components/PlayerSkillDictionary.jsx";
 import { PITCHER_SKILLS } from "@/data/skill/PITCHER_SKILLS.js";
 import { PITCHER_RECOMMEND } from "@/data/skill/PITCHER_RECOMMEND.js";
+import { useDispatch, useSelector } from "react-redux";
+import { requestPlayerSkillSet } from "@/store/modules/dictionary/index.js";
 
 const PitcherDictionary = () => {
+  const dispatch = useDispatch();
+  const { playerSkills } = useSelector((state) => state.dictionary);
+
+  useEffect(() => {
+    dispatch(requestPlayerSkillSet("PITCHER"));
+  }, [dispatch]);
+
+  if (!playerSkills) return null;
+
   return (
     <PlayerSkillDictionary
       title="📖 투수 스킬 백과사전"
