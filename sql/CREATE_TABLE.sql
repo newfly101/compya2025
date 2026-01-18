@@ -34,15 +34,16 @@ CREATE TABLE teams
             REFERENCES teams(id)
 );
 
-CREATE TABLE player_hitter_legend
+CREATE TABLE player_legend
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-    card_code   VARCHAR(50)     NOT NULL,
+    card_code   VARCHAR(50)     NOT NULL, -- LEGEND_{ROLE}_{TEAM}_{PLAYER}
     name        VARCHAR(50)     NOT NULL,
 
     team_id     BIGINT          NOT NULL, -- ⭐ FK
 
+    role        ENUM ('HITTER','PITCHER') NOT NULL,
     grade       ENUM ('LEGEND') NOT NULL DEFAULT 'LEGEND',
     overall     SMALLINT        NOT NULL,
     back_number SMALLINT,
@@ -57,6 +58,7 @@ CREATE TABLE player_hitter_legend
 
     UNIQUE KEY uk_card_code (card_code),
     INDEX idx_team_id (team_id),
+    INDEX idx_role (role),
 
     CONSTRAINT fk_legend_team
         FOREIGN KEY (team_id)

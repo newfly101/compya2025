@@ -899,7 +899,7 @@ export const legendPitcherData = [
     "team": "삼성 라이온즈",
     "teamCode": "SS",
     "grade": "LEGEND",
-    "overall": 21,
+    "overall": 84,
     "positions": ["CP"],
     "backNumber": 28,
     "birth": "1982-07-15",
