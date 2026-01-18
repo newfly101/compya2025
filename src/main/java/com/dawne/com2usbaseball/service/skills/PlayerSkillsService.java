@@ -4,5 +4,5 @@ import com.dawne.com2usbaseball.dto.response.skills.SkillSetResponse;
 import com.dawne.com2usbaseball.enums.Target;
 
 public interface PlayerSkillsService {
-    SkillSetResponse getSkillSetByTarget(Target target);
+    SkillSetResponse getPlayerSkillSet(Target target);
 }

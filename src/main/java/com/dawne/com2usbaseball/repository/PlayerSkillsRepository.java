@@ -15,7 +15,7 @@ public class PlayerSkillsRepository {
     private final PlayerSkillsMapper mapper;
 
     // 타자/투수 스킬 조회 (target = 선수 타입)
-    public List<PlayerSkillsEntity> findByTarget(Target target) {
-        return mapper.findByTarget(target);
+    public List<PlayerSkillsEntity> findAllSkillSetByTarget(Target target) {
+        return mapper.selectSkillsByTarget(target);
     }
 }

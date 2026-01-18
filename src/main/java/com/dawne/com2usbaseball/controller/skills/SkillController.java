@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/skills")
-public class SkillSetController {
-    private static final Logger log = LoggerFactory.getLogger(SkillSetController.class);
+public class SkillController {
+    private static final Logger log = LoggerFactory.getLogger(SkillController.class);
     private final PlayerSkillsService service;
 
     @GetMapping("/{target}")
-    public SkillSetResponse playerSkills(@PathVariable Target target) {
-        SkillSetResponse SAMPLE = service.getSkillSetByTarget(target);
+    public SkillSetResponse playerTypeSkills(@PathVariable Target target) {
+        SkillSetResponse SAMPLE = service.getPlayerSkillSet(target);
         log.info("result={}",SAMPLE);
-        return service.getSkillSetByTarget(target);
+        return service.getPlayerSkillSet(target);
     }
 }

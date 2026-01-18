@@ -8,5 +8,5 @@ import java.util.List;
 
 @Mapper
 public interface PlayerSkillsMapper {
-    List<PlayerSkillsEntity> findByTarget(Target target);
+    List<PlayerSkillsEntity> selectSkillsByTarget(Target target);
 }
