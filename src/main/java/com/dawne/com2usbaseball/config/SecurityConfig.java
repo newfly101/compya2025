@@ -16,7 +16,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors->{})
-                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/health").permitAll()
+                .authorizeHttpRequests(auth -> auth.requestMatchers("/api/**").permitAll()
                         .anyRequest().denyAll())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
