@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dawne.com2usbaseball.repository.mapper.LegendPlayerCareerMapper">
+
+    <select id="selectCareerByHitter" resultType="com.dawne.com2usbaseball.entity.LegendHitterCareerEntity" parameterType="String">
+        SELECT name,
+               seasons,
+               games,
+               avg,
+               at_bats,
+               hits,
+               doubles,
+               triples,
+               home_runs,
+               steals,
+               rbi,
+               runs,
+               strikeouts,
+               walks
+        FROM player_legend_hitter_career
+        WHERE name = #{name}
+    </select>
+
+    <select id="selectCareerByPitcher" resultType="com.dawne.com2usbaseball.entity.LegendPitcherCareerEntity" parameterType="String">
+        SELECT name,
+               seasons,
+               games,
+               era,
+               wins,
+               losses,
+               saves,
+               holds,
+               strikeouts,
+               walks,
+               hitsAllowed
+        FROM player_legend_pitcher_career
+        WHERE name = #{name}
+    </select>
+</mapper>

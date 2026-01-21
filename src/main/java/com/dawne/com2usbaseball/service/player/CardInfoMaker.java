@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.service.player;
 
 import com.dawne.com2usbaseball.dto.response.player.*;
+import com.dawne.com2usbaseball.dto.response.player.career.PlayerCareerResponse;
 import com.dawne.com2usbaseball.dto.response.player.game.PlayerGameInfoResponse;
 import com.dawne.com2usbaseball.dto.response.player.game.attributes.HitterAttributesResponse;
 import com.dawne.com2usbaseball.dto.response.player.game.attributes.PitcherAttributesResponse;
@@ -23,7 +24,8 @@ public class CardInfoMaker {
 
     public List<PlayerCardResponse> makeCardInfoList(
             Map<String, List<PlayerCardEntity>> grouped,
-            Map<Long, TeamResponse> teamMap
+            Map<Long, TeamResponse> teamMap,
+            Map<String, PlayerCareerResponse> careerMap
     ) {
 
         List<PlayerCardResponse> result = new ArrayList<>();
@@ -39,7 +41,10 @@ public class CardInfoMaker {
             PlayerGameInfoResponse game =
                     buildGameInfo(entities);
 
-            result.add(new PlayerCardResponse(identity, game));
+            PlayerCareerResponse career =
+                    careerMap.get(base.getName());
+
+            result.add(new PlayerCardResponse(identity, game, career));
         }
 
         return result;
