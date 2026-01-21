@@ -41,18 +41,17 @@ export const useHitterSkillChange = () => {
       }),
     );
 
-  const rollOnceFor = (hitter) => {
-    if (!hitter) return;
+  const rollOnceFor = (hitterName) => {
+    if (!hitterName) return;
 
-    const result = rollSkills(hitter);
+    const result = rollSkills(hitterName);
 
     setSkillStateMap(prev => {
-      const key = hitter.name;
-      const prevState = prev[key] ?? { skills: [], count: 0 };
+      const prevState = prev[hitterName] ?? { skills: [], count: 0 };
 
       const next = {
         ...prev,
-        [key]: {
+        [hitterName]: {
           skills: result,
           count: prevState.count + 1,
         },
@@ -76,33 +75,11 @@ export const useHitterSkillChange = () => {
 
       if (decoded && isValidSkillMap(decoded)) {
         setSkillStateMap(decoded);
-        return;
       }
-
-      // ❌ 복호화 실패 or 구조 이상
-      localStorage.removeItem(STORAGE_KEY);
+      else {
+        localStorage.removeItem(STORAGE_KEY);
+      }
     }
-
-    const initialMap = {};
-
-    legendHitterData.forEach(hitter => {
-      let result = rollSkills(hitter);
-
-      if (isTripleLegend(result)) {
-        result = rollSkills(hitter);
-      }
-
-      initialMap[hitter.name] = {
-        skills: result,
-        count: 0,
-      };
-    });
-
-    setSkillStateMap(initialMap);
-    localStorage.setItem(
-      STORAGE_KEY,
-      encrypt(initialMap)
-    );
   }, []);
 
 
@@ -110,4 +87,23 @@ export const useHitterSkillChange = () => {
     rollOnceFor,
     skillStateMap,
   };
+};
+
+export const useHitterSkillInit = ({
+                                      cardInfo,
+                                      skillStateMap,
+                                      rollOnceFor,
+                                    }) => {
+  useEffect(() => {
+    if (!cardInfo || cardInfo.length === 0) return;
+
+    // 이미 localStorage 복구된 경우면 스킵
+    if (Object.keys(skillStateMap).length > 0) return;
+
+    // 🔥 최초 1회: 전체 타자에게 roll
+    cardInfo.forEach((player) => {
+      rollOnceFor(player.identity.name);
+    });
+  }, [cardInfo, skillStateMap, rollOnceFor]);
+
 };

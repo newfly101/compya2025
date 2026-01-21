@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { pickByProbability, PROB_LEGEND } from "@/utils/skill/skillProbability.js";
 import { pickSkillsByCombo } from "@/utils/skill/playerSkillPicker.js";
-import { legendPitcherData } from "@/data/player/legend/legendPitcherData.js";
 import { decrypt, encrypt } from "@/utils/crypto/storageCrypto.js";
 import { useDispatch, useSelector } from "react-redux";
 import { requestPlayerSkillSet } from "@/store/modules/dictionary/index.js";
@@ -33,26 +32,25 @@ export const usePitcherSkillChange = () => {
     result.every(skill => skill.grade === "LEGEND");
 
   /** 투수 Map으로 실행해서, 선수 스킬 독립시행 **/
-  const rollSkills = (pitcher) =>
+  const rollSkills = (pitcherName) =>
     pickSkillsByCombo(playerSkills,
       pickByProbability(PROB_LEGEND, {
-        pitcherId: pitcher.id,
-        pitchTypes: pitcher.pitchTypes,
+        pitcherId: pitcherName,
+        // pitchTypes: pitcher.pitchTypes,
       }),
     );
 
-  const rollOnceFor = (pitcher) => {
-    if (!pitcher) return;
+  const rollOnceFor = (pitcherName) => {
+    if (!pitcherName) return;
 
-    const result = rollSkills(pitcher);
+    const result = rollSkills(pitcherName);
 
     setSkillStateMap(prev => {
-      const key = pitcher.name;
-      const prevState = prev[key] ?? { skills: [], count: 0 };
+      const prevState = prev[pitcherName] ?? { skills: [], count: 0 };
 
       const next = {
         ...prev,
-        [key]: {
+        [pitcherName]: {
           skills: result,
           count: prevState.count + 1,
         },
@@ -61,7 +59,7 @@ export const usePitcherSkillChange = () => {
       // 🔐 암호화 저장
       localStorage.setItem(
         STORAGE_KEY,
-        encrypt(next)
+        encrypt(next),
       );
 
       return next;
@@ -76,33 +74,10 @@ export const usePitcherSkillChange = () => {
 
       if (decoded && isValidSkillMap(decoded)) {
         setSkillStateMap(decoded);
-        return;
+      } else {
+        localStorage.removeItem(STORAGE_KEY);
       }
-
-      // ❌ 복호화 실패 or 구조 이상
-      localStorage.removeItem(STORAGE_KEY);
     }
-
-    const initialMap = {};
-
-    legendPitcherData.forEach(pitcher => {
-      let result = rollSkills(pitcher);
-
-      if (isTripleLegend(result)) {
-        result = rollSkills(pitcher);
-      }
-
-      initialMap[pitcher.name] = {
-        skills: result,
-        count: 0,
-      };
-    });
-
-    setSkillStateMap(initialMap);
-    localStorage.setItem(
-      STORAGE_KEY,
-      encrypt(initialMap)
-    );
   }, []);
 
 
@@ -110,4 +85,23 @@ export const usePitcherSkillChange = () => {
     rollOnceFor,
     skillStateMap,
   };
+};
+
+export const usePitcherSkillInit = ({
+                                      cardInfo,
+                                      skillStateMap,
+                                      rollOnceFor,
+                                    }) => {
+  useEffect(() => {
+    if (!cardInfo || cardInfo.length === 0) return;
+
+    // 이미 localStorage 복구된 경우면 스킵
+    if (Object.keys(skillStateMap).length > 0) return;
+
+    // 🔥 최초 1회: 전체 투수에게 roll
+    cardInfo.forEach((player) => {
+      rollOnceFor(player.identity.name);
+    });
+  }, [cardInfo, skillStateMap, rollOnceFor]);
+
 };

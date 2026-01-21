@@ -1,22 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./SkillChange.module.scss";
-import { legendPitcherData } from "@/data/player/legend/legendPitcherData.js";
 import PitcherSkillCard from "@/feature/skillSimulate/components/cards/v1/PitcherSkillCard.jsx";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
-import { usePitcherSkillChange } from "@/feature/skillSimulate/hooks/v2/usePitcherSkillChange.js";
+import { usePitcherSkillChange, usePitcherSkillInit } from "@/feature/skillSimulate/hooks/v2/usePitcherSkillChange.js";
 import { SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import { CardSwiper } from "@/shared/ui/cardSwiper/index.js";
+import { useDispatch, useSelector } from "react-redux";
+import { requestPlayerCardInfo } from "@/store/modules/simulate/index.js";
 
 
 const PitcherSkillChange = () => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const { cardInfo } = useSelector((state) => state.simulate);
   const { moveTo } = useContentPageHeader();
-
+  const dispatch = useDispatch();
   const { skillStateMap, rollOnceFor } = usePitcherSkillChange();
-  const selectedPitcher = legendPitcherData[activeIndex];
+
+  useEffect(() => {
+    dispatch(requestPlayerCardInfo("PITCHER"));
+  }, [dispatch]);
+
+  usePitcherSkillInit({cardInfo, skillStateMap, rollOnceFor});
+  const selectedPitcher = cardInfo?.[activeIndex];
 
   return (
     <ContentPageLayout
@@ -26,46 +34,47 @@ const PitcherSkillChange = () => {
                                  onBack={() => moveTo("/simulate")}
       />}
       children={
-        <section>
-          <h6>선수 이미지는 저작권 문제로 인해 변경하였습니다.</h6>
+        (!cardInfo || cardInfo.length === 0) ?
+          <div style={{ padding: "6rem", textAlign: "center" }}>
+            데이터를 불러오는 중입니다...
+          </div>
+          :
+          <section>
+            <h6>선수 이미지는 저작권 문제로 인해 변경하였습니다.</h6>
 
-          <section className={styles.pitcherSelectSection}>
-            <h2 className={styles.subTitle}>🧤 투수 선택</h2>
-            <CardSwiper
-              onActiveIndexChange={setActiveIndex}
-              className={styles.cardSwiper}
-              children={
-                legendPitcherData.map((p) => (
-                  <SwiperSlide
-                    key={p.id}
-                    className={styles.slide}
-                  >
+            <section className={styles.pitcherSelectSection}>
+              <h2 className={styles.subTitle}>🧤 투수 선택</h2>
+              <CardSwiper
+                onActiveIndexChange={setActiveIndex}
+                className={styles.cardSwiper}
+                >
+                {cardInfo.map((p) => (
+                  <SwiperSlide key={p?.identity?.name} className={styles.slide}>
                     <PitcherSkillCard
                       pitcher={p}
-                      skills={skillStateMap[p.name]?.skills}
+                      skills={skillStateMap[p?.identity?.name ?? p?.name]?.skills}
                     />
                   </SwiperSlide>
-                ))
-              }
-            />
-          </section>
+                ))}
+              </CardSwiper>
+            </section>
 
-          <section className={styles.cardSection}>
-            <button
-              className={styles.itemButton}
-              onClick={() => rollOnceFor(selectedPitcher)}
-              disabled={!selectedPitcher}
-            >
-              <div className={styles.textBox}>
-                <span className={styles.title}>고급 고유능력 변경권</span>
-                <span className={styles.count}>{skillStateMap[selectedPitcher?.name]?.count ?? 0}</span>
-              </div>
-            </button>
-          </section>
-          <section>
+            <section className={styles.cardSection}>
+              <button
+                className={styles.itemButton}
+                onClick={() => rollOnceFor(selectedPitcher?.identity.name)}
+                disabled={!selectedPitcher?.identity.name}
+              >
+                <div className={styles.textBox}>
+                  <span className={styles.title}>고급 고유능력 변경권</span>
+                  <span className={styles.count}>{skillStateMap[selectedPitcher?.identity.name]?.count ?? 0}</span>
+                </div>
+              </button>
+            </section>
+            <section>
 
+            </section>
           </section>
-        </section>
       } />
   );
 };

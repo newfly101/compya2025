@@ -3,15 +3,8 @@ import styles from "./SkillCard.module.scss";
 
 const PitcherSkillCard = ({ pitcher, skills }) => {
   const {
-    name,
-    team,
-    positions,
-    backNumber,
-    birth,
-    batThrow,
-    traits,
-    attributes,
-    careerStats,
+    card,
+    identity,
   } = pitcher;
 
   const calcAttrClass = (value) => {
@@ -29,34 +22,47 @@ const PitcherSkillCard = ({ pitcher, skills }) => {
   return (
     <article className={styles.skillCard}>
       {/* 이름 */}
-      <header className={styles.teamName}>{name}</header>
+      <header className={styles.teamName}>{identity.name}</header>
 
       {/* 기본 정보 */}
       <section className={styles.metaBlock}>
-        <div className={styles.metaGrid}>소속팀 <strong>{team}</strong></div>
-        <div className={styles.metaGrid}>포지션 <strong>{positions.join(", ")}</strong></div>
-        <div className={styles.metaGrid}>등번호 <strong>{backNumber}번</strong></div>
-        <div className={styles.metaGrid}>생년월일 <strong>{birth}</strong></div>
-        <div className={styles.metaGrid}>투타 <strong>{batThrow}</strong></div>
+        <div className={styles.metaGrid}>소속팀 <strong>{identity.team.teamName}</strong></div>
+        <div className={styles.metaGrid}>포지션 <strong>{card.positions}</strong></div>
+        <div className={styles.metaGrid}>등번호 <strong>{identity.backNumber}번</strong></div>
+        <div className={styles.metaGrid}>생년월일 <strong>{identity.birth}</strong></div>
+        <div className={styles.metaGrid}>투타 <strong>{identity.batThrow}</strong></div>
       </section>
 
       {/* 상단 정보 그리드 */}
       <section className={styles.infoGrid}>
         {/* 기록 */}
+
         <section className={styles.statBlock}>
           <div className={styles.statHeader}>
             <span>시즌</span><span>경기수</span><span>방어율</span>
             <span>승</span><span>패</span><span>세이브</span><span>삼진</span>
           </div>
-          <div className={styles.statValue}>
-            <span>{careerStats.seasons}</span>
-            <span>{careerStats.games}</span>
-            <span>{careerStats.era}</span>
-            <span>{careerStats.wins}</span>
-            <span>{careerStats.losses}</span>
-            <span>{careerStats.saves}</span>
-            <span>{careerStats.strikeouts}</span>
-          </div>
+          {pitcher.careerStats ?
+            <div className={styles.statValue}>
+              <span>{pitcher.seasons}</span>
+              <span>{careerStats.games}</span>
+              <span>{careerStats.era}</span>
+              <span>{careerStats.wins}</span>
+              <span>{careerStats.losses}</span>
+              <span>{careerStats.saves}</span>
+              <span>{careerStats.strikeouts}</span>
+            </div>
+            :
+            <div className={styles.statValue}>
+              <span>-</span>
+              <span>-</span>
+              <span>-</span>
+              <span>-</span>
+              <span>-</span>
+              <span>-</span>
+              <span>-</span>
+            </div>
+          }
         </section>
 
         {/* 능력치 */}
@@ -65,11 +71,11 @@ const PitcherSkillCard = ({ pitcher, skills }) => {
             <span>제구</span><span>구위</span><span>체력</span><span>직구</span><span>변화</span>
           </div>
           <div className={styles.attrValue}>
-            <span className={calcAttrClass(attributes.control)}>{attributes.control}</span>
-            <span className={calcAttrClass(attributes.breaking)}>{attributes.breaking}</span>
-            <span className={calcAttrClass(attributes.stamina)}>{attributes.stamina}</span>
-            <span className={calcAttrClass(attributes.velocity)}>{attributes.velocity}</span>
-            <span className={calcAttrClass(attributes.movement)}>{attributes.movement}</span>
+            <span className={calcAttrClass(card.attributes.control)}>{card.attributes.control}</span>
+            <span className={calcAttrClass(card.attributes.breaking)}>{card.attributes.breaking}</span>
+            <span className={calcAttrClass(card.attributes.stamina)}>{card.attributes.stamina}</span>
+            <span className={calcAttrClass(card.attributes.velocity)}>{card.attributes.velocity}</span>
+            <span className={calcAttrClass(card.attributes.movement)}>{card.attributes.movement}</span>
           </div>
         </section>
 
@@ -96,11 +102,11 @@ const PitcherSkillCard = ({ pitcher, skills }) => {
       {/* 특성 */}
       <footer className={styles.traits}>
         <div className={styles.option}>
-          {traits.map(t => (
+          {card.traits.map(t => (
             <span key={t} className={calcOptionClass(t)}>{t}</span>
           ))}
         </div>
-        <span>{pitcher.grade}</span>
+        <span>{identity.grade}</span>
       </footer>
     </article>
   );

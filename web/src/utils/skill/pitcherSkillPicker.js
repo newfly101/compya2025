@@ -50,6 +50,7 @@ const shuffle = (arr) => {
 
 
 export const pickSkillsByCombo = (combo) => {
+  console.log("pickSkillsByCombo: combo",combo);
   const legendPool = [...PITCHER_SKILLS.legend];
   const platinumPool = [...PITCHER_SKILLS.platinum];
   const normalPool = [...NORMAL_POOL];
