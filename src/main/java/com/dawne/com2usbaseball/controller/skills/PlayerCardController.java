@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.controller.skills;
 
-import com.dawne.com2usbaseball.dto.response.playerInfo.PlayerCardResponse;
+import com.dawne.com2usbaseball.dto.response.player.PlayerCardResponse;
 import com.dawne.com2usbaseball.enums.Target;
 import com.dawne.com2usbaseball.service.player.PlayerCardService;
 import lombok.RequiredArgsConstructor;

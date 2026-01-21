@@ -21,7 +21,7 @@ public class PlayerCardEntity {
     Grade grade;
     Short overall;
     Short backNumber;
-    LocalDateTime birth_date;
+    LocalDateTime birthDate;
     String batThrow;
     String positions;
     String traits;

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dawne.com2usbaseball.repository.mapper.TeamMapper">
+
+    <select id="selectTeamById" resultType="com.dawne.com2usbaseball.entity.TeamsEntity" parameterType="Long">
+        SELECT
+            id,
+            team_code     AS teamCode,
+            team_name,
+            latest_team_id       AS teamId
+        FROM teams
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectTeamAll" resultType="com.dawne.com2usbaseball.entity.TeamsEntity">
+        SELECT * FROM teams
+    </select>
+</mapper>

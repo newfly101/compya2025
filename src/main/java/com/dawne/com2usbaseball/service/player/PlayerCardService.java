@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.service.player;
 
-import com.dawne.com2usbaseball.dto.response.playerInfo.PlayerCardResponse;
+import com.dawne.com2usbaseball.dto.response.player.PlayerCardResponse;
 import com.dawne.com2usbaseball.enums.Target;
 
 import java.util.List;
