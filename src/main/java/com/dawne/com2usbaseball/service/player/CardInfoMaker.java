@@ -57,7 +57,7 @@ public class CardInfoMaker {
                 teamMap.get(base.getTeamId()),
                 base.getGrade(),
                 base.getBackNumber(),
-                base.getBirthDate(),
+                base.getBirthDate().toLocalDate(),
                 base.getBatThrow()
         );
     }

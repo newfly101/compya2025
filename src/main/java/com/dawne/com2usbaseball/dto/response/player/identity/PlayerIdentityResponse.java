@@ -3,7 +3,7 @@ package com.dawne.com2usbaseball.dto.response.player.identity;
 import com.dawne.com2usbaseball.dto.response.player.team.TeamResponse;
 import com.dawne.com2usbaseball.enums.Grade;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record PlayerIdentityResponse(
         Long id,
@@ -11,7 +11,7 @@ public record PlayerIdentityResponse(
         TeamResponse team,
         Grade grade,
         Short backNumber,
-        LocalDateTime birth,
+        LocalDate birth,
         String batThrow
 ) {
 }
