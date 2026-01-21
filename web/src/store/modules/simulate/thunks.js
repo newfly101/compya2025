@@ -6,10 +6,21 @@ import { fetchPlayerCardInfo } from "@/store/modules/simulate/api.js";
 export const requestPlayerCardInfo = createAsyncThunk(
   SIMULATE.INFO, async (type, { dispatch, getState, rejectWithValue }) => {
     try {
+      const cached = sessionStorage.getItem(`info-${type}`);
+
+      if (cached) {
+        return JSON.parse(cached);
+      }
+
       dispatch(setPlayerType(type));
 
       const data = await fetchPlayerCardInfo(type);
-      // console.log(`${type} SKILL : ` , data);
+      console.log(`${type} SKILL : ` , data);
+
+      sessionStorage.setItem(
+        `info-${type}`,
+        JSON.stringify(data)
+      );
 
       return data;
     } catch (error) {
