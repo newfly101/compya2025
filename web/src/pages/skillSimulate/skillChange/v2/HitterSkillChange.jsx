@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import styles from "./SkillChange.module.scss";
-import { legendHitterData } from "@/data/player/legend/legendHitterData.js";
 import { ContentPageHeader, useContentPageHeader } from "@/shared/ui/contentPageHeader/index.js";
 import { ContentPageLayout } from "@/shared/layout/contentPageLayout/index.js";
 import { useHitterSkillChange, useHitterSkillInit } from "@/feature/skillSimulate/hooks/v2/useHitterSkillChange.js";
 import { SwiperSlide } from "swiper/react";
-import PitcherSkillCard from "@/feature/skillSimulate/components/cards/v1/PitcherSkillCard.jsx";
 import { CardSwiper } from "@/shared/ui/cardSwiper/index.js";
 import { useDispatch, useSelector } from "react-redux";
 import { requestPlayerCardInfo } from "@/store/modules/simulate/index.js";

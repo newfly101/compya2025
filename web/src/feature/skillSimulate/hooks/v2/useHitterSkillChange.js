@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { pickByProbability, PROB_LEGEND } from "@/utils/skill/skillProbability.js";
 import { pickSkillsByCombo } from "@/utils/skill/playerSkillPicker.js";
 import { decrypt, encrypt } from "@/utils/crypto/storageCrypto.js";
-import { legendHitterData } from "@/data/player/legend/legendHitterData.js";
 import { useDispatch, useSelector } from "react-redux";
 import { requestPlayerSkillSet } from "@/store/modules/dictionary/index.js";
 
