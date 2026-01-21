@@ -2,6 +2,7 @@ import { setPlayerType } from "@/store/modules/dictionary/slices.js";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { DICTIONARY } from "@/store/modules/dictionary/endpoints.js";
 import { fetchPlayerSkillSet } from "@/store/modules/dictionary/api.js";
+import { decrypt, encrypt } from "@/utils/crypto/storageCrypto.js";
 
 export const requestPlayerSkillSet = createAsyncThunk(
   DICTIONARY.SKILLSET, async (type, { dispatch, getState, rejectWithValue }) => {
@@ -9,7 +10,7 @@ export const requestPlayerSkillSet = createAsyncThunk(
       const cached = sessionStorage.getItem(`skill-${type}`);
 
       if (cached) {
-        return JSON.parse(cached);
+        return decrypt(cached);
       }
 
       dispatch(setPlayerType(type));
@@ -19,7 +20,7 @@ export const requestPlayerSkillSet = createAsyncThunk(
 
       sessionStorage.setItem(
         `skill-${type}`,
-        JSON.stringify(data)
+        encrypt(data)
       );
 
       return data;
