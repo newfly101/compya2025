@@ -9,7 +9,7 @@ export const requestPlayerCardInfo = createAsyncThunk(
       dispatch(setPlayerType(type));
 
       const data = await fetchPlayerCardInfo(type);
-      console.log(`${type} SKILL : ` , data);
+      // console.log(`${type} SKILL : ` , data);
 
       return data;
     } catch (error) {
