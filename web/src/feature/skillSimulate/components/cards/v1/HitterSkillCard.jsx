@@ -4,7 +4,8 @@ import styles from "./SkillCard.module.scss";
 const HitterSkillCard = ({ hitter, skills }) => {
   const {
     card,
-    identity
+    identity,
+    career
   } = hitter;
 
   const calcAttrClass = (value) => {
@@ -41,15 +42,15 @@ const HitterSkillCard = ({ hitter, skills }) => {
             <span>시즌</span><span>경기수</span><span>타율</span>
             <span>타수</span><span>안타</span><span>홈런</span><span>도루</span>
           </div>
-          {hitter.careerStats ?
+          {career ?
             <div className={styles.statValue}>
-              <span>{hitter.seasons}</span>
-              <span>{careerStats.games}</span>
-              <span>{careerStats.era}</span>
-              <span>{careerStats.wins}</span>
-              <span>{careerStats.losses}</span>
-              <span>{careerStats.saves}</span>
-              <span>{careerStats.strikeouts}</span>
+              <span>{career.seasons}</span>
+              <span>{career.games}</span>
+              <span>{career.avg}</span>
+              <span>{career.atBats}</span>
+              <span>{career.hits}</span>
+              <span>{career.homeRuns}</span>
+              <span>{career.runs}</span>
             </div>
             :
             <div className={styles.statValue}>

@@ -5,6 +5,7 @@ const PitcherSkillCard = ({ pitcher, skills }) => {
   const {
     card,
     identity,
+    career
   } = pitcher;
 
   const calcAttrClass = (value) => {
@@ -42,15 +43,15 @@ const PitcherSkillCard = ({ pitcher, skills }) => {
             <span>시즌</span><span>경기수</span><span>방어율</span>
             <span>승</span><span>패</span><span>세이브</span><span>삼진</span>
           </div>
-          {pitcher.careerStats ?
+          {career ?
             <div className={styles.statValue}>
-              <span>{pitcher.seasons}</span>
-              <span>{careerStats.games}</span>
-              <span>{careerStats.era}</span>
-              <span>{careerStats.wins}</span>
-              <span>{careerStats.losses}</span>
-              <span>{careerStats.saves}</span>
-              <span>{careerStats.strikeouts}</span>
+              <span>{career.seasons}</span>
+              <span>{career.games}</span>
+              <span>{career.era}</span>
+              <span>{career.wins}</span>
+              <span>{career.losses}</span>
+              <span>{career.saves}</span>
+              <span>{career.strikeouts}</span>
             </div>
             :
             <div className={styles.statValue}>
