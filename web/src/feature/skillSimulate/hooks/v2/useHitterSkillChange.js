@@ -36,7 +36,6 @@ export const useHitterSkillChange = () => {
     pickSkillsByCombo(playerSkills,
       pickByProbability(PROB_LEGEND, {
         hitterId: hitter.id,
-        pitchTypes: hitter.pitchTypes,
       }),
     );
 
