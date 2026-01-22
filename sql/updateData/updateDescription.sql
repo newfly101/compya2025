@@ -155,7 +155,155 @@ UPDATE player_skills
 SET description = '득점권 상황에서 삼진 및 장타 확률 증가'
 WHERE target = 'PITCHER'  AND name = '승부사';
 
+UPDATE player_skills
+SET description = '4회 이후 (중계, 마무리) 등판 시 전체 스탯 증가, 등판 이닝 안타 확률 감소'
+WHERE target = 'PITCHER'  AND name = '벌떼야구';
+UPDATE player_skills
+SET description = '안타 확률 감소, 삼진 확률 증가, 선수의 탈삼진 숫자에 따라 추가 증가 및 스탯(구위) 증가'
+WHERE target = 'PITCHER'  AND name = '닥터K';
+UPDATE player_skills
+SET description = '안타 확률 감소, 다 이닝 소화 시 안타 확률 추가 감소 및 체력 소모 추가'
+WHERE target = 'PITCHER'  AND name = '투혼';
 
 UPDATE player_skills
-SET description = ''
-WHERE target = 'HITTER'  AND name = '배테랑';
+SET description = '안타 확률 증가, 스탯 증가'
+WHERE target = 'HITTER'  AND name = '베테랑';
+UPDATE player_skills
+SET description = '주자가 많을 수록 좋은 타구 증가'
+WHERE target = 'HITTER'  AND name = '슈퍼스타';
+UPDATE player_skills
+SET description = '안타 확률 증가, 실투 유발 확률 증가'
+WHERE target = 'HITTER'  AND name = '위압감';
+UPDATE player_skills
+SET description = '우산효과, 장타 확률 증가'
+WHERE target = 'HITTER'  AND name = '핵심타자';
+UPDATE player_skills
+SET description = '본인(중첩) 및 모든 타자 올스탯 증가'
+WHERE target = 'HITTER'  AND name = '캡틴';
+UPDATE player_skills
+SET description = '정확한 타격 시 홈런 확률 증가'
+WHERE target = 'HITTER'  AND name = '게스히터';
+UPDATE player_skills
+SET description = '득점권 장타율 증가'
+WHERE target = 'HITTER'  AND name = '클러치히터';
+UPDATE player_skills
+SET description = '(1번) 배치 시 정확한 타격 확률 증가'
+WHERE target = 'HITTER'  AND name = '리드오프';
+UPDATE player_skills
+SET description = '(4번) 배치 시 라인드라이브 타구 확률 증가'
+WHERE target = 'HITTER'  AND name = '파워히터';
+UPDATE player_skills
+SET description = '스탯 증가 (1~4번)'
+WHERE target = 'HITTER'  AND name = '레전드';
+UPDATE player_skills
+SET description = '안타 확률 증가'
+WHERE target = 'HITTER'  AND name = '배팅머신';
+UPDATE player_skills
+SET description = '라인드라이브 타구 확률 증가'
+WHERE target = 'HITTER'  AND name = '스프레이히터';
+UPDATE player_skills
+SET description = '홈런, 장타 확률 증가'
+WHERE target = 'HITTER'  AND name = '슬러거';
+UPDATE player_skills
+SET description = '투수보다 오버롤 낮거나 같으면 안타 확률 증가'
+WHERE target = 'HITTER'  AND name = '에이스킬러';
+UPDATE player_skills
+SET description = '볼넷, 출루율 상승, 손플 시 볼 위치 확인 가능'
+WHERE target = 'HITTER'  AND name = '예지력';
+UPDATE player_skills
+SET description = '도루 성공 확률 증가'
+WHERE target = 'HITTER'  AND name = '주루도사';
+UPDATE player_skills
+SET description = '상대 투수 스탯 감소 (중첩 가능)'
+WHERE target = 'HITTER'  AND name = '카리스마';
+UPDATE player_skills
+SET description = '수비 능력치 상승 (포수 실투 및 포구 감소)'
+WHERE target = 'HITTER'  AND name = '블로킹';
+UPDATE player_skills
+SET description = '장타 및 삼진 확률 증가'
+WHERE target = 'HITTER'  AND name = '빅스윙';
+UPDATE player_skills
+SET description = '장타율 증가'
+WHERE target = 'HITTER'  AND name = '거포본능';
+UPDATE player_skills
+SET description = '이기고 있는 경우 스탯 증가'
+WHERE target = 'HITTER'  AND name = '승부근성';
+UPDATE player_skills
+SET description = '어퍼스윙 시 장타율 증가'
+WHERE target = 'HITTER'  AND name = '어퍼스윙';
+UPDATE player_skills
+SET description = '지고 있는 경우 스탯 증가'
+WHERE target = 'HITTER'  AND name = '역전의힘';
+UPDATE player_skills
+SET description = '스탯(정확) 증가'
+WHERE target = 'HITTER'  AND name = '정밀타격';
+UPDATE player_skills
+SET description = '투구 수 많아질 수록 안타 확률 증가'
+WHERE target = 'HITTER'  AND name = '참을성';
+UPDATE player_skills
+SET description = '출루 시 투수 체력 감소'
+WHERE target = 'HITTER'  AND name = '탈진';
+UPDATE player_skills
+SET description = '주자 없는 경우 선구 증가'
+WHERE target = 'HITTER'  AND name = '테이블세터';
+UPDATE player_skills
+SET description = '스탯(파워) 증가'
+WHERE target = 'HITTER'  AND name = '풀스윙히터';
+UPDATE player_skills
+SET description = '스탯(주루) 증가'
+WHERE target = 'HITTER'  AND name = '하체단련';
+UPDATE player_skills
+SET description = '스탯(정확, 파워, 선구) 증가'
+WHERE target = 'HITTER'  AND name = '훈련중독';
+UPDATE player_skills
+SET description = '다운스윙 시 장타 확률 증가'
+WHERE target = 'HITTER'  AND name = '다운스윙';
+UPDATE player_skills
+SET description = '당겨치기 시 장타 확률 증가'
+WHERE target = 'HITTER'  AND name = '당겨치기';
+UPDATE player_skills
+SET description = '대타 효과 추가 상승'
+WHERE target = 'HITTER'  AND name = '대타전문가';
+UPDATE player_skills
+SET description = '주자 2루 이상인 경우 안타 확률 증가'
+WHERE target = 'HITTER'  AND name = '득점기계';
+UPDATE player_skills
+SET description = '안타 확률 증가'
+WHERE target = 'HITTER'  AND name = '매의눈';
+UPDATE player_skills
+SET description = '밀어치기 시 장타 확률 증가'
+WHERE target = 'HITTER'  AND name = '밀어치기';
+UPDATE player_skills
+SET description = '스탯(수비) 증가'
+WHERE target = 'HITTER'  AND name = '수비대장';
+UPDATE player_skills
+SET description = '투수가 직구 구종 던질 확률 증가'
+WHERE target = 'HITTER'  AND name = '정면승부';
+UPDATE player_skills
+SET description = '우완투수 상대 시 안타 확률 증가'
+WHERE target = 'HITTER'  AND name = '우완킬러';
+UPDATE player_skills
+SET description = '좌완투수 상대 시 안타 확률 증가'
+WHERE target = 'HITTER'  AND name = '좌완킬러';
+UPDATE player_skills
+SET description = '직구 구종 안타 확률 증가'
+WHERE target = 'HITTER'  AND name = '직구킬러';
+UPDATE player_skills
+SET description = '파울 타구 발생률 감소'
+WHERE target = 'HITTER'  AND name = '집중력';
+UPDATE player_skills
+SET description = '초구 안타 확률 증가'
+WHERE target = 'HITTER'  AND name = '초구공략';
+
+
+UPDATE player_skills
+SET description = '장타 및 도루 확률 증가, 홈런 이후 도루 확률 추가 증가, 도루 이후 장타 확률 추가 증가'
+WHERE target = 'HITTER'  AND name = '호타준족';
+
+UPDATE player_skills
+SET description = '장타 확률 증가, 팀 장타 숫자에 따라 장타 확률 추가 증가 및 스탯(파워) 증가'
+WHERE target = 'HITTER'  AND name = '대포군단';
+
+UPDATE player_skills
+SET description = '안타 확률 증가, 선수의 안타 숫자에 따라 안타 확률 추가 증가 및 스탯(정확) 증가'
+WHERE target = 'HITTER'  AND name = '타격의달인';

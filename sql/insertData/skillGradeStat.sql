@@ -100,7 +100,7 @@ VALUES ('L4', 'PITCHER', 'E', 2, 2, 2, 2, 2, NULL),
        ('H2', 'PITCHER', 'A', 8, 0, 0, 0, 0, NULL),
 
        ('H9', 'PITCHER', 'E', 1, 1, 1, 1, 1, '3,4,5번 타자 상대'),
-       ('H9', 'PITCHER', 'D', 2,2,2,2,2, '3,4,5번 타자 상대'),
+       ('H9', 'PITCHER', 'D', 2, 2, 2, 2, 2, '3,4,5번 타자 상대'),
        ('H9', 'PITCHER', 'C', 3, 3, 3, 3, 3, '3,4,5번 타자 상대'),
        ('H9', 'PITCHER', 'B', 4, 4, 4, 4, 4, '3,4,5번 타자 상대'),
        ('H9', 'PITCHER', 'A', 5, 5, 5, 5, 5, '3,4,5번 타자 상대'),
@@ -134,3 +134,13 @@ VALUES ('L4', 'PITCHER', 'E', 2, 2, 2, 2, 2, NULL),
        ('N10', 'PITCHER', 'C', 0, 0, 0, 0, 5, NULL),
        ('N10', 'PITCHER', 'B', 0, 0, 0, 0, 7, NULL),
        ('N10', 'PITCHER', 'A', 0, 0, 0, 0, 9, NULL);
+
+
+INSERT INTO skill_grade_stat
+(skill_code, target, grade, control, velocity, stamina, fastball, breaking, effect_text)
+VALUES ('P11', 'PITCHER', 'E', 3, 3, 3, 3, 3, '4회 이후 (중계, 마무리) 등판'),
+       ('P11', 'PITCHER', 'D', 5, 5, 5, 5, 5, '4회 이후 (중계, 마무리) 등판'),
+       ('P11', 'PITCHER', 'C', 7, 7, 7, 7, 7, '4회 이후 (중계, 마무리) 등판'),
+       ('P11', 'PITCHER', 'B', 9, 9, 9, 9, 9, '4회 이후 (중계, 마무리) 등판'),
+       ('P11', 'PITCHER', 'A', 11, 11, 11, 11, 11, '4회 이후 (중계, 마무리) 등판'),
+       ('P11', 'PITCHER', 'S', 13, 13, 13, 13, 13, '4회 이후 (중계, 마무리) 등판');
