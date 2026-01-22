@@ -194,3 +194,30 @@ VALUES ('선동열', 11, 367, 1.2, 146, 40, 132, 0, 1698, 342, 968),
        ('임기효', 18, 0, 0, 0, 0, 0, 0, 0, 0, 0),
        ('정명원', 12, 395, 2.57, 75, 54, 1442, 0, 634, 330, 933),
        ('오승환', 15, 738, 2.32, 44, 33, 427, 19, 865, 200, 604);
+
+INSERT INTO legend_pitcher_pitch_slot
+(pitcher_name, four_seam, two_seam, change_up, circle_change, slider, curve, fork, cutter, sinker, splitter)
+VALUES
+    ('선동열','A',NULL,'C', NULL, 'A', NULL, 'C',NULL, NULL, NULL),
+    ('정민철','B',NULL,NULL,NULL,'B','B','B',NULL,'B',NULL),
+    ('최동원', 'A','B',NULL,NULL,'B','A',NULL,NULL,NULL,'B'),
+    ('정민태', 'A',NULL,NULL,NULL,'B','B','B',NULL,'B',NULL),
+    ('박철순', 'B','B','B',NULL,'B','B',NULL,NULL,NULL,NULL),
+    ('윤학길', 'B',NULL,'B',NULL,'B','B','C',NULL,NULL,NULL),
+    ('김시진', 'A','B','B',NULL,'B','B',NULL,NULL,NULL,NULL),
+    ('이상훈C', 'A',NULL,'C',NULL,'A','B','B',NULL,NULL,NULL),
+    ('송진우', 'A',NULL,'B',NULL,'B',NULL,'C',NULL,'C',NULL),
+    ('이강철', 'B',NULL,'C',NULL,'B','B',NULL,NULL,'B',NULL),
+    ('조계현', 'B',NULL,NULL,NULL,'B','B','B',NULL,'B',NULL),
+    ('니퍼트', 'B',NULL,'B',NULL,'B','C','C',NULL,NULL,NULL),
+    ('배영수', 'A',NULL,'C',NULL,'B',NULL,'B',NULL,NULL,NULL),
+    ('김원형', 'B',NULL,NULL,'C',NULL,'B','B',NULL,'C',NULL),
+    ('류현진', 'B',NULL,'B','B','B','B',NULL,NULL,NULL,NULL),
+    ('김광현', 'B',NULL,NULL,NULL,'B','B','C','B',NULL,NULL),
+    ('양현종', 'B',NULL,'C','C','B','B',NULL,NULL,NULL,NULL),
+    ('김용수', 'B',NULL,NULL,NULL,'B','B','B',NULL,NULL,NULL),
+    ('구대성', 'B',NULL,'B',NULL,'A','B',NULL,NULL,'B',NULL),
+    ('임기효', 'A','C','C',NULL,'B','B',NULL,NULL,NULL,NULL),
+    ('정명원', 'B','C',NULL,NULL,'B','B','B',NULL,NULL,NULL),
+    ('오승환', 'A',NULL,'C',NULL,'B','C','C',NULL,NULL,NULL)
+;
