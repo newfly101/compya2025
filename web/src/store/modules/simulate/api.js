@@ -1,5 +1,4 @@
 import { API } from "@/store/api/APIConfig.js";
-import { DICTIONARY } from "@/store/modules/dictionary/endpoints.js";
 import { SIMULATE } from "@/store/modules/simulate/endpoints.js";
 
 /**

@@ -16,7 +16,7 @@ export const requestPlayerSkillSet = createAsyncThunk(
       dispatch(setPlayerType(type));
 
       const data = await fetchPlayerSkillSet(type);
-      console.log(`${type} SKILL : ` , data);
+      // console.log(`${type} SKILL : ` , data);
 
       sessionStorage.setItem(
         `skill-${type}`,
