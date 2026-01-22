@@ -12,6 +12,7 @@ import com.dawne.com2usbaseball.repository.LegendPlayerCareerRepository;
 import com.dawne.com2usbaseball.repository.PlayerCardInfoRepository;
 import com.dawne.com2usbaseball.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -29,31 +30,26 @@ public class PlayerCardServiceImpl implements PlayerCardService {
     private final CardInfoMaker cardInfoMaker;
 
     @Override
+    @Cacheable(
+            value = "playerInfoByTarget",
+            key = "#target"
+    )
     public List<PlayerCardResponse> getPlayerInfo(Target target) {
 
+        // 카드 기본 정보
         List<PlayerCardEntity> list = repository.findAllPlayerCardInfoByPosition(target);
 
+        // 이름 기준 그룹핑
         Map<String, List<PlayerCardEntity>> grouped = cardNameGrouper.nameListMap(list);
+
+        // 커리어 정보
         Map<String, PlayerCareerResponse> careerMap = playerCareerMap(grouped, target);
 
-        List<TeamsEntity> teams = teamrepository.findAll();
-
-        Map<Long, TeamResponse> teamMap = new HashMap<>();
-        for (TeamsEntity team : teams) {
-            teamMap.put(
-                    team.getId(),
-                    new TeamResponse(
-                            team.getId(),
-                            team.getTeamCode(),
-                            team.getTeamName()
-                    )
-            );
-        }
+        // 팀 정보 (공통 데이터)
+        Map<Long, TeamResponse> teamMap = buildTeamMap();
 
 
-        List<PlayerCardResponse> cardInfoList = cardInfoMaker.makeCardInfoList(grouped, teamMap, careerMap);
-
-        return cardInfoList;
+        return cardInfoMaker.makeCardInfoList(grouped, teamMap, careerMap);
     }
 
     private Map<String, PlayerCareerResponse> playerCareerMap(Map<String, List<PlayerCardEntity>> grouped, Target target) {
@@ -106,5 +102,22 @@ public class PlayerCardServiceImpl implements PlayerCardService {
 
         return careerMap;
 
+    }
+
+    private Map<Long, TeamResponse> buildTeamMap() {
+        List<TeamsEntity> teams = teamrepository.findAll();
+        Map<Long, TeamResponse> teamMap = new HashMap<>();
+
+        for (TeamsEntity team : teams) {
+            teamMap.put(
+                    team.getId(),
+                    new TeamResponse(
+                            team.getId(),
+                            team.getTeamCode(),
+                            team.getTeamName()
+                    )
+            );
+        }
+        return teamMap;
     }
 }

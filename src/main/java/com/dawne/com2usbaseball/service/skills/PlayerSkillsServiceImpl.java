@@ -7,6 +7,7 @@ import com.dawne.com2usbaseball.enums.Grade;
 import com.dawne.com2usbaseball.enums.Target;
 import com.dawne.com2usbaseball.repository.PlayerSkillsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,7 +20,9 @@ public class PlayerSkillsServiceImpl implements PlayerSkillsService {
     private final SkillItemConvertor skillItemConvertor;
     private final SkillGradeGrouper gradeGrouper;
 
+
     @Override
+    @Cacheable(value = "playerSkillSetByTarget", key = "#target")
     public SkillSetResponse getPlayerSkillSet(Target target) {
         /* 투수/타자에 따라 전체 스킬을 조회하는 function */
         List<PlayerSkillsEntity> entities = repository.findAllSkillSetByTarget(target);
