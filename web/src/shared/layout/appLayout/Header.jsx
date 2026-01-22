@@ -15,6 +15,7 @@ export default function Header() {
           <Link to="/tips">팁 모아보기</Link>
           <Link to="/dictionary">📌추천 백과사전</Link>
         </nav>
+        <button className={styles.register}>네이버 로그인</button>
       </div>
     </header>
   );

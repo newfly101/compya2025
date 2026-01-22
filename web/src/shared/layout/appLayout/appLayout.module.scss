@@ -120,8 +120,21 @@
       }
     }
   }
+}
 
+.register {
+  background: $primary-bg;
+  padding: 0 2rem;
+  border-radius: 1.2rem;
+  color: #fff;
+  text-align: center;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  word-break: keep-all;
 
+  &:hover {
+    background: $primary-hover;
+    transition: background 0.25s ease;
+  }
 }
 
 
