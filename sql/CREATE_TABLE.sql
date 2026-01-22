@@ -141,37 +141,62 @@ CREATE TABLE player_legend_pitcher_career
 CREATE TABLE legend_pitcher_pitch_slot
 (
     id            BIGINT AUTO_INCREMENT PRIMARY KEY,
-    pitcher_name  VARCHAR(50)  NOT NULL,
+    pitcher_name  VARCHAR(50) NOT NULL,
 
-    four_seam     CHAR(1) NULL,
-    two_seam      CHAR(1) NULL,
-    change_up     CHAR(1) NULL,
-    circle_change CHAR(1) NULL,
-    slider        CHAR(1) NULL,
-    curve         CHAR(1) NULL,
-    fork          CHAR(1) NULL,
-    cutter        CHAR(1) NULL,
-    sinker        CHAR(1) NULL,
-    splitter      CHAR(1) NULL,
+    four_seam     CHAR(1)     NULL,
+    two_seam      CHAR(1)     NULL,
+    change_up     CHAR(1)     NULL,
+    circle_change CHAR(1)     NULL,
+    slider        CHAR(1)     NULL,
+    curve         CHAR(1)     NULL,
+    fork          CHAR(1)     NULL,
+    cutter        CHAR(1)     NULL,
+    sinker        CHAR(1)     NULL,
+    splitter      CHAR(1)     NULL,
 
     CONSTRAINT pk_pitcher_pitch_slot_name
         UNIQUE (pitcher_name),
 
     CONSTRAINT fk_legend_pitcher_pitch_slot
         FOREIGN KEY (pitcher_name)
-            REFERENCES player_legend(name)
+            REFERENCES player_legend (name)
             ON DELETE CASCADE,
 
     CONSTRAINT chk_pitch CHECK (
-        (four_seam IN ('C','B','A','S') OR four_seam IS NULL)
-            AND (two_seam IN ('C','B','A','S') OR two_seam IS NULL)
-            AND (slider IN ('C','B','A','S') OR slider IS NULL)
-            AND (curve IN ('C','B','A','S') OR curve IS NULL)
-            AND (fork IN ('C','B','A','S') OR fork IS NULL)
-            AND (sinker IN ('C','B','A','S') OR sinker IS NULL)
-            AND (change_up IN ('C','B','A','S') OR change_up IS NULL)
-            AND (circle_change IN ('C','B','A','S') OR circle_change IS NULL)
-            AND (cutter IN ('C','B','A','S') OR cutter IS NULL)
-            AND (splitter IN ('C','B','A','S') OR splitter IS NULL)
+        (four_seam IN ('C', 'B', 'A', 'S') OR four_seam IS NULL)
+            AND (two_seam IN ('C', 'B', 'A', 'S') OR two_seam IS NULL)
+            AND (slider IN ('C', 'B', 'A', 'S') OR slider IS NULL)
+            AND (curve IN ('C', 'B', 'A', 'S') OR curve IS NULL)
+            AND (fork IN ('C', 'B', 'A', 'S') OR fork IS NULL)
+            AND (sinker IN ('C', 'B', 'A', 'S') OR sinker IS NULL)
+            AND (change_up IN ('C', 'B', 'A', 'S') OR change_up IS NULL)
+            AND (circle_change IN ('C', 'B', 'A', 'S') OR circle_change IS NULL)
+            AND (cutter IN ('C', 'B', 'A', 'S') OR cutter IS NULL)
+            AND (splitter IN ('C', 'B', 'A', 'S') OR splitter IS NULL)
         )
+);
+
+CREATE TABLE skill_grade_stat
+(
+    id             BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    skill_code VARCHAR(10) NOT NULL,
+    target ENUM ('PITCHER','HITTER') NOT NULL,
+    grade          CHAR(1)      NOT NULL, -- E D C B A S
+
+    control        INT DEFAULT 0,         -- 제구
+    velocity       INT DEFAULT 0,         -- 구위
+    stamina        INT DEFAULT 0,         -- 체력
+    fastball       INT DEFAULT 0,         -- 직구
+    breaking       INT DEFAULT 0,         -- 변화
+
+    effect_text    VARCHAR(255) NULL,
+
+    CONSTRAINT uk_skill_grade
+        UNIQUE (skill_code, target, grade),
+
+    CONSTRAINT fk_skill_grade_stat_skill
+        FOREIGN KEY (skill_code, target)
+            REFERENCES player_skills(skill_code, target)
+            ON DELETE CASCADE
 );
