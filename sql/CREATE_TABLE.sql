@@ -38,10 +38,10 @@ CREATE TABLE player_legend
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-    card_code   VARCHAR(50)               NOT NULL, -- LEGEND_{ROLE}_{TEAM}_{PLAYER}
+    card_code   VARCHAR(50)               NOT NULL,           -- LEGEND_{ROLE}_{TEAM}_{PLAYER}
     name        VARCHAR(50)               NOT NULL,
 
-    team_id     BIGINT                    NOT NULL, -- ⭐ FK
+    team_id     BIGINT                    NOT NULL,           -- ⭐ FK
 
     role        ENUM ('HITTER','PITCHER') NOT NULL,
     grade       ENUM ('LEGEND')           NOT NULL DEFAULT 'LEGEND',
@@ -52,7 +52,7 @@ CREATE TABLE player_legend
 
     positions   JSON                      NOT NULL,
     traits      JSON,
-    attributes  JSON                      NOT NULL,
+    attributes  JSON                      NOT NULL COMMENT 'control:제구, velocity:구위, stamina:체력, fastball:직구, breaking:변화',
 
     created_at  DATETIME                           DEFAULT CURRENT_TIMESTAMP,
 
@@ -176,27 +176,27 @@ CREATE TABLE legend_pitcher_pitch_slot
         )
 );
 
-CREATE TABLE skill_grade_stat
+CREATE TABLE skill_pitcher_grade_stat
 (
-    id             BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-    skill_code VARCHAR(10) NOT NULL,
-    target ENUM ('PITCHER','HITTER') NOT NULL,
-    grade          CHAR(1)      NOT NULL, -- E D C B A S
+    skill_code  VARCHAR(10)               NOT NULL,
+    target      ENUM ('PITCHER','HITTER') NOT NULL,
+    grade       CHAR(1)                   NOT NULL, -- E D C B A S
 
-    control        INT DEFAULT 0,         -- 제구
-    velocity       INT DEFAULT 0,         -- 구위
-    stamina        INT DEFAULT 0,         -- 체력
-    fastball       INT DEFAULT 0,         -- 직구
-    breaking       INT DEFAULT 0,         -- 변화
+    control     INT DEFAULT 0,                      -- 제구
+    velocity    INT DEFAULT 0,                      -- 구위
+    stamina     INT DEFAULT 0,                      -- 체력
+    fastball    INT DEFAULT 0,                      -- 직구
+    breaking    INT DEFAULT 0,                      -- 변화
 
-    effect_text    VARCHAR(255) NULL,
+    effect_text VARCHAR(255)              NULL,
 
     CONSTRAINT uk_skill_grade
         UNIQUE (skill_code, target, grade),
 
     CONSTRAINT fk_skill_grade_stat_skill
         FOREIGN KEY (skill_code, target)
-            REFERENCES player_skills(skill_code, target)
+            REFERENCES player_skills (skill_code, target)
             ON DELETE CASCADE
 );

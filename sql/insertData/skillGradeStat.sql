@@ -1,4 +1,4 @@
-INSERT INTO skill_grade_stat
+INSERT INTO skill_pitcher_grade_stat
 (skill_code, target, grade, control, velocity, stamina, fastball, breaking, effect_text)
 VALUES ('L4', 'PITCHER', 'E', 2, 2, 2, 2, 2, NULL),
        ('L4', 'PITCHER', 'D', 4, 4, 4, 4, 4, NULL),
@@ -136,7 +136,7 @@ VALUES ('L4', 'PITCHER', 'E', 2, 2, 2, 2, 2, NULL),
        ('N10', 'PITCHER', 'A', 0, 0, 0, 0, 9, NULL);
 
 
-INSERT INTO skill_grade_stat
+INSERT INTO skill_pitcher_grade_stat
 (skill_code, target, grade, control, velocity, stamina, fastball, breaking, effect_text)
 VALUES ('P11', 'PITCHER', 'E', 3, 3, 3, 3, 3, '4회 이후 (중계, 마무리) 등판'),
        ('P11', 'PITCHER', 'D', 5, 5, 5, 5, 5, '4회 이후 (중계, 마무리) 등판'),
