@@ -38,10 +38,10 @@ CREATE TABLE player_legend
 (
     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
 
-    card_code   VARCHAR(50)               NOT NULL,           -- LEGEND_{ROLE}_{TEAM}_{PLAYER}
+    card_code   VARCHAR(50)               NOT NULL, -- LEGEND_{ROLE}_{TEAM}_{PLAYER}
     name        VARCHAR(50)               NOT NULL,
 
-    team_id     BIGINT                    NOT NULL,           -- ⭐ FK
+    team_id     BIGINT                    NOT NULL, -- ⭐ FK
 
     role        ENUM ('HITTER','PITCHER') NOT NULL,
     grade       ENUM ('LEGEND')           NOT NULL DEFAULT 'LEGEND',
@@ -202,18 +202,19 @@ CREATE TABLE skill_pitcher_grade_stat
 );
 
 
-CREATE TABLE users (
-    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    provider    VARCHAR(20) NOT NULL,               -- NAVER
-    provider_id VARCHAR(100) NOT NULL,              -- NAVER UNIQUE ID
-    email       VARCHAR(255),
-    nickname    VARCHAR(16),
-    year        VARCHAR(20),
-    phone_number VARCHAR(20),
-    profile_image  VARCHAR(500),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    last_login_at TIMESTAMP,
-    gender      VARCHAR(6) DEFAULT NULL,
+CREATE TABLE users
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
+    provider      VARCHAR(20)  NOT NULL, -- NAVER
+    provider_id   VARCHAR(100) NOT NULL, -- NAVER UNIQUE ID
+    email         VARCHAR(255),
+    nickname      VARCHAR(16),
+    year          TIMESTAMP  DEFAULT '0000-00-00',
+    phone_number  VARCHAR(20),
+    profile_image VARCHAR(500),
+    created_at    TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
+    last_login_at TIMESTAMP  DEFAULT '0000-00-00 00:00:00',
+    gender        VARCHAR(6) DEFAULT NULL,
 
 
     UNIQUE KEY uk_provider (provider, provider_id)
