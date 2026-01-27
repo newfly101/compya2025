@@ -1,23 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { requestUserHealthCheck, requestUserLogout } from "@/store/modules/auth/thunks.js";
 
-const initialState  = {
+const initialState = {
   user: null,
+  role: null,
   isAuthenticated: false,
   initialized: false, // 🔥 중요
-}
+};
 
 const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
     setUser(state, action) {
-      state.user = action.payload;
+      const { user, role } = action.payload;
+      state.user = user;
+      state.role = role;
       state.isAuthenticated = true;
       state.initialized = true;
     },
     clearUser(state) {
       state.user = null;
+      state.role = null;
       state.isAuthenticated = false;
       state.initialized = true;
     },
@@ -26,29 +30,33 @@ const authSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(requestUserHealthCheck.fulfilled, (state, action) => {
-        const {authenticated, user} = action.payload;
+        const { authenticated, user, role } = action.payload;
 
         state.user = user;
+        state.role = role;
         state.isAuthenticated = authenticated;
         state.initialized = true;
       })
       .addCase(requestUserHealthCheck.rejected, (state) => {
         state.user = null;
+        state.role = null;
         state.isAuthenticated = false;
         state.initialized = true;
       })
       .addCase(requestUserLogout.fulfilled, (state) => {
         state.user = null;
+        state.role = null;
         state.isAuthenticated = false;
         state.initialized = true;
       })
       .addCase(requestUserLogout.rejected, (state) => {
         state.user = null;
+        state.role = null;
         state.isAuthenticated = false;
         state.initialized = true;
       });
-  }
-})
+  },
+});
 
 /**
  * export const {} = authSlice.actions;
