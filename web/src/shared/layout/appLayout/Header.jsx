@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
 import styles from "@/shared/layout/appLayout/appLayout.module.scss";
-import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { requestUserLogout } from "@/store/modules/auth/thunks.js";
+import { clearUser } from "@/store/modules/auth/slices.js";
 
 export default function Header() {
-
+  const {isAuthenticated, user} = useSelector(state => state.auth);
+  const dispatch = useDispatch();
   const NAVER_CLIENT_ID = "Ltp6btmLGcZZGgCIxYqv";
   const REDIRECT_URI = "https://api.compyafun.com/api/auth/naver/callback";
   const STATE = crypto.randomUUID(); // CSRF 방어용
@@ -19,23 +22,11 @@ export default function Header() {
     window.location.href = url;
   };
 
-  const login_success = localStorage.getItem("accessToken");
-
-  const logout = () => {
-    localStorage.removeItem("accessToken");
+  const logout = async () => {
+    dispatch(clearUser);
+    await dispatch(requestUserLogout());
     window.location.replace("/");
   }
-
-
-  useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get("token");
-    if (token) {
-      localStorage.setItem("accessToken", token);
-      window.location.replace("/");
-    }
-  }, []);
-
-
 
   return (
     <header className={styles.header}>
@@ -49,11 +40,17 @@ export default function Header() {
           <Link to="/notice">공지사항</Link>
           <Link to="/tips">팁 모아보기</Link>
           <Link to="/dictionary">📌추천 백과사전</Link>
+          {isAuthenticated &&
+            <Link to="/profile">마이페이지</Link>
+          }
         </nav>
-        {login_success ?
-          <button className={styles.register} onClick={logout}>로그아웃</button>
-          :
+        {!isAuthenticated ?
           <button className={styles.register} onClick={naverLogin}>네이버 로그인</button>
+          :
+          <>
+            <span> {user.nickName} </span>
+            <button className={styles.register} onClick={logout}>로그아웃</button>
+          </>
         }
       </div>
     </header>
