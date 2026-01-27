@@ -42,4 +42,15 @@
         SET last_login_at = NOW()
         WHERE id = #{id}
     </update>
+
+    <select id="countUserRoleByUserId" resultType="int">
+        SELECT COUNT(1)
+        FROM user_roles
+        WHERE user_id = #{userId}
+    </select>
+
+    <insert id="insertUserRole">
+        INSERT INTO user_roles (user_id, role, status, created_at, updated_at)
+        VALUES (#{userId}, 'USER', 'ACTIVE', NOW(), NOW())
+    </insert>
 </mapper>

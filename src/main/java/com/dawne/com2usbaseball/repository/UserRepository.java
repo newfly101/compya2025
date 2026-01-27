@@ -24,4 +24,12 @@ public class UserRepository {
     public void updateUserLastLogin(int userId) {
         mapper.updateUserLogin(userId);
     }
+
+    public boolean checkIsExistRole(int userId) {
+        return mapper.countUserRoleByUserId(userId) > 0;
+    }
+
+    public void saveRole(int userId) {
+        mapper.insertUserRole(userId);
+    }
 }

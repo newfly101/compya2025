@@ -219,3 +219,18 @@ CREATE TABLE users
 
     UNIQUE KEY uk_provider (provider, provider_id)
 );
+
+
+CREATE TABLE user_roles
+(
+    user_id    BIGINT PRIMARY KEY,
+    role       ENUM ('ADMIN', 'USER') NOT NULL                      DEFAULT 'USER',
+    status     ENUM ('ACTIVE', 'BLOCKED', 'WITHDRAWN', 'SUSPENDED') DEFAULT 'ACTIVE',
+    ban_reason VARCHAR(255),
+    created_at TIMESTAMP                                            DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP                                            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_user_roles_user
+        FOREIGN KEY (user_id) REFERENCES users (id)
+            ON DELETE CASCADE
+);

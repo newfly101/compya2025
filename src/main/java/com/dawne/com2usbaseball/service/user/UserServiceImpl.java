@@ -22,7 +22,12 @@ public class UserServiceImpl implements UserService {
                         createUser(info)
                 ));
 
+        if (!repository.checkIsExistRole(user.getId())) {
+            repository.saveRole(user.getId());
+        }
+
         repository.updateUserLastLogin(user.getId());
+
         return user;
     }
 
