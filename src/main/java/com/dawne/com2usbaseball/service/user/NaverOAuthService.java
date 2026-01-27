@@ -41,8 +41,8 @@ public class NaverOAuthService {
         Map<String, Object> response =
                 restTemplate.getForObject(url, Map.class);
 
-        log.error("🔥 NAVER TOKEN RESPONSE = {}", response);
-        log.error("NAVER CONFIG CHECK clientId=[{}], clientSecret=[{}], redirectUri=[{}]",
+        log.trace("🔥 NAVER TOKEN RESPONSE = {}", response);
+        log.trace("NAVER CONFIG CHECK clientId=[{}], clientSecret=[{}], redirectUri=[{}]",
                 naverProperties.getClientId(),
                 naverProperties.getClientSecret(),
                 naverProperties.getRedirectUri());

@@ -5,7 +5,9 @@ import com.dawne.com2usbaseball.controller.auth.support.AuthRedirectProvider;
 import com.dawne.com2usbaseball.dto.response.oauth.AuthHealthResponse;
 import com.dawne.com2usbaseball.dto.response.oauth.NaverOAuthUserResponse;
 import com.dawne.com2usbaseball.dto.response.oauth.UserHealthResponse;
+import com.dawne.com2usbaseball.dto.response.oauth.UserRoleResponse;
 import com.dawne.com2usbaseball.entity.UserEntity;
+import com.dawne.com2usbaseball.entity.UserRoleEntity;
 import com.dawne.com2usbaseball.utils.JwtProvider;
 import com.dawne.com2usbaseball.service.user.NaverOAuthService;
 import com.dawne.com2usbaseball.service.user.UserService;
@@ -48,7 +50,6 @@ public class AuthController {
 
         // 환경 별로 redirect 경로 분기 함수
         String url = redirectProvider.setRedirectUrl(request);
-        log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@={}",url);
 
         response.sendRedirect(url);
     }
@@ -66,11 +67,12 @@ public class AuthController {
 
         if (userId == null) {
             return ResponseEntity.ok(
-                    new AuthHealthResponse(false, null)
+                    new AuthHealthResponse(false, null, null)
             );
         }
 
         UserEntity user = service.findActiveUserById(userId);
+        UserRoleEntity role = service.findUserRoleByUserId(userId);
 
         return ResponseEntity.ok(
                 new AuthHealthResponse(
@@ -81,6 +83,12 @@ public class AuthController {
                                 user.getOauthEmail(),
                                 user.getOauthProfileImage(),
                                 user.getLastLoginAt()
+                        ),
+                        new UserRoleResponse(
+                                role.getRole(),
+                                role.getStatus(),
+                                role.getBanReason(),
+                                role.getUpdatedAt()
                         )
 
                 )

@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -53,14 +55,19 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() ->
                         new IllegalStateException("존재하지 않는 사용자"));
 
-        UserRoleEntity role = repository.findByUserId(userId)
-                .orElseThrow(() ->
-                        new IllegalStateException("권한 정보 없음"));
+        UserRoleEntity role = findUserRoleByUserId(userId);
 
-        if (role.getStatus() != UserStatus.ACTIVE) {
-            throw new IllegalStateException("로그인 불가 상태: " + role.getStatus());
-        }
+//        if (role.getStatus() != UserStatus.ACTIVE) {
+//            throw new IllegalStateException("로그인 불가 상태: " + role.getStatus());
+//        }
 
         return user;
+    }
+
+    @Override
+    public UserRoleEntity findUserRoleByUserId(int userId) {
+        return repository.findByUserId(userId)
+                .orElseThrow(() ->
+                        new IllegalStateException("권한 정보 없음"));
     }
 }

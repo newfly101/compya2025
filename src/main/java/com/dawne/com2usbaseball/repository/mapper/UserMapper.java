@@ -22,4 +22,5 @@ public interface UserMapper {
     // Health 용
     Optional<UserEntity> selectUserById(int userId);
     Optional<UserRoleEntity> selectUserRoleByUserId(int userId);
+
 }

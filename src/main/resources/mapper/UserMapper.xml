@@ -53,16 +53,16 @@
     </insert>
 
     <select id="selectUserById" resultType="com.dawne.com2usbaseball.entity.UserEntity">
-        SELECT
-            id,
-            provider,
-            provider_id     AS providerId,
-            nickname,
-            oauth_email,
-            oauth_profile_image   AS profileImage,
-            oauth_age_range       AS ageRange,
-            created_at      AS createdAt,
-            last_login_at   AS lastLoginAt
+        SELECT id,
+               provider,
+               provider_id         AS providerId,
+               oauth_nickname      AS oauthNickname,
+               oauth_email         AS oauthEmail,
+               oauth_profile_image AS oauthProfileImage,
+               oauth_age_range     AS oauthAgeRange,
+               nickname,
+               created_at          AS createdAt,
+               last_login_at       AS lastLoginAt
         FROM users
         WHERE id = #{userId}
     </select>
