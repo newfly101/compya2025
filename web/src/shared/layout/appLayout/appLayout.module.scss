@@ -123,9 +123,25 @@
 }
 
 .register {
+  background-image: url("@/assets/NAVER_login_btn.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 0 2rem;
+  width: 12rem;
+  height: 3.2rem;
+  color: #fff;
+  text-align: center;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  word-break: keep-all;
+}
+
+.logout {
   background: $primary-bg;
   padding: 0 2rem;
-  border-radius: 1.2rem;
+  border-radius: 0.4rem;
+  width: 12rem;
+  height: 3.2rem;
   color: #fff;
   text-align: center;
   font-size: clamp(1.1rem, 2.5vw, 1.4rem);
@@ -137,6 +153,16 @@
   }
 }
 
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-left: 2rem;
+
+  & > span {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  }
+}
 
 @media (max-width: 768px) {
   .header {

@@ -8,7 +8,11 @@ export default function Header() {
   const {isAuthenticated, user} = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const NAVER_CLIENT_ID = "Ltp6btmLGcZZGgCIxYqv";
-  const REDIRECT_URI = "https://api.compyafun.com/api/auth/naver/callback";
+  const isLocal = window.location.hostname === "localhost";
+
+  const REDIRECT_URI = isLocal
+    ? "http://localhost:8080/api/auth/naver/callback"
+    : "https://api.compyafun.com/api/auth/naver/callback";
   const STATE = crypto.randomUUID(); // CSRF 방어용
 
   const naverLogin = () => {
@@ -23,7 +27,7 @@ export default function Header() {
   };
 
   const logout = async () => {
-    dispatch(clearUser);
+    dispatch(clearUser());
     await dispatch(requestUserLogout());
     window.location.replace("/");
   }
@@ -45,12 +49,12 @@ export default function Header() {
           }
         </nav>
         {!isAuthenticated ?
-          <button className={styles.register} onClick={naverLogin}>네이버 로그인</button>
+          <button className={styles.register} onClick={naverLogin}></button>
           :
-          <>
-            <span> {user.nickName} </span>
-            <button className={styles.register} onClick={logout}>로그아웃</button>
-          </>
+          <div className={styles.userProfile}>
+            <span> {user?.nickName} </span>
+            <button className={styles.logout} onClick={logout}>로그아웃</button>
+          </div>
         }
       </div>
     </header>
