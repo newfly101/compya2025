@@ -7,6 +7,7 @@ import img6 from "@/assets/events/compyamymixture.png";
 import img7 from "@/assets/events/newyear1.jpg";
 import img8 from "@/assets/events/newyear2.jpg";
 import img9 from "@/assets/events/1937313missionChallenge.jpg";
+import img10 from "@/assets/events/event1940779.jpg";
 
 const events = [
   {
@@ -89,6 +90,15 @@ const events = [
     expireDate: "2026. 02. 27 23:59",
     image: img9,
     link: "https://cafe.naver.com/com2usbaseball2015/1937313"
+  },
+  {
+    id: 10,
+    title: "[이벤트] 2026 스프링캠프 훈련 일지 이벤트",
+    dateRange: "2026년 01월 23일 12:00 ~ 2026년 02월 04일 23:59",
+    startDate: "2026. 01. 23 12:00",
+    expireDate: "2026. 02. 04 23:59",
+    image: img10,
+    link: "https://cafe.naver.com/com2usbaseball2015/1940779"
   },
 ]
 export default events;

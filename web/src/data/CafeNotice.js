@@ -3,20 +3,12 @@ import cafeNoticeImg from "@/assets/events/com2usNotice.png";
 
 export const cafeNotice = [
   {
-    id: 1,
-    title: "[안내] 2026 새해맞이 특별 패키지 & 고급 고유능력 각성권 패키지 판매 안내",
-    startDate: "2025. 12. 31",
-    expireDate: "2026. 01. 11 23:59",
-    image: cafeNoticeImg,
-    link: "https://cafe.naver.com/com2usbaseball2015/1934678"
-  },
-  {
-    id: 2,
-    title: "[안내] v11.9.0 업데이트 안내 (iOS/Google/Onestore)",
-    startDate: "2025. 12. 18 10:17",
+    id: 4,
+    title: "[안내] v11.10.0 업데이트 안내 (iOS/Google/Onestore)",
+    startDate: "2026. 01. 22 10:24",
     expireDate: "2026. 12. 31 23:59",
     image: cafeUpdateImg,
-    link: "https://cafe.naver.com/com2usbaseball2015/1931684"
+    link: "https://cafe.naver.com/com2usbaseball2015/1932664"
   },
   {
     id: 3,
@@ -26,4 +18,21 @@ export const cafeNotice = [
     image: cafeNoticeImg,
     link: "https://cafe.naver.com/com2usbaseball2015/1932664"
   },
+  {
+    id: 2,
+    title: "[안내] v11.9.0 업데이트 안내 (iOS/Google/Onestore)",
+    startDate: "2025. 12. 18 10:17",
+    expireDate: "2026. 01. 21 23:59",
+    image: cafeUpdateImg,
+    link: "https://cafe.naver.com/com2usbaseball2015/1931684"
+  },
+  {
+    id: 1,
+    title: "[안내] 2026 새해맞이 특별 패키지 & 고급 고유능력 각성권 패키지 판매 안내",
+    startDate: "2025. 12. 31",
+    expireDate: "2026. 01. 11 23:59",
+    image: cafeNoticeImg,
+    link: "https://cafe.naver.com/com2usbaseball2015/1934678"
+  },
+
 ]
