@@ -53,4 +53,33 @@
         INSERT INTO user_roles (user_id, role, status, created_at, updated_at)
         VALUES (#{userId}, 'USER', 'ACTIVE', NOW(), NOW())
     </insert>
+
+    <select id="selectUserById" resultType="com.dawne.com2usbaseball.entity.UserEntity">
+        SELECT
+            id,
+            provider,
+            provider_id     AS providerId,
+            email,
+            nickname,
+            year,
+            phone_number    AS phoneNumber,
+            profile_image   AS profileImage,
+            created_at      AS createdAt,
+            last_login_at   AS lastLoginAt,
+            gender
+        FROM users
+        WHERE id = #{userId}
+    </select>
+
+    <select id="selectUserRoleByUserId" resultType="com.dawne.com2usbaseball.entity.UserRoleEntity">
+        SELECT
+            user_id     AS userId,
+            role,
+            status,
+            ban_reason  AS banReason,
+            created_at  AS createdAt,
+            updated_at  AS updatedAt
+        FROM user_roles
+        WHERE user_id = #{userId}
+    </select>
 </mapper>
