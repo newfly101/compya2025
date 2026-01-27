@@ -48,6 +48,7 @@ public class AuthController {
 
         // 환경 별로 redirect 경로 분기 함수
         String url = redirectProvider.setRedirectUrl(request);
+        log.info("@@@@@@@@@@@@@@@@@@@@@@@@@@={}",url);
 
         response.sendRedirect(url);
     }

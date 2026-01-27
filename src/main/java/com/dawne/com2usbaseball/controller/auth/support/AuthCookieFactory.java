@@ -10,7 +10,7 @@ public class AuthCookieFactory {
 
     public ResponseCookie createAccessToken(String token, HttpServletRequest request) {
         return applyEnvOptions(
-                ResponseCookie.from(ACCESS_TOKEN, "")
+                ResponseCookie.from(ACCESS_TOKEN, token)
                         .httpOnly(true)
                         .path("/"),
                 request
