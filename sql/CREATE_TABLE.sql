@@ -204,15 +204,16 @@ CREATE TABLE skill_pitcher_grade_stat
 
 CREATE TABLE users
 (
-    id            BIGINT AUTO_INCREMENT PRIMARY KEY,
-    provider      VARCHAR(20)  NOT NULL, -- NAVER
-    provider_id   VARCHAR(100) NOT NULL, -- NAVER UNIQUE ID
-    nickname      VARCHAR(16),
-    email         VARCHAR(255),
-    profile_image VARCHAR(500),
-    age_range     VARCHAR(10),
-    created_at    TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
-    last_login_at TIMESTAMP  DEFAULT '0000-00-00 00:00:00',
+    id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
+    provider            VARCHAR(20)  NOT NULL, -- NAVER
+    provider_id         VARCHAR(100) NOT NULL, -- NAVER UNIQUE ID
+    oauth_nickname      VARCHAR(20),
+    oauth_email         VARCHAR(255),
+    oauth_profile_image VARCHAR(500),
+    oauth_age_range     VARCHAR(10),
+    nickname            VARCHAR(20),
+    created_at          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login_at       TIMESTAMP DEFAULT '0000-00-00 00:00:00',
 
     UNIQUE KEY uk_provider (provider, provider_id)
 );

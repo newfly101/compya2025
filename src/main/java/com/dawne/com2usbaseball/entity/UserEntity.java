@@ -13,10 +13,11 @@ public class UserEntity {
     private int id;
     private String provider;
     private String providerId;
+    private String oauthNickname;
+    private String oauthEmail;
+    private String oauthProfileImage;
+    private String oauthAgeRange;
     private String nickname;
-    private String email;
-    private String profileImage;
-    private String ageRange;
     private LocalDateTime createdAt;
     private LocalDateTime lastLoginAt;
 

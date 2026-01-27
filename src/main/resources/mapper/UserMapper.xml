@@ -15,19 +15,21 @@
         INSERT INTO users (
             provider,
             provider_id,
+            oauth_nickname,
+            oauth_email,
+            oauth_profile_image,
+            oauth_age_range,
             nickname,
-            email,
-            profile_image,
-            age_range,
             created_at,
             last_login_at
         ) VALUES (
                      #{provider},
                      #{providerId},
+                     #{oauthNickname},
+                     #{oauthEmail},
+                     #{oauthProfileImage},
+                     #{oauthAgeRange},
                      #{nickname},
-                     #{email},
-                     #{profileImage},
-                     #{ageRange},
                      NOW(),
                      NOW()
                  )
@@ -56,9 +58,9 @@
             provider,
             provider_id     AS providerId,
             nickname,
-            email,
-            profile_image   AS profileImage,
-            age_range       AS ageRange,
+            oauth_email,
+            oauth_profile_image   AS profileImage,
+            oauth_age_range       AS ageRange,
             created_at      AS createdAt,
             last_login_at   AS lastLoginAt
         FROM users
