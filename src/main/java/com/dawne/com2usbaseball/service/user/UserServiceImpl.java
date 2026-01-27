@@ -2,6 +2,8 @@ package com.dawne.com2usbaseball.service.user;
 
 import com.dawne.com2usbaseball.dto.response.oauth.NaverOAuthUserResponse;
 import com.dawne.com2usbaseball.entity.UserEntity;
+import com.dawne.com2usbaseball.entity.UserRoleEntity;
+import com.dawne.com2usbaseball.enums.user.UserStatus;
 import com.dawne.com2usbaseball.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,24 @@ public class UserServiceImpl implements UserService {
         user.setYear(info.year());
         user.setPhoneNumber(info.phoneNumber());
         user.setGender(info.gender());
+        return user;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public UserEntity findActiveUserById(int userId) {
+        UserEntity user = repository.findById(userId)
+                .orElseThrow(() ->
+                        new IllegalStateException("존재하지 않는 사용자"));
+
+        UserRoleEntity role = repository.findByUserId(userId)
+                .orElseThrow(() ->
+                        new IllegalStateException("권한 정보 없음"));
+
+        if (role.getStatus() != UserStatus.ACTIVE) {
+            throw new IllegalStateException("로그인 불가 상태: " + role.getStatus());
+        }
+
         return user;
     }
 }

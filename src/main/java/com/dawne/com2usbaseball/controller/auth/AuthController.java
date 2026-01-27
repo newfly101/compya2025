@@ -1,16 +1,19 @@
 package com.dawne.com2usbaseball.controller.auth;
 
+import com.dawne.com2usbaseball.controller.auth.support.AuthCookieFactory;
+import com.dawne.com2usbaseball.dto.response.oauth.AuthHealthResponse;
 import com.dawne.com2usbaseball.dto.response.oauth.NaverOAuthUserResponse;
+import com.dawne.com2usbaseball.dto.response.oauth.UserHealthResponse;
 import com.dawne.com2usbaseball.entity.UserEntity;
 import com.dawne.com2usbaseball.utils.JwtProvider;
 import com.dawne.com2usbaseball.service.user.NaverOAuthService;
 import com.dawne.com2usbaseball.service.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -22,6 +25,7 @@ public class AuthController {
     private final UserService service;
     private final NaverOAuthService naverOAuthService;
     private final JwtProvider jwtProvider;
+    private final AuthCookieFactory cookieFactory;
 
     @GetMapping("/naver/callback")
     public void naverCallback(@RequestParam String code,
@@ -34,8 +38,41 @@ public class AuthController {
 
         String jwt = jwtProvider.createAccessToken(user.getId());
 
-        response.sendRedirect(
-                "https://compyafun.com/auth/callback?token=" + jwt
+        String cookie = cookieFactory.createAccessToken(jwt).toString();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie);
+
+        response.sendRedirect("https://compyafun.com/auth/callback");
+    }
+
+    @PostMapping("/logout")
+    public void logout(HttpServletResponse response) {
+        String cookie = cookieFactory.expireAccessToken().toString();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie);
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<AuthHealthResponse> health(HttpServletRequest request) {
+        Integer userId = (Integer) request.getAttribute("userId");
+
+        if (userId == null) {
+            return ResponseEntity.ok(
+                    new AuthHealthResponse(false, null)
+            );
+        }
+
+        UserEntity user = service.findActiveUserById(userId);
+
+        return ResponseEntity.ok(
+                new AuthHealthResponse(
+                        true,
+                        new UserHealthResponse(
+                                user.getId(),
+                                user.getNickname(),
+                                user.getEmail()
+                        )
+
+                )
         );
     }
 

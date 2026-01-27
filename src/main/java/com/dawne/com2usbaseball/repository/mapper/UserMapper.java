@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.repository.mapper;
 
 import com.dawne.com2usbaseball.entity.UserEntity;
+import com.dawne.com2usbaseball.entity.UserRoleEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.Optional;
@@ -17,4 +18,8 @@ public interface UserMapper {
 
     // userRole 추가
     void insertUserRole(int userId);
+
+    // Health 용
+    Optional<UserEntity> selectUserById(int userId);
+    Optional<UserRoleEntity> selectUserRoleByUserId(int userId);
 }

@@ -7,4 +7,5 @@ public interface UserService {
 
     UserEntity findOrCreateNaverUser (NaverOAuthUserResponse info);
     UserEntity createUser (NaverOAuthUserResponse info);
+    UserEntity findActiveUserById (int userId);
 }

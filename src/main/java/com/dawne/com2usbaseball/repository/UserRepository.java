@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.repository;
 
 import com.dawne.com2usbaseball.entity.UserEntity;
+import com.dawne.com2usbaseball.entity.UserRoleEntity;
 import com.dawne.com2usbaseball.repository.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -19,6 +20,13 @@ public class UserRepository {
     public UserEntity save(UserEntity user) {
         mapper.insertUser(user);
         return user;
+    }
+    public Optional<UserEntity> findById(int userId) {
+        return mapper.selectUserById(userId);
+    }
+
+    public Optional<UserRoleEntity> findByUserId(int userId) {
+        return mapper.selectUserRoleByUserId(userId);
     }
 
     public void updateUserLastLogin(int userId) {
