@@ -1,0 +1,238 @@
+
+input, span, label, h3 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.profilePage {
+  max-width: 720px;
+  margin: 4rem auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.8rem;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.profileCard {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2.8rem;
+  background: linear-gradient(
+                  180deg,
+                  rgba(255,255,255,0.03),
+                  rgba(255,255,255,0)
+  ), $surface2;
+  border: 1px solid $border;
+  border-radius: 1.6rem;
+}
+
+
+.avatar {
+  width: 88px;
+  height: 88px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  background: $surface3;
+  border: 1px solid $border;
+
+  & > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.profileInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  label {
+    margin-left: 0.4rem;
+    font-size: 1.2rem;
+    color: $text-muted;
+  }
+
+  & > input {
+    border: none;
+    background: none;
+    font-size: 2.2rem;
+    font-weight: 700;
+    padding: 0;
+    pointer-events: none;
+
+    background: transparent;
+    color: $text-primary;
+
+    &.editable {
+      border-bottom: 1px solid $border;
+      padding-bottom: 0.4rem;
+      margin-bottom: 0.4rem;
+    }
+  }
+}
+
+.badges {
+  display: flex;
+  gap: 1.2rem;
+  //margin-top: 0.8rem;
+
+  span {
+    font-size: 1.1rem;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .role {
+    background: rgba($primary, 0.15);
+    color: $primary-text;
+  }
+
+  .status {
+    background: rgba($error, 0.18);
+    color: $error;
+  }
+}
+
+.section {
+  padding: 2.6rem 2.8rem;
+  background: $surface2;
+  border-radius: 1.6rem;
+  border: 1px solid $border;
+
+  //& + .section {
+  //  margin-top: 0.6rem;
+  //}
+
+  h3 {
+    margin-bottom: 1.8rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+  }
+
+  label {
+    font-size: 1.2rem;
+    color: $text-muted;
+    display: block;
+    margin: 0.4rem 0 0.6rem 0.4rem;
+  }
+
+  input {
+    width: 100%;
+    margin-bottom: 1.6rem;
+    padding: 0.9rem 1rem;
+    background: $surface3;
+    border: 1px solid $border;
+    color: $text-secondary;
+    border-radius: 0.8rem;
+    font-size: 1.4rem;
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: default;
+    }
+  }
+}
+
+.statusRow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.statusBadge {
+  display: inline-block;
+  width: fit-content;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.02em;
+
+  padding: 0.6rem 1.4rem;
+  border-radius: 999px;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.warning {
+  margin-top: 1.2rem;
+  padding: 1.6rem 1.8rem;
+  background: linear-gradient(
+                  180deg,
+                  rgba($error, 0.18),
+                  rgba($error, 0.08)
+  );
+  border: 1px solid rgba($error, 0.3);
+  border-radius: 1.2rem;
+
+  h3 {
+    margin-bottom: 0.6rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+
+  .reason {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: $error;
+  }
+}
+
+.btnGroup {
+  //padding: 1.6rem;
+  //background: $surface2;
+  //border: 1px solid $border;
+  border-radius: 1.6rem;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3.2rem;
+
+  button {
+    height: 4.4rem;
+    border-radius: 1rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+}
+
+
+.success {
+  background: linear-gradient(
+                  180deg,
+                  rgba($success, 0.35),
+                  rgba($success, 0.18)
+  );
+  color: $success;
+}
+
+.info {
+  background: linear-gradient(
+                  180deg,
+                  rgba(#5da9ff, 0.35),
+                  rgba(#5da9ff, 0.18)
+  );
+  color: #a8cbff;
+}
+
+.danger {
+  background: linear-gradient(
+                  180deg,
+                  rgba($error, 0.35),
+                  rgba($error, 0.18)
+  );
+  color: $error;
+}
+
+@media (max-width: 768px) {
+  .btnGroup {
+    grid-template-columns: 1fr;
+  }
+}
