@@ -5,7 +5,7 @@ import { requestUserLogout } from "@/store/modules/auth/thunks.js";
 import { clearUser } from "@/store/modules/auth/slices.js";
 
 export default function Header() {
-  const {isAuthenticated, user} = useSelector(state => state.auth);
+  const { isAuthenticated, user } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const NAVER_CLIENT_ID = "Ltp6btmLGcZZGgCIxYqv";
   const isLocal = window.location.hostname === "localhost";
@@ -30,13 +30,13 @@ export default function Header() {
     dispatch(clearUser());
     await dispatch(requestUserLogout());
     window.location.replace("/");
-  }
+  };
 
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
         <nav className={styles.nav}>
-          <Link to="/" >홈</Link>
+          <Link to="/">홈</Link>
           {/*<Link to="/damage">데미지 계산기</Link>*/}
           {/*<Link to="/skill">스킬 계산기</Link>*/}
           <Link to="/notice?tab=event">이벤트</Link>
@@ -45,7 +45,7 @@ export default function Header() {
           <Link to="/tips">팁 모아보기</Link>
           <Link to="/dictionary">📌추천 백과사전</Link>
           {isAuthenticated &&
-            <Link to="/profile">마이페이지</Link>
+            <Link to="/mypage">마이페이지</Link>
           }
         </nav>
         {!isAuthenticated ?

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App.jsx";
 import { lazy } from "react";
+const UserProfile = lazy(() => import("@/pages/profile/UserProfile.jsx"));
 const AuthCallBack = lazy(() => import("@/shared/layout/callBack/AuthCallBack.jsx"));
 const LegendCalendar = lazy(() => import("@/pages/historyMode/LegendCalendar.jsx"));
 const Home = lazy(() => import("@/pages/Home.jsx"));
@@ -46,6 +47,7 @@ const router = createBrowserRouter([
       { path: "dictionary", element: <Dictionary />, handle: { title: "컴프야펀 | 백과사전 홈" } },
       { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
       { path: "auth/callback", element: <AuthCallBack />, handle: { title: "컴프야펀 | 로그인 콜백" } },
+      { path: "mypage", element: <UserProfile />, handle: { title: "컴프야펀 | 마이페이지" } },
     ],
   },
 ]);
