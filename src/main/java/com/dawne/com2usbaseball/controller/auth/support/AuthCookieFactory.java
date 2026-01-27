@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.controller.auth.support;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
@@ -7,24 +8,43 @@ import org.springframework.stereotype.Component;
 public class AuthCookieFactory {
     private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
 
-    public ResponseCookie createAccessToken(String token) {
-        return ResponseCookie.from(ACCESS_TOKEN, token)
-                .httpOnly(true)
-                .secure(true)
-                .sameSite("None")
-                .domain(".compyafun.com")
-                .path("/")
-                .build();
+    public ResponseCookie createAccessToken(String token, HttpServletRequest request) {
+        return applyEnvOptions(
+                ResponseCookie.from(ACCESS_TOKEN, "")
+                        .httpOnly(true)
+                        .path("/"),
+                request
+        ).build();
     }
 
-    public ResponseCookie expireAccessToken() {
-        return ResponseCookie.from(ACCESS_TOKEN, "")
-                .httpOnly(true)
+    public ResponseCookie expireAccessToken(HttpServletRequest request) {
+        return applyEnvOptions(
+                ResponseCookie.from(ACCESS_TOKEN, "")
+                        .httpOnly(true)
+                        .path("/")
+                        .maxAge(0),
+                request
+        ).build();
+    }
+
+    private ResponseCookie.ResponseCookieBuilder applyEnvOptions(
+            ResponseCookie.ResponseCookieBuilder builder,
+            HttpServletRequest request
+    ) {
+        if (isLocalhost(request)) {
+            return builder
+                    .secure(false)
+                    .sameSite("Lax");
+        }
+
+        return builder
                 .secure(true)
                 .sameSite("None")
-                .domain(".compyafun.com")
-                .path("/")
-                .maxAge(0)
-                .build();
+                .domain(".compyafun.com");
+    }
+
+    private boolean isLocalhost(HttpServletRequest request) {
+        String host = request.getServerName();
+        return host.equals("localhost") || host.equals("127.0.0.1");
     }
 }
