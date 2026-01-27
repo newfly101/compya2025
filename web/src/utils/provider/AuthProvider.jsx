@@ -7,10 +7,8 @@ const AuthProvider = ({ children }) => {
   const initialized = useSelector(state => state.auth.initialized);
 
   useEffect(() => {
-    console.log("AuthProvider 호출");
     if (!initialized) {
       dispatch(requestUserHealthCheck());
-      console.log("AuthProvider requestUserHealthCheck 호출");
     }
   }, [initialized, dispatch]);
 
