@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,14 +13,12 @@ public class UserEntity {
     private int id;
     private String provider;
     private String providerId;
-    private String email;
     private String nickname;
-    private LocalDate year;
-    private String phoneNumber;
+    private String email;
     private String profileImage;
+    private String ageRange;
     private LocalDateTime createdAt;
     private LocalDateTime lastLoginAt;
-    private String gender;
 
     void onCreate() {
         this.createdAt = LocalDateTime.now();

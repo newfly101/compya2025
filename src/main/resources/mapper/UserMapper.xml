@@ -15,23 +15,19 @@
         INSERT INTO users (
             provider,
             provider_id,
-            email,
             nickname,
-            year,
-            phone_number,
+            email,
             profile_image,
-            gender,
+            age_range,
             created_at,
             last_login_at
         ) VALUES (
                      #{provider},
                      #{providerId},
-                     #{email},
                      #{nickname},
-                     #{year},
-                     #{phoneNumber},
+                     #{email},
                      #{profileImage},
-                     #{gender},
+                     #{ageRange},
                      NOW(),
                      NOW()
                  )
@@ -59,14 +55,12 @@
             id,
             provider,
             provider_id     AS providerId,
-            email,
             nickname,
-            year,
-            phone_number    AS phoneNumber,
+            email,
             profile_image   AS profileImage,
+            age_range       AS ageRange,
             created_at      AS createdAt,
-            last_login_at   AS lastLoginAt,
-            gender
+            last_login_at   AS lastLoginAt
         FROM users
         WHERE id = #{userId}
     </select>

@@ -69,7 +69,9 @@ public class AuthController {
                         new UserHealthResponse(
                                 user.getId(),
                                 user.getNickname(),
-                                user.getEmail()
+                                user.getEmail(),
+                                user.getProfileImage(),
+                                user.getLastLoginAt()
                         )
 
                 )

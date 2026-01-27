@@ -76,12 +76,10 @@ public class NaverOAuthService {
 
         return new NaverOAuthUserResponse(
                 (String) info.get("id"),
-                (String) info.get("email"),
                 (String) info.get("nickname"),
+                (String) info.get("email"),
                 (String) info.get("profile_image"),
-                null,                          // birthyear → 지금 안 씀
-                (String) info.get("mobile"),
-                (String) info.get("gender")
+                (String) info.get("age")
         );
     }
 

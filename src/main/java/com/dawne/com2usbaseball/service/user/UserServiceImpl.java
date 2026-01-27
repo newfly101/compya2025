@@ -38,12 +38,10 @@ public class UserServiceImpl implements UserService {
         UserEntity user = new UserEntity();
         user.setProvider("NAVER");
         user.setProviderId(info.id());
-        user.setEmail(info.email());
         user.setNickname(info.nickname());
+        user.setEmail(info.email());
         user.setProfileImage(info.profileImage());
-        user.setYear(info.year());
-        user.setPhoneNumber(info.phoneNumber());
-        user.setGender(info.gender());
+        user.setAgeRange(info.ageRange());
         return user;
     }
 
