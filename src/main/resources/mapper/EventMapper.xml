@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.event.repository.mapper.EventMapper">
+
+    <select id="selectEventByExternal" resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        SELECT (
+           id,
+           event_source,
+           title,
+           start_at,
+           expire_at,
+           image_url,
+           external_link,
+           is_visible,
+           created_at,
+           updated_at
+       ) FROM events
+    </select>
+
+    <insert id="insertEvent" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO events (
+            event_source,
+            title,
+            start_at,
+            expire_at,
+            image_url,
+            external_link,
+            is_visible,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{eventSource},
+            #{title},
+            #{startAt},
+            #{expireAt},
+            #{imageUrl},
+            #{externalLink},
+            #{visible},
+            NOW(),
+            NOW()
+        )
+
+    </insert>
+
+    <update id="updateEventByExternal" parameterType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        <set>
+            <if test="eventSource != null">
+                event_source = #{eventSource},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="startAt != null">
+                start_at = #{startAt},
+            </if>
+            <if test="expireAt != null">
+                expire_at = #{expireAt},
+            </if>
+            <if test="imageUrl != null">
+                image_url = #{imageUrl},
+            </if>
+            <if test="externalLink != null">
+                external_link = #{externalLink},
+            </if>
+            <if test="visible != null">
+                is_visible = #{visible},
+            </if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+
+    </update>
+
+    <update id="updateEventVisible">
+        UPDATE events
+        <set>
+            <if test="visible != null">
+                is_visible = #{visible},
+            </if>
+        </set>
+        updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+</mapper>
