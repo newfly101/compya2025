@@ -1,0 +1,62 @@
+@use "@/styles/variables/colors" as *;
+
+.container {
+  width:100%;
+  overflow-x: hidden;
+}
+
+.adminBar {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.6rem;
+
+  padding: 1.2rem 2rem;
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 1.6rem 1.6rem 1.6rem 0.4rem;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+
+  position: fixed;
+  z-index: 5;
+}
+
+.label {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: $text-primary;
+  white-space: nowrap;
+}
+
+.adminNav {
+  display: flex;
+  gap: 0.8rem;
+
+  & > a {
+    //background: transparent;
+    border: 1px solid $border;
+    color: $text-secondary;
+    padding: 0.6rem 1.2rem;
+    border-radius: 10rem;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-decoration: none;
+    white-space: nowrap;
+
+    &:hover {
+      color: $text-primary;
+      background: $surface3;
+    }
+  }
+  & > a.active {
+    color: $primary-text;
+    background: $primary-bg;
+    border-color: rgba($primary, 0.5);
+    font-weight: 600;
+  }
+}
+
+.content {
+  margin-top: 4rem;
+}

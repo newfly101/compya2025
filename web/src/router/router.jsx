@@ -1,6 +1,17 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App.jsx";
 import { lazy } from "react";
+import UserGuard from "@/router/UserGuard.jsx";
+import AdminGuard from "@/router/AdminGuard.jsx";
+import AdminUserManagePage from "@/domains/admin/pages/user/AdminUserManagePage.jsx";
+import AdminUserDetailPage from "@/domains/admin/pages/user/AdminUserDetailPage.jsx";
+import AdminContentPage from "@/domains/admin/pages/content/AdminContentPage.jsx";
+import AdminNoticeManagePage from "@/domains/admin/pages/content/AdminNoticeManagePage.jsx";
+import AdminEventManagePage from "@/domains/admin/pages/content/AdminEventManagePage.jsx";
+import AdminCouponManagePage from "@/domains/admin/pages/content/AdminCouponManagePage.jsx";
+import AdminDashBoardPage from "@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx";
+import AdminLayout from "@/domains/admin/layout/AdminLayout.jsx";
+
 const UserProfile = lazy(() => import("@/pages/profile/UserProfile.jsx"));
 const AuthCallBack = lazy(() => import("@/shared/layout/callBack/AuthCallBack.jsx"));
 const LegendCalendar = lazy(() => import("@/pages/historyMode/LegendCalendar.jsx"));
@@ -26,15 +37,8 @@ const router = createBrowserRouter([
 
     element: <App />,
     children: [
-      {
-        index: true,
-        element: <Home />,
-        handle: { title: "컴프야펀 | 홈" },
-      },
-      {
-        path: "login",
-        element: <Login />,
-      },
+      { index: true, element: <Home />, handle: { title: "컴프야펀 | 홈" } },
+      { path: "login", element: <Login /> },
       { path: "notice", element: <Notice /> },
       { path: "notice/:id", element: <FunNoticePage /> },
       { path: "simulate", element: <SkillSimulator />, handle: { title: "컴프야펀 | 스킬 변경 시뮬레이터" } },
@@ -47,7 +51,34 @@ const router = createBrowserRouter([
       { path: "dictionary", element: <Dictionary />, handle: { title: "컴프야펀 | 백과사전 홈" } },
       { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
       { path: "auth/callback", element: <AuthCallBack />, handle: { title: "컴프야펀 | 로그인 콜백" } },
-      { path: "mypage", element: <UserProfile />, handle: { title: "컴프야펀 | 마이페이지" } },
+      {
+        element: <UserGuard />,
+        children: [
+          { path: "mypage", element: <UserProfile />, handle: { title: "컴프야펀 | 마이페이지" } },
+        ],
+      },
+      {
+        element: <AdminGuard />,
+        children: [
+          {
+            path: "admin",
+            element: <AdminLayout />,
+            children: [
+              { index: true, element: <AdminDashBoardPage />, handle: { title: "컴프야펀 | 어드민 | 대시보드" } },
+              { path: "users", element: <AdminUserManagePage />, handle: { title: "컴프야펀 | 어드민 | 유저 관리" } },
+              { path: "users/:userId", element: <AdminUserDetailPage />, handle: { title: "컴프야펀 | 어드민 | 유저 상세 관리" } },
+              {
+                path: "content", element: <AdminContentPage />, children: [
+                  { path: "notice", element: <AdminNoticeManagePage />, handle: { title: "컴프야펀 | 어드민 | 공지 관리" } },
+                  { path: "event", element: <AdminEventManagePage />, handle: { title: "컴프야펀 | 어드민 | 이벤트 관리" } },
+                  { path: "coupon", element: <AdminCouponManagePage />, handle: { title: "컴프야펀 | 어드민 | 쿠폰 관리" } },
+                ],
+              },
+            ]
+          },
+
+        ],
+      },
     ],
   },
 ]);

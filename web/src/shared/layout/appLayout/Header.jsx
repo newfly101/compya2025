@@ -5,7 +5,7 @@ import { requestUserLogout } from "@/store/modules/auth/thunks.js";
 import { clearUser } from "@/store/modules/auth/slices.js";
 
 export default function Header() {
-  const { isAuthenticated, user } = useSelector(state => state.auth);
+  const { isAuthenticated, user, role } = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const NAVER_CLIENT_ID = "Ltp6btmLGcZZGgCIxYqv";
   const isLocal = window.location.hostname === "localhost";
@@ -46,6 +46,9 @@ export default function Header() {
           <Link to="/dictionary">📌추천 백과사전</Link>
           {isAuthenticated &&
             <Link to="/mypage">마이페이지</Link>
+          }
+          {role?.role === 'ADMIN' &&
+            <Link to="/admin/users">유저 관리</Link>
           }
         </nav>
         {!isAuthenticated ?
