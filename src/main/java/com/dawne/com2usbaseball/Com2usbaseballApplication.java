@@ -9,7 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = "com.dawne.com2usbaseball")
 @EnableCaching
 @EntityScan("com.dawne.com2usbaseball")
-@MapperScan("com.dawne.com2usbaseball")
+@MapperScan(basePackages = "com.dawne.com2usbaseball",
+		annotationClass = org.apache.ibatis.annotations.Mapper.class)
 //@MapperScan("com.dawne.com2usbaseball.domain.**.mapper")
 public class Com2usbaseballApplication {
 
