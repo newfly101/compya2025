@@ -1,2 +1,17 @@
 GET http://localhost:8080/api/events/list/external
 Content-Type: application/json
+
+
+### 이벤트 생성
+POST http://localhost:8080/api/events
+Content-Type: application/json
+
+{
+  "eventSource": "OFFICIAL",
+  "title": "[이벤트] 2026시즌 대비 오프시즌 타격 이벤트",
+  "startAt": "2025-11-13 12:00:00",
+  "expireAt": "2026-03-28 23:59:00",
+  "imageUrl": "https://example.com/images/event_2026_offseason.png",
+  "externalLink": "https://cafe.naver.com/com2usbaseball2015/1923858",
+  "visible": true
+}
