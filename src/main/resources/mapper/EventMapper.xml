@@ -5,7 +5,7 @@
 <mapper namespace="com.dawne.com2usbaseball.domain.event.repository.mapper.EventMapper">
 
     <select id="selectEventByExternal" resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
-        SELECT (
+        SELECT
            id,
            event_source,
            title,
@@ -16,7 +16,7 @@
            is_visible,
            created_at,
            updated_at
-       ) FROM events
+        FROM events
     </select>
 
     <insert id="insertEvent" useGeneratedKeys="true" keyProperty="id">
