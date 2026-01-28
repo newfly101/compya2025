@@ -1,7 +1,11 @@
 package com.dawne.com2usbaseball.domain.event.service;
 
+import com.dawne.com2usbaseball.domain.event.dto.response.EventListResponse;
+import com.dawne.com2usbaseball.domain.event.dto.response.InsertEventResponse;
+import com.dawne.com2usbaseball.domain.event.dto.response.UpdateEventResponse;
 import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
 import com.dawne.com2usbaseball.domain.event.repository.EventRepository;
+import com.dawne.com2usbaseball.domain.event.service.support.EventListMaker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,35 +18,44 @@ import java.util.List;
 public class EventServiceImpl implements EventService {
 
     private final EventRepository repository;
+    private final EventListMaker eventListMaker;
 
     @Override
     @Transactional(readOnly = true)
-    public List<EventEntity> getEventListsByExternal() {
-        return repository.selectCafeEvents();
+    public EventListResponse getEventListsByExternal() {
+        List<EventEntity> eventEntity = repository.selectCafeEvents();
+
+        return eventListMaker.makeEventListResponse(eventEntity);
     }
 
     @Override
-    public EventEntity createEvent(EventEntity event) {
+    public InsertEventResponse createEvent(EventEntity event) {
         boolean success = repository.insertCafeEvent(event);
+
         if (!success) {
-            throw new IllegalStateException("이벤트 생성에 실패했습니다.");
+            return InsertEventResponse.fail();
         }
-        return event;
+
+        return InsertEventResponse.success(event.getId());
     }
 
     @Override
-    public void updateEvent(EventEntity event) {
+    public UpdateEventResponse updateEvent(EventEntity event) {
         boolean success = repository.updateCafeEvent(event);
         if (!success) {
-            throw new IllegalStateException("이벤트 수정에 실패했습니다.");
+            return UpdateEventResponse.fail();
         }
+
+        return UpdateEventResponse.success(event.getId());
     }
 
     @Override
-    public void updateEventVisible(Long id, boolean visible) {
+    public UpdateEventResponse updateEventVisible(Long id, boolean visible) {
         boolean success = repository.updateCafeEventVisible(id, visible);
         if (!success) {
-            throw new IllegalStateException("이벤트 노출 상태 변경에 실패했습니다.");
+            return UpdateEventResponse.fail();
         }
+
+        return UpdateEventResponse.success(id);
     }
 }
