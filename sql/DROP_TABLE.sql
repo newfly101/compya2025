@@ -10,3 +10,5 @@ DROP TABLE skill_pitcher_grade_stat;
 
 DROP TABLE user_roles;
 DROP TABLE users;
+
+DROP TABLE events;

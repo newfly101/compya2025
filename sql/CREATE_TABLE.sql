@@ -232,3 +232,22 @@ CREATE TABLE user_roles
         FOREIGN KEY (user_id) REFERENCES users (id)
             ON DELETE CASCADE
 );
+
+
+CREATE TABLE events
+(
+    id            BIGINT PRIMARY KEY AUTO_INCREMENT,
+    event_source  ENUM ('OFFICIAL', 'INTERNAL') NOT NULL DEFAULT 'OFFICIAL', -- OFFICIAL / INTERNAL
+    title         VARCHAR(255)                  NOT NULL,
+    start_at      DATETIME                      NOT NULL,
+    expire_at     DATETIME                      NOT NULL,
+    image_url     VARCHAR(500)                  NOT NULL,
+    external_link VARCHAR(500),
+    is_visible    BOOLEAN                       NOT NULL DEFAULT true,
+    created_at    TIMESTAMP                              DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMP                              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CHECK ( expire_at > start_at ),
+
+    INDEX idx_events_visible_period (is_visible, start_at, expire_at)
+);
