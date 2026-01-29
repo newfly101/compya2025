@@ -1,4 +1,4 @@
-import { API } from "@/store/api/APIConfig.js";
+import { API } from "@/app/store/APIConfig.js";
 import { SIMULATE } from "@/store/modules/simulate/endpoints.js";
 
 /**

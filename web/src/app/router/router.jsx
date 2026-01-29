@@ -1,8 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "@/App.jsx";
 import { lazy } from "react";
-import UserGuard from "@/router/UserGuard.jsx";
-import AdminGuard from "@/router/AdminGuard.jsx";
+import UserGuard from "@/app/router/UserGuard.jsx";
+import AdminGuard from "@/app/router/AdminGuard.jsx";
 import AdminUserManagePage from "@/domains/admin/pages/user/AdminUserManagePage.jsx";
 import AdminUserDetailPage from "@/domains/admin/pages/user/AdminUserDetailPage.jsx";
 import AdminContentPage from "@/domains/admin/pages/content/AdminContentPage.jsx";

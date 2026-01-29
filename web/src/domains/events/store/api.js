@@ -1,4 +1,4 @@
-import { API } from "@/store/api/APIConfig.js";
+import { API } from "@/app/store/APIConfig.js";
 import { EVENTS } from "@/domains/events/store/endpoints.js";
 
 /**

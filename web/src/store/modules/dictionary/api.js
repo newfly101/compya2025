@@ -1,4 +1,4 @@
-import { API } from "@/store/api/APIConfig.js";
+import { API } from "@/app/store/APIConfig.js";
 import { DICTIONARY } from "@/store/modules/dictionary/endpoints.js";
 
 /**
