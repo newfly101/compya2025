@@ -1,10 +1,10 @@
 import React from "react";
-import styles from "@/domains/events/feature/components/user/lists/EventList.module.scss";
-import CafeLinkCard from "../../../../../global/ui/cafeLinkCard/CafeLinkCard.jsx";
+import styles from "./UserEventList.module.scss";
+import CafeLinkCard from "@/global/ui/cafeLinkCard/CafeLinkCard.jsx";
 import { useEventListUser } from "@/domains/events/feature/hooks/user/useEventListUser.js";
 
-const UserEventList = ({ short = false }) => {
-  const { events, activeEvents, expireEvents } = useEventListUser();
+const UserEventList = ({ limit=null, short = false }) => {
+  const { events, activeEvents, expireEvents, shortEvents } = useEventListUser();
 
   if (events.length === 0) {
     return null;

@@ -13,10 +13,15 @@ export const useEventListUser = () => {
     dispatch(requestGetExternalEventList());
   }, [dispatch]);
 
+  const shortEvents = (limit) => {
+    return {activeEvents: limit ? activeEvents.slice(0, limit) : activeEvents};
+  }
+
   return {
-    events,
+    events: events ?? [],
     activeEvents,
     expireEvents,
+    shortEvents,
   };
 
 };

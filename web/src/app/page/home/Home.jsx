@@ -2,10 +2,9 @@ import styles from "@/app/page/home/Home.module.scss";
 import coupons from "@/data/Coupon.js";
 import CouponList from "@/domains/coupons/feature/components/user/couponList/CouponList.jsx";
 import { Link, useNavigate } from "react-router-dom";
-import EventList from "@/domains/events/feature/components/user/lists/EventList.jsx";
-import events from "@/data/Events.js";
 import React from "react";
 import quizImg from "@/assets/quiz/quiz877.png";
+import EventSwiper from "@/domains/events/feature/components/EventSwiper/EventSwiper.jsx";
 
 const CLUB_GUIDE_URL = "https://cafe.naver.com/com2usbaseball2015/1785997";
 
@@ -60,7 +59,7 @@ const Home = () => {
           <h2>🎉 최신 이벤트</h2>
           <span><Link to="/notice?tab=event">전체 보기 →</Link></span>
         </div>
-        <EventList data={events} limit={3} short={true} />
+        <EventSwiper short={true}/>
       </section>
 
       {/* 최신 쿠폰 */}

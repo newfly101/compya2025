@@ -1,5 +1,5 @@
 import React from "react";
-import UserEventList from "@/domains/events/feature/components/user/UserEventList.jsx";
+import UserEventList from "@/domains/events/feature/components/user/lists/UserEventList.jsx";
 
 const UserEventPage = () => {
   return <UserEventList  />
