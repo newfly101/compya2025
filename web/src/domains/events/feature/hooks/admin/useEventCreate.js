@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { requestInsertNewEvent } from "@/domains/events/store";
+import { requestInsertNewEvent } from "@/domains/events/store/index.js";
 import { useEventForm } from "./internal/useEventForm.js";
 
 export const useEventCreate = ({ onSuccess }) => {

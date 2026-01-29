@@ -1,5 +1,5 @@
 import EventModal from "./EventModal.jsx";
-import { useEventCreate } from "@/domains/events/feature/hooks/useEventCreate.js";
+import { useEventCreate } from "@/domains/events/feature/hooks/admin/useEventCreate.js";
 
 const EventCreateModal = ({ onClose }) => {
   const hook = useEventCreate({

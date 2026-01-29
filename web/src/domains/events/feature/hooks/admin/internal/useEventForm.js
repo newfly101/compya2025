@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { parseDateInput } from "@/global/utils/datetime/parseDateInput";
-import { formatDateTyping } from "@/global/utils/datetime/formatDateTyping";
-import { validateEventDate } from "@/global/utils/datetime/validateEventDate";
+import { parseDateInput } from "@/global/utils/datetime/parseDateInput.js";
+import { formatDateTyping } from "@/global/utils/datetime/formatDateTyping.js";
+import { validateEventDate } from "@/global/utils/datetime/validateEventDate.js";
 
 export const useEventForm = (initialForm) => {
   const [form, setForm] = useState(initialForm);

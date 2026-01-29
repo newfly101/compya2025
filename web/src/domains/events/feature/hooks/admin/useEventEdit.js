@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { requestUpdateExternalEvent } from "@/domains/events/store";
+import { requestUpdateExternalEvent } from "@/domains/events/store/index.js";
 import { useEventForm } from "./internal/useEventForm.js";
 
 export const useEventEdit = ({ event, onSuccess }) => {

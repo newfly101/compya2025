@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { requestGetExternalEventList, requestUpdateExternalEventVisible } from "@/domains/events/store";
+import { requestGetExternalEventList, requestUpdateExternalEventVisible } from "@/domains/events/store/index.js";
 
 export const useEventListAdmin = () => {
   const dispatch = useDispatch();

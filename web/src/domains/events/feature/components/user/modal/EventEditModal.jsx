@@ -1,5 +1,5 @@
 import EventModal from "./EventModal.jsx";
-import { useEventEdit } from "@/domains/events/feature/hooks/useEventEdit.js";
+import { useEventEdit } from "@/domains/events/feature/hooks/admin/useEventEdit.js";
 
 const EventEditModal = ({ event, onClose }) => {
   const hook = useEventEdit({
