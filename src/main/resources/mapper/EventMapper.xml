@@ -45,6 +45,7 @@
     </insert>
 
     <update id="updateEventByExternal" parameterType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        UPDATE events
         <set>
             <if test="eventSource != null">
                 event_source = #{eventSource},
