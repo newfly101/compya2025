@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/events/**").authenticated()
                         .anyRequest().denyAll())
                 // ✅ AccessLogFilter 먼저
                 .addFilterBefore(

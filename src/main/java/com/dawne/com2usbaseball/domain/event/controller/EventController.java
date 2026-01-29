@@ -21,7 +21,7 @@ public class EventController {
         return service.getEventListsByExternal();
     }
 
-    @PostMapping("/")
+    @PostMapping
     public InsertEventResponse insertNewEvent(@RequestBody ChangeEventRequest request) {
         return service.createEvent(request.toEntity());
     }
