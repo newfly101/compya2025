@@ -5,6 +5,7 @@ import FunNoticeList from "@/domains/notices/feature/components/user/lists/FunNo
 import OfficialNoticeList from "@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx";
 import EventList from "@/domains/events/feature/components/user/lists/EventList.jsx";
 import CouponList from "@/domains/coupons/feature/components/user/couponList/CouponList.jsx";
+import UserEventList from "@/domains/events/feature/components/user/UserEventList.jsx";
 
 export const NOTICE_TABS = {
   "": {
@@ -24,6 +25,12 @@ export const NOTICE_TABS = {
     label: "이벤트",
     title: "컴프야펀 | 이벤트 안내",
     element: <EventList data={events} />,
+  },
+  events: {
+    key: "events",
+    label: "이벤트",
+    title: "컴프야펀 | 이벤트 안내",
+    element: <UserEventList />,
   },
   coupons: {
     key: "coupons",

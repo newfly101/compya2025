@@ -1,16 +1,44 @@
-.grid {
-  display: grid;
-  gap: 2.4rem;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  justify-items: center;
-  padding: 2rem 0;
-  margin-bottom: 5rem;
-}
-
+.grid,
 .shortGrid {
   display: grid;
-  gap: 2.4rem;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  justify-items: center;
+  gap: 2rem;
   padding: 2rem 0;
+  justify-items: center;
+
+  /* PC 기본: 3열 */
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* 태블릿 */
+@media (max-width: 950px) {
+  .grid,
+  .shortGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 모바일 */
+@media (max-width: 662px) {
+  .grid,
+  .shortGrid {
+    grid-template-columns: repeat(1, 1fr); // 🔥 2열 유지
+    gap: 1.4rem;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+}
+
+/* 모바일 */
+@media (max-width: 480px) {
+  .grid,
+  .shortGrid {
+    grid-template-columns: repeat(1, 1fr); // 🔥 2열 유지
+    gap: 1.4rem;
+  }
+
+  .card {
+    max-width: 100%;
+  }
 }
