@@ -1,12 +1,23 @@
-
 .switch {
   position: relative;
   display: inline-block;
   width: 44px;
   height: 22px;
   border-radius: 999px;
-  background-color: #6b7280; // OFF 기본
+  background-color: #6b7280;
   transition: background-color 0.2s ease;
+
+  &.on {
+    background-color: #22c55e;
+
+    .knob {
+      transform: translateX(22px);
+    }
+  }
+
+  &.off {
+    background-color: #6b7280;
+  }
 }
 
 .knob {
@@ -18,18 +29,4 @@
   border-radius: 50%;
   background: #ffffff;
   transition: transform 0.2s ease;
-}
-
-/* ON 상태 */
-.on {
-  background-color: #22c55e; // green
-
-  .knob {
-    transform: translateX(22px);
-  }
-}
-
-/* OFF 상태 */
-.off {
-  background-color: #6b7280; // gray
 }
