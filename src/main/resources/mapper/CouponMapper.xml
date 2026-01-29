@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.coupon.repository.mapper.CouponMapper">
+
+    <select id="selectCouponList" resultType="com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity">
+        SELECT
+           id,
+           coupon_code,
+           title,
+           detail,
+           start_at,
+           expire_at,
+           is_visible AS visible,
+           created_at,
+           updated_at
+        FROM coupons
+    </select>
+
+    <insert id="insertCoupon" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO coupons (
+            coupon_code,
+            title,
+            detail,
+            start_at,
+            expire_at,
+            is_visible,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{couponCode},
+            #{title},
+            #{detail},
+            #{startAt},
+            #{expireAt},
+            #{visible},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <update id="updateCouponById" parameterType="com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity">
+        UPDATE coupons
+        <set>
+            <if test="couponCode != null">
+                coupon_code = #{couponCode},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="detail != null">
+                detail = #{detail},
+            </if>
+            <if test="startAt != null">
+                start_at = #{startAt},
+            </if>
+            <if test="expireAt != null">
+                expire_at = #{expireAt},
+            </if>
+            <if test="visible != null">
+                is_visible = #{visible},
+            </if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+
+    </update>
+
+    <update id="updateCouponVisible">
+        UPDATE coupons
+        SET
+            is_visible = #{visible},
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+</mapper>
