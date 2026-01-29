@@ -8,9 +8,9 @@ import AdminUserDetailPage from "@/domains/admin/pages/user/AdminUserDetailPage.
 import AdminContentPage from "@/domains/admin/pages/content/AdminContentPage.jsx";
 import AdminNoticeManagePage from "@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx";
 import AdminEventManagePage from "@/domains/events/page/admin/AdminEventManagePage.jsx";
-import AdminCouponManagePage from "@/domains/coupons/feature/components/admin/AdminCouponManagePage.jsx";
 import AdminDashBoardPage from "@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx";
 import AdminLayout from "@/domains/admin/layout/AdminLayout.jsx";
+import AdminCouponManagePage from "@/domains/coupons/page/admin/AdminCouponManagePage.jsx";
 
 const UserProfile = lazy(() => import("@/domains/profile/page/UserProfile.jsx"));
 const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
