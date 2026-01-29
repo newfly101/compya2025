@@ -1,0 +1,146 @@
+@use "@/styles/variables/colors" as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 720px;
+  max-height: 90vh;
+
+  background: $surface2;
+  border-radius: 1.2rem;
+  border: 1px solid $border;
+  padding: 2.4rem;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 2rem;
+    font-weight: 700;
+  }
+
+  button {
+    background: transparent;
+    border: none;
+    color: $text-secondary;
+    font-size: 1.8rem;
+    cursor: pointer;
+
+    &:hover {
+      color: $text-primary;
+    }
+  }
+}
+
+.form {
+  flex: 1;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.4rem;
+    color: $text-secondary;
+
+    input {
+      margin-top: 0.6rem;
+      padding: 0.8rem 1rem;
+      border-radius: 0.6rem;
+      border: 1px solid $border;
+      background: $surface3;
+      color: $text-primary;
+
+      &:focus {
+        outline: none;
+        border-color: $primary;
+      }
+    }
+    select {
+      margin-top: 0.6rem;
+      padding: 0.8rem 1rem;
+      border-radius: 0.6rem;
+      border: 1px solid $border;
+      background: $surface3;
+      color: $text-primary;
+
+      &:focus {
+        outline: none;
+        border-color: $primary;
+      }
+    }
+
+  }
+}
+
+.row {
+  display: flex;
+  gap: 1.6rem;
+
+  > label {
+    flex: 1;
+  }
+}
+
+.checkbox {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2.4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid $border;
+
+  button {
+    padding: 0.8rem 1.6rem;
+    border-radius: 0.6rem;
+    border: none;
+    cursor: pointer;
+    font-size: 1.4rem;
+  }
+}
+
+.cancel {
+  background: $surface3;
+  color: $text-secondary;
+
+  &:hover {
+    background: $surface3;
+  }
+}
+
+.primary {
+  background: $primary-bg;
+  color: $primary-text;
+
+  &:hover {
+    background: $primary-hover;
+  }
+}

@@ -62,7 +62,10 @@ const eventsSlice = createSlice({
         const index = state.events.findIndex(e => e.id === updated.id);
 
         if (index !== -1) {
-          state.events[index] = updated;
+          state.events[index] = {
+            ...state.events[index],
+            ...updated,
+          };
         }
       })
       .addCase(requestUpdateExternalEvent.rejected, (state, action) => {

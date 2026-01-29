@@ -57,16 +57,3 @@ export const updateEventDTO = (state) => ({
   imageUrl: state.imageUrl,
   externalLink: state.externalLink,
 });
-
-/**
- * PATCH /events/{id}/visible
- *
- * @param {boolean} visible
- *
- * @returns {{
- *   visible: boolean
- * }}
- */
-export const updateEventVisibleDTO = (visible) => ({
-  visible,
-});
