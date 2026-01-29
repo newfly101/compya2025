@@ -1,0 +1,205 @@
+@use "../../styles/variables/colors" as *;
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem 1rem;
+  overflow-y: auto;
+}
+
+.header, .footer {
+  width: 100%;
+  background: $surface2;
+  border-bottom: 1px solid $border-strong;
+  display: flex;
+  justify-content: center;
+
+  flex-shrink: 0;
+  white-space: nowrap;
+
+  &:hover {
+    background: $surface3;
+  }
+}
+
+.footer > .inner {
+  width: 100%;
+  max-width: 1200px;
+  color: $text-primary;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  justify-content: space-between;
+  margin: 1.6rem;
+  gap: 2rem;
+  align-items: center;
+
+  & > .legal {
+    display: flex;
+    flex-direction: row;
+    font-size: 1.6rem;
+    gap: 2rem;
+
+    a {
+      color: $text-secondary;
+      text-decoration: none;
+
+      &:hover {
+        color: $text-primary;
+      }
+    }
+
+    .disabled {
+      color: $text-muted;
+      cursor: default;
+    }
+  }
+
+  & > .copy {
+    font-size: 1.4rem;
+    color: $text-muted;
+  }
+
+  & > .actions {
+    display: flex;
+    gap: 1rem;
+
+    .kakao {
+      background: #fee500;
+      color: #000;
+      border: none;
+      border-radius: 999px;
+      padding: 0.8rem 1.4rem;
+      font-size: 1.4rem;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+  }
+}
+
+.inner {
+  width: 100%;
+  max-width: 1200px;
+  color: $text-primary;
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+  justify-content: center;
+  padding: 1.6rem;
+  margin: 0 auto;
+  box-sizing: border-box;
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 2.4rem;
+    margin-left: 1rem;
+    flex: 1;
+
+    a {
+      font-size: 1.6rem;
+      color: $text-secondary;
+      text-decoration: none;
+      padding: 0.8rem 0;
+      transition: color 0.2s ease;
+
+      &:hover {
+        color: $text-primary;
+      }
+    }
+  }
+}
+
+.register {
+  background-image: url("@/assets/NAVER_login_btn.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 0 2rem;
+  width: 12rem;
+  height: 3.2rem;
+  color: #fff;
+  text-align: center;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  word-break: keep-all;
+}
+
+.logout {
+  background: $primary-bg;
+  padding: 0 2rem;
+  border-radius: 0.4rem;
+  width: 12rem;
+  height: 3.2rem;
+  color: #fff;
+  text-align: center;
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  word-break: keep-all;
+
+  &:hover {
+    background: $primary-hover;
+    transition: background 0.25s ease;
+  }
+}
+
+.userProfile {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-left: 2rem;
+
+  & > span {
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    display: none;
+  }
+
+  .content {
+    padding-bottom: 80px;
+  }
+
+  .footer {
+    margin-bottom: 6.4rem;
+
+    & > .inner {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+      gap: 1.2rem;
+
+      & > .copy {
+        font-size: 1.3rem;
+      }
+
+      & > .legal {
+        justify-content: center;
+        gap: 1.6rem;
+      }
+
+      & > .actions {
+        width: 100%;
+
+        .kakao {
+          width: 100%;
+          padding: 1rem;
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+}

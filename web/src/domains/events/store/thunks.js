@@ -12,7 +12,7 @@ export const requestGetExternalEventList = createAsyncThunk(
   EVENT_ACTIONS.GET_EVENT_LISTS, async (_, { dispatch, getState, rejectWithValue }) => {
     try {
       const data = await fetchGetExternalEventList();
-      console.log(`requestGetExternalEventList : `, data);
+      // console.log(`requestGetExternalEventList : `, data);
 
       return data;
     } catch (error) {
@@ -24,9 +24,9 @@ export const requestGetExternalEventList = createAsyncThunk(
 export const requestInsertNewEvent = createAsyncThunk(
   EVENT_ACTIONS.CREATE, async (newEvent, { dispatch, getState, rejectWithValue }) => {
     try {
-      console.log(`new Event : `, newEvent);
+      // console.log(`new Event : `, newEvent);
       const { success, message, eventId } = await fetchInsertNewEvent(createEventDTO(newEvent));
-      console.log(`requestInsertNewEvent : `, success, message, eventId);
+      // console.log(`requestInsertNewEvent : `, success, message, eventId);
 
       return {
         ...newEvent,
@@ -40,9 +40,9 @@ export const requestInsertNewEvent = createAsyncThunk(
 export const requestUpdateExternalEvent = createAsyncThunk(
   EVENT_ACTIONS.UPDATE, async ({ id, ...event }, { dispatch, getState, rejectWithValue }) => {
     try {
-      console.log("EVENT_ACTIONS.UPDATE : ", id, event);
+      // console.log("EVENT_ACTIONS.UPDATE : ", id, event);
       const { success, message, eventId } = await fetchUpdateExternalEvent(id, updateEventDTO(event));
-      console.log(`requestUpdateExternalEvent : `, success, message, eventId);
+      // console.log(`requestUpdateExternalEvent : `, success, message, eventId);
 
       return {
         ...event,
@@ -57,7 +57,7 @@ export const requestUpdateExternalEventVisible = createAsyncThunk(
   EVENT_ACTIONS.UPDATE_VISIBLE, async ({ id, visible }, { dispatch, getState, rejectWithValue }) => {
     try {
       const { success, message, eventId } = await fetchUpdateExternalEventVisible(id, visible);
-      console.log(`requestUpdateExternalEventVisible : `, success, message, eventId);
+      // console.log(`requestUpdateExternalEventVisible : `, success, message, eventId);
       return {
         id: eventId,
         visible,

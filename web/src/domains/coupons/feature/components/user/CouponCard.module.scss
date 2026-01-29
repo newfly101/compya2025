@@ -1,0 +1,84 @@
+@use "../../../../../global/styles/variables/colors" as *;
+
+.card {
+  background: $surface2;
+  border: 1px dashed rgba($primary, 0.4);
+  border-radius: 1.2rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  color: $text-primary;
+  transition: background 0.25s ease;
+
+  &:hover {
+    background: $surface3;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.code {
+  background: rgba($primary, 0.2);
+  color: $primary-text;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.6rem;
+  font-weight: 700;
+  font-size: 1.6rem;
+}
+
+.copyBtn {
+  background: linear-gradient(135deg, #6d4ad3, #a86bf0);
+  color: white;
+  padding: 0.6rem 1.4rem;
+  border-radius: 0.8rem;
+  font-size: 1.4rem;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.25s ease;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+.disabled {
+  background: linear-gradient(135deg, #000000, #cfb6f3);
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: unset;
+}
+
+.reward {
+  font-size: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+
+  .title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: $primary-text;
+  }
+
+  .detail {
+    color: $text-secondary;
+    line-height: 1.5;
+  }
+}
+
+.expire {
+  font-size: 1.3rem;
+  color: $text-secondary;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.infoText {
+  font-size: 1.2rem;
+  color: $text-muted;
+}

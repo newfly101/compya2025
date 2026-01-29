@@ -6,30 +6,29 @@ import AdminGuard from "@/app/router/AdminGuard.jsx";
 import AdminUserManagePage from "@/domains/admin/pages/user/AdminUserManagePage.jsx";
 import AdminUserDetailPage from "@/domains/admin/pages/user/AdminUserDetailPage.jsx";
 import AdminContentPage from "@/domains/admin/pages/content/AdminContentPage.jsx";
-import AdminNoticeManagePage from "@/domains/notices/feature/components/AdminNoticeManagePage.jsx";
+import AdminNoticeManagePage from "@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx";
 import AdminEventManagePage from "@/domains/events/page/admin/AdminEventManagePage.jsx";
-import AdminCouponManagePage from "@/domains/coupons/feature/components/AdminCouponManagePage.jsx";
+import AdminCouponManagePage from "@/domains/coupons/feature/components/admin/AdminCouponManagePage.jsx";
 import AdminDashBoardPage from "@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx";
 import AdminLayout from "@/domains/admin/layout/AdminLayout.jsx";
 
-const UserProfile = lazy(() => import("@/pages/profile/UserProfile.jsx"));
-const AuthCallBack = lazy(() => import("@/shared/layout/callBack/AuthCallBack.jsx"));
-const LegendCalendar = lazy(() => import("@/pages/historyMode/LegendCalendar.jsx"));
-const Home = lazy(() => import("@/pages/Home.jsx"));
-const Login = lazy(() => import("@/pages/Login.jsx"));
-const Notice = lazy(() => import("@/pages/notice/Notice.jsx"));
-const FunNoticePage = lazy(() => import("@/pages/notice/funNotice/FunNoticePage.jsx"));
+const UserProfile = lazy(() => import("@/domains/profile/page/UserProfile.jsx"));
+const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
+const LegendCalendar = lazy(() => import("@/domains/historyMode/page/LegendCalendar.jsx"));
+const Home = lazy(() => import("@/app/page/home/Home.jsx"));
+const Notice = lazy(() => import("@/domains/notices/page/Notice.jsx"));
+const FunNoticePage = lazy(() => import("@/domains/notices/page/funNotice/FunNoticePage.jsx"));
 
-const SkillSimulator = lazy(() => import("@/pages/skillSimulate/SkillSimulator.jsx"));
-const PitcherSkillChange = lazy(() => import("@/pages/skillSimulate/skillChange/v2/PitcherSkillChange.jsx"));
-const HitterSkillChange = lazy(() => import("@/pages/skillSimulate/skillChange/v2/HitterSkillChange.jsx"));
+const SkillSimulator = lazy(() => import("@/domains/simulate/page/SkillSimulator.jsx"));
+const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
+const HitterSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
 
-const Dictionary = lazy(() => import("@/pages/dictionary/Dictionary.jsx"));
-const PitcherDictionary = lazy(() => import("@/pages/dictionary/PitcherDictionary.jsx"));
-const HitterDictionary = lazy(() => import("@/pages/dictionary/HitterDictionary.jsx"));
+const Dictionary = lazy(() => import("@/domains/dictionary/page/Dictionary.jsx"));
+const PitcherDictionary = lazy(() => import("@/domains/dictionary/page/PitcherDictionary.jsx"));
+const HitterDictionary = lazy(() => import("@/domains/dictionary/page/HitterDictionary.jsx"));
 
-const TipPage = lazy(() => import("@/pages/tipCollection/TipPage.jsx"));
-const PrivacyPolicy = lazy(() => import("@/pages/legal/PrivacyPolicy.jsx"));
+const TipPage = lazy(() => import("@/domains/tipBoard/page/TipPage.jsx"));
+const PrivacyPolicy = lazy(() => import("@/app/page/legal/PrivacyPolicy.jsx"));
 
 const router = createBrowserRouter([
   {
@@ -38,7 +37,6 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       { index: true, element: <Home />, handle: { title: "컴프야펀 | 홈" } },
-      { path: "login", element: <Login /> },
       { path: "notice", element: <Notice /> },
       { path: "notice/:id", element: <FunNoticePage /> },
       { path: "simulate", element: <SkillSimulator />, handle: { title: "컴프야펀 | 스킬 변경 시뮬레이터" } },

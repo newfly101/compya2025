@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { requestUserHealthCheck } from "@/store/modules/auth/thunks.js";
+import { requestUserHealthCheck } from "@/domains/auth/store/thunks.js";
 
 const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();
