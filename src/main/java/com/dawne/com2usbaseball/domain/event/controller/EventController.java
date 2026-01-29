@@ -26,12 +26,12 @@ public class EventController {
         return service.createEvent(request.toEntity());
     }
 
-    @PostMapping("/{id}")
+    @PatchMapping("/{id}")
     public UpdateEventResponse updateExternalEvent(@RequestBody ChangeEventRequest request, @PathVariable Long id) {
         return service.updateEvent(request.toEntity(id));
     }
 
-    @PostMapping("/{id}/visible")
+    @PatchMapping("/{id}/visible")
     public UpdateEventResponse updateExternalEventVisible(@PathVariable Long id, @RequestBody ChangeEventVisibleRequest request) {
         return service.updateEventVisible(id, request.visible());
     }
