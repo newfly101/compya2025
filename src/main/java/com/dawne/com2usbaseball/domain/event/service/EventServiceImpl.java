@@ -7,6 +7,8 @@ import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
 import com.dawne.com2usbaseball.domain.event.repository.EventRepository;
 import com.dawne.com2usbaseball.domain.event.service.support.EventListMaker;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value="externalEvents")
     public EventListResponse getEventListsByExternal() {
         List<EventEntity> eventEntity = repository.selectCafeEvents();
 
@@ -29,6 +32,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @CacheEvict(value="externalEvents", allEntries = true)
     public InsertEventResponse createEvent(EventEntity event) {
         boolean success = repository.insertCafeEvent(event);
 
@@ -40,6 +44,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @CacheEvict(value="externalEvents", allEntries = true)
     public UpdateEventResponse updateEvent(EventEntity event) {
         boolean success = repository.updateCafeEvent(event);
         if (!success) {
@@ -50,6 +55,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @CacheEvict(value="externalEvents", allEntries = true)
     public UpdateEventResponse updateEventVisible(Long id, boolean visible) {
         boolean success = repository.updateCafeEventVisible(id, visible);
         if (!success) {
