@@ -13,7 +13,7 @@
            expire_at,
            image_url,
            external_link,
-           is_visible,
+           is_visible AS visible,
            created_at,
            updated_at
         FROM events
