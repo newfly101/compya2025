@@ -1,0 +1,134 @@
+@use "@/styles/variables/colors" as *;
+
+.container {
+  width: 100%;
+  padding: 2.4rem 1.6rem;
+  color: $text-primary;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 2.2rem;
+  }
+
+  button {
+    background: $primary-bg;
+    color: $primary-text;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0.4rem;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+}
+
+.card {
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+  padding: 1.6rem;
+  margin-bottom: 2rem;
+
+  h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.2rem;
+    color: $text-secondary;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(200px, 1fr));
+  gap: 1.2rem;
+
+  div {
+    background: $surface1;
+    border: 1px solid $border;
+    padding: 1rem;
+    border-radius: 0.6rem;
+    font-size: 1.4rem;
+
+    span {
+      display: block;
+      color: $text-muted;
+      font-size: 1.2rem;
+      margin-bottom: 0.4rem;
+    }
+  }
+}
+
+.controlRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-bottom: 1.2rem;
+
+  label {
+    font-size: 1.3rem;
+    color: $text-secondary;
+  }
+
+  select,
+  textarea {
+    background: $surface1;
+    border: 1px solid $border;
+    color: $text-primary;
+    padding: 0.8rem;
+    border-radius: 0.6rem;
+    font-size: 1.4rem;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+}
+
+.actions {
+  margin-top: 1.6rem;
+  display: flex;
+  justify-content: flex-end;
+
+  button {
+    background: $primary;
+    color: $primary-text;
+    padding: 0.8rem 2rem;
+    border-radius: 0.6rem;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+}
+
+.logList {
+  list-style: none;
+  padding: 0;
+
+  li {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid $border;
+    font-size: 1.4rem;
+
+    span {
+      margin-right: 1.2rem;
+      color: $text-muted;
+      font-size: 1.2rem;
+    }
+  }
+}

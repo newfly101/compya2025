@@ -1,0 +1,90 @@
+@use "@/styles/variables/colors" as *;
+
+.container {
+  width: 100%;
+  padding: 2.4rem 1.6rem;
+  color: $text-primary;
+}
+
+h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 2.4rem;
+}
+
+.section {
+  margin-bottom: 3.2rem;
+
+  h2 {
+    font-size: 1.6rem;
+    margin-bottom: 1.6rem;
+    color: $text-secondary;
+  }
+}
+
+/* 카드 그리드 */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.6rem;
+}
+
+.card {
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+
+  strong {
+    font-size: 2.4rem;
+    font-weight: 700;
+  }
+
+  p {
+    font-size: 1.3rem;
+    color: $text-muted;
+  }
+}
+
+.label {
+  font-size: 1.3rem;
+  color: $text-secondary;
+}
+
+/* 상태 색상 */
+.success {
+  color: $success;
+}
+
+.warning {
+  color: $warning;
+}
+
+.error {
+  color: $error;
+}
+
+/* 빠른 이동 */
+.quickActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+
+  button {
+    background: $primary-bg;
+    color: $primary-text;
+    border: none;
+    padding: 0.8rem 1.6rem;
+    border-radius: 0.6rem;
+    font-size: 1.4rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+}

@@ -1,0 +1,72 @@
+@use "@/styles/variables/colors" as *;
+
+.wrapper {
+  width: 100%;
+}
+
+.create {
+  margin-bottom: 1.6rem;
+  background: $primary-bg;
+  color: $primary-text;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+
+  &:hover {
+    background: $primary-hover;
+  }
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  font-size: 1.4rem;
+
+  th,
+  td {
+    padding: 1.2rem 1rem;
+    border-bottom: 1px solid $border;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  th {
+    background: $surface3;
+    color: $text-secondary;
+    font-weight: 600;
+  }
+
+  tr:hover {
+    background: $surface3;
+  }
+
+  button {
+    margin-right: 0.4rem;
+    padding: 0.4rem 0.8rem;
+    font-size: 1.2rem;
+    border-radius: 0.4rem;
+    border: none;
+    background: $primary-bg;
+    color: $primary-text;
+    cursor: pointer;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+}
+
+.danger {
+  background: $error-bg !important;
+  color: $error !important;
+
+  &:hover {
+    background: rgba($error, 0.2) !important;
+  }
+}
