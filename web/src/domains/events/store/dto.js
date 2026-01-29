@@ -3,8 +3,8 @@
  * @param {Object} state
  * @param {string} state.title
  * @param {string} state.eventSource
- * @param {string|Date} state.startDate
- * @param {string|Date} state.endDate
+ * @param {string|Date} state.startAt
+ * @param {string|Date} state.expireAt
  * @param {string} state.imageUrl
  * @param {string} state.externalLink
  * @param {boolean} state.visible
@@ -22,8 +22,8 @@
 export const createEventDTO = (state) => ({
   title: state.title,
   eventSource: state.eventSource,
-  startAt: state.startDate,
-  expireAt: state.endDate,
+  startAt: state.startAt,
+  expireAt: state.expireAt,
   imageUrl: state.imageUrl,
   externalLink: state.externalLink,
   visible: state.visible,

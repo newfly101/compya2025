@@ -1,5 +1,5 @@
 /**
- * admin index;
+ * events index;
  */
 
 export * from "./slices.js";

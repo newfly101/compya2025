@@ -1,5 +1,5 @@
 import { API } from "@/store/api/APIConfig.js";
-import { EVENTS } from "@/domains/admin/store/endpoints.js";
+import { EVENTS } from "@/domains/events/store/endpoints.js";
 
 /**
  * EVENTS API

@@ -3,7 +3,7 @@ import {
   requestGetExternalEventList,
   requestInsertNewEvent,
   requestUpdateExternalEvent, requestUpdateExternalEventVisible,
-} from "@/domains/admin/store/thunks.js";
+} from "@/domains/events/store/thunks.js";
 
 const initialState  = {
   events: [],
@@ -26,7 +26,7 @@ const eventsSlice = createSlice({
       })
       .addCase(requestGetExternalEventList.fulfilled, (state, action) => {
         state.loading = false;
-        state.events = action.payload;
+        state.events = action.payload.events;
       })
       .addCase(requestGetExternalEventList.rejected, (state, action) => {
         state.loading = false;
@@ -42,7 +42,7 @@ const eventsSlice = createSlice({
       })
       .addCase(requestInsertNewEvent.fulfilled, (state, action) => {
         state.loading = false;
-        state.events.unshift(action.payload);
+        state.events.push(action.payload);
       })
       .addCase(requestInsertNewEvent.rejected, (state, action) => {
         state.loading = false;

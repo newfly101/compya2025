@@ -4,9 +4,9 @@ import {
   fetchInsertNewEvent,
   fetchUpdateExternalEvent,
   fetchUpdateExternalEventVisible,
-} from "@/domains/admin/store/api.js";
-import { EVENT_ACTIONS } from "@/domains/admin/store/endpoints.js";
-import { createEventDTO, updateEventDTO, updateEventVisibleDTO } from "@/domains/admin/store/dto.js";
+} from "@/domains/events/store/api.js";
+import { EVENT_ACTIONS } from "@/domains/events/store";
+import { createEventDTO, updateEventDTO, updateEventVisibleDTO } from "@/domains/events/store";
 
 export const requestGetExternalEventList = createAsyncThunk(
   EVENT_ACTIONS.GET_EVENT_LISTS, async (_ , { dispatch, getState, rejectWithValue }) => {
@@ -24,10 +24,14 @@ export const requestGetExternalEventList = createAsyncThunk(
 export const requestInsertNewEvent = createAsyncThunk(
   EVENT_ACTIONS.CREATE, async (event , { dispatch, getState, rejectWithValue }) => {
     try {
-      const data = await fetchInsertNewEvent(createEventDTO(event));
-      console.log(`Event List : ` , data);
+      console.log(`new Event : ` , event);
+      const {success, message, eventId } = await fetchInsertNewEvent(createEventDTO(event));
+      console.log(`Event List : ` , success, message, eventId);
 
-      return data;
+      return {
+        ...event,
+        id: eventId
+      };
     } catch (error) {
       return rejectWithValue(error.message);
     }
