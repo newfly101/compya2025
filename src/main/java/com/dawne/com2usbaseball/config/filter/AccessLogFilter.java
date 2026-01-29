@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.config.filter;
 
-import com.dawne.com2usbaseball.statistic.ClientInfoExtractor;
+import com.dawne.com2usbaseball.common.util.ClientInfoExtractor;
 import io.micrometer.common.lang.NonNull;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.FilterChain;

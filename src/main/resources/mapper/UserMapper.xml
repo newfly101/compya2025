@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dawne.com2usbaseball.repository.mapper.UserMapper">
+<mapper namespace="com.dawne.com2usbaseball.domain.oauth.repository.mapper.UserMapper">
 
-    <select id="selectUserByProvider" resultType="com.dawne.com2usbaseball.entity.UserEntity" parameterType="String">
+    <select id="selectUserByProvider" resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity" parameterType="String">
         SELECT *
         FROM users
         WHERE provider = #{provider}
@@ -52,7 +52,7 @@
         VALUES (#{userId}, 'USER', 'ACTIVE', NOW(), NOW())
     </insert>
 
-    <select id="selectUserById" resultType="com.dawne.com2usbaseball.entity.UserEntity">
+    <select id="selectUserById" resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity">
         SELECT id,
                provider,
                provider_id         AS providerId,
@@ -67,7 +67,7 @@
         WHERE id = #{userId}
     </select>
 
-    <select id="selectUserRoleByUserId" resultType="com.dawne.com2usbaseball.entity.UserRoleEntity">
+    <select id="selectUserRoleByUserId" resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserRoleEntity">
         SELECT
             user_id     AS userId,
             role,

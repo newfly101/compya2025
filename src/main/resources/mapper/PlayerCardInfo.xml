@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.dawne.com2usbaseball.repository.mapper.PlayerCardMapper">
+<mapper namespace="com.dawne.com2usbaseball.domain.player.repository.mapper.PlayerCardMapper">
 
-    <select id="selectPlayersByPosition" resultType="com.dawne.com2usbaseball.entity.PlayerCardEntity" parameterType="com.dawne.com2usbaseball.enums.Target">
+    <select id="selectPlayersByPosition" resultType="com.dawne.com2usbaseball.domain.player.entity.PlayerCardEntity" parameterType="com.dawne.com2usbaseball.common.enums.Target">
         SELECT
             id,
             card_code     AS cardCode,

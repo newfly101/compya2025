@@ -1,7 +1,7 @@
 package com.dawne.com2usbaseball.config;
 
 import com.dawne.com2usbaseball.config.filter.AccessLogFilter;
-import com.dawne.com2usbaseball.config.filter.JwtAuthFilter;
+import com.dawne.com2usbaseball.security.filter.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
