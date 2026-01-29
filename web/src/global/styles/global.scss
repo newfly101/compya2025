@@ -1,7 +1,6 @@
 @use "reset";
-@use "variablesolors";
-@use "variablespacing";
-@use "variablesindex";
+@use "variables/colors";
+@use "variables/spacing";
 @use "mixins/flex";
 @use "mixins/media";
 @use "mixins/table";

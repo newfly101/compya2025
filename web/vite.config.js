@@ -27,7 +27,7 @@ export default defineConfig({
       scss: {
         includePaths: [path.resolve(__dirname, "src")],
         additionalData: `
-          @use "@/styles/variables/colors.scss" as *;
+          @use "@/global/styles/variables/colors.scss" as *;
         `,
       },
     },
