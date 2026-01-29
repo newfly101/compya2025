@@ -76,12 +76,9 @@
 
     <update id="updateEventVisible">
         UPDATE events
-        <set>
-            <if test="visible != null">
-                is_visible = #{visible},
-            </if>
-        </set>
-        updated_at = NOW()
+        SET
+            is_visible = #{visible},
+            updated_at = NOW()
         WHERE id = #{id}
     </update>
 </mapper>
