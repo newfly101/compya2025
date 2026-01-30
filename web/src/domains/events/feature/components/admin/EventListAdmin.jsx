@@ -45,7 +45,7 @@ const EventListAdmin = () => {
         )}
 
         {hasEvents && events.map(e => {
-          const isExpired = new Date(e.expireAt) > nowDate;
+          const isExpired = new Date(e.expireAt) <= nowDate;
           return (
             <tr key={e.id}>
               <td>{e.id}</td>
@@ -53,7 +53,7 @@ const EventListAdmin = () => {
               <td><img src={e.imageUrl} alt={`event-${e.id}`} className={styles.thumbnail} /></td>
               <td><a href={e.externalLink} target="_blank" rel="noreferrer"> 카페링크 </a></td>
               <td>{e.startAt} ~ {e.expireAt}</td>
-              <td>{isExpired ? "진행중" : "종료"}</td>
+              <td>{!isExpired ? "진행중" : "종료"}</td>
               <td><EventVisibilityToggle visible={e.visible} onChange={handleVisibleChange(e.id)}/></td>
               <td className={styles.actions}>
                 <button onClick={() => setEditEvent(e)}>수정</button>
