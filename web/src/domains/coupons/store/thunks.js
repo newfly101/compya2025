@@ -13,6 +13,12 @@ export const requestGetCouponList = createAsyncThunk(
     try {
       const data = await fetchGetCouponList();
       console.log("requestGetCouponList : ", data);
+      if (data.length < 0) {
+        return {
+          coupons: [],
+          totalCount: 0
+        }
+      }
 
       return data;
     } catch (error) {
