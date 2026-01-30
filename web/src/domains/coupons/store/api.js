@@ -7,6 +7,7 @@ import { COUPONS } from "@/domains/coupons/store/endpoints.js";
 
 export const fetchGetCouponList = async () => {
   const { data } = await API.get(`${COUPONS.GET_COUPONS}`);
+  return data;
 };
 export const fetchInsertCoupon = async (coupon) => {
   const { data } = await API.post(`${COUPONS.CREATE_COUPONS}`, coupon);
