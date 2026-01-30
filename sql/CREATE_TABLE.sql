@@ -260,7 +260,6 @@ CREATE TABLE coupons
     title       VARCHAR(255) NOT NULL,              -- 플래티넘 코치팩 1장
     detail      VARCHAR(500),                       -- 40만 달성 쿠폰
 
-    start_at    DATETIME     NOT NULL,              -- 노출 시작 (보통 NOW)
     expire_at   DATETIME     NOT NULL,              -- 만료일
 
     is_visible  BOOLEAN      NOT NULL DEFAULT true, -- 관리자 노출 제어
@@ -268,8 +267,8 @@ CREATE TABLE coupons
     created_at  TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CHECK (expire_at > start_at),
+    CHECK (expire_at > created_at),
 
-    INDEX idx_coupons_visible_period (is_visible, start_at, expire_at),
+    INDEX idx_coupons_visible_period (is_visible, expire_at),
     INDEX idx_coupons_expire_at (expire_at)
 );
