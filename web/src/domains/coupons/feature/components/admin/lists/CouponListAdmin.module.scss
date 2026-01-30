@@ -31,6 +31,8 @@
     padding: 1.2rem 1rem;
     border-bottom: 1px solid $border;
     white-space: nowrap;
+    text-align: center;
+    vertical-align: middle;
   }
 
   th {
@@ -58,7 +60,57 @@
   }
 }
 
-.danger {
-  background: $error-bg !important;
-  color: $error !important;
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+
+  & > button {
+    padding: 0.4rem 0.8rem;
+    font-size: 1.2rem;
+    border-radius: 0.4rem;
+    border: none;
+    background: $primary-bg;
+    color: $primary-text;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 4.8rem;
+    text-align: center;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+
+  .danger {
+    background: $warning-bg;
+    color: $warning;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}
+
+.thumbnail {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: $text-secondary;
+}
+
+.detail {
+  //display: inline-block;
+  //text-align: left;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
 }
