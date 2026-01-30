@@ -10,7 +10,6 @@
            coupon_code,
            title,
            detail,
-           start_at,
            expire_at,
            is_visible AS visible,
            created_at,
@@ -23,7 +22,6 @@
             coupon_code,
             title,
             detail,
-            start_at,
             expire_at,
             is_visible,
             created_at,
@@ -32,7 +30,6 @@
             #{couponCode},
             #{title},
             #{detail},
-            #{startAt},
             #{expireAt},
             #{visible},
             NOW(),
@@ -51,9 +48,6 @@
             </if>
             <if test="detail != null">
                 detail = #{detail},
-            </if>
-            <if test="startAt != null">
-                start_at = #{startAt},
             </if>
             <if test="expireAt != null">
                 expire_at = #{expireAt},

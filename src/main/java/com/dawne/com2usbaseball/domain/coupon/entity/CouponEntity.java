@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,8 +15,6 @@ public class CouponEntity {
     String couponCode;
     String title;
     String detail;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    LocalDate startAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     LocalDateTime expireAt;
     boolean visible;
