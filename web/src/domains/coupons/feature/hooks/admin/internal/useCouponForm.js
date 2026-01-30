@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { parseDateInput } from "@/global/utils/datetime/parseDateInput.js";
+import React from "react";
 import { formatDateTyping } from "@/global/utils/datetime/formatDateTyping.js";
+import { parseDateInput } from "@/global/utils/datetime/parseDateInput.js";
 import { validateModalDate } from "@/global/utils/datetime/validateModalDate.js";
 
-export const useEventForm = (initialForm) => {
-  const [form, setForm] = useState(initialForm);
+export const useCouponForm = (initialForm) => {
+  const [form, setForm] = React.useState(initialForm);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
-  };
+  }
 
   const handleDateTyping = (e) => {
     const { name, value } = e.target;
@@ -22,8 +22,7 @@ export const useEventForm = (initialForm) => {
   };
 
   const validate = () =>
-    validateModalDate.event({
-      startAt: form.startAt,
+    validateModalDate.coupon({
       expireAt: form.expireAt,
     });
 
@@ -35,4 +34,4 @@ export const useEventForm = (initialForm) => {
     handleDateBlur,
     validate,
   };
-};
+}
