@@ -267,8 +267,6 @@ CREATE TABLE coupons
     created_at  TIMESTAMP             DEFAULT CURRENT_TIMESTAMP,
     updated_at  TIMESTAMP             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    CHECK (expire_at > created_at),
-
     INDEX idx_coupons_visible_period (is_visible, expire_at),
     INDEX idx_coupons_expire_at (expire_at)
 );
