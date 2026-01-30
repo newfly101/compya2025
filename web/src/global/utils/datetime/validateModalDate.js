@@ -11,7 +11,10 @@ const toDate = (value) => {
   return new Date(y, m - 1, d, hh, mm);
 };
 
-export const validateEventDate = ({ startAt, expireAt }) => {
+/* =========================
+ * Event Date Validator
+ * ========================= */
+const validateEventDate = ({ startAt, expireAt }) => {
   if (!startAt || !expireAt) {
     return {
       valid: false,
@@ -47,4 +50,41 @@ export const validateEventDate = ({ startAt, expireAt }) => {
   }
 
   return { valid: true };
+};
+
+/* =========================
+ * Coupon Date Validator
+ * ========================= */
+const validateCouponDate = ({ expireAt }) => {
+  if (!expireAt) {
+    return {
+      valid: false,
+      message: "만료일을 입력해야 합니다.",
+    };
+  }
+
+  if (!DATETIME_REGEX.test(expireAt)) {
+    return {
+      valid: false,
+      message: "만료일 형식이 올바르지 않습니다.",
+    };
+  }
+
+  const end = toDate(expireAt);
+  if (!end) {
+    return {
+      valid: false,
+      message: "유효한 만료일이 아닙니다.",
+    };
+  }
+
+  return { valid: true };
+};
+
+/* =========================
+ * ✅ 단일 export 네임스페이스
+ * ========================= */
+export const validateModalDate = {
+  event: validateEventDate,
+  coupon: validateCouponDate,
 };
