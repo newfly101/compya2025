@@ -8,7 +8,7 @@ import EventEditModal from "@/domains/events/feature/components/admin/modal/Even
 import AdminActionButton from "@/global/layout/adminLayout/AdminActionButton.jsx";
 
 const EventListAdmin = () => {
-  const { events, isExpired, changeVisible } = useEventListAdmin();
+  const { events, changeVisible } = useEventListAdmin();
   const [open, setOpen] = useState(false);
   const [editEvent, setEditEvent] = useState(false);
 
@@ -20,7 +20,6 @@ const EventListAdmin = () => {
         tbody={
           <EventTableBody
             events={events}
-            isExpired={isExpired}
             changeVisible={changeVisible}
             setEditEvent={setEditEvent}
           />

@@ -1,12 +1,12 @@
 import React from "react";
 import styles from "./VisibleToggle.module.scss";
 
-const VisibleToggle = ({ value, onChange, disabled = false }) => {
+const VisibleToggle = ({ visible, onChange, disabled = false }) => {
   return (
     <button
       type="button"
-      className={`${styles.switch} ${value ? styles.on : styles.off}`}
-      onClick={() => onChange?.(!value)}
+      className={`${styles.switch} ${visible ? styles.on : styles.off}`}
+      onClick={() => onChange?.(!visible)}
       disabled={disabled}
     >
       <span className={styles.knob} />

@@ -7,7 +7,7 @@ import CouponTableBody from "@/domains/coupons/feature/components/admin/table/Co
 import AdminActionButton from "@/global/layout/adminLayout/AdminActionButton.jsx";
 
 const CouponListAdmin = () => {
-  const { coupons, isExpired, changeVisible } = useCouponListAdmin();
+  const { coupons, changeVisible } = useCouponListAdmin();
   const [open, setOpen] = React.useState(false);
   const [editCoupon, setEditCoupon] = React.useState(false);
 
@@ -20,7 +20,6 @@ const CouponListAdmin = () => {
         tbody={
           <CouponTableBody
             coupons={coupons}
-            isExpired={isExpired}
             changeVisible={changeVisible}
             setEditCoupon={setEditCoupon}
           />
