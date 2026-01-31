@@ -7,12 +7,58 @@
 ========================= */
 .filterBar {
   display: flex;
-  gap: 1.2rem;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 1.6rem;
   margin-bottom: 1.6rem;
-  padding: 1.2rem;
+  padding: 1.2rem 1.4rem;
+
   background: $surface2;
   border: 1px solid $border;
   border-radius: 0.8rem;
+
+  .filterGroup {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .actionGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    white-space: nowrap;
+  }
+
+  input, select {
+    background: $surface1;
+    border: 1px solid $border;
+    color: $text-primary;
+
+    padding: 0.8rem 1rem;
+    font-size: 1.4rem;
+    border-radius: 0.6rem;
+
+    transition: border-color 0.15s ease, background 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      background: $surface2;
+    }
+  }
+
+  input {
+    width: 24rem;
+  }
+
+  select {
+    min-width: 13rem;
+    cursor: pointer;
+  }
+
 }
 /* =========================
    테이블 영역
@@ -75,7 +121,6 @@
    action Button 영역
 ========================= */
 .primary {
-  margin-bottom: 1.6rem;
   background: $primary-bg;
   color: $primary-text;
   border: none;
