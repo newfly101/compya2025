@@ -25,9 +25,11 @@ const EventTableBody = ({ events, isExpired, setEditEvent, changeVisible }) => {
         <td>{e.startAt} ~ {e.expireAt}</td>
         <td>{!isExpired ? "진행중" : "종료"}</td>
         <td><EventVisibilityToggle visible={e.visible} onChange={changeVisible(e.id)} /></td>
-        <td className={styles.actions}>
-          <button onClick={() => setEditEvent(e)}>수정</button>
-          <button className={styles.danger}>비공개</button>
+        <td>
+          <div className={styles.actions}>
+            <button onClick={() => setEditEvent(e)}>수정</button>
+            <button className={styles.danger}>비공개</button>
+          </div>
         </td>
       </tr>
     ))
