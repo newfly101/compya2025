@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { requestGetCouponList, requestUpdateCouponVisible } from "@/domains/coupons/store/index.js";
 import { VisibleToggleHandler } from "@/global/handler/VisibleToggleHandler.js";
 
-export const useCouponListAdmin = () => {
+export const useCouponAdminList = () => {
   const dispatch = useDispatch();
   const { coupons, loading, error } = useSelector((state) => state.coupon);
 

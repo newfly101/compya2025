@@ -1,25 +1,34 @@
 import React from "react";
 import CouponCreateModal from "@/domains/coupons/feature/components/admin/modal/CouponCreateModal.jsx";
-import { useCouponListAdmin } from "@/domains/coupons/feature/hooks/admin/useCouponListAdmin.js";
+import { useCouponAdminList } from "@/domains/coupons/feature/hooks/admin/useCouponAdminList.js";
 import AdminTableLayout from "@/global/layout/adminLayout/AdminTableLayout.jsx";
 import CouponTableHead from "@/domains/coupons/feature/components/admin/table/CouponTableHead.jsx";
 import CouponTableBody from "@/domains/coupons/feature/components/admin/table/CouponTableBody.jsx";
-import AdminActionButton from "@/global/layout/adminLayout/AdminActionButton.jsx";
+import AdminFilterBar from "@/global/layout/adminLayout/AdminFilterBar.jsx";
+import { useCouponAdminFilter } from "@/domains/coupons/feature/hooks/admin/useCouponAdminFilter.js";
 
 const CouponListAdmin = () => {
-  const { coupons, changeVisible } = useCouponListAdmin();
+  const { coupons, changeVisible } = useCouponAdminList();
+  const { filters, setFilters, filterUnits, filteredData: filteredCoupons }
+    = useCouponAdminFilter(coupons);
+
   const [open, setOpen] = React.useState(false);
   const [editCoupon, setEditCoupon] = React.useState(false);
-
 
   return (
     <>
       <AdminTableLayout
-        actions={<AdminActionButton onClick={() => setOpen(true)} actionTitle={"쿠폰 생성"} /> }
+        filters={<AdminFilterBar
+          title={"쿠폰"}
+          filters={filters}
+          setFilters={setFilters}
+          filterUnits={filterUnits}
+          action={() => setOpen(true)}
+        />}
         head={<CouponTableHead />}
         tbody={
           <CouponTableBody
-            coupons={coupons}
+            coupons={filteredCoupons}
             changeVisible={changeVisible}
             setEditCoupon={setEditCoupon}
           />
