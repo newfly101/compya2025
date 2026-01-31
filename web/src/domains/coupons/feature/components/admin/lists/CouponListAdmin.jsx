@@ -6,6 +6,7 @@ import CouponTableHead from "@/domains/coupons/feature/components/admin/table/Co
 import CouponTableBody from "@/domains/coupons/feature/components/admin/table/CouponTableBody.jsx";
 import AdminFilterBar from "@/global/layout/adminLayout/AdminFilterBar.jsx";
 import { useCouponAdminFilter } from "@/domains/coupons/feature/hooks/admin/useCouponAdminFilter.js";
+import CouponEditModal from "@/domains/coupons/feature/components/admin/modal/CouponEditModal.jsx";
 
 const CouponListAdmin = () => {
   const { coupons, changeVisible } = useCouponAdminList();
@@ -35,7 +36,7 @@ const CouponListAdmin = () => {
         }
       />
       {open && <CouponCreateModal onClose={() => setOpen(false)} />}
-      {/*{editCoupon && <CouponEditModal coupons={coupons} onClose={() => setEditCoupon(false)} />}*/}
+      {editCoupon && <CouponEditModal coupon={editCoupon} onClose={() => setEditCoupon(false)} />}
     </>
   );
 };
