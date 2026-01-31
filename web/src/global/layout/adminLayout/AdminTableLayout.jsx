@@ -1,22 +1,23 @@
 import React from "react";
 import styles from "./AdminTableLayout.module.scss";
 
-const AdminTableLayout = ({actions=null, filters, head, body }) => {
+const AdminTableLayout = ({actions=null, filters, head, tbody }) => {
   return (
     <section className={styles.wrapper}>
       {actions}
-      <div className={styles.filterBar}>
-        {filters}
-      </div>
+      {filters && (
+        <div className={styles.filterBar}>
+          {filters}
+        </div>
+      )}
       <table className={styles.table}>
         <thead>
-          {head}
+        {head}
         </thead>
         <tbody>
-          {body}
+          {tbody}
         </tbody>
       </table>
-
     </section>
   );
 };
