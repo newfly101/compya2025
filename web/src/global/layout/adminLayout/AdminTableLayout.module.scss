@@ -1,0 +1,72 @@
+.wrapper {
+  width: 100%;
+}
+
+/* =========================
+   검색 / 필터 바
+========================= */
+.filterBar {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 1.6rem;
+  padding: 1.2rem;
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+}
+/* =========================
+   테이블 영역
+========================= */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  font-size: 1.4rem;
+
+  th, td {
+    padding: 1.2rem 1rem;
+    text-align: center;
+    font-weight: 600;
+    color: $text-secondary;
+    border-bottom: 1px solid $border;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  thead {
+    background: $surface3;
+
+    th {
+      background: $surface3;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: $surface3;
+      }
+    }
+  }
+
+  button {
+    background: $primary-bg;
+    color: $primary-text;
+    border: 1px solid transparent;
+    padding: 0.4rem 1rem;
+    border-radius: 0.4rem;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+}
