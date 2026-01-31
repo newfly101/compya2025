@@ -1,8 +1,8 @@
 import React from "react";
 import CouponListAdmin from "@/domains/coupons/feature/components/admin/lists/CouponListAdmin.jsx";
 
-const AdminCouponManagePage = () => {
+const AdminCouponPage = () => {
   return <CouponListAdmin />
 };
 
-export default AdminCouponManagePage;
+export default AdminCouponPage;

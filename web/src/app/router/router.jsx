@@ -10,7 +10,7 @@ import AdminNoticeManagePage from "@/domains/notices/feature/components/admin/Ad
 import AdminEventPage from "@/domains/events/page/admin/AdminEventPage.jsx";
 import AdminDashBoardPage from "@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx";
 import AdminLayout from "@/domains/admin/layout/AdminLayout.jsx";
-import AdminCouponManagePage from "@/domains/coupons/page/admin/AdminCouponManagePage.jsx";
+import AdminCouponPage from "@/domains/coupons/page/admin/AdminCouponPage.jsx";
 
 const UserProfile = lazy(() => import("@/domains/profile/page/UserProfile.jsx"));
 const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
@@ -69,7 +69,7 @@ const router = createBrowserRouter([
                 path: "content", element: <AdminContentPage />, children: [
                   { path: "event", element: <AdminEventPage />, handle: { title: "컴프야펀 | 어드민 | 이벤트 관리" } },
                   { path: "notice", element: <AdminNoticeManagePage />, handle: { title: "컴프야펀 | 어드민 | 공지 관리" } },
-                  { path: "coupon", element: <AdminCouponManagePage />, handle: { title: "컴프야펀 | 어드민 | 쿠폰 관리" } },
+                  { path: "coupon", element: <AdminCouponPage />, handle: { title: "컴프야펀 | 어드민 | 쿠폰 관리" } },
                 ],
               },
             ]
