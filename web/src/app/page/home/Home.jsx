@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import quizImg from "@/assets/quiz/quiz877.png";
 import EventSwiper from "@/domains/events/feature/components/EventSwiper/EventSwiper.jsx";
+import CouponSwiper from "@/domains/coupons/feature/components/couponSwiper/CouponSwiper.jsx";
 
 const CLUB_GUIDE_URL = "https://cafe.naver.com/com2usbaseball2015/1785997";
 
@@ -68,7 +69,7 @@ const Home = () => {
           <h2>🎁 최신 쿠폰</h2>
           <span><Link to="/notice?tab=coupons">전체 보기 →</Link></span>
         </div>
-        <CouponList data={coupons} limit={3} short={true} />
+        <CouponSwiper short={true} />
       </section>
 
     </div>

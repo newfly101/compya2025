@@ -1,10 +1,8 @@
 import { cafeNotice } from "@/data/CafeNotice.js";
-import coupons from "@/data/Coupon.js";
 import FunNoticeList from "@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx";
 import OfficialNoticeList from "@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx";
-import CouponList from "@/domains/coupons/feature/components/user/couponList/CouponList.jsx";
 import UserEventPage from "@/domains/events/page/user/UserEventPage.jsx";
-import UserEventList from "@/domains/events/feature/components/user/lists/UserEventList.jsx";
+import UserCouponPage from "@/domains/coupons/page/user/UserCouponPage.jsx";
 
 export const NOTICE_TABS = {
   "": {
@@ -20,15 +18,15 @@ export const NOTICE_TABS = {
     element: <OfficialNoticeList data={cafeNotice} />,
   },
   events: {
-    key: "event",
+    key: "events",
     label: "이벤트",
     title: "컴프야펀 | 이벤트 안내",
-    element: <UserEventList />,
+    element: <UserEventPage />,
   },
   coupons: {
     key: "coupons",
     label: "쿠폰",
     title: "컴프야펀 | 쿠폰 모아보기",
-    element: <CouponList data={coupons} />,
+    element: <UserCouponPage />
   },
 }

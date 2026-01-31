@@ -8,6 +8,13 @@ const AdminContentPage = () => {
       <h1>콘텐츠 관리</h1>
 
       <Outlet />
+    {/*
+
+    <AdminEventPage />
+    <AdminCouponPage />
+
+
+    */}
     </div>
   );
 };
