@@ -33,7 +33,7 @@ export const createSearchFilterUnit = ({
   /* =========================
    Filter UI
   ========================= */
-  UI: ({value, onChange, title}) => (
+  UI: ({value, onChange}) => (
     <input
       type="text"
       placeholder={placeholder}

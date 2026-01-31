@@ -14,5 +14,6 @@ export const useFilterPipline = (data, filterUnits) => {
     filters,
     setFilters,
     filteredData,
+    filterUnits
   };
 };
