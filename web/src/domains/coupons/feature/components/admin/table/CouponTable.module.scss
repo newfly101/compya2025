@@ -1,0 +1,38 @@
+/* THead */
+
+/* TBody */
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: $text-secondary;
+}
+
+.detail {
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+
+  & > button {
+    padding: 0.4rem 0.8rem;
+    font-size: 1.2rem;
+    border-radius: 0.4rem;
+    border: none;
+    background: $primary-bg;
+    color: $primary-text;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 4.8rem;
+    text-align: center;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+}
