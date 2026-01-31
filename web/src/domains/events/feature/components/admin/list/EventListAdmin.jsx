@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useEventListAdmin } from "@/domains/events/feature/index.js";
-import EventCreateModal from "@/domains/events/feature/components/user/modal/EventCreateModal.jsx";
+import EventCreateModal from "@/domains/events/feature/components/admin/modal/EventCreateModal.jsx";
 import AdminTableLayout from "@/global/layout/adminLayout/AdminTableLayout.jsx";
 import EventTableHead from "@/domains/events/feature/components/admin/table/EventTableHead.jsx";
 import EventTableBody from "@/domains/events/feature/components/admin/table/EventTableBody.jsx";
-import EventEditModal from "@/domains/events/feature/components/user/modal/EventEditModal.jsx";
+import EventEditModal from "@/domains/events/feature/components/admin/modal/EventEditModal.jsx";
 import AdminActionButton from "@/global/layout/adminLayout/AdminActionButton.jsx";
 
 const EventListAdmin = () => {
