@@ -70,3 +70,20 @@
     }
   }
 }
+
+/* =========================
+   action Button 영역
+========================= */
+.primary {
+  margin-bottom: 1.6rem;
+  background: $primary-bg;
+  color: $primary-text;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+
+  &:hover {
+    background: $primary-hover;
+  }
+}
