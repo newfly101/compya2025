@@ -1,15 +1,17 @@
-.create {
-  margin-bottom: 1.6rem;
-  background: $primary-bg;
-  color: $primary-text;
-  border: none;
-  padding: 0.8rem 1.6rem;
-  border-radius: 0.6rem;
-  cursor: pointer;
+/* THead */
 
-  &:hover {
-    background: $primary-hover;
-  }
+/* TBody */
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: $text-secondary;
+}
+
+.thumbnail {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
 }
 
 .actions {
@@ -43,17 +45,4 @@
       opacity: 0.85;
     }
   }
-}
-
-.thumbnail {
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-  border-radius: 4px;
-}
-
-.empty {
-  text-align: center;
-  padding: 2rem;
-  color: $text-secondary;
 }
