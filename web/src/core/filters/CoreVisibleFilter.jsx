@@ -3,8 +3,15 @@ import React from "react";
 /* =========================
    Filter Unit
 ========================= */
-export const visibleFilterUnit = {
-  key: "visible",
+export const createVisibleFilterUnit = ({
+  key = "visible",
+  labels = {
+    ALL: "전체 노출",
+    VISIBLE: "노출",
+    HIDDEN: "비노출"
+  },
+} = {}) => ({
+  key,
   initial: "ALL",
 
   /* =========================
@@ -21,9 +28,9 @@ export const visibleFilterUnit = {
   ========================= */
   UI: ({value, onChange}) => (
     <select value={value} onChange={(e) => onChange(e.target.value)}>
-      <option value="ALL">전체 노출</option>
-      <option value="VISIBLE">노출</option>
-      <option value="HIDDEN">비노출</option>
+      <option value="ALL">{labels.ALL}</option>
+      <option value="VISIBLE">{labels.VISIBLE}</option>
+      <option value="HIDDEN">{labels.HIDDEN}</option>
     </select>
   )
-};
+});

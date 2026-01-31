@@ -4,8 +4,15 @@ import { dateUtils } from "@/global/utils/datetime/dateUtils.js";
 /* =========================
    Filter Unit
 ========================= */
-export const statusFilterUnit = {
-  key: "status",
+export const createStatusFilterUnit = ({
+  key = "status",
+  labels = {
+    ALL: "전체 상태",
+    ACTIVE: "진행중",
+    EXPIRED: "종료"
+  },
+} = {}) => ({
+  key,
   initial: "ALL",
 
   /* =========================
@@ -22,9 +29,9 @@ export const statusFilterUnit = {
   ========================= */
   UI: ({ value, onChange }) => (
     <select value={value} onChange={(e) => onChange(e.target.value)}>
-      <option value="ALL">전체 상태</option>
-      <option value="ACTIVE">진행중</option>
-      <option value="EXPIRED">종료</option>
+      <option value="ALL">{labels.ALL}</option>
+      <option value="ACTIVE">{labels.ACTIVE}</option>
+      <option value="EXPIRED">{labels.EXPIRED}</option>
     </select>
   )
-};
+});

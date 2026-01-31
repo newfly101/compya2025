@@ -3,8 +3,16 @@ import React from "react";
 /* =========================
    Filter Unit
 ========================= */
-export const searchFilterUnit = {
-  key: "keyword",
+export const createSearchFilterUnit = ({
+   key = "keyword",
+
+   /** 검색 대상 필드 */
+   fields = ["title"],
+
+   /** placeholder 텍스트 */
+   placeholder = "검색",
+} = {}) => ({
+  key,
   initial: "",
 
   /* =========================
@@ -13,10 +21,12 @@ export const searchFilterUnit = {
   predicate: (value) => (item) => {
     if (!value) return true;
 
-    // 기본은 title 기준 (필요하면 확장)
-    return (
-      item.title &&
-      item.title.toLowerCase().includes(value.toLowerCase())
+    const lower = value.toLowerCase();
+
+    return fields.some(
+      (field) =>
+        item[field] &&
+        String(item[field]).toLowerCase().includes(lower)
     );
   },
 
@@ -26,9 +36,9 @@ export const searchFilterUnit = {
   UI: ({value, onChange, title}) => (
     <input
       type="text"
-      placeholder={`${title}명 검색`}
+      placeholder={placeholder}
       value={value}
       onChange={(e) => onChange(e.target.value)}
     />
   )
-};
+});

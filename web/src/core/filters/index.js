@@ -1,16 +1,16 @@
 // @/core/filters/index.js
 
-import { searchFilterUnit } from "@/core/filters/CoreSearchFilter.jsx";
-import { visibleFilterUnit } from "@/core/filters/CoreVisibleFilter.jsx";
-import { statusFilterUnit } from "@/core/filters/CoreStatusFilter.jsx";
+import { createSearchFilterUnit } from "@/core/filters/CoreSearchFilter.jsx";
+import { createVisibleFilterUnit } from "@/core/filters/CoreVisibleFilter.jsx";
+import { createStatusFilterUnit } from "@/core/filters/CoreStatusFilter.jsx";
 
 /* =========================
    Filter Units (Named Export)
 ========================= */
 export {
-  searchFilterUnit,
-  visibleFilterUnit,
-  statusFilterUnit,
+  createSearchFilterUnit,
+  createVisibleFilterUnit,
+  createStatusFilterUnit,
 };
 
 /* =========================
@@ -25,3 +25,7 @@ export const applyFilters = (data, filters, specs) => {
 
 export const buildInitialFilters = (units) =>
   Object.fromEntries(units.map(u => [u.key, u.initial]));
+
+
+export const createFilterPipeline = (...factories) =>
+  factories.map(f => (typeof f === "function" ? f() : f));
