@@ -1,6 +1,4 @@
 import styles from "@/app/page/home/Home.module.scss";
-import coupons from "@/data/Coupon.js";
-import CouponList from "@/domains/coupons/feature/components/user/couponList/CouponList.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import quizImg from "@/assets/quiz/quiz877.png";

@@ -8,18 +8,6 @@ import { dateUtils } from "@/global/utils/datetime/dateUtils.js";
 const CouponList = ({ limit = null, short = false }) => {
   const { coupons, activeCoupons, expireCoupons, shortCoupons } = useCouponListUser();
 
-  // const finalList = useMemo(() => {
-  //   const sorted = sortCoupons(data);
-  //
-  //   const filtered = short
-  //     ? sorted.filter(
-  //       (item) => parseDate(item.expireDate) >= now
-  //     )
-  //     : sorted;
-  //
-  //   return limit ? filtered.slice(0, limit) : filtered;
-  // }, [data, limit, short]);
-
   if (coupons.length === 0) return null;
 
   return (
