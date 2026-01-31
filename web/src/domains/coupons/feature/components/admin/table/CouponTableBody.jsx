@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./CouponTable.module.scss";
-import EventVisibilityToggle from "@/domains/events/feature/components/user/support/EventVisibilityToggle.jsx";
 import { EVENT_TABLE } from "@/domains/events/config/eventTable.config.js";
+import VisibleToggle from "@/domains/admin/feature/components/toggle/VisibleToggle.jsx";
 
 const CouponTableBody = ({ coupons, isExpired, changeVisible, setEditCoupon }) => {
 
@@ -28,7 +28,7 @@ const CouponTableBody = ({ coupons, isExpired, changeVisible, setEditCoupon }) =
         </td>
         <td>{c.expireAt}</td>
         <td>{!isExpired ? "사용 가능" : "만료"}</td>
-        <td><EventVisibilityToggle visible={c.visible} onChange={changeVisible(c.id)} /></td>
+        <td><VisibleToggle visible={c.visible} onChange={changeVisible(c.id)} /></td>
         <td>
           <div className={styles.actions}>
             <button onClick={() => setEditCoupon(c)}>수정</button>

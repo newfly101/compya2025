@@ -1,7 +1,7 @@
 import styles from "./EventTable.module.scss";
-import EventVisibilityToggle from "@/domains/events/feature/components/user/support/EventVisibilityToggle.jsx";
 import React from "react";
 import { EVENT_TABLE } from "@/domains/events/config/eventTable.config.js";
+import VisibleToggle from "@/domains/admin/feature/components/toggle/VisibleToggle.jsx";
 
 const EventTableBody = ({ events, isExpired, setEditEvent, changeVisible }) => {
 
@@ -24,7 +24,7 @@ const EventTableBody = ({ events, isExpired, setEditEvent, changeVisible }) => {
         <td><a href={e.externalLink} target="_blank" rel="noreferrer"> 카페링크 </a></td>
         <td>{e.startAt} ~ {e.expireAt}</td>
         <td>{!isExpired ? "진행중" : "종료"}</td>
-        <td><EventVisibilityToggle visible={e.visible} onChange={changeVisible(e.id)} /></td>
+        <td><VisibleToggle visible={e.visible} onChange={changeVisible(e.id)} /></td>
         <td>
           <div className={styles.actions}>
             <button onClick={() => setEditEvent(e)}>수정</button>
