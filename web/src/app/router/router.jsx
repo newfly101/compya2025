@@ -7,7 +7,7 @@ import AdminUserManagePage from "@/domains/admin/pages/user/AdminUserManagePage.
 import AdminUserDetailPage from "@/domains/admin/pages/user/AdminUserDetailPage.jsx";
 import AdminContentPage from "@/domains/admin/pages/content/AdminContentPage.jsx";
 import AdminNoticeManagePage from "@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx";
-import AdminEventManagePage from "@/domains/events/page/admin/AdminEventManagePage.jsx";
+import AdminEventPage from "@/domains/events/page/admin/AdminEventPage.jsx";
 import AdminDashBoardPage from "@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx";
 import AdminLayout from "@/domains/admin/layout/AdminLayout.jsx";
 import AdminCouponManagePage from "@/domains/coupons/page/admin/AdminCouponManagePage.jsx";
@@ -67,7 +67,7 @@ const router = createBrowserRouter([
               { path: "users/:userId", element: <AdminUserDetailPage />, handle: { title: "컴프야펀 | 어드민 | 유저 상세 관리" } },
               {
                 path: "content", element: <AdminContentPage />, children: [
-                  { path: "event", element: <AdminEventManagePage />, handle: { title: "컴프야펀 | 어드민 | 이벤트 관리" } },
+                  { path: "event", element: <AdminEventPage />, handle: { title: "컴프야펀 | 어드민 | 이벤트 관리" } },
                   { path: "notice", element: <AdminNoticeManagePage />, handle: { title: "컴프야펀 | 어드민 | 공지 관리" } },
                   { path: "coupon", element: <AdminCouponManagePage />, handle: { title: "컴프야펀 | 어드민 | 쿠폰 관리" } },
                 ],
