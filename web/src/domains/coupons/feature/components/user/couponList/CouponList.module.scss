@@ -1,8 +1,57 @@
-.listGrid {
+.grid,
+.shortGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); // ★ 2열
-  gap: 2rem; // 카드 사이 간격
+  gap: 2rem;
+  padding: 2rem 0;
+  justify-items: center;
   width: 100%;
+
+  align-items: stretch;
+
+  /* PC 기본: 2열 */
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.shortGrid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 320px));
+}
+
+/* 태블릿 */
+@media (max-width: 950px) {
+  .grid,
+  .shortGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 모바일 */
+@media (max-width: 662px) {
+  .grid,
+  .shortGrid {
+    grid-template-columns: repeat(1, 1fr); // 🔥 2열 유지
+    gap: 1.4rem;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+}
+
+/* 모바일 */
+@media (max-width: 480px) {
+  .grid,
+  .shortGrid {
+    grid-template-columns: repeat(1, 1fr); // 🔥 2열 유지
+    gap: 1.4rem;
+  }
+
+  .card {
+    max-width: 100%;
+  }
+}
+
+
+.listGrid {
   margin-top: 2rem;
 }
 .shortListGrid {
@@ -16,7 +65,10 @@
 
 /* 모바일에서 1열 */
 @media (max-width: 768px) {
-  .listGrid {
+  .grid {
     grid-template-columns: 1fr;
+  }
+  .card {
+    max-width: 100%;
   }
 }

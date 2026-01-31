@@ -25,12 +25,17 @@ const CouponCard = ({ code, rewardTitle, rewardDetail, expireDate, disabled, sho
 
       <section className={styles.reward}>
         <h3 className={styles.title}>
-          {rewardTitle.split(" + ").map((item, idx) => (
-            <div key={idx}>{item}</div>
-          ))}
+            {rewardTitle}
         </h3>
         {short === false &&
-          <p className={styles.detail}>{rewardDetail}</p>
+          <p className={styles.detail}>
+            {rewardDetail.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         }
       </section>
 

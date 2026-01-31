@@ -4,6 +4,8 @@
   background: $surface2;
   border: 1px dashed rgba($primary, 0.4);
   border-radius: 1.2rem;
+  height: 100%;
+  width: 100%;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -57,6 +59,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+  flex: 1 1 auto;
 
   .title {
     font-size: 1.6rem;
@@ -76,9 +79,25 @@
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  margin-top: auto;
 }
 
 .infoText {
   font-size: 1.2rem;
   color: $text-muted;
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    max-width: 28rem; // 34rem
+    .header {
+      display: flex;
+      justify-content: left;
+      align-items: start;
+      gap: 0.8rem;
+      flex-direction: column;
+    }
+  }
 }
