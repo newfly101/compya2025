@@ -4,7 +4,7 @@ import { EVENT_TABLE } from "@/domains/events/config/eventTable.config.js";
 import VisibleToggle from "@/domains/admin/feature/components/toggle/VisibleToggle.jsx";
 import { dateUtils } from "@/global/utils/datetime/dateUtils.js";
 
-const EventTableBody = ({ events, isExpired, setEditEvent, changeVisible }) => {
+const EventTableBody = ({ events, setEditEvent, changeVisible }) => {
 
   if (events.length === 0) {
     return (
