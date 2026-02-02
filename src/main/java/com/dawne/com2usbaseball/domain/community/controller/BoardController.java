@@ -23,7 +23,7 @@ public class BoardController {
     public InsertBoardResponse createNewBoard(@RequestBody BoardChangeRequest request) {
         return boardService.createNewBoardItem(request.toEntity());
     }
-    @PostMapping("/admin/boards/{id}")
+    @PatchMapping("/admin/boards/{id}")
     public UpdateBoardResponse changeBoard(@RequestBody BoardChangeRequest request, @PathVariable Long id) {
         return boardService.updateBoardItem(request.toEntity(id));
     }
