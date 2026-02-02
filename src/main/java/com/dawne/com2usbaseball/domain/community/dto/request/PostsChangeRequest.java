@@ -1,8 +1,6 @@
 package com.dawne.com2usbaseball.domain.community.dto.request;
 
 import com.dawne.com2usbaseball.common.enums.user.UserGrant;
-import com.dawne.com2usbaseball.common.enums.user.UserType;
-import com.dawne.com2usbaseball.domain.community.entity.BoardsEntity;
 import com.dawne.com2usbaseball.domain.community.entity.PostsEntity;
 import com.dawne.com2usbaseball.domain.community.enums.PostsType;
 

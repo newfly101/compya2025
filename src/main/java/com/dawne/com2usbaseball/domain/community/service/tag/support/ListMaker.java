@@ -1,10 +1,7 @@
 package com.dawne.com2usbaseball.domain.community.service.tag.support;
 
-import com.dawne.com2usbaseball.domain.community.dto.response.board.BoardListResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.board.BoardResponse;
 import com.dawne.com2usbaseball.domain.community.dto.response.tag.TagListResponse;
 import com.dawne.com2usbaseball.domain.community.dto.response.tag.TagResponse;
-import com.dawne.com2usbaseball.domain.community.entity.BoardsEntity;
 import com.dawne.com2usbaseball.domain.community.entity.TagEntity;
 import org.springframework.stereotype.Component;
 

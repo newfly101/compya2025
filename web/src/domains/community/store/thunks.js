@@ -9,7 +9,7 @@ import { createBoardDTO } from "@/domains/community/store/dto.js";
 import { formatNow } from "@/global/utils/datetime/dateUtils.js";
 
 export const requestGetAllBoardLists = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.BOARD_LIST, async (_, { dispatch, getState, rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.BOARD_LIST, async (_, { rejectWithValue }) => {
     try {
       const data = await fetchGetAllBoardLists();
       console.log(`requestGetAllBoardLists : `, data);
@@ -21,7 +21,7 @@ export const requestGetAllBoardLists = createAsyncThunk(
   });
 
 export const requestInsertNewBoard = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.CREATE_BOARD, async (form, { dispatch, getState, rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.CREATE_BOARD, async (form, { rejectWithValue }) => {
     try {
       const { success, message, boardId } = await fetchInsertNewBoard(createBoardDTO(form));
       console.log(`requestInsertNewBoard: `, boardId);
@@ -39,7 +39,7 @@ export const requestInsertNewBoard = createAsyncThunk(
 );
 
 export const requestUpdateNewBoard = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.UPDATE_BOARD, async ({ id, form }, { dispatch, getState, rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.UPDATE_BOARD, async ({ id, form }, { rejectWithValue }) => {
     try {
       const { success, message, boardId } = await fetchUpdateBoard({ id: id, board: createBoardDTO(form) });
       console.log(`requestUpdateNewBoard: `, boardId);
@@ -55,7 +55,7 @@ export const requestUpdateNewBoard = createAsyncThunk(
 );
 
 export const requestGetAllPostLists = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.POST_LIST, async (_, { dispatch, getState, rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.POST_LIST, async (_, { rejectWithValue }) => {
     try {
       const { posts } = await fetchGetAllPostLists();
       console.log(`requestGetAllPostLists : `, posts);
@@ -67,7 +67,7 @@ export const requestGetAllPostLists = createAsyncThunk(
   });
 
 export const requestInsertNewPost = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.CREATE_POST, async (form, { dispatch, getState, rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.CREATE_POST, async (form, { rejectWithValue }) => {
     try {
       const { success, message, postId } = await fetchInsertNewPost(form);
       console.log(`requestInsertNewPost: `, postId);
@@ -85,7 +85,7 @@ export const requestInsertNewPost = createAsyncThunk(
 );
 
 export const requestUpdateNewPost = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.UPDATE_POST, async ({ id, form }, { dispatch, getState, rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.UPDATE_POST, async ({ id, form }, { rejectWithValue }) => {
     try {
       const { success, message, postId } = await fetchUpdatePost({ id: id, posts: form });
       console.log(`requestUpdateNewPost: `, postId);
@@ -103,7 +103,7 @@ export const requestUpdateNewPost = createAsyncThunk(
 // TAG
 
 export const requestGetAllTagLists = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.TAG_LIST, async (_, { dispatch, getState, rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.TAG_LIST, async (_, { rejectWithValue }) => {
     try {
       const { tags } = await fetchGetAllTags();
       console.log(`requestGetAllTagLists : `, tags);
@@ -115,7 +115,7 @@ export const requestGetAllTagLists = createAsyncThunk(
   });
 
 export const requestInsertNewTag = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.CREATE_TAG, async (form, { dispatch, getState, rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.CREATE_TAG, async (form, { rejectWithValue }) => {
     try {
       const { success, message, tagId } = await fetchInsertNewTag(form);
       console.log(`requestInsertNewTag: `, tagId);
@@ -136,7 +136,7 @@ export const requestInsertNewTag = createAsyncThunk(
 );
 
 export const requestUpdateNewTag = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.UPDATE_TAG, async ({ id, form }, { dispatch, getState, rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.UPDATE_TAG, async ({ id, form }, { rejectWithValue }) => {
     try {
       const { success, message, tagId } = await fetchUpdateTag({ id: id, tags: form });
       console.log(`requestUpdateNewTag: `, tagId);
