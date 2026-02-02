@@ -4,6 +4,7 @@ import simulateReducer from "../../domains/simulate/store/slices.js";
 import authReducer from "../../domains/auth/store/slices.js";
 import eventsReducer from "@/domains/events/store/slices.js";
 import couponReducer from "@/domains/coupons/store/slices.js";
+import communityReducer from "@/domains/community/store/slices.js";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     auth: authReducer,
     events: eventsReducer,
     coupon: couponReducer,
+    community: communityReducer,
   },
 });
