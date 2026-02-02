@@ -7,6 +7,11 @@ export const ADMIN_COMMUNITY = {
   POST_LIST: "/community/admin/posts",
   CREATE_POST: "/community/admin/posts",
   UPDATE_POST: (id) => `/community/admin/posts/${id}`,
+  // tags
+  TAG_LIST: "/community/admin/tags",
+  CREATE_TAG: "/community/admin/tags",
+  UPDATE_TAG: (id) => `/community/admin/tags/${id}`,
+
 }
 export const ADMIN_COMMUNITY_ACTIONS = {
   // boards
@@ -17,4 +22,8 @@ export const ADMIN_COMMUNITY_ACTIONS = {
   POST_LIST: "/community/admin/posts",
   CREATE_POST: "/community/admin/posts/create",
   UPDATE_POST: "/community/admin/posts/${id}",
+  // tags
+  TAG_LIST: "/community/admin/tags",
+  CREATE_TAG: "/community/admin/tags/create",
+  UPDATE_TAG: "/community/admin/tags/${id}",
 }

@@ -4,6 +4,7 @@ import CommunityAdminTabs from "@/domains/community/feature/components/admin/tab
 import BoardAdminTable from "@/domains/community/feature/components/admin/board/BoardAdminTable.jsx";
 import PostAdminTable from "@/domains/community/feature/components/admin/post/PostAdminTable.jsx";
 import CommentAdminTable from "@/domains/community/feature/components/admin/board/CommentAdminTable.jsx";
+import TagAdminTable from "@/domains/community/feature/components/admin/tag/TagAdminTable.jsx";
 
 const CommunityManagePage = () => {
   const [tab, setTab] = useState("boards");
@@ -18,6 +19,7 @@ const CommunityManagePage = () => {
       {tab === "boards" && <BoardAdminTable />}
       {tab === "posts" && <PostAdminTable />}
       {tab === "comments" && <CommentAdminTable />}
+      {tab === "tags" && <TagAdminTable />}
     </div>
   );
 };

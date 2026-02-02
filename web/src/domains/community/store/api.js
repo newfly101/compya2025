@@ -36,3 +36,18 @@ export const fetchUpdatePost = async ({ id, posts }) => {
   const { data } = await API.patch(`${ADMIN_COMMUNITY.UPDATE_POST(id)}`, posts);
   return data;
 }
+
+export const fetchGetAllTags = async () => {
+  const { data } = await API.get(`${ADMIN_COMMUNITY.TAG_LIST}`);
+  return data;
+}
+
+export const fetchInsertNewTag = async (newTag) => {
+  const { data } = await API.post(`${ADMIN_COMMUNITY.CREATE_TAG}`, newTag);
+  return data;
+}
+
+export const fetchUpdateTag = async ({ id, tags }) => {
+  const { data } = await API.patch(`${ADMIN_COMMUNITY.UPDATE_TAG(id)}`, tags);
+  return data;
+}

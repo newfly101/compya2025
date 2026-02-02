@@ -5,6 +5,7 @@ const TABS = [
   { key: "boards", label: "게시판 관리" },
   { key: "posts", label: "게시글 관리" },
   { key: "comments", label: "댓글 관리" },
+  { key: "tags", label: "태그 관리" },
 ];
 
 const CommunityAdminTabs = ({ active, onChange }) => {

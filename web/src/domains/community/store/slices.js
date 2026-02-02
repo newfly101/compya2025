@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  requestGetAllBoardLists, requestGetAllPostLists,
-  requestInsertNewBoard, requestInsertNewPost,
-  requestUpdateNewBoard, requestUpdateNewPost,
+  requestGetAllBoardLists, requestGetAllPostLists, requestGetAllTagLists,
+  requestInsertNewBoard, requestInsertNewPost, requestInsertNewTag,
+  requestUpdateNewBoard, requestUpdateNewPost, requestUpdateNewTag,
 } from "@/domains/community/store/thunks.js";
 import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
 
@@ -68,6 +68,33 @@ const communitySlice = createSlice({
       if (index !== -1) {
         state.postLists[index] = {
           ...state.postLists[index],
+          ...updated,
+        };
+      }
+    });
+
+    /* ===============================
+     * 태그 관리 - 목록 조회
+     * =============================== */
+    applyAsyncHandlers(builder, requestGetAllTagLists, (state, action) => {
+      state.tagLists = action.payload;
+    });
+    /* ===============================
+     * 태그 관리 - 추가
+     * =============================== */
+    applyAsyncHandlers(builder, requestInsertNewTag, (state, action) => {
+      state.tagLists.push(action.payload.tags);
+    });
+    /* ===============================
+     * 태그 관리 - 수정
+     * =============================== */
+    applyAsyncHandlers(builder, requestUpdateNewTag, (state, action) => {
+      const updated = action.payload;
+      const index = state.tagLists.findIndex(t => t.id === updated.id);
+
+      if (index !== -1) {
+        state.tagLists[index] = {
+          ...state.tagLists[index],
           ...updated,
         };
       }

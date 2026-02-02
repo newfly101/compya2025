@@ -98,3 +98,51 @@ export const requestUpdateNewPost = createAsyncThunk(
     }
   },
 );
+
+// TAG
+
+export const requestGetAllTagLists = createAsyncThunk(
+  ADMIN_COMMUNITY_ACTIONS.TAG_LIST, async (_, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const { tags } = await fetchGetAllPostLists();
+      console.log(`requestGetAllTagLists : `, tags);
+
+      return tags;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  });
+
+export const requestInsertNewTag = createAsyncThunk(
+  ADMIN_COMMUNITY_ACTIONS.CREATE_TAG, async (form, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const { success, message, tagId } = await fetchInsertNewPost(form);
+      console.log(`requestInsertNewTag: `, tagId);
+
+      return {
+        posts: {
+          id: tagId,
+          ...form,
+        },
+      };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const requestUpdateNewTag = createAsyncThunk(
+  ADMIN_COMMUNITY_ACTIONS.UPDATE_TAG, async ({ id, form }, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const { success, message, tagId } = await fetchUpdatePost({ id: id, tags: form });
+      console.log(`requestUpdateNewTag: `, tagId);
+
+      return {
+        id: tagId,
+        ...form,
+      };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
