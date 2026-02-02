@@ -23,4 +23,32 @@
         FROM boards
         ORDER BY sort_order
     </select>
+
+    <insert id="insertBoard" parameterType="com.dawne.com2usbaseball.domain.community.entity.BoardsEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO boards (
+            code,
+            name,
+            description,
+            write_role,
+            read_role,
+            is_visible,
+            is_deleted,
+            sort_order,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{code},
+            #{name},
+            #{description},
+            #{writeRole},
+            #{readRole},
+            #{visible},
+            #{deleted},
+            #{sortOrder},
+            NOW(),
+            NOW()
+        )
+    </insert>
 </mapper>

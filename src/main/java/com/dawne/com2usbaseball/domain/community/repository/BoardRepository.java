@@ -16,4 +16,8 @@ public class BoardRepository {
     public List<BoardsEntity> selectBoardItems() {
         return mapper.selectBoards();
     }
+
+    public boolean insertNewBoard(BoardsEntity boards) {
+        return mapper.insertBoard(boards) > 0;
+    }
 }

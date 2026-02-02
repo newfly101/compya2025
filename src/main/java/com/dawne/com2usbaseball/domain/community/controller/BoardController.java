@@ -1,11 +1,11 @@
 package com.dawne.com2usbaseball.domain.community.controller;
 
+import com.dawne.com2usbaseball.domain.community.dto.request.BoardCreateRequest;
 import com.dawne.com2usbaseball.domain.community.dto.response.BoardListResponse;
+import com.dawne.com2usbaseball.domain.community.dto.response.InsertBoardResponse;
 import com.dawne.com2usbaseball.domain.community.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +18,11 @@ public class BoardController {
     public BoardListResponse getBoardsList() {
         return boardService.selectBoardList();
     }
+    @PostMapping("/admin/boards")
+    public InsertBoardResponse createNewBoard(@RequestBody BoardCreateRequest request) {
+        return boardService.createNewBoardItem(request.toEntity());
+    }
+
 
     // 게시판 정보 조회
     // GET /boards/{boardCode}
