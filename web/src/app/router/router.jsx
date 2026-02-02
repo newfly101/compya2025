@@ -11,6 +11,7 @@ import AdminEventPage from "@/domains/events/page/admin/AdminEventPage.jsx";
 import AdminDashBoardPage from "@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx";
 import AdminLayout from "@/domains/admin/layout/AdminLayout.jsx";
 import AdminCouponPage from "@/domains/coupons/page/admin/AdminCouponPage.jsx";
+import UserCommunityPage from "@/domains/community/page/user/UserCommunityPage.jsx";
 
 const UserProfile = lazy(() => import("@/domains/profile/page/UserProfile.jsx"));
 const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
@@ -49,6 +50,7 @@ const router = createBrowserRouter([
       { path: "dictionary", element: <Dictionary />, handle: { title: "컴프야펀 | 백과사전 홈" } },
       { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
       { path: "auth/callback", element: <AuthCallBack />, handle: { title: "컴프야펀 | 로그인 콜백" } },
+      { path: "community", element: <UserCommunityPage />, handle: { title: "컴프야펀 | 커뮤니티" } },
       {
         element: <UserGuard />,
         children: [
