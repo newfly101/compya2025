@@ -1,5 +1,6 @@
 import { useDispatch } from "react-redux";
 import { usePostForm } from "@/domains/community/feature/hooks/post/internal/usePostForm.js";
+import { requestUpdateNewPost } from "@/domains/community/store/index.js";
 
 export const usePostEdit = ({ post, onSuccess }) => {
   const dispatch = useDispatch();
@@ -13,13 +14,15 @@ export const usePostEdit = ({ post, onSuccess }) => {
     content: post.content,
     linkType: post.linkType,
     externalUrl: post.externalUrl,
-    planned: post.planned,
+    pinned: post.pinned,
     visible: post.visible,
     viewCount: post.viewCount,
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    console.log("id: ",post.id, "      form:", formHook.form);
 
     await dispatch(requestUpdateNewPost({
       id: post.id,

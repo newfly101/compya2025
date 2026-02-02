@@ -10,7 +10,7 @@ const PostModal = ({
                      onSubmit,
                      onCancel,
                    }) => {
-  const boardLists = useSelector(state => state.community.boards);
+  const { boardLists } = useSelector(state => state.community);
 
   return (
     <div className={styles.overlay}>
@@ -38,7 +38,7 @@ const PostModal = ({
               onChange={onChange}
             >
               <option value="">게시판 선택</option>
-              {boardLists.map(board => (
+              {boardLists?.map(board => (
                 <option key={board.id} value={board.id}>
                   {board.code}
                 </option>
@@ -128,8 +128,8 @@ const PostModal = ({
             <label className={styles.checkbox}>
               <input
                 type="checkbox"
-                name="planned"
-                checked={form.planned}
+                name="pinned"
+                checked={form.pinned}
                 onChange={onChange}
               />
               고정글

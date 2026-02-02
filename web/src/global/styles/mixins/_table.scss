@@ -40,6 +40,16 @@
       &:hover {
         background: $surface3;
       }
+
+    }
+  }
+  td {
+    & > a {
+      color: $noticeHeader;
+
+      &:hover{
+        color: #94b6ff;
+      }
     }
   }
 

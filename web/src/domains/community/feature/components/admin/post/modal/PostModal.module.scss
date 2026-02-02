@@ -101,6 +101,26 @@
       width: 12rem;
     }
   }
+
+  textarea {
+    margin-top: 0.6rem;
+    padding: 0.8rem 1rem;
+    border-radius: 0.6rem;
+    border: 1px solid $border;
+    background: $surface3;
+    color: $text-primary;
+
+    min-height: 9.6rem; // 필요시 조절
+    resize: vertical;   // 완전 고정하려면 none
+    line-height: 1.4;
+    font-family: inherit;
+    font-size: 1.4rem;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+    }
+  }
 }
 
 /* =========================

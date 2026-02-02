@@ -1,10 +1,10 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useBoards } from "@/domains/community/feature/hooks/board/useBoards.js";
-import { usePosts } from "@/domains/community/feature/hooks/board/usePosts.js";
 import CommunityHeader from "@/domains/community/feature/components/user/CommunityHeader.jsx";
 import BoardTabs from "@/domains/community/feature/components/user/BoardTabs.jsx";
 import PostTable from "@/domains/community/feature/components/user/PostTable.jsx";
 import styles from "./CommunityList.module.scss";
+import { usePosts } from "@/domains/community/feature/hooks/post/usePosts.js";
 
 const CommunityPage = () => {
   const [params] = useSearchParams();

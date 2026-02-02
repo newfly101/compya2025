@@ -1,9 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ADMIN_COMMUNITY_ACTIONS } from "@/domains/community/store/endpoints.js";
 import {
-  fetchGetAllBoardLists,
-  fetchInsertNewBoard,
-  fetchUpdateBoard,
+  fetchGetAllBoardLists, fetchGetAllPostLists,
+  fetchInsertNewBoard, fetchInsertNewPost,
+  fetchUpdateBoard, fetchUpdatePost,
 } from "@/domains/community/store/api.js";
 import { createBoardDTO } from "@/domains/community/store/dto.js";
 
@@ -41,11 +41,57 @@ export const requestUpdateNewBoard = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.UPDATE_BOARD, async ({ id, form }, { dispatch, getState, rejectWithValue }) => {
     try {
       const { success, message, boardId } = await fetchUpdateBoard({ id: id, board: createBoardDTO(form) });
-      console.log(`requestInsertNewBoard: `, boardId);
+      console.log(`requestUpdateNewBoard: `, boardId);
 
       return {
-          id: boardId,
+        id: boardId,
+        ...form,
+      };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const requestGetAllPostLists = createAsyncThunk(
+  ADMIN_COMMUNITY_ACTIONS.POST_LIST, async (_, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const { posts } = await fetchGetAllPostLists();
+      console.log(`requestGetAllPostLists : `, posts);
+
+      return posts;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  });
+
+export const requestInsertNewPost = createAsyncThunk(
+  ADMIN_COMMUNITY_ACTIONS.CREATE_POST, async (form, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const { success, message, postId } = await fetchInsertNewPost(form);
+      console.log(`requestInsertNewPost: `, postId);
+
+      return {
+        posts: {
+          id: postId,
           ...form,
+        },
+      };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const requestUpdateNewPost = createAsyncThunk(
+  ADMIN_COMMUNITY_ACTIONS.UPDATE_POST, async ({ id, form }, { dispatch, getState, rejectWithValue }) => {
+    try {
+      const { success, message, postId } = await fetchUpdatePost({ id: id, posts: form });
+      console.log(`requestUpdateNewPost: `, postId);
+
+      return {
+        id: postId,
+        ...form,
       };
     } catch (error) {
       return rejectWithValue(error.message);

@@ -40,8 +40,8 @@ const PostAdminTable = () => {
             <td>{post.authorName}</td>
             <td>{post.title}</td>
             <td>{post.linkType}</td>
-            <td>{post.externalUrl}</td>
-            <td>{post.planned ? "고정" : "해제"}</td>
+            <td><a href={post.externalUrl} target="_blank" rel="noreferrer">링크</a></td>
+            <td>{post.pinned ? "고정" : "해제"}</td>
             <td>{post.visible ? "노출" : "숨김"}</td>
             <td>{post.viewCount}</td>
             <td>

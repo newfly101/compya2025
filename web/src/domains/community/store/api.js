@@ -20,3 +20,19 @@ export const fetchUpdateBoard = async ({ id, board }) => {
   const { data } = await API.patch(`${ADMIN_COMMUNITY.UPDATE_BOARD(id)}`, board);
   return data;
 }
+
+
+export const fetchGetAllPostLists = async () => {
+  const { data } = await API.get(`${ADMIN_COMMUNITY.POST_LIST}`);
+  return data;
+}
+
+export const fetchInsertNewPost = async (newPost) => {
+  const { data } = await API.post(`${ADMIN_COMMUNITY.CREATE_POST}`, newPost);
+  return data;
+}
+
+export const fetchUpdatePost = async ({ id, posts }) => {
+  const { data } = await API.patch(`${ADMIN_COMMUNITY.UPDATE_POST(id)}`, posts);
+  return data;
+}
