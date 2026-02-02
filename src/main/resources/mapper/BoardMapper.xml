@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.BoardMapper">
+
+    <select id="selectBoards"
+            parameterType="string"
+            resultType="com.dawne.com2usbaseball.domain.community.entity.BoardsEntity">
+
+        SELECT
+            id,
+            code,
+            name,
+            description,
+            write_role,
+            read_role,
+            is_visible AS visible,
+            is_deleted AS deleted,
+            sort_order,
+            created_at,
+            updated_at
+        FROM boards
+        ORDER BY sort_order ASC
+    </select>
+</mapper>
