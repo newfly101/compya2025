@@ -1,7 +1,7 @@
-package com.dawne.com2usbaseball.domain.board.entity;
+package com.dawne.com2usbaseball.domain.community.entity;
 
 import com.dawne.com2usbaseball.common.enums.user.UserGrant;
-import com.dawne.com2usbaseball.common.enums.user.UserType;
+import com.dawne.com2usbaseball.domain.community.enums.PostsType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,16 +12,19 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardsEntity {
+public class PostsEntity {
     private Long id;
-    private String code;
-    private String name;
-    private String description;
-    private UserGrant writeRole;        // 'ADMIN', 'USER'
-    private UserType readRole;          // 'ALL', 'LOGIN'
+    private Long boardId;
+    private UserGrant authorType;   // 'ADMIN', 'USER'
+    private Long authorId;
+    private String authorName;
+    private String title;
+    private String content;
+    private PostsType linkType;     // 'INTERNAL', 'EXTERNAL'
+    private String externalUrl;
+    private boolean planned;
     private boolean visible;
-    private boolean deleted;
-    private int sortOrder;
+    private int viewCount;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
