@@ -1,27 +1,21 @@
-import styles from "./BoardFormDrawer.module.scss";
-import { useBoardModal } from "@/domains/community/feature/hooks/useBoardModal.js";
+import React from "react";
+import styles from "./BoardModal.module.scss";
 
-
-
-const BoardFormDrawer = ({ onClose, onSubmit }) => {
-  const {form, handleChange} = useBoardModal();
-
-  const handleSubmit = () => {
-    if (!form.code || !form.name) {
-      alert("게시판 코드와 이름은 필수입니다.");
-      return;
-    }
-
-    onSubmit?.(form);
-  };
-
+const BoardModal = ({
+                      title,
+                      submitLabel,
+                      form,
+                      onChange,
+                      onSubmit,
+                      onCancel,
+                      onDelete,
+                    }) => {
   return (
     <div className={styles.overlay}>
       <div className={styles.wrapper}>
-        {/* Header */}
         <div className={styles.header}>
-          <h2>게시판 설정</h2>
-          <button onClick={onClose}>✕</button>
+          <h2>{title}</h2>
+          <button onClick={onCancel}>✕</button>
         </div>
 
         {/* Form */}
@@ -32,7 +26,7 @@ const BoardFormDrawer = ({ onClose, onSubmit }) => {
               name="code"
               value={form.code}
               placeholder="TIP / FREE / CLUB"
-              onChange={handleChange}
+              onChange={onChange}
             />
           </label>
 
@@ -42,7 +36,7 @@ const BoardFormDrawer = ({ onClose, onSubmit }) => {
               name="name"
               value={form.name}
               placeholder="게시판 이름"
-              onChange={handleChange}
+              onChange={onChange}
             />
           </label>
 
@@ -52,7 +46,7 @@ const BoardFormDrawer = ({ onClose, onSubmit }) => {
               name="description"
               value={form.description}
               placeholder="게시판 설명"
-              onChange={handleChange}
+              onChange={onChange}
             />
           </label>
 
@@ -62,7 +56,7 @@ const BoardFormDrawer = ({ onClose, onSubmit }) => {
               <select
                 name="writeRole"
                 value={form.writeRole}
-                onChange={handleChange}
+                onChange={onChange}
               >
                 <option value="ADMIN">ADMIN</option>
                 <option value="USER">USER</option>
@@ -74,7 +68,7 @@ const BoardFormDrawer = ({ onClose, onSubmit }) => {
               <select
                 name="readRole"
                 value={form.readRole}
-                onChange={handleChange}
+                onChange={onChange}
               >
                 <option value="ALL">ALL</option>
                 <option value="LOGIN">LOGIN</option>
@@ -86,9 +80,9 @@ const BoardFormDrawer = ({ onClose, onSubmit }) => {
             <label className={styles.checkbox}>
               <input
                 type="checkbox"
-                name="isVisible"
-                checked={form.isVisible}
-                onChange={handleChange}
+                name="visible"
+                checked={form.visible}
+                onChange={onChange}
               />
               노출 여부
             </label>
@@ -96,10 +90,10 @@ const BoardFormDrawer = ({ onClose, onSubmit }) => {
             <label className={styles.checkbox}>
               <input
                 type="checkbox"
-                name="isDeleted"
-                checked={form.isDeleted}
-                onChange={handleChange}
-                disabled
+                name="deleted"
+                checked={form.deleted}
+                onChange={onChange}
+                disabled={onDelete}
               />
               삭제 상태
             </label>
@@ -111,18 +105,18 @@ const BoardFormDrawer = ({ onClose, onSubmit }) => {
               type="number"
               name="sortOrder"
               value={form.sortOrder}
-              onChange={handleChange}
+              onChange={onChange}
             />
           </label>
         </div>
 
         {/* Actions */}
         <div className={styles.actions}>
-          <button className={styles.cancel} onClick={onClose}>
+          <button className={styles.cancel} onClick={onCancel}>
             취소
           </button>
-          <button className={styles.primary} onClick={handleSubmit}>
-            저장
+          <button className={styles.primary} onClick={onSubmit}>
+            {submitLabel}
           </button>
         </div>
       </div>
@@ -130,4 +124,4 @@ const BoardFormDrawer = ({ onClose, onSubmit }) => {
   );
 };
 
-export default BoardFormDrawer;
+export default BoardModal;

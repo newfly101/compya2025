@@ -1,11 +1,15 @@
-import BoardFormDrawer from "./modal/BoardFormDrawer.jsx";
 import { useState } from "react";
 import styles from "./AdminTable.module.scss";
 import { useBoards } from "@/domains/community/feature/hooks/useBoards.js";
+import BoardCreateModal from "@/domains/community/feature/components/admin/board/modal/BoardCreateModal.jsx";
+import BoardEditModal from "@/domains/community/feature/components/admin/board/modal/BoardEditModal.jsx";
+
 
 const BoardAdminTable = () => {
   const [open, setOpen] = useState(false);
-  const {boardLists, onSubmit} = useBoards();
+  const [edit, setEdit] = useState(null);
+  const {boardLists} = useBoards();
+
 
   return (
     <>
@@ -20,27 +24,34 @@ const BoardAdminTable = () => {
         <tr>
           <th>코드</th>
           <th>게시판명</th>
+          <th>설명</th>
           <th>작성권한</th>
+          <th>읽기권한</th>
           <th>노출</th>
+          <th>삭제</th>
           <th>관리</th>
         </tr>
         </thead>
         <tbody>
-        {boardLists && boardLists.map(board => (
+        {boardLists?.map((board) => (
           <tr key={board.id}>
             <td>{board.code}</td>
             <td>{board.name}</td>
+            <td>{board.description}</td>
             <td>{board.writeRole}</td>
+            <td>{board.readRole}</td>
             <td>{board.visible ? "ON" : "OFF"}</td>
+            <td>{board.deleted ? "ON" : "OFF"}</td>
             <td>
-              <button>수정</button>
+              <button onClick={() => setEdit(board)}>수정</button>
             </td>
           </tr>
         ))}
         </tbody>
       </table>
 
-      {open && <BoardFormDrawer onClose={() => setOpen(false)} onSubmit={onSubmit} />}
+      {open && <BoardCreateModal onClose={() => setOpen(false)}/>}
+      {edit && <BoardEditModal onClose={() => setEdit(null)} editBoard={edit}/>}
     </>
   );
 };
