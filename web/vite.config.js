@@ -28,6 +28,7 @@ export default defineConfig({
         includePaths: [path.resolve(__dirname, "src")],
         additionalData: `
           @use "@/global/styles/variables/colors.scss" as *;
+          @use "@/global/styles/mixins/_table.scss" as *;
         `,
       },
     },

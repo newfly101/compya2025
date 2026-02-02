@@ -1,3 +1,55 @@
-@mixin columW($width) {
-  width: $width;
+@use "@/global/styles/variables/_colors.scss" as *;
+
+@mixin tableBase($font-size: 1.4rem, $align: center) {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  font-size: $font-size;
+
+  th, td {
+    padding: 1.2rem 1rem;
+    text-align: center;
+    font-weight: 600;
+    color: $text-secondary;
+    border-bottom: 1px solid $border;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  thead {
+    background: $surface3;
+
+    th {
+      background: $surface3;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: $surface3;
+      }
+    }
+  }
+
+  button {
+    background: $primary-bg;
+    color: $primary-text;
+    border: 1px solid transparent;
+    padding: 0.4rem 1rem;
+    border-radius: 0.4rem;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
 }

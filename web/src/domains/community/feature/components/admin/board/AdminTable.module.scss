@@ -1,0 +1,22 @@
+
+.table {
+  @include tableBase($align: left);
+}
+
+//th, td {
+//  padding: 1.2rem;
+//  border-bottom: 1px solid $border;
+//  text-align: center;
+//}
+
+.actionBar {
+  margin-bottom: 1.6rem;
+}
+
+.primary {
+  background: $primary-bg;
+  color: $primary-text;
+  padding: 0.8rem 1.6rem;
+  border-radius: 0.6rem;
+  border: none;
+}

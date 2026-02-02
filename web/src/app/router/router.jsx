@@ -12,6 +12,7 @@ import AdminDashBoardPage from "@/domains/admin/pages/dashboard/AdminDashBoardPa
 import AdminLayout from "@/domains/admin/layout/AdminLayout.jsx";
 import AdminCouponPage from "@/domains/coupons/page/admin/AdminCouponPage.jsx";
 import UserCommunityPage from "@/domains/community/page/user/UserCommunityPage.jsx";
+import AdminCommunityPage from "@/domains/community/page/admin/AdminCommunityPage.jsx";
 
 const UserProfile = lazy(() => import("@/domains/profile/page/UserProfile.jsx"));
 const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
@@ -74,6 +75,7 @@ const router = createBrowserRouter([
                   { path: "coupon", element: <AdminCouponPage />, handle: { title: "컴프야펀 | 어드민 | 쿠폰 관리" } },
                 ],
               },
+              { path: "community", element: <AdminCommunityPage />, handle: { title: "컴프야펀 | 어드민 | 커뮤니티 관리" } },
             ]
           },
 
