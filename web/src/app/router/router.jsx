@@ -13,9 +13,6 @@ import AdminLayout from "@/domains/admin/layout/AdminLayout.jsx";
 import AdminCouponPage from "@/domains/coupons/page/admin/AdminCouponPage.jsx";
 import UserCommunityPage from "@/domains/community/page/user/UserCommunityPage.jsx";
 import AdminCommunityPage from "@/domains/community/page/admin/AdminCommunityPage.jsx";
-import BoardAdminTable from "@/domains/community/feature/components/admin/board/BoardAdminTable.jsx";
-import PostAdminTable from "@/domains/community/feature/components/admin/post/PostAdminTable.jsx";
-import CommentAdminTable from "@/domains/community/feature/components/admin/board/CommentAdminTable.jsx";
 
 const UserProfile = lazy(() => import("@/domains/profile/page/UserProfile.jsx"));
 const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
