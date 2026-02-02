@@ -4,96 +4,57 @@ import {
   requestInsertNewEvent,
   requestUpdateExternalEvent, requestUpdateExternalEventVisible,
 } from "@/domains/events/store/thunks.js";
+import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
 
-const initialState  = {
+const initialState = {
   events: [],
   loading: false,
   error: null,
-}
+};
 
 const eventsSlice = createSlice({
   name: "events",
   initialState: initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      /* ===============================
-       * 외부 이벤트 목록 조회
-       * =============================== */
-      .addCase(requestGetExternalEventList.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(requestGetExternalEventList.fulfilled, (state, action) => {
-        state.loading = false;
-        state.events = action.payload.events;
-      })
-      .addCase(requestGetExternalEventList.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+    /* ===============================
+     * 외부 이벤트 목록 조회
+     * =============================== */
+    applyAsyncHandlers(builder, requestGetExternalEventList, (state, action) => {
+      state.events = action.payload.events;
+    });
+    /* ===============================
+     * 이벤트 신규 생성
+     * =============================== */
+    applyAsyncHandlers(builder, requestInsertNewEvent, (state, action) => {
+      state.events.push(action.payload);
+    });
+    /* ===============================
+     * 이벤트 수정
+     * =============================== */
+    applyAsyncHandlers(builder, requestUpdateExternalEvent, (state, action) => {
+      const updated = action.payload;
+      const index = state.events.findIndex(e => e.id === updated.id);
 
-      /* ===============================
-       * 이벤트 신규 생성
-       * =============================== */
-      .addCase(requestInsertNewEvent.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(requestInsertNewEvent.fulfilled, (state, action) => {
-        state.loading = false;
-        state.events.push(action.payload);
-      })
-      .addCase(requestInsertNewEvent.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
+      if (index !== -1) {
+        state.events[index] = {
+          ...state.events[index],
+          ...updated,
+        };
+      }
+    });
+    /* ===============================
+     * visible 토글
+     * =============================== */
+    applyAsyncHandlers(builder, requestUpdateExternalEventVisible, (state, action) => {
+      const updated = action.payload;
+      const index = state.events.findIndex(e => e.id === updated.id);
 
-      /* ===============================
-       * 이벤트 수정
-       * =============================== */
-      .addCase(requestUpdateExternalEvent.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(requestUpdateExternalEvent.fulfilled, (state, action) => {
-        state.loading = false;
-        const updated = action.payload;
-        const index = state.events.findIndex(e => e.id === updated.id);
-
-        if (index !== -1) {
-          state.events[index] = {
-            ...state.events[index],
-            ...updated,
-          };
-        }
-      })
-      .addCase(requestUpdateExternalEvent.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-
-      /* ===============================
-       * visible 토글
-       * =============================== */
-      .addCase(requestUpdateExternalEventVisible.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(requestUpdateExternalEventVisible.fulfilled, (state, action) => {
-        state.loading = false;
-        const updated = action.payload;
-        const index = state.events.findIndex(e => e.id === updated.id);
-
-        if (index !== -1) {
-          state.events[index].visible = updated.visible;
-        }
-      })
-      .addCase(requestUpdateExternalEventVisible.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
-  }
-})
-export const {  } = eventsSlice.actions;
+      if (index !== -1) {
+        state.events[index].visible = updated.visible;
+      }
+    });
+  },
+});
+export const {} = eventsSlice.actions;
 export default eventsSlice.reducer;

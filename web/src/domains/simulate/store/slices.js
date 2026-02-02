@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { requestPlayerCardInfo } from "@/domains/simulate/store/thunks.js";
+import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
 
 const initialState  = {
   playerType: null,
@@ -18,19 +19,13 @@ const simulateSlice = createSlice({
 
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(requestPlayerCardInfo.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(requestPlayerCardInfo.fulfilled, (state, action) => {
-        state.loading = false;
-        state.cardInfo = action.payload;
-      })
-      .addCase(requestPlayerCardInfo.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+    /* ===============================
+     * 시뮬레이션 카드 정보 불러오기
+     * =============================== */
+    applyAsyncHandlers(builder, requestPlayerCardInfo, (state, action) => {
+      state.cardInfo = action.payload;
+    });
+
   }
 })
 

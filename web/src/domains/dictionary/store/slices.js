@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { requestPlayerSkillSet } from "@/domains/dictionary/store/thunks.js";
+import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
 
 const initialState  = {
   playerType: null,
@@ -18,19 +19,12 @@ const dictionarySlice = createSlice({
 
   },
   extraReducers: (builder) => {
-    builder
-      .addCase(requestPlayerSkillSet.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(requestPlayerSkillSet.fulfilled, (state, action) => {
-        state.loading = false;
-        state.playerSkills = action.payload;
-      })
-      .addCase(requestPlayerSkillSet.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      });
+    /* ===============================
+     * 스킬 관리 - 목록 조회
+     * =============================== */
+    applyAsyncHandlers(builder, requestPlayerSkillSet, (state, action) => {
+      state.playerSkills = action.payload;
+    });
   }
 })
 
