@@ -20,4 +20,8 @@ public class BoardRepository {
     public boolean insertNewBoard(BoardsEntity boards) {
         return mapper.insertBoard(boards) > 0;
     }
+
+    public boolean updateBoard(BoardsEntity boards) {
+        return mapper.updateBoard(boards) > 0;
+    }
 }

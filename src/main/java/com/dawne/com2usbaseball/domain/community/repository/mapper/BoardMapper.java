@@ -12,5 +12,6 @@ public interface BoardMapper {
 //    List<BoardsEntity> selectBoards(@Param("boardCode") String boardCode);
 
     int insertBoard(BoardsEntity board);
+    int updateBoard(BoardsEntity board);
 
 }

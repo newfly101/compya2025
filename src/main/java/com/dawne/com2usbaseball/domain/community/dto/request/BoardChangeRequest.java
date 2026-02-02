@@ -4,7 +4,7 @@ import com.dawne.com2usbaseball.common.enums.user.UserGrant;
 import com.dawne.com2usbaseball.common.enums.user.UserType;
 import com.dawne.com2usbaseball.domain.community.entity.BoardsEntity;
 
-public record BoardCreateRequest(
+public record BoardChangeRequest(
         String code,
         String name,
         String description,

@@ -51,4 +51,38 @@
             NOW()
         )
     </insert>
+
+    <update id="updateBoard" parameterType="com.dawne.com2usbaseball.domain.community.entity.BoardsEntity">
+        UPDATE boards
+        <set>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+
+            description = #{description},
+
+            <if test="writeRole != null">
+                write_role = #{writeRole},
+            </if>
+            <if test="readRole != null">
+                read_role = #{readRole},
+            </if>
+            <if test="visible != null">
+                is_visible = #{visible},
+            </if>
+            <if test="deleted != null">
+                is_deleted = #{deleted},
+            </if>
+
+            sort_order = #{sortOrder},
+
+            updated_at = NOW()
+        </set>
+
+        WHERE id = #{id}
+
+    </update>
 </mapper>

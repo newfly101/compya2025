@@ -1,8 +1,8 @@
 package com.dawne.com2usbaseball.domain.community.service.board;
 
-import com.dawne.com2usbaseball.domain.community.dto.request.BoardCreateRequest;
 import com.dawne.com2usbaseball.domain.community.dto.response.BoardListResponse;
 import com.dawne.com2usbaseball.domain.community.dto.response.InsertBoardResponse;
+import com.dawne.com2usbaseball.domain.community.dto.response.UpdateBoardResponse;
 import com.dawne.com2usbaseball.domain.community.entity.BoardsEntity;
 import com.dawne.com2usbaseball.domain.community.repository.BoardRepository;
 import com.dawne.com2usbaseball.domain.community.service.board.support.ListMaker;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BoardServiceImpl implements BoardService{
+public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository repository;
     private final ListMaker listMaker;
@@ -29,10 +29,21 @@ public class BoardServiceImpl implements BoardService{
     public InsertBoardResponse createNewBoardItem(BoardsEntity boards) {
         boolean success = repository.insertNewBoard(boards);
 
-        if(!success) {
+        if (!success) {
             return InsertBoardResponse.fail();
         }
 
         return InsertBoardResponse.success(boards.getId());
+    }
+
+    @Override
+    public UpdateBoardResponse updateBoardItem(BoardsEntity boards) {
+        boolean success = repository.updateBoard(boards);
+
+        if (!success) {
+            return UpdateBoardResponse.fail();
+        }
+
+        return UpdateBoardResponse.success(boards.getId());
     }
 }
