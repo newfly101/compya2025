@@ -1,6 +1,7 @@
 import BoardFormDrawer from "./BoardFormDrawer";
 import { useState } from "react";
 import styles from "./AdminTable.module.scss";
+import { useBoards } from "@/domains/community/feature/hooks/useBoards.js";
 
 const MOCK_BOARDS = [
   { id: 1, code: "TIP", name: "팁", writeRole: "ADMIN", visible: true },
@@ -9,6 +10,7 @@ const MOCK_BOARDS = [
 
 const BoardAdminTable = () => {
   const [open, setOpen] = useState(false);
+  const {boardLists} = useBoards();
 
   return (
     <>
@@ -29,7 +31,7 @@ const BoardAdminTable = () => {
         </tr>
         </thead>
         <tbody>
-        {MOCK_BOARDS.map(board => (
+        {boardLists && boardLists.map(board => (
           <tr key={board.id}>
             <td>{board.code}</td>
             <td>{board.name}</td>

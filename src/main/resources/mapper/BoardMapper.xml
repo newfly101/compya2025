@@ -21,6 +21,6 @@
             created_at,
             updated_at
         FROM boards
-        ORDER BY sort_order ASC
+        ORDER BY sort_order
     </select>
 </mapper>

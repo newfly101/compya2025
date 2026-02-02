@@ -1,4 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { requestGetAllBoardLists } from "@/domains/community/store/index.js";
 
 export const DEFAULT_BOARDS = [
   {
@@ -24,8 +26,15 @@ export const DEFAULT_BOARDS = [
 export const useBoards = () => {
   // 🔹 렌더링마다 새 배열 만들지 않게 memo
   const boards = useMemo(() => DEFAULT_BOARDS, []);
+  const dispatch = useDispatch();
+  const { boardLists } = useSelector((state) => state.community);
+
+  useEffect(() => {
+    dispatch(requestGetAllBoardLists());
+  }, [dispatch])
 
   return {
-    boards
+    boards,
+    boardLists
   };
 };

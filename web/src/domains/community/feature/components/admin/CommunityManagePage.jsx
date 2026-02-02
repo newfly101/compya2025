@@ -8,6 +8,7 @@ import CommentAdminTable from "@/domains/community/feature/components/admin/boar
 const CommunityManagePage = () => {
   const [tab, setTab] = useState("boards");
 
+
   return (
     <div className={styles.page}>
       <h1 className={styles.title}>커뮤니티 관리</h1>
