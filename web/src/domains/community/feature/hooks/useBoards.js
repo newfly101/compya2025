@@ -25,16 +25,21 @@ export const DEFAULT_BOARDS = [
 
 export const useBoards = () => {
   // 🔹 렌더링마다 새 배열 만들지 않게 memo
-  const boards = useMemo(() => DEFAULT_BOARDS, []);
   const dispatch = useDispatch();
   const { boardLists } = useSelector((state) => state.community);
+  const boards = useMemo(() => boardLists, []);
 
   useEffect(() => {
     dispatch(requestGetAllBoardLists());
   }, [dispatch])
 
+  const onSubmit = () => {
+    // dispatch(requestGetAllBoardLists());
+  }
+
   return {
     boards,
-    boardLists
+    boardLists,
+    onSubmit
   };
 };

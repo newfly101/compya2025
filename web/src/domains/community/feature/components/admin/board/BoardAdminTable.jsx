@@ -1,16 +1,11 @@
-import BoardFormDrawer from "./BoardFormDrawer";
+import BoardFormDrawer from "./modal/BoardFormDrawer.jsx";
 import { useState } from "react";
 import styles from "./AdminTable.module.scss";
 import { useBoards } from "@/domains/community/feature/hooks/useBoards.js";
 
-const MOCK_BOARDS = [
-  { id: 1, code: "TIP", name: "팁", writeRole: "ADMIN", visible: true },
-  { id: 2, code: "FREE", name: "자유", writeRole: "USER", visible: true },
-];
-
 const BoardAdminTable = () => {
   const [open, setOpen] = useState(false);
-  const {boardLists} = useBoards();
+  const {boardLists, onSubmit} = useBoards();
 
   return (
     <>
@@ -45,7 +40,7 @@ const BoardAdminTable = () => {
         </tbody>
       </table>
 
-      {open && <BoardFormDrawer onClose={() => setOpen(false)} />}
+      {open && <BoardFormDrawer onClose={() => setOpen(false)} onSubmit={onSubmit} />}
     </>
   );
 };
