@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
+@Component("postListMaker")
 public class ListMaker {
 
     public PostListResponse makePostListMaker(List<PostsEntity> postLists) {

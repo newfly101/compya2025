@@ -6,6 +6,7 @@ import com.dawne.com2usbaseball.domain.community.dto.response.board.UpdateBoardR
 import com.dawne.com2usbaseball.domain.community.entity.BoardsEntity;
 import com.dawne.com2usbaseball.domain.community.repository.BoardRepository;
 import com.dawne.com2usbaseball.domain.community.service.board.support.ListMaker;
+import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository repository;
+    @Resource(name = "boardListMaker")
     private final ListMaker listMaker;
 
     @Override
