@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.TagMapper">
+
+    <select id="selectTags"
+            resultType="com.dawne.com2usbaseball.domain.community.entity.TagEntity">
+        SELECT
+            id,
+            code,
+            name,
+            description,
+            is_visible AS visible,
+            is_deleted AS deleted,
+            created_at,
+            updated_at
+        FROM tags
+    </select>
+
+    <insert id="insertNewTag" parameterType="com.dawne.com2usbaseball.domain.community.entity.TagEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO tags (
+            code,
+            name,
+            description,
+            is_visible,
+            is_deleted,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{code},
+            #{name},
+            #{description},
+            #{visible},
+            #{deleted},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <update id="updateTag" parameterType="com.dawne.com2usbaseball.domain.community.entity.TagEntity">
+        UPDATE tags
+        <set>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+
+            description = #{description},
+
+            <if test="visible != null">
+                is_visible = #{visible},
+            </if>
+            <if test="deleted != null">
+                is_deleted = #{deleted},
+            </if>
+
+            updated_at = NOW()
+        </set>
+
+        WHERE id = #{id}
+
+    </update>
+</mapper>
