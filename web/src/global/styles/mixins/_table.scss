@@ -1,5 +1,10 @@
 @use "@/global/styles/variables/_colors.scss" as *;
 
+@mixin columW($width) {
+  width: $width;
+}
+
+
 @mixin tableBase($font-size: 1.4rem, $align: center) {
   width: 100%;
   border-collapse: separate;
