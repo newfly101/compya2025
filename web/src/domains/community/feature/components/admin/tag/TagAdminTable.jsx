@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import styles from "@/domains/community/feature/components/admin/board/AdminTable.module.scss";
-import { useBoards } from "@/domains/community/feature/hooks/board/useBoards.js";
 import TagCreateModal from "@/domains/community/feature/components/admin/tag/modal/TagCreateModal.jsx";
 import TagEditModal from "@/domains/community/feature/components/admin/tag/modal/TagEditModal.jsx";
+import { useTag } from "@/domains/community/feature/hooks/tag/useTag.js";
 
 const TagAdminTable = () => {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(null);
-  const { tagLists } = useBoards();
+  const { tagLists } = useTag();
 
   return (
     <>
