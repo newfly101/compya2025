@@ -14,7 +14,7 @@ public record PostResponse(
         String content,
         PostsType linkType,     // 'INTERNAL', 'EXTERNAL'
         String externalUrl,
-        boolean planned,
+        boolean pinned,
         boolean visible,
         int viewCount
 ) {
@@ -29,7 +29,7 @@ public record PostResponse(
                 p.getContent(),
                 p.getLinkType(),
                 p.getExternalUrl(),
-                p.isPlanned(),
+                p.isPinned(),
                 p.isVisible(),
                 p.getViewCount()
         );

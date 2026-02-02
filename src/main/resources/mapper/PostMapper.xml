@@ -17,7 +17,7 @@
             content,
             link_type,
             external_url,
-            is_pinned AS planned,
+            is_pinned AS pinned,
             is_visible AS visible,
             view_count,
             created_at,

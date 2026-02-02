@@ -15,7 +15,7 @@ public record PostsChangeRequest(
         String content,
         PostsType linkType,     // 'INTERNAL', 'EXTERNAL
         String externalUrl,
-        boolean planned,
+        boolean pinned,
         boolean visible,
         int viewCount
 ) {
@@ -42,7 +42,7 @@ public record PostsChangeRequest(
         p.setContent(content);
         p.setLinkType(linkType);
         p.setExternalUrl(externalUrl);
-        p.setPlanned(planned);
+        p.setPinned(pinned);
         p.setVisible(visible);
         p.setViewCount(viewCount);
     }

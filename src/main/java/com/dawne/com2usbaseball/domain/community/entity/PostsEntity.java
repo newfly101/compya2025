@@ -22,7 +22,7 @@ public class PostsEntity {
     private String content;
     private PostsType linkType;     // 'INTERNAL', 'EXTERNAL'
     private String externalUrl;
-    private boolean planned;
+    private boolean pinned;
     private boolean visible;
     private int viewCount;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")

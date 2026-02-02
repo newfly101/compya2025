@@ -3,7 +3,7 @@ package com.dawne.com2usbaseball.domain.community.dto.response.posts;
 public record InsertPostsResponse(
         boolean success,
         String message,
-        Long boardId
+        Long postId
 ) {
     public static InsertPostsResponse success(Long postId) {
         return new InsertPostsResponse(
