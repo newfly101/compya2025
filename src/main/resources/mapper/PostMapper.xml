@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.PostMapper">
+
+    <select id="selectPosts"
+            resultType="com.dawne.com2usbaseball.domain.community.entity.PostsEntity">
+
+        SELECT
+            id,
+            board_id,
+            author_type,
+            author_id,
+            author_name,
+            title,
+            content,
+            link_type,
+            external_url,
+            is_pinned AS planned,
+            is_visible AS visible,
+            view_count,
+            created_at,
+            updated_at
+        FROM posts
+    </select>
+
+    <insert id="insertNewPost" parameterType="com.dawne.com2usbaseball.domain.community.entity.PostsEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO posts (
+            board_id,
+            author_type,
+            author_id,
+            author_name,
+            title,
+            content,
+            link_type,
+            external_url,
+            is_pinned,
+            is_visible,
+            view_count,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{boardId},
+            #{authorType},
+            #{authorId},
+            #{authorName},
+            #{title},
+            #{content},
+            #{linkType},
+            #{externalUrl},
+            #{pinned},
+            #{visible},
+            #{viewCount},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
+    <update id="updatePost" parameterType="com.dawne.com2usbaseball.domain.community.entity.PostsEntity">
+        UPDATE posts
+        <set>
+            <if test="boardId != null">
+                board_id = #{boardId},
+            </if>
+            <if test="authorType != null">
+                author_type = #{authorType},
+            </if>
+
+            author_id = #{authorId},
+
+            <if test="authorName != null">
+                author_name = #{authorName},
+            </if>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            content = #{content},
+
+            <if test="linkType != null">
+                link_type = #{linkType},
+            </if>
+            external_url = #{externalUrl},
+
+            <if test="pinned != null">
+                is_pinned = #{pinned},
+            </if>
+            <if test="visible != null">
+                is_visible = #{visible},
+            </if>
+            <if test="viewCount != null">
+                view_count = #{viewCount},
+            </if>
+
+            updated_at = NOW()
+        </set>
+
+        WHERE id = #{id}
+
+    </update>
+</mapper>
