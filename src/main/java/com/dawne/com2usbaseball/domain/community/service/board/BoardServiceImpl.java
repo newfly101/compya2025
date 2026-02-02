@@ -1,8 +1,8 @@
 package com.dawne.com2usbaseball.domain.community.service.board;
 
-import com.dawne.com2usbaseball.domain.community.dto.response.BoardListResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.InsertBoardResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.UpdateBoardResponse;
+import com.dawne.com2usbaseball.domain.community.dto.response.board.BoardListResponse;
+import com.dawne.com2usbaseball.domain.community.dto.response.board.InsertBoardResponse;
+import com.dawne.com2usbaseball.domain.community.dto.response.board.UpdateBoardResponse;
 import com.dawne.com2usbaseball.domain.community.entity.BoardsEntity;
 import com.dawne.com2usbaseball.domain.community.repository.BoardRepository;
 import com.dawne.com2usbaseball.domain.community.service.board.support.ListMaker;

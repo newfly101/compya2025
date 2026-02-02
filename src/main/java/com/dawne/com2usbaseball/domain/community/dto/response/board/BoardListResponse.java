@@ -1,4 +1,4 @@
-package com.dawne.com2usbaseball.domain.community.dto.response;
+package com.dawne.com2usbaseball.domain.community.dto.response.board;
 
 
 import java.util.List;

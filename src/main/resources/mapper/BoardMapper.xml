@@ -5,7 +5,6 @@
 <mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.BoardMapper">
 
     <select id="selectBoards"
-            parameterType="string"
             resultType="com.dawne.com2usbaseball.domain.community.entity.BoardsEntity">
 
         SELECT
