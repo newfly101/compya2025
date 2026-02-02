@@ -1,11 +1,11 @@
 import { useDispatch } from "react-redux";
-import { useBoardForm } from "@/domains/community/feature/hooks/board/internal/useBoardForm.js";
 import { requestUpdateNewBoard } from "@/domains/community/store/index.js";
+import { useForm } from "@/domains/community/feature/hooks/internal/useForm.js";
 
 export const useBoardEdit = ({ board, onSuccess }) => {
   const dispatch = useDispatch();
 
-  const formHook = useBoardForm({
+  const formHook = useForm({
     code: board.code,
     name: board.name,
     description: board.description,

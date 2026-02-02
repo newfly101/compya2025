@@ -1,11 +1,11 @@
 import { useDispatch } from "react-redux";
-import { usePostForm } from "@/domains/community/feature/hooks/post/internal/usePostForm.js";
 import { requestUpdateNewPost } from "@/domains/community/store/index.js";
+import { useForm } from "@/domains/community/feature/hooks/internal/useForm.js";
 
 export const usePostEdit = ({ post, onSuccess }) => {
   const dispatch = useDispatch();
 
-  const formHook = usePostForm({
+  const formHook = useForm({
     boardId: post.boardId,
     authorType: post.authorType,
     authorId: post.authorId,
