@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useBoardForm } from "@/domains/community/feature/hooks/internal/useBoardForm.js";
-import { requestInsertNewBoard } from "@/domains/community/store/index.js";
+import { requestUpdateNewBoard } from "@/domains/community/store/index.js";
 
 export const useBoardEdit = ({ board, onSuccess }) => {
   const dispatch = useDispatch();
@@ -19,9 +19,9 @@ export const useBoardEdit = ({ board, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    await dispatch(requestInsertNewBoard({
+    await dispatch(requestUpdateNewBoard({
       id: board.id,
-      ...formHook.form
+      form: formHook.form
     }));
 
     onSuccess?.();

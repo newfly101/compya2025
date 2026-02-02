@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { requestGetAllBoardLists } from "@/domains/community/store/thunks.js";
+import {
+  requestGetAllBoardLists,
+  requestInsertNewBoard,
+  requestUpdateNewBoard,
+} from "@/domains/community/store/thunks.js";
 
 const initialState  = {
   boardLists: [],
@@ -26,6 +30,40 @@ const communitySlice = createSlice({
       })
       .addCase(requestGetAllBoardLists.rejected, (state, action) => {
         state.loading = false;
+        state.error = action.payload;
+      })
+
+      .addCase(requestInsertNewBoard.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(requestInsertNewBoard.fulfilled, (state, action) => {
+        state.loading = true;
+        state.boardLists.push(action.payload.boards);
+      })
+      .addCase(requestInsertNewBoard.rejected, (state, action) => {
+        state.loading = true;
+        state.error = action.payload;
+      })
+
+      .addCase(requestUpdateNewBoard.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(requestUpdateNewBoard.fulfilled, (state, action) => {
+        state.loading = true;
+        const updated = action.payload;
+        const index = state.boardLists.findIndex(b => b.id === updated.id);
+
+        if (index !== -1) {
+          state.boardLists[index] = {
+            ...state.boardLists[index],
+            ...updated,
+          };
+        }
+      })
+      .addCase(requestUpdateNewBoard.rejected, (state, action) => {
+        state.loading = true;
         state.error = action.payload;
       })
   }
