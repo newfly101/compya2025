@@ -324,5 +324,34 @@ CREATE TABLE posts
 
     INDEX idx_board_visible_created (board_id, is_visible, created_at),
     INDEX idx_board_pinned_created (board_id, is_pinned DESC, created_at DESC), -- 게시판별 목록, 고정글
-    INDEX idx_author (author_type, author_id)       -- 작성자 기준 조회
+    INDEX idx_author (author_type, author_id)                                   -- 작성자 기준 조회
+);
+
+
+CREATE TABLE tags
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    code        VARCHAR(50) NOT NULL UNIQUE, -- NEWBIE, RECOMMEND, SKILL
+    name        VARCHAR(50) NOT NULL,        -- 뉴비, 추천, 스킬
+
+    description VARCHAR(255),
+
+    is_visible  BOOLEAN     NOT NULL DEFAULT true,
+    is_deleted  BOOLEAN     NOT NULL DEFAULT false,
+
+    created_at  TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP            DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts_tags
+(
+    post_id BIGINT NOT NULL,
+    tag_id  BIGINT NOT NULL,
+
+    PRIMARY KEY (post_id, tag_id),
+
+    FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags (id)
 );

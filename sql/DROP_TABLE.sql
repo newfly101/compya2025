@@ -13,3 +13,9 @@ DROP TABLE users;
 
 DROP TABLE events;
 DROP TABLE coupons;
+
+DROP TABLE boards;
+DROP TABLE posts;
+
+DROP TABLE tags;
+DROP TABLE posts_tags;
