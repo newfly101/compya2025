@@ -1,11 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ADMIN_COMMUNITY_ACTIONS } from "@/domains/community/store/endpoints.js";
 import {
-  fetchGetAllBoardLists, fetchGetAllPostLists,
-  fetchInsertNewBoard, fetchInsertNewPost,
-  fetchUpdateBoard, fetchUpdatePost,
+  fetchGetAllBoardLists, fetchGetAllPostLists, fetchGetAllTags,
+  fetchInsertNewBoard, fetchInsertNewPost, fetchInsertNewTag,
+  fetchUpdateBoard, fetchUpdatePost, fetchUpdateTag,
 } from "@/domains/community/store/api.js";
 import { createBoardDTO } from "@/domains/community/store/dto.js";
+import { formatNow } from "@/global/utils/datetime/dateUtils.js";
 
 export const requestGetAllBoardLists = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.BOARD_LIST, async (_, { dispatch, getState, rejectWithValue }) => {
@@ -104,7 +105,7 @@ export const requestUpdateNewPost = createAsyncThunk(
 export const requestGetAllTagLists = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.TAG_LIST, async (_, { dispatch, getState, rejectWithValue }) => {
     try {
-      const { tags } = await fetchGetAllPostLists();
+      const { tags } = await fetchGetAllTags();
       console.log(`requestGetAllTagLists : `, tags);
 
       return tags;
@@ -116,12 +117,15 @@ export const requestGetAllTagLists = createAsyncThunk(
 export const requestInsertNewTag = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.CREATE_TAG, async (form, { dispatch, getState, rejectWithValue }) => {
     try {
-      const { success, message, tagId } = await fetchInsertNewPost(form);
+      const { success, message, tagId } = await fetchInsertNewTag(form);
       console.log(`requestInsertNewTag: `, tagId);
+      const now = formatNow();
 
       return {
-        posts: {
+        tags: {
           id: tagId,
+          createdAt: now,
+          updatedAt: now,
           ...form,
         },
       };
@@ -134,7 +138,7 @@ export const requestInsertNewTag = createAsyncThunk(
 export const requestUpdateNewTag = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.UPDATE_TAG, async ({ id, form }, { dispatch, getState, rejectWithValue }) => {
     try {
-      const { success, message, tagId } = await fetchUpdatePost({ id: id, tags: form });
+      const { success, message, tagId } = await fetchUpdateTag({ id: id, tags: form });
       console.log(`requestUpdateNewTag: `, tagId);
 
       return {
