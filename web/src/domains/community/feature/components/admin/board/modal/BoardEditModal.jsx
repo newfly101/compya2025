@@ -1,6 +1,6 @@
 import React from "react";
 import BoardModal from "@/domains/community/feature/components/admin/board/modal/BoardModal.jsx";
-import { useBoardEdit } from "@/domains/community/feature/hooks/useBoardEdit.js";
+import { useBoardEdit } from "@/domains/community/feature/hooks/board/useBoardEdit.js";
 
 const BoardEditModal = ({ editBoard, onClose }) => {
   const hook = useBoardEdit({

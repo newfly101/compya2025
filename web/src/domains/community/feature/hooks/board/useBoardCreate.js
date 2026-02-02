@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { useBoardForm } from "@/domains/community/feature/hooks/internal/useBoardForm.js";
+import { useBoardForm } from "@/domains/community/feature/hooks/board/internal/useBoardForm.js";
 import { requestInsertNewBoard } from "@/domains/community/store/index.js";
 
 export const useBoardCreate = ({ onSuccess }) => {

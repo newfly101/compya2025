@@ -1,6 +1,6 @@
 import React from "react";
 import BoardModal from "@/domains/community/feature/components/admin/board/modal/BoardModal.jsx";
-import { useBoardCreate } from "@/domains/community/feature/hooks/useBoardCreate.js";
+import { useBoardCreate } from "@/domains/community/feature/hooks/board/useBoardCreate.js";
 
 const BoardCreateModal = ({ onClose }) => {
   const hook = useBoardCreate({

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./CommunityManagePage.module.scss";
 import CommunityAdminTabs from "@/domains/community/feature/components/admin/tabs/CommunityAdminTabs.jsx";
 import BoardAdminTable from "@/domains/community/feature/components/admin/board/BoardAdminTable.jsx";
-import PostAdminTable from "@/domains/community/feature/components/admin/board/PostAdminTable.jsx";
+import PostAdminTable from "@/domains/community/feature/components/admin/post/PostAdminTable.jsx";
 import CommentAdminTable from "@/domains/community/feature/components/admin/board/CommentAdminTable.jsx";
 
 const CommunityManagePage = () => {
