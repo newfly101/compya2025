@@ -270,3 +270,59 @@ CREATE TABLE coupons
     INDEX idx_coupons_visible_period (is_visible, expire_at),
     INDEX idx_coupons_expire_at (expire_at)
 );
+
+
+CREATE TABLE boards
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    code        VARCHAR(50)            NOT NULL UNIQUE,
+    -- TIP, FREE, CLUB, NOTICE 등 (URL 기준)
+
+    name        VARCHAR(100)           NOT NULL,
+    description VARCHAR(255),
+
+    write_role  ENUM ('ADMIN', 'USER') NOT NULL DEFAULT 'USER',
+    read_role   ENUM ('ALL', 'LOGIN')  NOT NULL DEFAULT 'ALL',
+
+    is_visible  BOOLEAN                NOT NULL DEFAULT true,
+    is_deleted  BOOLEAN                NOT NULL DEFAULT false,
+
+    sort_order  INT                             DEFAULT 0,
+
+    created_at  TIMESTAMP                       DEFAULT CURRENT_TIMESTAMP,
+    updated_at  TIMESTAMP                       DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE posts
+(
+    id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    board_id     BIGINT                        NOT NULL,
+
+    author_type  ENUM ('ADMIN', 'USER')        NOT NULL,
+    author_id    BIGINT                        NULL,
+    author_name  VARCHAR(50)                   NOT NULL,
+
+    title        VARCHAR(255)                  NOT NULL,
+    content      LONGTEXT                      NULL,
+
+    link_type    ENUM ('INTERNAL', 'EXTERNAL') NOT NULL DEFAULT 'INTERNAL',
+    external_url VARCHAR(500)                  NULL,
+
+    is_pinned    BOOLEAN                       NOT NULL DEFAULT false,
+    is_visible   BOOLEAN                       NOT NULL DEFAULT true,
+
+    view_count   INT                           NOT NULL DEFAULT 0,
+
+    created_at   TIMESTAMP                              DEFAULT CURRENT_TIMESTAMP,
+    updated_at   TIMESTAMP                              DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (board_id) REFERENCES boards (id),
+
+    INDEX idx_board_visible_created (board_id, is_visible, created_at),
+    INDEX idx_board_pinned_created (board_id, is_pinned DESC, created_at DESC), -- 게시판별 목록, 고정글
+    INDEX idx_author (author_type, author_id)       -- 작성자 기준 조회
+);
