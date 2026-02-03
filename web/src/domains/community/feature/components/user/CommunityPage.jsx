@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
 import { ContentPageHeader, useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
 import PostUserTableHead from "@/domains/community/feature/components/user/post/pc/PostUserTableHead.jsx";

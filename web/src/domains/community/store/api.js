@@ -1,6 +1,5 @@
 import { API } from "@/app/store/APIConfig.js";
 import { ADMIN_COMMUNITY, USER_COMMUNITY } from "@/domains/community/store/endpoints.js";
-import { requestGetUserPostListsByBoardId } from "@/domains/community/store/thunks.js";
 
 /**
  * COMMUNITY API
