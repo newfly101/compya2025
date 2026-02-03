@@ -26,7 +26,7 @@ public class PostsServiceImpl implements PostsService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value="adminPosts")
+//    @Cacheable(value="adminPosts")
     public PostListResponse selectAllPostLists() {
         List<PostsEntity> boards = repository.selectPostItems();
 

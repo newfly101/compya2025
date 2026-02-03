@@ -25,7 +25,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value="adminBoards")
+//    @Cacheable(value="adminBoards")
     public BoardListResponse selectBoardList() {
         List<BoardsEntity> boards = repository.selectBoardItems();
 
