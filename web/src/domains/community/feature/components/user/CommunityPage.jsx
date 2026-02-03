@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
 import { ContentPageHeader, useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
-import PostUserTableHead from "@/domains/community/feature/components/user/post/PostUserTableHead.jsx";
+import PostUserTableHead from "@/domains/community/feature/components/user/post/pc/PostUserTableHead.jsx";
 import UserTableLayout from "@/global/layout/userLayout/UserTableLayout.jsx";
 import UserFilterBar from "@/global/layout/userLayout/UserFilterBar.jsx";
-import PostUserTableBody from "@/domains/community/feature/components/user/post/PostUserTableBody.jsx";
+import PostUserTableBody from "@/domains/community/feature/components/user/post/pc/PostUserTableBody.jsx";
 import { usePostUserFilter } from "@/domains/community/feature/hooks/user/post/usePostUserFilter.js";
 import { useUserPost } from "@/domains/community/feature/hooks/user/post/useUserPost.js";
 import { useUserBoard } from "@/domains/community/feature/hooks/user/board/useUserBoards.js";
