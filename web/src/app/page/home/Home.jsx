@@ -4,9 +4,39 @@ import React from "react";
 import quizImg from "@/assets/quiz/quiz877.png";
 import EventSwiper from "@/domains/events/feature/components/EventSwiper/EventSwiper.jsx";
 import CouponSwiper from "@/domains/coupons/feature/components/couponSwiper/CouponSwiper.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { clearUser } from "@/domains/auth/store/slices.js";
+import { requestUserLogout } from "@/domains/auth/store/thunks.js";
 
 const Home = () => {
   const navigate = useNavigate();
+  const { isAuthenticated, user, role } = useSelector(state => state.auth);
+  const dispatch = useDispatch();
+  const isLocal = window.location.hostname === "localhost";
+
+  const NAVER_CLIENT_ID = "Ltp6btmLGcZZGgCIxYqv";
+  const REDIRECT_URI = isLocal
+    ? "http://localhost:8080/api/auth/naver/callback"
+    : "https://api.compyafun.com/api/auth/naver/callback";
+  const STATE = crypto.randomUUID(); // CSRF 방어용
+
+
+  const naverLogin = () => {
+    const url =
+      "https://nid.naver.com/oauth2.0/authorize" +
+      "?response_type=code" +
+      `&client_id=${NAVER_CLIENT_ID}` +
+      `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
+      `&state=${STATE}`;
+
+    window.location.href = url;
+  };
+
+  const logout = async () => {
+    dispatch(clearUser());
+    await dispatch(requestUserLogout());
+    window.location.replace("/");
+  };
 
   const handleClick = (url) => {
     navigate(`/${url}`);
@@ -20,6 +50,16 @@ const Home = () => {
   };
   return (
     <div className={styles.homePage}>
+      <div className={styles.loginWrapper}>
+      {!isAuthenticated ?
+        <button className={styles.register} onClick={naverLogin}></button>
+        :
+        <div className={styles.userProfile}>
+          <span> {user?.nickName} </span>
+          <button className={styles.logout} onClick={logout}>로그아웃</button>
+        </div>
+      }
+      </div>
 
       {/* Hero Section (상단 그래디언트 영역) */}
       <section className={styles.hero}>
