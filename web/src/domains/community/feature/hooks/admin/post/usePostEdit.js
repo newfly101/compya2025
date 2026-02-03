@@ -22,7 +22,7 @@ export const usePostEdit = ({ post, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("id: ",post.id, "      form:", formHook.form);
+    // console.log("id: ",post.id, "      form:", formHook.form);
 
     await dispatch(requestUpdateNewPost({
       id: post.id,

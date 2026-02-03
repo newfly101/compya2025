@@ -9,24 +9,19 @@ import { usePostUserFilter } from "@/domains/community/feature/hooks/user/post/u
 import { useUserPost } from "@/domains/community/feature/hooks/user/post/useUserPost.js";
 import { useUserBoard } from "@/domains/community/feature/hooks/user/board/useUserBoards.js";
 import CommunityUserBoardTabs from "@/domains/community/feature/components/user/board/CommunityUserBoardTabs.jsx";
-import PostUserMobileTableBody from "@/domains/community/feature/components/user/post/mobile/PostUserMobileTableBody.jsx";
+import PostUserMobileTableBody
+  from "@/domains/community/feature/components/user/post/mobile/PostUserMobileTableBody.jsx";
 import PostUserMobileTableHead
   from "@/domains/community/feature/components/user/post/mobile/PostUserMobileTableHead.jsx";
 
 const CommunityPage = () => {
   const { moveHome } = useContentPageHeader();
 
-  const { boardLists } = useUserBoard();
-  const { postLists, handleAddViewCount, useMediaQuery } = useUserPost();
+  const { boardLists, activeBoardId, selectBoard } = useUserBoard();
+
+  const { postLists, handleAddViewCount, useMediaQuery } = useUserPost(activeBoardId);
   const { filters, setFilters, filterUnits, filteredData: filteredPosts }
     = usePostUserFilter(postLists);
-  const [activeBoard, setActiveBoard] = useState(null);
-
-  useEffect(() => {
-    if (boardLists.length > 0 && !activeBoard) {
-      setActiveBoard(boardLists[0]);
-    }
-  }, [boardLists, activeBoard]);
 
   const isMobile = useMediaQuery("(max-width: 768px)");
 
@@ -39,7 +34,7 @@ const CommunityPage = () => {
                                    onBack={moveHome}
         />}
         children={<>
-          <CommunityUserBoardTabs boards={boardLists} active={activeBoard?.code} onChange={setActiveBoard} />
+          <CommunityUserBoardTabs boards={boardLists} active={activeBoardId} onChange={selectBoard} />
           {isMobile ? (
               <UserTableLayout
                 filters={<UserFilterBar

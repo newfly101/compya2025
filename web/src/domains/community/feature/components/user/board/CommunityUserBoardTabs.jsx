@@ -7,11 +7,11 @@ const CommunityUserBoardTabs = ({ boards, active, onChange }) => {
     <div className={styles.tabs}>
       {boards.map(tab => (
         <button
-          key={tab.code}
+          key={tab.id}
           className={`${styles.tab} ${
-            active === tab.code ? styles.active : ""
+            active === tab.id ? styles.active : ""
           }`}
-          onClick={() => onChange(tab)}
+          onClick={() => onChange(tab.id)}
         >
           {tab.name}
         </button>
