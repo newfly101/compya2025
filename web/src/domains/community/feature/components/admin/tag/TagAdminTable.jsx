@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "@/domains/community/feature/components/admin/board/AdminTable.module.scss";
 import TagCreateModal from "@/domains/community/feature/components/admin/tag/modal/TagCreateModal.jsx";
 import TagEditModal from "@/domains/community/feature/components/admin/tag/modal/TagEditModal.jsx";
-import { useTag } from "@/domains/community/feature/hooks/tag/useTag.js";
+import { useTag } from "@/domains/community/feature/hooks/admin/tag/useTag.js";
 
 const TagAdminTable = () => {
   const [open, setOpen] = useState(false);

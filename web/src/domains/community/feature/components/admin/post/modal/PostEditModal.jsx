@@ -1,6 +1,6 @@
 import React from "react";
 import PostModal from "@/domains/community/feature/components/admin/post/modal/PostModal.jsx";
-import { usePostEdit } from "@/domains/community/feature/hooks/post/usePostEdit.js";
+import { usePostEdit } from "@/domains/community/feature/hooks/admin/post/usePostEdit.js";
 
 const PostEditModal = ({ editPost, onClose }) => {
   const hook = usePostEdit({

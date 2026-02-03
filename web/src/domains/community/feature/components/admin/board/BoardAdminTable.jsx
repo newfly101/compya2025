@@ -1,6 +1,6 @@
 import { useState } from "react";
 import styles from "./AdminTable.module.scss";
-import { useBoards } from "@/domains/community/feature/hooks/board/useBoards.js";
+import { useBoards } from "@/domains/community/feature/hooks/admin/board/useBoards.js";
 import BoardCreateModal from "@/domains/community/feature/components/admin/board/modal/BoardCreateModal.jsx";
 import BoardEditModal from "@/domains/community/feature/components/admin/board/modal/BoardEditModal.jsx";
 

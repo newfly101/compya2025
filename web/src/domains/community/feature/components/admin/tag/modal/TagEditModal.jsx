@@ -1,6 +1,6 @@
 import React from "react";
 import TagModal from "@/domains/community/feature/components/admin/tag/modal/TagModal.jsx";
-import { useTagEdit } from "@/domains/community/feature/hooks/tag/useTagEdit.js";
+import { useTagEdit } from "@/domains/community/feature/hooks/admin/tag/useTagEdit.js";
 
 const TagEditModal = ({ editTag, onClose }) => {
   const hook = useTagEdit({

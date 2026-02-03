@@ -1,6 +1,6 @@
 import React from "react";
 import PostModal from "@/domains/community/feature/components/admin/post/modal/PostModal.jsx";
-import { usePostCreate } from "@/domains/community/feature/hooks/post/usePostCreate.js";
+import { usePostCreate } from "@/domains/community/feature/hooks/admin/post/usePostCreate.js";
 
 const PostCreateModal = ({ onClose }) => {
   const hook = usePostCreate({

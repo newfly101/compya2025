@@ -1,5 +1,5 @@
 import styles from "./AdminTable.module.scss";
-import { usePosts } from "@/domains/community/feature/hooks/post/usePosts.js";
+import { usePosts } from "@/domains/community/feature/hooks/admin/post/usePosts.js";
 import { useState } from "react";
 import PostCreateModal from "@/domains/community/feature/components/admin/post/modal/PostCreateModal.jsx";
 import PostEditModal from "@/domains/community/feature/components/admin/post/modal/PostEditModal.jsx";
