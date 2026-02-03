@@ -1,5 +1,6 @@
 import { API } from "@/app/store/APIConfig.js";
 import { ADMIN_COMMUNITY, USER_COMMUNITY } from "@/domains/community/store/endpoints.js";
+import { requestGetUserPostListsByBoardId } from "@/domains/community/store/thunks.js";
 
 /**
  * COMMUNITY API
@@ -57,5 +58,10 @@ export const fetchUpdateTag = async ({ id, tags }) => {
 
 export const fetchGetUserBoardLists = async () => {
   const { data } = await API.get(`${USER_COMMUNITY.BOARD_LIST}`);
+  return data;
+}
+
+export const fetchGetUserPostListsByBoardId = async (boardId) => {
+  const { data } = await API.get(`${USER_COMMUNITY.POST_LIST(boardId)}`);
   return data;
 }

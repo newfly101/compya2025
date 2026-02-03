@@ -1,13 +1,22 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  requestGetAllBoardLists, requestGetAllPostLists, requestGetAllTagLists, requestGetUserBoardLists,
-  requestInsertNewBoard, requestInsertNewPost, requestInsertNewTag,
-  requestUpdateNewBoard, requestUpdateNewPost, requestUpdateNewTag,
+  requestGetAllBoardLists,
+  requestGetAllPostLists,
+  requestGetAllTagLists,
+  requestGetUserBoardLists,
+  requestGetUserPostListsByBoardId,
+  requestInsertNewBoard,
+  requestInsertNewPost,
+  requestInsertNewTag,
+  requestUpdateNewBoard,
+  requestUpdateNewPost,
+  requestUpdateNewTag,
 } from "@/domains/community/store/thunks.js";
 import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
 
 const initialState  = {
   boardLists: [],
+  activeBoardId: null,
   postLists: [],
   tagLists: [],
   loading: false,
@@ -17,7 +26,11 @@ const initialState  = {
 const communitySlice = createSlice({
   name: "community",
   initialState: initialState,
-  reducers: {},
+  reducers: {
+    setActiveBoard: (state, action) => {
+      state.activeBoardId = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     /* ===============================
      * 게시판 관리 - 목록 조회
@@ -105,7 +118,13 @@ const communitySlice = createSlice({
     applyAsyncHandlers(builder, requestGetUserBoardLists, (state, action) => {
       state.boardLists = action.payload.boards;
     });
+
+    applyAsyncHandlers(builder, requestGetUserPostListsByBoardId, (state, action) => {
+      state.postLists = action.payload;
+    });
+
+
   }
 })
-export const {  } = communitySlice.actions;
+export const { setActiveBoard } = communitySlice.actions;
 export default communitySlice.reducer;

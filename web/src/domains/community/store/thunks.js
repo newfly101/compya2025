@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ADMIN_COMMUNITY_ACTIONS, USER_COMMUNITY_ACTIONS } from "@/domains/community/store/endpoints.js";
 import {
-  fetchGetAllBoardLists, fetchGetAllPostLists, fetchGetAllTags, fetchGetUserBoardLists,
+  fetchGetAllBoardLists, fetchGetAllPostLists, fetchGetAllTags, fetchGetUserBoardLists, fetchGetUserPostListsByBoardId,
   fetchInsertNewBoard, fetchInsertNewPost, fetchInsertNewTag,
   fetchUpdateBoard, fetchUpdatePost, fetchUpdateTag,
 } from "@/domains/community/store/api.js";
@@ -12,7 +12,7 @@ export const requestGetAllBoardLists = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.BOARD_LIST, async (_, { rejectWithValue }) => {
     try {
       const data = await fetchGetAllBoardLists();
-      console.log(`requestGetAllBoardLists : `, data);
+      // console.log(`requestGetAllBoardLists : `, data);
 
       return data;
     } catch (error) {
@@ -24,7 +24,7 @@ export const requestInsertNewBoard = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.CREATE_BOARD, async (form, { rejectWithValue }) => {
     try {
       const { success, message, boardId } = await fetchInsertNewBoard(createBoardDTO(form));
-      console.log(`requestInsertNewBoard: `, boardId);
+      // console.log(`requestInsertNewBoard: `, boardId);
 
       return {
         boards: {
@@ -42,7 +42,7 @@ export const requestUpdateNewBoard = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.UPDATE_BOARD, async ({ id, form }, { rejectWithValue }) => {
     try {
       const { success, message, boardId } = await fetchUpdateBoard({ id: id, board: createBoardDTO(form) });
-      console.log(`requestUpdateNewBoard: `, boardId);
+      // console.log(`requestUpdateNewBoard: `, boardId);
 
       return {
         id: boardId,
@@ -58,7 +58,7 @@ export const requestGetAllPostLists = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.POST_LIST, async (_, { rejectWithValue }) => {
     try {
       const { posts } = await fetchGetAllPostLists();
-      console.log(`requestGetAllPostLists : `, posts);
+      // console.log(`requestGetAllPostLists : `, posts);
 
       return posts;
     } catch (error) {
@@ -81,7 +81,7 @@ export const requestInsertNewPost = createAsyncThunk(
       };
 
       const { success, message, postId } = await fetchInsertNewPost(payload);
-      console.log(`requestInsertNewPost: `, postId);
+      // console.log(`requestInsertNewPost: `, postId);
 
       return {
         posts: {
@@ -99,7 +99,7 @@ export const requestUpdateNewPost = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.UPDATE_POST, async ({ id, form }, { rejectWithValue }) => {
     try {
       const { success, message, postId } = await fetchUpdatePost({ id: id, posts: form });
-      console.log(`requestUpdateNewPost: `, postId);
+      // console.log(`requestUpdateNewPost: `, postId);
 
       return {
         id: postId,
@@ -117,7 +117,7 @@ export const requestGetAllTagLists = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.TAG_LIST, async (_, { rejectWithValue }) => {
     try {
       const { tags } = await fetchGetAllTags();
-      console.log(`requestGetAllTagLists : `, tags);
+      // console.log(`requestGetAllTagLists : `, tags);
 
       return tags;
     } catch (error) {
@@ -129,7 +129,7 @@ export const requestInsertNewTag = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.CREATE_TAG, async (form, { rejectWithValue }) => {
     try {
       const { success, message, tagId } = await fetchInsertNewTag(form);
-      console.log(`requestInsertNewTag: `, tagId);
+      // console.log(`requestInsertNewTag: `, tagId);
       const now = formatNow();
 
       return {
@@ -150,7 +150,7 @@ export const requestUpdateNewTag = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.UPDATE_TAG, async ({ id, form }, { rejectWithValue }) => {
     try {
       const { success, message, tagId } = await fetchUpdateTag({ id: id, tags: form });
-      console.log(`requestUpdateNewTag: `, tagId);
+      // console.log(`requestUpdateNewTag: `, tagId);
 
       return {
         id: tagId,
@@ -169,9 +169,21 @@ export const requestGetUserBoardLists = createAsyncThunk(
   USER_COMMUNITY_ACTIONS.BOARD_LIST, async (_, { rejectWithValue }) => {
     try {
       const data = await fetchGetUserBoardLists();
-      console.log(`requestGetUserBoardLists : `, data);
+      // console.log(`requestGetUserBoardLists : `, data);
 
       return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  });
+
+export const requestGetUserPostListsByBoardId = createAsyncThunk(
+  USER_COMMUNITY_ACTIONS.POST_LIST, async (boardId, { rejectWithValue }) => {
+    try {
+      const { posts }  = await fetchGetUserPostListsByBoardId(boardId);
+      // console.log(`requestGetUserPostListsByBoardId : `, posts);
+
+      return posts;
     } catch (error) {
       return rejectWithValue(error.message);
     }

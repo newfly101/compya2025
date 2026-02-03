@@ -33,7 +33,7 @@ export const USER_COMMUNITY = {
   CREATE_BOARD: "/community/boards",
   UPDATE_BOARD: (id) => `/community/boards/${id}`,
   // posts
-  POST_LIST: "/community/posts",
+  POST_LIST: (boardId) => `/community/board/${boardId}/posts`,
   CREATE_POST: "/community/posts",
   UPDATE_POST: (id) => `/community/posts/${id}`,
   // tags
@@ -48,7 +48,7 @@ export const USER_COMMUNITY_ACTIONS = {
   CREATE_BOARD: "/community/boards/create",
   UPDATE_BOARD: "/community/boards/${id}",
   // posts
-  POST_LIST: "/community/posts",
+  POST_LIST: "/community/board/{boardId}/posts",
   CREATE_POST: "/community/posts/create",
   UPDATE_POST: "/community/posts/${id}",
   // tags
