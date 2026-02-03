@@ -11,7 +11,6 @@ export const ADMIN_COMMUNITY = {
   TAG_LIST: "/community/admin/tags",
   CREATE_TAG: "/community/admin/tags",
   UPDATE_TAG: (id) => `/community/admin/tags/${id}`,
-
 }
 export const ADMIN_COMMUNITY_ACTIONS = {
   // boards
@@ -26,4 +25,34 @@ export const ADMIN_COMMUNITY_ACTIONS = {
   TAG_LIST: "/community/admin/tags",
   CREATE_TAG: "/community/admin/tags/create",
   UPDATE_TAG: "/community/admin/tags/${id}",
+}
+
+export const USER_COMMUNITY = {
+  // boards
+  BOARD_LIST: "/community/boards",
+  CREATE_BOARD: "/community/boards",
+  UPDATE_BOARD: (id) => `/community/boards/${id}`,
+  // posts
+  POST_LIST: "/community/posts",
+  CREATE_POST: "/community/posts",
+  UPDATE_POST: (id) => `/community/posts/${id}`,
+  // tags
+  TAG_LIST: "/community/tags",
+  CREATE_TAG: "/community/tags",
+  UPDATE_TAG: (id) => `/community/tags/${id}`,
+}
+
+export const USER_COMMUNITY_ACTIONS = {
+  // boards
+  BOARD_LIST: "/community/boards",
+  CREATE_BOARD: "/community/boards/create",
+  UPDATE_BOARD: "/community/boards/${id}",
+  // posts
+  POST_LIST: "/community/posts",
+  CREATE_POST: "/community/posts/create",
+  UPDATE_POST: "/community/posts/${id}",
+  // tags
+  TAG_LIST: "/community/tags",
+  CREATE_TAG: "/community/tags/create",
+  UPDATE_TAG: "/community/tags/${id}",
 }
