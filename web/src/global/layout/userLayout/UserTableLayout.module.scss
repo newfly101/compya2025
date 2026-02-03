@@ -1,0 +1,135 @@
+// todo : AdminTableLayout.module.scss 랑 같은 파일이라 통합 필요함
+.wrapper {
+  width: 100%;
+}
+
+/* =========================
+   검색 / 필터 바
+========================= */
+.filterBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 1.6rem;
+  margin-bottom: 1.6rem;
+  padding: 1.2rem 1.4rem;
+
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+
+  .filterGroup {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+  }
+
+  .actionGroup {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    white-space: nowrap;
+  }
+
+  input, select {
+    background: $surface1;
+    border: 1px solid $border;
+    color: $text-primary;
+
+    padding: 0.8rem 1rem;
+    font-size: 1.4rem;
+    border-radius: 0.6rem;
+
+    transition: border-color 0.15s ease, background 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      background: $surface2;
+    }
+  }
+
+  input {
+    width: 24rem;
+  }
+
+  select {
+    min-width: 13rem;
+    cursor: pointer;
+  }
+
+}
+/* =========================
+   테이블 영역
+========================= */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+  overflow: hidden;
+  font-size: 1.4rem;
+
+  th, td {
+    padding: 1.2rem 1rem;
+    text-align: center;
+    font-weight: 600;
+    color: $text-secondary;
+    border-bottom: 1px solid $border;
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+
+  thead {
+    background: $surface3;
+
+    th {
+      background: $surface3;
+    }
+  }
+
+  tbody {
+    tr {
+      transition: background 0.15s ease;
+
+      &:hover {
+        background: $surface3;
+      }
+    }
+  }
+
+  button {
+    background: $primary-bg;
+    color: $primary-text;
+    border: 1px solid transparent;
+    padding: 0.4rem 1rem;
+    border-radius: 0.4rem;
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+}
+
+/* =========================
+   action Button 영역
+========================= */
+.primary {
+  background: $primary-bg;
+  color: $primary-text;
+  border: none;
+  padding: 0.8rem 1.6rem;
+  border-radius: 0.6rem;
+  cursor: pointer;
+
+  &:hover {
+    background: $primary-hover;
+  }
+}
