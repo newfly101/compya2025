@@ -100,4 +100,25 @@
         WHERE id = #{id}
 
     </update>
+
+    <select id="selectUserPosts"
+            resultType="com.dawne.com2usbaseball.domain.community.entity.PostsEntity">
+
+        SELECT
+            id,
+            board_id,
+            author_type,
+            author_id,
+            author_name,
+            title,
+            content,
+            link_type,
+            external_url,
+            is_pinned AS pinned,
+            is_visible AS visible,
+            view_count,
+            created_at,
+            updated_at
+        FROM posts
+    </select>
 </mapper>

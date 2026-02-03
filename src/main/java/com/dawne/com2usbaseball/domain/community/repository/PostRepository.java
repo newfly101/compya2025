@@ -24,4 +24,10 @@ public class PostRepository {
     public boolean updatePost(PostsEntity posts) {
         return mapper.updatePost(posts) > 0;
     }
+
+    public List<PostsEntity> selectUserPostByBoardId(Long boardId) {
+        return mapper.selectUserPosts(boardId);
+    }
+
+
 }

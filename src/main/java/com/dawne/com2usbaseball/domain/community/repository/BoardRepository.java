@@ -28,4 +28,8 @@ public class BoardRepository {
     public List<BoardsEntity> selectUserBoardItems() {
         return mapper.selectBoardsWithUser();
     }
+
+    public boolean existsById(Long id) {
+        return mapper.selectBoardItemById(id) > 0;
+    }
 }

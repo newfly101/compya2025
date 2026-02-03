@@ -4,10 +4,12 @@ import com.dawne.com2usbaseball.domain.community.dto.response.posts.InsertPostsR
 import com.dawne.com2usbaseball.domain.community.dto.response.posts.PostListResponse;
 import com.dawne.com2usbaseball.domain.community.dto.response.posts.UpdatePostsResponse;
 import com.dawne.com2usbaseball.domain.community.entity.PostsEntity;
+import com.dawne.com2usbaseball.domain.community.repository.BoardRepository;
 import com.dawne.com2usbaseball.domain.community.repository.PostRepository;
 import com.dawne.com2usbaseball.domain.community.service.posts.support.ListMaker;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +24,7 @@ public class PostsServiceImpl implements PostsService {
     @Resource(name = "postListMaker")
     private final ListMaker listMaker;
     private final PostRepository repository;
+    private final BoardRepository boardRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -33,7 +36,7 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
-    @CacheEvict(value="adminPosts", allEntries = true)
+    @CacheEvict(value = "adminPosts", allEntries = true)
     public InsertPostsResponse createNewPostItem(PostsEntity posts) {
         boolean success = repository.insertNewPost(posts);
 
@@ -45,7 +48,7 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
-    @CacheEvict(value="adminPosts", allEntries = true)
+    @CacheEvict(value = "adminPosts", allEntries = true)
     public UpdatePostsResponse updatePostItem(PostsEntity posts) {
         boolean success = repository.updatePost(posts);
 
@@ -54,5 +57,20 @@ public class PostsServiceImpl implements PostsService {
         }
 
         return UpdatePostsResponse.success(posts.getId());
+    }
+
+
+    // User Get Post List
+    @Override
+    @Transactional(readOnly = true)
+    public PostListResponse selectPostListsByBoard(Long boardId) throws NotFoundException {
+        // 검증
+        if (!boardRepository.existsById(boardId)) {
+            throw new NotFoundException("BOARD_NOT_FOUND");
+        }
+
+        List<PostsEntity> boards = repository.selectUserPostByBoardId(boardId);
+
+        return listMaker.makePostListMaker(boards);
     }
 }

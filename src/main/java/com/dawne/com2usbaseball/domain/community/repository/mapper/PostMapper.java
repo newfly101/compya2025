@@ -13,4 +13,6 @@ public interface PostMapper {
     int insertNewPost(PostsEntity posts);
     int updatePost(PostsEntity posts);
 
+    List<PostsEntity> selectUserPosts(Long boardId);
+
 }

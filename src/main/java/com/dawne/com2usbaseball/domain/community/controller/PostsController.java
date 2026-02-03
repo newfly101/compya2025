@@ -6,6 +6,7 @@ import com.dawne.com2usbaseball.domain.community.dto.response.posts.PostListResp
 import com.dawne.com2usbaseball.domain.community.dto.response.posts.UpdatePostsResponse;
 import com.dawne.com2usbaseball.domain.community.service.posts.PostsService;
 import lombok.RequiredArgsConstructor;
+import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,5 +29,12 @@ public class PostsController {
     public UpdatePostsResponse updatePost(@RequestBody PostsChangeRequest request, @PathVariable Long id) {
         return postsService.updatePostItem(request.toEntity(id));
     }
+
+    @GetMapping("/board/{boardId}/posts")
+    public PostListResponse getPostListByBoardId(@PathVariable Long boardId) throws NotFoundException {
+        return postsService.selectPostListsByBoard(boardId);
+    }
+
+
 
 }
