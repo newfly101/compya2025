@@ -12,7 +12,7 @@ const PostModal = ({
                      onCancel,
                    }) => {
   const { boardLists } = useSelector(state => state.community);
-  const { user, role } = useSelector(state => state.auth);
+  const { role } = useSelector(state => state.auth);
 
   return (
     <div className={styles.overlay}>
@@ -27,13 +27,6 @@ const PostModal = ({
           {/* Board */}
           <label>
             게시판
-            {/*게시판 ID*/}
-            {/*<input*/}
-            {/*  name="boardId"*/}
-            {/*  value={form.boardId}*/}
-            {/*  onChange={onChange}*/}
-            {/*  placeholder="게시판 ID"*/}
-            {/*/>*/}
             <select
               name="boardId"
               value={form.boardId}

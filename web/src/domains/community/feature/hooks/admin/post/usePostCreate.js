@@ -19,7 +19,7 @@ export const usePostCreate = ({ onSuccess }) => {
     viewCount: 0,
   });
 
-  const handleSubmit = async ({keep}) => {
+  const handleSubmit = async () => {
 
     await dispatch(requestInsertNewPost(formHook.form));
     onSuccess?.();

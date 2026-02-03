@@ -5,8 +5,6 @@ import quizImg from "@/assets/quiz/quiz877.png";
 import EventSwiper from "@/domains/events/feature/components/EventSwiper/EventSwiper.jsx";
 import CouponSwiper from "@/domains/coupons/feature/components/couponSwiper/CouponSwiper.jsx";
 
-const CLUB_GUIDE_URL = "https://cafe.naver.com/com2usbaseball2015/1785997";
-
 const Home = () => {
   const navigate = useNavigate();
 
