@@ -1,4 +1,4 @@
-import CommunityPage from "@/domains/community/feature/components/user/CommunityList.jsx";
+import CommunityPage from "@/domains/community/feature/components/user/CommunityPage.jsx";
 
 const UserCommunityPage = () => {
   return (
