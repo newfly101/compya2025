@@ -8,12 +8,16 @@ import com.dawne.com2usbaseball.domain.community.repository.TagRepository;
 import com.dawne.com2usbaseball.domain.community.service.tag.support.ListMaker;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TagServiceImpl implements TagService {
 
     private final TagRepository repository;
@@ -21,6 +25,8 @@ public class TagServiceImpl implements TagService {
     private final ListMaker listMaker;
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value="adminTags")
     public TagListResponse selectTagList() {
         List<TagEntity> tags = repository.selectTagItems();
 
@@ -28,6 +34,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @CacheEvict(value="adminTags", allEntries = true)
     public InsertTagResponse createNewTagItem(TagEntity tags) {
         boolean success = repository.insertNewTag(tags);
 
@@ -39,6 +46,7 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    @CacheEvict(value="adminTags", allEntries = true)
     public UpdateTagResponse updateTagItem(TagEntity tags) {
         boolean success = repository.updateTag(tags);
 

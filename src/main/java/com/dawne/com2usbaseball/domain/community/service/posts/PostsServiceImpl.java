@@ -8,12 +8,16 @@ import com.dawne.com2usbaseball.domain.community.repository.PostRepository;
 import com.dawne.com2usbaseball.domain.community.service.posts.support.ListMaker;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class PostsServiceImpl implements PostsService {
 
     @Resource(name = "postListMaker")
@@ -21,6 +25,8 @@ public class PostsServiceImpl implements PostsService {
     private final PostRepository repository;
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value="adminPosts")
     public PostListResponse selectAllPostLists() {
         List<PostsEntity> boards = repository.selectPostItems();
 
@@ -28,6 +34,7 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
+    @CacheEvict(value="adminPosts", allEntries = true)
     public InsertPostsResponse createNewPostItem(PostsEntity posts) {
         boolean success = repository.insertNewPost(posts);
 
@@ -39,6 +46,7 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
+    @CacheEvict(value="adminPosts", allEntries = true)
     public UpdatePostsResponse updatePostItem(PostsEntity posts) {
         boolean success = repository.updatePost(posts);
 

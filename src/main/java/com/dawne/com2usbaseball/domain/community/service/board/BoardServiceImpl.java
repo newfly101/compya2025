@@ -8,7 +8,10 @@ import com.dawne.com2usbaseball.domain.community.repository.BoardRepository;
 import com.dawne.com2usbaseball.domain.community.service.board.support.ListMaker;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,6 +24,8 @@ public class BoardServiceImpl implements BoardService {
     private final ListMaker listMaker;
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value="adminBoards")
     public BoardListResponse selectBoardList() {
         List<BoardsEntity> boards = repository.selectBoardItems();
 
@@ -28,6 +33,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @CacheEvict(value="adminBoards", allEntries = true)
     public InsertBoardResponse createNewBoardItem(BoardsEntity boards) {
         boolean success = repository.insertNewBoard(boards);
 
@@ -39,6 +45,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @CacheEvict(value="adminBoards", allEntries = true)
     public UpdateBoardResponse updateBoardItem(BoardsEntity boards) {
         boolean success = repository.updateBoard(boards);
 
@@ -50,6 +57,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    @Cacheable(value="userBoards")
     public BoardListResponse selectUserBoardList() {
         List<BoardsEntity> boards = repository.selectUserBoardItems();
 
