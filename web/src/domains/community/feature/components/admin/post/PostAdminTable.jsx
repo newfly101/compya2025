@@ -38,7 +38,10 @@ const PostAdminTable = () => {
             <td>{post.boardId}</td>
             <td>{post.authorType}</td>
             <td>{post.authorName}</td>
-            <td>{post.title}</td>
+            <td className={styles.titleWrapper}>
+              <span className={styles.titleText}>{post.title}</span>
+              <span className={styles.tooltip}>{post.title}</span>
+            </td>
             <td>{post.linkType}</td>
             <td><a href={post.externalUrl} target="_blank" rel="noreferrer">링크</a></td>
             <td>{post.pinned ? "고정" : "해제"}</td>

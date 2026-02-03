@@ -8,9 +8,11 @@ const PostModal = ({
                      form,
                      onChange,
                      onSubmit,
+                     onSubmitContinue=null,
                      onCancel,
                    }) => {
   const { boardLists } = useSelector(state => state.community);
+  const { user, role } = useSelector(state => state.auth);
 
   return (
     <div className={styles.overlay}>
@@ -47,6 +49,7 @@ const PostModal = ({
           </label>
 
           {/* Author */}
+          {role.role === "ADMIN" &&
           <div className={styles.row}>
             <label>
               작성자 유형
@@ -54,6 +57,7 @@ const PostModal = ({
                 name="authorType"
                 value={form.authorType}
                 onChange={onChange}
+                disabled
               >
                 <option value="ADMIN">ADMIN</option>
                 <option value="USER">USER</option>
@@ -67,9 +71,11 @@ const PostModal = ({
                 value={form.authorName}
                 onChange={onChange}
                 placeholder="작성자 이름"
+                disabled
               />
             </label>
           </div>
+          }
 
           {/* Title */}
           <label>
@@ -163,6 +169,11 @@ const PostModal = ({
           <button className={styles.primary} onClick={onSubmit}>
             {submitLabel}
           </button>
+          {onSubmitContinue &&
+          <button className={styles.primary} onClick={onSubmitContinue}>
+            {submitLabel} 후 계속
+          </button>
+          }
         </div>
       </div>
     </div>

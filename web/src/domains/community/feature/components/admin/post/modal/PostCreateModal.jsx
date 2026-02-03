@@ -13,7 +13,8 @@ const PostCreateModal = ({ onClose }) => {
       submitLabel="추가"
       form={hook.form}
       onChange={hook.handleChange}
-      onSubmit={hook.handleSubmit}
+      onSubmit={() => hook.handleSubmitContinue({keep: false})}
+      onSubmitContinue={() => hook.handleSubmitContinue({keep: true})}
       onCancel={onClose}
       />
   );
