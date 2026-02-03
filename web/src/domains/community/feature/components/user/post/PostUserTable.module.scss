@@ -1,0 +1,81 @@
+/* THead */
+
+/* TBody */
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: $text-secondary;
+}
+
+.thumbnail {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+
+  & > button {
+    padding: 0.4rem 0.8rem;
+    font-size: 1.2rem;
+    border-radius: 0.4rem;
+    border: none;
+    background: $primary-bg;
+    color: $primary-text;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 4.8rem;
+    text-align: center;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+
+  .danger {
+    background: $warning-bg;
+    color: $warning;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}
+
+
+.titleWrapper {
+  position: relative;
+  max-width: 420px;
+}
+
+.titleText {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 25%;
+  background: #222;
+  color: #fff;
+  padding: 6px 8px;
+  border-radius: 4px;
+  white-space: normal;
+  z-index: 10;
+  width: 100%;
+  min-width: 400px;
+}
+
+.titleWrapper:hover .tooltip {
+  display: block;
+}
