@@ -65,57 +65,7 @@
    테이블 영역
 ========================= */
 .table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  background: $surface2;
-  border: 1px solid $border;
-  border-radius: 0.8rem;
-  overflow: hidden;
-  font-size: 1.4rem;
-
-  th, td {
-    padding: 1.2rem 1rem;
-    text-align: center;
-    font-weight: 600;
-    color: $text-secondary;
-    border-bottom: 1px solid $border;
-    white-space: nowrap;
-    vertical-align: middle;
-  }
-
-  thead {
-    background: $surface3;
-
-    th {
-      background: $surface3;
-    }
-  }
-
-  tbody {
-    tr {
-      transition: background 0.15s ease;
-
-      &:hover {
-        background: $surface3;
-      }
-    }
-  }
-
-  button {
-    background: $primary-bg;
-    color: $primary-text;
-    border: 1px solid transparent;
-    padding: 0.4rem 1rem;
-    border-radius: 0.4rem;
-    font-size: 1.3rem;
-    cursor: pointer;
-    transition: background 0.2s ease;
-
-    &:hover {
-      background: $primary-hover;
-    }
-  }
+  @include tableBase( $align: left,$layout: fixed, $whiteSpace: nowrap);
 }
 
 /* =========================
@@ -131,5 +81,11 @@
 
   &:hover {
     background: $primary-hover;
+  }
+}
+
+@media (max-width: 768px) {
+  .table {
+    @include tableBase( $align: left,$layout: auto, $whiteSpace: normal);
   }
 }

@@ -5,7 +5,7 @@
 }
 
 
-@mixin tableBase($font-size: 1.4rem, $align: center) {
+@mixin tableBase($font-size: 1.4rem, $align: center, $layout: fixed, $whiteSpace: nowrap) {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
@@ -14,7 +14,7 @@
   border-radius: 0.8rem;
   overflow: hidden;
   font-size: $font-size;
-  table-layout: fixed;
+  table-layout: $layout;
 
   th, td {
     padding: 1.2rem 1rem;
@@ -22,7 +22,7 @@
     font-weight: 600;
     color: $text-secondary;
     border-bottom: 1px solid $border;
-    white-space: nowrap;
+    white-space: $whiteSpace;
     vertical-align: middle;
 
   }

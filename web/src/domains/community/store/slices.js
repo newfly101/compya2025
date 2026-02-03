@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
-  requestGetAllBoardLists, requestGetAllPostLists, requestGetAllTagLists,
+  requestGetAllBoardLists, requestGetAllPostLists, requestGetAllTagLists, requestGetUserBoardLists,
   requestInsertNewBoard, requestInsertNewPost, requestInsertNewTag,
   requestUpdateNewBoard, requestUpdateNewPost, requestUpdateNewTag,
 } from "@/domains/community/store/thunks.js";
@@ -98,6 +98,12 @@ const communitySlice = createSlice({
           ...updated,
         };
       }
+    });
+    /* ===============================
+    * (유저) 게시판 관리 - 목록 조회
+    * =============================== */
+    applyAsyncHandlers(builder, requestGetUserBoardLists, (state, action) => {
+      state.boardLists = action.payload.boards;
     });
   }
 })

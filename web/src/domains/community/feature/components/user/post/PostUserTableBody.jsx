@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./PostUserTable.module.scss";
 import { POST_TABLE } from "@/domains/community/config/POST_TABLE.js";
 
-const PostUserTableBody = ({ posts, handleAddCount }) => {
+const PostUserTableBody = ({ posts, handleClickPost }) => {
 
   if (posts.length === 0) {
     return (
@@ -17,12 +17,11 @@ const PostUserTableBody = ({ posts, handleAddCount }) => {
   return (
     posts?.map(post => (
       <tr key={post.id}>
-        <td>{post.boardId}</td>
-        <td className={styles.titleWrapper}>
+        <td>{post.id}</td>
+        <td className={styles.titleWrapper} onClick={() => handleClickPost(post)}>
           <span className={styles.titleText}>{post.title}</span>
           <span className={styles.tooltip}>{post.title}</span>
         </td>
-        <td><a href={post.externalUrl} target="_blank" rel="noreferrer" onClick={handleAddCount}>링크</a></td>
         <td>{post.viewCount}</td>
         <td>{post.authorName}</td>
         <td>{post.updatedAt}</td>

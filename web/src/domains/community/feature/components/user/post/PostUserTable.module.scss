@@ -50,7 +50,9 @@
 
 .titleWrapper {
   position: relative;
-  max-width: 420px;
+  //max-width: 420px;
+  cursor: pointer;
+  max-width: 1px;
 }
 
 .titleText {
@@ -72,8 +74,8 @@
   border-radius: 4px;
   white-space: normal;
   z-index: 10;
-  width: 100%;
-  min-width: 400px;
+  width: max-content;
+  max-width: min(90vw, 600px);
 }
 
 .titleWrapper:hover .tooltip {
