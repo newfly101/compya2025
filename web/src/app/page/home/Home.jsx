@@ -36,7 +36,7 @@ const Home = () => {
         <div className={styles.grid}>
           <div className={styles.card} onClick={() => handleClick("notice")}>공지사항</div>
           {/*<div className={styles.card}>성장 가이드</div>*/}
-          <div className={styles.card} onClick={() => handleClick("tips")}>팁 모아보기</div>
+          <div className={styles.card} onClick={() => handleClick("community")}>커뮤니티</div>
           {/*<div className={styles.card}>덱 구성 가이드</div>*/}
           {/*<div className={styles.card}>플레이 가이드</div>*/}
           <div className={styles.card} onClick={() => handleClick("dictionary")}>📌추천 백과사전</div>

@@ -29,7 +29,6 @@ const Dictionary = lazy(() => import("@/domains/dictionary/page/Dictionary.jsx")
 const PitcherDictionary = lazy(() => import("@/domains/dictionary/page/PitcherDictionary.jsx"));
 const HitterDictionary = lazy(() => import("@/domains/dictionary/page/HitterDictionary.jsx"));
 
-const TipPage = lazy(() => import("@/domains/tipBoard/page/TipPage.jsx"));
 const PrivacyPolicy = lazy(() => import("@/app/page/legal/PrivacyPolicy.jsx"));
 
 const router = createBrowserRouter([
@@ -44,7 +43,6 @@ const router = createBrowserRouter([
       { path: "simulate", element: <SkillSimulator />, handle: { title: "컴프야펀 | 스킬 변경 시뮬레이터" } },
       { path: "simulate/pitcher", element: <PitcherSkillChange />, handle: { title: "컴프야펀 | 투수 고스변 시뮬레이터" } },
       { path: "simulate/hitter", element: <HitterSkillChange />, handle: { title: "컴프야펀 | 타자 고스변 시뮬레이터" } },
-      { path: "tips", element: <TipPage />, handle: { title: "컴프야펀 | 팁 모아보기" } },
       { path: "dictionary/pitcher", element: <PitcherDictionary />, handle: { title: "컴프야펀 | 투수 스킬 백과사전" } },
       { path: "dictionary/hitter", element: <HitterDictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
       { path: "mode/history", element: <LegendCalendar />, handle: { title: "컴프야펀 | 히스토리 모드 레전드 재료" } },

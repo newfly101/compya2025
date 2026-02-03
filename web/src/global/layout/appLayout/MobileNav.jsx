@@ -13,8 +13,8 @@ const MobileNav = () => {
         홈
       </NavLink>
 
-      <NavLink to="/tips" onClick={scrollTop}>
-        팁
+      <NavLink to="/community" onClick={scrollTop}>
+        커뮤니티
       </NavLink>
 
       <NavLink to="/notice" onClick={scrollTop}>
