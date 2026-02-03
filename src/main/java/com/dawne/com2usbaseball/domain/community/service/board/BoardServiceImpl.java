@@ -58,7 +58,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value="userBoards")
+//    @Cacheable(value="userBoards")
     public BoardListResponse selectUserBoardList() {
         List<BoardsEntity> boards = repository.selectUserBoardItems();
 
