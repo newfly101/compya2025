@@ -10,4 +10,6 @@ public interface BoardService {
     BoardListResponse selectBoardList();
     InsertBoardResponse createNewBoardItem(BoardsEntity boards);
     UpdateBoardResponse updateBoardItem(BoardsEntity boards);
+
+    BoardListResponse selectUserBoardList();
 }

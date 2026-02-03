@@ -28,6 +28,11 @@ public class BoardController {
         return boardService.updateBoardItem(request.toEntity(id));
     }
 
+    @GetMapping("/boards")
+    public BoardListResponse getUserBoardsList() {
+        return boardService.selectBoardList();
+    }
+
 
     // 게시판 정보 조회
     // GET /boards/{boardCode}

@@ -13,5 +13,6 @@ public interface BoardMapper {
 
     int insertBoard(BoardsEntity board);
     int updateBoard(BoardsEntity board);
+    List<BoardsEntity> selectBoardsWithUser();
 
 }

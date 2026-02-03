@@ -48,4 +48,11 @@ public class BoardServiceImpl implements BoardService {
 
         return UpdateBoardResponse.success(boards.getId());
     }
+
+    @Override
+    public BoardListResponse selectUserBoardList() {
+        List<BoardsEntity> boards = repository.selectUserBoardItems();
+
+        return listMaker.makeBoardListMaker(boards);
+    }
 }

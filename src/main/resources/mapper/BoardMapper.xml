@@ -84,4 +84,25 @@
         WHERE id = #{id}
 
     </update>
+
+    <select id="selectBoardsWithUser" resultType="com.dawne.com2usbaseball.domain.community.entity.BoardsEntity">
+        SELECT
+            id,
+            code,
+            name,
+            description,
+            write_role,
+            read_role,
+            is_visible AS visible,
+            is_deleted AS deleted,
+            sort_order,
+            created_at,
+            updated_at
+        FROM boards
+        WHERE is_visible = true
+          AND is_deleted = false
+          AND read_role = 'LOGIN'
+        ORDER BY sort_order
+    </select>
+
 </mapper>

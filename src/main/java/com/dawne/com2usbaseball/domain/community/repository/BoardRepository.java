@@ -24,4 +24,8 @@ public class BoardRepository {
     public boolean updateBoard(BoardsEntity boards) {
         return mapper.updateBoard(boards) > 0;
     }
+
+    public List<BoardsEntity> selectUserBoardItems() {
+        return mapper.selectBoardsWithUser();
+    }
 }
