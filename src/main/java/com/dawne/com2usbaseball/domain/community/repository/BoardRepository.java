@@ -30,6 +30,6 @@ public class BoardRepository {
     }
 
     public boolean existsById(Long id) {
-        return mapper.selectBoardItemById(id) > 0;
+        return mapper.selectBoardItemById(id);
     }
 }

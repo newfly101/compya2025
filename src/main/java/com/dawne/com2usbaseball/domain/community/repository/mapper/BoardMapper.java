@@ -14,6 +14,6 @@ public interface BoardMapper {
     int insertBoard(BoardsEntity board);
     int updateBoard(BoardsEntity board);
     List<BoardsEntity> selectBoardsWithUser();
-    int selectBoardItemById(Long id);
+    boolean selectBoardItemById(Long id);
 
 }

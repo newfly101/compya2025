@@ -120,5 +120,6 @@
             created_at,
             updated_at
         FROM posts
+        WHERE board_id=#{boardId}
     </select>
 </mapper>
