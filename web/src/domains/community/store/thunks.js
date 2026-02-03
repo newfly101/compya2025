@@ -67,15 +67,26 @@ export const requestGetAllPostLists = createAsyncThunk(
   });
 
 export const requestInsertNewPost = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.CREATE_POST, async (form, { rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.CREATE_POST, async (form, {getState, rejectWithValue }) => {
+
     try {
-      const { success, message, postId } = await fetchInsertNewPost(form);
+      const state = getState(); // 1회만 호출
+      const { user, role} = state.auth;
+
+      const payload = {
+        ...form,
+        authorId: user.id,
+        authorType: role.role,
+        authorName: role.role === "ADMIN" ? "관리자" : user.nickName,
+      };
+
+      const { success, message, postId } = await fetchInsertNewPost(payload);
       console.log(`requestInsertNewPost: `, postId);
 
       return {
         posts: {
           id: postId,
-          ...form,
+          ...payload,
         },
       };
     } catch (error) {
