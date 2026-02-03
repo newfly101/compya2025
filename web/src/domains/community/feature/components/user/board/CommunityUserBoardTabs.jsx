@@ -11,7 +11,7 @@ const CommunityUserBoardTabs = ({ boards, active, onChange }) => {
           className={`${styles.tab} ${
             active === tab.code ? styles.active : ""
           }`}
-          onClick={() => onChange(tab.code)}
+          onClick={() => onChange(tab)}
         >
           {tab.name}
         </button>

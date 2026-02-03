@@ -7,7 +7,7 @@ export const useUserBoard = () => {
   const { boardLists } = useSelector((state) => state.community);
 
   useEffect(() => {
-    dispatch(requestGetUserBoardLists());
+      dispatch(requestGetUserBoardLists());
   }, [dispatch]);
 
   return {
