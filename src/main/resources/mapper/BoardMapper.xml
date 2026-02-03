@@ -101,7 +101,6 @@
         FROM boards
         WHERE is_visible = true
           AND is_deleted = false
-          AND read_role = 'LOGIN'
         ORDER BY sort_order
     </select>
 

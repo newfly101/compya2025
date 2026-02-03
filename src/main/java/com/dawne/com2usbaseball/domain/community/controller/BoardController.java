@@ -30,7 +30,7 @@ public class BoardController {
 
     @GetMapping("/boards")
     public BoardListResponse getUserBoardsList() {
-        return boardService.selectBoardList();
+        return boardService.selectUserBoardList();
     }
 
 
