@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ADMIN_COMMUNITY_ACTIONS } from "@/domains/community/store/endpoints.js";
+import { ADMIN_COMMUNITY_ACTIONS, USER_COMMUNITY_ACTIONS } from "@/domains/community/store/endpoints.js";
 import {
-  fetchGetAllBoardLists, fetchGetAllPostLists, fetchGetAllTags,
+  fetchGetAllBoardLists, fetchGetAllPostLists, fetchGetAllTags, fetchGetUserBoardLists,
   fetchInsertNewBoard, fetchInsertNewPost, fetchInsertNewTag,
   fetchUpdateBoard, fetchUpdatePost, fetchUpdateTag,
 } from "@/domains/community/store/api.js";
@@ -161,3 +161,18 @@ export const requestUpdateNewTag = createAsyncThunk(
     }
   },
 );
+
+
+// USER
+
+export const requestGetUserBoardLists = createAsyncThunk(
+  USER_COMMUNITY_ACTIONS.BOARD_LIST, async (_, { rejectWithValue }) => {
+    try {
+      const data = await fetchGetUserBoardLists();
+      console.log(`requestGetUserBoardLists : `, data);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  });

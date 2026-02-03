@@ -1,5 +1,5 @@
 import { API } from "@/app/store/APIConfig.js";
-import { ADMIN_COMMUNITY } from "@/domains/community/store/endpoints.js";
+import { ADMIN_COMMUNITY, USER_COMMUNITY } from "@/domains/community/store/endpoints.js";
 
 /**
  * COMMUNITY API
@@ -48,5 +48,14 @@ export const fetchInsertNewTag = async (newTag) => {
 
 export const fetchUpdateTag = async ({ id, tags }) => {
   const { data } = await API.patch(`${ADMIN_COMMUNITY.UPDATE_TAG(id)}`, tags);
+  return data;
+}
+
+/**
+ * User API
+ */
+
+export const fetchGetUserBoardLists = async () => {
+  const { data } = await API.get(`${USER_COMMUNITY.BOARD_LIST}`);
   return data;
 }
