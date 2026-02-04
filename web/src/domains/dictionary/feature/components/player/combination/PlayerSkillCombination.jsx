@@ -1,11 +1,11 @@
 import React from "react";
-import { usePlayerSkillChange } from "@/domains/dictionary/feature/hooks/usePlayerSkillChange.js";
 import { useCardModal } from "@/domains/dictionary/feature/hooks/useCardModal.js";
 import SkillPanels from "@/domains/dictionary/feature/components/skillPanels/SkillPanels.jsx";
 import RecommendModal from "@/domains/dictionary/feature/components/RecommendModal.jsx";
 import SkillGradeToggle from "@/domains/dictionary/feature/components/skillGradeToggle/SkillGradeToggle.jsx";
+import { useSkillCombine } from "@/domains/dictionary/feature/hooks/player/useSkillCombine.js";
 
-const PlayerSkillDictionary = ({
+const PlayerSkillCombination = ({
                                  skillData,
                                  recommendData,
                                  skillExclusive, // 없으면 null
@@ -20,7 +20,7 @@ const PlayerSkillDictionary = ({
     skillToggle,
     clearCombo,
     isSkillDisabled,
-  } = usePlayerSkillChange();
+  } = useSkillCombine();
 
   const modal = useCardModal();
 
@@ -70,4 +70,4 @@ const PlayerSkillDictionary = ({
   );
 };
 
-export default PlayerSkillDictionary;
+export default PlayerSkillCombination;
