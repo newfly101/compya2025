@@ -21,7 +21,6 @@ const PlayerSkillDescription = ({
                                 }) => {
   const [position, setPosition] = useState("전체");
   const [grade, setGrade] = useState("전체");
-  const [compact, setCompact] = useState(false);
 
   const skills = selectFlatSkills(skillData);
 
@@ -85,7 +84,6 @@ const PlayerSkillDescription = ({
         {filtered.map((skill) => (
           <div key={skill.id} className={styles.card}>
             <button className={`${styles.skillButton} ${styles[skill.grade.toLowerCase()]}`}>{skill.name}</button>
-            {!compact && (
               <ul className={styles.descList}>
                 {parseDescription(skill.description).map((opt, idx) => (
                   <li key={idx} className={styles.descItem}>
@@ -99,7 +97,6 @@ const PlayerSkillDescription = ({
                   </li>
                 ))}
               </ul>
-            )}
           </div>
         ))}
       </div>
