@@ -1,19 +1,15 @@
 import React from "react";
-import { useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
 import { usePlayerSkillChange } from "@/domains/dictionary/feature/hooks/usePlayerSkillChange.js";
 import { useCardModal } from "@/domains/dictionary/feature/hooks/useCardModal.js";
 import SkillPanels from "@/domains/dictionary/feature/components/skillPanels/SkillPanels.jsx";
 import RecommendModal from "@/domains/dictionary/feature/components/RecommendModal.jsx";
 import SkillGradeToggle from "@/domains/dictionary/feature/components/skillGradeToggle/SkillGradeToggle.jsx";
-import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
-import MetaHeader from "@/global/ui/metaHeader/MetaHeader.jsx";
 
 const PlayerSkillDictionary = ({
                                  skillData,
                                  recommendData,
                                  skillExclusive, // 없으면 null
                                }) => {
-  const { moveTo } = useContentPageHeader();
   const {
     tier,
     selected,
@@ -43,13 +39,7 @@ const PlayerSkillDictionary = ({
     : () => false;
 
   return (
-    <ContentPageLayout
-      header={<MetaHeader
-        backLabel="조합 홈으로"
-        onBack={() => moveTo("/dictionary")}
-      />
-      }
-    >
+    <>
 
       <SkillGradeToggle
         tier={tier}
@@ -76,7 +66,7 @@ const PlayerSkillDictionary = ({
         onToggleSkill={skillToggle}
         skills={skillData}
       />
-    </ContentPageLayout>
+    </>
   );
 };
 
