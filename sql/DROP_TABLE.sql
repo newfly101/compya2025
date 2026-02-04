@@ -19,3 +19,8 @@ DROP TABLE posts;
 
 DROP TABLE tags;
 DROP TABLE posts_tags;
+
+
+DROP TABLE coach;
+DROP TABLE coach_skill_condition;
+DROP TABLE coach_skill_buff;
