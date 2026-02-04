@@ -103,13 +103,6 @@ const PlayerSkillDescription = ({
           </div>
         ))}
       </div>
-
-      <button
-        className={styles.floatingToggle}
-        onClick={() => setCompact((prev) => !prev)}
-      >
-        {compact ? "상세보기" : "간편보기"}
-      </button>
     </div>
   );
 };
