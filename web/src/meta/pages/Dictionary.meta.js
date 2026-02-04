@@ -16,7 +16,7 @@ export const DICTIONARY_HOME_META = {
     home: {
       route: "/dictionary",
       title: "백과사전 홈",
-      version: "1.0.0",
+      version: "0.1.5",
       lastUpdated: "2026-02-04",
       summary: "백과사전 진입 카드 구성",
     },
@@ -24,16 +24,16 @@ export const DICTIONARY_HOME_META = {
     pitcher: {
       route: "/dictionary/pitcher",
       title: "투수 스킬 백과사전",
-      version: "1.0.1",
-      lastUpdated: "2026-02-10",
-      summary: "간편/상세 보기 토글 UI 추가",
+      version: "0.1.4",
+      lastUpdated: "2026-01-02",
+      summary: "투수 스킬 조합 백과사전 최초 공개",
     },
 
     hitter: {
       route: "/dictionary/hitter",
       title: "타자 스킬 백과사전",
-      version: "1.0.0",
-      lastUpdated: "2026-02-05",
+      version: "0.1.5",
+      lastUpdated: "2026-01-07",
       summary: "타자 스킬 설명/조합 백과사전 공개",
     },
   },
@@ -41,8 +41,8 @@ export const DICTIONARY_HOME_META = {
   // changeLog assets
   changelog: [
     {
-      version: "1.0.5",
-      date: "2026-02-10",
+      version: "0.1.5",
+      date: "2026-01-07",
       type: "release",
       description: "타자 스킬 조합 백과사전 최초 공개",
     },
