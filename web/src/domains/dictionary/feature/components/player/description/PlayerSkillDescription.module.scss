@@ -1,0 +1,233 @@
+.page {
+  min-height: 100vh;
+  padding: 16px;
+  //background: $background;
+  color: $text-primary;
+}
+
+.filterHeader {
+  display: flex;
+  align-items: center;
+
+  margin: 14px 0 6px;
+}
+
+.filterLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+
+  color: $text-secondary;
+
+  position: relative;
+  padding-left: 10px;
+
+  // 왼쪽 구분선 (사전 느낌)
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    width: 3px;
+    height: 12px;
+    border-radius: 2px;
+
+    background: linear-gradient(
+                    to bottom,
+                    $primary,
+                    $primary-hover
+    );
+  }
+}
+
+
+
+.title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  letter-spacing: -0.02em;
+  color: $text-primary;
+}
+.chips {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  button {
+    padding: 6px 14px;
+    border-radius: 999px;
+
+    background: $surface2;
+    border: 1px solid $border;
+    color: $text-secondary;
+
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    transition: all 0.15s ease;
+
+    &:hover {
+      border-radius: 999px;
+      background: $surface3;
+      color: $text-primary;
+    }
+  }
+}
+
+.active {
+  background: $primary-bg !important;
+  border-color: $primary !important;
+  color: $primary-text !important;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr; // 🔥 모바일: 1열
+  gap: 12px;
+  margin-top: 12px;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr); // 태블릿
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr); // 데스크탑
+  }
+}
+.card {
+  background: $surface1;
+  border: 1px solid $border;
+  border-radius: 14px;
+
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+
+  box-shadow:
+          0 6px 16px rgba(0,0,0,.25),
+          inset 0 1px 0 rgba(255,255,255,.04);
+}
+.skillButton {
+  width: 100%;
+  height: 36px;
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+
+  margin-bottom: 6px;
+  color: #fff;
+
+  box-shadow:
+          inset 0 1px 0 rgba(255,255,255,.25),
+          0 2px 6px rgba(0,0,0,.35);
+}
+.legend {
+  background: linear-gradient(
+                  180deg,
+                  #8f86ff 0%,
+                  #6f64f7 45%,
+                  #5a4de0 100%
+  );
+}
+
+.platinum {
+  background: linear-gradient(
+                  180deg,
+                  #ffe37a 0%,
+                  #f2c94c 45%,
+                  #d4a900 100%
+  );
+  color: #2b2100;
+}
+
+.hero {
+  background: linear-gradient(
+                  180deg,
+                  #5bff9c 0%,
+                  #2ecc71 45%,
+                  #1e9f55 100%
+  );
+  color: #0f2f1d;
+}
+
+.normal {
+  background: linear-gradient(
+                  180deg,
+                  #cfd3da 0%,
+                  #aeb4bf 50%,
+                  #8e95a3 100%
+  );
+  color: #1f2937;
+}
+.desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: $text-muted;
+
+  padding: 4px 2px 2px;
+}
+.floatingToggle {
+  position: fixed;
+  right: 16px;
+  top: 52px;
+
+  padding: 10px 14px;
+  border-radius: 12px;
+
+  background: linear-gradient(
+                  135deg,
+                  $primary,
+                  $primary-active
+  );
+
+  color: $primary-text;
+  font-size: 13px;
+  font-weight: 700;
+
+  box-shadow:
+          0 8px 24px rgba(0,0,0,.45),
+          inset 0 1px 0 rgba(255,255,255,.15);
+
+  z-index: 1000;
+}
+
+.descList {
+  margin: 0;
+  padding-left: 1em;
+
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  font-size: 12px;
+  line-height: 1.45;
+  color: $text-muted;
+
+  min-height: 4.2em;
+}
+
+.descItem {
+  list-style: disc;
+  margin-left: 1rem;
+}
+
+.descSub {
+  margin-left: 0.1em; // 불릿 기준 정렬
+  color: $text-muted;
+}

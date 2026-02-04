@@ -23,7 +23,7 @@ const DictionaryPage = () => {
     {
       const config = DICTIONARY_PLAYER_CONFIG[type];
       if (!config) return <Navigate to="/dictionary" replace />;
-      return <PlayerDictionaryView config={config} />;
+      return <PlayerDictionaryView config={config} type={type}/>;
     }
 
     case "coach":

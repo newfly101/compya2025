@@ -6,9 +6,16 @@ import { requestPlayerSkillSet } from "@/domains/dictionary/store/index.js";
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
 import MetaHeader from "@/global/ui/metaHeader/MetaHeader.jsx";
 import CommonNavigationTab from "@/global/ui/navigation/tabs/CommonNavigationTab.jsx";
-import PlayerSkillCombination from "@/domains/dictionary/feature/components/player/combination/PlayerSkillCombination.jsx";
+import PlayerSkillCombination
+  from "@/domains/dictionary/feature/components/player/combination/PlayerSkillCombination.jsx";
+import PlayerSkillDescription
+  from "@/domains/dictionary/feature/components/player/description/PlayerSkillDescription.jsx";
+import {
+  PLAYER_POSITION_CONFIG,
+  PLAYER_SKILL_GRADE_CONFIG,
+} from "@/domains/dictionary/feature/config/player/dictionaryPlayerConfig.js";
 
-const PlayerDictionaryView = ({ config }) => {
+const PlayerDictionaryView = ({ config, type }) => {
   const dispatch = useDispatch();
   const { playerSkills } = useSelector((state) => state.dictionary);
   const [tab, setTab] = useState(DictionaryNavTab[0].key);
@@ -29,9 +36,17 @@ const PlayerDictionaryView = ({ config }) => {
     >
       <CommonNavigationTab tabs={DictionaryNavTab} onChange={setTab} activeKey={tab} />
 
-      {/*{tab === DICTIONARY_TAB_KEY.DESCRIPTION && (<SkillDescriptionSection />)}*/}
-      {tab === DICTIONARY_TAB_KEY.COMBINATION && (
-        <PlayerSkillCombination skillData={playerSkills} recommendData={config.recommendData} skillExclusive={config.skillExclusive} />)}
+      {tab === DICTIONARY_TAB_KEY.DESCRIPTION && playerSkills &&
+        (<PlayerSkillDescription
+          skillData={playerSkills}
+          gradeOptions={PLAYER_SKILL_GRADE_CONFIG}
+          positionConfig={PLAYER_POSITION_CONFIG[type]}
+        />)}
+      {tab === DICTIONARY_TAB_KEY.COMBINATION && playerSkills &&
+        (<PlayerSkillCombination skillData={playerSkills}
+                                 recommendData={config.recommendData}
+                                 skillExclusive={config.skillExclusive}
+        />)}
 
     </ContentPageLayout>
   );

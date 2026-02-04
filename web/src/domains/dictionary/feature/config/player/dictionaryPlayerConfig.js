@@ -15,4 +15,16 @@ export const DICTIONARY_PLAYER_CONFIG = {
     recommendData: PITCHER_RECOMMEND,
     skillExclusive: null,
   },
-}
+};
+
+export const PLAYER_SKILL_GRADE_CONFIG = ["전체", "LEGEND", "PLATINUM", "HERO", "NORMAL"];
+export const PLAYER_POSITION_CONFIG = {
+  hitter: {
+    label: "타석",
+    options: ["전체", "1번 타자", "4번 타자"],
+  },
+  pitcher: {
+    label: "포지션",
+    options: ["전체", "선발", "필승조", "추격조", "롱릴리프", "마무리"],
+  },
+};
