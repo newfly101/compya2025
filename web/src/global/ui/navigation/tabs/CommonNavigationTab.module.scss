@@ -1,0 +1,21 @@
+.tabs {
+  display: flex;
+  gap: 1.6rem;
+  margin-bottom: 2.4rem;
+  border-bottom: 1px solid $border;
+}
+
+.tab {
+  padding: 1.2rem 0;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: $text-muted;
+  cursor: pointer;
+
+  &.active {
+    color: $text-primary;
+    border-bottom: 2px solid $primary;
+  }
+}
