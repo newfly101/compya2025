@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CoachSkillBuffEntity {
+public class CoachSkillOptionEntity {
     private Long id;
     private CoachSkillGrade grade;
     private Target target;
