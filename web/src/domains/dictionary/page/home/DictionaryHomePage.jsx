@@ -5,7 +5,7 @@ import NavigationCard from "@/global/ui/navigationCard/NavigationCard.jsx";
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
 import { useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
 import MetaHeader from "@/global/ui/metaHeader/MetaHeader.jsx";
-import { DICTIONARY_HOME_CARDS } from "@/domains/dictionary/feature/config/home/dictionaryHomConfig.js";
+import { DICTIONARY_HOME_CARDS } from "@/domains/dictionary/feature/config/home/dictionaryHomeConfig.js";
 
 const DictionaryHomePage = () => {
   const {
