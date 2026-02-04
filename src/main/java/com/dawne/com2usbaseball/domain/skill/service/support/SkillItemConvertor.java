@@ -25,7 +25,8 @@ public class SkillItemConvertor {
         return new SkillItemResponse(
                 entity.getId(),
                 entity.getName(),
-                entity.getGrade()
+                entity.getGrade(),
+                entity.getDescription()
         );
     }
 

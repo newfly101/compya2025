@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/skills")
 public class SkillController {
-    private final PlayerSkillsService service;
+    private final PlayerSkillsService playerSkillsService;
 
     @GetMapping("/{target}")
     public SkillSetResponse playerTypeSkills(@PathVariable Target target) {
-        return service.getPlayerSkillSet(target);
+        return playerSkillsService.getPlayerSkillSet(target);
     }
 }
