@@ -30,7 +30,7 @@ const PlayerDictionaryView = ({ config }) => {
       <CommonNavigationTab tabs={DictionaryNavTab} onChange={setTab} activeKey={tab} />
 
       {/*{tab === DICTIONARY_TAB_KEY.DESCRIPTION && (<SkillDescriptionSection />)}*/}
-      {tab === DICTIONARY_TAB_KEY.COMBINATION && config.type === "player" && (
+      {tab === DICTIONARY_TAB_KEY.COMBINATION && (
         <PlayerSkillDictionary skillData={playerSkills} recommendData={config.recommendData} skillExclusive={config.skillExclusive} />)}
 
     </ContentPageLayout>
