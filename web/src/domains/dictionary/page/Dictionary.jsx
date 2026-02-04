@@ -6,7 +6,8 @@ import hitterImg from "@/assets/dictionary/hitterImg.png";
 import coachImg from "@/assets/dictionary/coachImg.png";
 import logoImg from "@/assets/dictionary/logoImg.png";
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
-import { ContentPageHeader, useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
+import { useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
+import MetaHeader from "@/global/ui/metaHeader/MetaHeader.jsx";
 
 const Dictionary = () => {
   const {
@@ -15,9 +16,7 @@ const Dictionary = () => {
 
   return (
     <ContentPageLayout
-      header={<ContentPageHeader
-        title={"📌 조합 추천 백과사전"}
-        meta={["2026-01-03","v0.1.5"]}
+      header={<MetaHeader
         backLabel={"메인으로"}
         onBack={moveHome}
       />}

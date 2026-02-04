@@ -1,18 +1,21 @@
 import React from "react";
-import { ContentPageHeader, useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
+import { useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
 import { usePlayerSkillChange } from "@/domains/dictionary/feature/hooks/usePlayerSkillChange.js";
 import { useCardModal } from "@/domains/dictionary/feature/hooks/useCardModal.js";
 import SkillPanels from "@/domains/dictionary/feature/components/skillPanels/SkillPanels.jsx";
 import RecommendModal from "@/domains/dictionary/feature/components/RecommendModal.jsx";
 import SkillGradeToggle from "@/domains/dictionary/feature/components/skillGradeToggle/SkillGradeToggle.jsx";
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
+import CommonNavigationTab from "@/global/ui/navigation/tabs/CommonNavigationTab.jsx";
+import { DictionaryNavTab } from "@/domains/dictionary/feature/config/DictionaryNavTab.js";
+import MetaHeader from "@/global/ui/metaHeader/MetaHeader.jsx";
 
 const PlayerSkillDictionary = ({
-                                 title,
-                                 meta,
                                  skillData,
                                  recommendData,
                                  skillExclusive, // 없으면 null
+                                 tab,
+                                 setTab,
                                }) => {
   const { moveTo } = useContentPageHeader();
   const {
@@ -45,15 +48,17 @@ const PlayerSkillDictionary = ({
 
   return (
     <ContentPageLayout
-      header={
-        <ContentPageHeader
-          title={title}
-          meta={meta}
-          backLabel="조합 홈으로"
-          onBack={() => moveTo("/dictionary")}
-        />
+      header={<MetaHeader
+        backLabel="조합 홈으로"
+        onBack={() => moveTo("/dictionary")}
+      />
       }
     >
+      <CommonNavigationTab tabs={DictionaryNavTab} onChange={setTab} activeKey={tab} />
+
+      {/*{tab === DICTIONARY_TAB_KEY.DESCRIPTION && (<SkillDescriptionSection />)}*/}
+      {/*{tab === DICTIONARY_TAB_KEY.COMBINATION && (<SkillDescriptionSection />)}*/}
+
       <SkillGradeToggle
         tier={tier}
         initSelected={onInitSkills}
