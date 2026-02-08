@@ -1,9 +1,9 @@
 package com.dawne.com2usbaseball.domain.community.service.board;
 
+import com.dawne.com2usbaseball.common.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.community.dto.response.board.BoardListResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.board.InsertBoardResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.board.UpdateBoardResponse;
 import com.dawne.com2usbaseball.domain.community.entity.BoardsEntity;
+import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.repository.BoardRepository;
 import com.dawne.com2usbaseball.domain.community.service.board.support.ListMaker;
 import jakarta.annotation.Resource;
@@ -24,7 +24,6 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-//    @Cacheable(value="adminBoards")
     public BoardListResponse selectBoardList() {
         List<BoardsEntity> boards = repository.selectBoardItems();
 
@@ -33,26 +32,18 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @CacheEvict(value="adminBoards", allEntries = true)
-    public InsertBoardResponse createNewBoardItem(BoardsEntity boards) {
-        boolean success = repository.insertNewBoard(boards);
-
-        if (!success) {
-            return InsertBoardResponse.fail();
-        }
-
-        return InsertBoardResponse.success(boards.getId());
+    public OperationResponse<CommunityMessages> createNewBoardItem(BoardsEntity boards) {
+        return repository.insertNewBoard(boards)
+                ? OperationResponse.success(CommunityMessages.BOARD_CREATED, boards.getId())
+                : OperationResponse.fail(CommunityMessages.BOARD_FAILED);
     }
 
     @Override
     @CacheEvict(value="adminBoards", allEntries = true)
-    public UpdateBoardResponse updateBoardItem(BoardsEntity boards) {
-        boolean success = repository.updateBoard(boards);
-
-        if (!success) {
-            return UpdateBoardResponse.fail();
-        }
-
-        return UpdateBoardResponse.success(boards.getId());
+    public OperationResponse<CommunityMessages> updateBoardItem(BoardsEntity boards) {
+        return repository.updateBoard(boards)
+                ? OperationResponse.success(CommunityMessages.BOARD_UPDATED, boards.getId())
+                : OperationResponse.fail(CommunityMessages.BOARD_FAILED);
     }
 
     @Override

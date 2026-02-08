@@ -1,9 +1,9 @@
 package com.dawne.com2usbaseball.domain.community.controller;
 
+import com.dawne.com2usbaseball.common.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.community.dto.request.BoardChangeRequest;
 import com.dawne.com2usbaseball.domain.community.dto.response.board.BoardListResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.board.InsertBoardResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.board.UpdateBoardResponse;
+import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +20,11 @@ public class BoardController {
         return boardService.selectBoardList();
     }
     @PostMapping("/admin/boards")
-    public InsertBoardResponse createNewBoard(@RequestBody BoardChangeRequest request) {
+    public OperationResponse<CommunityMessages> createNewBoard(@RequestBody BoardChangeRequest request) {
         return boardService.createNewBoardItem(request.toEntity());
     }
     @PatchMapping("/admin/boards/{id}")
-    public UpdateBoardResponse changeBoard(@RequestBody BoardChangeRequest request, @PathVariable Long id) {
+    public OperationResponse<CommunityMessages> changeBoard(@RequestBody BoardChangeRequest request, @PathVariable Long id) {
         return boardService.updateBoardItem(request.toEntity(id));
     }
 
