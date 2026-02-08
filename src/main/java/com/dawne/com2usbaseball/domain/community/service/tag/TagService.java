@@ -1,13 +1,14 @@
 package com.dawne.com2usbaseball.domain.community.service.tag;
 
-import com.dawne.com2usbaseball.domain.community.dto.response.tag.InsertTagResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.tag.TagListResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.tag.UpdateTagResponse;
+import com.dawne.com2usbaseball.common.support.dto.ListResponse;
+import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
+import com.dawne.com2usbaseball.domain.community.dto.response.TagResponse;
 import com.dawne.com2usbaseball.domain.community.entity.TagEntity;
+import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 
 public interface TagService {
 
-    TagListResponse selectTagList();
-    InsertTagResponse createNewTagItem(TagEntity boards);
-    UpdateTagResponse updateTagItem(TagEntity boards);
+    ListResponse<TagResponse> selectTagList();
+    OperationResponse<CommunityMessages> createNewTagItem(TagEntity boards);
+    OperationResponse<CommunityMessages> updateTagItem(TagEntity boards);
 }
