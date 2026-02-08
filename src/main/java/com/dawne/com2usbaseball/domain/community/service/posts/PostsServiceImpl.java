@@ -1,9 +1,9 @@
 package com.dawne.com2usbaseball.domain.community.service.posts;
 
-import com.dawne.com2usbaseball.domain.community.dto.response.posts.InsertPostsResponse;
+import com.dawne.com2usbaseball.common.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.community.dto.response.posts.PostListResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.posts.UpdatePostsResponse;
 import com.dawne.com2usbaseball.domain.community.entity.PostsEntity;
+import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.repository.BoardRepository;
 import com.dawne.com2usbaseball.domain.community.repository.PostRepository;
 import com.dawne.com2usbaseball.domain.community.service.posts.support.ListMaker;
@@ -28,7 +28,6 @@ public class PostsServiceImpl implements PostsService {
 
     @Override
     @Transactional(readOnly = true)
-//    @Cacheable(value="adminPosts")
     public PostListResponse selectAllPostLists() {
         List<PostsEntity> boards = repository.selectPostItems();
 
@@ -37,28 +36,19 @@ public class PostsServiceImpl implements PostsService {
 
     @Override
     @CacheEvict(value = "adminPosts", allEntries = true)
-    public InsertPostsResponse createNewPostItem(PostsEntity posts) {
-        boolean success = repository.insertNewPost(posts);
-
-        if (!success) {
-            return InsertPostsResponse.fail();
-        }
-
-        return InsertPostsResponse.success(posts.getId());
+    public OperationResponse<CommunityMessages> createNewPostItem(PostsEntity posts) {
+        return repository.insertNewPost(posts)
+                ? OperationResponse.success(CommunityMessages.POST_CREATED, posts.getId())
+                : OperationResponse.fail(CommunityMessages.POST_FAILED);
     }
 
     @Override
     @CacheEvict(value = "adminPosts", allEntries = true)
-    public UpdatePostsResponse updatePostItem(PostsEntity posts) {
-        boolean success = repository.updatePost(posts);
-
-        if (!success) {
-            return UpdatePostsResponse.fail();
-        }
-
-        return UpdatePostsResponse.success(posts.getId());
+    public OperationResponse<CommunityMessages> updatePostItem(PostsEntity posts) {
+        return repository.updatePost(posts)
+                ? OperationResponse.success(CommunityMessages.POST_UPDATED, posts.getId())
+                : OperationResponse.fail(CommunityMessages.POST_FAILED);
     }
-
 
     // User Get Post List
     @Override

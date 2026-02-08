@@ -1,9 +1,9 @@
 package com.dawne.com2usbaseball.domain.community.controller;
 
+import com.dawne.com2usbaseball.common.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.community.dto.request.PostsChangeRequest;
-import com.dawne.com2usbaseball.domain.community.dto.response.posts.InsertPostsResponse;
 import com.dawne.com2usbaseball.domain.community.dto.response.posts.PostListResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.posts.UpdatePostsResponse;
+import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.service.posts.PostsService;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.javassist.NotFoundException;
@@ -22,11 +22,11 @@ public class PostsController {
     }
 
     @PostMapping("/admin/posts")
-    public InsertPostsResponse createNewPost(@RequestBody PostsChangeRequest request) {
+    public OperationResponse<CommunityMessages> createNewPost(@RequestBody PostsChangeRequest request) {
         return postsService.createNewPostItem(request.toEntity());
     }
     @PatchMapping("/admin/posts/{id}")
-    public UpdatePostsResponse updatePost(@RequestBody PostsChangeRequest request, @PathVariable Long id) {
+    public OperationResponse<CommunityMessages> updatePost(@RequestBody PostsChangeRequest request, @PathVariable Long id) {
         return postsService.updatePostItem(request.toEntity(id));
     }
 
