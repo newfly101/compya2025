@@ -48,20 +48,21 @@ const PlayerSkillDescription = ({
 
   return (
     <div className={styles.page}>
-      <div className={styles.filterHeader}>
-        <span className={styles.filterLabel}>{positionConfig.label}</span>
-      </div>
-      <div className={styles.chips}>
-        {positionConfig.options.map((p) => (
-          <button
-            key={p}
-            className={p === position ? styles.active : ""}
-            onClick={() => setPosition(p)}
-          >
-            {p}
-          </button>
-        ))}
-      </div>
+      {/* todo: 포지션 걸어주는 부분 : 아직 기능 미구현으로 제외 상태 */}
+      {/*<div className={styles.filterHeader}>*/}
+      {/*  <span className={styles.filterLabel}>{positionConfig.label}</span>*/}
+      {/*</div>*/}
+      {/*<div className={styles.chips}>*/}
+      {/*  {positionConfig.options.map((p) => (*/}
+      {/*    <button*/}
+      {/*      key={p}*/}
+      {/*      className={p === position ? styles.active : ""}*/}
+      {/*      onClick={() => setPosition(p)}*/}
+      {/*    >*/}
+      {/*      {p}*/}
+      {/*    </button>*/}
+      {/*  ))}*/}
+      {/*</div>*/}
 
       {/* 등급 필터 */}
       <div className={styles.filterHeader}>
