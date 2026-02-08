@@ -1,36 +1,14 @@
-import { Outlet, useLocation, useMatches } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import Header from "@/global/layout/appLayout/Header.jsx";
 import Footer from "@/global/layout/appLayout/Footer.jsx";
 import styles from "@/global/layout/appLayout/appLayout.module.scss";
-import { Suspense, useEffect } from "react";
+import { Suspense } from "react";
 import MobileNav from "@/global/layout/appLayout/MobileNav.jsx";
+import { useGA4PageView } from "@/app/analytics/hooks/useGA4PageView.js";
 
 const App = () => {
-  const location = useLocation();
-  const matches = useMatches();
-
-  /* Google Analytics 추가 */
-  useEffect(() => {
-    // 1️⃣ 현재 라우트 title 설정
-    const current = matches[matches.length - 1];
-    const isNoticePage = location.pathname === "/notice";
-
-    if (current?.handle?.title && !isNoticePage) {
-      document.title = current.handle.title;
-    }
-
-    // 2️⃣ GA4 page_view 수동 전송 (SPA 대응)
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
-      event: "page_view",
-      page_path: location.pathname,
-      page_location: window.location.href,
-      page_title: document.title,
-    });
-
-  }, [location.pathname, matches]);
-
+  useGA4PageView();
 
   return (
     <div className={styles.container}>
