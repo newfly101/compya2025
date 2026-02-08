@@ -25,7 +25,7 @@ const SkillSimulator = lazy(() => import("@/domains/simulate/page/SkillSimulator
 const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
 const HitterSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
 
-const DictionaryHome = lazy(() => import("@/domains/dictionary/page/home/DictionaryHomePage.jsx"));
+const DictionaryHome = lazy(() => import("@/domains/dictionary/page/DictionaryHomePage.jsx"));
 const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.jsx"));
 
 const PrivacyPolicy = lazy(() => import("@/app/page/legal/PrivacyPolicy.jsx"));
