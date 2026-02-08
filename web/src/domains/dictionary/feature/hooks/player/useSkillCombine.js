@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-export const usePlayerSkillChange = () => {
+export const useSkillCombine = () => {
   const [tier, setTier] = useState("레전드"); // 레전드 | 플래티넘
   const [selected, setSelected] = useState([]);
   const selectedRef = useRef([]);

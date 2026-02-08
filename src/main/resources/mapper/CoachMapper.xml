@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dawne.com2usbaseball.domain.skill.repository.mapper.CoachMapper">
+
+    <select id="selectAllCoaches" resultType="com.dawne.com2usbaseball.domain.skill.entity.CoachEntity">
+        SELECT id, role, name, position, scope
+        FROM coach
+    </select>
+
+    <select id="selectAllCoachSkillBuff" resultType="com.dawne.com2usbaseball.domain.skill.entity.CoachSkillOptionEntity">
+        SELECT id, grade, target, name, description, detail_description
+        FROM coach_skill_buff
+    </select>
+
+    <select id="selectAllCoachSkillCondition" resultType="com.dawne.com2usbaseball.domain.skill.entity.CoachSkillOptionEntity">
+        SELECT id, grade, target, name, description, detail_description
+        FROM coach_skill_condition
+    </select>
+
+</mapper>

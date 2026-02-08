@@ -355,3 +355,41 @@ CREATE TABLE posts_tags
     FOREIGN KEY (post_id) REFERENCES posts (id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tags (id)
 );
+
+CREATE TABLE coach
+(
+    id   TINYINT AUTO_INCREMENT PRIMARY KEY,
+
+    role ENUM ('HITTER','PITCHER') NOT NULL COMMENT '타자 계열 / 투수 계열',
+    name VARCHAR(30)               NOT NULL COMMENT '감독, 타격코치, 주수코치, 수석코치, 투수코치, 불펜코치',
+    position VARCHAR(2)            NOT NULL COMMENT 'M, HD, HC, DC, PC, BC',
+    scope VARCHAR(30)               NOT NULL COMMENT 'MASTER SKILL 적용 범위'
+);
+
+CREATE TABLE coach_skill_condition
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+
+    grade              ENUM ('MASTER','PLATINUM') NOT NULL COMMENT '마스터 / 일반',
+    target             ENUM ('HITTER','PITCHER')  NOT NULL COMMENT '타자/투수',
+
+    name               VARCHAR(50)                NOT NULL COMMENT '조건명',
+    description        VARCHAR(100)               NOT NULL COMMENT '간단 설명',
+    detail_description VARCHAR(255)               NOT NULL COMMENT '상세 설명',
+
+    UNIQUE KEY uk_condition (grade, target, name)
+);
+
+CREATE TABLE coach_skill_buff
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+
+    grade              ENUM ('MASTER','PLATINUM') NOT NULL COMMENT '마스터 / 일반',
+    target             ENUM ('HITTER','PITCHER')  NOT NULL COMMENT '타자 / 투수',
+
+    name               VARCHAR(50)                NOT NULL COMMENT '버프명',
+    description        VARCHAR(100)               NOT NULL COMMENT '간단 설명',
+    detail_description VARCHAR(255)               NOT NULL COMMENT '상세 설명',
+
+    UNIQUE KEY uk_buff (grade, target, name)
+)
