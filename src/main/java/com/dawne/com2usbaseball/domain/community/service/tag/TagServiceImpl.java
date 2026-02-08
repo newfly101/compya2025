@@ -1,9 +1,9 @@
 package com.dawne.com2usbaseball.domain.community.service.tag;
 
-import com.dawne.com2usbaseball.domain.community.dto.response.tag.InsertTagResponse;
+import com.dawne.com2usbaseball.common.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.community.dto.response.tag.TagListResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.tag.UpdateTagResponse;
 import com.dawne.com2usbaseball.domain.community.entity.TagEntity;
+import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.repository.TagRepository;
 import com.dawne.com2usbaseball.domain.community.service.tag.support.ListMaker;
 import jakarta.annotation.Resource;
@@ -35,25 +35,17 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @CacheEvict(value="adminTags", allEntries = true)
-    public InsertTagResponse createNewTagItem(TagEntity tags) {
-        boolean success = repository.insertNewTag(tags);
-
-        if (!success) {
-            return InsertTagResponse.fail();
-        }
-
-        return InsertTagResponse.success(tags.getId());
+    public OperationResponse<CommunityMessages> createNewTagItem(TagEntity tags) {
+        return repository.insertNewTag(tags)
+                ? OperationResponse.success(CommunityMessages.TAG_CREATED, tags.getId())
+                : OperationResponse.fail(CommunityMessages.TAG_FAILED);
     }
 
     @Override
     @CacheEvict(value="adminTags", allEntries = true)
-    public UpdateTagResponse updateTagItem(TagEntity tags) {
-        boolean success = repository.updateTag(tags);
-
-        if (!success) {
-            return UpdateTagResponse.fail();
-        }
-
-        return UpdateTagResponse.success(tags.getId());
+    public OperationResponse<CommunityMessages> updateTagItem(TagEntity tags) {
+        return repository.updateTag(tags)
+                ? OperationResponse.success(CommunityMessages.TAG_UPDATED, tags.getId())
+                : OperationResponse.fail(CommunityMessages.TAG_FAILED);
     }
 }
