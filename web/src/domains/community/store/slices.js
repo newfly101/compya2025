@@ -79,7 +79,7 @@ const communitySlice = createSlice({
      * 게시글 관리 - 수정
      * =============================== */
     applyAsyncHandlers(builder, requestUpdateNewPost, (state, action) => {
-      const updated = action.payload;
+      const updated = action.payload.posts;
       const index = state.postLists.findIndex(b => b.id === updated.id);
 
       if (index !== -1) {
@@ -106,7 +106,7 @@ const communitySlice = createSlice({
      * 태그 관리 - 수정
      * =============================== */
     applyAsyncHandlers(builder, requestUpdateNewTag, (state, action) => {
-      const updated = action.payload;
+      const updated = action.payload.tags;
       const index = state.tagLists.findIndex(t => t.id === updated.id);
 
       if (index !== -1) {

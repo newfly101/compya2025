@@ -1,16 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { ADMIN_COMMUNITY_ACTIONS, USER_COMMUNITY_ACTIONS } from "@/domains/community/store/endpoints.js";
-import {
-  fetchGetAllPostLists, fetchGetAllTags, fetchGetUserBoardLists, fetchGetUserPostListsByBoardId, fetchInsertNewPost, fetchInsertNewTag, fetchUpdatePost, fetchUpdateTag,
-} from "@/domains/community/store/api.js";
-import { formatNow } from "@/global/utils/datetime/dateUtils.js";
+import { ADMIN_COMMUNITY_ACTIONS } from "@/domains/community/store/endpoints.js";
+import { fetchGetAllPostLists, fetchInsertNewPost, fetchUpdatePost } from "@/domains/community/store/index.js";
 
 export const requestGetAllPostLists = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.POST_LIST, async (_, { rejectWithValue }) => {
     try {
       const { items: posts } = await fetchGetAllPostLists();
-      console.log(`requestGetAllPostLists : `, posts);
-
+      
       return posts;
     } catch (error) {
       return rejectWithValue(error.message);
@@ -31,14 +27,11 @@ export const requestInsertNewPost = createAsyncThunk(
         authorName: role.role === "ADMIN" ? "관리자" : user.nickName,
       };
 
-      const { success, message, id } = await fetchInsertNewPost(payload);
-      // console.log(`requestInsertNewPost: `, postId);
+      const { id, ...options } = await fetchInsertNewPost(payload);
 
       return {
-        posts: {
-          id,
-          ...payload,
-        },
+        posts: { id, ...payload },
+        options,
       };
     } catch (error) {
       return rejectWithValue(error.message);
@@ -47,14 +40,13 @@ export const requestInsertNewPost = createAsyncThunk(
 );
 
 export const requestUpdateNewPost = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.UPDATE_POST, async ({ id, form }, { rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.UPDATE_POST, async ({ id: postId, form }, { rejectWithValue }) => {
     try {
-      const { success, message, id } = await fetchUpdatePost({ id: id, posts: form });
-      // console.log(`requestUpdateNewPost: `, postId);
+      const { id, ...options } = await fetchUpdatePost({ id: postId, posts: form });
 
       return {
-        id,
-        ...form,
+        posts: { id, ...form },
+        options,
       };
     } catch (error) {
       return rejectWithValue(error.message);

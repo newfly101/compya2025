@@ -9,7 +9,6 @@ export const requestGetAllTagLists = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.TAG_LIST, async (_, { rejectWithValue }) => {
     try {
       const { items: tags } = await fetchGetAllTags();
-      // console.log(`requestGetAllTagLists : `, tags);
 
       return tags;
     } catch (error) {
@@ -20,8 +19,9 @@ export const requestGetAllTagLists = createAsyncThunk(
 export const requestInsertNewTag = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.CREATE_TAG, async (form, { rejectWithValue }) => {
     try {
-      const { success, message, id } = await fetchInsertNewTag(form);
-      // console.log(`requestInsertNewTag: `, tagId);
+      const { id, ...options } = await fetchInsertNewTag(form);
+
+
       const now = formatNow();
 
       return {
@@ -31,6 +31,7 @@ export const requestInsertNewTag = createAsyncThunk(
           updatedAt: now,
           ...form,
         },
+        options
       };
     } catch (error) {
       return rejectWithValue(error.message);
@@ -39,14 +40,13 @@ export const requestInsertNewTag = createAsyncThunk(
 );
 
 export const requestUpdateNewTag = createAsyncThunk(
-  ADMIN_COMMUNITY_ACTIONS.UPDATE_TAG, async ({ id, form }, { rejectWithValue }) => {
+  ADMIN_COMMUNITY_ACTIONS.UPDATE_TAG, async ({ id:tagId, form }, { rejectWithValue }) => {
     try {
-      const { success, message, id } = await fetchUpdateTag({ id: id, tags: form });
-      // console.log(`requestUpdateNewTag: `, tagId);
+      const { id, ...options } = await fetchUpdateTag({ id: tagId, tags: form });
 
       return {
-        id,
-        ...form,
+        tags: {id, ...form},
+        options
       };
     } catch (error) {
       return rejectWithValue(error.message);
