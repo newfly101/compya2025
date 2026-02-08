@@ -21,6 +21,7 @@ const initialState  = {
   tagLists: [],
   loading: false,
   error: null,
+  lastOperation: null, // insert, update, delete 에 관련된 요소들 -> common modal
 }
 
 const communitySlice = createSlice({
@@ -29,6 +30,9 @@ const communitySlice = createSlice({
   reducers: {
     setActiveBoard: (state, action) => {
       state.activeBoardId = action.payload;
+    },
+    clearLastOperation: (state) => {
+      state.lastOperation = null;
     }
   },
   extraReducers: (builder) => {
@@ -48,7 +52,7 @@ const communitySlice = createSlice({
      * 게시판 관리 - 수정
      * =============================== */
     applyAsyncHandlers(builder, requestUpdateNewBoard, (state, action) => {
-      const updated = action.payload;
+      const updated = action.payload.boards;
       const index = state.boardLists.findIndex(b => b.id === updated.id);
 
       if (index !== -1) {
@@ -126,5 +130,5 @@ const communitySlice = createSlice({
 
   }
 })
-export const { setActiveBoard } = communitySlice.actions;
+export const { setActiveBoard, clearLastOperation } = communitySlice.actions;
 export default communitySlice.reducer;
