@@ -11,7 +11,7 @@ import {
   requestUpdateNewBoard,
   requestUpdateNewPost,
   requestUpdateNewTag,
-} from "@/domains/community/store/thunks.js";
+} from "@/domains/community/store/thunks/index.js";
 import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
 
 const initialState  = {
@@ -36,7 +36,7 @@ const communitySlice = createSlice({
      * 게시판 관리 - 목록 조회
      * =============================== */
     applyAsyncHandlers(builder, requestGetAllBoardLists, (state, action) => {
-      state.boardLists = action.payload.boards;
+      state.boardLists = action.payload;
     });
     /* ===============================
      * 게시판 관리 - 추가
@@ -116,7 +116,7 @@ const communitySlice = createSlice({
     * (유저) 게시판 관리 - 목록 조회
     * =============================== */
     applyAsyncHandlers(builder, requestGetUserBoardLists, (state, action) => {
-      state.boardLists = action.payload.boards;
+      state.boardLists = action.payload;
     });
 
     applyAsyncHandlers(builder, requestGetUserPostListsByBoardId, (state, action) => {
