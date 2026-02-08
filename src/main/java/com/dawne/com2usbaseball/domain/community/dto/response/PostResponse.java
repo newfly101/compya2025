@@ -1,4 +1,4 @@
-package com.dawne.com2usbaseball.domain.community.dto.response.posts;
+package com.dawne.com2usbaseball.domain.community.dto.response;
 
 import com.dawne.com2usbaseball.common.enums.user.UserGrant;
 import com.dawne.com2usbaseball.domain.community.entity.PostsEntity;

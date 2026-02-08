@@ -1,8 +1,9 @@
 package com.dawne.com2usbaseball.domain.community.controller;
 
-import com.dawne.com2usbaseball.common.dto.OperationResponse;
+import com.dawne.com2usbaseball.common.support.dto.ListResponse;
+import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.community.dto.request.BoardChangeRequest;
-import com.dawne.com2usbaseball.domain.community.dto.response.board.BoardListResponse;
+import com.dawne.com2usbaseball.domain.community.dto.response.BoardResponse;
 import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping("/admin/boards")
-    public BoardListResponse getBoardsList() {
+    public ListResponse<BoardResponse> getBoardsList() {
         return boardService.selectBoardList();
     }
     @PostMapping("/admin/boards")
@@ -29,7 +30,7 @@ public class BoardController {
     }
 
     @GetMapping("/boards")
-    public BoardListResponse getUserBoardsList() {
+    public ListResponse<BoardResponse> getUserBoardsList() {
         return boardService.selectUserBoardList();
     }
 

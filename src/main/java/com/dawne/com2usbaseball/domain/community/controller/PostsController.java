@@ -1,8 +1,9 @@
 package com.dawne.com2usbaseball.domain.community.controller;
 
-import com.dawne.com2usbaseball.common.dto.OperationResponse;
+import com.dawne.com2usbaseball.common.support.dto.ListResponse;
+import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.community.dto.request.PostsChangeRequest;
-import com.dawne.com2usbaseball.domain.community.dto.response.posts.PostListResponse;
+import com.dawne.com2usbaseball.domain.community.dto.response.PostResponse;
 import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.service.posts.PostsService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class PostsController {
     private final PostsService postsService;
 
     @GetMapping("/admin/posts")
-    public PostListResponse getAllPostList() {
+    public ListResponse<PostResponse> getAllPostList() {
          return postsService.selectAllPostLists();
     }
 
@@ -31,7 +32,7 @@ public class PostsController {
     }
 
     @GetMapping("/board/{boardId}/posts")
-    public PostListResponse getPostListByBoardId(@PathVariable Long boardId) throws NotFoundException {
+    public ListResponse<PostResponse> getPostListByBoardId(@PathVariable Long boardId) throws NotFoundException {
         return postsService.selectPostListsByBoard(boardId);
     }
 

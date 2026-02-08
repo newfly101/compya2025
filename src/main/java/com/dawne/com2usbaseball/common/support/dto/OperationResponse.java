@@ -1,4 +1,4 @@
-package com.dawne.com2usbaseball.common.dto;
+package com.dawne.com2usbaseball.common.support.dto;
 
 public record OperationResponse <M>(
         boolean success,

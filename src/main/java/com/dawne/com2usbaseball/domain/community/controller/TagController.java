@@ -1,8 +1,9 @@
 package com.dawne.com2usbaseball.domain.community.controller;
 
-import com.dawne.com2usbaseball.common.dto.OperationResponse;
+import com.dawne.com2usbaseball.common.support.dto.ListResponse;
+import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.community.dto.request.TagChangeRequest;
-import com.dawne.com2usbaseball.domain.community.dto.response.tag.TagListResponse;
+import com.dawne.com2usbaseball.domain.community.dto.response.TagResponse;
 import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.service.tag.TagService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping("/admin/tags")
-    public TagListResponse getTagList() {
+    public ListResponse<TagResponse> getTagList() {
         return tagService.selectTagList();
     }
     @PostMapping("/admin/tags")

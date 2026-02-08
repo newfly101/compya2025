@@ -1,4 +1,4 @@
-package com.dawne.com2usbaseball.domain.community.dto.response.tag;
+package com.dawne.com2usbaseball.domain.community.dto.response;
 
 import com.dawne.com2usbaseball.domain.community.entity.TagEntity;
 import com.fasterxml.jackson.annotation.JsonFormat;
