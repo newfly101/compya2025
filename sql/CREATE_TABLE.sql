@@ -358,12 +358,12 @@ CREATE TABLE posts_tags
 
 CREATE TABLE coach
 (
-    id   TINYINT AUTO_INCREMENT PRIMARY KEY,
+    id       TINYINT AUTO_INCREMENT PRIMARY KEY,
 
-    role ENUM ('HITTER','PITCHER') NOT NULL COMMENT '타자 계열 / 투수 계열',
-    name VARCHAR(30)               NOT NULL COMMENT '감독, 타격코치, 주수코치, 수석코치, 투수코치, 불펜코치',
-    position VARCHAR(2)            NOT NULL COMMENT 'M, HD, HC, DC, PC, BC',
-    scope VARCHAR(30)               NOT NULL COMMENT 'MASTER SKILL 적용 범위'
+    role     ENUM ('HITTER','PITCHER') NOT NULL COMMENT '타자 계열 / 투수 계열',
+    name     VARCHAR(30)               NOT NULL COMMENT '감독, 타격코치, 주수코치, 수석코치, 투수코치, 불펜코치',
+    position VARCHAR(2)                NOT NULL COMMENT 'M, HD, HC, DC, PC, BC',
+    scope    VARCHAR(30)               NOT NULL COMMENT 'MASTER SKILL 적용 범위'
 );
 
 CREATE TABLE coach_skill_condition
@@ -392,4 +392,27 @@ CREATE TABLE coach_skill_buff
     detail_description VARCHAR(255)               NOT NULL COMMENT '상세 설명',
 
     UNIQUE KEY uk_buff (grade, target, name)
-)
+);
+
+
+CREATE TABLE notices
+(
+    id           BIGINT PRIMARY KEY AUTO_INCREMENT,
+    source       ENUM ('INTERNAL','EXTERNAL') NOT NULL COMMENT 'INTERNAL / EXTERNAL',
+    title        VARCHAR(255)                 NOT NULL,
+    summary      TEXT                         NULL,
+    content      LONGTEXT                     NULL,
+    external_url VARCHAR(500)                 NULL,
+
+    is_visible   BOOLEAN                      NOT NULL DEFAULT true,
+    is_pinned    BOOLEAN                      NOT NULL DEFAULT false,
+
+    created_at   TIMESTAMP                             DEFAULT CURRENT_TIMESTAMP,
+    updated_at   TIMESTAMP                             DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CHECK (
+        (source = 'INTERNAL' AND content IS NOT NULL AND external_url IS NULL)
+            OR
+        (source = 'EXTERNAL' AND content IS NULL AND external_url IS NOT NULL)
+    )
+);
