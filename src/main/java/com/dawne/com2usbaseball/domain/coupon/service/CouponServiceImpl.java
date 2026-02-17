@@ -55,6 +55,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
+    @CacheEvict(value="couponLists", allEntries = true)
     public UpdateCouponResponse updateCouponVisible(Long id, boolean visible) {
         boolean success = repository.updateCouponVisible(id, visible);
         if (!success) {
