@@ -2,6 +2,7 @@ import styles from "@/app/page/home/Home.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import quizImg from "@/assets/quiz/quiz877.png";
+import reservationImg from "/events/reservation2026.JPG";
 import EventSwiper from "@/domains/events/feature/components/EventSwiper/EventSwiper.jsx";
 import CouponSwiper from "@/domains/coupons/feature/components/couponSwiper/CouponSwiper.jsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -83,10 +84,17 @@ const Home = () => {
           {/*<div className={styles.card} onClick={() => handleLinkTo(CLUB_GUIDE_URL)}>클럽 대전 가이드</div>*/}
         </div>
       </section>
+      <section className={styles.homeSection}>
+        <div onClick={() => handleLinkTo("https://event.withhive.com/ci/minisite/main/cpb2026pre/ko?r=p1&fcode=ST27METIdG")}>
+          <h2 className={styles.mainTitle}>🎉 컴프야2026 사전 예약</h2>
+          <img className={styles.reservation} src={reservationImg} alt="reservation-2026" />
+        </div>
+
+      </section>
 
       <section className={styles.homeSection}>
         <div>
-          <h2>🎉 컴프야 퀴즈 이벤트 877회 정답</h2>
+          <h2 className={styles.mainTitle}>🎉 컴프야 퀴즈 이벤트 877회 정답</h2>
           <img className={styles.quiz} src={quizImg} alt="quiz-875" />
         </div>
       </section>
