@@ -134,20 +134,38 @@
 
 .appHeaderOverlay {
   position: fixed;
-  top: 6.4rem;
-  left: 0;
-  width: 100%;
-  background: $ui-surface-bar;
-  border-top: 1px solid $ui-border-strong;
-  z-index: 1200;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 2000;
 
   display: flex;
-  flex-direction: column;
 
   @include desktop {
     display: none;
   }
 }
+
+.appHeaderPanel {
+  width: 280px;
+  height: 100%;
+  background: $surface2;
+
+  padding: 2.4rem 2rem;
+
+  box-shadow: 6px 0 18px rgba(0,0,0,0.35);
+
+  transform: translateX(-100%);
+  animation: slideIn 0.25s ease forwards;
+}
+
+.open {
+  animation: slideIn 0.25s ease forwards;
+}
+
+.closing {
+  animation: slideOut 0.22s ease forwards;
+}
+
 
 .appHeaderOverlayNav {
   display: flex;
@@ -158,4 +176,15 @@
     border-bottom: 1px solid $ui-border;
     color: $ui-text-main;
   }
+}
+
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
 }

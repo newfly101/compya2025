@@ -2,10 +2,12 @@ import { Link } from "react-router-dom";
 import styles from "./Header.module.scss";
 import { useHeaderAuth } from "@/app/wrapper/parts/hooks/useHeaderAuth.js";
 import { useHeaderNav } from "@/app/wrapper/parts/hooks/useHeaderNav.js";
+import { useHeaderUI } from "@/app/wrapper/parts/hooks/useHeaderUI.js";
 
 export default function Header() {
-  const {isAuthenticated, user, authority, login, logout} = useHeaderAuth();
+  const { isAuthenticated, user, authority, login, logout } = useHeaderAuth();
   const headerNav = useHeaderNav(isAuthenticated, authority);
+  const { isOpen, isClosing, toggleMenu, closeMenu, onAnimationEnd } = useHeaderUI();
 
   return (
     <header className={styles.appHeader}>
@@ -15,7 +17,7 @@ export default function Header() {
           <div className={styles.appHeaderLeft}>
             <button
               className={styles.appHeaderBurger}
-              // onClick={toggleMenu}
+              onClick={toggleMenu}
             >
               ☰
             </button>
@@ -43,16 +45,29 @@ export default function Header() {
         </div>
       </div>
 
-      {/*{menuOpen && (*/}
-      {/*  <div className={styles.appHeaderOverlay}>*/}
-      {/*    <nav className={styles.appHeaderOverlayNav}>*/}
-      {/*      <Link to="/">홈</Link>*/}
-      {/*      <Link to="/notice">공지</Link>*/}
-      {/*      <Link to="/community">커뮤니티</Link>*/}
-      {/*      <Link to="/dictionary">백과</Link>*/}
-      {/*    </nav>*/}
-      {/*  </div>*/}
-      {/*)}*/}
+      {isOpen && (
+        <div className={styles.appHeaderOverlay} onClick={closeMenu}>
+          <div
+            className={`${styles.appHeaderPanel} ${
+              isClosing ? styles.closing : styles.open
+            }`}
+            onClick={(e) => e.stopPropagation()}
+            onAnimationEnd={onAnimationEnd}
+          >
+            <nav className={styles.appHeaderOverlayNav}>
+              {headerNav.map((item, i) => (
+                <Link
+                  key={`overlay-nav-${i}`}
+                  to={item.to}
+                  onClick={closeMenu}
+                >
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
