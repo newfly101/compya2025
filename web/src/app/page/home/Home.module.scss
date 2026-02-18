@@ -1,173 +1,210 @@
-.homePage {
-  user-select: none; /* text */
-  //white-space: nowrap;
-  //flex-shrink: 0;
-
-  .hero {
-    padding: 10rem 2rem;
-    text-align: center;
-
-    background-image: url("@/assets/hero-bg.png");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 0.5rem;
-
-    .heroInner {
-      width: 30%;
-      min-width: 27rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: $surface3;
-      border-radius: 0.5rem;
-      padding: 1rem;
-    }
-
-    & > h1, & > p {
-      white-space: nowrap;
-    }
-    h1 {
-      font-size: 3rem;
-      color: #fff;
-    }
-  }
-
-  .features {
-    margin-top: 3rem;
-    padding: 2rem;
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.6rem;
-
-      .card {
-        background: $primary-bg;
-        padding: 2rem;
-        border-radius: 1.2rem;
-        color: #fff;
-        text-align: center;
-        font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-        word-break: keep-all;
-
-        &:hover {
-          background: $primary-hover;
-          transition: background 0.25s ease;
-        }
-      }
-    }
-  }
-  @media (max-width: 768px) {
-    .features {
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1.6rem;
-      }
-    }
-  }
-}
-
-
-//@media (max-width: 480px) {
-//  .features {
-//    .grid {
-//      grid-template-columns: 1fr;
-//    }
-//  }
-//}
-
-.subTitle {
+.homeWrapper {
   display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-
-  & h2 {
-    display: inline-block;
-  }
-  & > span {
-    color: $primary;
-    cursor: pointer;
-
-    &:hover {
-      color: $text-secondary;
-    }
-    & a{
-      font-size: 2rem;
-    }
-  }
-}
-.quiz {
-  width: 90%;
-  margin: 3rem 5%;
-}
-.reservation {
-  width: 90%;
-  margin: 3rem 5%;
-  cursor: pointer;
+  flex-direction: column;
+  gap: $space-16;
 }
 
-@media (max-width: 768px) {
-  .homePage {
-    .hero {
-      padding: 5rem 2rem;
-    }
-    .features {
-      margin-top: 0;
-    }
-  }
+/* HERO */
+.hero {
+  position: relative;
+  overflow: hidden;
+  border-radius: $radius-12;
+
+  padding: $space-48 $space-16;
 }
 
-.loginWrapper{
-  display: flex;
-  justify-content: right;
-}
+/* 실제 배경 레이어 */
+.heroBg {
+  position: absolute;
+  inset: 0;
 
-.register {
-  background-image: url("@/assets/NAVER_login_btn.png");
-  background-size: contain;
-  background-repeat: no-repeat;
+  background-image: url("@/assets/hero-bg.png");
+  background-size: cover;
   background-position: center;
-  padding: 0 2rem;
-  width: 12rem;
-  height: 3.2rem;
-  color: #fff;
-  text-align: center;
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  word-break: keep-all;
+  background-repeat: no-repeat;
+
+  filter: brightness(0.6); // 가독성 확보
 }
 
-.logout {
-  background: $primary-bg;
-  padding: 0 2rem;
-  border-radius: 0.4rem;
-  width: 12rem;
-  height: 3.2rem;
-  color: #fff;
+/* 컨텐츠 레이어 */
+.heroContent {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+/* 텍스트 박스 */
+.heroBox {
+  background: $surface3;
+  border-radius: $radius-8;
+  padding: $space-16 $space-20;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-16;
+
+  min-width: 280px;
+  max-width: 420px;
+
+  h1 {
+    color: $primary-text;
+  }
+
+  p {
+    font-size: $fs-14;
+    color: $primary-text;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .hero {
+    padding: $space-32 $space-16;
+  }
+}
+
+
+/* QUICK NAV */
+.quickNav {
+  margin-top: $space-24;
+}
+
+.quickGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-16;
+}
+
+.quickCard {
+  background: $ui-btn-ghost;
+  border-radius: $radius-8;
+  padding: $space-16;
+
+  color: $primary-text;
+  font-size: $fs-14;
+  font-weight: 600;
   text-align: center;
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
-  word-break: keep-all;
+
+  transition: background 0.2s ease, transform 0.1s ease;
 
   &:hover {
-    background: $primary-hover;
-    transition: background 0.25s ease;
+    background: $ui-btn-ghost-hover;
+    transform: translateY(-2px);
   }
 }
 
-.userProfile {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  margin-left: 2rem;
+/* PC */
+@media (min-width: 1024px) {
 
-  & > span {
-    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  .quickGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .hero {
+    padding: $space-48 $space-16;
+  }
+}
+
+/* TABLET */
+@media (max-width: 1024px) {
+  .quickGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* HIGHLIGHT */
+.highlight {
+  padding: 0 $space-16;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $space-12;
+}
+
+/* spotlight */
+/* ===== Section Wrapper ===== */
+.spotlightWrapper {
+  width: 100%;
+  margin-top: $space-32;
+}
+
+/* ===== Content Block ===== */
+.spotlightContent {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+/* 클릭 가능 */
+.spotlightInteractive {
+  cursor: pointer;
+
+  &:hover .spotlightTitle {
+    color: $text-primary;
+  }
+}
+
+/* ===== Title ===== */
+.spotlightTitle {
+  margin-bottom: $space-12;
+  line-height: 1.4;
+}
+
+.spotlightMedia {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* ===== Image ===== */
+/* 절대 안 잘림 */
+.spotlightImage {
+  width: 100%;
+  height: auto;
+
+  /* 너무 커지는 것만 제한 */
+  max-width: 100%;
+  max-height: 520px;
+
+  object-fit: contain;
+
+  /* 좌측 정렬 느낌 유지 */
+  display: block;
+}
+
+@media (min-width: 1024px) {
+  .spotlightImage {
+    max-height: 420px;
+  }
+}
+
+
+/* ===== Tablet ===== */
+@media (max-width: 1024px) {
+  .spotlightImage {
+    max-height: 420px;
+  }
+}
+
+/* ===== Mobile ===== */
+@media (max-width: 768px) {
+
+  .spotlightWrapper {
+    margin-top: $space-24;
+  }
+
+  .spotlightTitle {
+    font-size: $fs-16;
+    margin-bottom: $space-8;
+  }
+
+  .spotlightImage {
+    max-height: 320px;
   }
 }
