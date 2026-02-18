@@ -9,6 +9,7 @@ export const requestGetAllBoardLists = createAsyncThunk(
   ADMIN_COMMUNITY_ACTIONS.BOARD_LIST, async (_, { rejectWithValue }) => {
     try {
       const { items: boards } = await fetchGetAllBoardLists();
+      // console.log("requestGetAllBoardLists boards:", boards);
 
       return boards;
     } catch (error) {
