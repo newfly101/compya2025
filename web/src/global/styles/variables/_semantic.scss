@@ -1,0 +1,30 @@
+@use "./colors" as c;
+
+// Surface
+$surface-card
+$surface-page: c.$background-subtle;
+$surface-bar: c.$surface2;
+$surface-hover: c.$surface3;
+
+// Text
+$text-main: c.$text-primary;
+$text-sub: c.$text-secondary;
+$text-muted: c.$text-muted;
+
+// Border
+$border: c.$border;
+$border-strong: c.$border-strong;
+
+// Buttons
+$btn-main: c.$primary;
+$btn-main-hover: c.$primary-hover;
+$btn-ghost: c.$primary-bg;
+$btn-ghost-hover: c.$primary-hover;
+
+// Nav
+$nav-text: c.$text-secondary;
+$nav-hover: c.$text-primary;
+
+// Layout
+$container-width: 1200px;
+$container-padding: 1.6rem;
