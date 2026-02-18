@@ -1,0 +1,48 @@
+.appFooter {
+  width: 100%;
+  background: $surface2;
+  border-top: 1px solid $border-strong;
+  flex-shrink: 0;
+}
+
+.appFooterFrame {
+  max-width: $desktop;
+  margin: 0 auto;
+  padding: $space-16;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-16;
+}
+
+.appFooterCopy {
+  font-size: 1.4rem;
+  color: $text-muted;
+}
+
+.appFooterLegal {
+  display: flex;
+  gap: 2rem;
+  font-size: 1.4rem;
+
+  a {
+    color: $text-secondary;
+    &:hover { color: $text-primary; }
+  }
+}
+
+.appFooterDisabled {
+  color: $text-muted;
+}
+
+.appFooterActions {}
+
+.appFooterKakao {
+  background: #fee500;
+  color: #000;
+  border-radius: 999px;
+  padding: 0.8rem 1.4rem;
+  font-size: 1.4rem;
+  display: inline-block;
+}

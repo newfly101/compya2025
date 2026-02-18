@@ -1,10 +1,9 @@
 import { Outlet } from "react-router-dom";
 
-import Header from "@/app/wrapper/parts/Header.jsx";
-import Footer from "@/global/layout/appLayout/Footer.jsx";
 import styles from "@/app/wrapper/AppWrapper.module.scss";
+import Header from "@/app/wrapper/parts/Header.jsx";
+import Footer from "@/app/wrapper/parts/Footer.jsx";
 import { Suspense } from "react";
-import MobileNav from "@/global/layout/appLayout/MobileNav.jsx";
 import { useGA4PageView } from "@/app/analytics/hooks/useGA4PageView.js";
 
 const App = () => {
@@ -13,11 +12,16 @@ const App = () => {
   return (
     <div className={styles.appWrapper}>
       <Header />
-      <div className={styles.pageFrame}>
-        <main className={styles.pageBody}> <Suspense fallback={<div>로딩중...</div>}> <Outlet /> </Suspense> </main>
-      </div>
+
+      <main className={styles.pageMain}>
+        <div className={styles.pageFrame}>
+          <Suspense fallback={<div>로딩중...</div>}>
+            <Outlet />
+          </Suspense>
+        </div>
+      </main>
+
       <Footer />
-      <MobileNav />
     </div>
   );
 };
