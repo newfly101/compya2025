@@ -1,0 +1,20 @@
+@use "@/global/styles/variables/colors" as *;
+@use "@/global/styles/variables/spacing" as *;
+@use "@/global/styles/variables/breakpoints" as *;
+
+.appWrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.pageFrame {
+  width: 100%;
+  max-width: $desktop;
+  margin: 0 auto;
+  padding-inline: $space-16;
+}
+.pageBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}

@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import App from "@/App.jsx";
+import AppWrapper from "@/app/wrapper/AppWrapper.jsx";
 
 import { PublicRoutes } from "@/app/router/routes/PublicRoutes.jsx";
 import { userRoutes } from "@/app/router/routes/UserRoutes.jsx";
@@ -9,7 +9,7 @@ const router = createBrowserRouter([
   {
     path: "/",
 
-    element: <App />,
+    element: <AppWrapper />,
     children: [
       ...PublicRoutes,
       ...userRoutes,
