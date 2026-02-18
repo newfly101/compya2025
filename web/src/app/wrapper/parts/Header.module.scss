@@ -1,42 +1,161 @@
-
-
-.header {
+.appHeader {
   position: sticky;
   top: 0;
   z-index: 1000;
+  white-space: nowrap;
 }
 
-.headerBar {
+.appHeaderBar {
   width: 100%;
-  background: $surface2;
-  border-bottom: 1px solid $border-strong;
+  background: $ui-surface-bar;
+  border-bottom: 1px solid $ui-border-strong;
 }
 
-.inner {
-  max-width: $desktop;
+.appHeaderInner {
+  max-width: $ui-container-width;
   margin: 0 auto;
-  padding-inline: $space-16;
+  padding-inline: $ui-container-padding;
+
+  height: 6.4rem;
 
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.navGroup {
-  display: flex;
-  align-items: center;
-  min-width: 0;  // overflow 방지 핵심
-}
-
-.nav {
-  display: flex;
-  gap: $space-24;
-  flex-wrap: nowrap;
-}
-
-.actionGroup {
+.appHeaderLeft {
   display: flex;
   align-items: center;
   gap: $space-16;
-  flex-shrink: 0;  // 줄어들지 않게
+  min-width: 0;
+}
+
+
+.appHeaderNavGroup {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+/* =========================
+   NAV (PC)
+========================= */
+
+.appHeaderNav {
+  display: none;
+  gap: $space-24;
+
+  a {
+    font-size: $text-md;
+    color: $ui-text-sub;
+    text-decoration: none;
+
+    &:hover {
+      color: $ui-text-main;
+    }
+  }
+}
+
+@include desktop {
+  .appHeaderNav {
+    display: flex;
+  }
+}
+
+/* =========================
+   BURGER (Mobile)
+========================= */
+
+.appHeaderBurger {
+  font-size: 2rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $ui-text-main;
+
+  @include desktop {
+    display: none;
+  }
+}
+
+/* =========================
+   AUTH AREA
+========================= */
+
+.appHeaderAuth {
+  display: flex;
+  align-items: center;
+  gap: $space-16;
+}
+
+/* LOGIN BUTTON */
+
+.appHeaderLoginBtn {
+  background-image: url("@/assets/NAVER_login_btn.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  width: 12rem;
+  height: 3.2rem;
+}
+
+/* USER */
+
+.appHeaderUser {
+  display: flex;
+  align-items: center;
+  gap: $space-16;
+}
+
+.appHeaderUserName {
+  font-size: $text-sm;
+}
+
+/* LOGOUT */
+
+.appHeaderLogoutBtn {
+  background: $ui-btn-ghost;
+  padding: 0 $space-16;
+  border-radius: $radius-sm;
+  width: 12rem;
+  height: 3.2rem;
+  color: #fff;
+  font-size: $text-sm;
+
+  &:hover {
+    background: $ui-btn-ghost-hover;
+  }
+}
+
+/* =========================
+   MOBILE OVERLAY MENU
+========================= */
+
+.appHeaderOverlay {
+  position: fixed;
+  top: 6.4rem;
+  left: 0;
+  width: 100%;
+  background: $ui-surface-bar;
+  border-top: 1px solid $ui-border-strong;
+  z-index: 1200;
+
+  display: flex;
+  flex-direction: column;
+
+  @include desktop {
+    display: none;
+  }
+}
+
+.appHeaderOverlayNav {
+  display: flex;
+  flex-direction: column;
+
+  a {
+    padding: $space-16;
+    border-bottom: 1px solid $ui-border;
+    color: $ui-text-main;
+  }
 }
