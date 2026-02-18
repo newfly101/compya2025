@@ -5,7 +5,7 @@ import { useCouponListUser } from "@/domains/coupons/feature/hooks/user/useCoupo
 import CouponCard from "@/domains/coupons/feature/components/user/CouponCard.jsx";
 import { dateUtils } from "@/global/utils/datetime/dateUtils.js";
 
-const CouponSwiper = (short = false) => {
+const CouponSwiper = ({ short = false }) => {
   const { activeCoupons } = useCouponListUser();
 
   if (activeCoupons.length === 0) return null;
