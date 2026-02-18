@@ -200,11 +200,46 @@
   }
 
   .spotlightTitle {
-    font-size: $fs-16;
     margin-bottom: $space-8;
   }
 
   .spotlightImage {
     max-height: 320px;
   }
+}
+
+/* ============================= */
+/* Highlight Section */
+/* ============================= */
+
+.highlightWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $space-16;            // header ↔ body
+}
+
+.highlightHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-16;
+}
+
+.highlightTitle {
+  /* h 태그 기본 typography 사용 */
+  line-height: 1.4;
+}
+
+.highlightMore {
+  font-size: $fs-16;
+  color: $primary;
+  white-space: nowrap;
+
+  &:hover {
+    color: $text-secondary;
+  }
+}
+
+.highlightBody {
+  width: 100%;
 }
