@@ -2,47 +2,72 @@
   width: 100%;
   background: $surface2;
   border-top: 1px solid $border-strong;
-  flex-shrink: 0;
+  margin-top: $space-40;
 }
 
-.appFooterFrame {
-  max-width: $desktop;
+.appFooterInner {
+  max-width: 1200px;
   margin: 0 auto;
   padding: $space-16;
 
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $space-16;
+  flex-direction: column;
 }
 
 .appFooterCopy {
-  font-size: 1.4rem;
+  font-size: $fs-13;
   color: $text-muted;
+  margin-bottom: $space-8;
+  letter-spacing: 0.02em;
 }
 
-.appFooterLegal {
+.appFooterBottom {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: $space-12;
+}
+
+.appFooterLinks {
   display: flex;
-  gap: 2rem;
-  font-size: 1.4rem;
+  gap: $space-8;
+  font-size: $fs-13;
 
   a {
     color: $text-secondary;
-    &:hover { color: $text-primary; }
+
+    &:hover {
+      color: $text-primary;
+    }
   }
 }
 
-.appFooterDisabled {
+.divider {
   color: $text-muted;
 }
 
-.appFooterActions {}
+.disabled {
+  color: $text-muted;
+}
 
-.appFooterKakao {
-  background: #fee500;
-  color: #000;
-  border-radius: 999px;
-  padding: 0.8rem 1.4rem;
-  font-size: 1.4rem;
-  display: inline-block;
+.kakaoBtn {
+  background: $kakao-btn-bg;
+  color: $kakao-btn-text;
+
+  border-radius: $radius-full;
+  padding: $space-8 $space-16;
+  font-size: $fs-12;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .appFooterBottom {
+    grid-template-columns: 1fr;
+    gap: $space-8;
+  }
+
+  .kakaoBtn {
+    justify-self: start;
+  }
 }

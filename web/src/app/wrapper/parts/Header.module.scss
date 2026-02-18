@@ -46,7 +46,7 @@
   gap: $space-24;
 
   a {
-    font-size: $text-md;
+    font-size: $fs-16;
     color: $ui-text-sub;
     text-decoration: none;
 
@@ -67,7 +67,7 @@
 ========================= */
 
 .appHeaderBurger {
-  font-size: 2rem;
+  font-size: $fs-20;
   background: none;
   border: none;
   cursor: pointer;
@@ -109,7 +109,7 @@
 }
 
 .appHeaderUserName {
-  font-size: $text-sm;
+  font-size: $fs-14;
 }
 
 /* LOGOUT */
@@ -121,7 +121,7 @@
   width: 12rem;
   height: 3.2rem;
   color: #fff;
-  font-size: $text-sm;
+  font-size: $fs-14;
 
   &:hover {
     background: $ui-btn-ghost-hover;

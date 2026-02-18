@@ -5,30 +5,32 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className={styles.appFooter}>
-      <div className={styles.appFooterFrame}>
+      <div className={styles.appFooterInner}>
 
-        <p className={styles.appFooterCopy}>
+        <div className={styles.appFooterCopy}>
           © 컴투스프로야구2026 — 컴투스프로야구 정보 사이트
-        </p>
-
-        <div className={styles.appFooterLegal}>
-          <Link to="/privacy">개인정보처리방침</Link>
-          <span className={styles.appFooterDisabled}>이용약관</span>
         </div>
 
-        <div className={styles.appFooterActions}>
+        <div className={styles.appFooterBottom}>
+          <div className={styles.appFooterLinks}>
+            <Link to="/privacy">개인정보처리방침</Link>
+            <span className={styles.divider}>|</span>
+            <span className={styles.disabled}>이용약관</span>
+          </div>
+
           <a
             href="https://open.kakao.com/o/sw9YuV8h"
             target="_blank"
             rel="noreferrer"
-            className={styles.appFooterKakao}
+            className={styles.kakaoBtn}
           >
-            카카오톡: 오픈채팅 열기
+            카카오톡 문의
           </a>
         </div>
 
       </div>
     </footer>
+
   );
 };
 
