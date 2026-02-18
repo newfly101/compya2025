@@ -8,6 +8,7 @@ import CouponSwiper from "@/domains/coupons/feature/components/couponSwiper/Coup
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "@/domains/auth/store/slices.js";
 import { requestUserLogout } from "@/domains/auth/store/thunks.js";
+import Sample from "@/app/page/home/Sample.jsx";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -115,6 +116,8 @@ const Home = () => {
         </div>
         <CouponSwiper short={true} />
       </section>
+
+      <Sample />
 
     </div>
   );
