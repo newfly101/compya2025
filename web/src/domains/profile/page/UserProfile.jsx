@@ -25,7 +25,7 @@ const statusClassMap = {
 
 const UserProfile = () => {
   const dispatch = useDispatch();
-  const { user, role } = useSelector((state) => state.auth);
+  const { user, authority } = useSelector((state) => state.auth);
   const {
     email,
     lastLoginAt,
@@ -53,8 +53,8 @@ const UserProfile = () => {
           />
 
           <div className={styles.badges}>
-            <span className={styles.role}>{role.role}</span>
-            <span className={`${styles.statusBadge} ${statusClassMap[role?.status]}`}>{stateToString(role.status)}</span>
+            <span className={styles.role}>{authority.role}</span>
+            <span className={`${styles.statusBadge} ${statusClassMap[authority?.status]}`}>{stateToString(authority.status)}</span>
           </div>
         </div>
       </div>
@@ -75,23 +75,23 @@ const UserProfile = () => {
         <h3>계정 상태</h3>
 
         <div className={styles.statusRow}>
-          <span className={`${styles.statusBadge} ${statusClassMap[role?.status]}`}>{stateToString(role.status)}</span>
-          {role?.status === "BLOCKED" && (
+          <span className={`${styles.statusBadge} ${statusClassMap[authority?.status]}`}>{stateToString(authority.status)}</span>
+          {authority?.status === "BLOCKED" && (
             <div className={styles.warning}>
               <h3>사유</h3>
               <div className={styles.reason}>
-                <span> {role?.banReason}</span>
+                <span> {authority?.banReason}</span>
               </div>
             </div>
           )}
         </div>
       </div>
       <div className={styles.btnGroup}>
-        {role?.status !== "BLOCKED" && role?.status !== "WITHDRAWN" && (
+        {authority?.status !== "BLOCKED" && authority?.status !== "WITHDRAWN" && (
           <button className={styles.success}>정보수정</button>
         )}
         <button className={styles.info}>문의하기</button>
-        {role?.status !== "WITHDRAWN" && (
+        {authority?.status !== "WITHDRAWN" && (
           <button className={styles.danger}>회원탈퇴</button>
         )}
       </div>

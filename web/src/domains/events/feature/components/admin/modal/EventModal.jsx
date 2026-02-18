@@ -52,6 +52,20 @@ const EventModal = ({
           </label>
 
           <label>
+            이미지 파일
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => onChange({
+                target: {
+                  name: "imageFile",
+                  value: e.target.files[0]
+                }
+              })}
+            />
+          </label>
+
+          <label>
             외부 링크
             <input
               name="externalLink"

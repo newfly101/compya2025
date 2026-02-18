@@ -17,7 +17,7 @@ public class UploadController {
 
     private final UploadService uploadService;
 
-    @PostMapping("/images")
+    @PostMapping("/events")
     public String uploadImage(@RequestParam MultipartFile file) throws Exception {
         log.info("file={}",file);
         return uploadService.uploadImage(file);
