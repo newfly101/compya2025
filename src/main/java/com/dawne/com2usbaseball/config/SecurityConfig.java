@@ -26,6 +26,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers("/api/upload/**").permitAll()
                         .requestMatchers("/api/events/**").authenticated()
                         .requestMatchers("/api/community/admin/**").authenticated()
                         .anyRequest().denyAll())
