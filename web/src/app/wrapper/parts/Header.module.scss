@@ -1,0 +1,42 @@
+
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.headerBar {
+  width: 100%;
+  background: $surface2;
+  border-bottom: 1px solid $border-strong;
+}
+
+.inner {
+  max-width: $desktop;
+  margin: 0 auto;
+  padding-inline: $space-16;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navGroup {
+  display: flex;
+  align-items: center;
+  min-width: 0;  // overflow 방지 핵심
+}
+
+.nav {
+  display: flex;
+  gap: $space-24;
+  flex-wrap: nowrap;
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: $space-16;
+  flex-shrink: 0;  // 줄어들지 않게
+}

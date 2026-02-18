@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 
-import Header from "@/global/layout/appLayout/Header.jsx";
+import Header from "@/app/wrapper/parts/Header.jsx";
 import Footer from "@/global/layout/appLayout/Footer.jsx";
 import styles from "@/app/wrapper/AppWrapper.module.scss";
 import { Suspense } from "react";
