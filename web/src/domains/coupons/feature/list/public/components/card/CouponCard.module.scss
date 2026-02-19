@@ -23,10 +23,16 @@
   justify-content: space-between;
   align-items: center;
   gap: $space-12;
+
+  min-width: 0;
 }
 
 .couponCardCode {
-  background: rgba($ui-brand-main, 0.2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  background: $ui-brand-main;
   color: $ui-brand-text;
 
   padding: $space-8 $space-16;
@@ -34,8 +40,6 @@
 
   font-size: $fs-14;
   font-weight: 700;
-
-  white-space: nowrap;
 }
 
 .couponCardAction {

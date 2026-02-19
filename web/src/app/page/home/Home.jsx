@@ -30,14 +30,14 @@ const Home = () => {
 
       <HighlightSection
         title="최신 이벤트"
-        link="/notice?tab=event"
+        link="/notice/events"
         // items={events}
         type="event"
       />
 
       <HighlightSection
         title="최신 쿠폰"
-        link="/notice?tab=coupons"
+        link="/notice/coupons"
         // items={coupons}
         type="coupon"
       />
