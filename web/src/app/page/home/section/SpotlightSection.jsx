@@ -12,9 +12,7 @@ const SpotlightSection = ({ title, image, link, interactive = false }) => {
           interactive ? styles.spotlightInteractive : ""
         }`}
         onClick={
-          interactive
-            ? () => window.open(link, "_blank", "noopener,noreferrer")
-            : undefined
+          interactive && (() => window.open(link, "_blank", "noopener,noreferrer"))
         }
       >
         <h2 className={styles.spotlightTitle}>{title}</h2>

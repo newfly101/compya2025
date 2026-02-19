@@ -20,7 +20,7 @@ const Home = () => {
         title="🎉 컴프야2026 사전 예약"
         image={reservationImg}
         link="https://event.withhive.com/ci/minisite/main/cpb2026pre/ko?r=p1&fcode=ST27METIdG"
-        clickable
+        interactive={true}
       />
 
       <SpotlightSection
