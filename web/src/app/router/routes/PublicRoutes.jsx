@@ -4,9 +4,11 @@ import FunNoticeList from "@/domains/notices/feature/components/user/lists/FunNo
 import OfficialNoticeList
   from "@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx";
 import UserEventPage from "@/domains/events/page/user/UserEventPage.jsx";
-import UserCouponPage from "@/domains/coupons/page/user/UserCouponPage.jsx";
 
 const Home = lazy(() => import("@/app/page/home/Home.jsx"));
+const CouponListPage = lazy(() => import("@/domains/coupons/feature/list/public/pages/CouponListPage.jsx"));
+
+
 const FunNoticePage = lazy(() => import("@/domains/notices/page/funNotice/FunNoticePage.jsx"));
 const SkillSimulator = lazy(() => import("@/domains/simulate/page/SkillSimulator.jsx"));
 const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
@@ -28,7 +30,7 @@ export const PublicRoutes = [
       { index: true, element: <FunNoticeList />, handle: { title: "컴프야펀 | 펀 공지사항" } },
       { path: "official", element: <OfficialNoticeList />, handle: { title: "컴프야펀 | 공식 공지사항" }  },
       { path: "events", element: <UserEventPage />, handle: { title: "컴프야펀 | 공식 이벤트" }  },
-      { path: "coupons", element: <UserCouponPage />, handle: { title: "컴프야펀 | 쿠폰 코드" }  },
+      { path: "coupons", element: <CouponListPage />, handle: { title: "컴프야펀 | 쿠폰 코드" }  },
     ],
   },
   { path: "notice/:id", element: <FunNoticePage /> },

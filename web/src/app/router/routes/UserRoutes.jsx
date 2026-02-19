@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import React, { lazy } from "react";
 import AuthGuard from "@/app/router/guards/AuthGuard.jsx";
 const UserProfile = lazy(() => import("@/domains/profile/page/UserProfile.jsx"));
 
