@@ -7,7 +7,6 @@ import UserEventPage from "@/domains/events/page/user/UserEventPage.jsx";
 import UserCouponPage from "@/domains/coupons/page/user/UserCouponPage.jsx";
 
 const Home = lazy(() => import("@/app/page/home/Home.jsx"));
-const Notice = lazy(() => import("@/domains/notices/page/Notice.jsx"));
 const FunNoticePage = lazy(() => import("@/domains/notices/page/funNotice/FunNoticePage.jsx"));
 const SkillSimulator = lazy(() => import("@/domains/simulate/page/SkillSimulator.jsx"));
 const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
