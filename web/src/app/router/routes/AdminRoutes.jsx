@@ -1,9 +1,9 @@
 import AuthGuard from "@/app/router/guards/AuthGuard.jsx";
-import AdminLayout from "@/domains/admin/layout/AdminLayout.jsx";
+import AdminPageLayout from "@/global/layout/adminPageLayout/AdminPageLayout.jsx";
 import AdminDashBoardPage from "@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx";
 import AdminUserManagePage from "@/domains/admin/pages/user/AdminUserManagePage.jsx";
 import AdminUserDetailPage from "@/domains/admin/pages/user/AdminUserDetailPage.jsx";
-import AdminContentPage from "@/domains/admin/pages/content/AdminContentPage.jsx";
+import AdminContentPage from "@/global/layout/adminPageLayout/content/AdminContentPage.jsx";
 import AdminEventPage from "@/domains/events/page/admin/AdminEventPage.jsx";
 import AdminNoticeManagePage from "@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx";
 import AdminCouponPage from "@/domains/coupons/page/admin/AdminCouponPage.jsx";
@@ -15,7 +15,7 @@ export const AdminRoutes = [
     children: [
       {
         path: "admin",
-        element: <AdminLayout />,
+        element: <AdminPageLayout />,
         children: [
           { index: true, element: <AdminDashBoardPage />, handle: { title: "컴프야펀 | 어드민 | 대시보드" } },
           { path: "users", element: <AdminUserManagePage />, handle: { title: "컴프야펀 | 어드민 | 유저 관리" } },

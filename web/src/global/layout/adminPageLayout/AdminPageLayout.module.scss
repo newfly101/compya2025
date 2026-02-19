@@ -1,0 +1,73 @@
+.adminLayoutWrapper {
+  width: 100%;
+}
+
+.adminLayoutBar {
+  position: sticky;
+  top: 6.4rem;
+  z-index: 100;
+
+  background: $surface2;
+  border-bottom: 1px solid $border-strong;
+  max-width: 100%;
+  width: fit-content;
+  border-radius: $radius-12 $radius-12 $radius-12 0;
+}
+
+.adminLayoutBarInner {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+
+  display: flex;
+  align-items: center;
+  gap: $space-16;
+
+  padding: $space-12 $space-24;
+}
+
+.adminLayoutLabel {
+  font-size: $fs-14;
+  font-weight: 600;
+}
+
+.adminLayoutNav {
+  display: flex;
+  gap: $space-16;
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+
+  /* Firefox */
+  scrollbar-width: none;
+
+  /* IE, Edge */
+  -ms-overflow-style: none;
+
+  /* Chrome, Safari */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.adminLayoutNavItem {
+  font-size: $fs-14;
+  padding: $space-4 $space-8;
+  border-radius: $radius-8;
+  white-space: nowrap;
+}
+
+.isActive {
+  color: $primary-text;
+  background: $primary-bg;
+  border-color: rgba($primary, 0.5);
+}
+
+.adminLayoutContent {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding-left: $space-24;
+  padding-right: $space-24;
+}

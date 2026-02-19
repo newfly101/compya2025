@@ -35,3 +35,20 @@ h1 {
     }
   }
 }
+
+
+.adminContentWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $space-24;
+  padding: $space-24 0;
+}
+
+.adminContentHeader {}
+
+.adminContentTitle {
+  font-size: $fs-20;
+  font-weight: 700;
+}
+
+.adminContentBody {}
