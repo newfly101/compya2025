@@ -1,0 +1,42 @@
+.tabNavigationWrapper {
+  display: flex;
+  gap: $space-16;
+  border-bottom: 1px solid $border;
+
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.tabButton {
+  flex: 0 0 auto;
+  white-space: nowrap;
+
+  padding: $space-12 0;
+  background: none;
+  border: none;
+
+  font-size: $fs-16;
+  font-weight: 600;
+  color: $text-muted;
+  cursor: pointer;
+
+  &.active {
+    color: $text-primary;
+    border-bottom: 2px solid $primary;
+  }
+}
+
+@media (max-width: 768px) {
+  .tabNavigationWrapper {
+    gap: $space-12;
+  }
+
+  .tabButton {
+    font-size: $fs-14;
+  }
+}
