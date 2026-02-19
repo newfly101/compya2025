@@ -1,4 +1,10 @@
 import React, { lazy } from "react";
+import NoticeLayout from "@/app/page/notice/NoticeLayout.jsx";
+import FunNoticeList from "@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx";
+import OfficialNoticeList
+  from "@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx";
+import UserEventPage from "@/domains/events/page/user/UserEventPage.jsx";
+import UserCouponPage from "@/domains/coupons/page/user/UserCouponPage.jsx";
 
 const Home = lazy(() => import("@/app/page/home/Home.jsx"));
 const Notice = lazy(() => import("@/domains/notices/page/Notice.jsx"));
@@ -16,7 +22,16 @@ const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.j
 
 export const PublicRoutes = [
   { index: true, element: <Home />, handle: { title: "컴프야펀 | 홈" } },
-  { path: "notice", element: <Notice /> },
+  {
+    path: "notice",
+    element: <NoticeLayout />,
+    children: [
+      { index: true, element: <FunNoticeList /> },
+      { path: "official", element: <OfficialNoticeList /> },
+      { path: "events", element: <UserEventPage /> },
+      { path: "coupons", element: <UserCouponPage /> },
+    ],
+  },
   { path: "notice/:id", element: <FunNoticePage /> },
   { path: "simulate", element: <SkillSimulator />, handle: { title: "컴프야펀 | 스킬 변경 시뮬레이터" } },
   { path: "simulate/pitcher", element: <PitcherSkillChange />, handle: { title: "컴프야펀 | 투수 고스변 시뮬레이터" } },
