@@ -1,16 +1,12 @@
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
 import MetaHeader from "@/global/ui/metaHeader/MetaHeader.jsx";
-import Tabs from "@/domains/notices/feature/components/Tabs.jsx";
 import React from "react";
 import styles from "@/app/page/notice/Notice.module.scss";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import TabNavigation from "@/global/ui/navigation/tabNav/TabNavigation.jsx";
 
 const NoticeLayout = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-
-  const current = location.pathname.split("/")[2] ?? "";
 
   const NOTICE_TAB = [
     { key: "", label: "펀 공지", path: "/notice", exact: true },
