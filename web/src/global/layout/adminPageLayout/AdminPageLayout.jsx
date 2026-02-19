@@ -1,6 +1,6 @@
 import React from "react";
 import { Outlet, NavLink } from "react-router-dom";
-import styles from "./AdminLayout.module.scss";
+import styles from "./AdminPageLayout.module.scss";
 import { AdminNavigation } from "@/domains/admin/config/AdminNavigation.js";
 
 const AdminPageLayout = () => {
