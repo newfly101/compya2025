@@ -1,26 +1,25 @@
 import { useDispatch, useSelector } from "react-redux";
-import { splitCouponsByExpired } from "@/domains/events/utils/EventDateUtils.js";
 import { useEffect } from "react";
 import { requestGetCouponList } from "@/domains/coupons/store/index.js";
+import { classifyCoupons } from "@/domains/coupons/feature/list/public/utils/couponUtils.js";
 
 export const useCouponList = () => {
   const dispatch = useDispatch();
-  const { coupons } = useSelector(state => state.coupon);
-
-  const { activeCoupons, expireCoupons } = splitCouponsByExpired(coupons);
+  const coupons = useSelector(state => state.coupon.coupons) ?? [];
 
   useEffect(() => {
     dispatch(requestGetCouponList());
   }, [dispatch]);
 
-  const shortCoupons = (limit) => {
-    return {activeCoupons: limit ? activeCoupons.slice(0, limit) : activeCoupons};
-  }
+  const { active, expired } = classifyCoupons(coupons);
+
+  const getLimitedActive = (limit) =>
+    limit ? active.slice(0, limit) : active;
 
   return {
-    coupons: coupons ?? [],
-    activeCoupons,
-    expireCoupons,
-    shortCoupons,
-  }
-}
+    coupons,
+    activeCoupons: active,
+    expiredCoupons: expired,
+    getLimitedActive,
+  };
+};
