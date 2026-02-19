@@ -112,7 +112,7 @@
     display: none;
   }
 
-  /* 5 expireAt ❗ 이걸 추가해야 함 */
+  /* 5 expireAt */
   :global(.adminTableHead th:nth-child(5)),
   :global(.adminTableBody td:nth-child(5)) {
     display: none;
