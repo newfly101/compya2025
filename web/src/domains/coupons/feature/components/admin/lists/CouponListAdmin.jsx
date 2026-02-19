@@ -1,10 +1,10 @@
 import React from "react";
 import CouponCreateModal from "@/domains/coupons/feature/components/admin/modal/CouponCreateModal.jsx";
 import { useCouponAdminList } from "@/domains/coupons/feature/hooks/admin/useCouponAdminList.js";
-import AdminTableLayout from "@/global/layout/adminLayout/AdminTableLayout.jsx";
+import AdminTableLayout from "@/global/layout/adminPageLayout/table/AdminTableLayout.jsx";
 import CouponTableHead from "@/domains/coupons/feature/components/admin/table/CouponTableHead.jsx";
 import CouponTableBody from "@/domains/coupons/feature/components/admin/table/CouponTableBody.jsx";
-import AdminFilterBar from "@/global/layout/adminLayout/AdminFilterBar.jsx";
+import AdminFilterBar from "@/global/layout/adminPageLayout/table/AdminFilterBar.jsx";
 import { useCouponAdminFilter } from "@/domains/coupons/feature/hooks/admin/useCouponAdminFilter.js";
 import CouponEditModal from "@/domains/coupons/feature/components/admin/modal/CouponEditModal.jsx";
 
