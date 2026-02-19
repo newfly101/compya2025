@@ -10,12 +10,12 @@ const AdminTableLayout = ({ filters, head, tbody }) => {
         </div>
       )}
 
-      <div className={styles.adminTableContainer}>
-        <table className={styles.adminTable}>
-          <thead className={styles.adminTableHead}>
+      <div className={`${styles.adminTableContainer} adminTableContainer`}>
+        <table className={`${styles.adminTable} adminTable`}>
+          <thead className={`${styles.adminTableHead} adminTableHead`}>
           {head}
           </thead>
-          <tbody className={styles.adminTableBody}>
+          <tbody className={`${styles.adminTableBody} adminTableBody`}>
           {tbody}
           </tbody>
         </table>
