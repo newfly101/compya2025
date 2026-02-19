@@ -7,7 +7,7 @@
 
 .appHeaderBar {
   width: 100%;
-  background: $ui-surface-bar;
+  background: $ui-surface-elevated;
   border-bottom: 1px solid $ui-border-strong;
 }
 
@@ -173,7 +173,7 @@
 
   a {
     padding: $space-16;
-    border-bottom: 1px solid $ui-border;
+    border-bottom: 1px solid $ui-border-light;
     color: $ui-text-main;
   }
 }
