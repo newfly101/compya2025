@@ -16,14 +16,14 @@
   display: flex;
   flex-direction: column;
   //gap: $space-32; // header ↔ body 기본 리듬
-  gap: $space-24; // header ↔ body 기본 리듬
+  gap: $space-16; // header ↔ body 기본 리듬
 }
 
 @media (max-width: 1024px) {
 
   .contentPageContainer {
     padding: 0 $space-16;
-    gap: $space-24;
+    gap: $space-16;
   }
 }
 
@@ -36,6 +36,6 @@
 
   .contentPageContainer {
     padding: 0 $space-16;
-    gap: $space-24;
+    gap: $space-16;
   }
 }
