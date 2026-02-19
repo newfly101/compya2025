@@ -2,7 +2,6 @@ import React from "react";
 import styles from "@/app/page/home/Home.module.scss";
 import { Link } from "react-router-dom";
 import EventSwiper from "@/domains/events/feature/components/EventSwiper/EventSwiper.jsx";
-import CouponSwiper from "@/domains/coupons/feature/components/couponSwiper/CouponSwiper.jsx";
 import CouponSlideSection from "@/domains/coupons/feature/list/public/components/slide/CouponSlideSection.jsx";
 
 const HighlightSection = ({title, link, type}) => {
@@ -18,7 +17,6 @@ const HighlightSection = ({title, link, type}) => {
 
       <div className={styles.highlightBody}>
         {type === "event" && <EventSwiper short />}
-        {/*{type === "coupon" && <CouponSwiper short />}*/}
         {type === "coupon" && <CouponSlideSection limit={3} />}
       </div>
     </section>

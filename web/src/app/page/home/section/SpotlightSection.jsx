@@ -4,6 +4,10 @@ import styles from "@/app/page/home/Home.module.scss";
 const SpotlightSection = ({ title, image, link, interactive = false }) => {
   const Wrapper = interactive ? "button" : "div";
 
+  const clickExternalUrl = (link) => {
+    window.open(link, "_blank", "noopener,noreferrer");
+  }
+
   return (
     <section className={styles.spotlightWrapper}>
       <Wrapper
@@ -12,11 +16,10 @@ const SpotlightSection = ({ title, image, link, interactive = false }) => {
           interactive ? styles.spotlightInteractive : ""
         }`}
         onClick={
-          interactive && (() => window.open(link, "_blank", "noopener,noreferrer"))
+          interactive ? () => clickExternalUrl(link) : undefined
         }
       >
         <h2 className={styles.spotlightTitle}>{title}</h2>
-        {/*<h2>{title}</h2>*/}
 
         <div className={styles.spotlightMedia}>
           <img
