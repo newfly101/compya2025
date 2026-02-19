@@ -1,0 +1,49 @@
+@use "../variables/colors" as *;
+
+/* =========================
+   SURFACE
+========================= */
+$ui-surface-base: $background;
+$ui-surface-elevated: $surface2;
+$ui-surface-hover: $surface3;
+
+/* =========================
+   BORDER
+========================= */
+$ui-border-light: $border;
+$ui-border-strong: $border-strong;
+
+/* =========================
+   TEXT
+========================= */
+$ui-text-main: $text-primary;
+$ui-text-sub: $text-secondary;
+$ui-text-muted: $text-muted;
+
+/* =========================
+   BRAND
+========================= */
+$ui-brand-main: $primary;
+$ui-brand-hover: $primary-hover;
+$ui-brand-active: $primary-active;
+$ui-brand-text: $primary-text;
+
+/* =========================
+   BUTTON
+========================= */
+$ui-btn-ghost: $secondary;
+$ui-btn-ghost-hover: $secondary-hover;
+
+$ui-btn-primary-gradient: linear-gradient(
+                135deg,
+                #6d4ad3,
+                #a86bf0
+);
+
+// kakao btn
+$kakao-btn-bg: $kakao-yellow;
+$kakao-btn-text: $kakao-txt;
+
+// Layout
+$ui-container-width: 1200px;
+$ui-container-padding: 1.6rem;

@@ -8,12 +8,17 @@
 @forward "variables/radius";
 @forward "variables/zindex";
 @forward "variables/breakpoints";
-@forward "variables/semantic";
+//@forward "variables/semantic";
 
 /* ===== MIXINS ===== */
-@forward "mixins/flex";
+//@forward "mixins/flex";
 @forward "mixins/media";
 @forward "mixins/table";
+@forward "mixins/layout";
 
 /* ===== BASE ===== */
 @forward "base/typography";
+
+
+/* ==== SEMANTIC ======= */
+@forward "semantic/color";
