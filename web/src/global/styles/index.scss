@@ -6,10 +6,14 @@
 @forward "variables/spacing";
 @forward "variables/font";
 @forward "variables/radius";
+@forward "variables/zindex";
 @forward "variables/breakpoints";
-@forward "variables/_semantic";
+@forward "variables/semantic";
 
 /* ===== MIXINS ===== */
 @forward "mixins/flex";
 @forward "mixins/media";
 @forward "mixins/table";
+
+/* ===== BASE ===== */
+@forward "base/typography";
