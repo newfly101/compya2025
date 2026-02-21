@@ -1,15 +1,16 @@
 import EventModal from "./EventModal.jsx";
-import { useEventCreate } from "@/domains/events/feature/hooks/admin/useEventCreate.js";
+import { useEventEdit } from "@/domains/events/feature/admin/hooks/useEventEdit.js";
 
-const EventCreateModal = ({ onClose }) => {
-  const hook = useEventCreate({
+const EventEditModal = ({ event, onClose }) => {
+  const hook = useEventEdit({
+    event,
     onSuccess: onClose,
   });
 
   return (
     <EventModal
-      title="이벤트 등록"
-      submitLabel="등록"
+      title="이벤트 수정"
+      submitLabel="수정"
       form={hook.form}
       onChange={hook.handleChange}
       onDateTyping={hook.handleDateTyping}
@@ -20,4 +21,4 @@ const EventCreateModal = ({ onClose }) => {
   );
 };
 
-export default EventCreateModal;
+export default EventEditModal;

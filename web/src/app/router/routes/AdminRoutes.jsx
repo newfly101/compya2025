@@ -4,7 +4,7 @@ import AdminDashBoardPage from "@/domains/admin/pages/dashboard/AdminDashBoardPa
 import AdminUserManagePage from "@/domains/admin/pages/user/AdminUserManagePage.jsx";
 import AdminUserDetailPage from "@/domains/admin/pages/user/AdminUserDetailPage.jsx";
 import AdminContentPage from "@/global/layout/adminPageLayout/content/AdminContentPage.jsx";
-import AdminEventPage from "@/domains/events/page/admin/AdminEventPage.jsx";
+import AdminEventPage from "@/domains/events/feature/admin/pages/AdminEventPage.jsx";
 import AdminNoticeManagePage from "@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx";
 import AdminCommunityPage from "@/domains/community/page/admin/AdminCommunityPage.jsx";
 import AdminCouponListPage from "@/domains/coupons/feature/admin/pages/AdminCouponListPage.jsx";

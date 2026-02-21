@@ -1,4 +1,4 @@
-import { useEventListUser } from "@/domains/events/feature/hooks/user/useEventListUser.js";
+import { useEventListUser } from "@/domains/events/feature/public/hooks/useEventListUser.js";
 import { CardSwiper } from "@/global/ui/cardSwiper/index.js";
 import { SwiperSlide } from "swiper/react";
 import { CafeLinkCard } from "@/global/ui/cafeLinkCard/index.js";

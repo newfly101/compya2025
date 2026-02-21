@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { requestInsertNewEvent } from "@/domains/events/store/index.js";
-import { useEventForm } from "./internal/useEventForm.js";
+import { useEventForm } from "./useEventForm.js";
 import { requestUploadImage } from "@/infra/uploads/store/index.js";
 
 export const useEventCreate = ({ onSuccess }) => {

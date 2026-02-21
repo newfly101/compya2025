@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useEventListAdmin } from "@/domains/events/feature/index.js";
 import AdminTableLayout from "@/global/layout/adminPageLayout/table/AdminTableLayout.jsx";
-import EventTableHead from "@/domains/events/feature/components/admin/table/EventTableHead.jsx";
-import EventTableBody from "@/domains/events/feature/components/admin/table/EventTableBody.jsx";
-import EventEditModal from "@/domains/events/feature/components/admin/modal/EventEditModal.jsx";
-import EventCreateModal from "@/domains/events/feature/components/admin/modal/EventCreateModal.jsx";
+import EventTableHead from "@/domains/events/feature/admin/components/table/EventTableHead.jsx";
+import EventTableBody from "@/domains/events/feature/admin/components/table/EventTableBody.jsx";
+import EventEditModal from "@/domains/events/feature/admin/components/modal/EventEditModal.jsx";
+import EventCreateModal from "@/domains/events/feature/admin/components/modal/EventCreateModal.jsx";
 import AdminFilterBar from "@/global/layout/adminPageLayout/table/AdminFilterBar.jsx";
-import { useEventAdminFilter } from "@/domains/events/feature/hooks/admin/useEventAdminFilter.js";
+import { useEventAdminFilter } from "@/domains/events/feature/admin/hooks/useEventAdminFilter.js";
+import { useEventListAdmin } from "@/domains/events/feature/admin/hooks/useEventListAdmin.js";
 
 const EventListAdmin = () => {
   const { events, changeVisible } = useEventListAdmin();

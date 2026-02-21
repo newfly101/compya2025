@@ -1,7 +1,7 @@
 import { cafeNotice } from "@/data/CafeNotice.js";
 import FunNoticeList from "@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx";
 import OfficialNoticeList from "@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx";
-import UserEventPage from "@/domains/events/page/user/UserEventPage.jsx";
+import UserEventPage from "@/domains/events/feature/public/pages/UserEventPage.jsx";
 import UserCouponPage from "@/domains/coupons/page/user/UserCouponPage.jsx";
 
 export const NOTICE_TABS = {

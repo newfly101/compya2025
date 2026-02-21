@@ -3,7 +3,7 @@ import NoticeLayout from "@/app/page/notice/NoticeLayout.jsx";
 import FunNoticeList from "@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx";
 import OfficialNoticeList
   from "@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx";
-import UserEventPage from "@/domains/events/page/user/UserEventPage.jsx";
+import UserEventPage from "@/domains/events/feature/public/pages/UserEventPage.jsx";
 
 const Home = lazy(() => import("@/app/page/home/Home.jsx"));
 const CouponListPage = lazy(() => import("@/domains/coupons/feature/public/pages/CouponListPage.jsx"));
