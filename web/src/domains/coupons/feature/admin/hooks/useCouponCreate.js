@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { useCouponForm } from "@/domains/coupons/feature/hooks/admin/internal/useCouponForm.js";
-import { requestInsertNewCoupon } from "@/domains/coupons/store/index.js";
+import { useCouponForm } from "@/domains/coupons/feature/admin/hooks/useCouponForm.js";
+import { requestAdminInsertNewCoupon } from "@/domains/coupons/store/admin/thunks.js";
 
 export const useCouponCreate = ({onSuccess}) => {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ export const useCouponCreate = ({onSuccess}) => {
       return;
     }
 
-    await dispatch(requestInsertNewCoupon(formHook.form));
+    await dispatch(requestAdminInsertNewCoupon(formHook.form));
     onSuccess?.();
   };
 

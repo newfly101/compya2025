@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { requestGetCouponList } from "@/domains/coupons/store/index.js";
-import { classifyCoupons } from "@/domains/coupons/feature/list/public/utils/couponUtils.js";
+import { classifyCoupons } from "@/domains/coupons/feature/public/utils/couponUtils.js";
+import { requestGetUserCouponList } from "@/domains/coupons/store/public/thunks.js";
 
 export const useCouponList = () => {
   const dispatch = useDispatch();
   const coupons = useSelector(state => state.coupon.coupons) ?? [];
 
   useEffect(() => {
-    dispatch(requestGetCouponList());
+    dispatch(requestGetUserCouponList());
   }, [dispatch]);
 
   const { active, expired } = classifyCoupons(coupons);

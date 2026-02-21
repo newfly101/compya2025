@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
-import { useCouponForm } from "@/domains/coupons/feature/hooks/admin/internal/useCouponForm.js";
-import { requestUpdateCoupon } from "@/domains/coupons/store/index.js";
+import { useCouponForm } from "@/domains/coupons/feature/admin/hooks/useCouponForm.js";
+import { requestAdminUpdateCoupon } from "@/domains/coupons/store/admin/thunks.js";
 
 export const useCouponEdit = ({ coupon, onSuccess }) => {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ export const useCouponEdit = ({ coupon, onSuccess }) => {
       return;
     }
 
-    await dispatch(requestUpdateCoupon({
+    await dispatch(requestAdminUpdateCoupon({
         id: coupon.id,
         ...formHook.form,
       }),

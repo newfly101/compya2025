@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./CouponCard.module.scss";
-import CouponCardBase from "@/domains/coupons/feature/list/public/components/card/CouponCardBase.jsx";
+import CouponCardBase from "@/domains/coupons/feature/public/components/card/CouponCardBase.jsx";
 
 const CouponCardSummary = ({ code, rewardTitle, expireDate, disabled}) => {
   return (

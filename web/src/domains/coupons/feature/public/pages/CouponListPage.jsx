@@ -1,5 +1,5 @@
 import React from "react";
-import CouponListSection from "@/domains/coupons/feature/list/public/components/CouponListSection.jsx";
+import CouponListSection from "@/domains/coupons/feature/public/components/CouponListSection.jsx";
 
 const CouponListPage = () => {
   return (

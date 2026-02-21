@@ -1,6 +1,6 @@
 import React from "react";
-import CouponModal from "@/domains/coupons/feature/components/admin/modal/CouponModal.jsx";
-import { useCouponCreate } from "@/domains/coupons/feature/hooks/admin/useCouponCreate.js";
+import CouponModal from "@/domains/coupons/feature/admin/components/modal/CouponModal.jsx";
+import { useCouponCreate } from "@/domains/coupons/feature/admin/hooks/useCouponCreate.js";
 
 const CouponCreateModal = ({ onClose }) => {
   const hook = useCouponCreate({

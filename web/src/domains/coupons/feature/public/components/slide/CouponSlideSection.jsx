@@ -1,6 +1,6 @@
 import React from "react";
-import CouponCardSummary from "@/domains/coupons/feature/list/public/components/card/CouponCardSummary.jsx";
-import { useCouponList } from "@/domains/coupons/feature/list/public/hooks/useCouponList.js";
+import CouponCardSummary from "@/domains/coupons/feature/public/components/card/CouponCardSummary.jsx";
+import { useCouponList } from "@/domains/coupons/feature/public/hooks/useCouponList.js";
 import styles from "./CouponSlideSection.module.scss";
 
 const CouponSlideSection = ({ limit = null }) => {

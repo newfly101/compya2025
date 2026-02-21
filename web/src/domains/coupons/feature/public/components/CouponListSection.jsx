@@ -1,7 +1,7 @@
 import React from "react";
-import { useCouponList } from "@/domains/coupons/feature/list/public/hooks/useCouponList.js";
+import { useCouponList } from "@/domains/coupons/feature/public/hooks/useCouponList.js";
 import styles from "./CouponListSection.module.scss";
-import CouponCardDetail from "@/domains/coupons/feature/list/public/components/card/CouponCardDetail.jsx";
+import CouponCardDetail from "@/domains/coupons/feature/public/components/card/CouponCardDetail.jsx";
 
 const CouponListSection = ({ limit = null }) => {
   const { activeCoupons, expiredCoupons } = useCouponList();
