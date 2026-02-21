@@ -28,12 +28,13 @@ export const requestGetAdminCouponList = createAsyncThunk(
 export const requestAdminInsertNewCoupon = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.CREATE, async (newCoupon, { rejectWithValue }) => {
     try {
-      const { success, message, couponId } = await fetchAdminInsertCoupon(newCoupon);
+      const { couponId, ...options } = await fetchAdminInsertCoupon(newCoupon);
       // console.log("requestInsertNewCoupon : ", couponId);
 
       return {
         ...newCoupon,
         id: couponId,
+        options
       };
     } catch (error) {
       return rejectWithValue(error.message);
@@ -44,12 +45,13 @@ export const requestAdminInsertNewCoupon = createAsyncThunk(
 export const requestAdminUpdateCoupon = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.UPDATE, async ({ id, ...coupon }, { rejectWithValue }) => {
     try {
-      const { success, message, couponId } = await fetchAdminUpdateCoupon(id, coupon);
+      const {couponId, ...options } = await fetchAdminUpdateCoupon(id, coupon);
       // console.log("requestUpdateCoupon : ", couponId);
 
       return {
         ...coupon,
         id: couponId,
+        options,
       }
     } catch (error) {
       return rejectWithValue(error.message);
@@ -60,12 +62,13 @@ export const requestAdminUpdateCoupon = createAsyncThunk(
 export const requestAdminUpdateCouponVisible = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.UPDATE_VISIBLE, async ({id, visible}, { rejectWithValue }) => {
     try {
-      const { success, message, couponId } = await fetchAdminUpdateVisible(id, visible);
+      const {couponId, ...options } = await fetchAdminUpdateVisible(id, visible);
       // console.log("requestGetCouponList : ", couponId);
 
       return {
         id: couponId,
-        visible
+        visible,
+        options
       }
     } catch (error) {
       return rejectWithValue(error.message);

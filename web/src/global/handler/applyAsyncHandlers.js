@@ -7,18 +7,14 @@ export const applyAsyncHandlers = (builder, thunk, onFulfilled) => {
     })
     .addCase(thunk.fulfilled, (state, action) => {
       state.loading = false;
-      if (action.payload?.options) {
-        state.lastOperation = action.payload.options;
-      }
+
       onFulfilled(state, action); // fulfilled만 커스텀
     })
     .addCase(thunk.rejected, (state, action) => {
       state.loading = false;
-      const error = "[내부 오류] " + action.payload ?? action.error?.message;
-      state.error = error;
-      state.lastOperation = {
-        success: false,
-        message: error,
-      };
+
+      const errorMessage = action.payload?.message ?? action.error?.message ?? "Unknown error";
+
+      state.error = "[내부 오류] " + errorMessage;
     });
 };
