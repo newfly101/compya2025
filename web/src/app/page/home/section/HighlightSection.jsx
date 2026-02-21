@@ -2,7 +2,7 @@ import React from "react";
 import styles from "@/app/page/home/Home.module.scss";
 import { Link } from "react-router-dom";
 import EventSwiper from "@/domains/events/feature/components/EventSwiper/EventSwiper.jsx";
-import CouponSlideSection from "@/domains/coupons/feature/list/public/components/slide/CouponSlideSection.jsx";
+import CouponSlideSection from "@/domains/coupons/feature/public/components/slide/CouponSlideSection.jsx";
 
 const HighlightSection = ({title, link, type}) => {
   return (
