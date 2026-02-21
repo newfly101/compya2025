@@ -11,17 +11,55 @@ const EventModal = ({
                       onSubmit,
                       onCancel,
                     }) => {
+
+  const handleImageTypeChange = (type) => {
+    onChange({ target: { name: "imageType", value: type } });
+
+    if (type === "URL") {
+      onChange({ target: { name: "imageFile", value: null }});
+      onChange({ target: { name: "imagePreview", value: "" }});
+    } else {
+      onChange({ target: { name: "imageUrl", value: "" }});
+    }
+  };
+
+  const handleFileChange = (file) => {
+    if (!file) return;
+
+    const preview = URL.createObjectURL(file);
+
+    onChange({ target: { name: "imageFile", value: file }});
+    onChange({ target: { name: "imagePreview", value: preview }});
+  };
+
   return (
-    <div className={styles.overlay}>
-      <div className={styles.wrapper}>
-        <div className={styles.header}>
-          <h2>{title}</h2>
-          <button onClick={onCancel}>×</button>
+    <div className={styles.eventModalWrapper}>
+      <div
+        className={styles.eventModalOverlay}
+        onClick={onCancel}
+      />
+
+      <div className={styles.eventModalContainer}>
+        <div className={styles.eventModalHeader}>
+          <h2 className={styles.eventModalTitle}>
+            {title}
+          </h2>
+          <button
+            type="button"
+            className={styles.eventModalClose}
+            onClick={onCancel}
+          >
+            ×
+          </button>
         </div>
 
-        <form className={styles.form} onSubmit={onSubmit}>
-          <label>
-            이벤트명
+        <form
+          className={styles.eventModalBody}
+          onSubmit={onSubmit}
+        >
+
+          <label className={styles.eventModalField}>
+            <span className={styles.fieldLabel}>이벤트명</span>
             <input
               name="title"
               value={form.title}
@@ -30,8 +68,8 @@ const EventModal = ({
             />
           </label>
 
-          <label>
-            이벤트 출처
+          <label className={styles.eventModalField}>
+            <span className={styles.fieldLabel}>이벤트 출처</span>
             <select
               name="eventSource"
               value={form.eventSource}
@@ -42,31 +80,65 @@ const EventModal = ({
             </select>
           </label>
 
-          <label>
-            이미지 URL
-            <input
-              name="imageUrl"
-              value={form.imageUrl}
-              onChange={onChange}
-            />
-          </label>
+          <div className={styles.eventModalSwitch}>
+            <button
+              type="button"
+              className={
+                form.imageType === "URL"
+                  ? `${styles.eventModalSwitchButton} ${styles.eventModalSwitchButtonActive}`
+                  : styles.eventModalSwitchButton
+              }
+              onClick={() => handleImageTypeChange("URL")}
+            >
+              URL 입력
+            </button>
 
-          <label>
-            이미지 파일
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => onChange({
-                target: {
-                  name: "imageFile",
-                  value: e.target.files[0]
-                }
-              })}
-            />
-          </label>
+            <button
+              type="button"
+              className={
+                form.imageType === "FILE"
+                  ? `${styles.eventModalSwitchButton} ${styles.eventModalSwitchButtonActive}`
+                  : styles.eventModalSwitchButton
+              }
+              onClick={() => handleImageTypeChange("FILE")}
+            >
+              파일 업로드
+            </button>
+          </div>
 
-          <label>
-            외부 링크
+          {form.imageType === "URL" && (
+            <label className={styles.eventModalField}>
+              <span className={styles.fieldLabel}>이미지 URL</span>
+              <input
+                name="imageUrl"
+                value={form.imageUrl}
+                onChange={onChange}
+              />
+            </label>
+          )}
+
+          {form.imageType === "FILE" && (
+            <label className={styles.eventModalField}>
+              <span className={styles.fieldLabel}>이미지 파일</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleFileChange(e.target.files[0])}
+              />
+            </label>
+          )}
+
+          {(form.imagePreview || form.imageUrl) && (
+            <div className={styles.eventModalPreview}>
+              <img
+                src={form.imagePreview || form.imageUrl}
+                alt="preview"
+              />
+            </div>
+          )}
+
+          <label className={styles.eventModalField}>
+            <span className={styles.fieldLabel}>외부 링크</span>
             <input
               name="externalLink"
               value={form.externalLink}
@@ -74,9 +146,9 @@ const EventModal = ({
             />
           </label>
 
-          <div className={styles.row}>
-            <label>
-              시작일
+          <div className={styles.eventModalRow}>
+            <label className={styles.eventModalField}>
+              <span className={styles.fieldLabel}>시작일</span>
               <input
                 type="text"
                 inputMode="numeric"
@@ -87,8 +159,8 @@ const EventModal = ({
               />
             </label>
 
-            <label>
-              종료일
+            <label className={styles.eventModalField}>
+              <span className={styles.fieldLabel}>종료일</span>
               <input
                 type="text"
                 inputMode="numeric"
@@ -100,18 +172,23 @@ const EventModal = ({
             </label>
           </div>
 
-          <div className={styles.actions}>
+          <div className={styles.eventModalActions}>
             <button
               type="button"
-              className={styles.cancel}
+              className={styles.eventModalCancel}
               onClick={onCancel}
             >
               취소
             </button>
-            <button type="submit" className={styles.primary}>
+
+            <button
+              type="submit"
+              className={styles.eventModalPrimary}
+            >
               {submitLabel}
             </button>
           </div>
+
         </form>
       </div>
     </div>
