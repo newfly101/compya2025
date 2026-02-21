@@ -36,13 +36,57 @@
       background: $primary-hover;
     }
   }
+}
 
-  .danger {
-    background: $warning-bg;
-    color: $warning;
+@media (max-width: 768px) {
 
-    &:hover {
-      opacity: 0.85;
-    }
+  :global(.adminTableEvent) {
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  /* 공통 가운데 정렬 */
+  :global(.adminTableEvent td),
+  :global(.adminTableEvent th) {
+    text-align: center;
+  }
+
+  /* ======================
+     숨길 컬럼
+     ====================== */
+
+  /* 1 id */
+  :global(.adminTableEvent th:nth-child(1)),
+  :global(.adminTableEvent td:nth-child(1)) {
+    display: none;
+  }
+
+  /* 4 detail */
+  :global(.adminTableEvent th:nth-child(2)),
+  :global(.adminTableEvent td:nth-child(2)) {
+    display: none;
+  }
+
+  /* 4 detail */
+  :global(.adminTableEvent th:nth-child(4)),
+  :global(.adminTableEvent td:nth-child(4)) {
+    display: none;
+  }
+
+  /* 5 expireAt */
+  :global(.adminTableEvent th:nth-child(5)),
+  :global(.adminTableEvent td:nth-child(5)) {
+    display: none;
+  }
+
+  /* ======================
+     title ellipsis
+     ====================== */
+
+  :global(.adminTableEvent td:nth-child(3)) {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }

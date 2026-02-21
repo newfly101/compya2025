@@ -29,7 +29,6 @@ const EventTableBody = ({ events, setEditEvent, changeVisible }) => {
         <td>
           <div className={styles.actions}>
             <button onClick={() => setEditEvent(e)}>수정</button>
-            <button className={styles.danger}>비공개</button>
           </div>
         </td>
       </tr>

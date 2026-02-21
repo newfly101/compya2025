@@ -1,7 +1,7 @@
-import EventListAdmin from "@/domains/events/feature/admin/components/EventListAdmin.jsx";
+import AdminEventTable from "@/domains/events/feature/admin/components/AdminEventTable.jsx";
 
 const AdminEventPage = () => {
-  return <EventListAdmin />
+  return <AdminEventTable />
 };
 
 export default AdminEventPage;
