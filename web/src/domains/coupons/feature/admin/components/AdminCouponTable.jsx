@@ -33,6 +33,7 @@ const AdminCouponTable = () => {
             setEditCoupon={setEditCoupon}
           />
         }
+        tableClass="adminTableCoupon"
       />
       {open && <CouponCreateModal onClose={() => setOpen(false)} />}
       {editCoupon && <CouponEditModal coupon={editCoupon} onClose={() => setEditCoupon(false)} />}

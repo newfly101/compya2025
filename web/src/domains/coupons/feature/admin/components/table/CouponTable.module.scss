@@ -79,14 +79,14 @@
 
 @media (max-width: 768px) {
 
-  :global(.adminTable) {
+  :global(.adminTableCoupon) {
     min-width: 0;
     table-layout: fixed;
   }
 
   /* 공통 가운데 정렬 */
-  :global(.adminTableBody td),
-  :global(.adminTableHead th) {
+  :global(.adminTableCoupon td),
+  :global(.adminTableCoupon th) {
     text-align: center;
   }
 
@@ -95,26 +95,26 @@
      ====================== */
 
   /* 1 id */
-  :global(.adminTableHead th:nth-child(1)),
-  :global(.adminTableBody td:nth-child(1)) {
+  :global(.adminTableCoupon th:nth-child(1)),
+  :global(.adminTableCoupon td:nth-child(1)) {
     display: none;
   }
 
   /* 2 couponCode */
-  :global(.adminTableHead th:nth-child(2)),
-  :global(.adminTableBody td:nth-child(2)) {
+  :global(.adminTableCoupon th:nth-child(2)),
+  :global(.adminTableCoupon td:nth-child(2)) {
     display: none;
   }
 
   /* 4 detail */
-  :global(.adminTableHead th:nth-child(4)),
-  :global(.adminTableBody td:nth-child(4)) {
+  :global(.adminTableCoupon th:nth-child(4)),
+  :global(.adminTableCoupon td:nth-child(4)) {
     display: none;
   }
 
   /* 5 expireAt */
-  :global(.adminTableHead th:nth-child(5)),
-  :global(.adminTableBody td:nth-child(5)) {
+  :global(.adminTableCoupon th:nth-child(5)),
+  :global(.adminTableCoupon td:nth-child(5)) {
     display: none;
   }
 
@@ -122,7 +122,7 @@
      title ellipsis
      ====================== */
 
-  :global(.adminTableBody td:nth-child(3)) {
+  :global(.adminTableCoupon td:nth-child(3)) {
     max-width: 120px;
     overflow: hidden;
     text-overflow: ellipsis;

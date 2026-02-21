@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./AdminTableLayout.module.scss";
 
-const AdminTableLayout = ({ filters, head, tbody }) => {
+const AdminTableLayout = ({ filters, head, tbody, tableClass="" }) => {
   return (
     <section className={styles.adminTableSection}>
       {filters && (
@@ -11,11 +11,11 @@ const AdminTableLayout = ({ filters, head, tbody }) => {
       )}
 
       <div className={`${styles.adminTableContainer} adminTableContainer`}>
-        <table className={`${styles.adminTable} adminTable`}>
-          <thead className={`${styles.adminTableHead} adminTableHead`}>
+        <table className={`${styles.adminTable} ${tableClass}`}>
+          <thead className={`${styles.adminTableHead}`}>
           {head}
           </thead>
-          <tbody className={`${styles.adminTableBody} adminTableBody`}>
+          <tbody className={`${styles.adminTableBody}`}>
           {tbody}
           </tbody>
         </table>
