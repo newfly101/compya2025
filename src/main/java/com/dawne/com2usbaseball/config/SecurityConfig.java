@@ -27,8 +27,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/upload/**").permitAll()
-                        .requestMatchers("/api/events/**").authenticated()
+                        .requestMatchers("/api/admin/**").authenticated()
                         .requestMatchers("/api/community/admin/**").authenticated()
+                        .requestMatchers("/api/events/**").authenticated()
                         .anyRequest().denyAll())
                 // ✅ AccessLogFilter 먼저
                 .addFilterBefore(
