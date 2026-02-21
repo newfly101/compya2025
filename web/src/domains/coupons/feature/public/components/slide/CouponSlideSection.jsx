@@ -16,7 +16,7 @@ const CouponSlideSection = ({ limit = null }) => {
     <div className={styles.couponScrollWrapper}>
       <div className={styles.couponScrollViewport}>
         <div className={styles.couponScrollTrack}>
-          {activeCoupons.map(c => (
+          {visibleCoupons.map(c => (
             <div key={c.id} className={styles.couponScrollItem}>
               <CouponCardSummary
                 code={c.couponCode}
