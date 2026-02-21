@@ -7,7 +7,7 @@ import AdminContentPage from "@/global/layout/adminPageLayout/content/AdminConte
 import AdminEventPage from "@/domains/events/page/admin/AdminEventPage.jsx";
 import AdminNoticeManagePage from "@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx";
 import AdminCommunityPage from "@/domains/community/page/admin/AdminCommunityPage.jsx";
-import AdminCouponListPage from "@/domains/coupons/feature/list/admin/pages/AdminCouponListPage.jsx";
+import AdminCouponListPage from "@/domains/coupons/feature/admin/pages/AdminCouponListPage.jsx";
 
 export const AdminRoutes = [
   {

@@ -6,7 +6,7 @@ import OfficialNoticeList
 import UserEventPage from "@/domains/events/page/user/UserEventPage.jsx";
 
 const Home = lazy(() => import("@/app/page/home/Home.jsx"));
-const CouponListPage = lazy(() => import("@/domains/coupons/feature/list/public/pages/CouponListPage.jsx"));
+const CouponListPage = lazy(() => import("@/domains/coupons/feature/public/pages/CouponListPage.jsx"));
 
 
 const FunNoticePage = lazy(() => import("@/domains/notices/page/funNotice/FunNoticePage.jsx"));
