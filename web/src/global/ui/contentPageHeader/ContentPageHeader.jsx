@@ -7,20 +7,30 @@ const ContentPageHeader = ({
                              backLabel,
                              onBack,
                            }) => {
-
   return (
-      <header className={styles.header}>
-        <span className={styles.category} onClick={onBack}>← {backLabel}</span>
-        <h1 className={styles.title}>{title}</h1>
+    <header className={styles.headerWrapper}>
+      {backLabel && (
+        <button
+          type="button"
+          className={styles.headerBack}
+          onClick={onBack}
+        >
+          ← {backLabel}
+        </button>
+      )}
 
-        {meta.length > 0 && (
-          <div className={styles.meta}>
-            {meta.map((item, idx) => (
-              <span key={`meta-${idx}`}>{item}</span>
-            ))}
-          </div>
-        )}
-      </header>
+      <h1 className={styles.headerTitle}>{title}</h1>
+
+      {meta.length > 0 && (
+        <div className={styles.headerMeta}>
+          {meta.map((item, idx) => (
+            <span key={`meta-${idx}`} className={styles.headerMetaItem}>
+              {item}
+            </span>
+          ))}
+        </div>
+      )}
+    </header>
   );
 };
 

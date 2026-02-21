@@ -38,6 +38,7 @@ $surface3: rgba(39, 32, 51, 0.6);
 // Border
 $border: rgba(255, 255, 255, 0.06);
 $border-strong: rgba(255, 255, 255, 0.12);
+$border-bottom: #1f2937;
 
 
 // Text
@@ -69,3 +70,11 @@ $error-bg:   rgba($error, 0.12);
 // playerAttribute
 $overallMid: #ff6a41;
 $overallHigh: #ff0000;
+
+
+
+/* =================================
+ * components
+ * ================================= */
+$kakao-yellow: #fee500;
+$kakao-txt: #000;

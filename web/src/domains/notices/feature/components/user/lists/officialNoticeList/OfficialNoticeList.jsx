@@ -1,8 +1,10 @@
 import React from "react";
 import styles from "./OfficialNoticeList.module.scss";
 import CafeLinkCard from "@/global/ui/cafeLinkCard/CafeLinkCard.jsx";
+import { cafeNotice } from "@/data/CafeNotice.js";
 
-const OfficialNoticeList = ({data}) => {
+const OfficialNoticeList = () => {
+  const data = cafeNotice;
   return (
     <section aria-labelledby="cafeNotice-list-title">
       <h3 id="cafeNotice-list-title">📢 컴프야 공식 카페 공지사항</h3>

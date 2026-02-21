@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.9-SNAPSHOT'
+	id 'org.springframework.boot' version '3.3.2'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -16,7 +16,6 @@ java {
 
 repositories {
 	mavenCentral()
-	maven { url = 'https://repo.spring.io/snapshot' }
 }
 
 dependencies {
@@ -44,6 +43,9 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 //	in-memory cache
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
+
+//	s3
+	implementation 'software.amazon.awssdk:s3:2.25.59'
 }
 
 tasks.named('test') {

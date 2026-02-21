@@ -1,11 +1,13 @@
 import React from "react";
 import styles from "./ContentPageLayout.module.scss";
 
-const ContentPageLayout = ({header, children}) => {
+const ContentPageLayout = ({ header, children }) => {
   return (
-    <section className={styles.container}>
-      {header}
-      {children}
+    <section className={styles.contentPageWrapper}>
+      <div className={styles.contentPageContainer}>
+        {header}
+        {children}
+      </div>
     </section>
   );
 };

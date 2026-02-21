@@ -1,0 +1,116 @@
+.couponCard {
+  background: $ui-surface-elevated;
+  border: 1px dashed rgba($ui-brand-main, 0.4);
+  border-radius: $radius-12;
+
+  width: 100%;
+  padding: $space-24;
+
+  display: flex;
+  flex-direction: column;
+  gap: $space-12;
+
+  color: $ui-text-main;
+  transition: background 0.2s ease;
+
+  &:hover {
+    background: $ui-surface-hover;
+  }
+}
+
+.couponCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $space-12;
+
+  min-width: 0;
+}
+
+.couponCardCode {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  background: $ui-brand-main;
+  color: $ui-brand-text;
+
+  padding: $space-8 $space-16;
+  border-radius: $radius-8;
+
+  font-size: $fs-14;
+  font-weight: 700;
+}
+
+.couponCardAction {
+  background: linear-gradient(135deg, #6d4ad3, #a86bf0);
+  color: white;
+
+  padding: $space-8 $space-16;
+  border-radius: $radius-8;
+
+  font-size: $fs-14;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.isDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.couponCardBody {
+  display: flex;
+  flex-direction: column;
+  gap: $space-8;
+  flex: 1 1 auto;
+}
+
+.couponCardTitle {
+  font-size: $fs-16;
+  font-weight: 600;
+  color: $ui-text-main;
+}
+
+.couponCardDetail {
+  font-size: $fs-14;
+  color: $ui-text-sub;
+  line-height: 1.5;
+}
+
+.couponCardExpire {
+  font-size: $fs-13;
+  color: $ui-text-sub;
+  margin-top: auto;
+}
+
+.couponCardNotice {
+  font-size: $fs-12;
+  color: $ui-text-muted;
+}
+
+@media (max-width: 768px) {
+
+  .couponCard {
+    padding: $space-16;
+  }
+
+  .couponCardHeader {
+    gap: $space-8;
+  }
+
+  .couponCardCode {
+    font-size: $fs-12;
+    padding: $space-4 $space-12;
+  }
+
+  .couponCardAction {
+    font-size: $fs-12;
+    padding: $space-4 $space-12;
+  }
+}

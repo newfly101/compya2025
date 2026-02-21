@@ -1,0 +1,167 @@
+.adminTableSection {
+  display: flex;
+  flex-direction: column;
+  gap: $space-24;
+}
+
+/* ================= FILTER AREA ================= */
+
+.adminTableFilter {
+  display: flex;
+  flex-direction: column;
+  gap: $space-16;
+}
+
+/* ================= TABLE WRAPPER ================= */
+
+.adminTableContainer {
+  width: 100%;
+  overflow-x: auto;
+  background: $surface2;
+  border: 1px solid $border-strong;
+  border-radius: $radius-12;
+}
+
+/* ================= TABLE ================= */
+
+.adminTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 960px; // 운영툴은 가로 확장 허용
+}
+
+.adminTableHead {
+  background: $surface3;
+
+  th {
+    padding: $space-12 $space-16;
+    font-size: $fs-13;
+    font-weight: 600;
+    text-align: left;
+    color: $text-secondary;
+    border-bottom: 1px solid $border-strong;
+    white-space: nowrap;
+  }
+}
+
+.adminTableBody {
+  tr {
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: $background-subtle;
+    }
+  }
+
+  td {
+    padding: $space-12 $space-16;
+    font-size: $fs-14;
+    color: $text-primary;
+    border-bottom: 1px solid $border;
+    vertical-align: middle;
+  }
+}
+
+.adminFilterBar {
+  display: flex;
+  flex-direction: column;
+  gap: $space-16;
+
+  padding: $space-16;
+  background: $surface2;
+  border: 1px solid $border-strong;
+  border-radius: $radius-12;
+
+  input,
+  select {
+    background: $surface1;
+    border: 1px solid $border;
+    color: $text-primary;
+
+    padding: $space-8 $space-12;
+    font-size: $fs-14;
+    border-radius: $radius-8;
+
+    transition:
+            border-color 0.15s ease,
+            background 0.15s ease;
+
+    min-height: 3.6rem;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      background: $surface2;
+    }
+  }
+
+  select {
+    appearance: none;
+    cursor: pointer;
+  }
+}
+
+.adminFilterBarTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-16;
+}
+
+.adminFilterTitle {
+  font-size: $fs-18;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.adminFilterControls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-12;
+
+  input,
+  select {
+    min-width: 140px;
+    flex: 1 1 auto;
+  }
+}
+
+@media (min-width: 1024px) {
+  .adminFilterBar {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .adminFilterBarTop {
+    flex: 0 0 auto;
+  }
+
+  .adminFilterControls {
+    flex: 1 1 auto;
+    justify-content: flex-start;
+  }
+}
+
+.adminActionButton {
+  background: linear-gradient(
+                  135deg,
+                  $primary,
+                  $primary-active
+  );
+
+  color: #fff;
+
+  padding: $space-8 $space-16;
+  border-radius: $radius-8;
+  font-size: $fs-14;
+  font-weight: 600;
+  border: none;
+
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}

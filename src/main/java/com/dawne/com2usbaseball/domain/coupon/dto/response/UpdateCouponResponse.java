@@ -8,7 +8,7 @@ public record UpdateCouponResponse(
     public static UpdateCouponResponse success(Long couponId) {
         return new UpdateCouponResponse(
                 true,
-                "이벤트가 성공적으로 등록되었습니다.",
+                "쿠폰이 성공적으로 수정되었습니다.",
                 couponId
         );
     }
@@ -16,7 +16,7 @@ public record UpdateCouponResponse(
     public static UpdateCouponResponse fail() {
         return new UpdateCouponResponse(
                 false,
-                "이벤트 생성에 실패했습니다.",
+                "쿠폰 수정에 실패했습니다.",
                 null
         );
     }

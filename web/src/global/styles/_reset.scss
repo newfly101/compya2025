@@ -20,12 +20,12 @@ time, mark, audio, video {
   font-size: small;
 }
 
-html, body, #root {
+html, body {
   height: 100%;
+}
+
+#root {
   min-height: 100vh;
-  //overflow: hidden;
-  display: flex;
-  flex-direction: column;
 }
 
 html {

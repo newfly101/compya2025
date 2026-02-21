@@ -1,0 +1,73 @@
+.appFooter {
+  width: 100%;
+  background: $surface2;
+  border-top: 1px solid $border-strong;
+  margin-top: $space-40;
+}
+
+.appFooterInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: $space-16;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.appFooterCopy {
+  font-size: $fs-13;
+  color: $text-muted;
+  margin-bottom: $space-8;
+  letter-spacing: 0.02em;
+}
+
+.appFooterBottom {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: $space-12;
+}
+
+.appFooterLinks {
+  display: flex;
+  gap: $space-8;
+  font-size: $fs-13;
+
+  a {
+    color: $text-secondary;
+
+    &:hover {
+      color: $text-primary;
+    }
+  }
+}
+
+.divider {
+  color: $text-muted;
+}
+
+.disabled {
+  color: $text-muted;
+}
+
+.kakaoBtn {
+  background: $kakao-btn-bg;
+  color: $kakao-btn-text;
+
+  border-radius: $radius-full;
+  padding: $space-8 $space-16;
+  font-size: $fs-12;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .appFooterBottom {
+    grid-template-columns: 1fr;
+    gap: $space-8;
+  }
+
+  .kakaoBtn {
+    justify-self: start;
+  }
+}

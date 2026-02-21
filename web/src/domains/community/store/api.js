@@ -15,7 +15,7 @@ export const fetchInsertNewBoard = async (newBoard) => {
   return data;
 }
 
-export const fetchUpdateBoard = async ({ id, board }) => {
+export const fetchUpdateBoard = async (id, board) => {
   const { data } = await API.patch(`${ADMIN_COMMUNITY.UPDATE_BOARD(id)}`, board);
   return data;
 }

@@ -1,0 +1,30 @@
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-column($gap: 0) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+
+@mixin card-base {
+  background: $ui-surface-elevated;
+  border: 1px solid $ui-border-light;
+  border-radius: $radius-12;
+  padding: $space-24;
+}
+
+@mixin container {
+  max-width: $ui-container-width;
+  margin: 0 auto;
+  padding-inline: $ui-container-padding;
+}

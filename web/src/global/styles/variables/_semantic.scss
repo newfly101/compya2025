@@ -1,0 +1,34 @@
+@use "./colors" as c;
+
+// Surface
+$ui-surface-page: c.$background-subtle;
+$ui-surface-bar: c.$surface2;
+//$ui-surface-hover: c.$surface3;
+
+// Text
+//$ui-text-main: c.$text-primary;
+//$ui-text-sub: c.$text-secondary;
+//$ui-text-muted: c.$text-muted;
+
+// Border
+$ui-border: c.$border;
+//$ui-border-strong: c.$border-strong;
+
+// Buttons
+$ui-btn-main: c.$primary;
+$ui-btn-main-hover: c.$primary-hover;
+$ui-btn-ghost: c.$primary-bg;
+$ui-btn-ghost-hover: c.$primary-hover;
+
+// Nav
+$ui-nav-text: c.$text-secondary;
+$ui-nav-hover: c.$text-primary;
+
+// Layout
+$ui-container-width: 1200px;
+$ui-container-padding: 1.6rem;
+
+
+// kakao btn
+$kakao-btn-bg: c.$kakao-yellow;
+$kakao-btn-text: c.$kakao-txt;

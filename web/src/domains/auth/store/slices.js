@@ -3,7 +3,7 @@ import { requestUserHealthCheck, requestUserLogout } from "@/domains/auth/store/
 
 const initialState = {
   user: null,
-  role: null,
+  authority: null,
   isAuthenticated: false,
   initialized: false, // 🔥 중요
 };
@@ -15,13 +15,13 @@ const authSlice = createSlice({
     setUser(state, action) {
       const { user, role } = action.payload;
       state.user = user;
-      state.role = role;
+      state.authority = role;
       state.isAuthenticated = true;
       state.initialized = true;
     },
     clearUser(state) {
       state.user = null;
-      state.role = null;
+      state.authority = null;
       state.isAuthenticated = false;
       state.initialized = true;
     },
@@ -33,25 +33,25 @@ const authSlice = createSlice({
         const { authenticated, user, role } = action.payload;
 
         state.user = user;
-        state.role = role;
+        state.authority = role;
         state.isAuthenticated = authenticated;
         state.initialized = true;
       })
       .addCase(requestUserHealthCheck.rejected, (state) => {
         state.user = null;
-        state.role = null;
+        state.authority = null;
         state.isAuthenticated = false;
         state.initialized = true;
       })
       .addCase(requestUserLogout.fulfilled, (state) => {
         state.user = null;
-        state.role = null;
+        state.authority = null;
         state.isAuthenticated = false;
         state.initialized = true;
       })
       .addCase(requestUserLogout.rejected, (state) => {
         state.user = null;
-        state.role = null;
+        state.authority = null;
         state.isAuthenticated = false;
         state.initialized = true;
       });

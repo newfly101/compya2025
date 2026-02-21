@@ -11,7 +11,7 @@ export const useUserBoard = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    if (!activeBoardId && boardLists.length > 0) {
+    if (!activeBoardId && boardLists?.length > 0) {
       dispatch(setActiveBoard(boardLists[0]?.id));
     }
   }, [boardLists, activeBoardId, dispatch]);

@@ -11,7 +11,7 @@ import {
   requestUpdateNewBoard,
   requestUpdateNewPost,
   requestUpdateNewTag,
-} from "@/domains/community/store/thunks.js";
+} from "@/domains/community/store/thunks/index.js";
 import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
 
 const initialState  = {
@@ -21,6 +21,7 @@ const initialState  = {
   tagLists: [],
   loading: false,
   error: null,
+  lastOperation: null, // insert, update, delete 에 관련된 요소들 -> common modal
 }
 
 const communitySlice = createSlice({
@@ -29,6 +30,9 @@ const communitySlice = createSlice({
   reducers: {
     setActiveBoard: (state, action) => {
       state.activeBoardId = action.payload;
+    },
+    clearLastOperation: (state) => {
+      state.lastOperation = null;
     }
   },
   extraReducers: (builder) => {
@@ -36,7 +40,7 @@ const communitySlice = createSlice({
      * 게시판 관리 - 목록 조회
      * =============================== */
     applyAsyncHandlers(builder, requestGetAllBoardLists, (state, action) => {
-      state.boardLists = action.payload.boards;
+      state.boardLists = action.payload;
     });
     /* ===============================
      * 게시판 관리 - 추가
@@ -48,7 +52,7 @@ const communitySlice = createSlice({
      * 게시판 관리 - 수정
      * =============================== */
     applyAsyncHandlers(builder, requestUpdateNewBoard, (state, action) => {
-      const updated = action.payload;
+      const updated = action.payload.boards;
       const index = state.boardLists.findIndex(b => b.id === updated.id);
 
       if (index !== -1) {
@@ -75,7 +79,7 @@ const communitySlice = createSlice({
      * 게시글 관리 - 수정
      * =============================== */
     applyAsyncHandlers(builder, requestUpdateNewPost, (state, action) => {
-      const updated = action.payload;
+      const updated = action.payload.posts;
       const index = state.postLists.findIndex(b => b.id === updated.id);
 
       if (index !== -1) {
@@ -102,7 +106,7 @@ const communitySlice = createSlice({
      * 태그 관리 - 수정
      * =============================== */
     applyAsyncHandlers(builder, requestUpdateNewTag, (state, action) => {
-      const updated = action.payload;
+      const updated = action.payload.tags;
       const index = state.tagLists.findIndex(t => t.id === updated.id);
 
       if (index !== -1) {
@@ -116,7 +120,7 @@ const communitySlice = createSlice({
     * (유저) 게시판 관리 - 목록 조회
     * =============================== */
     applyAsyncHandlers(builder, requestGetUserBoardLists, (state, action) => {
-      state.boardLists = action.payload.boards;
+      state.boardLists = action.payload;
     });
 
     applyAsyncHandlers(builder, requestGetUserPostListsByBoardId, (state, action) => {
@@ -126,5 +130,5 @@ const communitySlice = createSlice({
 
   }
 })
-export const { setActiveBoard } = communitySlice.actions;
+export const { setActiveBoard, clearLastOperation } = communitySlice.actions;
 export default communitySlice.reducer;

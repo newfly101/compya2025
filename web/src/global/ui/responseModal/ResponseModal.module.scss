@@ -1,0 +1,66 @@
+/* ResponseModal.module.scss */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal {
+  width: 320px;
+  background: #1e1e1e;
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  animation: fadeUp 0.18s ease-out;
+}
+
+.iconSuccess {
+  font-size: 42px;
+  color: #4ade80;
+  margin-bottom: 12px;
+}
+
+.iconFail {
+  font-size: 42px;
+  color: #f87171;
+  margin-bottom: 12px;
+}
+
+.message {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #e5e7eb;
+  margin-bottom: 20px;
+}
+
+.confirmBtn {
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 8px;
+  border: none;
+  background: #6366f1;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirmBtn:hover {
+  background: #4f46e5;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

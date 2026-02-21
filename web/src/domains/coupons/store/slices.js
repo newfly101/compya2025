@@ -1,11 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  requestGetCouponList,
-  requestInsertNewCoupon,
-  requestUpdateCoupon,
-  requestUpdateCouponVisible,
-} from "@/domains/coupons/store/thunks.js";
 import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
+import {
+  requestAdminInsertNewCoupon,
+  requestAdminUpdateCoupon, requestAdminUpdateCouponVisible,
+  requestGetAdminCouponList,
+} from "@/domains/coupons/store/admin/thunks.js";
+import { requestGetUserCouponList } from "@/domains/coupons/store/public/thunks.js";
 
 const initialState = {
   coupons: [],
@@ -21,19 +21,23 @@ const couponSlice = createSlice({
     /* ===============================
      * 쿠폰 목록 조회
      * =============================== */
-    applyAsyncHandlers(builder, requestGetCouponList, (state, action) => {
+    applyAsyncHandlers(builder, requestGetUserCouponList, (state, action) => {
+      state.coupons = action.payload.coupons;
+    });
+
+    applyAsyncHandlers(builder, requestGetAdminCouponList, (state, action) => {
       state.coupons = action.payload.coupons;
     });
     /* ===============================
      * 쿠폰 신규 생성
      * =============================== */
-    applyAsyncHandlers(builder, requestInsertNewCoupon, (state, action) => {
+    applyAsyncHandlers(builder, requestAdminInsertNewCoupon, (state, action) => {
       state.coupons.push(action.payload);
     });
     /* ===============================
      * 쿠폰 수정
      * =============================== */
-    applyAsyncHandlers(builder, requestUpdateCoupon, (state, action) => {
+    applyAsyncHandlers(builder, requestAdminUpdateCoupon, (state, action) => {
       const updated = action.payload;
       const index = state.coupons.findIndex(e => e.id === updated.id);
 
@@ -47,7 +51,7 @@ const couponSlice = createSlice({
     /* ===============================
      * 쿠폰 visible 변경
      * =============================== */
-    applyAsyncHandlers(builder, requestUpdateCouponVisible, (state, action) => {
+    applyAsyncHandlers(builder, requestAdminUpdateCouponVisible, (state, action) => {
       const updated = action.payload;
       const index = state.coupons.findIndex(e => e.id === updated.id);
 

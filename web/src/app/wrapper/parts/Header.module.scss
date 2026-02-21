@@ -1,0 +1,190 @@
+.appHeader {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  white-space: nowrap;
+}
+
+.appHeaderBar {
+  width: 100%;
+  background: $ui-surface-elevated;
+  border-bottom: 1px solid $ui-border-strong;
+}
+
+.appHeaderInner {
+  max-width: $ui-container-width;
+  margin: 0 auto;
+  padding-inline: $ui-container-padding;
+
+  height: 6.4rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.appHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: $space-16;
+  min-width: 0;
+}
+
+
+.appHeaderNavGroup {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+/* =========================
+   NAV (PC)
+========================= */
+
+.appHeaderNav {
+  display: none;
+  gap: $space-24;
+
+  a {
+    font-size: $fs-16;
+    color: $ui-text-sub;
+    text-decoration: none;
+
+    &:hover {
+      color: $ui-text-main;
+    }
+  }
+}
+
+@include desktop {
+  .appHeaderNav {
+    display: flex;
+  }
+}
+
+/* =========================
+   BURGER (Mobile)
+========================= */
+
+.appHeaderBurger {
+  font-size: $fs-20;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $ui-text-main;
+
+  @include desktop {
+    display: none;
+  }
+}
+
+/* =========================
+   AUTH AREA
+========================= */
+
+.appHeaderAuth {
+  display: flex;
+  align-items: center;
+  gap: $space-16;
+}
+
+/* LOGIN BUTTON */
+
+.appHeaderLoginBtn {
+  background-image: url("@/assets/NAVER_login_btn.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  width: 12rem;
+  height: 3.2rem;
+}
+
+/* USER */
+
+.appHeaderUser {
+  display: flex;
+  align-items: center;
+  gap: $space-16;
+}
+
+.appHeaderUserName {
+  font-size: $fs-14;
+}
+
+/* LOGOUT */
+
+.appHeaderLogoutBtn {
+  background: $ui-btn-ghost;
+  padding: 0 $space-16;
+  border-radius: $radius-4;
+  width: 12rem;
+  height: 3.2rem;
+  color: #fff;
+  font-size: $fs-14;
+
+  &:hover {
+    background: $ui-btn-ghost-hover;
+  }
+}
+
+/* =========================
+   MOBILE OVERLAY MENU
+========================= */
+
+.appHeaderOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 2000;
+
+  display: flex;
+
+  @include desktop {
+    display: none;
+  }
+}
+
+.appHeaderPanel {
+  width: 280px;
+  height: 100%;
+  background: $surface2;
+
+  padding: 2.4rem 2rem;
+
+  box-shadow: 6px 0 18px rgba(0,0,0,0.35);
+
+  transform: translateX(-100%);
+  animation: slideIn 0.25s ease forwards;
+}
+
+.open {
+  animation: slideIn 0.25s ease forwards;
+}
+
+.closing {
+  animation: slideOut 0.22s ease forwards;
+}
+
+
+.appHeaderOverlayNav {
+  display: flex;
+  flex-direction: column;
+
+  a {
+    padding: $space-16;
+    border-bottom: 1px solid $ui-border-light;
+    color: $ui-text-main;
+  }
+}
+
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}

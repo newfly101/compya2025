@@ -4,7 +4,7 @@ import { SwiperSlide } from "swiper/react";
 import { CafeLinkCard } from "@/global/ui/cafeLinkCard/index.js";
 import React from "react";
 
-const EventSwiper = (short = false) => {
+const EventSwiper = ({ short = false }) => {
   const { activeEvents } = useEventListUser();
 
   if (activeEvents.length === 0) return null;

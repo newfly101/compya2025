@@ -5,7 +5,7 @@ const CommunityUserBoardTabs = ({ boards, active, onChange }) => {
 
   return (
     <div className={styles.tabs}>
-      {boards.map(tab => (
+      {(boards ?? []).map(tab => (
         <button
           key={tab.id}
           className={`${styles.tab} ${

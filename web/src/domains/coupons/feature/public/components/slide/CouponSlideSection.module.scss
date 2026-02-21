@@ -1,0 +1,49 @@
+.couponScrollWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.couponScrollViewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  padding-bottom: $space-12;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.couponScrollTrack {
+  display: flex;
+  gap: $space-16;
+
+  padding-inline: $space-16;
+}
+
+.couponScrollItem {
+  flex: 0 0 240px;
+}
+
+
+@media (min-width: 768px) {
+
+  .couponScrollWrapper {
+    overflow-x: visible;
+  }
+
+  .couponScrollTrack {
+    display: grid; // flex 제거
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .couponScrollItem {
+    flex: unset;
+  }
+}
+
+@media (min-width: 1280px) {
+
+  .couponScrollTrack {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+}

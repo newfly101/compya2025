@@ -1,0 +1,131 @@
+/* THead */
+
+/* TBody */
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: $text-secondary;
+}
+
+.detail {
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+
+  & > button {
+    padding: 0.4rem 0.8rem;
+    font-size: 1.2rem;
+    border-radius: 0.4rem;
+    border: none;
+    background: $primary-bg;
+    color: $primary-text;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 4.8rem;
+    text-align: center;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+}
+
+/* THead */
+
+/* TBody */
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: $text-secondary;
+}
+
+.detail {
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.6rem;
+
+  & > button {
+    padding: 0.4rem 0.8rem;
+    font-size: 1.2rem;
+    border-radius: 0.4rem;
+    border: none;
+    background: $primary-bg;
+    color: $primary-text;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 4.8rem;
+    text-align: center;
+
+    &:hover {
+      background: $primary-hover;
+    }
+  }
+}
+
+
+@media (max-width: 768px) {
+
+  :global(.adminTable) {
+    min-width: 0;
+    table-layout: fixed;
+  }
+
+  /* 공통 가운데 정렬 */
+  :global(.adminTableBody td),
+  :global(.adminTableHead th) {
+    text-align: center;
+  }
+
+  /* ======================
+     숨길 컬럼
+     ====================== */
+
+  /* 1 id */
+  :global(.adminTableHead th:nth-child(1)),
+  :global(.adminTableBody td:nth-child(1)) {
+    display: none;
+  }
+
+  /* 2 couponCode */
+  :global(.adminTableHead th:nth-child(2)),
+  :global(.adminTableBody td:nth-child(2)) {
+    display: none;
+  }
+
+  /* 4 detail */
+  :global(.adminTableHead th:nth-child(4)),
+  :global(.adminTableBody td:nth-child(4)) {
+    display: none;
+  }
+
+  /* 5 expireAt */
+  :global(.adminTableHead th:nth-child(5)),
+  :global(.adminTableBody td:nth-child(5)) {
+    display: none;
+  }
+
+  /* ======================
+     title ellipsis
+     ====================== */
+
+  :global(.adminTableBody td:nth-child(3)) {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
