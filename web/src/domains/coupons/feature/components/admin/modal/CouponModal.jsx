@@ -11,17 +11,38 @@ const CouponModal = ({
                        onSubmit,
                        onCancel,
                      }) => {
+  const isMobile = window.innerWidth <= 768;
+
+
   return (
-    <div className={styles.overlay}>
-      <div className={styles.wrapper}>
-        <div className={styles.header}>
-          <h2>{title}</h2>
-          <button onClick={onCancel}>×</button>
+    <div className={styles.couponModalWrapper}>
+      <div
+        className={styles.couponModalOverlay}
+        onClick={onCancel}
+      />
+
+      <div className={styles.couponModalContainer}>
+        <div className={styles.couponModalHeader}>
+          <h2 className={styles.couponModalTitle}>
+            {title}
+          </h2>
+          <button
+            type="button"
+            className={styles.couponModalClose}
+            onClick={onCancel}
+          >
+            ×
+          </button>
         </div>
 
-        <form className={styles.form} onSubmit={onSubmit}>
-          <label>
-            쿠폰 코드
+        <form
+          className={styles.couponModalBody}
+          onSubmit={onSubmit}
+        >
+          <label className={styles.couponModalField}>
+            <span className={styles.fieldLabel}>
+              쿠폰 코드
+            </span>
             <input
               name="couponCode"
               value={form.couponCode}
@@ -30,8 +51,10 @@ const CouponModal = ({
             />
           </label>
 
-          <label>
-            쿠폰 제목
+          <label className={styles.couponModalField}>
+            <span className={styles.fieldLabel}>
+              쿠폰 제목
+            </span>
             <input
               name="title"
               value={form.title}
@@ -40,8 +63,10 @@ const CouponModal = ({
             />
           </label>
 
-          <label>
-            쿠폰 설명
+          <label className={styles.couponModalField}>
+            <span className={styles.fieldLabel}>
+              쿠폰 설명
+            </span>
             <textarea
               name="detail"
               value={form.detail}
@@ -50,9 +75,12 @@ const CouponModal = ({
             />
           </label>
 
-          <div className={styles.row}>
-            <label className={styles.hiddenField}>
-              시작일
+          <div className={styles.couponModalRow}>
+            {!isMobile &&
+            <label className={styles.couponModalField}>
+              <span className={styles.fieldLabel}>
+                시작일
+              </span>
               <input
                 type="text"
                 inputMode="numeric"
@@ -62,9 +90,12 @@ const CouponModal = ({
                 onBlur={onDateBlur}
               />
             </label>
+            }
 
-            <label>
-              만료일
+            <label className={styles.couponModalField}>
+              <span className={styles.fieldLabel}>
+                만료일
+              </span>
               <input
                 type="text"
                 inputMode="numeric"
@@ -76,15 +107,19 @@ const CouponModal = ({
             </label>
           </div>
 
-          <div className={styles.actions}>
+          <div className={styles.couponModalActions}>
             <button
               type="button"
-              className={styles.cancel}
+              className={styles.couponModalCancel}
               onClick={onCancel}
             >
               취소
             </button>
-            <button type="submit" className={styles.primary}>
+
+            <button
+              type="submit"
+              className={styles.couponModalPrimary}
+            >
               {submitLabel}
             </button>
           </div>

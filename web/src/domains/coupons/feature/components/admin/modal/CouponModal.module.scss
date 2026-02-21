@@ -1,167 +1,174 @@
-.overlay {
+.couponModalWrapper {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.6);
   z-index: 1000;
 
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
-.wrapper {
+.couponModalOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.couponModalContainer {
+  position: relative;
   width: 100%;
   max-width: 720px;
   max-height: 90vh;
 
-  background: $surface2;
-  border-radius: 1.2rem;
-  border: 1px solid $border;
-  padding: 2.4rem;
+  background: $ui-surface-elevated;
+  border-radius: $radius-12;
+  border: 1px solid $ui-border-light;
+  padding: $space-24;
 
   display: flex;
   flex-direction: column;
-
   overflow: hidden;
+  z-index: 2;
 }
 
-.header {
+.couponModalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: $space-24;
+}
 
-  h2 {
-    font-size: 2rem;
-    font-weight: 700;
-  }
+.couponModalTitle {
+  font-size: $fs-20;
+  font-weight: 700;
+  color: $ui-text-main;
+}
 
-  button {
-    background: transparent;
-    border: none;
-    color: $text-secondary;
-    font-size: 1.8rem;
-    cursor: pointer;
+.couponModalClose {
+  background: transparent;
+  border: none;
+  font-size: $fs-18;
+  color: $ui-text-sub;
+  cursor: pointer;
 
-    &:hover {
-      color: $text-primary;
-    }
+  &:hover {
+    color: $ui-text-main;
   }
 }
 
-.form {
+.couponModalBody {
   flex: 1;
   overflow-y: auto;
 
   display: flex;
   flex-direction: column;
-  gap: 1.6rem;
-
-  label {
-    display: flex;
-    flex-direction: column;
-    font-size: 1.4rem;
-    color: $text-secondary;
-
-    input {
-      margin-top: 0.6rem;
-      padding: 0.8rem 1rem;
-      border-radius: 0.6rem;
-      border: 1px solid $border;
-      background: $surface3;
-      color: $text-primary;
-
-      &:focus {
-        outline: none;
-        border-color: $primary;
-      }
-    }
-    select {
-      margin-top: 0.6rem;
-      padding: 0.8rem 1rem;
-      border-radius: 0.6rem;
-      border: 1px solid $border;
-      background: $surface3;
-      color: $text-primary;
-
-      &:focus {
-        outline: none;
-        border-color: $primary;
-      }
-    }
-
-    textarea {
-      margin-top: 0.6rem;
-      padding: 0.8rem 1rem;
-      border-radius: 0.6rem;
-      border: 1px solid $border;
-      background: $surface3;
-      color: $text-primary;
-
-      min-height: 9.6rem; // 필요시 조절
-      resize: vertical;   // 완전 고정하려면 none
-      line-height: 1.4;
-      font-family: inherit;
-      font-size: 1.4rem;
-
-      &:focus {
-        outline: none;
-        border-color: $primary;
-      }
-    }
-
-  }
+  gap: $space-16;
 }
 
-.row {
+.couponModalField {
   display: flex;
-  gap: 1.6rem;
+  flex-direction: column;
+  gap: $space-8;
+}
 
-  > label {
-    flex: 1;
-  }
-  & .hiddenField {
-    visibility: hidden;
+.fieldLabel {
+  font-size: $fs-14;
+  color: $ui-text-sub;
+}
+
+.couponModalField input,
+.couponModalField textarea {
+  padding: $space-8 $space-12;
+  border-radius: $radius-8;
+  border: 1px solid $ui-border-light;
+  background: $ui-surface-hover;
+  color: $ui-text-main;
+  font-size: $fs-14;
+
+  &:focus {
+    outline: none;
+    border-color: $ui-brand-main;
   }
 }
 
-.checkbox {
-  flex-direction: row !important;
-  align-items: center;
-  gap: 0.6rem;
+.couponModalField textarea {
+  min-height: 96px;
+  resize: vertical;
 }
 
-.actions {
+.couponModalRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-16;
+}
+
+.couponModalActions {
   display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  margin-top: 2.4rem;
-  padding-top: 1.6rem;
-  border-top: 1px solid $border;
+  gap: $space-12;
+  margin-top: $space-24;
+  padding-top: $space-16;
+  border-top: 1px solid $ui-border-light;
+}
 
-  button {
-    padding: 0.8rem 1.6rem;
-    border-radius: 0.6rem;
-    border: none;
-    cursor: pointer;
-    font-size: 1.4rem;
+.couponModalCancel {
+  padding: $space-8 $space-16;
+  border-radius: $radius-8;
+  background: $ui-btn-ghost;
+  color: $ui-text-sub;
+  font-size: $fs-14;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background: $ui-btn-ghost-hover;
   }
 }
 
-.cancel {
-  background: $surface3;
-  color: $text-secondary;
+.couponModalPrimary {
+  padding: $space-8 $space-16;
+  border-radius: $radius-8;
+  background: $ui-brand-main;
+  color: $ui-brand-text;
+  font-size: $fs-14;
+  border: none;
+  cursor: pointer;
 
   &:hover {
-    background: $surface3;
+    background: $ui-brand-hover;
   }
 }
 
-.primary {
-  background: $primary-bg;
-  color: $primary-text;
+/* 반응형 최소화 */
+@media (max-width: 768px) {
 
-  &:hover {
-    background: $primary-hover;
+  .couponModalContainer {
+    margin: $space-12;
+    padding: $space-16;
+    max-height: 80vh;
   }
+
+  .couponModalHeader {
+    margin-bottom: $space-16;
+  }
+
+  .couponModalBody {
+    gap: $space-12;
+  }
+
+  .couponModalRow {
+    grid-template-columns: 1fr;
+  }
+
+  .couponModalField textarea {
+    min-height: 72px;
+    resize: vertical;
+    max-height: 160px;
+  }
+
+  .couponModalActions {
+    margin-top: $space-16;
+    padding-top: $space-12;
+  }
+
 }
