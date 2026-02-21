@@ -9,9 +9,11 @@ import java.util.List;
 @Mapper
 public interface CouponMapper {
 
-    // 쿠폰
-    List<CouponEntity> selectCouponList();
+    // user
+    List<CouponEntity> selectCouponListForUser();
 
+    // admin
+    List<CouponEntity> selectCouponList();
     int insertCoupon(CouponEntity coupon);
     int updateCouponById(CouponEntity coupon);
     int updateCouponVisible(

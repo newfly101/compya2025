@@ -4,7 +4,7 @@
 
 <mapper namespace="com.dawne.com2usbaseball.domain.coupon.repository.mapper.CouponMapper">
 
-    <select id="selectCouponList" resultType="com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity">
+    <select id="selectCouponListForUser" resultType="com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity">
         SELECT
            id,
            coupon_code,
@@ -14,6 +14,21 @@
            is_visible AS visible,
            created_at,
            updated_at
+        FROM coupons
+        WHERE is_visible = true
+    </select>
+
+
+    <select id="selectCouponList" resultType="com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity">
+        SELECT
+            id,
+            coupon_code,
+            title,
+            detail,
+            expire_at,
+            is_visible AS visible,
+            created_at,
+            updated_at
         FROM coupons
     </select>
 

@@ -17,14 +17,14 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class CouponServiceImpl implements CouponService {
+public class CouponAdminServiceImpl implements CouponAdminService {
 
     private final CouponRepository repository;
     private final CouponListMaker couponMaker;
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value="couponLists")
+    @Cacheable(value="coupon:admin")
     public CouponListResponse getCouponLists() {
         List<CouponEntity> couponEntity = repository.selectCoupons();
 
@@ -32,7 +32,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    @CacheEvict(value="couponLists", allEntries = true)
+    @CacheEvict(value={"coupon:admin", "coupon:public"}, allEntries = true)
     public InsertCouponResponse createCoupon(CouponEntity coupon) {
         boolean success = repository.insertCoupon(coupon);
 
@@ -44,7 +44,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    @CacheEvict(value="couponLists", allEntries = true)
+    @CacheEvict(value={"coupon:admin", "coupon:public"}, allEntries = true)
     public UpdateCouponResponse updateCoupon(CouponEntity coupon) {
         boolean success = repository.updateCoupon(coupon);
         if (!success) {
@@ -55,7 +55,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    @CacheEvict(value="couponLists", allEntries = true)
+    @CacheEvict(value={"coupon:admin", "coupon:public"}, allEntries = true)
     public UpdateCouponResponse updateCouponVisible(Long id, boolean visible) {
         boolean success = repository.updateCouponVisible(id, visible);
         if (!success) {

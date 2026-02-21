@@ -13,6 +13,14 @@ public class CouponRepository {
 
     private final CouponMapper mapper;
 
+    // public
+
+    public List<CouponEntity> selectCouponsUser() {
+        return mapper.selectCouponListForUser();
+    }
+
+    // admin
+
     public List<CouponEntity> selectCoupons() {
         return mapper.selectCouponList();
     }
