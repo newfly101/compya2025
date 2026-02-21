@@ -1,15 +1,15 @@
 import React from "react";
 import styles from "./CouponTable.module.scss";
-import { EVENT_TABLE } from "@/domains/events/config/eventTable.config.js";
 import VisibleToggle from "@/domains/admin/feature/components/toggle/VisibleToggle.jsx";
 import { dateUtils } from "@/global/utils/datetime/dateUtils.js";
+import { COUPON_TABLE } from "@/domains/coupons/config/couponTable.config.js";
 
 const CouponTableBody = ({ coupons, changeVisible, setEditCoupon }) => {
 
   if (coupons.length === 0) {
     return (
       <tr>
-        <td colSpan={EVENT_TABLE.length} className={styles.empty}>
+        <td colSpan={COUPON_TABLE.length} className={styles.empty}>
           등록된 쿠폰이 없습니다.
         </td>
       </tr>
