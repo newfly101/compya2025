@@ -30,7 +30,7 @@ const CouponListSection = ({ limit = null }) => {
         </div>
       </section>
 
-      {expiredCoupons && (
+      {expiredCoupons.length > 0 && (
         <section className={styles.couponGroupSection}>
           <h3 className={styles.groupTitle}>🎉 종료된 쿠폰 리스트</h3>
 
