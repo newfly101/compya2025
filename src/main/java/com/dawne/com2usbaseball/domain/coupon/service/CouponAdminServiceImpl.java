@@ -10,6 +10,7 @@ import com.dawne.com2usbaseball.domain.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +25,7 @@ public class CouponAdminServiceImpl implements CouponAdminService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value="coupon:admin")
+    @Cacheable(value="coupons", key="'admin'")
     public ListResponse<CouponResponse> getCouponLists() {
         List<CouponEntity> coupons = repository.selectCoupons();
 
@@ -32,7 +33,10 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     }
 
     @Override
-    @CacheEvict(value={"coupon:admin", "coupon:public"}, allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value="coupons", key="'admin'", condition="#result.success == true"),
+            @CacheEvict(value="coupons", key="'public'", condition="#result.success == true")
+    })
     public OperationResponse<CouponMessages> createCoupon(CouponEntity coupon) {
         return repository.insertCoupon(coupon)
                 ? OperationResponse.success(CouponMessages.COUPON_CREATED, coupon.getId())
@@ -40,7 +44,10 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     }
 
     @Override
-    @CacheEvict(value={"coupon:admin", "coupon:public"}, allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value="coupons", key="'admin'", condition="#result.success == true"),
+            @CacheEvict(value="coupons", key="'public'", condition="#result.success == true")
+    })
     public OperationResponse<CouponMessages> updateCoupon(CouponEntity coupon) {
         return repository.updateCoupon(coupon)
                 ? OperationResponse.success(CouponMessages.COUPON_UPDATED, coupon.getId())
@@ -48,7 +55,10 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     }
 
     @Override
-    @CacheEvict(value={"coupon:admin", "coupon:public"}, allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value="coupons", key="'admin'", condition="#result.success == true"),
+            @CacheEvict(value="coupons", key="'public'", condition="#result.success == true")
+    })
     public OperationResponse<CouponMessages> updateCouponVisible(Long id, boolean visible) {
         return repository.updateCouponVisible(id, visible)
                 ? OperationResponse.success(CouponMessages.COUPON_VISIBLE_UPDATED, id)

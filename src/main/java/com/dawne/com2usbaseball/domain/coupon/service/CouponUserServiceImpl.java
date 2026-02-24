@@ -21,7 +21,7 @@ public class CouponUserServiceImpl implements CouponUserService {
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value="coupon:public")
+    @Cacheable(value="coupons", key="'public'")
     public ListResponse<CouponResponse> getCouponLists() {
         List<CouponEntity> coupons = repository.selectCouponsUser();
 
