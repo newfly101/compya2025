@@ -1,10 +1,10 @@
 import React from "react";
 import styles from "./EventListSection.module.scss";
 import CafeLinkCard from "@/global/ui/cafeLinkCard/CafeLinkCard.jsx";
-import { useEventListUser } from "@/domains/events/feature/public/hooks/useEventListUser.js";
+import { useEventList } from "@/domains/events/feature/public/hooks/useEventList.js";
 
 const EventListSection = ({ short = false }) => {
-  const { events, activeEvents, expireEvents } = useEventListUser();
+  const { events, activeEvents, expireEvents } = useEventList();
 
   if (!events?.length) return null;
 

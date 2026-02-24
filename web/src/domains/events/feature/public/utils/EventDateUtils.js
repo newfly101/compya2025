@@ -30,7 +30,3 @@ export const splitEventsByExpired = (events = []) => {
 
   return { activeEvents, expireEvents };
 }
-
-export const filterCouponVisible = (coupons) => {
-  return coupons.filter(e => e.visible === true);
-}

@@ -1,11 +1,11 @@
-import { useEventListUser } from "@/domains/events/feature/public/hooks/useEventListUser.js";
+import { useEventList } from "@/domains/events/feature/public/hooks/useEventList.js";
 import { CardSwiper } from "@/global/ui/cardSwiper/index.js";
 import { SwiperSlide } from "swiper/react";
 import { CafeLinkCard } from "@/global/ui/cafeLinkCard/index.js";
 import React from "react";
 
 const EventSwiper = ({ short = false }) => {
-  const { activeEvents } = useEventListUser();
+  const { activeEvents } = useEventList();
 
   if (activeEvents.length === 0) return null;
 

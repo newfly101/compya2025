@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { splitEventsByExpired } from "@/domains/events/feature/public/utils/EventDateUtils.js";
 import { requestGetExternalEventList } from "@/domains/events/store/public/thunks.js";
 
-export const useEventListUser = () => {
+export const useEventList = () => {
   const dispatch = useDispatch();
   const { events } = useSelector((state) => state.events);
 
