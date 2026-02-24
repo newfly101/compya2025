@@ -9,16 +9,9 @@ import { ADMIN_COUPON_ACTIONS } from "@/domains/coupons/store/admin/endpoints.js
 export const requestGetAdminCouponList = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.GET_LIST, async (_, { rejectWithValue }) => {
     try {
-      const data = await fetchAdminCouponList();
-      // console.log("requestGetCouponList : ", data);
-      if (data.length < 0) {
-        return {
-          coupons: [],
-          totalCount: 0
-        }
-      }
+      const {items} = await fetchAdminCouponList();
 
-      return data;
+      return [...items].sort((a, b) => b.id - a.id);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -28,12 +21,11 @@ export const requestGetAdminCouponList = createAsyncThunk(
 export const requestAdminInsertNewCoupon = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.CREATE, async (newCoupon, { rejectWithValue }) => {
     try {
-      const { couponId, ...options } = await fetchAdminInsertCoupon(newCoupon);
-      // console.log("requestInsertNewCoupon : ", couponId);
+      const { id:couponId, ...options } = await fetchAdminInsertCoupon(newCoupon);
 
       return {
         ...newCoupon,
-        id: couponId,
+        id: Number(couponId),
         options
       };
     } catch (error) {
@@ -45,12 +37,11 @@ export const requestAdminInsertNewCoupon = createAsyncThunk(
 export const requestAdminUpdateCoupon = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.UPDATE, async ({ id, ...coupon }, { rejectWithValue }) => {
     try {
-      const {couponId, ...options } = await fetchAdminUpdateCoupon(id, coupon);
-      // console.log("requestUpdateCoupon : ", couponId);
+      const {id:couponId, ...options } = await fetchAdminUpdateCoupon(id, coupon);
 
       return {
         ...coupon,
-        id: couponId,
+        id: Number(couponId),
         options,
       }
     } catch (error) {
@@ -62,11 +53,10 @@ export const requestAdminUpdateCoupon = createAsyncThunk(
 export const requestAdminUpdateCouponVisible = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.UPDATE_VISIBLE, async ({id, visible}, { rejectWithValue }) => {
     try {
-      const {couponId, ...options } = await fetchAdminUpdateVisible(id, visible);
-      // console.log("requestGetCouponList : ", couponId);
+      const {id:couponId, ...options } = await fetchAdminUpdateVisible(id, visible);
 
       return {
-        id: couponId,
+        id: Number(couponId),
         visible,
         options
       }
