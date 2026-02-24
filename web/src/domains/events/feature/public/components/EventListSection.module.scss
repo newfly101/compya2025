@@ -1,0 +1,49 @@
+.eventListSectionWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $space-32;
+  width: 100%;
+}
+
+.eventListSection {
+  display: flex;
+  flex-direction: column;
+  gap: $space-16;
+}
+
+@media (max-width: 768px) {
+  .eventListSectionWrapper {
+    gap: $space-24;
+  }
+}
+
+.sectionHeader {
+  margin-bottom: $space-16;
+}
+
+.sectionTitle {
+  font-size: $fs-20;
+  font-weight: 700;
+  color: $ui-text-main;
+}
+
+.eventListGrid,
+.short {
+  display: grid;
+  gap: clamp($space-16, 2vw, $space-24);
+
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 934px) {
+  .eventListGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 644px) {
+  .eventListGrid {
+    grid-template-columns: auto;
+    justify-content: center;
+  }
+}

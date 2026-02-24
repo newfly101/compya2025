@@ -3,7 +3,7 @@ import NoticeLayout from "@/app/page/notice/NoticeLayout.jsx";
 import FunNoticeList from "@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx";
 import OfficialNoticeList
   from "@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx";
-import UserEventPage from "@/domains/events/feature/public/pages/UserEventPage.jsx";
+import EventListPage from "@/domains/events/feature/public/pages/EventListPage.jsx";
 
 const Home = lazy(() => import("@/app/page/home/Home.jsx"));
 const CouponListPage = lazy(() => import("@/domains/coupons/feature/public/pages/CouponListPage.jsx"));
@@ -29,7 +29,7 @@ export const PublicRoutes = [
     children: [
       { index: true, element: <FunNoticeList />, handle: { title: "컴프야펀 | 펀 공지사항" } },
       { path: "official", element: <OfficialNoticeList />, handle: { title: "컴프야펀 | 공식 공지사항" }  },
-      { path: "events", element: <UserEventPage />, handle: { title: "컴프야펀 | 공식 이벤트" }  },
+      { path: "events", element: <EventListPage />, handle: { title: "컴프야펀 | 공식 이벤트" }  },
       { path: "coupons", element: <CouponListPage />, handle: { title: "컴프야펀 | 쿠폰 코드" }  },
     ],
   },

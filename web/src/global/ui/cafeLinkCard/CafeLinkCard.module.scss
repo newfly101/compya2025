@@ -1,108 +1,92 @@
-.card {
-  background: $surface2;
-  border: 1px solid $border;
-  border-radius: 1.2rem;
+.cafeLinkCardWrapper {
+  background: $ui-surface-elevated;
+  border: 1px solid $ui-border-light;
+  border-radius: $radius-12;
   overflow: hidden;
   width: 100%;
-  max-width: 28rem; // 34rem
+  max-width: $length-350;
+
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transform: translateY(-$space-4);
+    box-shadow: 0 $space-8 $space-24 rgba(0, 0, 0, 0.2);
   }
+}
 
-  /** 이미지 썸네일 **/
-  .thumbnail {
-    position: relative;
+.thumbnail {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 26 / 9;
+  overflow: hidden;
+  border-top-left-radius: $radius-12;
+  border-top-right-radius: $radius-12;
+
+  img {
     width: 100%;
-    height: 14rem; // 18rem
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .badge {
-      background: linear-gradient(135deg, #6d4ad3, #a86bf0);
-      position: absolute;
-      top: 0;
-      right: 0;
-      padding: 0.8rem 1.2rem;
-      border-radius: 0 1rem 0 1rem;
-      font-size: 1.2rem;
-      color: white;
-      font-weight: 600;
-    }
-
-    .disableBadge {
-      background: linear-gradient(135deg, #000000, #cfb6f3);
-      position: absolute;
-      top: 0;
-      right: 0;
-      padding: 0.8rem 1.2rem;
-      border-radius: 0 1rem 0 1rem;
-      font-size: 1.2rem;
-      color: white;
-      font-weight: 600;
-    }
+    height: 100%;
+    object-fit: cover;
+    object-position: 30% center;
   }
+}
 
-  .content {
-    padding: 1.4rem;
+.badge,
+.disabledBadge {
+  position: absolute;
+  top: $space-8;
+  right: $space-8;
+  padding: $space-4 $space-8;
+  border-radius: $radius-8;
+  font-size: $fs-12;
+  font-weight: 600;
+  color: $ui-brand-text;
+}
 
-    .title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: $text-primary;
-      margin-bottom: 0.8rem;
-    }
+.badge {
+  cursor: default;
+  background: $ui-btn-primary-gradient;
+}
 
-    .date {
-      font-size: 1.3rem;
-      color: $text-secondary;
-      margin-bottom: 1.2rem;
-    }
+.disabledBadge {
+  opacity: 0.8;
+  cursor: default;
+  background: $ui-btn-primary-disabled;
+}
 
-    .detail {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: $primary-text;
-      text-decoration: none;
+.content {
+  padding: $space-12; // 기존 $space-16 -> 더 타이트하게
+  display: flex;
+  flex-direction: column;
+  gap: $space-8; // 없다면 $space-8 유지
+}
 
-      &:hover {
-        text-decoration: underline;
-      }
-    }
+/* 한 줄 처리 공통 */
+.title,
+.date,
+.detailLink {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title {
+  font-size: $fs-14; // 기존 $fs-16 -> 축소
+  font-weight: 700;
+  color: $ui-text-main;
+}
+
+.date {
+  font-size: $fs-14; // 기존 $fs-14 -> 축소
+  color: $ui-text-sub;
+}
+
+.detailLink {
+  font-size: $fs-12;
+  font-weight: 600;
+  color: $ui-brand-main;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
   }
-
-}
-
-
-
-
-
-
-/* main page styles */
-
-.eventSection > .grid {
-  margin-bottom: 5rem;
-}
-
-.grid {
-  display: grid;
-  gap: 2.4rem;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  justify-items: center;
-  padding: 2rem 0;
-}
-
-.shortGrid {
-  display: grid;
-  gap: 2.4rem;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  justify-items: center;
-  padding: 2rem 0;
 }
