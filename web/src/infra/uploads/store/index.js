@@ -1,5 +1,5 @@
 /**
- * coupons index;
+ * [infra] upload index;
  */
 
 export * from "./slices.js";
