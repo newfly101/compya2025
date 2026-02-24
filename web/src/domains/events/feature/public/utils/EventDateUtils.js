@@ -10,7 +10,7 @@ export const isExpiredEvent = (expireAt, now = new Date()) => {
 }
 
 // 종료/진행중 이벤트 반환
-export const splitEventsByExpired = (events) => {
+export const splitEventsByExpired = (events = []) => {
   // visible 옵션 기준 이벤트 노출 정렬
   const visibleEvents = filterEventVisible(events);
 
@@ -33,26 +33,4 @@ export const splitEventsByExpired = (events) => {
 
 export const filterCouponVisible = (coupons) => {
   return coupons.filter(e => e.visible === true);
-}
-
-// 종료/진행중 이벤트 반환
-export const splitCouponsByExpired = (coupons) => {
-  // visible 옵션 기준 이벤트 노출 정렬
-  const visibleEvents = filterCouponVisible(coupons);
-
-  // 노출:o 기준으로 만료/진행중 이벤트 배열 생성
-  const now = new Date();
-
-  const activeCoupons = [];
-  const expireCoupons = [];
-
-  visibleEvents.forEach(e => {
-    if (isExpiredEvent(e.expireAt, now)) {
-      expireCoupons.push(e);
-    } else {
-      activeCoupons.push(e);
-    }
-  });
-
-  return { activeCoupons, expireCoupons };
 }
