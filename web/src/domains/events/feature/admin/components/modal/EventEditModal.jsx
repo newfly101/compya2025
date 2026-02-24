@@ -17,6 +17,8 @@ const EventEditModal = ({ event, onClose }) => {
       onDateBlur={hook.handleDateBlur}
       onSubmit={hook.handleSubmit}
       onCancel={onClose}
+      onImageTypeChange={hook.handleImageTypeChange}
+      onFileChange={hook.handleFileChange}
     />
   );
 };
