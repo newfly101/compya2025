@@ -237,7 +237,7 @@ CREATE TABLE user_roles
 CREATE TABLE events
 (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT,
-    event_source  ENUM ('OFFICIAL', 'INTERNAL') NOT NULL DEFAULT 'OFFICIAL', -- OFFICIAL / INTERNAL
+    event_type    ENUM ('OFFICIAL', 'INTERNAL') NOT NULL DEFAULT 'OFFICIAL', -- OFFICIAL / INTERNAL
     title         VARCHAR(255)                  NOT NULL,
     start_at      DATETIME                      NOT NULL,
     expire_at     DATETIME                      NOT NULL,

@@ -7,7 +7,7 @@
     <select id="selectEventByExternalForUser" resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
             id,
-            event_source,
+            event_type,
             title,
             start_at,
             expire_at,
@@ -23,7 +23,7 @@
     <select id="selectEventByExternal" resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
            id,
-           event_source,
+           event_type,
            title,
            start_at,
            expire_at,
@@ -37,7 +37,7 @@
 
     <insert id="insertEvent" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO events (
-            event_source,
+            event_type,
             title,
             start_at,
             expire_at,
@@ -47,7 +47,7 @@
             created_at,
             updated_at
         ) VALUES (
-            #{eventSource},
+            #{eventType},
             #{title},
             #{startAt},
             #{expireAt},
@@ -63,8 +63,8 @@
     <update id="updateEventByExternal" parameterType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         UPDATE events
         <set>
-            <if test="eventSource != null">
-                event_source = #{eventSource},
+            <if test="eventType != null">
+                event_type = #{eventType},
             </if>
             <if test="title != null">
                 title = #{title},
