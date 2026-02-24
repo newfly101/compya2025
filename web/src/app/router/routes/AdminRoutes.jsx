@@ -1,13 +1,14 @@
+import { lazy } from "react";
 import AuthGuard from "@/app/router/guards/AuthGuard.jsx";
-import AdminPageLayout from "@/global/layout/adminPageLayout/AdminPageLayout.jsx";
-import AdminDashBoardPage from "@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx";
-import AdminUserManagePage from "@/domains/admin/pages/user/AdminUserManagePage.jsx";
-import AdminUserDetailPage from "@/domains/admin/pages/user/AdminUserDetailPage.jsx";
-import AdminContentPage from "@/global/layout/adminPageLayout/content/AdminContentPage.jsx";
-import AdminEventPage from "@/domains/events/feature/admin/pages/AdminEventPage.jsx";
-import AdminNoticeManagePage from "@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx";
-import AdminCommunityPage from "@/domains/community/page/admin/AdminCommunityPage.jsx";
-import AdminCouponListPage from "@/domains/coupons/feature/admin/pages/AdminCouponListPage.jsx";
+const AdminPageLayout = lazy(() =>  import("@/global/layout/adminPageLayout/AdminPageLayout.jsx"));
+const AdminDashBoardPage = lazy(() =>  import("@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx"));
+const AdminUserManagePage = lazy(() =>  import("@/domains/admin/pages/user/AdminUserManagePage.jsx"));
+const AdminUserDetailPage = lazy(() =>  import("@/domains/admin/pages/user/AdminUserDetailPage.jsx"));
+const AdminContentPage = lazy(() =>  import("@/global/layout/adminPageLayout/content/AdminContentPage.jsx"));
+const AdminEventPage = lazy(() =>  import("@/domains/events/feature/admin/pages/AdminEventPage.jsx"));
+const AdminNoticeManagePage = lazy(() =>  import("@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx"));
+const AdminCommunityPage = lazy(() =>  import("@/domains/community/page/admin/AdminCommunityPage.jsx"));
+const AdminCouponListPage = lazy(() =>  import("@/domains/coupons/feature/admin/pages/AdminCouponListPage.jsx"));
 
 export const AdminRoutes = [
   {

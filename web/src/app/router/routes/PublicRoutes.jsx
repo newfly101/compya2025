@@ -1,10 +1,8 @@
 import React, { lazy } from "react";
-import NoticeLayout from "@/app/page/notice/NoticeLayout.jsx";
-import FunNoticeList from "@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx";
-import OfficialNoticeList
-  from "@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx";
-import EventListPage from "@/domains/events/feature/public/pages/EventListPage.jsx";
-
+const NoticeLayout = lazy(() => import("@/app/page/notice/NoticeLayout.jsx"));
+const FunNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx"));
+const OfficialNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx"));
+const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
 const Home = lazy(() => import("@/app/page/home/Home.jsx"));
 const CouponListPage = lazy(() => import("@/domains/coupons/feature/public/pages/CouponListPage.jsx"));
 
