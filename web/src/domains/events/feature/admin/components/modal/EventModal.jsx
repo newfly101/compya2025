@@ -10,28 +10,9 @@ const EventModal = ({
                       onDateBlur,
                       onSubmit,
                       onCancel,
+                      onImageTypeChange,
+                      onFileChange
                     }) => {
-
-  const handleImageTypeChange = (type) => {
-    onChange({ target: { name: "imageType", value: type } });
-
-    if (type === "URL") {
-      onChange({ target: { name: "imageFile", value: null }});
-      onChange({ target: { name: "imagePreview", value: "" }});
-    } else {
-      onChange({ target: { name: "imageUrl", value: "" }});
-    }
-  };
-
-  const handleFileChange = (file) => {
-    if (!file) return;
-
-    const preview = URL.createObjectURL(file);
-
-    onChange({ target: { name: "imageFile", value: file }});
-    onChange({ target: { name: "imagePreview", value: preview }});
-  };
-
   return (
     <div className={styles.eventModalWrapper}>
       <div
@@ -41,9 +22,7 @@ const EventModal = ({
 
       <div className={styles.eventModalContainer}>
         <div className={styles.eventModalHeader}>
-          <h2 className={styles.eventModalTitle}>
-            {title}
-          </h2>
+          <h2 className={styles.eventModalTitle}>{title}</h2>
           <button
             type="button"
             className={styles.eventModalClose}
@@ -57,7 +36,6 @@ const EventModal = ({
           className={styles.eventModalBody}
           onSubmit={onSubmit}
         >
-
           <label className={styles.eventModalField}>
             <span className={styles.fieldLabel}>이벤트명</span>
             <input
@@ -88,7 +66,7 @@ const EventModal = ({
                   ? `${styles.eventModalSwitchButton} ${styles.eventModalSwitchButtonActive}`
                   : styles.eventModalSwitchButton
               }
-              onClick={() => handleImageTypeChange("URL")}
+              onClick={() => onImageTypeChange("URL")}
             >
               URL 입력
             </button>
@@ -100,7 +78,7 @@ const EventModal = ({
                   ? `${styles.eventModalSwitchButton} ${styles.eventModalSwitchButtonActive}`
                   : styles.eventModalSwitchButton
               }
-              onClick={() => handleImageTypeChange("FILE")}
+              onClick={() => onImageTypeChange("FILE")}
             >
               파일 업로드
             </button>
@@ -123,28 +101,18 @@ const EventModal = ({
               <input
                 type="file"
                 accept="image/*"
-                onChange={(e) => handleFileChange(e.target.files[0])}
+                onChange={(e) =>
+                  onFileChange(e.target.files[0])
+                }
               />
             </label>
           )}
 
           {(form.imagePreview || form.imageUrl) && (
             <div className={styles.eventModalPreview}>
-              <img
-                src={form.imagePreview || form.imageUrl}
-                alt="preview"
-              />
+              <img src={form.imagePreview || form.imageUrl} alt="preview" />
             </div>
           )}
-
-          <label className={styles.eventModalField}>
-            <span className={styles.fieldLabel}>외부 링크</span>
-            <input
-              name="externalLink"
-              value={form.externalLink}
-              onChange={onChange}
-            />
-          </label>
 
           <div className={styles.eventModalRow}>
             <label className={styles.eventModalField}>
@@ -188,7 +156,6 @@ const EventModal = ({
               {submitLabel}
             </button>
           </div>
-
         </form>
       </div>
     </div>

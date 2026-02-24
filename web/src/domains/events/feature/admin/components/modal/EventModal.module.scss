@@ -82,11 +82,26 @@
   background: $ui-surface-hover;
   color: $ui-text-main;
   font-size: $fs-14;
+  height: 40px;
 
   &:focus {
     outline: none;
     border-color: $ui-brand-main;
   }
+}
+
+.eventModalField input[type="file"]::file-selector-button {
+  height: 100%;
+  padding: 0 $space-12;
+  border: none;
+  background: $ui-btn-ghost;
+  color: $ui-text-sub;
+  font-size: $fs-14;
+  cursor: pointer;
+}
+
+.eventModalField input[type="file"]::file-selector-button:hover {
+  background: $ui-btn-ghost-hover;
 }
 
 /* ================= Switch Buttons ================= */
