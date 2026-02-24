@@ -1,4 +1,5 @@
 @use "../variables/colors" as *;
+@use "sass:color";
 
 /* =========================
    SURFACE
@@ -63,9 +64,9 @@ $ui-btn-skill-platinum: linear-gradient(
 
 $ui-btn-skill-hero: linear-gradient(
                 180deg,
-                lighten($success, 30%) 0%,
+                color.adjust($success, $lightness: 30%) 0%,
                 $success 45%,
-                darken($success, 17%) 100%
+                color.adjust($success, $lightness: -17%) 100%
 );
 
 $ui-btn-skill-normal: linear-gradient(
