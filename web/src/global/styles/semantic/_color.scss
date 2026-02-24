@@ -40,6 +40,52 @@ $ui-btn-primary-gradient: linear-gradient(
                 #a86bf0
 );
 
+$ui-btn-primary-disabled: linear-gradient(
+                210deg,
+                #a694c8,
+                #3f3950,
+                #312e3e
+);
+
+$ui-btn-skill-legend: linear-gradient(
+                to bottom,
+                #8f86ff 0%,
+                #6f64f7 45%,
+                #5a4de0 100%
+);
+
+$ui-btn-skill-platinum: linear-gradient(
+                180deg,
+                #ffe37a 0%,
+                #f2c94c 45%,
+                #d4a900 100%
+);
+
+$ui-btn-skill-hero: linear-gradient(
+                180deg,
+                lighten($success, 30%) 0%,
+                $success 45%,
+                darken($success, 17%) 100%
+);
+
+$ui-btn-skill-normal: linear-gradient(
+                180deg,
+                #cfd3da 0%,
+                #aeb4bf 50%,
+                #8e95a3 100%
+);
+
+/* =========================
+   dark BUTTON
+========================= */
+$ui-btn-user-edit: linear-gradient(
+                210deg,
+                #a694c8,
+                #3f3950,
+                #312e3e
+);
+
+
 // kakao btn
 $kakao-btn-bg: $kakao-yellow;
 $kakao-btn-text: $kakao-txt;
