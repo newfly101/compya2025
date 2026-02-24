@@ -1,10 +1,11 @@
 package com.dawne.com2usbaseball.domain.coupon.controller;
 
+import com.dawne.com2usbaseball.common.support.dto.ListResponse;
+import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.coupon.dto.request.ChangeCouponRequest;
 import com.dawne.com2usbaseball.domain.coupon.dto.request.ChangeCouponVisibleRequest;
-import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponListResponse;
-import com.dawne.com2usbaseball.domain.coupon.dto.response.InsertCouponResponse;
-import com.dawne.com2usbaseball.domain.coupon.dto.response.UpdateCouponResponse;
+import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
+import com.dawne.com2usbaseball.domain.coupon.enums.EventMessages;
 import com.dawne.com2usbaseball.domain.coupon.service.CouponAdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,22 +20,22 @@ public class AdminCouponController {
     private final CouponAdminService couponAdminService;
 
     @GetMapping
-    public CouponListResponse getCouponLists() {
+    public ListResponse<CouponResponse> getCouponLists() {
         return couponAdminService.getCouponLists();
     }
 
     @PostMapping
-    public InsertCouponResponse insertNewCoupons(@RequestBody ChangeCouponRequest request) {
+    public OperationResponse<EventMessages> insertNewCoupons(@RequestBody ChangeCouponRequest request) {
         return couponAdminService.createCoupon(request.toEntity());
     }
 
     @PatchMapping("/{id}")
-    public UpdateCouponResponse updateCoupon(@RequestBody ChangeCouponRequest request, @PathVariable Long id) {
+    public OperationResponse<EventMessages> updateCoupon(@RequestBody ChangeCouponRequest request, @PathVariable Long id) {
         return couponAdminService.updateCoupon(request.toEntity(id));
     }
 
     @PatchMapping("/{id}/visible")
-    public UpdateCouponResponse updateCouponVisible(@PathVariable Long id, @RequestBody ChangeCouponVisibleRequest request) {
+    public OperationResponse<EventMessages> updateCouponVisible(@PathVariable Long id, @RequestBody ChangeCouponVisibleRequest request) {
         return couponAdminService.updateCouponVisible(id, request.visible());
     }
 
