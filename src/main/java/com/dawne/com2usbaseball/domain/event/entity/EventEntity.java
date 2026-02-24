@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.domain.event.entity;
 
-import com.dawne.com2usbaseball.domain.event.enums.EventSource;
+import com.dawne.com2usbaseball.domain.event.enums.EventType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class EventEntity {
     Long id;
-    EventSource eventSource;
+    EventType eventType;
     String title;
     LocalDateTime startAt;
     LocalDateTime expireAt;

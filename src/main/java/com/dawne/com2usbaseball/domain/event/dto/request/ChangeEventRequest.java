@@ -1,13 +1,13 @@
 package com.dawne.com2usbaseball.domain.event.dto.request;
 
 import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
-import com.dawne.com2usbaseball.domain.event.enums.EventSource;
+import com.dawne.com2usbaseball.domain.event.enums.EventType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 
 public record ChangeEventRequest(
-        EventSource eventSource,
+        EventType eventType,
         String title,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime startAt,
@@ -31,7 +31,7 @@ public record ChangeEventRequest(
     }
 
     private void applyTo(EventEntity e) {
-        e.setEventSource(eventSource);
+        e.setEventType(eventType);
         e.setTitle(title);
         e.setStartAt(startAt);
         e.setExpireAt(expireAt);

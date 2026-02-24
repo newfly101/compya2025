@@ -4,6 +4,22 @@
 
 <mapper namespace="com.dawne.com2usbaseball.domain.event.repository.mapper.EventMapper">
 
+    <select id="selectEventByExternalForUser" resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        SELECT
+            id,
+            event_source,
+            title,
+            start_at,
+            expire_at,
+            image_url,
+            external_link,
+            is_visible AS visible,
+            created_at,
+            updated_at
+        FROM events
+        WHERE is_visible = true
+    </select>
+
     <select id="selectEventByExternal" resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
            id,

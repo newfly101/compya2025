@@ -12,7 +12,13 @@ import java.util.List;
 public class EventRepository {
     private final EventMapper mapper;
 
-    // 카페 이벤트 등록 한 내용 반환
+    // public
+    public List<EventEntity> selectCafeEventUser() {
+        return mapper.selectEventByExternalForUser();
+    }
+
+    // admin
+
     public List<EventEntity> selectCafeEvents() {
         return mapper.selectEventByExternal();
     }
