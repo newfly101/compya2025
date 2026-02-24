@@ -23,7 +23,7 @@ export const requestAdminGetExEventList = createAsyncThunk(
 export const requestAdminInsertNewExEvent = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.CREATE, async (newEvent, { rejectWithValue }) => {
     try {
-      const { eventId, ...options } = await fetchAdminInsertExEvent(baseEventDTO(newEvent));
+      const { id:eventId, ...options } = await fetchAdminInsertExEvent(baseEventDTO(newEvent));
 
       return {
         ...newEvent,
@@ -38,7 +38,7 @@ export const requestAdminInsertNewExEvent = createAsyncThunk(
 export const requestAdminUpdateExEvent = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.UPDATE, async ({ id, ...event }, { rejectWithValue }) => {
     try {
-      const { eventId, ...options } = await fetchAdminUpdateExEvent(id, baseEventDTO(event));
+      const { id:eventId, ...options } = await fetchAdminUpdateExEvent(id, baseEventDTO(event));
 
       return {
         ...event,
@@ -53,7 +53,7 @@ export const requestAdminUpdateExEvent = createAsyncThunk(
 export const requestAdminUpdateExEventVisible = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.UPDATE_VISIBLE, async ({ id, visible }, { rejectWithValue }) => {
     try {
-      const { eventId, ...options } = await fetchAdminUpdateExVisible(id, visible);
+      const { id:eventId, ...options } = await fetchAdminUpdateExVisible(id, visible);
       return {
         id: eventId,
         visible,
