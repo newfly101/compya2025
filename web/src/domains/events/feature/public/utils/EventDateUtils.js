@@ -1,10 +1,10 @@
 // visible 옵션 기준으로 배열을 재생성
-export const filterEventVisible = (events) => {
+const filterEventVisible = (events) => {
   return events.filter(e => e.visible === true);
 }
 
 // 날짜 두개 비교, 오늘보다 날짜가 지났으면 true : false 반환
-export const isExpiredEvent = (expireAt, now = new Date()) => {
+const isExpiredEvent = (expireAt, now = new Date()) => {
   if (!expireAt) return false;
   return new Date(expireAt).getTime() < now.getTime();
 }
