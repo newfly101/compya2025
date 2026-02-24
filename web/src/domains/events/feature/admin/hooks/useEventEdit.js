@@ -1,11 +1,11 @@
-import { requestUpdateExternalEvent } from "@/domains/events/store/index.js";
 import { useEventForm } from "@/domains/events/feature/admin/hooks/useEventForm.js";
+import { requestAdminUpdateExEvent } from "@/domains/events/store/admin/thunks.js";
 
 export const useEventEdit = ({ event, onSuccess }) => {
   return useEventForm({
     initialForm: {
       title: event.title,
-      eventSource: event.eventSource,
+      eventType: event.eventType,
       imageUrl: event.imageUrl ?? "",
       imageType: event.imageUrl ? "URL" : "FILE",
       imagePreview: event.imageUrl ?? "",
@@ -15,7 +15,7 @@ export const useEventEdit = ({ event, onSuccess }) => {
       expireAt: event.expireAt,
       visible: event.visible,
     },
-    submitThunk: requestUpdateExternalEvent,
+    submitThunk: requestAdminUpdateExEvent,
     onSuccess,
     eventId: event.id,
   });

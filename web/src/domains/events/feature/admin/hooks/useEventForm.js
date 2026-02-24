@@ -3,7 +3,7 @@ import { parseDateInput } from "@/global/utils/datetime/parseDateInput.js";
 import { formatDateTyping } from "@/global/utils/datetime/formatDateTyping.js";
 import { validateModalDate } from "@/global/utils/datetime/validateModalDate.js";
 import { useDispatch } from "react-redux";
-import { requestUploadImage } from "@/infra/uploads/store/index.js";
+import { requestAdminUploadEventImage } from "@/domains/events/store/admin/thunks.js";
 
 export const useEventForm = ({
                                initialForm,
@@ -79,7 +79,7 @@ export const useEventForm = ({
 
       if (form.imageType === "FILE" && form.imageFile) {
         imageUrl = await dispatch(
-          requestUploadImage(form.imageFile)
+          requestAdminUploadEventImage(form.imageFile)
         ).unwrap();
       }
 

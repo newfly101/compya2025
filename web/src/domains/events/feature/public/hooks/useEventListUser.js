@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { requestGetExternalEventList } from "@/domains/events/store/index.js";
 import { splitEventsByExpired } from "@/domains/events/feature/public/utils/EventDateUtils.js";
+import { requestGetExternalEventList } from "@/domains/events/store/public/thunks.js";
 
 export const useEventListUser = () => {
   const dispatch = useDispatch();

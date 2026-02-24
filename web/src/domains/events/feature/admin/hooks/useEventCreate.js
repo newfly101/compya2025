@@ -1,11 +1,11 @@
-import { requestInsertNewEvent } from "@/domains/events/store/index.js";
 import { useEventForm } from "./useEventForm.js";
+import { requestAdminInsertNewExEvent } from "@/domains/events/store/admin/thunks.js";
 
 export const useEventCreate = ({ onSuccess }) => {
   return useEventForm({
     initialForm: {
       title: "",
-      eventSource: "OFFICIAL",
+      eventType: "OFFICIAL",
       imageUrl: "",
       imageType: "URL",
       imagePreview: "",
@@ -15,7 +15,7 @@ export const useEventCreate = ({ onSuccess }) => {
       expireAt: "",
       visible: true,
     },
-    submitThunk: requestInsertNewEvent,
+    submitThunk: requestAdminInsertNewExEvent,
     onSuccess,
   });
 };
