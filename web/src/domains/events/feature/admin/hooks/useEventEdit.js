@@ -1,41 +1,22 @@
-import { useDispatch } from "react-redux";
 import { requestUpdateExternalEvent } from "@/domains/events/store/index.js";
-import { useEventForm } from "./useEventForm.js";
+import { useEventForm } from "@/domains/events/feature/admin/hooks/useEventForm.js";
 
 export const useEventEdit = ({ event, onSuccess }) => {
-  const dispatch = useDispatch();
-
-  const formHook = useEventForm({
-    title: event.title,
-    eventSource: event.eventSource,
-    imageUrl: event.imageUrl,
-    externalLink: event.externalLink,
-    startAt: event.startAt,
-    expireAt: event.expireAt,
-    visible: event.visible,
+  return useEventForm({
+    initialForm: {
+      title: event.title,
+      eventSource: event.eventSource,
+      imageUrl: event.imageUrl ?? "",
+      imageType: event.imageUrl ? "URL" : "FILE",
+      imagePreview: event.imageUrl ?? "",
+      imageFile: null,
+      externalLink: event.externalLink,
+      startAt: event.startAt,
+      expireAt: event.expireAt,
+      visible: event.visible,
+    },
+    submitThunk: requestUpdateExternalEvent,
+    onSuccess,
+    eventId: event.id,
   });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const result = formHook.validate();
-    if (!result.valid) {
-      alert(result.message);
-      return;
-    }
-
-    await dispatch(
-      requestUpdateExternalEvent({
-        id: event.id,
-        ...formHook.form,
-      })
-    );
-
-    onSuccess?.();
-  };
-
-  return {
-    ...formHook,
-    handleSubmit,
-  };
 };
