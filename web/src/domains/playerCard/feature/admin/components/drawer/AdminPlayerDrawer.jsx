@@ -1,64 +1,93 @@
-import React, { useEffect } from "react";
-import styles from "./AdminDrawer.module.scss";
+import React from "react";
+import styles from "./AdminPlayerDrawer.module.scss";
 import MetaSection from "@/domains/playerCard/feature/admin/components/drawer/DrawerMetaSection.jsx";
 import AttributeSection from "@/domains/playerCard/feature/admin/components/drawer/DrawerAttributeSection.jsx";
-import { useDispatch } from "react-redux";
-import { requestAdminPlayerCardTeamLists } from "@/domains/playerCard/store/admin/thunks.js";
-import { useFormFormats } from "@/domains/playerCard/utils/useFormFormats.js";
-const AdminPlayerDrawer = ({ mode, cardForm, onClose, onChange, onSubmit }) => {
-  const dispatch = useDispatch();
-  const { formatBirthDate, parseArray, stringifyArray } = useFormFormats();
 
-  const handleBirthDateChange = (e) => {
-    const formatted = formatBirthDate(e.target.value);
-
-    onChange({
-      target: {
-        name: "birthDate",
-        value: formatted,
-      },
-    });
-  };
-
-  const handleMultiSelect = (e) => {
-    const { name, selectedOptions } = e.target;
-
-    const values = Array.from(selectedOptions).map((opt) => opt.value);
-
-    onChange({
-      target: {
-        name,
-        value: JSON.stringify(values),
-      },
-    });
-  };
-
-
-
-  useEffect(() => {
-    dispatch(requestAdminPlayerCardTeamLists());
-  }, []);
-
-  if (!mode) return null;
+const AdminPlayerDrawer = ({
+                             formState,
+                             formActions,
+                           }) => {
+  const {form:cardForm,
+    isClosing,
+    mode,
+    confirmCloseOpen
+  } = formState;
+  const {
+    handleChange,
+    handleSubmit,
+    requestClose,
+    confirmClose,
+    cancelClose
+  } = formActions;
 
   return (
-    <div className={styles.drawerOverlay} onClick={onClose}>
-      <div className={styles.drawerPanel} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.drawerHeader}>
-          <h2>{mode === "CREATE" ? "선수 등록" : "선수 수정"}</h2>
-          <button onClick={onClose}>✕</button>
+    <div
+      className={styles.adminPlayerDrawerWrapper}
+    >
+      <div
+        className={styles.adminPlayerDrawerOverlay}
+        onClick={requestClose}
+      />
+
+      <div
+        className={`${styles.adminPlayerDrawerContainer} ${
+          isClosing ? styles.slideOut : styles.slideIn
+        }`}
+        onClick={(e) => e.stopPropagation()}
+        >
+        <div className={styles.adminPlayerDrawerHeaderSection}>
+          <h2>
+            {mode === "CREATE" ? "선수 등록" : "선수 수정"}
+          </h2>
+          <button
+            type="button"
+            className={styles.adminPlayerDrawerCloseButton}
+            onClick={requestClose}
+          >
+            ✕
+          </button>
         </div>
 
-        <div className={styles.drawerBody}>
-          <MetaSection form={cardForm} onChange={onChange} onBirthDateChange={handleBirthDateChange} onMultiChange={handleMultiSelect} />
-          <AttributeSection form={cardForm} onChange={onChange} />
+        <div className={styles.adminPlayerDrawerBodySection}>
+          <MetaSection
+            formState={formState}
+            formActions={formActions}
+          />
+          <AttributeSection
+            formState={formState}
+            formActions={formActions}
+            form={cardForm}
+            onChange={handleChange}
+          />
         </div>
 
-        <div className={styles.drawerFooter}>
-          <button onClick={onClose}>취소</button>
-          <button onClick={onSubmit}>저장</button>
+        <div className={styles.adminPlayerDrawerFooterSection}>
+          <button type="button" onClick={requestClose}>
+            취소
+          </button>
+          <button type="button" onClick={handleSubmit}>
+            저장
+          </button>
         </div>
       </div>
+
+      {confirmCloseOpen && (
+        <div className={styles.drawerConfirmWrapper}>
+
+          <div className={styles.drawerConfirmContainer}>
+            <p>등록/수정을 종료하시겠습니까?</p>
+
+            <div className={styles.drawerConfirmActions}>
+              <button type="button" onClick={cancelClose}>
+                취소
+              </button>
+              <button type="button" onClick={confirmClose}>
+                닫기
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
