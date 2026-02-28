@@ -9,6 +9,7 @@ const AdminEventPage = lazy(() =>  import("@/domains/events/feature/admin/pages/
 const AdminNoticeManagePage = lazy(() =>  import("@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx"));
 const AdminCommunityPage = lazy(() =>  import("@/domains/community/page/admin/AdminCommunityPage.jsx"));
 const AdminCouponListPage = lazy(() =>  import("@/domains/coupons/feature/admin/pages/AdminCouponListPage.jsx"));
+const AdminPlayerPage = lazy(() => import("@/domains/admin/pages/player/pages/AdminPlayerPage.jsx"));
 
 export const AdminRoutes = [
   {
@@ -29,6 +30,7 @@ export const AdminRoutes = [
             ],
           },
           { path: "community", element: <AdminCommunityPage />, handle: { title: "컴프야펀 | 어드민 | 커뮤니티 관리" } },
+          { path: "player", element: <AdminPlayerPage />, handle: { title: "컴프야펀 | 어드민 | 선수 카드 관리" } },
         ],
       },
     ],
