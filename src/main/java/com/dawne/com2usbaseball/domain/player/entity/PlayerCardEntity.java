@@ -4,6 +4,7 @@ import com.dawne.com2usbaseball.common.enums.Grade;
 import com.dawne.com2usbaseball.common.enums.Target;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -19,12 +20,12 @@ public class PlayerCardEntity {
     Long teamId;
     Target role;
     Grade grade;
+    Short seasonYear;
     Short overall;
     Short backNumber;
-    LocalDateTime birthDate;
+    LocalDate birthDate;
     String batThrow;
     String positions;
     String traits;
-    String attributes;
     LocalDateTime createdAt;
 }
