@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/admin/player")
 public class AdminPlayerCardController {
 
-    private final AdminPlayerCardService adminPlayerCardservice;
+    private final AdminPlayerCardService adminPlayerCardService;
 
 //    @GetMapping
 //    public ListResponse<PlayerCardResponse> getAllPlayerCardList() {
@@ -30,12 +30,12 @@ public class AdminPlayerCardController {
 
     @GetMapping("teams")
     public ListResponse<TeamResponse> getPlayerTeams() {
-        return adminPlayerCardservice.getAllPlayerTeamInfo();
+        return adminPlayerCardService.getAllPlayerTeamInfo();
     }
 
     @PostMapping
     public OperationResponse<PlayerMessages> createPlayerCard(@RequestBody AdminPlayerCardCreateRequest request) {
-       return adminPlayerCardservice.createPlayerCardInfo(request.toFormat());
+       return adminPlayerCardService.createPlayerCardInfo(request.toFormat());
     }
 
 //    @PatchMapping("/{id}")
