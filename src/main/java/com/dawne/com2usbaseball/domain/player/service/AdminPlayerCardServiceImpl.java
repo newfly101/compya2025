@@ -1,27 +1,40 @@
 package com.dawne.com2usbaseball.domain.player.service;
 
+import com.dawne.com2usbaseball.common.support.ListAssembler;
 import com.dawne.com2usbaseball.common.support.dto.ListResponse;
 import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.player.dto.command.PlayerCardFormat;
 import com.dawne.com2usbaseball.domain.player.dto.response.PlayerCardResponse;
+import com.dawne.com2usbaseball.domain.player.dto.response.team.TeamResponse;
 import com.dawne.com2usbaseball.domain.player.entity.HitterAttributeEntity;
 import com.dawne.com2usbaseball.domain.player.entity.PitcherAttributeEntity;
 import com.dawne.com2usbaseball.domain.player.entity.PlayerCardEntity;
+import com.dawne.com2usbaseball.domain.player.entity.TeamsEntity;
 import com.dawne.com2usbaseball.domain.player.enums.PlayerMessages;
 import com.dawne.com2usbaseball.domain.player.repository.PlayerCardRepository;
+import com.dawne.com2usbaseball.domain.player.repository.TeamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AdminPlayerCardServiceImpl implements AdminPlayerCardService {
 
     private final PlayerCardRepository repository;
+    private final TeamRepository teamRepository;
 
     @Override
     public ListResponse<PlayerCardResponse> getPlayerInfo() {
         return null;
+    }
+
+    @Override
+    public ListResponse<TeamResponse> getAllPlayerTeamInfo() {
+        List<TeamsEntity> teams = teamRepository.findAll();
+        return ListAssembler.assemble(teams, TeamResponse::from);
     }
 
     @Override

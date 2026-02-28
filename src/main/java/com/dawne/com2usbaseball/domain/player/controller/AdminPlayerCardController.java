@@ -1,7 +1,9 @@
 package com.dawne.com2usbaseball.domain.player.controller;
 
+import com.dawne.com2usbaseball.common.support.dto.ListResponse;
 import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.player.dto.request.AdminPlayerCardCreateRequest;
+import com.dawne.com2usbaseball.domain.player.dto.response.team.TeamResponse;
 import com.dawne.com2usbaseball.domain.player.enums.PlayerMessages;
 import com.dawne.com2usbaseball.domain.player.service.AdminPlayerCardService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,11 @@ public class AdminPlayerCardController {
 //    public ListResponse<PlayerCardResponse> getPlayerCardListByGrade(@PathVariable Grade grade) {
 //
 //    }
+
+    @GetMapping("teams")
+    public ListResponse<TeamResponse> getPlayerTeams() {
+        return adminPlayerCardservice.getAllPlayerTeamInfo();
+    }
 
     @PostMapping
     public OperationResponse<PlayerMessages> createPlayerCard(@RequestBody AdminPlayerCardCreateRequest request) {
