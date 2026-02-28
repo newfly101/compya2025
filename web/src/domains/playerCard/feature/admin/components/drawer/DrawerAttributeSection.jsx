@@ -1,6 +1,6 @@
-import styles from "@/domains/admin/pages/player/components/drawer/AdminDrawer.module.scss";
+import styles from "@/domains/playerCard/feature/admin/components/drawer/AdminDrawer.module.scss";
 import React from "react";
-import AttributeField from "@/domains/admin/pages/player/components/drawer/AttributeField.jsx";
+import AttributeField from "@/domains/playerCard/feature/admin/components/drawer/AttributeField.jsx";
 
 const DrawerAttributeSection = ({ form, onChange }) => (
   <div className={styles.sectionWrapper}>

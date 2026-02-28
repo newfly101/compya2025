@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./PlayerTable.module.scss";
-import { PLAYER_TABLE } from "@/domains/admin/pages/player/config/PlayerTableConfig.js";
+import { PLAYER_TABLE } from "@/domains/playerCard/config/PlayerTableConfig.js";
 
 const PlayerTableBody = ({cards, setEditCards}) => {
   if (cards.length === 0) {

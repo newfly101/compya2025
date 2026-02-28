@@ -1,4 +1,4 @@
-import styles from "@/domains/admin/pages/player/components/drawer/AdminDrawer.module.scss";
+import styles from "@/domains/playerCard/feature/admin/components/drawer/AdminDrawer.module.scss";
 
 const AttributeField = ({ label, name, value, onChange }) => (
   <div className={styles.field}>

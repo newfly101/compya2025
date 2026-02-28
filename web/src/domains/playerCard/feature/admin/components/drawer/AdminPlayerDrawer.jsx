@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./AdminDrawer.module.scss";
-import MetaSection from "@/domains/admin/pages/player/components/drawer/DrawerMetaSection.jsx";
-import AttributeSection from "@/domains/admin/pages/player/components/drawer/DrawerAttributeSection.jsx";
+import MetaSection from "@/domains/playerCard/feature/admin/components/drawer/DrawerMetaSection.jsx";
+import AttributeSection from "@/domains/playerCard/feature/admin/components/drawer/DrawerAttributeSection.jsx";
 const AdminPlayerDrawer = ({ mode, cardForm, onClose, onChange, onSubmit }) => {
   if (!mode) return null;
 

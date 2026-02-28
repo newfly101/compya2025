@@ -1,4 +1,4 @@
-import styles from "@/domains/admin/pages/player/components/drawer/AdminDrawer.module.scss";
+import styles from "@/domains/playerCard/feature/admin/components/drawer/AdminDrawer.module.scss";
 import React from "react";
 
 const DrawerMetaSection = ({ form, onChange }) => (

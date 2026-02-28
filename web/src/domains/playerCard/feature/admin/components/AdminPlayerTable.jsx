@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import AdminTableLayout from "@/global/layout/adminPageLayout/table/AdminTableLayout.jsx";
-import PlayerTableHead from "@/domains/admin/pages/player/components/table/PlayerTableHead.jsx";
-import PlayerTableBody from "@/domains/admin/pages/player/components/table/PlayerTableBody.jsx";
-import AdminPlayerFilterBar from "@/domains/admin/pages/player/components/filter/AdminPlayerFilterBar.jsx";
-import { useAdminPlayerFilter } from "@/domains/admin/pages/player/hooks/useAdminPlayerFilter.js";
-import AdminPlayerDrawer from "@/domains/admin/pages/player/components/drawer/AdminPlayerDrawer.jsx";
+import PlayerTableHead from "@/domains/playerCard/feature/admin/components/table/PlayerTableHead.jsx";
+import PlayerTableBody from "@/domains/playerCard/feature/admin/components/table/PlayerTableBody.jsx";
+import AdminPlayerFilterBar from "@/domains/playerCard/feature/admin/components/filter/AdminPlayerFilterBar.jsx";
+import { useAdminPlayerFilter } from "@/domains/playerCard/feature/admin/hooks/useAdminPlayerFilter.js";
+import AdminPlayerDrawer from "@/domains/playerCard/feature/admin/components/drawer/AdminPlayerDrawer.jsx";
 
 
 const createEmptyForm = () => ({
