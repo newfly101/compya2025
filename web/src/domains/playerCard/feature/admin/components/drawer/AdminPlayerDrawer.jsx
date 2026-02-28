@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styles from "./AdminDrawer.module.scss";
 import MetaSection from "@/domains/playerCard/feature/admin/components/drawer/DrawerMetaSection.jsx";
 import AttributeSection from "@/domains/playerCard/feature/admin/components/drawer/DrawerAttributeSection.jsx";
+import { useDispatch } from "react-redux";
+import { requestAdminPlayerCardTeamLists } from "@/domains/playerCard/store/admin/thunks.js";
 const AdminPlayerDrawer = ({ mode, cardForm, onClose, onChange, onSubmit }) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(requestAdminPlayerCardTeamLists());
+  }, []);
+
   if (!mode) return null;
 
   return (
