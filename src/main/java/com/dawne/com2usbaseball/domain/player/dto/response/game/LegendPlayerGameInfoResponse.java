@@ -4,7 +4,7 @@ import com.dawne.com2usbaseball.domain.player.dto.response.game.attributes.Playe
 
 import java.util.List;
 
-public record PlayerGameInfoResponse(
+public record LegendPlayerGameInfoResponse(
         Short overall,
         List<String> positions,
         List<String> traits,

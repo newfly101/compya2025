@@ -5,7 +5,7 @@ import com.dawne.com2usbaseball.common.enums.Grade;
 
 import java.time.LocalDate;
 
-public record PlayerIdentityResponse(
+public record LegendPlayerIdentityResponse(
         Long id,
         String name,
         TeamResponse team,

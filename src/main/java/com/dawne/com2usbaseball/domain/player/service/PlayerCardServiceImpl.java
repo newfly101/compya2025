@@ -3,11 +3,11 @@ package com.dawne.com2usbaseball.domain.player.service;
 import com.dawne.com2usbaseball.domain.player.dto.response.career.HitterCareerResponse;
 import com.dawne.com2usbaseball.domain.player.dto.response.career.PitcherCareerResponse;
 import com.dawne.com2usbaseball.domain.player.dto.response.career.PlayerCareerResponse;
-import com.dawne.com2usbaseball.domain.player.dto.response.PlayerCardResponse;
+import com.dawne.com2usbaseball.domain.player.dto.response.LegendPlayerCardResponse;
 import com.dawne.com2usbaseball.domain.player.dto.response.team.TeamResponse;
 import com.dawne.com2usbaseball.domain.player.service.support.CardInfoMaker;
 import com.dawne.com2usbaseball.domain.player.service.support.CardNameGrouper;
-import com.dawne.com2usbaseball.domain.player.entity.PlayerCardEntity;
+import com.dawne.com2usbaseball.domain.player.entity.PlayerLegendCardEntity;
 import com.dawne.com2usbaseball.domain.player.entity.TeamsEntity;
 import com.dawne.com2usbaseball.common.enums.Target;
 import com.dawne.com2usbaseball.domain.player.repository.LegendPlayerCareerRepository;
@@ -36,13 +36,13 @@ public class PlayerCardServiceImpl implements PlayerCardService {
             value = "playerInfoByTarget",
             key = "#target"
     )
-    public List<PlayerCardResponse> getPlayerInfo(Target target) {
+    public List<LegendPlayerCardResponse> getPlayerInfo(Target target) {
 
         // 카드 기본 정보
-        List<PlayerCardEntity> list = repository.findAllPlayerCardInfoByPosition(target);
+        List<PlayerLegendCardEntity> list = repository.findAllPlayerCardInfoByPosition(target);
 
         // 이름 기준 그룹핑
-        Map<String, List<PlayerCardEntity>> grouped = cardNameGrouper.nameListMap(list);
+        Map<String, List<PlayerLegendCardEntity>> grouped = cardNameGrouper.nameListMap(list);
 
         // 커리어 정보
         Map<String, PlayerCareerResponse> careerMap = playerCareerMap(grouped, target);
@@ -54,7 +54,7 @@ public class PlayerCardServiceImpl implements PlayerCardService {
         return cardInfoMaker.makeCardInfoList(grouped, teamMap, careerMap);
     }
 
-    private Map<String, PlayerCareerResponse> playerCareerMap(Map<String, List<PlayerCardEntity>> grouped, Target target) {
+    private Map<String, PlayerCareerResponse> playerCareerMap(Map<String, List<PlayerLegendCardEntity>> grouped, Target target) {
         Map<String, PlayerCareerResponse> careerMap = new HashMap<>();
 
         for (String name : grouped.keySet()) {

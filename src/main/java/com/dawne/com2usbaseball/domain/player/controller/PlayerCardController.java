@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.domain.player.controller;
 
-import com.dawne.com2usbaseball.domain.player.dto.response.PlayerCardResponse;
+import com.dawne.com2usbaseball.domain.player.dto.response.LegendPlayerCardResponse;
 import com.dawne.com2usbaseball.common.enums.Target;
 import com.dawne.com2usbaseball.domain.player.service.PlayerCardService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ public class PlayerCardController {
     private final PlayerCardService service;
 
     @GetMapping("/{position}")
-    public List<PlayerCardResponse> getLegendPlayerByPosition(@PathVariable Target position) {
+    public List<LegendPlayerCardResponse> getLegendPlayerByPosition(@PathVariable Target position) {
         return service.getPlayerInfo(position);
     }
 }
