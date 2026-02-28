@@ -1,9 +1,66 @@
 import styles from "@/domains/playerCard/feature/admin/components/drawer/AdminDrawer.module.scss";
 import React from "react";
 import { useSelector } from "react-redux";
+import {
+  HITTER_POSITION_OPTIONS,
+  PITCHER_POSITION_OPTIONS,
+  TRAIT_OPTIONS,
+} from "@/domains/playerCard/config/PlayerTableConfig.js";
+import { useFormFormats } from "@/domains/playerCard/utils/useFormFormats.js";
 
-const DrawerMetaSection = ({ form, onChange }) => {
+const DrawerMetaSection = ({ form, onChange, onBirthDateChange, onMultiChange }) => {
   const { teamList } = useSelector(state => state.playerCard);
+  const { formatBirthDate, parseArray, stringifyArray } = useFormFormats();
+
+  // 선택 추가 logic
+  const handleAddItem = (name, value) => {
+    if (!value) return;
+
+    const current = parseArray(form.meta[name]);
+
+    if (current.includes(value)) return;
+
+    const updated = [...current, value];
+
+    onChange({
+      target: {
+        name,
+        value: stringifyArray(updated),
+      },
+    });
+  };
+
+  // 제거 로직
+  const handleRemoveItem = (name, value) => {
+    const current = parseArray(form.meta[name]);
+
+    const updated = current.filter((item) => item !== value);
+
+    onChange({
+      target: {
+        name,
+        value: stringifyArray(updated),
+      },
+    });
+  };
+
+  const role = form.meta.role;
+
+  const POSITION_OPTIONS =
+    role === "PITCHER"
+      ? PITCHER_POSITION_OPTIONS :
+      role === "HITTER" ? HITTER_POSITION_OPTIONS
+      : [] ;
+
+  const selectedPositions = parseArray(form.meta.positions);
+  const availablePositions = POSITION_OPTIONS.filter(
+    (p) => !selectedPositions.includes(p)
+  );
+
+  const selectedTraits = parseArray(form.meta.traits);
+  const availableTraits = TRAIT_OPTIONS.filter(
+    (t) => !selectedTraits.includes(t)
+  );
 
   return (
   <div className={styles.sectionWrapper}>
@@ -71,7 +128,7 @@ const DrawerMetaSection = ({ form, onChange }) => {
       </div>
 
       <div className={styles.field}>
-        <label>Overall</label>
+        <label>오버롤</label>
         <input type="number" name="overall" value={form.meta.overall} onChange={onChange} />
       </div>
 
@@ -82,7 +139,13 @@ const DrawerMetaSection = ({ form, onChange }) => {
 
       <div className={styles.field}>
         <label>생년월일</label>
-        <input type="date" name="birthDate" value={form.meta.birthDate} onChange={onChange} />
+        <input type="text"
+               inputMode="numeric"
+               maxLength={10}
+               placeholder="YYYYMMDD"
+               value={form.meta.birthDate || ""}
+               onChange={onBirthDateChange}
+        />
       </div>
 
       <div className={styles.field}>
@@ -98,26 +161,70 @@ const DrawerMetaSection = ({ form, onChange }) => {
 
       <div className={styles.field}>
         <label>포지션 (JSON)</label>
-        <input
-          name="positions"
-          value={form.meta.positions}
-          onChange={onChange}
-          placeholder='["C","1B"]'
-        />
+        <select
+          onChange={(e) => {
+            handleAddItem("positions", e.target.value);
+            e.target.value = "";
+          }}
+        >
+          <option value="">포지션 선택</option>
+          {availablePositions.map((pos) => (
+            <option key={pos} value={pos}>
+              {pos}
+            </option>
+          ))}
+        </select>
+
+        {/* 선택된 태그 영역 */}
+        <div className={styles.tagContainer}>
+          {selectedPositions.map((pos) => (
+            <button
+              type="button"
+              key={pos}
+              className={styles.tag}
+              onClick={() => handleRemoveItem("positions", pos)}
+            >
+              {pos} ✕
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className={styles.field}>
-        <label>특성 (JSON)</label>
-        <input
-          name="traits"
-          value={form.meta.traits}
-          onChange={onChange}
-          placeholder='["특이폼","페이스"]'
-        />
+        <label>특성</label>
+
+        <select
+          onChange={(e) => {
+            handleAddItem("traits", e.target.value);
+            e.target.value = "";
+          }}
+        >
+          <option value="">포지션 선택</option>
+          {availableTraits.map((trait) => (
+            <option key={trait} value={trait}>
+              {trait}
+            </option>
+          ))}
+        </select>
+
+        {/* 선택된 태그 영역 */}
+        <div className={styles.tagContainer}>
+          {selectedTraits.map((trait) => (
+            <button
+              type="button"
+              key={trait}
+              className={styles.tag}
+              onClick={() => handleRemoveItem("traits", trait)}
+            >
+              {trait} ✕
+            </button>
+          ))}
+        </div>
       </div>
 
     </div>
   </div>
-)};
+  )
+};
 
 export default DrawerMetaSection;

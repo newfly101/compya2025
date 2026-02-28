@@ -4,8 +4,36 @@ import MetaSection from "@/domains/playerCard/feature/admin/components/drawer/Dr
 import AttributeSection from "@/domains/playerCard/feature/admin/components/drawer/DrawerAttributeSection.jsx";
 import { useDispatch } from "react-redux";
 import { requestAdminPlayerCardTeamLists } from "@/domains/playerCard/store/admin/thunks.js";
+import { useFormFormats } from "@/domains/playerCard/utils/useFormFormats.js";
 const AdminPlayerDrawer = ({ mode, cardForm, onClose, onChange, onSubmit }) => {
   const dispatch = useDispatch();
+  const { formatBirthDate, parseArray, stringifyArray } = useFormFormats();
+
+  const handleBirthDateChange = (e) => {
+    const formatted = formatBirthDate(e.target.value);
+
+    onChange({
+      target: {
+        name: "birthDate",
+        value: formatted,
+      },
+    });
+  };
+
+  const handleMultiSelect = (e) => {
+    const { name, selectedOptions } = e.target;
+
+    const values = Array.from(selectedOptions).map((opt) => opt.value);
+
+    onChange({
+      target: {
+        name,
+        value: JSON.stringify(values),
+      },
+    });
+  };
+
+
 
   useEffect(() => {
     dispatch(requestAdminPlayerCardTeamLists());
@@ -22,7 +50,7 @@ const AdminPlayerDrawer = ({ mode, cardForm, onClose, onChange, onSubmit }) => {
         </div>
 
         <div className={styles.drawerBody}>
-          <MetaSection form={cardForm} onChange={onChange} />
+          <MetaSection form={cardForm} onChange={onChange} onBirthDateChange={handleBirthDateChange} onMultiChange={handleMultiSelect} />
           <AttributeSection form={cardForm} onChange={onChange} />
         </div>
 

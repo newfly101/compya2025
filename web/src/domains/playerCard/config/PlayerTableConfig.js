@@ -8,3 +8,26 @@ export const PLAYER_TABLE = [
   {key: "position", label: "포지션"},
   {key: "attributes", label: "능력치"}
 ]
+
+
+export const HITTER_POSITION_OPTIONS = [
+  "C",
+  "1B",
+  "2B",
+  "3B",
+  "SS",
+  "LF",
+  "CF",
+  "RF",
+  "DH",
+];
+
+export const PITCHER_POSITION_OPTIONS = [
+  "SP",
+  "RP",
+];
+
+export const TRAIT_OPTIONS = [
+  "특이폼",
+  "페이스",
+];
