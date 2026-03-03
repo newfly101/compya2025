@@ -35,6 +35,7 @@ export const useAdminPlayerForm = () => {
   const [mode, setMode] = useState(null); // CREATE | EDIT
   const [confirmCloseOpen, setConfirmCloseOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     dispatch(requestAdminPlayerCardTeamLists());
@@ -140,10 +141,69 @@ export const useAdminPlayerForm = () => {
     setConfirmCloseOpen(false);
   };
 
+  /* -------------------- Validate -------------------- */
+
+
+  const validateForm = () => {
+    const newErrors = {};
+    const { meta, attributes } = form;
+
+    // meta 필수값 (seasonYear 제외)
+    const requiredMetaFields = [
+      "cardCode",
+      "name",
+      "teamId",
+      "role",
+      "grade",
+      "overall",
+      "backNumber",
+      "birthDate",
+      "batThrow",
+    ];
+
+    requiredMetaFields.forEach((field) => {
+      if (!meta[field]) {
+        newErrors[field] = "필수 입력 항목입니다.";
+      }
+    });
+
+    if (attributes) {
+      if (meta.role === "HITTER") {
+        ["accuracy", "power", "contact", "speed", "defense"].forEach((key) => {
+          const value = Number(attributes[key]);
+
+          if (isNaN(value) || value <= 0) {
+            newErrors[key] = "1 이상 숫자를 입력하세요.";
+          }
+        });
+      }
+
+      if (meta.role === "PITCHER") {
+        ["control", "velocity", "stamina", "fastball", "breaking"].forEach((key) => {
+          const value = Number(attributes[key]);
+
+          if (isNaN(value) || value <= 0) {
+            newErrors[key] = "1 이상 숫자를 입력하세요.";
+          }
+        });
+      }
+    }
+
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
   /* -------------------- Submit -------------------- */
 
   const handleSubmit = () => {
+    if (!validateForm()) {
+      console.log(errors);
+      return;
+    };
     console.log("submit data", form);
+
 
     // TODO: API call
 
