@@ -7,14 +7,12 @@ import AdminFilterBar from "@/global/layout/adminPageLayout/table/AdminFilterBar
 import CouponEditModal from "@/domains/coupons/feature/admin/components/modal/CouponEditModal.jsx";
 import { useAdminCouponTable } from "@/domains/coupons/feature/admin/hooks/useAdminCouponTable.js";
 import { useAdminCouponFilter } from "@/domains/coupons/feature/admin/hooks/useAdminCouponFilter.js";
+import { useTableModal } from "@/global/hooks/useTableModal.js";
 
 const AdminCouponTable = () => {
   const { coupons, changeVisible } = useAdminCouponTable();
-  const { filters, setFilters, filteredData: filteredCoupons }
-    = useAdminCouponFilter(coupons);
-
-  const [open, setOpen] = React.useState(false);
-  const [editCoupon, setEditCoupon] = React.useState(false);
+  const { filters, setFilters, filteredData: filteredCoupons } = useAdminCouponFilter(coupons);
+  const { createOpen, editTarget, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
 
   return (
     <>
@@ -23,20 +21,20 @@ const AdminCouponTable = () => {
           title={"쿠폰"}
           filters={filters}
           setFilters={setFilters}
-          onCreate={() => setOpen(true)}
+          onCreate={openCreate}
         />}
         head={<CouponTableHead />}
         tbody={
           <CouponTableBody
             coupons={filteredCoupons}
             changeVisible={changeVisible}
-            setEditCoupon={setEditCoupon}
+            setEditCoupon={openEdit}
           />
         }
         tableClass="adminTableCoupon"
       />
-      {open && <CouponCreateModal onClose={() => setOpen(false)} />}
-      {editCoupon && <CouponEditModal coupon={editCoupon} onClose={() => setEditCoupon(false)} />}
+      {createOpen && <CouponCreateModal onClose={closeCreate} />}
+      {editTarget && <CouponEditModal coupon={editTarget} onClose={closeEdit} />}
     </>
   );
 };

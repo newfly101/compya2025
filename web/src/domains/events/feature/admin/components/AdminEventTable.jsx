@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import AdminTableLayout from "@/global/layout/adminPageLayout/table/AdminTableLayout.jsx";
 import EventTableHead from "@/domains/events/feature/admin/components/table/EventTableHead.jsx";
 import EventTableBody from "@/domains/events/feature/admin/components/table/EventTableBody.jsx";
@@ -7,14 +7,12 @@ import EventCreateModal from "@/domains/events/feature/admin/components/modal/Ev
 import AdminFilterBar from "@/global/layout/adminPageLayout/table/AdminFilterBar.jsx";
 import { useAdminEventTable } from "@/domains/events/feature/admin/hooks/useAdminEventTable.js";
 import { useAdminEventFilter } from "@/domains/events/feature/admin/hooks/useAdminEventFilter.js";
+import { useTableModal } from "@/global/hooks/useTableModal.js";
 
 const AdminEventTable = () => {
   const { events, changeVisible } = useAdminEventTable();
-  const { filters, setFilters, filteredData: filteredEvents }
-    = useAdminEventFilter(events);
-
-  const [open, setOpen] = useState(false);
-  const [editEvent, setEditEvent] = useState(false);
+  const { filters, setFilters, filteredData: filteredEvents } = useAdminEventFilter(events);
+  const { createOpen, editTarget, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
 
   return (
     <>
@@ -23,20 +21,20 @@ const AdminEventTable = () => {
           title={"이벤트"}
           filters={filters}
           setFilters={setFilters}
-          onCreate={() => setOpen(true)}
+          onCreate={openCreate}
         />}
         head={<EventTableHead />}
         tbody={
           <EventTableBody
             events={filteredEvents}
             changeVisible={changeVisible}
-            setEditEvent={setEditEvent}
+            setEditEvent={openEdit}
           />
         }
         tableClass="adminTableEvent"
       />
-      {open && <EventCreateModal onClose={() => setOpen(false)} />}
-      {editEvent && (<EventEditModal event={editEvent} onClose={() => setEditEvent(false)} />)}
+      {createOpen && <EventCreateModal onClose={closeCreate} />}
+      {editTarget && <EventEditModal event={editTarget} onClose={closeEdit} />}
     </>
   );
 };
