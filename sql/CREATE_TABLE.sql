@@ -414,35 +414,35 @@ CREATE TABLE notices
         (source = 'INTERNAL' AND content IS NOT NULL AND external_url IS NULL)
             OR
         (source = 'EXTERNAL' AND content IS NULL AND external_url IS NOT NULL)
-    )
+        )
 );
 
 CREATE TABLE player_card
 (
-    id           BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
 
     -- 카드 식별
-    card_code    VARCHAR(60) NOT NULL COMMENT 'GRADE_ROLE_TEAM_PLAYER_YEAR',
-    name         VARCHAR(50) NOT NULL,
+    card_code   VARCHAR(60)                                                             NOT NULL COMMENT 'GRADE_ROLE_TEAM_PLAYER_YEAR',
+    name        VARCHAR(50)                                                             NOT NULL,
 
-    team_id      BIGINT NOT NULL,
+    team_id     BIGINT                                                                  NOT NULL,
 
-    role         ENUM ('HITTER','PITCHER') NOT NULL,
-    grade        ENUM ('LEGEND','EPIC','PLATINUM','MVP','NATIONAL', 'ALLSTAR', 'GOLDEN') NOT NULL,
+    role        ENUM ('HITTER','PITCHER')                                               NOT NULL,
+    grade       ENUM ('LEGEND','EPIC','PLATINUM','MVP','NATIONAL', 'ALLSTAR', 'GOLDEN') NOT NULL,
 
     -- 시즌 (LEGEND는 NULL 허용)
-    season_year  SMALLINT NULL COMMENT 'LEGEND는 NULL',
+    season_year SMALLINT                                                                NULL COMMENT 'LEGEND는 NULL',
 
-    overall      SMALLINT NOT NULL,
-    back_number  SMALLINT,
-    birth_date   DATE,
-    bat_throw    VARCHAR(10),
+    overall     SMALLINT                                                                NOT NULL,
+    back_number SMALLINT,
+    birth_date  DATE,
+    bat_throw   VARCHAR(10),
 
-    positions    JSON NOT NULL,
-    traits       JSON,
+    positions   JSON                                                                    NOT NULL,
+    traits      JSON,
 
-    created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
 
     -- 제약
@@ -478,7 +478,7 @@ CREATE TABLE player_card_hitter_attributes
 
     CONSTRAINT fk_card_hitter_attr
         FOREIGN KEY (card_id)
-            REFERENCES player_card(id)
+            REFERENCES player_card (id)
             ON DELETE CASCADE
 );
 
@@ -494,6 +494,34 @@ CREATE TABLE player_card_pitcher_attributes
 
     CONSTRAINT fk_card_pitcher_attr
         FOREIGN KEY (card_id)
-            REFERENCES player_card(id)
+            REFERENCES player_card (id)
+            ON DELETE CASCADE
+);
+
+-- 점수표 관리 테이블
+CREATE TABLE skill_score_config
+(
+    id               BIGINT AUTO_INCREMENT PRIMARY KEY,
+    skill_code       VARCHAR(10)                              NOT NULL,
+    target           ENUM ('PITCHER', 'HITTER')              NOT NULL,
+    point            INT                                      NOT NULL DEFAULT 1,
+
+    -- 같은 카드 내 스킬 공존 조건만
+    condition_type   ENUM ('NONE', 'WITH_SKILL')             NOT NULL DEFAULT 'NONE',
+    condition_value  VARCHAR(10)                              NULL,  -- 공존 스킬코드
+    effect_type      ENUM ('ADD', 'SUB')                     NOT NULL DEFAULT 'ADD',
+    effect_point     INT                                      NULL,
+
+    is_active        BOOLEAN                                  NOT NULL DEFAULT true,
+    updated_by       BIGINT                                   NULL,
+    updated_at       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE KEY uk_skill_condition
+        (skill_code, target, condition_type, condition_value),
+
+    CONSTRAINT fk_score_config_skill
+        FOREIGN KEY (skill_code, target)
+            REFERENCES player_skills (skill_code, target)
             ON DELETE CASCADE
 );

@@ -7,7 +7,7 @@ import { decrypt, encrypt } from "@/global/utils/crypto/storageCrypto.js";
 export const requestPlayerSkillSet = createAsyncThunk(
   DICTIONARY.SKILLSET, async (type, { dispatch, getState, rejectWithValue }) => {
     try {
-      const cached = sessionStorage.getItem(`skill-${type}`);
+      const cached = sessionStorage.getItem(`skill-v2-${type}`);
 
       if (cached) {
         return decrypt(cached);
@@ -19,7 +19,7 @@ export const requestPlayerSkillSet = createAsyncThunk(
       // console.log(`${type} SKILL : ` , data);
 
       sessionStorage.setItem(
-        `skill-${type}`,
+        `skill-v2-${type}`,
         encrypt(data)
       );
 

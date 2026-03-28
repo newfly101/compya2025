@@ -5,7 +5,7 @@ import { decrypt, encrypt } from "@/global/utils/crypto/storageCrypto.js";
 import { useDispatch, useSelector } from "react-redux";
 import { requestPlayerSkillSet } from "@/domains/dictionary/store/index.js";
 
-const STORAGE_KEY = "COMPYAFUN-HITTER-SKILL";
+const STORAGE_KEY = "COMPYAFUN-HITTER-SKILL-V2";
 
 /** 구조 검증 (조작 방지) **/
 const isValidSkillMap = (data) =>

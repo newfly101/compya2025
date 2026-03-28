@@ -8,6 +8,9 @@ import { CardSwiper } from "@/global/ui/cardSwiper/index.js";
 import HitterSkillCard from "@/domains/simulate/feature/components/cards/HitterSkillCard.jsx";
 import { usePlayerCardData } from "@/domains/simulate/feature/hooks/usePlayerCardData.js";
 import CardLoadingView from "@/domains/simulate/feature/components/CardLoadingView.jsx";
+import { useSkillScoreResult } from "@/domains/simulate/feature/hooks/useSkillScoreResult.js";
+import { useSkillScoreConfig } from "@/domains/simulate/feature/hooks/useSkillScoreConfig.js";
+import SkillScoreTable from "@/domains/simulate/feature/components/scoreTable/SkillScoreTable.jsx";
 
 const HitterSkillChange = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -17,7 +20,11 @@ const HitterSkillChange = () => {
 
   useHitterSkillInit({ cardInfo, skillStateMap, rollOnceFor });
 
+  useSkillScoreConfig();
+
   const selectedHitter = cardInfo?.[activeIndex];
+  const selectedSkills = skillStateMap[selectedHitter?.identity?.name]?.skills;
+  const scoreResult = useSkillScoreResult("HITTER", selectedSkills);
 
   return (
     <ContentPageLayout
@@ -64,6 +71,11 @@ const HitterSkillChange = () => {
                 </div>
               </button>
             </section>
+
+            <SkillScoreTable
+              result={scoreResult}
+              playerName={selectedHitter?.identity?.name}
+            />
           </section>
         )
       }

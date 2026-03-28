@@ -24,6 +24,7 @@ public class SkillItemConvertor {
     private SkillItemResponse makeRecord(PlayerSkillsEntity entity) {
         return new SkillItemResponse(
                 entity.getId(),
+                entity.getSkillCode(),
                 entity.getName(),
                 entity.getGrade(),
                 entity.getDescription()

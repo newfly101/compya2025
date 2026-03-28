@@ -10,6 +10,9 @@ import "swiper/css/effect-coverflow";
 import { CardSwiper } from "@/global/ui/cardSwiper/index.js";
 import { usePlayerCardData } from "@/domains/simulate/feature/hooks/usePlayerCardData.js";
 import CardLoadingView from "@/domains/simulate/feature/components/CardLoadingView.jsx";
+import { useSkillScoreResult } from "@/domains/simulate/feature/hooks/useSkillScoreResult.js";
+import { useSkillScoreConfig } from "@/domains/simulate/feature/hooks/useSkillScoreConfig.js";
+import SkillScoreTable from "@/domains/simulate/feature/components/scoreTable/SkillScoreTable.jsx";
 
 const PitcherSkillChange = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -19,7 +22,11 @@ const PitcherSkillChange = () => {
 
   usePitcherSkillInit({ cardInfo, skillStateMap, rollOnceFor });
 
+  useSkillScoreConfig();
+
   const selectedPitcher = cardInfo?.[activeIndex];
+  const selectedSkills = skillStateMap[selectedPitcher?.identity?.name]?.skills;
+  const scoreResult = useSkillScoreResult("PITCHER", selectedSkills);
 
   return (
     <ContentPageLayout
@@ -66,6 +73,11 @@ const PitcherSkillChange = () => {
                 </div>
               </button>
             </section>
+
+            <SkillScoreTable
+              result={scoreResult}
+              playerName={selectedPitcher?.identity?.name}
+            />
           </section>
         )
       }
