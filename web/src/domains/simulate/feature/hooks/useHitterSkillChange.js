@@ -43,6 +43,7 @@ export const useHitterSkillChange = () => {
     if (!hitterName) return;
 
     const result = rollSkills(hitterName);
+    onResult?.(result);
 
     setSkillStateMap(prev => {
       const prevState = prev[hitterName] ?? { skills: [], count: 0 };

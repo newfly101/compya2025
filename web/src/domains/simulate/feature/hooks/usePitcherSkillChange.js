@@ -40,10 +40,11 @@ export const usePitcherSkillChange = () => {
       }),
     );
 
-  const rollOnceFor = (pitcherName) => {
+  const rollOnceFor = (pitcherName, onResult) => {
     if (!pitcherName) return;
 
     const result = rollSkills(pitcherName);
+    onResult?.(result);
 
     setSkillStateMap(prev => {
       const prevState = prev[pitcherName] ?? { skills: [], count: 0 };

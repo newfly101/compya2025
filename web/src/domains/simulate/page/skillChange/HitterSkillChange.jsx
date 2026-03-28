@@ -11,6 +11,7 @@ import CardLoadingView from "@/domains/simulate/feature/components/CardLoadingVi
 import { useSkillScoreResult } from "@/domains/simulate/feature/hooks/useSkillScoreResult.js";
 import { useSkillScoreConfig } from "@/domains/simulate/feature/hooks/useSkillScoreConfig.js";
 import SkillScoreTable from "@/domains/simulate/feature/components/scoreTable/SkillScoreTable.jsx";
+import ResponseModal from "@/global/ui/responseModal/ResponseModal.jsx";
 
 const HitterSkillChange = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -22,9 +23,18 @@ const HitterSkillChange = () => {
 
   useSkillScoreConfig();
 
+  const [celebrate, setCelebrate] = useState(false);
+
   const selectedHitter = cardInfo?.[activeIndex];
   const selectedSkills = skillStateMap[selectedHitter?.identity?.name]?.skills;
   const scoreResult = useSkillScoreResult("HITTER", selectedSkills);
+
+  const handleRoll = (name) => {
+    rollOnceFor(name, (skills) => {
+      const legendCount = skills.filter(s => s.grade === "LEGEND").length;
+      if (legendCount === 3) setCelebrate(true);
+    });
+  };
 
   return (
     <ContentPageLayout
@@ -60,7 +70,7 @@ const HitterSkillChange = () => {
             <section className={styles.cardSection}>
               <button
                 className={styles.itemButton}
-                onClick={() => rollOnceFor(selectedHitter?.identity.name)}
+                onClick={() => handleRoll(selectedHitter?.identity.name)}
                 disabled={!selectedHitter?.identity.name}
               >
                 <div className={styles.textBox}>
@@ -75,6 +85,13 @@ const HitterSkillChange = () => {
             <SkillScoreTable
               result={scoreResult}
               playerName={selectedHitter?.identity?.name}
+            />
+
+            <ResponseModal
+              open={celebrate}
+              success={true}
+              message={"🎉 레전드 3개 달성!\n최고의 조합입니다!"}
+              onClose={() => setCelebrate(false)}
             />
           </section>
         )
