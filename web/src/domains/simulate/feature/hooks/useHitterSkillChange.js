@@ -39,7 +39,7 @@ export const useHitterSkillChange = () => {
       }),
     );
 
-  const rollOnceFor = (hitterName) => {
+  const rollOnceFor = (hitterName, onResult) => {
     if (!hitterName) return;
 
     const result = rollSkills(hitterName);
