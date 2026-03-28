@@ -6,4 +6,5 @@ export const AdminNavigation = [
   { url: "/admin/users", name: "유저 관리@" },
   { url: "/admin/community", name: "게시판 관리@" },
   { url: "/admin/content/player", name: "선수 카드 관리@" },
+  { url: "/admin/content/quiz", name: "퀴즈 관리" },
 ]

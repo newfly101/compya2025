@@ -525,3 +525,16 @@ CREATE TABLE skill_score_config
             REFERENCES player_skills (skill_code, target)
             ON DELETE CASCADE
 );
+
+
+CREATE TABLE quiz_answers
+(
+    id         BIGINT       AUTO_INCREMENT PRIMARY KEY,
+    round      INT          NOT NULL COMMENT '퀴즈 회차 번호 (예: 877)',
+    title      VARCHAR(100) NOT NULL COMMENT '표시 제목 (예: 컴프야 퀴즈 이벤트 877회 정답)',
+    image_url  VARCHAR(500) NOT NULL COMMENT 'S3 이미지 URL',
+    is_visible BOOLEAN      NOT NULL DEFAULT true,
+    created_at DATETIME     NOT NULL,
+    updated_at DATETIME     NOT NULL,
+    UNIQUE KEY uq_round (round)
+);

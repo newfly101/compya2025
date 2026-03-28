@@ -20,6 +20,7 @@ const LegendCalendar = () => {
     positionFilter,
     teamFilter,
     availableTeams,
+    teamCountMap,
     filteredLegendList,
     fmt,
     setIsAutoOpen,
@@ -135,26 +136,31 @@ const LegendCalendar = () => {
                 onClick={() => handleTeamChange(team)}
               >
                 {team}
+                <span className={styles.teamCount}>{teamCountMap[team]}</span>
               </button>
             ))}
           </div>
         </div>
 
-        {/* 레전드 칩 */}
-        <div className={styles.legendRow}>
-          <span className={styles.filterLabel}>레전드 :</span>
-          <div className={styles.legendChips}>
-            {filteredLegendList.map((name) => (
-              <span
-                key={name}
-                className={`${styles.legendChip} ${query === name ? styles.active : ""}`}
-                onClick={() => handleSelectSuggestion(name)}
-              >
-                {name}
-              </span>
-            ))}
+        {/* 레전드 칩 — 구단 선택 후에만 표시 */}
+        {teamFilter !== "all" ? (
+          <div className={styles.legendRow}>
+            <span className={styles.filterLabel}>레전드 :</span>
+            <div className={styles.legendChips}>
+              {filteredLegendList.map((name) => (
+                <span
+                  key={name}
+                  className={`${styles.legendChip} ${query === name ? styles.active : ""}`}
+                  onClick={() => handleSelectSuggestion(name)}
+                >
+                  {name}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        ) : (
+          <p className={styles.legendHint}>구단을 선택하면 레전드 선수 목록이 표시됩니다</p>
+        )}
       </section>
 
       {/* 메인 레이아웃 */}

@@ -114,6 +114,16 @@ const EventModal = ({
             </div>
           )}
 
+          <label className={styles.eventModalField}>
+            <span className={styles.fieldLabel}>상세 링크 URL</span>
+            <input
+              name="externalLink"
+              value={form.externalLink ?? ""}
+              onChange={onChange}
+              placeholder="카페 링크 추가"
+            />
+          </label>
+
           <div className={styles.eventModalRow}>
             <label className={styles.eventModalField}>
               <span className={styles.fieldLabel}>시작일</span>

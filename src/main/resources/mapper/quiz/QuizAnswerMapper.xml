@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.quiz.repository.mapper.QuizAnswerMapper">
+
+    <resultMap id="quizAnswerResult" type="com.dawne.com2usbaseball.domain.quiz.entity.QuizAnswerEntity">
+        <id     property="id"        column="id" />
+        <result property="round"     column="round" />
+        <result property="title"     column="title" />
+        <result property="imageUrl"  column="image_url" />
+        <result property="visible"   column="is_visible" />
+        <result property="createdAt" column="created_at" />
+        <result property="updatedAt" column="updated_at" />
+    </resultMap>
+
+    <select id="selectLatestVisible" resultMap="quizAnswerResult">
+        SELECT id, round, title, image_url, is_visible, created_at, updated_at
+        FROM quiz_answers
+        WHERE is_visible = true
+        ORDER BY round DESC
+        LIMIT 1
+    </select>
+
+    <select id="selectAll" resultMap="quizAnswerResult">
+        SELECT id, round, title, image_url, is_visible, created_at, updated_at
+        FROM quiz_answers
+        ORDER BY round DESC
+    </select>
+
+    <insert id="insertQuizAnswer" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO quiz_answers (round, title, image_url, is_visible, created_at, updated_at)
+        VALUES (#{round}, #{title}, #{imageUrl}, #{visible}, NOW(), NOW())
+    </insert>
+
+    <update id="updateQuizAnswer">
+        UPDATE quiz_answers
+        <set>
+            <if test="round != null">round = #{round},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="imageUrl != null">image_url = #{imageUrl},</if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateVisible">
+        UPDATE quiz_answers
+        SET is_visible = #{visible}, updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+</mapper>

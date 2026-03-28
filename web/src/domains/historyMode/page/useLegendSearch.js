@@ -21,10 +21,18 @@ export const useLegendSearch = () => {
     return legendMeta.filter((m) => m.position === positionFilter);
   }, [positionFilter]);
 
-  // 포지션 필터 기준으로 선택 가능한 구단 목록
+  // 포지션 필터 기준으로 선택 가능한 구단 목록 + 선수 수
   const availableTeams = useMemo(() => {
     const teams = [...new Set(legendsByPosition.map((m) => m.team))];
     return teams.sort((a, b) => a.localeCompare(b, "ko"));
+  }, [legendsByPosition]);
+
+  const teamCountMap = useMemo(() => {
+    const map = {};
+    legendsByPosition.forEach((m) => {
+      map[m.team] = (map[m.team] ?? 0) + 1;
+    });
+    return map;
   }, [legendsByPosition]);
 
   // 포지션 + 구단 필터 적용된 레전드 칩 목록
@@ -136,6 +144,7 @@ export const useLegendSearch = () => {
     positionFilter,
     teamFilter,
     availableTeams,
+    teamCountMap,
     filteredLegendList,
     fmt,
     setIsAutoOpen,
