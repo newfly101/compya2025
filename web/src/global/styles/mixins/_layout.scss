@@ -1,21 +1,11 @@
-@mixin flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
+// ===== 레이아웃 헬퍼 믹스인 =====
+// 의존 토큰을 명시적으로 @use 해야 믹스인 내부에서 안전하게 참조됩니다.
 
-@mixin flex-between {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
+@use "../variables/semantic" as *;
+@use "../variables/spacing" as *;
+@use "../variables/radius" as *;
 
-@mixin flex-column($gap: 0) {
-  display: flex;
-  flex-direction: column;
-  gap: $gap;
-}
-
+// 카드 베이스 스타일
 @mixin card-base {
   background: $ui-surface-elevated;
   border: 1px solid $ui-border-light;
@@ -23,6 +13,7 @@
   padding: $space-24;
 }
 
+// 페이지 중앙 컨테이너
 @mixin container {
   max-width: $ui-container-width;
   margin: 0 auto;

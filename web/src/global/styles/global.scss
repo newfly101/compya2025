@@ -1,18 +1,21 @@
-@use "reset";
-@use "variables/colors";
-@use "variables/spacing";
-@use "mixins/flex";
-@use "mixins/media";
-@use "mixins/table";
+// ============================================================
+//  global.scss — main.jsx 에서 단 한 번만 import
+//
+//  CSS 규칙(셀렉터/출력)을 적용하는 유일한 진입점입니다.
+//  여기서 로드된 스타일은 전역으로 한 번만 적용됩니다.
+// ============================================================
+
+// 1. Reset & 기본 요소 스타일
+@use "reset";           // html font-size: 62.5% (1rem = 10px) + Eric Meyer reset
+@use "base/base";       // img, 기타 기본 요소
+
+// 2. 타이포그래피 (body font, h1~h6 스케일)
 @use "base/typography";
-@use "base/base";
 
+// 3. 변수 — body 배경 등 글로벌 스타일에 사용
+@use "variables/semantic" as *;
 
+// 4. 전역 body 스타일
 body {
-  background: colors.$background-subtle; // 전체 사이트 배경
-  //color: colors.$text-primary;
-}
-
-.container {
-  background: #fff;
+  background: $ui-surface-page;
 }

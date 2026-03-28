@@ -1,24 +1,24 @@
-/* RAW PALETTE */
-@forward "variables/colors";
+// ============================================================
+//  index.scss — vite.config.js additionalData 전용
+//
+//  ⚠️  이 파일은 모든 .module.scss 에 자동 주입됩니다.
+//      CSS 출력(셀렉터 / 규칙)이 있는 파일은 절대 @forward 하지 마세요.
+//      변수(tokens) 와 믹스인(mixins) 만 포함해야 합니다.
+//
+//  10px 기준(html { font-size: 62.5% }) → 1rem = 10px
+// ============================================================
 
-/* ===== VARIABLES ===== */
-@forward "variables/colors";
-@forward "variables/spacing";
-@forward "variables/font";
-@forward "variables/radius";
-@forward "variables/zindex";
-@forward "variables/breakpoints";
-//@forward "variables/semantic";
+/* ===== TOKENS ===== */
+@forward "variables/colors";      // 팔레트 원색
+@forward "variables/semantic";    // UI 시맨틱 토큰 (surface, border, btn, ...)
+@forward "variables/font";        // $fs-11 ~ $fs-28
+@forward "variables/spacing";     // $space-4 ~ $space-64
+@forward "variables/radius";      // $radius-4 ~ $radius-full
+@forward "variables/zindex";      // $z-header, $z-modal, $z-toast
+@forward "variables/breakpoints"; // $mobile, $tablet, $laptop, ...
 
 /* ===== MIXINS ===== */
-//@forward "mixins/flex";
-@forward "mixins/media";
-@forward "mixins/table";
-@forward "mixins/layout";
-
-/* ===== BASE ===== */
-@forward "base/typography";
-
-
-/* ==== SEMANTIC ======= */
-@forward "semantic/color";
+@forward "mixins/flex";    // flex-center, flex-between, flex-column
+@forward "mixins/media";   // mobile(), tablet(), desktop()
+@forward "mixins/layout";  // card-base(), container()
+@forward "mixins/table";   // tableBase(), columW()
