@@ -5,6 +5,7 @@ import EventTableBody from "@/domains/events/feature/admin/components/table/Even
 import EventEditModal from "@/domains/events/feature/admin/components/modal/EventEditModal.jsx";
 import EventCreateModal from "@/domains/events/feature/admin/components/modal/EventCreateModal.jsx";
 import AdminFilterBar from "@/global/layout/adminPageLayout/table/AdminFilterBar.jsx";
+import AdminDefaultFilterControls from "@/global/layout/adminPageLayout/table/AdminDefaultFilterControls.jsx";
 import { useAdminEventTable } from "@/domains/events/feature/admin/hooks/useAdminEventTable.js";
 import { useAdminEventFilter } from "@/domains/events/feature/admin/hooks/useAdminEventFilter.js";
 import { useTableModal } from "@/global/hooks/useTableModal.js";
@@ -17,12 +18,15 @@ const AdminEventTable = () => {
   return (
     <>
       <AdminTableLayout
-        filters={<AdminFilterBar
-          title={"이벤트"}
-          filters={filters}
-          setFilters={setFilters}
-          onCreate={openCreate}
-        />}
+        filters={
+          <AdminFilterBar title={"이벤트"} onCreate={openCreate}>
+            <AdminDefaultFilterControls
+              filters={filters}
+              setFilters={setFilters}
+              searchPlaceholder="이벤트명 검색"
+            />
+          </AdminFilterBar>
+        }
         head={<EventTableHead />}
         tbody={
           <EventTableBody

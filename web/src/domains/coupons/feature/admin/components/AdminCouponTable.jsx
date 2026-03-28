@@ -4,6 +4,7 @@ import AdminTableLayout from "@/global/layout/adminPageLayout/table/AdminTableLa
 import CouponTableHead from "@/domains/coupons/feature/admin/components/table/CouponTableHead.jsx";
 import CouponTableBody from "@/domains/coupons/feature/admin/components/table/CouponTableBody.jsx";
 import AdminFilterBar from "@/global/layout/adminPageLayout/table/AdminFilterBar.jsx";
+import AdminDefaultFilterControls from "@/global/layout/adminPageLayout/table/AdminDefaultFilterControls.jsx";
 import CouponEditModal from "@/domains/coupons/feature/admin/components/modal/CouponEditModal.jsx";
 import { useAdminCouponTable } from "@/domains/coupons/feature/admin/hooks/useAdminCouponTable.js";
 import { useAdminCouponFilter } from "@/domains/coupons/feature/admin/hooks/useAdminCouponFilter.js";
@@ -17,12 +18,15 @@ const AdminCouponTable = () => {
   return (
     <>
       <AdminTableLayout
-        filters={<AdminFilterBar
-          title={"쿠폰"}
-          filters={filters}
-          setFilters={setFilters}
-          onCreate={openCreate}
-        />}
+        filters={
+          <AdminFilterBar title={"쿠폰"} onCreate={openCreate}>
+            <AdminDefaultFilterControls
+              filters={filters}
+              setFilters={setFilters}
+              searchPlaceholder="쿠폰 코드 검색"
+            />
+          </AdminFilterBar>
+        }
         head={<CouponTableHead />}
         tbody={
           <CouponTableBody
