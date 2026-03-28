@@ -1,18 +1,17 @@
 import styles from "./AdminTable.module.scss";
 import { usePosts } from "@/domains/community/feature/hooks/admin/post/usePosts.js";
-import { useState } from "react";
+import { useTableModal } from "@/global/hooks/useTableModal.js";
 import PostCreateModal from "@/domains/community/feature/components/admin/post/modal/PostCreateModal.jsx";
 import PostEditModal from "@/domains/community/feature/components/admin/post/modal/PostEditModal.jsx";
 
 const PostAdminTable = () => {
-  const [open, setOpen] = useState(false);
-  const [edit, setEdit] = useState(null);
   const { postLists } = usePosts();
+  const { createOpen, editTarget, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
 
   return (
     <>
       <div className={styles.actionBar}>
-        <button className={styles.primary} onClick={() => setOpen(true)}>
+        <button className={styles.primary} onClick={openCreate}>
           게시글 추가
         </button>
       </div>
@@ -48,14 +47,15 @@ const PostAdminTable = () => {
             <td>{post.visible ? "노출" : "숨김"}</td>
             <td>{post.viewCount}</td>
             <td>
-              <button onClick={() => setEdit(post)}>수정</button>
+              <button onClick={() => openEdit(post)}>수정</button>
             </td>
           </tr>
         ))}
         </tbody>
       </table>
-      {open && <PostCreateModal onClose={() => setOpen(false)} />}
-      {edit && <PostEditModal onClose={() => setEdit(null)} editPost={edit} />}
+
+      {createOpen && <PostCreateModal onClose={closeCreate} />}
+      {editTarget && <PostEditModal onClose={closeEdit} editPost={editTarget} />}
     </>
   );
 };

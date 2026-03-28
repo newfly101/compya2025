@@ -1,20 +1,17 @@
-import { useState } from "react";
 import styles from "./AdminTable.module.scss";
 import { useBoards } from "@/domains/community/feature/hooks/admin/board/useBoards.js";
+import { useTableModal } from "@/global/hooks/useTableModal.js";
 import BoardCreateModal from "@/domains/community/feature/components/admin/board/modal/BoardCreateModal.jsx";
 import BoardEditModal from "@/domains/community/feature/components/admin/board/modal/BoardEditModal.jsx";
 
-
 const BoardAdminTable = () => {
-  const [open, setOpen] = useState(false);
-  const [edit, setEdit] = useState(null);
-  const {boardLists} = useBoards();
-
+  const { boardLists } = useBoards();
+  const { createOpen, editTarget, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
 
   return (
     <>
       <div className={styles.actionBar}>
-        <button className={styles.primary} onClick={() => setOpen(true)}>
+        <button className={styles.primary} onClick={openCreate}>
           게시판 추가
         </button>
       </div>
@@ -43,15 +40,15 @@ const BoardAdminTable = () => {
             <td>{board.visible ? "ON" : "OFF"}</td>
             <td>{board.deleted ? "ON" : "OFF"}</td>
             <td>
-              <button onClick={() => setEdit(board)}>수정</button>
+              <button onClick={() => openEdit(board)}>수정</button>
             </td>
           </tr>
         ))}
         </tbody>
       </table>
 
-      {open && <BoardCreateModal onClose={() => setOpen(false)}/>}
-      {edit && <BoardEditModal onClose={() => setEdit(null)} editBoard={edit}/>}
+      {createOpen && <BoardCreateModal onClose={closeCreate} />}
+      {editTarget && <BoardEditModal onClose={closeEdit} editBoard={editTarget} />}
     </>
   );
 };
