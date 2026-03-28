@@ -1,71 +1,120 @@
+/* ================================
+   Page Container
+================================ */
 .container {
   max-width: 90rem;
   margin: 6rem auto;
-  padding: 0 2.4rem;
+  padding: 0 2.4rem 8rem;
+}
 
+/* ================================
+   Header
+================================ */
+.header {
+  border-bottom: 1px solid $border-bottom;
+  padding-bottom: 2.4rem;
+  margin-bottom: 3.2rem;
 
-  & > .header {
-    border-bottom: 1px solid #1f2937;
-    padding-bottom: 2.4rem;
-    margin-bottom: 3.2rem;
+  .category {
+    display: inline-block;
+    font-size: 1.5rem;
+    color: #60a5fa;
+    margin-bottom: 0.8rem;
+    cursor: pointer;
 
-    & > .title {
-      font-size: 2.8rem;
+    &:hover {
+      color: #89bcfb;
       font-weight: 700;
-      margin-bottom: 1.2rem;
-    }
-    & > .meta {
-      font-size: 2.8rem;
-      color: $primary8;
-      display: flex;
-      gap: 1rem;
-    }
-
-    & > .category {
-      display: inline-block;
-      font-size: 1.5rem;
-      color: #60a5fa;
-      margin-bottom: 0.8rem;
-      cursor: pointer;
-
-      &:hover {
-        color: #89bcfb;
-        font-weight: 700;
-      }
     }
   }
-}
-/* =========================
-   Wrapper
-========================= */
-.legendWrapper {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 1.5rem;
-  font-family: system-ui, sans-serif;
-  color: $text-primary;
+
+  .title {
+    font-size: 2.8rem;
+    font-weight: 900;
+    margin-bottom: 0.6rem;
+  }
+
+  .meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 1.3rem;
+    color: $text-muted;
+  }
 }
 
-/* =========================
-   Search
-========================= */
-
-.searchWrapper {
+/* ================================
+   Search Section
+================================ */
+.searchSection {
+  background: $surface1;
+  border: 1px solid $border-strong;
+  border-radius: 1.6rem;
+  padding: 2.4rem 2.8rem;
+  margin-bottom: 2.4rem;
   position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, $primary, transparent);
+    border-radius: 1.6rem 1.6rem 0 0;
+  }
+}
+
+.searchBar {
+  position: relative;
+  margin-bottom: 1.6rem;
+}
+
+.searchInputWrap {
+  position: relative;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 1.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: $text-muted;
+  font-size: 1.6rem;
+  pointer-events: none;
+}
+
+.searchInput {
   width: 100%;
-  max-width: 15rem;
-  margin-bottom: 1rem;
+  background: $surface2;
+  border: 1px solid $border-strong;
+  color: $text-primary;
+  font-family: inherit;
+  font-size: 1.5rem;
+  padding: 1.3rem 4.4rem;
+  border-radius: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &::placeholder {
+    color: $text-muted;
+  }
+
+  &:focus {
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba($primary, 0.15);
+  }
 }
 
 .clearButton {
   position: absolute;
-  right: 0.6rem;
-  top: 1.3rem;
+  right: 1.2rem;
+  top: 50%;
   transform: translateY(-50%);
   background: transparent;
   border: none;
   color: $text-muted;
-  font-size: 0.9rem;
+  font-size: 1.4rem;
   cursor: pointer;
   padding: 0.2rem;
 
@@ -74,159 +123,558 @@
   }
 }
 
-.legendSearch {
-  width: 100%;
-  max-width: 15rem;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-
-  background: $surface2;
-  color: $text-primary;
-  border: 1px solid $border;
-  border-radius: 6px;
-
-  &::placeholder {
-    color: $text-muted;
-  }
-
-  &:focus {
-    outline: none;
-    border-color: $primary;
-    background: $surface3;
-  }
-}
-
-/* =========================
-   Autocomplete
-========================= */
+/* Autocomplete */
 .autoComplete {
   position: absolute;
-  top: calc(100% + 2px); // input 바로 아래
+  top: calc(100% + 4px);
   left: 0;
+  right: 0;
   z-index: 50;
-  //overflow: hidden;
-
-  border: 1px solid $border;
-  border-radius: 6px;
-  background: rgba(31, 26, 41, 0.8);
-  max-width: 15rem;
-  width: 100%;
+  border: 1px solid $border-strong;
+  border-radius: 0.6rem;
+  background: $surface2;
+  max-height: 24rem;
+  overflow-y: auto;
 }
 
 .autoCompleteItem {
-  padding: 0.6rem 0.8rem;
+  padding: 0.8rem 1.2rem;
   cursor: pointer;
   color: $text-secondary;
-  font-size: clamp(0.65rem, 1.3vw, 1.2rem);
+  font-size: 1.4rem;
 
   &:hover {
     background: $primary-bg;
     color: $text-primary;
   }
 }
+
 .highlighted {
   background: $primary-hover;
   color: $text-primary;
 }
 
-/* =========================
-   Calendar Grid
-========================= */
-.calendarGrid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.75rem;
+/* 공통 필터 행 */
+.filterRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.2rem;
 }
 
-.calendarCell {
-  border: 1px solid $border;
-  border-radius: 8px;
-  padding: 0.75rem;
-  min-height: 90px;
-  background: $surface1;
-  transition: background 0.15s ease, border-color 0.15s ease;
+.filterLabel {
+  color: $text-muted;
+  font-size: 1.2rem;
+  font-weight: 700;
+  white-space: nowrap;
+  padding-top: 0.6rem;
 }
 
-/* =========================
-   Day Labels
-========================= */
-.dayLabel {
+/* 포지션 탭 */
+.positionTabs {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.positionTab {
+  background: $surface2;
+  border: 1px solid $border-strong;
+  border-radius: 0.6rem;
+  padding: 0.5rem 1.4rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  margin-bottom: 0.4rem;
-  font-size: clamp(0.65rem, 1.3vw, 1rem);
+  cursor: pointer;
+  color: $text-muted;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: $primary;
+    color: $primary-text;
+  }
+
+  &.active {
+    background: $primary;
+    color: $text-primary;
+    border-color: $primary;
+  }
+}
+
+/* 구단 pill */
+.teamPills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.teamPill {
+  background: $surface2;
+  border: 1px solid $border-strong;
+  border-radius: 2rem;
+  padding: 0.4rem 1rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: $text-muted;
+  font-weight: 500;
+  transition: all 0.15s;
+
+  &:hover {
+    border-color: $primary;
+    color: $primary-text;
+  }
+
+  &.active {
+    background: $primary;
+    color: $text-primary;
+    border-color: $primary;
+  }
+}
+
+/* 레전드 칩 */
+.legendRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+
+.legendChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.legendChip {
+  background: rgba($primary, 0.08);
+  border: 1px solid rgba($primary, 0.2);
   color: $text-secondary;
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover {
+    background: rgba($primary, 0.18);
+    border-color: $primary;
+    color: $primary-text;
+  }
+
+  &.active {
+    background: rgba($primary, 0.25);
+    border-color: $primary;
+    color: $primary-text;
+  }
+}
+
+/* ================================
+   Main Layout
+================================ */
+.mainLayout {
+  display: grid;
+  grid-template-columns: 1fr 38rem;
+  gap: 2rem;
+  align-items: start;
+
+  @media (max-width: 960px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================================
+   Left Panel
+================================ */
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* Empty state */
+.emptyState {
+  text-align: center;
+  padding: 6rem 2rem;
+  color: $text-muted;
+}
+
+.emptyIcon {
+  font-size: 4.8rem;
+  margin-bottom: 1.6rem;
+}
+
+.emptyText {
+  font-size: 1.4rem;
+  line-height: 1.8;
+}
+
+/* Player card */
+.playerCard {
+  background: $surface1;
+  border: 1px solid $border-strong;
+  border-radius: 1.6rem;
+  padding: 2.2rem;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, $primary-text, transparent);
+  }
+}
+
+.playerHeader {
+  display: flex;
+  gap: 1.6rem;
+  align-items: flex-start;
+  margin-bottom: 1.6rem;
+}
+
+.playerAvatar {
+  width: 7.6rem;
+  height: 7.6rem;
+  border-radius: 1.2rem;
+  background: linear-gradient(135deg, $surface2, $surface1);
+  border: 2px solid $border-strong;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  position: relative;
+  flex-shrink: 0;
+
+  .avatarTag {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    color: $primary-text;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 0.2rem 0;
+    border-radius: 0 0 1rem 1rem;
+    letter-spacing: 0.15em;
+  }
+}
+
+.playerInfo {
+  flex: 1;
+}
+
+.playerTags {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.6rem;
+}
+
+.tagLegend {
+  font-size: 1.1rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 0.4rem;
+  font-weight: 700;
+  background: rgba($primary, 0.15);
+  color: $primary-text;
+  border: 1px solid rgba($primary, 0.3);
+}
+
+.tagCount {
+  font-size: 1.1rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 0.4rem;
+  font-weight: 700;
+  background: rgba($noticeHeader, 0.15);
+  color: $noticeHeader;
+  border: 1px solid rgba($noticeHeader, 0.3);
+}
+
+.playerName {
+  font-size: 2.6rem;
+  font-weight: 900;
+  letter-spacing: -0.05rem;
+  line-height: 1;
+}
+
+.playerSub {
+  color: $text-muted;
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+  line-height: 1.6;
+}
+
+.goldText {
+  color: #f5a623;
+}
+
+/* Mat summary */
+.matSummary {
+  background: $surface2;
+  border-radius: 1rem;
+  padding: 1.4rem 1.6rem;
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.matSumItem {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.matSumIcon {
+  width: 3.2rem;
+  height: 3.2rem;
+  border-radius: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  background: rgba($primary, 0.12);
+}
+
+.matSumLabel {
+  font-size: 1.1rem;
+  color: $text-muted;
+}
+
+.matSumVal {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* Result list */
+.resultList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.resultsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.resultsTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $text-muted;
+  letter-spacing: 0.1rem;
+  text-transform: uppercase;
+}
+
+.resultsCount {
+  font-size: 1.1rem;
+  color: $noticeHeader;
+  font-family: monospace;
+}
+
+.noResults {
+  text-align: center;
+  padding: 3.2rem;
+  color: $text-muted;
+  font-size: 1.4rem;
+}
+
+.resultItem {
+  background: $surface2;
+  border: 1px solid $border-strong;
+  border-radius: 1rem;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  gap: 1.2rem;
+  align-items: flex-start;
+
+  &:hover {
+    border-color: $primary;
+    background: $primary-bg;
+    transform: translateX(2px);
+  }
+
+  &.selected {
+    border-color: $primary;
+    background: $primary-bg;
+  }
+}
+
+.resultBadge {
+  background: $surface1;
+  border: 1px solid $border-strong;
+  border-radius: 0.6rem;
+  padding: 0.5rem 0.9rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $text-muted;
+  white-space: nowrap;
+  font-family: monospace;
+  flex-shrink: 0;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.resultMain {
+  flex: 1;
+}
+
+.resultName {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.resultStageSub {
+  font-size: 1.1rem;
+  color: $text-muted;
+  margin-bottom: 0.6rem;
+}
+
+.playerChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.playerChip {
+  font-size: 1.1rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 0.4rem;
+  background: rgba($warning, 0.08);
+  border: 1px solid rgba($warning, 0.2);
+  color: $text-muted;
+  font-weight: 500;
+
+  &.highlight {
+    background: rgba($warning, 0.18);
+    border-color: $warning;
+    color: $warning;
+  }
+}
+
+/* ================================
+   Right Panel
+================================ */
+.rightPanel {
+  position: sticky;
+  top: 2rem;
+}
+
+.acquireCard {
+  background: $surface1;
+  border: 1px solid $border-strong;
+  border-radius: 1.6rem;
+  padding: 2.2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.emptyRight {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: $text-muted;
+  font-size: 1.3rem;
+  line-height: 1.8;
+}
+
+/* Selected stage */
+.selectedLabel {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $text-muted;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+
+.selectedVal {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: 0.4rem;
+}
+
+.selectedName {
+  font-size: 1.2rem;
+  color: $text-muted;
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.panelSectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: $text-muted;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 0.8rem;
+}
+
+/* Session players */
+.sessionPlayers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.noMaterial {
+  color: $text-muted;
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 1.2rem 0;
+}
+
+.spItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: $surface2;
+  border: 1px solid $border-strong;
+  border-radius: 0.8rem;
+  padding: 0.9rem 1.2rem;
+}
+
+.spLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 0;
+}
+
+.spLegendName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: $text-muted;
   white-space: nowrap;
 }
 
-.subLabel {
-  margin-top: 0.2rem;
-  font-size: clamp(0.55rem, 1.1vw, 0.8rem);
-  line-height: 1;
+.spArrow {
   color: $text-muted;
-  letter-spacing: 0.02em;
+  font-size: 1.1rem;
+  flex-shrink: 0;
 }
 
-/* =========================
-   States
-========================= */
-.active {
-  border-color: $primary;
-  background: $primary-bg;
-}
+.spPlayerName {
+  font-size: 1.3rem;
+  font-weight: 700;
 
-.focused {
-  border-color: $primary-active;
-  background: rgba($primary, 0.25);
-}
-
-/* =========================
-   Dot (Desktop only)
-========================= */
-.dot {
-  font-size: clamp(0.6rem, 2.4vw, 0.75rem);
-  color: $noticeHeader;
-  margin-top: 0.4rem;
-}
-
-/* =========================
-   Player List
-========================= */
-.playerList {
-  margin-top: 0.4rem;
-  padding-left: 1rem;
-  color: $text-primary;
-
-  li {
-    list-style: disc;
-    margin-bottom: 0.25rem;
-    font-size: clamp(0.6rem, 1.4vw, 0.85rem);
-    white-space: nowrap;
+  &.isTarget {
+    color: #f5a623;
   }
 }
 
-/* =========================
-   Mobile
-========================= */
-@media (max-width: 768px) {
-  .legendWrapper {
-    padding: 0;
-    margin: 0;
-  }
-
-  .calendarGrid {
-    gap: 0.5rem;
-  }
-
-  .subLabel {
-    margin-bottom: 0.5rem;
-  }
-
-  .playerList {
-    margin: 0;
-    padding: 0;
-
-    li {
-      list-style: none;
-    }
-  }
+.spTargetBadge {
+  font-size: 1rem;
+  color: #f5a623;
+  font-weight: 700;
+  flex-shrink: 0;
 }
