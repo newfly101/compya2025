@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import styles from "./AdminUserDetailPage.module.scss";
+import { useAdminUserForm } from "./useAdminUserForm.js";
 
 /** MOCK DATA (API 연동 전) */
 const MOCK_USER = {
@@ -23,21 +24,8 @@ const MOCK_USER = {
 const AdminUserDetailPage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
-
-  const [role, setRole] = useState(MOCK_USER.role);
-  const [status, setStatus] = useState(MOCK_USER.status);
-  const [banReason, setBanReason] = useState("");
-
-  const handleSave = () => {
-    // TODO: API 호출
-    console.log({
-      userId,
-      role,
-      status,
-      banReason,
-    });
-    alert("변경 사항이 저장되었습니다.");
-  };
+  const { role, setRole, status, setStatus, banReason, setBanReason, handleSave } =
+    useAdminUserForm(MOCK_USER);
 
   return (
     <div className={styles.container}>
@@ -63,7 +51,7 @@ const AdminUserDetailPage = () => {
 
         <div className={styles.controlRow}>
           <label>권한</label>
-          <select value={role} onChange={e => setRole(e.target.value)}>
+          <select value={role} onChange={(e) => setRole(e.target.value)}>
             <option value="USER">USER</option>
             <option value="ADMIN">ADMIN</option>
           </select>
@@ -71,7 +59,7 @@ const AdminUserDetailPage = () => {
 
         <div className={styles.controlRow}>
           <label>계정 상태</label>
-          <select value={status} onChange={e => setStatus(e.target.value)}>
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="ACTIVE">ACTIVE</option>
             <option value="BAN">BAN</option>
             <option value="SUSPENDED">SUSPENDED</option>
@@ -84,13 +72,13 @@ const AdminUserDetailPage = () => {
             <textarea
               placeholder="정지 사유를 입력하세요"
               value={banReason}
-              onChange={e => setBanReason(e.target.value)}
+              onChange={(e) => setBanReason(e.target.value)}
             />
           </div>
         )}
 
         <div className={styles.actions}>
-          <button onClick={handleSave}>변경 저장</button>
+          <button onClick={() => handleSave(userId)}>변경 저장</button>
         </div>
       </section>
 
