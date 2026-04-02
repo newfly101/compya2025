@@ -139,41 +139,21 @@
           0 2px 6px rgba(0,0,0,.35);
 }
 .legend {
-  background: linear-gradient(
-                  180deg,
-                  #8f86ff 0%,
-                  #6f64f7 45%,
-                  #5a4de0 100%
-  );
+  background: $ui-btn-skill-legend;
 }
 
 .platinum {
-  background: linear-gradient(
-                  180deg,
-                  #ffe37a 0%,
-                  #f2c94c 45%,
-                  #d4a900 100%
-  );
+  background: $ui-btn-skill-platinum;
   color: #2b2100;
 }
 
 .hero {
-  background: linear-gradient(
-                  180deg,
-                  #5bff9c 0%,
-                  #2ecc71 45%,
-                  #1e9f55 100%
-  );
+  background: $ui-btn-skill-hero;
   color: #0f2f1d;
 }
 
 .normal {
-  background: linear-gradient(
-                  180deg,
-                  #cfd3da 0%,
-                  #aeb4bf 50%,
-                  #8e95a3 100%
-  );
+  background: $ui-btn-skill-normal;
   color: #1f2937;
 }
 .desc {

@@ -1,10 +1,9 @@
 import React, { lazy } from "react";
-import NoticeLayout from "@/app/page/notice/NoticeLayout.jsx";
-import FunNoticeList from "@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx";
-import OfficialNoticeList
-  from "@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx";
-import UserEventPage from "@/domains/events/page/user/UserEventPage.jsx";
-
+const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
+const NoticeLayout = lazy(() => import("@/app/page/notice/NoticeLayout.jsx"));
+const FunNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx"));
+const OfficialNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx"));
+const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
 const Home = lazy(() => import("@/app/page/home/Home.jsx"));
 const CouponListPage = lazy(() => import("@/domains/coupons/feature/public/pages/CouponListPage.jsx"));
 
@@ -29,7 +28,7 @@ export const PublicRoutes = [
     children: [
       { index: true, element: <FunNoticeList />, handle: { title: "컴프야펀 | 펀 공지사항" } },
       { path: "official", element: <OfficialNoticeList />, handle: { title: "컴프야펀 | 공식 공지사항" }  },
-      { path: "events", element: <UserEventPage />, handle: { title: "컴프야펀 | 공식 이벤트" }  },
+      { path: "events", element: <EventListPage />, handle: { title: "컴프야펀 | 공식 이벤트" }  },
       { path: "coupons", element: <CouponListPage />, handle: { title: "컴프야펀 | 쿠폰 코드" }  },
     ],
   },
@@ -48,4 +47,5 @@ export const PublicRoutes = [
       { path: "hitter", element: <Dictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
     ]
   },
+  { path: "kbo" , element: <KBOLeaguePage />, handle: {title: "컴프야펀 | KBO 승부예측"} }
 ];

@@ -1,14 +1,14 @@
 package com.dawne.com2usbaseball.domain.event.dto.response;
 
 import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
-import com.dawne.com2usbaseball.domain.event.enums.EventSource;
+import com.dawne.com2usbaseball.domain.event.enums.EventType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 
 public record EventResponse(
         Long id,
-        EventSource eventSource,
+        EventType eventType,
         String title,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime startAt,
@@ -21,7 +21,7 @@ public record EventResponse(
     public static EventResponse from(EventEntity e) {
         return new EventResponse(
                 e.getId(),
-                e.getEventSource(),
+                e.getEventType(),
                 e.getTitle(),
                 e.getStartAt(),
                 e.getExpireAt(),

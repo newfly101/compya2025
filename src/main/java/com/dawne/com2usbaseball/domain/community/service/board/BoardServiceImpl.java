@@ -9,6 +9,8 @@ import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +31,10 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    @CacheEvict(value = "adminBoards", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "adminBoards", allEntries = true),
+            @CacheEvict(value = "userBoards",  allEntries = true)
+    })
     public OperationResponse<CommunityMessages> createNewBoardItem(BoardsEntity boards) {
         return repository.insertNewBoard(boards)
                 ? OperationResponse.success(CommunityMessages.BOARD_CREATED, boards.getId())
@@ -37,7 +42,10 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    @CacheEvict(value = "adminBoards", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "adminBoards", allEntries = true),
+            @CacheEvict(value = "userBoards",  allEntries = true)
+    })
     public OperationResponse<CommunityMessages> updateBoardItem(BoardsEntity boards) {
         return repository.updateBoard(boards)
                 ? OperationResponse.success(CommunityMessages.BOARD_UPDATED, boards.getId())
@@ -46,7 +54,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-//    @Cacheable(value="userBoards")
+    @Cacheable(value = "userBoards")
     public ListResponse<BoardResponse> selectUserBoardList() {
         List<BoardsEntity> boards = repository.selectUserBoardItems();
 

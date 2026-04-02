@@ -1,30 +1,35 @@
-@use "@/global/styles/variables/_colors.scss" as *;
+// ===== 테이블 믹스인 =====
+
+@use "../variables/colors" as *;
 
 @mixin columW($width) {
   width: $width;
 }
 
-
-@mixin tableBase($font-size: 1.4rem, $align: center, $layout: fixed, $whiteSpace: nowrap) {
+@mixin tableBase(
+  $font-size: 1.4rem,   // 14px
+  $align: center,
+  $layout: fixed,
+  $whiteSpace: nowrap
+) {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   background: $surface2;
   border: 1px solid $border;
-  border-radius: 0.8rem;
+  border-radius: 0.8rem;   // 8px
   overflow: hidden;
   font-size: $font-size;
   table-layout: $layout;
 
   th, td {
-    padding: 1.2rem 1rem;
-    text-align: center;
+    padding: 1.2rem 1rem;  // 12px 10px
+    text-align: $align;
     font-weight: 600;
     color: $text-secondary;
     border-bottom: 1px solid $border;
     white-space: $whiteSpace;
     vertical-align: middle;
-
   }
 
   thead {
@@ -42,14 +47,14 @@
       &:hover {
         background: $surface3;
       }
-
     }
   }
+
   td {
     & > a {
       color: $noticeHeader;
 
-      &:hover{
+      &:hover {
         color: #94b6ff;
       }
     }
@@ -59,9 +64,9 @@
     background: $primary-bg;
     color: $primary-text;
     border: 1px solid transparent;
-    padding: 0.4rem 1rem;
-    border-radius: 0.4rem;
-    font-size: 1.3rem;
+    padding: 0.4rem 1rem;   // 4px 10px
+    border-radius: 0.4rem;  // 4px
+    font-size: 1.3rem;      // 13px
     cursor: pointer;
     transition: background 0.2s ease;
 

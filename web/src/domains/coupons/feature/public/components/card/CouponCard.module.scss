@@ -54,7 +54,7 @@
   cursor: pointer;
   flex-shrink: 0;
 
-  &:hover {
+  &:not(.isDisabled):hover {
     opacity: 0.85;
   }
 }
@@ -62,6 +62,7 @@
 .isDisabled {
   opacity: 0.4;
   cursor: not-allowed;
+  background: $ui-btn-primary-disabled;
 }
 
 .couponCardBody {

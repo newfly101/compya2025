@@ -11,6 +11,8 @@ import com.dawne.com2usbaseball.domain.community.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.javassist.NotFoundException;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,7 +35,10 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
-    @CacheEvict(value = "adminPosts", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "adminPosts", allEntries = true),
+            @CacheEvict(value = "userPosts",  allEntries = true)
+    })
     public OperationResponse<CommunityMessages> createNewPostItem(PostsEntity posts) {
         return repository.insertNewPost(posts)
                 ? OperationResponse.success(CommunityMessages.POST_CREATED, posts.getId())
@@ -41,7 +46,10 @@ public class PostsServiceImpl implements PostsService {
     }
 
     @Override
-    @CacheEvict(value = "adminPosts", allEntries = true)
+    @Caching(evict = {
+            @CacheEvict(value = "adminPosts", allEntries = true),
+            @CacheEvict(value = "userPosts",  allEntries = true)
+    })
     public OperationResponse<CommunityMessages> updatePostItem(PostsEntity posts) {
         return repository.updatePost(posts)
                 ? OperationResponse.success(CommunityMessages.POST_UPDATED, posts.getId())
@@ -51,6 +59,7 @@ public class PostsServiceImpl implements PostsService {
     // User Get Post List
     @Override
     @Transactional(readOnly = true)
+    @Cacheable(value = "userPosts", key = "#boardId")
     public ListResponse<PostResponse> selectPostListsByBoard(Long boardId) throws NotFoundException {
         // 검증
         if (!boardRepository.existsById(boardId)) {

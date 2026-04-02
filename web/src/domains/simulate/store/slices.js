@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { requestPlayerCardInfo } from "@/domains/simulate/store/thunks.js";
+import { requestPlayerCardInfo, requestSkillScoreConfig } from "@/domains/simulate/store/thunks.js";
 import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
 
 const initialState  = {
   playerType: null,
   cardInfo: null,
+  scoreConfig: null,
   loading: false,
   error: null,
 }
@@ -24,6 +25,13 @@ const simulateSlice = createSlice({
      * =============================== */
     applyAsyncHandlers(builder, requestPlayerCardInfo, (state, action) => {
       state.cardInfo = action.payload;
+    });
+
+    /* ===============================
+     * 스킬 점수 설정 불러오기
+     * =============================== */
+    applyAsyncHandlers(builder, requestSkillScoreConfig, (state, action) => {
+      state.scoreConfig = action.payload;
     });
 
   }

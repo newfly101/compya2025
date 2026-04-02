@@ -4,6 +4,7 @@ import com.dawne.com2usbaseball.common.enums.Grade;
 
 public record SkillItemResponse(
         Long id,
+        String skillCode,
         String name,
         Grade grade,
         String description

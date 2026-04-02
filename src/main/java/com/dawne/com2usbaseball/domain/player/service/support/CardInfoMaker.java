@@ -1,14 +1,14 @@
 package com.dawne.com2usbaseball.domain.player.service.support;
 
-import com.dawne.com2usbaseball.domain.player.dto.response.PlayerCardResponse;
+import com.dawne.com2usbaseball.domain.player.dto.response.LegendPlayerCardResponse;
 import com.dawne.com2usbaseball.domain.player.dto.response.career.PlayerCareerResponse;
-import com.dawne.com2usbaseball.domain.player.dto.response.game.PlayerGameInfoResponse;
+import com.dawne.com2usbaseball.domain.player.dto.response.game.LegendPlayerGameInfoResponse;
 import com.dawne.com2usbaseball.domain.player.dto.response.game.attributes.HitterAttributesResponse;
 import com.dawne.com2usbaseball.domain.player.dto.response.game.attributes.PitcherAttributesResponse;
 import com.dawne.com2usbaseball.domain.player.dto.response.game.attributes.PlayerAttributesResponse;
-import com.dawne.com2usbaseball.domain.player.dto.response.identity.PlayerIdentityResponse;
+import com.dawne.com2usbaseball.domain.player.dto.response.identity.LegendPlayerIdentityResponse;
 import com.dawne.com2usbaseball.domain.player.dto.response.team.TeamResponse;
-import com.dawne.com2usbaseball.domain.player.entity.PlayerCardEntity;
+import com.dawne.com2usbaseball.domain.player.entity.PlayerLegendCardEntity;
 import com.dawne.com2usbaseball.common.enums.Target;
 import com.dawne.com2usbaseball.common.util.JsonUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,41 +22,41 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CardInfoMaker {
 
-    public List<PlayerCardResponse> makeCardInfoList(
-            Map<String, List<PlayerCardEntity>> grouped,
+    public List<LegendPlayerCardResponse> makeCardInfoList(
+            Map<String, List<PlayerLegendCardEntity>> grouped,
             Map<Long, TeamResponse> teamMap,
             Map<String, PlayerCareerResponse> careerMap
     ) {
 
-        List<PlayerCardResponse> result = new ArrayList<>();
+        List<LegendPlayerCardResponse> result = new ArrayList<>();
 
-        for (List<PlayerCardEntity> entities : grouped.values()) {
+        for (List<PlayerLegendCardEntity> entities : grouped.values()) {
             if (entities.isEmpty()) continue;
 
-            PlayerCardEntity base = entities.get(0);
+            PlayerLegendCardEntity base = entities.get(0);
 
-            PlayerIdentityResponse identity =
+            LegendPlayerIdentityResponse identity =
                     buildIdentity(base, teamMap);
 
-            PlayerGameInfoResponse game =
+            LegendPlayerGameInfoResponse game =
                     buildGameInfo(entities);
 
             PlayerCareerResponse career =
                     careerMap.get(base.getName());
 
-            result.add(new PlayerCardResponse(identity, game, career));
+            result.add(new LegendPlayerCardResponse(identity, game, career));
         }
 
         return result;
     }
 
     // identity 객체화
-    private PlayerIdentityResponse buildIdentity(
-            PlayerCardEntity base,
+    private LegendPlayerIdentityResponse buildIdentity(
+            PlayerLegendCardEntity base,
             Map<Long, TeamResponse> teamMap
     ) {
 
-        return new PlayerIdentityResponse(
+        return new LegendPlayerIdentityResponse(
                 base.getId(),
                 base.getName(),
                 teamMap.get(base.getTeamId()),
@@ -68,14 +68,14 @@ public class CardInfoMaker {
     }
 
     // gameInfo 객체화
-    private PlayerGameInfoResponse buildGameInfo(
-            List<PlayerCardEntity> entities
+    private LegendPlayerGameInfoResponse buildGameInfo(
+            List<PlayerLegendCardEntity> entities
     ) {
 
         // 현재 구조상 마지막 카드 = 대표 카드
-        PlayerCardEntity card = entities.get(entities.size() - 1);
+        PlayerLegendCardEntity card = entities.get(entities.size() - 1);
 
-        return new PlayerGameInfoResponse(
+        return new LegendPlayerGameInfoResponse(
                 card.getOverall(),
                 JsonUtils.toList(card.getPositions()),
                 JsonUtils.toList(card.getTraits()),
@@ -85,7 +85,7 @@ public class CardInfoMaker {
 
     // 선수 능력치 정보 객체화
     private PlayerAttributesResponse buildAttributes(
-            PlayerCardEntity card
+            PlayerLegendCardEntity card
     ) {
 
         if (card.getRole() == Target.PITCHER) {

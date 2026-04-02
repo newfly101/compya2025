@@ -7,7 +7,7 @@ import HighlightSection from "@/app/page/home/section/HighlightSection.jsx";
 import { useHomeData } from "@/app/page/home/hooks/useHomeData.js";
 
 const Home = () => {
-  const {reservationImg, quizImg } = useHomeData();
+  const { quizImg, quizTitle } = useHomeData();
 
   return (
     <div className={styles.homeWrapper}>
@@ -16,17 +16,12 @@ const Home = () => {
 
       <QuickNavSection />
 
-      <SpotlightSection
-        title="🎉 컴프야2026 사전 예약"
-        image={reservationImg}
-        link="https://event.withhive.com/ci/minisite/main/cpb2026pre/ko?r=p1&fcode=ST27METIdG"
-        interactive={true}
-      />
-
-      <SpotlightSection
-        title="🎉 컴프야 퀴즈 이벤트 877회 정답"
-        image={quizImg}
-      />
+      {quizImg && (
+        <SpotlightSection
+          title={quizTitle ?? "🎉 컴프야 퀴즈 이벤트 정답"}
+          image={quizImg}
+        />
+      )}
 
       <HighlightSection
         title="최신 이벤트"

@@ -5,11 +5,14 @@ import hitterImg from "@/assets/dictionary/hitterImg.png";
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
 import { ContentPageHeader, useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
 import { NavigationCard } from "@/global/ui/navigationCard/index.js";
+import { useSkillScoreConfig } from "@/domains/simulate/feature/hooks/useSkillScoreConfig.js";
 
 const SkillSimulator = () => {
   const {
     moveHome,
   } = useContentPageHeader();
+
+  useSkillScoreConfig();
 
   return (
     <ContentPageLayout

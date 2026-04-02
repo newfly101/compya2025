@@ -26,11 +26,7 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         includePaths: [path.resolve(__dirname, "src")],
-        additionalData: `
-          @use "@/global/styles/index.scss" as *;
-          @use "@/global/styles/variables/colors.scss" as *;
-          @use "@/global/styles/mixins/_table.scss" as *;
-        `,
+        additionalData: `@use "@/global/styles/index.scss" as *;`,
       },
     },
   }

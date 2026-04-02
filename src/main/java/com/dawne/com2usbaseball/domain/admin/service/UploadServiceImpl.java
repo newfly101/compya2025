@@ -38,6 +38,8 @@ public class UploadServiceImpl implements UploadService {
                 RequestBody.fromInputStream(file.getInputStream(), file.getSize())
         );
 
-        return props.getS3().getUrl() + "/" + key;
+        String baseUrl = props.getS3().getUrl();
+        if (!baseUrl.startsWith("http")) baseUrl = "https://" + baseUrl;
+        return baseUrl + "/" + key;
     }
 }

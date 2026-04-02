@@ -1,5 +1,5 @@
-import cafeUpdateImg from "@/assets/events/com2usUpdate.png";
-import cafeNoticeImg from "@/assets/events/com2usNotice.png";
+import cafeUpdateImg from "/events/com2usUpdate.png";
+import cafeNoticeImg from "/events/com2usNotice.png";
 
 export const cafeNotice = [
   {

@@ -1,285 +1,368 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import styles from "@/domains/historyMode/page/legendCalendar.module.scss";
-import { legendStuff } from "@/data/historyMode/LegendStuff.js";
-import { formatDateLabel, isSameDate } from "@/global/utils/DateFormatt.js";
+import React, { useEffect, useRef } from "react";
+import styles from "./LegendCalendar.module.scss";
 import { useNavigate } from "react-router-dom";
+import { useLegendSearch } from "./useLegendSearch.js";
+
+const POSITIONS = ["전체", "타자", "투수"];
 
 const LegendCalendar = () => {
-  const [query, setQuery] = useState("");
-  const [focusedDay, setFocusedDay] = useState(null);
-  const [isAutoOpen, setIsAutoOpen] = useState(false);
-  const wrapperRef = useRef(null);
-  const [highlightIndex, setHighlightIndex] = useState(0);
-
-
   const navigate = useNavigate();
+  const wrapperRef = useRef(null);
 
-  const handleMoveUrl = () => {
-    navigate("/");
-  };
-
-  const handleUseKeyBoard = (e) => {
-    if (!isAutoOpen) return;
-
-    // ⬇️ 아래 화살표
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setHighlightIndex((prev) =>
-        Math.min(prev + 1, autoCompleteList.length - 1),
-      );
-    }
-
-    // ⬆️ 위 화살표
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setHighlightIndex((prev) => Math.max(prev - 1, 0));
-    }
-
-    // ⏎ Enter
-    if (e.key === "Enter") {
-      e.preventDefault();
-
-      if (autoCompleteList.length > 0) {
-        const index =
-          highlightIndex >= 0 &&
-          highlightIndex < autoCompleteList.length
-            ? highlightIndex
-            : 0;
-
-        setQuery(autoCompleteList[index]);
-      }
-
-      setIsAutoOpen(false);
-    }
-
-    // ⎋ ESC
-    if (e.key === "Escape") {
-      setIsAutoOpen(false);
-    }
-  };
-
-  const CYCLE_LENGTH = 14;
-  const CYCLE_START_DATE = new Date("2026-01-05"); // 1일차 기준
-
-
-  const getCycleDayByDate = (date) => {
-    const diffTime = date.getTime() - CYCLE_START_DATE.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-
-    // 음수 방지 + 1~14 보장
-    return ((diffDays % CYCLE_LENGTH) + CYCLE_LENGTH) % CYCLE_LENGTH + 1;
-  };
-
-  const calendarDates = useMemo(() => {
-    const today = new Date();
-
-    return Array.from({ length: 14 }, (_, i) => {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-
-      return {
-        date,
-        cycleDay: getCycleDayByDate(date),
-      };
-    });
-  }, []);
+  const {
+    query,
+    isAutoOpen,
+    highlightIndex,
+    autoCompleteList,
+    allMatchedStages,
+    selectedStage,
+    playerStats,
+    positionFilter,
+    teamFilter,
+    availableTeams,
+    teamCountMap,
+    filteredLegendList,
+    fmt,
+    setIsAutoOpen,
+    handleQueryChange,
+    handleSelectSuggestion,
+    handleClear,
+    handleKeyDown,
+    handlePositionChange,
+    handleTeamChange,
+    handleSelectStage,
+  } = useLegendSearch();
 
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(e.target)
-      ) {
+      if (wrapperRef.current && !wrapperRef.current.contains(e.target)) {
         setIsAutoOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [setIsAutoOpen]);
 
-  /** Day 1 ~ 14 고정 */
-  const days = useMemo(
-    () => Array.from({ length: 14 }, (_, i) => i + 1),
-    [],
-  );
+  useEffect(() => {
+    if (allMatchedStages.length > 0) {
+      handleSelectStage(allMatchedStages[0]);
+    } else {
+      handleSelectStage(null);
+    }
+  }, [allMatchedStages]);
 
-  const legendList = useMemo(() => {
-    const set = new Set();
-    legendStuff.forEach((event) => {
-      event.item.forEach((it) => {
-        if (it.legend) set.add(it.legend);
-      });
-    });
-    return Array.from(set);
-  }, []);
-
-  /** 🔍 자동완성 */
-  const autoCompleteList = useMemo(() => {
-    if (!query) return [];
-    return legendList.filter((name) =>
-      name.includes(query),
-    );
-  }, [query, legendList]);
-
-  /** 🔍 검색 결과 */
-  const searchResults = useMemo(() => {
-    if (!query) return [];
-
-    const result = [];
-    legendStuff.forEach((event) => {
-      event.item.forEach((it) => {
-        if (it.legend?.includes(query)) {
-          result.push({
-            day: event.day,
-            player: it.player,
-            years: it.years,
-            roaster: event.roaster,
-          });
-        }
-      });
-    });
-
-    console.log("result : ", result);
-    return result;
-  }, [query]);
-
-  const searchResultMap = useMemo(() => {
-    const map = {};
-
-    searchResults.forEach(({ day, player, years, roaster }) => {
-      if (!map[day]) {
-        map[day] = [];
-      }
-      map[day].push({ player, years, roaster });
-    });
-
-    return map;
-  }, [searchResults]);
-
-
-  /** 검색 결과 기반 활성 Day */
-  const activeDays = useMemo(() => {
-    return new Set(searchResults.map((r) => r.day));
-  }, [searchResults]);
-
-  /** Day별 이벤트 수 */
-  const dayCountMap = useMemo(() => {
-    const map = {};
-    legendStuff.forEach((e) => {
-      map[e.day] = (map[e.day] ?? 0) + e.item.length;
-    });
-    return map;
-  }, []);
+  const hasResults = allMatchedStages.length > 0;
 
   return (
     <main className={styles.container}>
       <header className={styles.header}>
-        <span className={styles.category} onClick={handleMoveUrl}>← 메인으로</span>
+        <span className={styles.category} onClick={() => navigate("/")}>
+          ← 메인으로
+        </span>
         <h1 className={styles.title}>히스토리모드 재료 탐색기</h1>
-
         <div className={styles.meta}>
           <span>2026-01-12</span>
-          <span>v0.1.8</span>
+          <span>v0.2.0</span>
         </div>
       </header>
-      <div ref={wrapperRef} className={styles.legendWrapper}>
-        {/* 🔍 검색 */}
-        <div className={styles.searchWrapper}>
-          <input
-            className={styles.legendSearch}
-            placeholder="레전드 이름 검색 (예: 김시진)"
-            value={query}
-            onChange={(e) => {
-              setQuery(e.target.value);
-              setFocusedDay(null);
-              setIsAutoOpen(true);
-            }}
-            onKeyDown={(e) => handleUseKeyBoard(e)}
-          />
 
-          {query && (
-            <button
-              type="button"
-              className={styles.clearButton}
-              onClick={() => {
-                setQuery("");
-                setIsAutoOpen(false);
-                setFocusedDay(null);
-              }}
-              aria-label="검색 삭제"
-            >
-              ✕
-            </button>
-          )}
+      {/* 검색 + 필터 섹션 */}
+      <section className={styles.searchSection}>
+        {/* 검색창 */}
+        <div ref={wrapperRef} className={styles.searchBar}>
+          <div className={styles.searchInputWrap}>
+            <span className={styles.searchIcon}>🔍</span>
+            <input
+              className={styles.searchInput}
+              placeholder="레전드 선수 이름 검색"
+              value={query}
+              onChange={(e) => handleQueryChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+            {query && (
+              <button
+                type="button"
+                className={styles.clearButton}
+                onClick={handleClear}
+                aria-label="검색 삭제"
+              >
+                ✕
+              </button>
+            )}
+          </div>
 
-          {/* 자동완성 */}
           {isAutoOpen && query && autoCompleteList.length > 0 && (
             <div className={styles.autoComplete}>
-              {autoCompleteList.map((name, idx) => {
-                return (
-                  <div
-                    key={`legend-${name}`}
-                    className={`${styles.autoCompleteItem}
-                                ${idx === highlightIndex ? styles.highlighted : ""} `}
-                    onClick={() => {
-                      setQuery(name);
-                      setIsAutoOpen(false);
-                    }}
-                  >
-                    {name}
-                  </div>
-                );
-              })}
+              {autoCompleteList.map((name, idx) => (
+                <div
+                  key={`ac-${name}`}
+                  className={`${styles.autoCompleteItem} ${idx === highlightIndex ? styles.highlighted : ""}`}
+                  onClick={() => handleSelectSuggestion(name)}
+                >
+                  {name}
+                </div>
+              ))}
             </div>
           )}
         </div>
 
-        {/* 📅 14일 캘린더 */}
-        <div className={styles.calendarGrid}>
-          {calendarDates.map(({ date, cycleDay }) => {
-            const players = searchResultMap[cycleDay];
-            const today = isSameDate(date, new Date());
+        {/* 포지션 탭 */}
+        <div className={styles.filterRow}>
+          <span className={styles.filterLabel}>포지션 :</span>
+          <div className={styles.positionTabs}>
+            {POSITIONS.map((pos) => {
+              const key = pos === "전체" ? "all" : pos;
+              return (
+                <button
+                  key={pos}
+                  className={`${styles.positionTab} ${positionFilter === key ? styles.active : ""}`}
+                  onClick={() => handlePositionChange(key)}
+                >
+                  {pos}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-            return (
-              <div
-                key={date.toISOString()}
-                className={`${styles.calendarCell}
-          ${activeDays.has(cycleDay) ? styles.active : ""}
-          ${today ? styles.focused : ""}
-        `}
+        {/* 구단 필터 */}
+        <div className={styles.filterRow}>
+          <span className={styles.filterLabel}>구단 :</span>
+          <div className={styles.teamPills}>
+            {availableTeams.map((team) => (
+              <button
+                key={team}
+                className={`${styles.teamPill} ${teamFilter === team ? styles.active : ""}`}
+                onClick={() => handleTeamChange(team)}
               >
-                {/* 실제 날짜 */}
-                <div className={styles.dayLabel}>
-                  {formatDateLabel(date)}
-                </div>
+                {team}
+                <span className={styles.teamCount}>{teamCountMap[team]}</span>
+              </button>
+            ))}
+          </div>
+        </div>
 
-                {/* 내부적으로는 주기 day */}
-                <div className={styles.subLabel}>
-                  {cycleDay}일차
-                </div>
+        {/* 레전드 칩 — 구단 선택 후에만 표시 */}
+        {teamFilter !== "all" ? (
+          <div className={styles.legendRow}>
+            <span className={styles.filterLabel}>레전드 :</span>
+            <div className={styles.legendChips}>
+              {filteredLegendList.map((name) => (
+                <span
+                  key={name}
+                  className={`${styles.legendChip} ${query === name ? styles.active : ""}`}
+                  onClick={() => handleSelectSuggestion(name)}
+                >
+                  {name}
+                </span>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p className={styles.legendHint}>구단을 선택하면 레전드 선수 목록이 표시됩니다</p>
+        )}
+      </section>
 
-                {/* 🔍 검색 중일 때만 선수 리스트 */}
-                {query && players && (
-                  <ul className={styles.playerList}>
-                    {players.map(({ player, years, roaster }, idx) => (
-                      <li key={`${cycleDay}-${player}-${idx}`}>
-                        {roaster}: {player}'{String(years).slice(-2)}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+      {/* 메인 레이아웃 */}
+      <div className={styles.mainLayout}>
+        {/* 좌측 패널 */}
+        <div className={styles.leftPanel}>
+          {!query && (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>⚾</div>
+              <p className={styles.emptyText}>
+                레전드 선수 이름을 검색하거나
+                <br />
+                하단의 레전드 칩을 클릭하세요
+              </p>
+            </div>
+          )}
 
-                {/* 🔵 기본 상태 */}
-                {!query && dayCountMap[cycleDay] && (
-                  <div className={styles.dot}>
-                    ● {dayCountMap[cycleDay]}
+          {query && !hasResults && (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>🔍</div>
+              <p className={styles.emptyText}>
+                <strong>{query}</strong> 선수가 레전드 재료로
+                <br />
+                등장하는 세션이 없습니다
+              </p>
+            </div>
+          )}
+
+          {query && hasResults && playerStats && (
+            <>
+              {/* 선수 카드 */}
+              <div className={styles.playerCard}>
+                <div className={styles.playerHeader}>
+                  <div className={styles.playerAvatar}>
+                    ⚾
+                    <span className={styles.avatarTag}>LEGEND</span>
                   </div>
-                )}
+                  <div className={styles.playerInfo}>
+                    <div className={styles.playerTags}>
+                      <span className={styles.tagLegend}>레전드 재료</span>
+                      <span className={styles.tagCount}>
+                        총 {playerStats.totalSessions}개 세션
+                      </span>
+                    </div>
+                    <div className={styles.playerName}>{query}</div>
+                    <div className={styles.playerSub}>
+                      재료 카드:{" "}
+                      <strong className={styles.goldText}>
+                        {playerStats.uniqueCombos.join(", ")}
+                      </strong>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.matSummary}>
+                  <div className={styles.matSumItem}>
+                    <div className={styles.matSumIcon}>📅</div>
+                    <div>
+                      <div className={styles.matSumLabel}>등장 Day</div>
+                      <div className={styles.matSumVal}>
+                        {playerStats.days.map((d) => `Day ${d}`).join(", ")}
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.matSumItem}>
+                    <div className={styles.matSumIcon}>🎯</div>
+                    <div>
+                      <div className={styles.matSumLabel}>총 세션 수</div>
+                      <div className={styles.matSumVal}>
+                        {playerStats.totalSessions}개
+                      </div>
+                    </div>
+                  </div>
+                  <div className={styles.matSumItem}>
+                    <div className={styles.matSumIcon}>🃏</div>
+                    <div>
+                      <div className={styles.matSumLabel}>재료 카드 종류</div>
+                      <div className={styles.matSumVal}>
+                        {playerStats.uniqueCombos.length}종
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            );
-          })}
+
+              {/* 결과 목록 */}
+              <div className={styles.resultList}>
+                <div className={styles.resultsHeader}>
+                  <span className={styles.resultsTitle}>
+                    획득 가능 히스토리 스테이지
+                  </span>
+                  <span className={styles.resultsCount}>
+                    {allMatchedStages.length}개
+                  </span>
+                </div>
+
+                {allMatchedStages.map((stage) => {
+                  const targetItems = stage.item.filter(
+                    (it) => it.legend === query
+                  );
+                  const otherItems = stage.item.filter(
+                    (it) => it.legend && it.legend !== query
+                  );
+                  const isSelected =
+                    selectedStage?.day === stage.day &&
+                    selectedStage?.roaster === stage.roaster;
+
+                  return (
+                    <div
+                      key={`${stage.day}-${stage.roaster}`}
+                      className={`${styles.resultItem} ${isSelected ? styles.selected : ""}`}
+                      onClick={() => handleSelectStage(stage)}
+                    >
+                      <div className={styles.resultBadge}>
+                        Day {stage.day}
+                        <br />
+                        세션 {stage.roaster}
+                      </div>
+                      <div className={styles.resultMain}>
+                        <div className={styles.resultName}>{stage.name}</div>
+                        <div className={styles.resultStageSub}>
+                          Day {stage.day} · 세션 {stage.roaster} · 재료{" "}
+                          {stage.item.length}슬롯
+                        </div>
+                        <div className={styles.playerChips}>
+                          {targetItems.map((it, i) => (
+                            <span
+                              key={i}
+                              className={`${styles.playerChip} ${styles.highlight}`}
+                            >
+                              ⭐ {fmt(it.player, it.years)}
+                            </span>
+                          ))}
+                          {otherItems.map((it, i) => (
+                            <span key={i} className={styles.playerChip}>
+                              {fmt(it.player, it.years)}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* 우측 패널 */}
+        <div className={styles.rightPanel}>
+          <div className={styles.acquireCard}>
+            {!selectedStage ? (
+              <p className={styles.emptyRight}>
+                👈 스테이지를 선택하면
+                <br />
+                세션 상세 정보가 표시됩니다
+              </p>
+            ) : (
+              <>
+                <div className={styles.selectedLabel}>SELECTED STAGE</div>
+                <div className={styles.selectedVal}>
+                  Day {selectedStage.day} · 세션 {selectedStage.roaster}
+                </div>
+                <div className={styles.selectedName}>{selectedStage.name}</div>
+
+                <div className={styles.panelSectionTitle}>세션 재료 선수 목록</div>
+                <div className={styles.sessionPlayers}>
+                  {selectedStage.item.filter((it) => it.legend).length === 0 ? (
+                    <p className={styles.noMaterial}>
+                      이 세션에는 히스토리 재료가 없습니다
+                    </p>
+                  ) : (
+                    selectedStage.item
+                      .filter((it) => it.legend)
+                      .map((it, i) => {
+                        const isTarget = it.legend === query;
+                        return (
+                          <div key={i} className={styles.spItem}>
+                            <div className={styles.spLeft}>
+                              <span className={styles.spLegendName}>
+                                {it.legend}
+                              </span>
+                              <span className={styles.spArrow}>▶</span>
+                              <span
+                                className={`${styles.spPlayerName} ${isTarget ? styles.isTarget : ""}`}
+                              >
+                                {fmt(it.player, it.years)}
+                              </span>
+                            </div>
+                            {isTarget && (
+                              <span className={styles.spTargetBadge}>
+                                ⭐ 목표
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </main>

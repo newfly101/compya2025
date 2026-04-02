@@ -5,5 +5,6 @@ export const useHomeNav = () => {
     { to: "/dictionary", label: "📌추천 백과사전" },
     { to: "/simulate", label: "고스변 시뮬레이터" },
     { to: "/mode/history", label: "히스토리 재료 탐색기" },
+    { to: "kbo" , label: "KBO 2026 승부예측", new: "newContent"}
   ];
 };

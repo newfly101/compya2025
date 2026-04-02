@@ -1,9 +1,11 @@
 package com.dawne.com2usbaseball.domain.skill.controller;
 
+import com.dawne.com2usbaseball.domain.skill.dto.response.SkillScoreConfigResponse;
 import com.dawne.com2usbaseball.domain.skill.dto.response.SkillSetResponse;
 import com.dawne.com2usbaseball.common.enums.Target;
 import com.dawne.com2usbaseball.domain.skill.dto.response.coach.CoachSkillSetResponse;
 import com.dawne.com2usbaseball.domain.skill.service.PlayerSkillsService;
+import com.dawne.com2usbaseball.domain.skill.service.SkillScoreConfigService;
 import com.dawne.com2usbaseball.domain.skill.service.coach.CoachSkillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class SkillController {
     private final PlayerSkillsService playerSkillsService;
     private final CoachSkillService coachSkillService;
+    private final SkillScoreConfigService skillScoreConfigService;
 
     @GetMapping("/{target}")
     public SkillSetResponse playerTypeSkills(@PathVariable Target target) {
@@ -23,5 +26,10 @@ public class SkillController {
     @GetMapping("/coach")
     public CoachSkillSetResponse coachSkills() {
         return coachSkillService.getCoachSkillSet();
+    }
+
+    @GetMapping("/score-config")
+    public SkillScoreConfigResponse skillScoreConfig() {
+        return skillScoreConfigService.getSkillScoreConfig();
     }
 }

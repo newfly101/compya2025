@@ -1,8 +1,17 @@
-import quiz877 from "@/assets/quiz/quiz877.png";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { requestLatestQuizAnswer } from "@/domains/quiz/store/public/thunks.js";
 
 export const useHomeData = () => {
+  const dispatch = useDispatch();
+  const latest = useSelector((state) => state.quiz.latest);
+
+  useEffect(() => {
+    dispatch(requestLatestQuizAnswer());
+  }, [dispatch]);
+
   return {
-    reservationImg: "/events/reservation2026.JPG",
-    quizImg: quiz877,
-  }
-}
+    quizTitle: latest?.title ?? null,
+    quizImg: latest?.imageUrl ?? null,
+  };
+};

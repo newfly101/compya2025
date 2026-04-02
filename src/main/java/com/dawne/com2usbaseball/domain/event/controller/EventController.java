@@ -1,11 +1,8 @@
 package com.dawne.com2usbaseball.domain.event.controller;
 
-import com.dawne.com2usbaseball.domain.event.dto.request.ChangeEventRequest;
-import com.dawne.com2usbaseball.domain.event.dto.request.ChangeEventVisibleRequest;
-import com.dawne.com2usbaseball.domain.event.dto.response.EventListResponse;
-import com.dawne.com2usbaseball.domain.event.dto.response.InsertEventResponse;
-import com.dawne.com2usbaseball.domain.event.dto.response.UpdateEventResponse;
-import com.dawne.com2usbaseball.domain.event.service.EventService;
+import com.dawne.com2usbaseball.common.support.dto.ListResponse;
+import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
+import com.dawne.com2usbaseball.domain.event.service.EventUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,25 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/events")
 public class EventController {
 
-    private final EventService service;
+    private final EventUserService eventUserService;
 
-    @GetMapping("/list/external")
-    public EventListResponse getExternalEventList() {
-        return service.getEventListsByExternal();
-    }
-
-    @PostMapping
-    public InsertEventResponse insertNewEvent(@RequestBody ChangeEventRequest request) {
-        return service.createEvent(request.toEntity());
-    }
-
-    @PatchMapping("/{id}")
-    public UpdateEventResponse updateExternalEvent(@RequestBody ChangeEventRequest request, @PathVariable Long id) {
-        return service.updateEvent(request.toEntity(id));
-    }
-
-    @PatchMapping("/{id}/visible")
-    public UpdateEventResponse updateExternalEventVisible(@PathVariable Long id, @RequestBody ChangeEventVisibleRequest request) {
-        return service.updateEventVisible(id, request.visible());
+    @GetMapping("/external")
+    public ListResponse<EventResponse> getExternalEventList() {
+        return eventUserService.getExternalEventList();
     }
 }

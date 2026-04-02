@@ -22,17 +22,17 @@ const couponSlice = createSlice({
      * 쿠폰 목록 조회
      * =============================== */
     applyAsyncHandlers(builder, requestGetUserCouponList, (state, action) => {
-      state.coupons = action.payload.coupons;
+      state.coupons = action.payload;
     });
 
     applyAsyncHandlers(builder, requestGetAdminCouponList, (state, action) => {
-      state.coupons = action.payload.coupons;
+      state.coupons = action.payload;
     });
     /* ===============================
      * 쿠폰 신규 생성
      * =============================== */
     applyAsyncHandlers(builder, requestAdminInsertNewCoupon, (state, action) => {
-      state.coupons.push(action.payload);
+      state.coupons.unshift(action.payload);
     });
     /* ===============================
      * 쿠폰 수정
@@ -53,11 +53,12 @@ const couponSlice = createSlice({
      * =============================== */
     applyAsyncHandlers(builder, requestAdminUpdateCouponVisible, (state, action) => {
       const updated = action.payload;
-      const index = state.coupons.findIndex(e => e.id === updated.id);
 
-      if (index !== -1) {
-        state.coupons[index].visible = updated.visible;
-      }
+      state.coupons = state.coupons.map(c =>
+        Number(c.id) === Number(updated.id)
+          ? { ...c, visible: updated.visible }
+          : c
+      );
     });
   },
 });

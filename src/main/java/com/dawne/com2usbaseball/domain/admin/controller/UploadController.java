@@ -22,4 +22,10 @@ public class UploadController {
         log.info("file={}",file);
         return uploadService.uploadImage(file);
     }
+    /* 값을 아래와 같이 내려 줄 수 있도록 변경 필요
+        {
+          "url": "https://...",
+          "fileName": "uuid.png"
+        }
+    */
 }

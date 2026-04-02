@@ -1,0 +1,290 @@
+.wrap {
+  margin-top: 1.6rem;
+  padding: 1.2rem;
+  background: $surface2;
+  border: 1px solid $border;
+  border-radius: 1.2rem;
+}
+
+// -------------------------------------------------------
+// 헤더
+// -------------------------------------------------------
+.tableHeader {
+  @include flex-between;
+  margin-bottom: 0.8rem;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.badges {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.recommendBadge {
+  padding: 0.3rem 1rem;
+  border-radius: 2rem;
+  background: $primary-bg;
+  color: $primary-text;
+  font-size: 1.2rem;
+  font-weight: 700;
+  border: 1px solid $primary;
+}
+
+.highEndBadge {
+  padding: 0.3rem 1rem;
+  border-radius: 2rem;
+  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.totalBig {
+  font-size: 2rem;
+  font-weight: 800;
+  color: $primary-text;
+}
+
+// -------------------------------------------------------
+// 프리셋 배지
+// -------------------------------------------------------
+.presetBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.8rem;
+  background: $surface3;
+  border: 1px solid $border;
+  border-radius: 0.8rem;
+  flex-wrap: wrap;
+
+  strong {
+    font-size: 1.3rem;
+    color: $text-primary;
+  }
+}
+
+.presetDesc {
+  font-size: 1.2rem;
+  color: $text-secondary;
+}
+
+.tierS {
+  padding: 0.2rem 0.7rem;
+  border-radius: 0.4rem;
+  background: linear-gradient(135deg, #d97706, #b45309);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.tierA {
+  padding: 0.2rem 0.7rem;
+  border-radius: 0.4rem;
+  background: $primary-bg;
+  color: $primary-text;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: 1px solid $primary;
+}
+
+.tierB {
+  padding: 0.2rem 0.7rem;
+  border-radius: 0.4rem;
+  background: $surface3;
+  color: $text-secondary;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+// -------------------------------------------------------
+// 테이블
+// -------------------------------------------------------
+.tableScroll {
+  width: 100%;
+}
+
+.table {
+  @include tableBase($font-size: 1.3rem);
+  width: 100%;
+  table-layout: fixed;
+
+  th {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: $text-secondary;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 0; // table-layout: fixed 환경에서 ellipsis 동작에 필요
+  }
+
+  th, td {
+    padding: 0.8rem 0.6rem;
+  }
+}
+
+.recommended {
+  background: $primary-bg !important;
+
+  td { color: $primary-text; }
+
+  .totalCell { font-weight: 800; }
+}
+
+.positionCell {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.star {
+  color: #ffd86a;
+  margin-right: 0.3rem;
+  text-shadow: 0 0 6px rgba(255, 216, 106, 0.7);
+}
+
+.scoreCell {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.totalCell {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: $text-primary;
+}
+
+// -------------------------------------------------------
+// 스킬 등급 색상
+// -------------------------------------------------------
+.legend   { color: #a78bfa; font-weight: 700; }
+.platinum { color: #fbbf24; font-weight: 700; }
+.hero     { color: #4ade80; font-weight: 700; }
+.normal   { color: $text-secondary; }
+
+// -------------------------------------------------------
+// 상극 / 시너지
+// -------------------------------------------------------
+.relationWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 0.8rem;
+}
+
+.conflict {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 2rem;
+  background: rgba(#f87171, 0.12);
+  border: 1px solid rgba(#f87171, 0.4);
+  color: #f87171;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.synergy {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 2rem;
+  background: rgba(#4ade80, 0.1);
+  border: 1px solid rgba(#4ade80, 0.35);
+  color: #4ade80;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+// -------------------------------------------------------
+// 타자 조건부 안내
+// -------------------------------------------------------
+.noteList {
+  margin-top: 0.8rem;
+  padding-left: 1.6rem;
+  list-style: disc;
+
+  li {
+    font-size: 1.2rem;
+    color: $text-secondary;
+    line-height: 2;
+  }
+}
+
+// -------------------------------------------------------
+// 모바일 (iPhone SE 375px 기준)
+// -------------------------------------------------------
+@media (max-width: 480px) {
+  .wrap {
+    padding: 1rem;
+    margin-top: 1.2rem;
+  }
+
+  .title {
+    font-size: 1.3rem;
+  }
+
+  .table {
+    th {
+      font-size: 1.0rem;
+      padding: 0.6rem 0.4rem;
+    }
+
+    td {
+      font-size: 1.1rem;
+      padding: 0.6rem 0.4rem;
+    }
+  }
+
+  .scoreCell {
+    font-size: 1.2rem;
+  }
+
+  .totalCell {
+    font-size: 1.3rem;
+  }
+
+  .positionCell {
+    font-size: 1.1rem;
+  }
+
+  .star {
+    margin-right: 0.1rem;
+  }
+
+  .recommendBadge,
+  .highEndBadge {
+    font-size: 1.0rem;
+    padding: 0.2rem 0.7rem;
+  }
+
+  .presetBadge {
+    padding: 0.5rem 0.8rem;
+    gap: 0.5rem;
+
+    strong { font-size: 1.1rem; }
+  }
+
+  .presetDesc {
+    font-size: 1.0rem;
+  }
+
+  .conflict,
+  .synergy {
+    font-size: 1.0rem;
+    padding: 0.3rem 0.6rem;
+  }
+}

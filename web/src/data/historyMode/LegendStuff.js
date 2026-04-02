@@ -348,7 +348,6 @@ export const legendStuff = [
     item: [
       { legend: "심정수", player: "이승엽", years: 2003 },
       { legend: "한대화", player: "김한수", years: 2003 },
-      { legend: "배영수", player: "임찬용", years: 2003 },
       { legend: "임기효", player: "배영수", years: 2003 },
     ],
   },

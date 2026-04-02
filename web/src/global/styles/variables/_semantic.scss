@@ -1,34 +1,79 @@
-@use "./colors" as c;
+@use "./colors" as *;
+@use "sass:color";
 
-// Surface
-$ui-surface-page: c.$background-subtle;
-$ui-surface-bar: c.$surface2;
-//$ui-surface-hover: c.$surface3;
+/* =========================
+   SURFACE
+   (10px base → 1rem = 10px)
+========================= */
+$ui-surface-base:     $background;
+$ui-surface-page:     $background-subtle;
+$ui-surface-bar:      $surface2;
+$ui-surface-elevated: $surface2;
+$ui-surface-hover:    $surface3;
+$ui-surface-muted:    $surface4;
 
-// Text
-//$ui-text-main: c.$text-primary;
-//$ui-text-sub: c.$text-secondary;
-//$ui-text-muted: c.$text-muted;
+/* =========================
+   BORDER
+========================= */
+$ui-border:        $border;
+$ui-border-light:  $border;
+$ui-border-strong: $border-strong;
 
-// Border
-$ui-border: c.$border;
-//$ui-border-strong: c.$border-strong;
+/* =========================
+   TEXT
+========================= */
+$ui-text-main:  $text-primary;
+$ui-text-sub:   $text-secondary;
+$ui-text-muted: $text-muted;
 
-// Buttons
-$ui-btn-main: c.$primary;
-$ui-btn-main-hover: c.$primary-hover;
-$ui-btn-ghost: c.$primary-bg;
-$ui-btn-ghost-hover: c.$primary-hover;
+/* =========================
+   BRAND
+========================= */
+$ui-brand-main:   $primary;
+$ui-brand-hover:  $primary-hover;
+$ui-brand-active: $primary-active;
+$ui-brand-text:   $primary-text;
 
-// Nav
-$ui-nav-text: c.$text-secondary;
-$ui-nav-hover: c.$text-primary;
+/* =========================
+   BUTTON — solid
+========================= */
+$ui-btn-main:       $primary;
+$ui-btn-main-hover: $primary-hover;
+$ui-btn-ghost:      $secondary;
+$ui-btn-ghost-hover: $secondary-hover;
 
-// Layout
-$ui-container-width: 1200px;
-$ui-container-padding: 1.6rem;
+/* =========================
+   BUTTON — gradients
+========================= */
+$ui-btn-primary-gradient: linear-gradient(135deg, #6d4ad3, #a86bf0);
+$ui-btn-primary-disabled: linear-gradient(210deg, #a694c8, #3f3950, #312e3e);
+$ui-btn-user-edit:        linear-gradient(210deg, #a694c8, #3f3950, #312e3e);
 
+/* =========================
+   BUTTON — skill grades
+========================= */
+$ui-btn-skill-legend:   linear-gradient(to bottom, #8f86ff 0%, #6f64f7 45%, #5a4de0 100%);
+$ui-btn-skill-platinum: linear-gradient(180deg,    #ffe37a 0%, #f2c94c 45%, #d4a900 100%);
+$ui-btn-skill-hero:     linear-gradient(180deg,
+                          color.adjust($success, $lightness: 30%) 0%,
+                          $success 45%,
+                          color.adjust($success, $lightness: -17%) 100%);
+$ui-btn-skill-normal:   linear-gradient(180deg,    #cfd3da 0%, #aeb4bf 50%, #8e95a3 100%);
 
-// kakao btn
-$kakao-btn-bg: c.$kakao-yellow;
-$kakao-btn-text: c.$kakao-txt;
+/* =========================
+   KAKAO
+========================= */
+$kakao-btn-bg:   $kakao-yellow;
+$kakao-btn-text: $kakao-txt;
+
+/* =========================
+   NAV
+========================= */
+$ui-nav-text:  $text-secondary;
+$ui-nav-hover: $text-primary;
+
+/* =========================
+   LAYOUT
+========================= */
+$ui-container-width:   1200px;
+$ui-container-padding: 1.6rem;   // 16px

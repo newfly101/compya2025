@@ -237,7 +237,7 @@ CREATE TABLE user_roles
 CREATE TABLE events
 (
     id            BIGINT PRIMARY KEY AUTO_INCREMENT,
-    event_source  ENUM ('OFFICIAL', 'INTERNAL') NOT NULL DEFAULT 'OFFICIAL', -- OFFICIAL / INTERNAL
+    event_type    ENUM ('OFFICIAL', 'INTERNAL') NOT NULL DEFAULT 'OFFICIAL', -- OFFICIAL / INTERNAL
     title         VARCHAR(255)                  NOT NULL,
     start_at      DATETIME                      NOT NULL,
     expire_at     DATETIME                      NOT NULL,
@@ -414,5 +414,146 @@ CREATE TABLE notices
         (source = 'INTERNAL' AND content IS NOT NULL AND external_url IS NULL)
             OR
         (source = 'EXTERNAL' AND content IS NULL AND external_url IS NOT NULL)
-    )
+        )
 );
+
+CREATE TABLE player_card
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+
+    -- 카드 식별
+    card_code   VARCHAR(60)                                                             NOT NULL COMMENT 'GRADE_ROLE_TEAM_PLAYER_YEAR',
+    name        VARCHAR(50)                                                             NOT NULL,
+
+    team_id     BIGINT                                                                  NOT NULL,
+
+    role        ENUM ('HITTER','PITCHER')                                               NOT NULL,
+    grade       ENUM ('LEGEND','EPIC','PLATINUM','MVP','NATIONAL', 'ALLSTAR', 'GOLDEN') NOT NULL,
+
+    -- 시즌 (LEGEND는 NULL 허용)
+    season_year SMALLINT                                                                NULL COMMENT 'LEGEND는 NULL',
+
+    overall     SMALLINT                                                                NOT NULL,
+    back_number SMALLINT,
+    birth_date  DATE,
+    bat_throw   VARCHAR(10),
+
+    positions   JSON                                                                    NOT NULL,
+    traits      JSON,
+
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    -- 제약
+    UNIQUE KEY uk_card_code (card_code),
+
+    INDEX idx_team_id (team_id),
+    INDEX idx_grade (grade),
+    INDEX idx_role (role),
+    INDEX idx_season_year (season_year),
+    INDEX idx_grade_year (grade, season_year),
+
+    CONSTRAINT fk_card_team
+        FOREIGN KEY (team_id)
+            REFERENCES teams (id),
+
+    CONSTRAINT chk_grade_year
+        CHECK (
+            (grade = 'LEGEND' AND season_year IS NULL)
+                OR
+            (grade <> 'LEGEND' AND season_year IS NOT NULL)
+            )
+);
+
+CREATE TABLE player_card_hitter_attributes
+(
+    card_id  BIGINT PRIMARY KEY,
+
+    accuracy SMALLINT NOT NULL COMMENT '정확',
+    power    SMALLINT NOT NULL COMMENT '파워',
+    contact  SMALLINT NOT NULL COMMENT '선구',
+    speed    SMALLINT NOT NULL COMMENT '주력',
+    defense  SMALLINT NOT NULL COMMENT '수비',
+
+    CONSTRAINT fk_card_hitter_attr
+        FOREIGN KEY (card_id)
+            REFERENCES player_card (id)
+            ON DELETE CASCADE
+);
+
+CREATE TABLE player_card_pitcher_attributes
+(
+    card_id  BIGINT PRIMARY KEY,
+
+    control  SMALLINT NOT NULL COMMENT '제구',
+    velocity SMALLINT NOT NULL COMMENT '구위',
+    stamina  SMALLINT NOT NULL COMMENT '체력',
+    fastball SMALLINT NOT NULL COMMENT '직구',
+    breaking SMALLINT NOT NULL COMMENT '변화',
+
+    CONSTRAINT fk_card_pitcher_attr
+        FOREIGN KEY (card_id)
+            REFERENCES player_card (id)
+            ON DELETE CASCADE
+);
+
+-- 점수표 관리 테이블
+CREATE TABLE skill_score_config
+(
+    id               BIGINT AUTO_INCREMENT PRIMARY KEY,
+    skill_code       VARCHAR(10)                              NOT NULL,
+    target           ENUM ('PITCHER', 'HITTER')              NOT NULL,
+    point            INT                                      NOT NULL DEFAULT 1,
+
+    -- 같은 카드 내 스킬 공존 조건만
+    condition_type   ENUM ('NONE', 'WITH_SKILL')             NOT NULL DEFAULT 'NONE',
+    condition_value  VARCHAR(10)                              NULL,  -- 공존 스킬코드
+    effect_type      ENUM ('ADD', 'SUB')                     NOT NULL DEFAULT 'ADD',
+    effect_point     INT                                      NULL,
+
+    is_active        BOOLEAN                                  NOT NULL DEFAULT true,
+    updated_by       BIGINT                                   NULL,
+    updated_at       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
+
+    UNIQUE KEY uk_skill_condition
+        (skill_code, target, condition_type, condition_value),
+
+    CONSTRAINT fk_score_config_skill
+        FOREIGN KEY (skill_code, target)
+            REFERENCES player_skills (skill_code, target)
+            ON DELETE CASCADE
+);
+
+
+CREATE TABLE quiz_answers
+(
+    id         BIGINT       AUTO_INCREMENT PRIMARY KEY,
+    round      INT          NOT NULL COMMENT '퀴즈 회차 번호 (예: 877)',
+    title      VARCHAR(100) NOT NULL COMMENT '표시 제목 (예: 컴프야 퀴즈 이벤트 877회 정답)',
+    image_url  VARCHAR(500) NOT NULL COMMENT 'S3 이미지 URL',
+    is_visible BOOLEAN      NOT NULL DEFAULT true,
+    created_at DATETIME     NOT NULL,
+    updated_at DATETIME     NOT NULL,
+    UNIQUE KEY uq_round (round)
+);
+
+CREATE TABLE kbo_team_code_mappings
+(
+    id                    BIGINT AUTO_INCREMENT PRIMARY KEY,
+    source_system         VARCHAR(50) NOT NULL,
+    external_team_code    VARCHAR(20) NOT NULL,
+    external_team_name    VARCHAR(20),
+    internal_team_id      BIGINT NOT NULL,
+    internal_team_code    VARCHAR(20) NOT NULL,
+    is_active             BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at            TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at            TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT uq_external_team_mapping
+        UNIQUE (source_system, external_team_code),
+
+    CONSTRAINT fk_external_team_mappings_internal_team
+        FOREIGN KEY (internal_team_id) REFERENCES teams(id)
+)

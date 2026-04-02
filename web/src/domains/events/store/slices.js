@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  requestGetExternalEventList,
-  requestInsertNewEvent,
-  requestUpdateExternalEvent, requestUpdateExternalEventVisible,
-} from "@/domains/events/store/thunks.js";
 import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
+import {
+  requestAdminGetExEventList,
+  requestAdminInsertNewExEvent,
+  requestAdminUpdateExEvent, requestAdminUpdateExEventVisible,
+} from "@/domains/events/store/admin/thunks.js";
+import { requestGetExternalEventList } from "@/domains/events/store/public/thunks.js";
 
 const initialState = {
   events: [],
@@ -21,18 +22,22 @@ const eventsSlice = createSlice({
      * 외부 이벤트 목록 조회
      * =============================== */
     applyAsyncHandlers(builder, requestGetExternalEventList, (state, action) => {
-      state.events = action.payload.events;
+      state.events = action.payload;
+    });
+
+    applyAsyncHandlers(builder, requestAdminGetExEventList, (state, action) => {
+      state.events = action.payload;
     });
     /* ===============================
      * 이벤트 신규 생성
      * =============================== */
-    applyAsyncHandlers(builder, requestInsertNewEvent, (state, action) => {
-      state.events.push(action.payload);
+    applyAsyncHandlers(builder, requestAdminInsertNewExEvent, (state, action) => {
+      state.events.unshift(action.payload);
     });
     /* ===============================
      * 이벤트 수정
      * =============================== */
-    applyAsyncHandlers(builder, requestUpdateExternalEvent, (state, action) => {
+    applyAsyncHandlers(builder, requestAdminUpdateExEvent, (state, action) => {
       const updated = action.payload;
       const index = state.events.findIndex(e => e.id === updated.id);
 
@@ -44,15 +49,16 @@ const eventsSlice = createSlice({
       }
     });
     /* ===============================
-     * visible 토글
+     * 이벤트 visible 변경
      * =============================== */
-    applyAsyncHandlers(builder, requestUpdateExternalEventVisible, (state, action) => {
+    applyAsyncHandlers(builder, requestAdminUpdateExEventVisible, (state, action) => {
       const updated = action.payload;
-      const index = state.events.findIndex(e => e.id === updated.id);
 
-      if (index !== -1) {
-        state.events[index].visible = updated.visible;
-      }
+      state.events = state.events.map(e =>
+        Number(e.id) === Number(updated.id)
+          ? { ...e, visible: updated.visible }
+          : e
+      );
     });
   },
 });

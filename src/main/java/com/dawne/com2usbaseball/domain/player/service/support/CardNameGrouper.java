@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.domain.player.service.support;
 
-import com.dawne.com2usbaseball.domain.player.entity.PlayerCardEntity;
+import com.dawne.com2usbaseball.domain.player.entity.PlayerLegendCardEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,11 +11,11 @@ import java.util.Map;
 @Component
 public class CardNameGrouper {
 
-    public Map<String, List<PlayerCardEntity>> nameListMap(List<PlayerCardEntity> list) {
+    public Map<String, List<PlayerLegendCardEntity>> nameListMap(List<PlayerLegendCardEntity> list) {
 
-        Map<String, List<PlayerCardEntity>> grouped = new HashMap<>();
+        Map<String, List<PlayerLegendCardEntity>> grouped = new HashMap<>();
 
-        for (PlayerCardEntity card : list) {
+        for (PlayerLegendCardEntity card : list) {
             grouped
                     .computeIfAbsent(card.getName(), k -> new ArrayList<>())
                     .add(card);
