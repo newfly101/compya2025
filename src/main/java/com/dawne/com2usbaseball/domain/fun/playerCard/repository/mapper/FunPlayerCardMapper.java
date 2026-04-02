@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.domain.fun.playerCard.repository.mapper;
 
-import com.dawne.com2usbaseball.domain.player.entity.PlayerCardEntity;
+import com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Mapper
-public interface PlayerCardMapper {
+public interface FunPlayerCardMapper {
     int insert(PlayerCardEntity entity);
 
     int update(PlayerCardEntity entity);
