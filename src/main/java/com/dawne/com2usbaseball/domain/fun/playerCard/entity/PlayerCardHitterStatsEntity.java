@@ -7,10 +7,10 @@ import lombok.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlayerCardHitterStatsEntity {
-    Long cardId;
-    Short accuracy;
-    Short power;
-    Short discipline;
-    Short speed;
-    Short defense;
+    private Long cardId;
+    private Short accuracy;
+    private Short power;
+    private Short discipline;
+    private Short speed;
+    private Short defense;
 }

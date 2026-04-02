@@ -8,16 +8,16 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayerCardPitcherPitchGradesEntity {
-    Long cardId;
-    String fourSeamGrade;
-    String twoSeamGrade;
-    String changeupGrade;
-    String circleChangeupGrade;
-    String sliderGrade;
-    String curveGrade;
-    String forkballGrade;
-    String cutterGrade;
-    String sinkerGrade;
-    String splitterGrade;
+    private Long cardId;
+    private String fourSeamGrade;
+    private String twoSeamGrade;
+    private String changeupGrade;
+    private String circleChangeupGrade;
+    private String sliderGrade;
+    private String curveGrade;
+    private String forkballGrade;
+    private String cutterGrade;
+    private String sinkerGrade;
+    private String splitterGrade;
 
 }

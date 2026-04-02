@@ -8,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayerCardPositionsEntity {
-    Long id;
-    Long cardId;
-    String positionCode;
-    Short displayOrder;
+    private Long id;
+    private Long cardId;
+    private String positionCode;
+    private Short displayOrder;
 }

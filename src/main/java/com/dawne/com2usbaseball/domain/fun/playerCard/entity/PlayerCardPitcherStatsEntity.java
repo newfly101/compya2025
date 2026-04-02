@@ -8,10 +8,10 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PlayerCardPitcherStatsEntity {
-    Long cardId;
-    Short control;
-    Short velocity;
-    Short stamina;
-    Short fastball;
-    Short breaking;
+    private Long cardId;
+    private Short control;
+    private Short velocity;
+    private Short stamina;
+    private Short fastball;
+    private Short breaking;
 }
