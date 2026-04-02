@@ -538,3 +538,22 @@ CREATE TABLE quiz_answers
     updated_at DATETIME     NOT NULL,
     UNIQUE KEY uq_round (round)
 );
+
+CREATE TABLE kbo_team_code_mappings
+(
+    id                    BIGINT AUTO_INCREMENT PRIMARY KEY,
+    source_system         VARCHAR(50) NOT NULL,
+    external_team_code    VARCHAR(20) NOT NULL,
+    external_team_name    VARCHAR(20),
+    internal_team_id      BIGINT NOT NULL,
+    internal_team_code    VARCHAR(20) NOT NULL,
+    is_active             BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at            TIMESTAMP NOT NULL DEFAULT NOW(),
+    updated_at            TIMESTAMP NOT NULL DEFAULT NOW(),
+
+    CONSTRAINT uq_external_team_mapping
+        UNIQUE (source_system, external_team_code),
+
+    CONSTRAINT fk_external_team_mappings_internal_team
+        FOREIGN KEY (internal_team_id) REFERENCES teams(id)
+)
