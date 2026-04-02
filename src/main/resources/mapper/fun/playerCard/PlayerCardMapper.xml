@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.fun.playerCard.mapper.PlayerCardMapper">
+
+    <resultMap id="PlayerCardResultMap"
+               type="com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardEntity">
+        <id property="id" column="id"/>
+        <result property="cardCode" column="card_code"/>
+        <result property="playerId" column="player_id"/>
+        <result property="playerName" column="player_name"/>
+        <result property="teamId" column="team_id"/>
+        <result property="playerRole" column="player_role"/>
+        <result property="cardGrade" column="card_grade"/>
+        <result property="seasonYear" column="season_year"/>
+        <result property="overallRating" column="overall_rating"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardEntity"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO fun_player_card
+        (
+            card_code,
+            player_id,
+            player_name,
+            team_id,
+            player_role,
+            card_grade,
+            season_year,
+            overall_rating
+        )
+        VALUES
+            (
+                #{cardCode},
+                #{playerId},
+                #{playerName},
+                #{teamId},
+                #{playerRole},
+                #{cardGrade},
+                #{seasonYear},
+                #{overallRating}
+            )
+    </insert>
+
+    <update id="update" parameterType="com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardEntity">
+        UPDATE fun_player_card
+        SET
+            card_code = #{cardCode},
+            player_id = #{playerId},
+            player_name = #{playerName},
+            team_id = #{teamId},
+            player_role = #{playerRole},
+            card_grade = #{cardGrade},
+            season_year = #{seasonYear},
+            overall_rating = #{overallRating}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM fun_player_card
+        WHERE id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="long" resultMap="PlayerCardResultMap">
+        SELECT
+            id,
+            card_code,
+            player_id,
+            player_name,
+            team_id,
+            player_role,
+            card_grade,
+            season_year,
+            overall_rating,
+            created_at,
+            updated_at
+        FROM fun_player_card
+        WHERE id = #{id}
+    </select>
+
+    <select id="findByCardCode" parameterType="string" resultMap="PlayerCardResultMap">
+        SELECT
+            id,
+            card_code,
+            player_id,
+            player_name,
+            team_id,
+            player_role,
+            card_grade,
+            season_year,
+            overall_rating,
+            created_at,
+            updated_at
+        FROM fun_player_card
+        WHERE card_code = #{cardCode}
+    </select>
+
+    <select id="findAll" resultMap="PlayerCardResultMap">
+        SELECT
+            id,
+            card_code,
+            player_id,
+            player_name,
+            team_id,
+            player_role,
+            card_grade,
+            season_year,
+            overall_rating,
+            created_at,
+            updated_at
+        FROM fun_player_card
+        ORDER BY id DESC
+    </select>
+
+</mapper>

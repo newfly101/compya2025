@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.fun.playerCard.mapper.PlayerCardPitcherPitchGradesMapper">
+
+    <resultMap id="PlayerCardPitcherPitchGradesResultMap"
+               type="com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardPitcherPitchGradesEntity">
+        <id property="cardId" column="card_id"/>
+        <result property="fourSeamGrade" column="four_seam_grade"/>
+        <result property="twoSeamGrade" column="two_seam_grade"/>
+        <result property="changeupGrade" column="changeup_grade"/>
+        <result property="circleChangeupGrade" column="circle_changeup_grade"/>
+        <result property="sliderGrade" column="slider_grade"/>
+        <result property="curveGrade" column="curve_grade"/>
+        <result property="forkballGrade" column="forkball_grade"/>
+        <result property="cutterGrade" column="cutter_grade"/>
+        <result property="sinkerGrade" column="sinker_grade"/>
+        <result property="splitterGrade" column="splitter_grade"/>
+    </resultMap>
+
+    <insert id="insert"
+            parameterType="com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardPitcherPitchGradesEntity">
+        INSERT INTO fun_player_card_pitcher_pitch_grades
+        (
+            card_id,
+            four_seam_grade,
+            two_seam_grade,
+            changeup_grade,
+            circle_changeup_grade,
+            slider_grade,
+            curve_grade,
+            forkball_grade,
+            cutter_grade,
+            sinker_grade,
+            splitter_grade
+        )
+        VALUES
+            (
+                #{cardId},
+                #{fourSeamGrade},
+                #{twoSeamGrade},
+                #{changeupGrade},
+                #{circleChangeupGrade},
+                #{sliderGrade},
+                #{curveGrade},
+                #{forkballGrade},
+                #{cutterGrade},
+                #{sinkerGrade},
+                #{splitterGrade}
+            )
+    </insert>
+
+    <update id="update"
+            parameterType="com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardPitcherPitchGradesEntity">
+        UPDATE fun_player_card_pitcher_pitch_grades
+        SET
+            four_seam_grade = #{fourSeamGrade},
+            two_seam_grade = #{twoSeamGrade},
+            changeup_grade = #{changeupGrade},
+            circle_changeup_grade = #{circleChangeupGrade},
+            slider_grade = #{sliderGrade},
+            curve_grade = #{curveGrade},
+            forkball_grade = #{forkballGrade},
+            cutter_grade = #{cutterGrade},
+            sinker_grade = #{sinkerGrade},
+            splitter_grade = #{splitterGrade}
+        WHERE card_id = #{cardId}
+    </update>
+
+    <delete id="deleteByCardId" parameterType="long">
+        DELETE FROM fun_player_card_pitcher_pitch_grades
+        WHERE card_id = #{cardId}
+    </delete>
+
+    <select id="findByCardId" parameterType="long" resultMap="PlayerCardPitcherPitchGradesResultMap">
+        SELECT
+            card_id,
+            four_seam_grade,
+            two_seam_grade,
+            changeup_grade,
+            circle_changeup_grade,
+            slider_grade,
+            curve_grade,
+            forkball_grade,
+            cutter_grade,
+            sinker_grade,
+            splitter_grade
+        FROM fun_player_card_pitcher_pitch_grades
+        WHERE card_id = #{cardId}
+    </select>
+
+</mapper>
