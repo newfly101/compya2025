@@ -8,6 +8,7 @@ import communityReducer from "@/domains/community/store/slices.js";
 import playerCardReducer from "@/domains/playerCard/store/slices.js";
 import upLoadReducer from "@/infra/uploads/store/slices.js";
 import quizReducer from "@/domains/quiz/store/slices.js";
+import kboReducer from "@/domains/kbo/store/slices.js";
 import operationReducer from "@/app/store/operation/slices.jsx";
 import { operationListener } from "@/app/store/operation/operationListener.js";
 
@@ -23,6 +24,7 @@ export const store = configureStore({
     upload: upLoadReducer,
     playerCard: playerCardReducer,
     quiz: quizReducer,
+    kbo: kboReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(operationListener.middleware),
