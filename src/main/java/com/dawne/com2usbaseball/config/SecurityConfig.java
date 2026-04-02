@@ -24,12 +24,15 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors->{})
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/**").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/upload/**").permitAll()
+                        .requestMatchers(
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html"
+                        ).permitAll()
                         .requestMatchers("/api/admin/**").authenticated()
                         .requestMatchers("/api/community/admin/**").authenticated()
                         .requestMatchers("/api/events/**").authenticated()
+                        .requestMatchers("/api/**").permitAll()   // ← 구체적인 것들 다음에
                         .anyRequest().denyAll())
                 // ✅ AccessLogFilter 먼저
                 .addFilterBefore(
@@ -46,4 +49,5 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 }

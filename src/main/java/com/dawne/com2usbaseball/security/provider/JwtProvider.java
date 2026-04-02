@@ -47,4 +47,5 @@ public class JwtProvider {
 
         return Integer.parseInt(claims.getSubject());
     }
+
 }

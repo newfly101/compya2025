@@ -7,11 +7,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import jakarta.servlet.http.Cookie;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -29,6 +32,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             try {
                 int userId = jwtProvider.getUserId(token);
                 request.setAttribute("userId", userId);
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                userId,       // principal
+                                null,         // credentials
+                                List.of()     // authorities (권한 없으면 빈 리스트)
+                        );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 return;
@@ -59,11 +70,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
-//        return path.startsWith("/api/auth");
-        return switch (path) {
-            case "/api/auth/naver/callback",
-                 "/api/auth/logout" -> true;
-            default -> false;
-        };
+        return path.startsWith("/swagger-ui") ||
+                path.startsWith("/v3/api-docs") ||
+                path.startsWith("/api/auth/naver/callback") ||
+                path.startsWith("/api/auth/logout");
     }
+
 }
