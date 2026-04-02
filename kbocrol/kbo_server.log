@@ -1,0 +1,38 @@
+2026-04-02 07:12:31 [INFO] __main__ - ==================================================
+2026-04-02 07:12:31 [INFO] __main__ -   KBO Python 서버 시작
+2026-04-02 07:12:31 [INFO] __main__ - ==================================================
+2026-04-02 07:12:31 [INFO] apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-02 07:12:31 [INFO] apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-02 07:12:31 [INFO] apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-02 07:12:31 [INFO] apscheduler.scheduler - Added job "선발투수 수집" to job store "default"
+2026-04-02 07:12:31 [INFO] apscheduler.scheduler - Added job "경기 결과 업데이트" to job store "default"
+2026-04-02 07:12:31 [INFO] apscheduler.scheduler - Added job "타자 기록 수집" to job store "default"
+2026-04-02 07:12:31 [INFO] apscheduler.scheduler - Scheduler started
+2026-04-02 07:12:31 [INFO] src.app.scheduler - APScheduler 시작
+2026-04-02 07:12:31 [INFO] src.app.scheduler -   09:00 → 선발투수 수집
+2026-04-02 07:12:31 [INFO] src.app.scheduler -   23:30  → 경기 결과 업데이트
+2026-04-02 07:12:31 [INFO] src.app.scheduler -   23:45  → 타자 기록 수집
+2026-04-02 07:12:31 [INFO] src.app.grpc_server - gRPC 서버 시작: 포트 50051
+2026-04-02 07:12:31 [INFO] __main__ - 서버 실행 중... (종료: Ctrl+C)
+2026-04-02 07:12:32 [INFO] __main__ - 종료 시그널 수신 → 서버 종료 중...
+2026-04-02 07:12:32 [INFO] apscheduler.scheduler - Scheduler has been shut down
+2026-04-02 07:12:32 [INFO] __main__ - 서버 종료 완료
+2026-04-02 07:39:02 [INFO] __main__ - ==================================================
+2026-04-02 07:39:02 [INFO] __main__ -   KBO Python 서버 시작
+2026-04-02 07:39:02 [INFO] __main__ - ==================================================
+2026-04-02 07:39:02 [INFO] apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-02 07:39:02 [INFO] apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-02 07:39:02 [INFO] apscheduler.scheduler - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-04-02 07:39:02 [INFO] apscheduler.scheduler - Added job "선발투수 수집" to job store "default"
+2026-04-02 07:39:02 [INFO] apscheduler.scheduler - Added job "경기 결과 업데이트" to job store "default"
+2026-04-02 07:39:02 [INFO] apscheduler.scheduler - Added job "타자 기록 수집" to job store "default"
+2026-04-02 07:39:02 [INFO] apscheduler.scheduler - Scheduler started
+2026-04-02 07:39:02 [INFO] src.app.scheduler - APScheduler 시작
+2026-04-02 07:39:02 [INFO] src.app.scheduler -   09:00 → 선발투수 수집
+2026-04-02 07:39:02 [INFO] src.app.scheduler -   23:30  → 경기 결과 업데이트
+2026-04-02 07:39:02 [INFO] src.app.scheduler -   23:45  → 타자 기록 수집
+2026-04-02 07:39:02 [INFO] src.app.grpc_server - gRPC 서버 시작: 포트 50051
+2026-04-02 07:39:02 [INFO] __main__ - 서버 실행 중... (종료: Ctrl+C)
+2026-04-02 07:39:10 [INFO] __main__ - 종료 시그널 수신 → 서버 종료 중...
+2026-04-02 07:39:10 [INFO] apscheduler.scheduler - Scheduler has been shut down
+2026-04-02 07:39:10 [INFO] __main__ - 서버 종료 완료

@@ -1,0 +1,6 @@
+requests==2.32.3
+pymysql==1.1.1
+grpcio==1.64.0
+grpcio-tools==1.64.0
+APScheduler==3.10.4
+protobuf==5.27.0
