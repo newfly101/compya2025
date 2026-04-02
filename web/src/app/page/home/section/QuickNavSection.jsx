@@ -13,7 +13,7 @@ const QuickNavSection = () => {
         {quickNav.map((item, i) => (
           <button key={`home-nav-${i}`}
           onClick={() => navigate(item.to)}
-          className={styles.quickCard}
+          className={`${styles.quickCard} ${item.new ? styles[item.new] : ""}`}
           >
             {item.label}
           </button>

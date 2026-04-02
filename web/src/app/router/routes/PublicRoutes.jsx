@@ -1,4 +1,5 @@
 import React, { lazy } from "react";
+const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
 const NoticeLayout = lazy(() => import("@/app/page/notice/NoticeLayout.jsx"));
 const FunNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx"));
 const OfficialNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx"));
@@ -46,4 +47,5 @@ export const PublicRoutes = [
       { path: "hitter", element: <Dictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
     ]
   },
+  { path: "kbo" , element: <KBOLeaguePage />, handle: {title: "컴프야펀 | KBO 승부예측"} }
 ];
