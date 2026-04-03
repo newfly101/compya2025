@@ -7,21 +7,41 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Repository
+@RequiredArgsConstructor
 public class TagRepository {
 
-    private final TagMapper mapper;
+    private final TagMapper tagMapper;
 
-    public List<TagEntity> selectTagItems() {
-        return mapper.selectTags();
+    public List<TagEntity> getTagList() {
+        return tagMapper.getTagList();
     }
 
-    public boolean insertNewTag(TagEntity tags) {
-        return mapper.insertNewTag(tags) > 0;
+    public List<TagEntity> getVisibleTagList() {
+        return tagMapper.getVisibleTagList();
     }
 
-    public boolean updateTag(TagEntity tags) {
-        return mapper.updateTag(tags) > 0;
+    public TagEntity getTagDetail(Long id) {
+        return tagMapper.getTagDetail(id);
+    }
+
+    public TagEntity getTagDetailByCode(String code) {
+        return tagMapper.getTagDetailByCode(code);
+    }
+
+    public int insertTag(TagEntity entity) {
+        return tagMapper.insertTag(entity);
+    }
+
+    public int updateTag(TagEntity entity) {
+        return tagMapper.updateTag(entity);
+    }
+
+    public int updateTagVisible(Long id, Boolean isVisible) {
+        return tagMapper.updateTagVisible(id, isVisible);
+    }
+
+    public int deleteTag(Long id) {
+        return tagMapper.deleteTag(id);
     }
 }

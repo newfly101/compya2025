@@ -3,5 +3,10 @@ package com.dawne.com2usbaseball.domain.community.enums.messages;
 public enum CommunityMessages {
     COMMUNITY_BOARD_NOT_FOUND,
     COMMUNITY_POST_NOT_FOUND,
-
+    COMMUNITY_TAG_NOT_FOUND,
+    COMMUNITY_TAG_CODE_ALREADY_EXISTS,
+    COMMUNITY_TAG_CREATED,
+    COMMUNITY_TAG_UPDATED,
+    COMMUNITY_TAG_VISIBLE_UPDATED,
+    COMMUNITY_TAG_DELETED,
 }

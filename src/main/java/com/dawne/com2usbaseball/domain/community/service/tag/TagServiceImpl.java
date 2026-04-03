@@ -2,14 +2,14 @@ package com.dawne.com2usbaseball.domain.community.service.tag;
 
 import com.dawne.com2usbaseball.common.support.ListAssembler;
 import com.dawne.com2usbaseball.common.support.dto.ListResponse;
-import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
+import com.dawne.com2usbaseball.domain.community.dto.mapstruct.TagMapStruct;
 import com.dawne.com2usbaseball.domain.community.dto.response.TagResponse;
 import com.dawne.com2usbaseball.domain.community.entity.TagEntity;
-import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
+import com.dawne.com2usbaseball.domain.community.enums.messages.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,33 +17,25 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class TagServiceImpl implements TagService {
 
-    private final TagRepository repository;
+    private final TagRepository tagRepository;
+    private final TagMapStruct tagMapStruct;
 
     @Override
-    @Transactional(readOnly = true)
-    @Cacheable(value = "adminTags")
-    public ListResponse<TagResponse> selectTagList() {
-        List<TagEntity> tags = repository.selectTagItems();
-
-        return ListAssembler.assemble(tags, TagResponse::from);
+    public ListResponse<TagResponse> getVisibleTagList() {
+        List<TagEntity> tagList = tagRepository.getVisibleTagList();
+        return ListAssembler.assemble(tagList, tagMapStruct::toResponse);
     }
 
     @Override
-    @CacheEvict(value = "adminTags", allEntries = true)
-    public OperationResponse<CommunityMessages> createNewTagItem(TagEntity tags) {
-        return repository.insertNewTag(tags)
-                ? OperationResponse.success(CommunityMessages.TAG_CREATED, tags.getId())
-                : OperationResponse.fail(CommunityMessages.TAG_FAILED);
-    }
+    public TagResponse getTagDetailByCode(String code) {
+        TagEntity entity = tagRepository.getTagDetailByCode(code);
+        if (entity == null) {
+            throw new BaseException(CommunityMessages.COMMUNITY_TAG_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
 
-    @Override
-    @CacheEvict(value = "adminTags", allEntries = true)
-    public OperationResponse<CommunityMessages> updateTagItem(TagEntity tags) {
-        return repository.updateTag(tags)
-                ? OperationResponse.success(CommunityMessages.TAG_UPDATED, tags.getId())
-                : OperationResponse.fail(CommunityMessages.TAG_FAILED);
+        return tagMapStruct.toResponse(entity);
     }
 }
