@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.notice.repository.mapper.NoticeMapper">
+
+    <!-- =========================================================
+         ResultMap
+    ========================================================== -->
+    <resultMap id="noticeResultMap" type="com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity">
+        <id property="id" column="id"/>
+        <result property="source" column="source"/>
+        <result property="title" column="title"/>
+        <result property="summary" column="summary"/>
+        <result property="content" column="content"/>
+        <result property="externalUrl" column="external_url"/>
+        <result property="isVisible" column="is_visible"/>
+        <result property="isPinned" column="is_pinned"/>
+        <result property="publishedAt" column="published_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <!-- =========================================================
+         Public
+    ========================================================== -->
+
+    <!-- 사용자 공지 목록 조회 -->
+    <select id="getNoticeList" resultMap="noticeResultMap">
+        SELECT id,
+               source,
+               title,
+               summary,
+               content,
+               external_url,
+               is_visible,
+               is_pinned,
+               published_at,
+               created_at,
+               updated_at
+        FROM site_notices
+        WHERE is_visible = TRUE
+        ORDER BY is_pinned DESC,
+                 published_at DESC,
+                 id DESC
+    </select>
+
+    <!-- 사용자 공지 상세 조회 -->
+    <select id="getNoticeDetail" parameterType="long" resultMap="noticeResultMap">
+        SELECT id,
+               source,
+               title,
+               summary,
+               content,
+               external_url,
+               is_visible,
+               is_pinned,
+               published_at,
+               created_at,
+               updated_at
+        FROM site_notices
+        WHERE id = #{id}
+          AND is_visible = TRUE
+    </select>
+
+    <!-- =========================================================
+         Admin
+    ========================================================== -->
+
+    <!-- 관리자 공지 목록 조회 -->
+    <select id="getAdminNoticeList" resultMap="noticeResultMap">
+        SELECT id,
+               source,
+               title,
+               summary,
+               content,
+               external_url,
+               is_visible,
+               is_pinned,
+               published_at,
+               created_at,
+               updated_at
+        FROM site_notices
+        ORDER BY is_pinned DESC,
+                 published_at DESC,
+                 id DESC
+    </select>
+
+    <!-- 관리자 공지 상세 조회 -->
+    <select id="getAdminNoticeDetail" parameterType="long" resultMap="noticeResultMap">
+        SELECT id,
+               source,
+               title,
+               summary,
+               content,
+               external_url,
+               is_visible,
+               is_pinned,
+               published_at,
+               created_at,
+               updated_at
+        FROM site_notices
+        WHERE id = #{id}
+    </select>
+
+    <!-- 관리자 공지 등록 -->
+    <insert id="insertNotice"
+            parameterType="com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO site_notices (
+            source,
+            title,
+            summary,
+            content,
+            external_url,
+            is_visible,
+            is_pinned,
+            published_at
+        )
+        VALUES (
+                   #{source},
+                   #{title},
+                   #{summary},
+                   #{content},
+                   #{externalUrl},
+                   #{isVisible},
+                   #{isPinned},
+                   #{publishedAt}
+               )
+    </insert>
+
+    <!-- 관리자 공지 수정 -->
+    <update id="updateNotice"
+            parameterType="com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity">
+        UPDATE site_notices
+        SET source       = #{source},
+            title        = #{title},
+            summary      = #{summary},
+            content      = #{content},
+            external_url = #{externalUrl},
+            is_visible   = #{isVisible},
+            is_pinned    = #{isPinned},
+            published_at = #{publishedAt},
+            updated_at   = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <!-- 관리자 공지 노출 여부 변경 -->
+    <update id="updateNoticeVisible">
+        UPDATE site_notices
+        SET is_visible = #{isVisible},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <!-- 관리자 공지 고정 여부 변경 -->
+    <update id="updateNoticePinned">
+        UPDATE site_notices
+        SET is_pinned  = #{isPinned},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <!-- 관리자 공지 삭제 -->
+    <delete id="deleteNotice" parameterType="long">
+        DELETE FROM site_notices
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
