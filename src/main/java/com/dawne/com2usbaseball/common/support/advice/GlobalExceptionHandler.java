@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.common.support.advice;
 
+import com.dawne.com2usbaseball.common.enums.CommonMessages;
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import lombok.extern.slf4j.Slf4j;
@@ -13,23 +14,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<GlobalResponse<Void>> handle(BaseException e) {
-
-        Enum<?> message = e.getCode();
-
         return ResponseEntity
                 .status(e.getStatus())
-                .body(GlobalResponse.fail(
-                        message.name()
-                ));
+                .body(GlobalResponse.fail(e.getCode()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<GlobalResponse<Void>> handleException(Exception e) {
-
         log.error("Unhandled Exception", e);
-
         return ResponseEntity
                 .status(500)
-                .body(GlobalResponse.fail("COMMON_500"));
+                .body(GlobalResponse.fail(CommonMessages.INTERNAL_SERVER_ERROR));
     }
 }

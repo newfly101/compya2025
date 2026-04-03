@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.admin.controller;
 
+import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.security.provider.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,9 +15,9 @@ public class SwaggerController {
 
     private final JwtProvider jwtProvider;
 
-    @GetMapping("/token")
-    @Operation(summary = "JWT 토큰 발급", description="user_id = 1, user_role = ADMIN")
-    public String getTestToken(@RequestParam Long userId, @RequestParam String userRole) {
-        return jwtProvider.createAccessToken(userId, userRole);
+    @GetMapping("/test-token")
+    public GlobalResponse<String> getTestToken() {
+        String token = jwtProvider.createAccessToken(1L, "ADMIN");
+        return GlobalResponse.success(token);
     }
 }
