@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.domain.community.entity;
 
 import com.dawne.com2usbaseball.domain.community.enums.UserRoleType;
 import com.dawne.com2usbaseball.domain.community.enums.ReadRoleType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -29,6 +30,8 @@ public class BoardEntity {
 
     private Integer sortOrder;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime updatedAt;
 }

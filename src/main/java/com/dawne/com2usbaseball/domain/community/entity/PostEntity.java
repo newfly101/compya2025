@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.domain.community.entity;
 
 import com.dawne.com2usbaseball.domain.community.enums.UserRoleType;
 import com.dawne.com2usbaseball.domain.community.enums.LinkType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,8 @@ public class PostEntity {
     private Integer dislikeCount;
     private Integer reportCount;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime updatedAt;
 }
