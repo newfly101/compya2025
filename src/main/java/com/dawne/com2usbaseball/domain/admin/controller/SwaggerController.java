@@ -15,8 +15,8 @@ public class SwaggerController {
     private final JwtProvider jwtProvider;
 
     @GetMapping("/token")
-    @Operation(summary = "JWT 토큰 발급", description="user_id = 1")
-    public String getTestToken(@RequestParam int userId) {
-        return jwtProvider.createAccessToken(userId);
+    @Operation(summary = "JWT 토큰 발급", description="user_id = 1, user_role = ADMIN")
+    public String getTestToken(@RequestParam Long userId, @RequestParam String userRole) {
+        return jwtProvider.createAccessToken(userId, userRole);
     }
 }
