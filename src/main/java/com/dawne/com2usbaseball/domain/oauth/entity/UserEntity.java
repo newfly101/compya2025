@@ -1,31 +1,37 @@
 package com.dawne.com2usbaseball.domain.oauth.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.dawne.com2usbaseball.domain.oauth.enums.OAuthProvider;
+import com.dawne.com2usbaseball.domain.oauth.enums.UserRole;
+import com.dawne.com2usbaseball.domain.oauth.enums.UserStatus;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserEntity {
-    private int id;
-    private String provider;
+
+    private Long id;
+
+    // OAuth 정보
+    private OAuthProvider provider;
     private String providerId;
     private String oauthNickname;
     private String oauthEmail;
     private String oauthProfileImage;
     private String oauthAgeRange;
+
+    // 서비스 정보
     private String nickname;
+    private UserRole userRole;
+    private UserStatus userStatus;
+
+    // 시간
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private LocalDateTime lastLoginAt;
 
-    void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    public void updateLastLogin() {
-        this.lastLoginAt = LocalDateTime.now();
-    }
 }

@@ -1,79 +1,79 @@
+// NaverOAuthService.java
 package com.dawne.com2usbaseball.domain.oauth.service.support;
 
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.config.properties.NaverOauthProperties;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.NaverOAuthUserResponse;
+import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
+import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
+import com.dawne.com2usbaseball.domain.oauth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import org.springframework.http.HttpHeaders;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class NaverOAuthService {
-    private final NaverOauthProperties naverProperties;
 
+    private final NaverOauthProperties naverProperties;
+    private final UserService userService;
     private final RestTemplate restTemplate = new RestTemplate();
+
+    public UserEntity findOrCreateUser(String code, String state) {
+        NaverOAuthUserResponse userInfo = getUserInfo(code, state);
+        return userService.findOrCreateNaverUser(userInfo);
+    }
 
     public NaverOAuthUserResponse getUserInfo(String code, String state) {
         String accessToken = getAccessToken(code, state);
         return requestUserInfo(accessToken);
     }
 
-    // 1️⃣ code → access_token
     private String getAccessToken(String code, String state) {
+        String url = "https://nid.naver.com/oauth2.0/token" +
+                "?grant_type=authorization_code" +
+                "&client_id=" + naverProperties.getClientId() +
+                "&client_secret=" + naverProperties.getClientSecret() +
+                "&code=" + code +
+                "&state=" + state +
+                "&redirect_uri=" + naverProperties.getRedirectUri();
 
-        String url =
-                "https://nid.naver.com/oauth2.0/token" +
-                        "?grant_type=authorization_code" +
-                        "&client_id=" + naverProperties.getClientId() +
-                        "&client_secret=" + naverProperties.getClientSecret() +
-                        "&code=" + code +
-                        "&state=" + state +
-                        "&redirect_uri=" + naverProperties.getRedirectUri();
+        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
 
-        Map<String, Object> response =
-                restTemplate.getForObject(url, Map.class);
-
-        log.trace("🔥 NAVER TOKEN RESPONSE = {}", response);
-        log.trace("NAVER CONFIG CHECK clientId=[{}], clientSecret=[{}], redirectUri=[{}]",
-                naverProperties.getClientId(),
-                naverProperties.getClientSecret(),
-                naverProperties.getRedirectUri());
+        log.trace("NAVER TOKEN RESPONSE = {}", response);
 
         if (response == null || !response.containsKey("access_token")) {
-            throw new IllegalStateException(
-                    "NAVER access_token 발급 실패: " + response
-            );
+            throw new BaseException(AuthMessages.AUTH_NAVER_TOKEN_FAILED, HttpStatus.BAD_GATEWAY);
         }
 
         return (String) response.get("access_token");
     }
 
-    // 2️⃣ access_token → user info
     private NaverOAuthUserResponse requestUserInfo(String accessToken) {
-
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + accessToken);
-
-        HttpEntity<HttpHeaders> entity = new HttpEntity<>(headers);
 
         ResponseEntity<Map> response = restTemplate.exchange(
                 "https://openapi.naver.com/v1/nid/me",
                 HttpMethod.GET,
-                entity,
+                new HttpEntity<>(headers),
                 Map.class
         );
 
-        Map<String, Object> body = response.getBody();
-        Map<String, Object> info = (Map<String, Object>) body.get("response");
+        return parseUserInfo(response.getBody());
+    }
 
+    private NaverOAuthUserResponse parseUserInfo(Map<String, Object> body) {
+        Map<String, Object> info = (Map<String, Object>) body.get("response");
         return new NaverOAuthUserResponse(
                 (String) info.get("id"),
                 (String) info.get("nickname"),
@@ -82,5 +82,4 @@ public class NaverOAuthService {
                 (String) info.get("age")
         );
     }
-
 }

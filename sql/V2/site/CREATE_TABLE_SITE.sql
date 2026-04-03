@@ -61,3 +61,29 @@ CREATE TABLE site_events
 
     INDEX idx_site_events_visible_period (is_visible, start_at, expire_at)
 ) COMMENT = '사이트 이벤트 정보';
+
+
+CREATE TABLE site_users
+(
+    id                      BIGINT AUTO_INCREMENT PRIMARY KEY   COMMENT '사용자 고유 ID',
+
+    -- OAuth 정보
+    oauth_provider          VARCHAR(20)  NOT NULL               COMMENT 'OAuth 제공자 (NAVER)',
+    oauth_provider_id       VARCHAR(100) NOT NULL               COMMENT 'OAuth 제공자 고유 ID',
+    oauth_nickname          VARCHAR(20)                         COMMENT 'OAuth 제공자 닉네임',
+    oauth_email             VARCHAR(255)                        COMMENT 'OAuth 제공자 이메일',
+    oauth_profile_image     VARCHAR(500)                        COMMENT 'OAuth 제공자 프로필 이미지 URL',
+    oauth_age_range         VARCHAR(10)                         COMMENT 'OAuth 제공자 연령대 (예: 20~29)',
+
+    -- 서비스 자체 정보
+    service_nickname        VARCHAR(20)                         COMMENT '서비스 자체 닉네임 (미설정 시 NULL)',
+    user_role               ENUM('ADMIN', 'USER')      NOT NULL DEFAULT 'USER'   COMMENT '사용자 권한',
+    user_status             ENUM('ACTIVE', 'BLOCKED', 'WITHDRAWN', 'SUSPENDED')
+        NOT NULL DEFAULT 'ACTIVE' COMMENT '계정 상태 (ACTIVE: 정상, BLOCKED: 차단, WITHDRAWN: 탈퇴, SUSPENDED: 정지)',
+
+    created_at              DATETIME DEFAULT CURRENT_TIMESTAMP                  COMMENT '최초 가입일',
+    updated_at              DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+    last_login_at           DATETIME DEFAULT CURRENT_TIMESTAMP                  COMMENT '마지막 로그인 시각',
+
+    UNIQUE KEY uk_oauth (oauth_provider, oauth_provider_id)     COMMENT 'OAuth 제공자 + 고유 ID 복합 유니크'
+) COMMENT = '서비스 사용자 테이블';
