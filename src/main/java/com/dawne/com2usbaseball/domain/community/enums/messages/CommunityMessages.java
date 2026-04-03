@@ -30,4 +30,8 @@ public enum CommunityMessages {
     COMMUNITY_POST_REACTION_NOT_FOUND,           // ("게시글 반응 정보를 찾을 수 없습니다."),
     COMMUNITY_POST_REACTION_SAVED,               // ("게시글 반응이 저장되었습니다."),
     COMMUNITY_POST_REACTION_DELETED,             // ("게시글 반응이 삭제되었습니다."),
+
+    COMMUNITY_POST_TAG_CREATED,                  //("게시글 태그가 등록되었습니다."),
+    COMMUNITY_POST_TAG_DELETED,                  //("게시글 태그가 삭제되었습니다."),
+    COMMUNITY_POST_TAG_REPLACED,                 //("게시글 태그가 변경되었습니다."),
 }
