@@ -1,0 +1,143 @@
+/* 전체 배경 */
+body { background-color: #1a1a2e !important; }
+.swagger-ui { background-color: #1a1a2e !important; }
+.swagger-ui .wrapper { background-color: #1a1a2e !important; }
+
+/* 상단 헤더 */
+.swagger-ui .topbar { background: #16213e !important; }
+
+/* 정보 영역 (제목, 설명) */
+.swagger-ui .info { background: #1a1a2e !important; }
+.swagger-ui .info .title,
+.swagger-ui .info p,
+.swagger-ui .info li,
+.swagger-ui .info a { color: #e0e0e0 !important; }
+
+/* 태그 섹션 헤더 */
+.swagger-ui .opblock-tag {
+    color: #a78bfa !important;
+    border-bottom: 1px solid #0f3460 !important;
+    background: #16213e !important;
+}
+
+/* 태그 텍스트 */
+.swagger-ui .opblock-tag span,
+.swagger-ui .opblock-tag small { color: #a0a0b0 !important; }
+
+/* Filter 입력창 */
+.swagger-ui .filter input {
+    background: #16213e !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #0f3460 !important;
+}
+
+/* GET */
+.swagger-ui .opblock.opblock-get {
+    background: rgba(97, 175, 254, 0.08) !important;
+    border-color: #61affe !important;
+}
+.swagger-ui .opblock.opblock-get .opblock-summary-method {
+    background: #61affe !important;
+}
+
+/* POST */
+.swagger-ui .opblock.opblock-post {
+    background: rgba(73, 204, 144, 0.08) !important;
+    border-color: #49cc90 !important;
+}
+.swagger-ui .opblock.opblock-post .opblock-summary-method {
+    background: #49cc90 !important;
+}
+
+/* PATCH */
+.swagger-ui .opblock.opblock-patch {
+    background: rgba(80, 227, 194, 0.08) !important;
+    border-color: #50e3c2 !important;
+}
+.swagger-ui .opblock.opblock-patch .opblock-summary-method {
+    background: #50e3c2 !important; color: #000 !important;
+}
+
+/* PUT */
+.swagger-ui .opblock.opblock-put {
+    background: rgba(252, 161, 48, 0.08) !important;
+    border-color: #fca130 !important;
+}
+.swagger-ui .opblock.opblock-put .opblock-summary-method {
+    background: #fca130 !important;
+}
+
+/* DELETE */
+.swagger-ui .opblock.opblock-delete {
+    background: rgba(249, 62, 62, 0.08) !important;
+    border-color: #f93e3e !important;
+}
+.swagger-ui .opblock.opblock-delete .opblock-summary-method {
+    background: #f93e3e !important;
+}
+
+/* API 경로 텍스트 */
+.swagger-ui .opblock-summary-path,
+.swagger-ui .opblock-summary-path__deprecated { color: #e0e0e0 !important; }
+
+/* 펼쳤을 때 내부 */
+.swagger-ui .opblock-body,
+.swagger-ui .opblock .opblock-section-header {
+    background: #16213e !important;
+}
+.swagger-ui .opblock .opblock-section-header label,
+.swagger-ui .opblock .opblock-section-header h4 { color: #e0e0e0 !important; }
+
+/* 파라미터 테이블 */
+.swagger-ui .table-container { background: #16213e !important; }
+.swagger-ui table tbody tr td,
+.swagger-ui .parameter__name,
+.swagger-ui .parameter__type { color: #e0e0e0 !important; }
+
+/* input */
+.swagger-ui input, .swagger-ui textarea, .swagger-ui select {
+    background: #0f3460 !important;
+    color: #e0e0e0 !important;
+    border: 1px solid #a78bfa !important;
+}
+
+/* Execute 버튼 */
+.swagger-ui .btn.execute {
+    background: linear-gradient(135deg, #667eea, #764ba2) !important;
+    border: none !important;
+    color: #fff !important;
+}
+
+/* Authorize 버튼 */
+.swagger-ui .btn.authorize {
+    border-color: #a78bfa !important;
+    color: #a78bfa !important;
+    background: transparent !important;
+}
+
+/* Servers 드롭다운 */
+.swagger-ui .scheme-container {
+    background: #16213e !important;
+    box-shadow: none !important;
+}
+.swagger-ui .servers > label { color: #e0e0e0 !important; }
+.swagger-ui .servers select {
+    background: #0f3460 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Response 영역 */
+.swagger-ui .responses-inner { background: #16213e !important; }
+.swagger-ui .response-col_status { color: #e0e0e0 !important; }
+.swagger-ui .highlight-code { background: #0f3460 !important; }
+
+/* Models */
+.swagger-ui section.models { background: #16213e !important; border-color: #0f3460 !important; }
+.swagger-ui section.models h4 { color: #a78bfa !important; }
+.swagger-ui .model-box { background: #0f3460 !important; }
+.swagger-ui .model { color: #e0e0e0 !important; }
+
+/* 스크롤바 */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #1a1a2e; }
+::-webkit-scrollbar-thumb { background: #a78bfa; border-radius: 3px; }

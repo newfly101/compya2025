@@ -9,6 +9,8 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springdoc.core.customizers.OperationCustomizer;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,9 +18,9 @@ import java.util.List;
 
 @Configuration
 public class SwaggerConfig {
+
     @Bean
     public OpenAPI openAPI() {
-        // ✅ Bearer 인증 스킴 정의
         SecurityScheme securityScheme = new SecurityScheme()
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
@@ -26,7 +28,6 @@ public class SwaggerConfig {
                 .in(SecurityScheme.In.HEADER)
                 .name("Authorization");
 
-        // ✅ 전역 보안 요구사항 등록
         SecurityRequirement securityRequirement = new SecurityRequirement()
                 .addList("bearerAuth");
 
@@ -44,13 +45,35 @@ public class SwaggerConfig {
 
     private Info apiInfo() {
         return new Info()
-                .title("Com2us Baseball Admin API")
-                .description("컴투스 야구 관리자/내부 API 문서")
-                .version("v1.0.0")
+                .title("Com2us Baseball 2026 Fun API")
+                .description("컴투스프로야구2026 컴프야펀 전용 API 문서")
+                .version("v2.0.0")
                 .contact(new Contact()
-                        .name("Dawne")
-                        .email("dev@example.com"))
+                        .name("김잿농")
+                        .email("newfly101@naver.com"))
                 .license(new License()
-                        .name("Internal Use Only"));
+                        .name("김잿농의 개발 연구소"));
+    }
+
+    @Bean
+    public GroupedOpenApi publicApi() {
+        return GroupedOpenApi.builder()
+                .group("public")
+                .pathsToMatch("/api/**")
+                .pathsToExclude("/api/admin/**", "/api/community/admin/**")
+                .build();
+    }
+
+    @Bean
+    public GroupedOpenApi adminApi() {
+        return GroupedOpenApi.builder()
+                .group("admin")
+                .pathsToMatch("/api/admin/**", "/api/community/admin/**", "/api/dev/**")
+                .build();
+    }
+
+    @Bean
+    public OperationCustomizer customOperationCustomizer() {
+        return (operation, handlerMethod) -> operation;
     }
 }

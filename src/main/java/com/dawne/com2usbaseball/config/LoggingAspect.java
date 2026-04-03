@@ -30,13 +30,11 @@ public class LoggingAspect {
     public void mapperFactoryBean() {}
 
 
-//    @Pointcut("within(org.springdoc..*)")
-//    public void swaggerBean() {
-//    }
+    @Pointcut("within(org.springdoc..*)")
+    public void swaggerBean() {}
 
     /** 둘 다 합친 포인트컷 */
-//    @Pointcut("(applicationLayer() || mapperBean()) && !mapperFactoryBean() && !swaggerBean()")
-    @Pointcut("(applicationLayer() || mapperBean()) && !mapperFactoryBean()")
+    @Pointcut("(applicationLayer() || mapperBean()) && !mapperFactoryBean() && !swaggerBean()")
     public void applicationAndMappers() {}
 
     @Around("applicationAndMappers()")
