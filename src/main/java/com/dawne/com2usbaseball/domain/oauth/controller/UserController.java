@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.oauth.controller;
 
+import com.dawne.com2usbaseball.domain.oauth.controller.docs.UserSwaggerDocs;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.UserMeResponse;
 import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
@@ -15,13 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController implements UserSwaggerDocs {
 
     private final UserService userService;
 
-    /**
-     * 내 정보 조회 (인증 상태 확인)
-     */
+    @Override
     @GetMapping("/me")
     public UserMeResponse getMe(HttpServletRequest request) {
 

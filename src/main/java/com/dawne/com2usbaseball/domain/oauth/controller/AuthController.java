@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.oauth.controller;
 
+import com.dawne.com2usbaseball.domain.oauth.controller.docs.AuthSwaggerDocs;
 import com.dawne.com2usbaseball.domain.oauth.service.AuthService;
 import com.dawne.com2usbaseball.security.cookie.AuthCookieFactory;
 import com.dawne.com2usbaseball.security.provider.AuthRedirectProvider;
@@ -16,7 +17,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/auth")
-public class AuthController {
+public class AuthController implements AuthSwaggerDocs {
 
     private final AuthService authService;
     private final AuthCookieFactory cookieFactory;
@@ -25,6 +26,7 @@ public class AuthController {
     /**
      * 네이버 로그인 콜백
      */
+    @Override
     @GetMapping("/naver/callback")
     public void naverCallback(@RequestParam String code,
                               @RequestParam String state,
@@ -44,6 +46,7 @@ public class AuthController {
     /**
      * 로그아웃 (stateless → 쿠키 제거)
      */
+    @Override
     @PostMapping("/logout")
     public void logout(HttpServletResponse response, HttpServletRequest request) {
         String cookie = cookieFactory.expireAccessToken(request).toString();
