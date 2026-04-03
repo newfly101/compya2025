@@ -1,16 +1,11 @@
 package com.dawne.com2usbaseball.domain.community.service.board;
 
-import com.dawne.com2usbaseball.common.support.ListAssembler;
-import com.dawne.com2usbaseball.common.support.dto.ListResponse;
-import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
-import com.dawne.com2usbaseball.domain.community.dto.response.BoardResponse;
-import com.dawne.com2usbaseball.domain.community.entity.BoardsEntity;
-import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
+import com.dawne.com2usbaseball.domain.community.entity.BoardEntity;
+import com.dawne.com2usbaseball.domain.community.enums.messages.CommunityMessages;
+import com.dawne.com2usbaseball.domain.community.exception.CommunityException;
 import com.dawne.com2usbaseball.domain.community.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,46 +13,78 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class BoardServiceImpl implements BoardService {
 
-    private final BoardRepository repository;
+    private final BoardRepository boardRepository;
 
     @Override
-    @Transactional(readOnly = true)
-    public ListResponse<BoardResponse> selectBoardList() {
-        List<BoardsEntity> boards = repository.selectBoardItems();
-
-        return ListAssembler.assemble(boards, BoardResponse::from);
+    public List<BoardEntity> getBoardList() {
+        return boardRepository.getBoardList();
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "adminBoards", allEntries = true),
-            @CacheEvict(value = "userBoards",  allEntries = true)
-    })
-    public OperationResponse<CommunityMessages> createNewBoardItem(BoardsEntity boards) {
-        return repository.insertNewBoard(boards)
-                ? OperationResponse.success(CommunityMessages.BOARD_CREATED, boards.getId())
-                : OperationResponse.fail(CommunityMessages.BOARD_FAILED);
+    public List<BoardEntity> getVisibleBoardList() {
+        return boardRepository.getVisibleBoardList();
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "adminBoards", allEntries = true),
-            @CacheEvict(value = "userBoards",  allEntries = true)
-    })
-    public OperationResponse<CommunityMessages> updateBoardItem(BoardsEntity boards) {
-        return repository.updateBoard(boards)
-                ? OperationResponse.success(CommunityMessages.BOARD_UPDATED, boards.getId())
-                : OperationResponse.fail(CommunityMessages.BOARD_FAILED);
+    public BoardEntity getBoardDetail(Long id) {
+        BoardEntity board = boardRepository.getBoardDetail(id);
+        if (board == null) {
+            throw new CommunityException(CommunityMessages.COMMUNITY_BOARD_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+        return board;
     }
 
     @Override
-    @Transactional(readOnly = true)
-    @Cacheable(value = "userBoards")
-    public ListResponse<BoardResponse> selectUserBoardList() {
-        List<BoardsEntity> boards = repository.selectUserBoardItems();
+    public BoardEntity getBoardDetailByCode(String code) {
+        BoardEntity board = boardRepository.getBoardDetailByCode(code);
+        if (board == null) {
+            throw new CommunityException(CommunityMessages.COMMUNITY_BOARD_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+        return board;
+    }
 
-        return ListAssembler.assemble(boards, BoardResponse::from);
+    @Override
+    @Transactional
+    public Long createBoard(BoardEntity entity) {
+        if (entity.getIsDeleted() == null) {
+            entity.setIsDeleted(false);
+        }
+        boardRepository.insertBoard(entity);
+        return entity.getId();
+    }
+
+    @Override
+    @Transactional
+    public void updateBoard(Long id, BoardEntity entity) {
+        BoardEntity current = getBoardDetail(id);
+
+        current.setName(entity.getName());
+        current.setDescription(entity.getDescription());
+        current.setUserRoleType(entity.getUserRoleType());
+        current.setReadRoleType(entity.getReadRoleType());
+        current.setUseComment(entity.getUseComment());
+        current.setUseLike(entity.getUseLike());
+        current.setUseTag(entity.getUseTag());
+        current.setIsVisible(entity.getIsVisible());
+        current.setSortOrder(entity.getSortOrder());
+
+        boardRepository.updateBoard(current);
+    }
+
+    @Override
+    @Transactional
+    public void updateBoardVisible(Long id, Boolean isVisible) {
+        getBoardDetail(id);
+        boardRepository.updateBoardVisible(id, isVisible);
+    }
+
+    @Override
+    @Transactional
+    public void deleteBoard(Long id) {
+        getBoardDetail(id);
+        boardRepository.deleteBoard(id);
     }
 }

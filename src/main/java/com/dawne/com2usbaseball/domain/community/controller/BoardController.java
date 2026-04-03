@@ -1,51 +1,36 @@
 package com.dawne.com2usbaseball.domain.community.controller;
 
-import com.dawne.com2usbaseball.common.support.dto.ListResponse;
-import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
-import com.dawne.com2usbaseball.domain.community.dto.request.BoardChangeRequest;
+import com.dawne.com2usbaseball.domain.community.dto.mapstruct.BoardMapStruct;
 import com.dawne.com2usbaseball.domain.community.dto.response.BoardResponse;
-import com.dawne.com2usbaseball.domain.community.enums.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/community")
+@RequestMapping("/api/boards")
 public class BoardController {
 
     private final BoardService boardService;
+    private final BoardMapStruct boardMapStruct;
 
-    @GetMapping("/admin/boards")
-    public ListResponse<BoardResponse> getBoardsList() {
-        return boardService.selectBoardList();
-    }
-    @PostMapping("/admin/boards")
-    public OperationResponse<CommunityMessages> createNewBoard(@RequestBody BoardChangeRequest request) {
-        return boardService.createNewBoardItem(request.toEntity());
-    }
-    @PatchMapping("/admin/boards/{id}")
-    public OperationResponse<CommunityMessages> changeBoard(@RequestBody BoardChangeRequest request, @PathVariable Long id) {
-        return boardService.updateBoardItem(request.toEntity(id));
+    @GetMapping
+    public List<BoardResponse> getVisibleBoardList() {
+        return boardService.getVisibleBoardList()
+                .stream()
+                .map(boardMapStruct::toResponse)
+                .toList();
     }
 
-    @GetMapping("/boards")
-    public ListResponse<BoardResponse> getUserBoardsList() {
-        return boardService.selectUserBoardList();
+    @GetMapping("/{id}")
+    public BoardResponse getBoardDetail(@PathVariable Long id) {
+        return boardMapStruct.toResponse(boardService.getBoardDetail(id));
     }
 
-
-    // 게시판 정보 조회
-    // GET /boards/{boardCode}
-//    @GetMapping("/{boardCode}")
-//    public BoardResponse getBoardsList(@PathVariable("boardCode") String boardCode) {
-//        return boardService.selectBoardList(boardCode);
-//    }
-
-    // 게시글 목록 조회
-    // GET /boards/{boardCode}/posts
-//    @GetMapping("/{boardCode}/posts")
-//    public void getPostsList(@PathVariable("boardCode") String boardCode) {
-//        boardService.selectPostList(boardCode);
-//    }
+    @GetMapping("/code/{code}")
+    public BoardResponse getBoardDetailByCode(@PathVariable String code) {
+        return boardMapStruct.toResponse(boardService.getBoardDetailByCode(code));
+    }
 }

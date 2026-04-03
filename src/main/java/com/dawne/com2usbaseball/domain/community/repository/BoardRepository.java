@@ -1,35 +1,47 @@
 package com.dawne.com2usbaseball.domain.community.repository;
 
-import com.dawne.com2usbaseball.domain.community.entity.BoardsEntity;
+import com.dawne.com2usbaseball.domain.community.entity.BoardEntity;
 import com.dawne.com2usbaseball.domain.community.repository.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Repository
+@RequiredArgsConstructor
 public class BoardRepository {
 
-    private final BoardMapper mapper;
+    private final BoardMapper boardMapper;
 
-    public List<BoardsEntity> selectBoardItems() {
-        return mapper.selectBoards();
+    public List<BoardEntity> getBoardList() {
+        return boardMapper.getBoardList();
     }
 
-    public boolean insertNewBoard(BoardsEntity boards) {
-        return mapper.insertBoard(boards) > 0;
+    public List<BoardEntity> getVisibleBoardList() {
+        return boardMapper.getVisibleBoardList();
     }
 
-    public boolean updateBoard(BoardsEntity boards) {
-        return mapper.updateBoard(boards) > 0;
+    public BoardEntity getBoardDetail(Long id) {
+        return boardMapper.getBoardDetail(id);
     }
 
-    public List<BoardsEntity> selectUserBoardItems() {
-        return mapper.selectBoardsWithUser();
+    public BoardEntity getBoardDetailByCode(String code) {
+        return boardMapper.getBoardDetailByCode(code);
     }
 
-    public boolean existsById(Long id) {
-        return mapper.selectBoardItemById(id);
+    public boolean insertBoard(BoardEntity entity) {
+        return boardMapper.insertBoard(entity) > 0;
+    }
+
+    public boolean updateBoard(BoardEntity entity) {
+        return boardMapper.updateBoard(entity) > 0;
+    }
+
+    public boolean updateBoardVisible(Long id, Boolean isVisible) {
+        return boardMapper.updateBoardVisible(id, isVisible) > 0;
+    }
+
+    public boolean deleteBoard(Long id) {
+        return boardMapper.deleteBoard(id) > 0;
     }
 }
