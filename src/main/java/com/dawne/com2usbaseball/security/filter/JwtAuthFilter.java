@@ -3,15 +3,17 @@ package com.dawne.com2usbaseball.security.filter;
 import com.dawne.com2usbaseball.security.provider.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import jakarta.servlet.http.Cookie;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,23 +28,28 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+
         String token = resolveToken(request);
 
         if (token != null) {
             try {
-                int userId = jwtProvider.getUserId(token);
+                Long userId = jwtProvider.getUserId(token);
+                String role = jwtProvider.getUserRole(token);
+
                 request.setAttribute("userId", userId);
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                userId,       // principal
-                                null,         // credentials
-                                List.of()     // authorities (권한 없으면 빈 리스트)
+                                userId,
+                                null,
+                                List.of(new SimpleGrantedAuthority("ROLE_" + role))
                         );
+                authentication.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request)
+                );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             } catch (Exception e) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+                SecurityContextHolder.clearContext();
             }
         }
 
@@ -72,8 +79,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return path.startsWith("/swagger-ui") ||
                 path.startsWith("/v3/api-docs") ||
-                path.startsWith("/api/auth/naver/callback") ||
-                path.startsWith("/api/auth/logout");
+                path.startsWith("/api/auth/naver");
     }
-
 }

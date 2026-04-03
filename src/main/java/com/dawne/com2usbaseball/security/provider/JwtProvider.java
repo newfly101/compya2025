@@ -23,29 +23,35 @@ public class JwtProvider {
     }
 
     /** JWT 생성 */
-    public String createAccessToken(int userId) {
+    public String createAccessToken(Long userId, String role) {
 
         Date now = new Date();
         Date expiry = new Date(now.getTime() + jwtProperties.getAccessTokenExpireMinutes() * 60 * 1000);
 
         return Jwts.builder()
-                .setSubject(String.valueOf(userId)) // userId만 담는다
+                .setSubject(String.valueOf(userId))
+                .claim("role", role)
                 .setIssuedAt(now)
                 .setExpiration(expiry)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    /** JWT 검증 + userId 추출 */
-    public int getUserId(String token) {
+    public Long getUserId(String token) {
+        Claims claims = parseClaims(token);
+        return Long.parseLong(claims.getSubject());
+    }
 
-        Claims claims = Jwts.parserBuilder()
+    public String getUserRole(String token) {
+        Claims claims = parseClaims(token);
+        return claims.get("role", String.class);
+    }
+
+    private Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
-
-        return Integer.parseInt(claims.getSubject());
     }
-
 }
