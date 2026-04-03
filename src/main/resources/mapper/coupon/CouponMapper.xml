@@ -14,7 +14,7 @@
            is_visible AS visible,
            created_at,
            updated_at
-        FROM coupons
+        FROM site_coupons
         WHERE is_visible = true
     </select>
 
@@ -29,11 +29,11 @@
             is_visible AS visible,
             created_at,
             updated_at
-        FROM coupons
+        FROM site_coupons
     </select>
 
     <insert id="insertCoupon" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO coupons (
+        INSERT INTO site_coupons (
             coupon_code,
             title,
             detail,
@@ -53,7 +53,7 @@
     </insert>
 
     <update id="updateCouponById" parameterType="com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity">
-        UPDATE coupons
+        UPDATE site_coupons
         <set>
             <if test="couponCode != null">
                 coupon_code = #{couponCode},
@@ -75,7 +75,7 @@
     </update>
 
     <update id="updateCouponVisible">
-        UPDATE coupons
+        UPDATE site_coupons
         SET
             is_visible = #{visible},
             updated_at = NOW()
