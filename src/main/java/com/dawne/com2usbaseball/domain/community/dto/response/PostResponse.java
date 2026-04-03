@@ -1,8 +1,7 @@
 package com.dawne.com2usbaseball.domain.community.dto.response;
 
-import com.dawne.com2usbaseball.common.enums.user.UserGrant;
-import com.dawne.com2usbaseball.domain.community.entity.PostsEntity;
-import com.dawne.com2usbaseball.domain.community.enums.PostsType;
+import com.dawne.com2usbaseball.domain.community.enums.LinkType;
+import com.dawne.com2usbaseball.domain.community.enums.UserRoleType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
@@ -10,37 +9,23 @@ import java.time.LocalDateTime;
 public record PostResponse(
         Long id,
         Long boardId,
-        UserGrant authorType,   // 'ADMIN', 'USER'
+        UserRoleType userRoleType,
         Long authorId,
         String authorName,
         String title,
         String content,
-        PostsType linkType,     // 'INTERNAL', 'EXTERNAL'
+        LinkType linkType,
         String externalUrl,
-        boolean pinned,
-        boolean visible,
-        int viewCount,
+        Boolean isPinned,
+        Boolean isVisible,
+        Boolean isDeleted,
+        Integer viewCount,
+        Integer commentCount,
+        Integer likeCount,
+        Integer dislikeCount,
+        Integer reportCount,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime updatedAt
-) {
-    public static PostResponse from(PostsEntity p) {
-        return new PostResponse(
-                p.getId(),
-                p.getBoardId(),
-                p.getAuthorType(),
-                p.getAuthorId(),
-                p.getAuthorName(),
-                p.getTitle(),
-                p.getContent(),
-                p.getLinkType(),
-                p.getExternalUrl(),
-                p.isPinned(),
-                p.isVisible(),
-                p.getViewCount(),
-                p.getCreatedAt(),
-                p.getUpdatedAt()
-        );
-    }
-}
+) { }
