@@ -1,25 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.dawne.com2usbaseball.domain.oauth.repository.mapper.UserMapper">
 
-    <select id="selectUserByProvider" resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity" parameterType="String">
-        SELECT *
-        FROM users
-        WHERE provider = #{provider}
-          AND provider_id = #{providerId}
+    <!-- provider + providerId 조회 -->
+    <select id="selectUserByProvider"
+            resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity">
+
+        SELECT
+            id,
+            oauth_provider       AS provider,
+            oauth_provider_id    AS providerId,
+            oauth_nickname       AS oauthNickname,
+            oauth_email          AS oauthEmail,
+            oauth_profile_image  AS oauthProfileImage,
+            oauth_age_range      AS oauthAgeRange,
+            service_nickname     AS nickname,
+            user_role            AS userRole,
+            user_status          AS userStatus,
+            created_at           AS createdAt,
+            updated_at           AS updatedAt,
+            last_login_at        AS lastLoginAt
+        FROM site_users
+        WHERE oauth_provider = #{provider}
+          AND oauth_provider_id = #{providerId}
         LIMIT 1
     </select>
 
+    <!-- 신규 유저 생성 -->
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO users (
-            provider,
-            provider_id,
+        INSERT INTO site_users (
+            oauth_provider,
+            oauth_provider_id,
             oauth_nickname,
             oauth_email,
             oauth_profile_image,
             oauth_age_range,
-            nickname,
+            service_nickname,
+            user_role,
+            user_status,
             created_at,
             last_login_at
         ) VALUES (
@@ -30,52 +50,40 @@
                      #{oauthProfileImage},
                      #{oauthAgeRange},
                      #{nickname},
+                     'USER',
+                     'ACTIVE',
                      NOW(),
                      NOW()
                  )
     </insert>
 
+    <!-- 로그인 시간 업데이트 -->
     <update id="updateUserLogin">
-        UPDATE users
+        UPDATE site_users
         SET last_login_at = NOW()
         WHERE id = #{id}
     </update>
 
-    <select id="countUserRoleByUserId" resultType="int">
-        SELECT COUNT(1)
-        FROM user_roles
-        WHERE user_id = #{userId}
-    </select>
+    <!-- ID 조회 -->
+    <select id="selectUserById"
+            resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity">
 
-    <insert id="insertUserRole">
-        INSERT INTO user_roles (user_id, role, status, created_at, updated_at)
-        VALUES (#{userId}, 'USER', 'ACTIVE', NOW(), NOW())
-    </insert>
-
-    <select id="selectUserById" resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity">
-        SELECT id,
-               provider,
-               provider_id         AS providerId,
-               oauth_nickname      AS oauthNickname,
-               oauth_email         AS oauthEmail,
-               oauth_profile_image AS oauthProfileImage,
-               oauth_age_range     AS oauthAgeRange,
-               nickname,
-               created_at          AS createdAt,
-               last_login_at       AS lastLoginAt
-        FROM users
-        WHERE id = #{userId}
-    </select>
-
-    <select id="selectUserRoleByUserId" resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserRoleEntity">
         SELECT
-            user_id     AS userId,
-            role,
-            status,
-            ban_reason  AS banReason,
-            created_at  AS createdAt,
-            updated_at  AS updatedAt
-        FROM user_roles
-        WHERE user_id = #{userId}
+            id,
+            oauth_provider       AS provider,
+            oauth_provider_id    AS providerId,
+            oauth_nickname       AS oauthNickname,
+            oauth_email          AS oauthEmail,
+            oauth_profile_image  AS oauthProfileImage,
+            oauth_age_range      AS oauthAgeRange,
+            service_nickname     AS nickname,
+            user_role            AS userRole,
+            user_status          AS userStatus,
+            created_at           AS createdAt,
+            updated_at           AS updatedAt,
+            last_login_at        AS lastLoginAt
+        FROM site_users
+        WHERE id = #{id}
     </select>
+
 </mapper>
