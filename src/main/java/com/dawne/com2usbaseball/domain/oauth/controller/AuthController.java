@@ -7,7 +7,6 @@ import com.dawne.com2usbaseball.security.provider.AuthRedirectProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +14,6 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping("/api/auth")
 public class AuthController implements AuthSwaggerDocs {
 

@@ -20,7 +20,7 @@ public class GlobalResponseAdvice implements ResponseBodyAdvice<Object> {
         if (returnType.getParameterType().equals(Void.TYPE)) return false;
         if (returnType.getParameterType().equals(GlobalResponse.class)) return false;
         if (converterType.equals(ByteArrayHttpMessageConverter.class)) return false;
-        if (converterType.equals(StringHttpMessageConverter.class)) return false; // 추가
+        if (converterType.equals(StringHttpMessageConverter.class)) return false;
         return true;
     }
 

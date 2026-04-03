@@ -8,13 +8,11 @@ import com.dawne.com2usbaseball.domain.oauth.exception.AuthException;
 import com.dawne.com2usbaseball.domain.oauth.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 @RequestMapping("/api/users")
 public class UserController implements UserSwaggerDocs {
 
