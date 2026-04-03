@@ -4,31 +4,128 @@
   <meta charset="UTF-8" />
   <title>Com2us Baseball API Docs</title>
 
-  <!-- Swagger UI 기본 CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
-
-  <!-- 내 커스텀 CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui.css" />
   <link rel="stylesheet" href="/swagger-custom.css" />
 </head>
 <body>
 <div id="swagger-ui"></div>
 
-<script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
-<script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-standalone-preset.js"></script>
+<script src="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui-bundle.js"></script>
+<script src="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui-standalone-preset.js"></script>
+
 <script>
+  const TwoPaneOperationPlugin = function() {
+    return {
+      wrapComponents: {
+        operation: (Original, system) => {
+          const React = system.React;
+
+          function RenderErrorPanel(props) {
+            const style = {
+              margin: "12px 0",
+              padding: "14px 16px",
+              borderRadius: "12px",
+              background: "rgba(249, 62, 62, 0.10)",
+              border: "1px solid rgba(249, 62, 62, 0.35)",
+              color: "#ffd7d7",
+              fontSize: "13px",
+              lineHeight: "1.5"
+            };
+
+            const titleStyle = {
+              fontWeight: "700",
+              marginBottom: "8px",
+              color: "#ffb4b4"
+            };
+
+            return React.createElement(
+              "div",
+              { className: "swagger-render-error-panel", style },
+              React.createElement("div", { style: titleStyle }, "Operation render error"),
+              React.createElement(
+                "div",
+                null,
+                "Could not render this operation. Check the browser console for details."
+              ),
+              props && props.message
+                ? React.createElement(
+                  "pre",
+                  {
+                    style: {
+                      marginTop: "10px",
+                      padding: "10px",
+                      overflow: "auto",
+                      whiteSpace: "pre-wrap",
+                      background: "rgba(0,0,0,0.2)",
+                      borderRadius: "8px",
+                      color: "#ffe5e5"
+                    }
+                  },
+                  String(props.message)
+                )
+                : null
+            );
+          }
+
+          class OperationErrorBoundary extends React.Component {
+            constructor(props) {
+              super(props);
+              this.state = { hasError: false, errorMessage: "" };
+            }
+
+            static getDerivedStateFromError(error) {
+              return {
+                hasError: true,
+                errorMessage: error && error.message ? error.message : String(error)
+              };
+            }
+
+            componentDidCatch(error, errorInfo) {
+              console.group("[SwaggerUI] Operation render error");
+              console.error(error);
+              console.error(errorInfo);
+              console.groupEnd();
+            }
+
+            render() {
+              if (this.state.hasError) {
+                return React.createElement(RenderErrorPanel, {
+                  message: this.state.errorMessage
+                });
+              }
+
+              return this.props.children;
+            }
+          }
+
+          return (props) =>
+            React.createElement(
+              OperationErrorBoundary,
+              null,
+              React.createElement(
+                "div",
+                { className: "two-pane-operation" },
+                React.createElement(Original, props)
+              )
+            );
+        }
+      }
+    };
+  };
+
   window.onload = () => {
     window.ui = SwaggerUIBundle({
       urls: [
-        {url: "/v3/api-docs/public", name: "Public API"},
-        {url: "/v3/api-docs/admin", name: "Admin API"}
+        { url: "/v3/api-docs/public", name: "Public API" },
+        { url: "/v3/api-docs/admin", name: "Admin API" }
       ],
-      // url:  "/v3/api-docs",
       dom_id: "#swagger-ui",
       deepLinking: true,
       presets: [
         SwaggerUIBundle.presets.apis,
         SwaggerUIStandalonePreset
       ],
+      plugins: [TwoPaneOperationPlugin],
       layout: "StandaloneLayout"
     });
   };

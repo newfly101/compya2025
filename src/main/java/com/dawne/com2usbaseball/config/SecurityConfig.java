@@ -29,7 +29,7 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/docs/**",
-                                "/static/swagger-custom.css"
+                                "/swagger-custom.css"
                         ).permitAll()
                         .requestMatchers("/api/admin/**").authenticated()
                         .requestMatchers("/api/community/admin/**").authenticated()
