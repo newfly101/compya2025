@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.community.entity;
 
+import com.dawne.com2usbaseball.domain.community.enums.ReactionType;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -9,15 +10,11 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TagEntity {
+public class PostReactionEntity {
     private Long id;
-    private String code;
-    private String name;
-    private String description;
-
-    private Boolean isVisible;
-    private Boolean isDeleted;
+    private Long postId;
+    private Long userId;
+    private ReactionType reaction;
 
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
