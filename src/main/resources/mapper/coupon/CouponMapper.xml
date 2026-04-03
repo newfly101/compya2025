@@ -67,9 +67,7 @@
             <if test="expireAt != null">
                 expire_at = #{expireAt},
             </if>
-            <if test="visible != null">
-                is_visible = #{visible},
-            </if>
+            is_visible = #{visible},
             updated_at = NOW()
         </set>
         WHERE id = #{id}

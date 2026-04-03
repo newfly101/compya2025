@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.domain.coupon.service;
 
 import com.dawne.com2usbaseball.common.support.ListAssembler;
 import com.dawne.com2usbaseball.common.support.dto.ListResponse;
+import com.dawne.com2usbaseball.domain.coupon.dto.mapstruct.CouponMapStruct;
 import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
 import com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity;
 import com.dawne.com2usbaseball.domain.coupon.repository.CouponRepository;
@@ -18,6 +19,7 @@ import java.util.List;
 public class CouponUserServiceImpl implements CouponUserService {
 
     private final CouponRepository repository;
+    private final CouponMapStruct couponMapStruct;
 
     @Override
     @Transactional(readOnly = true)
@@ -25,7 +27,7 @@ public class CouponUserServiceImpl implements CouponUserService {
     public ListResponse<CouponResponse> getCouponLists() {
         List<CouponEntity> coupons = repository.selectCouponsUser();
 
-        return ListAssembler.assemble(coupons, CouponResponse::from);
+        return ListAssembler.assemble(coupons, couponMapStruct::toResponse);  // ✅ MapStruct로 교체
     }
 
     @Override

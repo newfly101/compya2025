@@ -29,21 +29,23 @@ public class AdminCouponController implements AdminCouponSwaggerDocs {
     @Override
     @PostMapping
     public OperationResponse<CouponMessages> insertNewCoupons(@RequestBody ChangeCouponRequest request) {
-        return couponAdminService.createCoupon(request.toEntity());
+        return couponAdminService.createCoupon(request);
     }
 
     @Override
     @PatchMapping("/{id}")
-    public OperationResponse<CouponMessages> updateCoupon(@RequestBody ChangeCouponRequest request, @PathVariable Long id) {
-        return couponAdminService.updateCoupon(request.toEntity(id));
+    public OperationResponse<CouponMessages> updateCoupon(
+            @RequestBody ChangeCouponRequest request, @PathVariable Long id
+    ) {
+        return couponAdminService.updateCoupon(request, id);
     }
 
     @Override
     @PatchMapping("/{id}/visible")
-    public OperationResponse<CouponMessages> updateCouponVisible(@PathVariable Long id, @RequestBody ChangeCouponVisibleRequest request) {
+    public OperationResponse<CouponMessages> updateCouponVisible(
+            @PathVariable Long id,
+            @RequestBody ChangeCouponVisibleRequest request
+    ) {
         return couponAdminService.updateCouponVisible(id, request.visible());
     }
-
-
-
 }
