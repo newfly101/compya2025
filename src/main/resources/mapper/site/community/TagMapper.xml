@@ -16,7 +16,8 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
-    <sql id="tagColumns">
+    <select id="getTagList" resultMap="tagResultMap">
+        SELECT
         id,
         code,
         name,
@@ -25,11 +26,6 @@
         is_deleted,
         created_at,
         updated_at
-    </sql>
-
-    <select id="getTagList" resultMap="tagResultMap">
-        SELECT
-        <include refid="tagColumns"/>
         FROM site_tag
         WHERE is_deleted = FALSE
         ORDER BY id DESC
@@ -37,7 +33,14 @@
 
     <select id="getVisibleTagList" resultMap="tagResultMap">
         SELECT
-        <include refid="tagColumns"/>
+        id,
+        code,
+        name,
+        description,
+        is_visible,
+        is_deleted,
+        created_at,
+        updated_at
         FROM site_tag
         WHERE is_deleted = FALSE
         AND is_visible = TRUE
@@ -46,7 +49,14 @@
 
     <select id="getTagDetail" resultMap="tagResultMap">
         SELECT
-        <include refid="tagColumns"/>
+        id,
+        code,
+        name,
+        description,
+        is_visible,
+        is_deleted,
+        created_at,
+        updated_at
         FROM site_tag
         WHERE id = #{id}
         AND is_deleted = FALSE
@@ -54,7 +64,14 @@
 
     <select id="getTagDetailByCode" resultMap="tagResultMap">
         SELECT
-        <include refid="tagColumns"/>
+        id,
+        code,
+        name,
+        description,
+        is_visible,
+        is_deleted,
+        created_at,
+        updated_at
         FROM site_tag
         WHERE code = #{code}
         AND is_deleted = FALSE

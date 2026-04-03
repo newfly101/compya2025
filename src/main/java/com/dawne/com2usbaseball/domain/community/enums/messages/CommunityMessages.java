@@ -34,4 +34,11 @@ public enum CommunityMessages {
     COMMUNITY_POST_TAG_CREATED,                  //("게시글 태그가 등록되었습니다."),
     COMMUNITY_POST_TAG_DELETED,                  //("게시글 태그가 삭제되었습니다."),
     COMMUNITY_POST_TAG_REPLACED,                 //("게시글 태그가 변경되었습니다."),
+
+    COMMUNITY_REPORT_NOT_FOUND,                  // ("신고 내역을 찾을 수 없습니다."),
+    COMMUNITY_REPORT_ALREADY_EXISTS,             // ("이미 동일한 대상에 대해 신고한 내역이 있습니다."),
+    COMMUNITY_REPORT_CREATED,                    // ("신고가 접수되었습니다."),
+    COMMUNITY_REPORT_STATUS_UPDATED,             // ("신고 상태가 변경되었습니다."),
+    COMMUNITY_REPORT_DELETED,                    // ("신고 내역이 삭제되었습니다."),
+    COMMUNITY_REPORT_TARGET_NOT_FOUND,           // ("신고 대상을 찾을 수 없습니다.");
 }

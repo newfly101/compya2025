@@ -29,7 +29,20 @@
 
     <select id="getCommentListByPostId" resultMap="commentResultMap">
         SELECT
-        <include refid="commentColumns"/>
+        id,
+        post_id,
+        parent_comment_id,
+        author_type,
+        author_id,
+        author_name,
+        content,
+        is_visible,
+        is_deleted,
+        like_count,
+        dislike_count,
+        report_count,
+        created_at,
+        updated_at
         FROM site_comment
         WHERE post_id = #{postId}
         AND parent_comment_id IS NULL
@@ -39,7 +52,20 @@
 
     <select id="getReplyListByParentCommentId" resultMap="commentResultMap">
         SELECT
-        <include refid="commentColumns"/>
+        id,
+        post_id,
+        parent_comment_id,
+        author_type,
+        author_id,
+        author_name,
+        content,
+        is_visible,
+        is_deleted,
+        like_count,
+        dislike_count,
+        report_count,
+        created_at,
+        updated_at
         FROM site_comment
         WHERE parent_comment_id = #{parentCommentId}
         AND is_deleted = FALSE
@@ -48,7 +74,20 @@
 
     <select id="getCommentDetail" resultMap="commentResultMap">
         SELECT
-        <include refid="commentColumns"/>
+        id,
+        post_id,
+        parent_comment_id,
+        author_type,
+        author_id,
+        author_name,
+        content,
+        is_visible,
+        is_deleted,
+        like_count,
+        dislike_count,
+        report_count,
+        created_at,
+        updated_at
         FROM site_comment
         WHERE id = #{id}
     </select>
