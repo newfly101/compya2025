@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.PostReactionMapper">
+
+    <resultMap id="postReactionResultMap" type="com.dawne.com2usbaseball.domain.community.entity.PostReactionEntity">
+        <id property="id" column="id"/>
+        <result property="postId" column="post_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="reaction" column="reaction"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="getPostReactionListByPostId" resultMap="postReactionResultMap">
+        SELECT
+            id,
+            post_id,
+            user_id,
+            reaction,
+            created_at
+        FROM site_post_reaction
+        WHERE post_id = #{postId}
+        ORDER BY id DESC
+    </select>
+
+    <select id="getPostReactionListByUserId" resultMap="postReactionResultMap">
+        SELECT
+            id,
+            post_id,
+            user_id,
+            reaction,
+            created_at
+        FROM site_post_reaction
+        WHERE user_id = #{userId}
+        ORDER BY id DESC
+    </select>
+
+    <select id="getPostReaction" resultMap="postReactionResultMap">
+        SELECT
+            id,
+            post_id,
+            user_id,
+            reaction,
+            created_at
+        FROM site_post_reaction
+        WHERE post_id = #{postId}
+        AND user_id = #{userId}
+    </select>
+
+    <insert id="insertPostReaction"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.PostReactionEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO site_post_reaction (
+            post_id,
+            user_id,
+            reaction
+        ) VALUES (
+                     #{postId},
+                     #{userId},
+                     #{reaction}
+                 )
+    </insert>
+
+    <update id="updatePostReaction"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.PostReactionEntity">
+        UPDATE site_post_reaction
+        SET reaction = #{reaction}
+        WHERE post_id = #{postId}
+          AND user_id = #{userId}
+    </update>
+
+    <delete id="deletePostReaction">
+        DELETE FROM site_post_reaction
+        WHERE post_id = #{postId}
+          AND user_id = #{userId}
+    </delete>
+
+</mapper>

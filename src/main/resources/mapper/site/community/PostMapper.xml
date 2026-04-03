@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.PostMapper">
+
+    <resultMap id="postResultMap" type="com.dawne.com2usbaseball.domain.community.entity.PostEntity">
+        <id property="id" column="id"/>
+        <result property="boardId" column="board_id"/>
+
+        <result property="userRoleType" column="author_type"/>
+        <result property="authorId" column="author_id"/>
+        <result property="authorName" column="author_name"/>
+
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+
+        <result property="linkType" column="link_type"/>
+        <result property="externalUrl" column="external_url"/>
+
+        <result property="isPinned" column="is_pinned"/>
+        <result property="isVisible" column="is_visible"/>
+        <result property="isDeleted" column="is_deleted"/>
+
+        <result property="viewCount" column="view_count"/>
+        <result property="commentCount" column="comment_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="dislikeCount" column="dislike_count"/>
+        <result property="reportCount" column="report_count"/>
+
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="getPostListByBoardId" resultMap="postResultMap">
+        SELECT
+            id,
+            board_id,
+            author_type,
+            author_id,
+            author_name,
+            title,
+            content,
+            link_type,
+            external_url,
+            is_pinned,
+            is_visible,
+            is_deleted,
+            view_count,
+            comment_count,
+            like_count,
+            dislike_count,
+            report_count,
+            created_at,
+            updated_at
+        FROM site_post
+        WHERE board_id = #{boardId}
+        AND is_deleted = FALSE
+        AND is_visible = TRUE
+        ORDER BY is_pinned DESC, created_at DESC, id DESC
+    </select>
+
+    <select id="getPinnedPostListByBoardId" resultMap="postResultMap">
+        SELECT
+            id,
+            board_id,
+            author_type,
+            author_id,
+            author_name,
+            title,
+            content,
+            link_type,
+            external_url,
+            is_pinned,
+            is_visible,
+            is_deleted,
+            view_count,
+            comment_count,
+            like_count,
+            dislike_count,
+            report_count,
+            created_at,
+            updated_at
+        FROM site_post
+        WHERE board_id = #{boardId}
+        AND is_deleted = FALSE
+        AND is_visible = TRUE
+        AND is_pinned = TRUE
+        ORDER BY created_at DESC, id DESC
+    </select>
+
+    <select id="getPopularPostListByBoardId" resultMap="postResultMap">
+        SELECT
+            id,
+            board_id,
+            author_type,
+            author_id,
+            author_name,
+            title,
+            content,
+            link_type,
+            external_url,
+            is_pinned,
+            is_visible,
+            is_deleted,
+            view_count,
+            comment_count,
+            like_count,
+            dislike_count,
+            report_count,
+            created_at,
+            updated_at
+        FROM site_post
+        WHERE board_id = #{boardId}
+        AND is_deleted = FALSE
+        AND is_visible = TRUE
+        ORDER BY like_count DESC, id DESC
+    </select>
+
+    <select id="getPostListByAuthor" resultMap="postResultMap">
+        SELECT
+            id,
+            board_id,
+            author_type,
+            author_id,
+            author_name,
+            title,
+            content,
+            link_type,
+            external_url,
+            is_pinned,
+            is_visible,
+            is_deleted,
+            view_count,
+            comment_count,
+            like_count,
+            dislike_count,
+            report_count,
+            created_at,
+            updated_at
+        FROM site_post
+        WHERE author_type = #{userRoleType}
+        AND author_id = #{authorId}
+        AND is_deleted = FALSE
+        ORDER BY created_at DESC, id DESC
+    </select>
+
+    <select id="getPostDetail" resultMap="postResultMap">
+        SELECT
+            id,
+            board_id,
+            author_type,
+            author_id,
+            author_name,
+            title,
+            content,
+            link_type,
+            external_url,
+            is_pinned,
+            is_visible,
+            is_deleted,
+            view_count,
+            comment_count,
+            like_count,
+            dislike_count,
+            report_count,
+            created_at,
+            updated_at
+        FROM site_post
+        WHERE id = #{id}
+        AND is_deleted = FALSE
+    </select>
+
+    <insert id="insertPost"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.PostEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO site_post (
+            board_id,
+            author_type,
+            author_id,
+            author_name,
+            title,
+            content,
+            link_type,
+            external_url,
+            is_pinned,
+            is_visible,
+            is_deleted,
+            view_count,
+            comment_count,
+            like_count,
+            dislike_count,
+            report_count
+        ) VALUES (
+                     #{boardId},
+                     #{authorType},
+                     #{authorId},
+                     #{authorName},
+                     #{title},
+                     #{content},
+                     #{linkType},
+                     #{externalUrl},
+                     #{isPinned},
+                     #{isVisible},
+                     #{isDeleted},
+                     #{viewCount},
+                     #{commentCount},
+                     #{likeCount},
+                     #{dislikeCount},
+                     #{reportCount}
+                 )
+    </insert>
+
+    <update id="updatePost"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.PostEntity">
+        UPDATE site_post
+        SET
+            title = #{title},
+            content = #{content},
+            link_type = #{linkType},
+            external_url = #{externalUrl},
+            is_pinned = #{isPinned},
+            is_visible = #{isVisible}
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+    <update id="updatePostVisible">
+        UPDATE site_post
+        SET is_visible = #{isVisible}
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+    <update id="updatePostPinned">
+        UPDATE site_post
+        SET is_pinned = #{isPinned}
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+    <update id="increasePostViewCount">
+        UPDATE site_post
+        SET view_count = view_count + 1
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+    <update id="increasePostCommentCount">
+        UPDATE site_post
+        SET comment_count = comment_count + 1
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="decreasePostCommentCount">
+        UPDATE site_post
+        SET comment_count = GREATEST(comment_count - 1, 0)
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="increasePostLikeCount">
+        UPDATE site_post
+        SET like_count = like_count + 1
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="decreasePostLikeCount">
+        UPDATE site_post
+        SET like_count = GREATEST(like_count - 1, 0)
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="increasePostDislikeCount">
+        UPDATE site_post
+        SET dislike_count = dislike_count + 1
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="decreasePostDislikeCount">
+        UPDATE site_post
+        SET dislike_count = GREATEST(dislike_count - 1, 0)
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="increasePostReportCount">
+        UPDATE site_post
+        SET report_count = report_count + 1
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="deletePost">
+        UPDATE site_post
+        SET is_deleted = TRUE
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+</mapper>

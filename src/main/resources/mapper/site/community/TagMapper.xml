@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.TagMapper">
+
+    <resultMap id="tagResultMap" type="com.dawne.com2usbaseball.domain.community.entity.TagEntity">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="isVisible" column="is_visible"/>
+        <result property="isDeleted" column="is_deleted"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="tagColumns">
+        id,
+        code,
+        name,
+        description,
+        is_visible,
+        is_deleted,
+        created_at,
+        updated_at
+    </sql>
+
+    <select id="getTagList" resultMap="tagResultMap">
+        SELECT
+        <include refid="tagColumns"/>
+        FROM site_tag
+        WHERE is_deleted = FALSE
+        ORDER BY id DESC
+    </select>
+
+    <select id="getVisibleTagList" resultMap="tagResultMap">
+        SELECT
+        <include refid="tagColumns"/>
+        FROM site_tag
+        WHERE is_deleted = FALSE
+        AND is_visible = TRUE
+        ORDER BY id DESC
+    </select>
+
+    <select id="getTagDetail" resultMap="tagResultMap">
+        SELECT
+        <include refid="tagColumns"/>
+        FROM site_tag
+        WHERE id = #{id}
+        AND is_deleted = FALSE
+    </select>
+
+    <select id="getTagDetailByCode" resultMap="tagResultMap">
+        SELECT
+        <include refid="tagColumns"/>
+        FROM site_tag
+        WHERE code = #{code}
+        AND is_deleted = FALSE
+    </select>
+
+    <insert id="insertTag"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.TagEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO site_tag (
+            code,
+            name,
+            description,
+            is_visible,
+            is_deleted
+        ) VALUES (
+                     #{code},
+                     #{name},
+                     #{description},
+                     #{isVisible},
+                     #{isDeleted}
+                 )
+    </insert>
+
+    <update id="updateTag"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.TagEntity">
+        UPDATE site_tag
+        SET
+            name = #{name},
+            description = #{description},
+            is_visible = #{isVisible}
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+    <update id="updateTagVisible">
+        UPDATE site_tag
+        SET is_visible = #{isVisible}
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+    <update id="deleteTag">
+        UPDATE site_tag
+        SET is_deleted = TRUE
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+</mapper>

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.BoardMapper">
+
+    <resultMap id="boardResultMap" type="com.dawne.com2usbaseball.domain.community.entity.BoardEntity">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+
+        <result property="userRoleType" column="write_role"/>
+        <result property="readRoleType" column="read_role"/>
+
+        <result property="useComment" column="use_comment"/>
+        <result property="useLike" column="use_like"/>
+        <result property="useTag" column="use_tag"/>
+
+        <result property="isVisible" column="is_visible"/>
+        <result property="isDeleted" column="is_deleted"/>
+
+        <result property="sortOrder" column="sort_order"/>
+
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="getBoardList" resultMap="boardResultMap">
+        SELECT
+            id,
+            code,
+            name,
+            description,
+            write_role,
+            read_role,
+            use_comment,
+            use_like,
+            use_tag,
+            is_visible,
+            is_deleted,
+            sort_order,
+            created_at,
+            updated_at
+        FROM site_board
+        WHERE is_deleted = FALSE
+        ORDER BY sort_order ASC, id ASC
+    </select>
+
+    <select id="getVisibleBoardList" resultMap="boardResultMap">
+        SELECT
+            id,
+            code,
+            name,
+            description,
+            write_role,
+            read_role,
+            use_comment,
+            use_like,
+            use_tag,
+            is_visible,
+            is_deleted,
+            sort_order,
+            created_at,
+            updated_at
+        FROM site_board
+        WHERE is_deleted = FALSE
+        AND is_visible = TRUE
+        ORDER BY sort_order ASC, id ASC
+    </select>
+
+    <select id="getBoardDetail" resultMap="boardResultMap">
+        SELECT
+            id,
+            code,
+            name,
+            description,
+            write_role,
+            read_role,
+            use_comment,
+            use_like,
+            use_tag,
+            is_visible,
+            is_deleted,
+            sort_order,
+            created_at,
+            updated_at
+        FROM site_board
+        WHERE id = #{id}
+        AND is_deleted = FALSE
+    </select>
+
+    <select id="getBoardDetailByCode" resultMap="boardResultMap">
+        SELECT
+            id,
+            code,
+            name,
+            description,
+            write_role,
+            read_role,
+            use_comment,
+            use_like,
+            use_tag,
+            is_visible,
+            is_deleted,
+            sort_order,
+            created_at,
+            updated_at
+        FROM site_board
+        WHERE code = #{code}
+        AND is_deleted = FALSE
+    </select>
+
+    <insert id="insertBoard" parameterType="com.dawne.com2usbaseball.domain.community.entity.BoardEntity"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO site_board (
+            code,
+            name,
+            description,
+            write_role,
+            read_role,
+            use_comment,
+            use_like,
+            use_tag,
+            is_visible,
+            is_deleted,
+            sort_order
+        ) VALUES (
+                     #{code},
+                     #{name},
+                     #{description},
+                     #{userRoleType},
+                     #{readRoleType},
+                     #{useComment},
+                     #{useLike},
+                     #{useTag},
+                     #{isVisible},
+                     #{isDeleted},
+                     #{sortOrder}
+                 )
+    </insert>
+
+    <update id="updateBoard" parameterType="com.dawne.com2usbaseball.domain.community.entity.BoardEntity">
+        UPDATE site_board
+        SET
+            name = #{name},
+            description = #{description},
+            write_role = #{userRoleType},
+            read_role = #{readRoleType},
+            use_comment = #{useComment},
+            use_like = #{useLike},
+            use_tag = #{useTag},
+            is_visible = #{isVisible},
+            sort_order = #{sortOrder}
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+    <update id="updateBoardVisible">
+        UPDATE site_board
+        SET
+            is_visible = #{isVisible}
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+    <update id="deleteBoard">
+        UPDATE site_board
+        SET
+            is_deleted = TRUE
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+</mapper>

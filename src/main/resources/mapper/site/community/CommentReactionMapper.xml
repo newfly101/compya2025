@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.CommentReactionMapper">
+
+    <resultMap id="commentReactionResultMap" type="com.dawne.com2usbaseball.domain.community.entity.CommentReactionEntity">
+        <id property="id" column="id"/>
+        <result property="commentId" column="comment_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="reaction" column="reaction"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="getCommentReactionListByCommentId" resultMap="commentReactionResultMap">
+        SELECT
+            id,
+            comment_id,
+            user_id,
+            reaction,
+            created_at
+        FROM site_comment_reaction
+        WHERE comment_id = #{commentId}
+        ORDER BY id DESC
+    </select>
+
+    <select id="getCommentReactionListByUserId" resultMap="commentReactionResultMap">
+        SELECT
+        id,
+        comment_id,
+        user_id,
+        reaction,
+        created_at
+        FROM site_comment_reaction
+        WHERE user_id = #{userId}
+        ORDER BY id DESC
+    </select>
+
+    <select id="getCommentReaction" resultMap="commentReactionResultMap">
+        SELECT
+        id,
+        comment_id,
+        user_id,
+        reaction,
+        created_at
+        FROM site_comment_reaction
+        WHERE comment_id = #{commentId}
+        AND user_id = #{userId}
+    </select>
+
+    <insert id="insertCommentReaction"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.CommentReactionEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO site_comment_reaction (
+            comment_id,
+            user_id,
+            reaction
+        ) VALUES (
+                     #{commentId},
+                     #{userId},
+                     #{reaction}
+                 )
+    </insert>
+
+    <update id="updateCommentReaction"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.CommentReactionEntity">
+        UPDATE site_comment_reaction
+        SET reaction = #{reaction}
+        WHERE comment_id = #{commentId}
+          AND user_id = #{userId}
+    </update>
+
+    <delete id="deleteCommentReaction">
+        DELETE FROM site_comment_reaction
+        WHERE comment_id = #{commentId}
+          AND user_id = #{userId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.PostTagMapper">
+
+    <resultMap id="postTagResultMap" type="com.dawne.com2usbaseball.domain.community.entity.PostTagEntity">
+        <id property="postId" column="post_id"/>
+        <id property="tagId" column="tag_id"/>
+    </resultMap>
+
+    <select id="getPostTagListByPostId" resultMap="postTagResultMap">
+        SELECT
+            post_id,
+            tag_id
+        FROM site_post_tag
+        WHERE post_id = #{postId}
+        ORDER BY tag_id ASC
+    </select>
+
+    <select id="getPostTagListByTagId" resultMap="postTagResultMap">
+        SELECT
+            post_id,
+            tag_id
+        FROM site_post_tag
+        WHERE tag_id = #{tagId}
+        ORDER BY post_id DESC
+    </select>
+
+    <insert id="insertPostTag"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.PostTagEntity">
+        INSERT INTO site_post_tag (
+            post_id,
+            tag_id
+        ) VALUES (
+                     #{postId},
+                     #{tagId}
+                 )
+    </insert>
+
+    <delete id="deletePostTag">
+        DELETE FROM site_post_tag
+        WHERE post_id = #{postId}
+          AND tag_id = #{tagId}
+    </delete>
+
+    <delete id="deleteAllPostTagByPostId">
+        DELETE FROM site_post_tag
+        WHERE post_id = #{postId}
+    </delete>
+
+</mapper>

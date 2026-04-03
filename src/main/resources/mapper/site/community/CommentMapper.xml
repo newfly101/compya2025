@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.CommentMapper">
+
+    <resultMap id="commentResultMap" type="com.dawne.com2usbaseball.domain.community.entity.CommentEntity">
+        <id property="id" column="id"/>
+        <result property="postId" column="post_id"/>
+        <result property="parentCommentId" column="parent_comment_id"/>
+
+        <result property="userRoleType" column="author_type"/>
+        <result property="authorId" column="author_id"/>
+        <result property="authorName" column="author_name"/>
+
+        <result property="content" column="content"/>
+
+        <result property="isVisible" column="is_visible"/>
+        <result property="isDeleted" column="is_deleted"/>
+
+        <result property="likeCount" column="like_count"/>
+        <result property="dislikeCount" column="dislike_count"/>
+        <result property="reportCount" column="report_count"/>
+
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="getCommentListByPostId" resultMap="commentResultMap">
+        SELECT
+        <include refid="commentColumns"/>
+        FROM site_comment
+        WHERE post_id = #{postId}
+        AND parent_comment_id IS NULL
+        AND is_deleted = FALSE
+        ORDER BY created_at ASC, id ASC
+    </select>
+
+    <select id="getReplyListByParentCommentId" resultMap="commentResultMap">
+        SELECT
+        <include refid="commentColumns"/>
+        FROM site_comment
+        WHERE parent_comment_id = #{parentCommentId}
+        AND is_deleted = FALSE
+        ORDER BY created_at ASC, id ASC
+    </select>
+
+    <select id="getCommentDetail" resultMap="commentResultMap">
+        SELECT
+        <include refid="commentColumns"/>
+        FROM site_comment
+        WHERE id = #{id}
+    </select>
+
+    <select id="countCommentByPostId" resultType="int">
+        SELECT COUNT(*)
+        FROM site_comment
+        WHERE post_id = #{postId}
+          AND is_deleted = FALSE
+    </select>
+
+    <insert id="insertComment"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.CommentEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO site_comment (
+            post_id,
+            parent_comment_id,
+            author_type,
+            author_id,
+            author_name,
+            content,
+            is_visible,
+            is_deleted,
+            like_count,
+            dislike_count,
+            report_count
+        ) VALUES (
+                     #{postId},
+                     #{parentCommentId},
+                     #{userRoleType},
+                     #{authorId},
+                     #{authorName},
+                     #{content},
+                     #{isVisible},
+                     #{isDeleted},
+                     #{likeCount},
+                     #{dislikeCount},
+                     #{reportCount}
+                 )
+    </insert>
+
+    <update id="updateComment"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.CommentEntity">
+        UPDATE site_comment
+        SET content = #{content},
+            is_visible = #{isVisible}
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+    <update id="updateCommentVisible">
+        UPDATE site_comment
+        SET is_visible = #{isVisible}
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+    <update id="increaseCommentLikeCount">
+        UPDATE site_comment
+        SET like_count = like_count + 1
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="decreaseCommentLikeCount">
+        UPDATE site_comment
+        SET like_count = GREATEST(like_count - 1, 0)
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="increaseCommentDislikeCount">
+        UPDATE site_comment
+        SET dislike_count = dislike_count + 1
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="decreaseCommentDislikeCount">
+        UPDATE site_comment
+        SET dislike_count = GREATEST(dislike_count - 1, 0)
+        WHERE id = #{id} AND is_deleted = FALSE
+    </update>
+
+    <update id="increaseCommentReportCount">
+        UPDATE site_comment
+        SET report_count = report_count + 1
+        WHERE id = #{id}
+    </update>
+
+    <update id="deleteComment">
+        UPDATE site_comment
+        SET is_deleted = TRUE
+        WHERE id = #{id}
+          AND is_deleted = FALSE
+    </update>
+
+</mapper>

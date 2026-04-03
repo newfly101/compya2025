@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.community.repository.mapper.ReportMapper">
+
+    <resultMap id="reportResultMap" type="com.dawne.com2usbaseball.domain.community.entity.ReportEntity">
+        <id property="id" column="id"/>
+        <result property="targetType" column="target_type"/>
+        <result property="targetId" column="target_id"/>
+        <result property="reporterId" column="reporter_id"/>
+        <result property="reason" column="reason"/>
+        <result property="detail" column="detail"/>
+        <result property="status" column="status"/>
+        <result property="reviewedBy" column="reviewed_by"/>
+        <result property="reviewedAt" column="reviewed_at"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="getReportList" resultMap="reportResultMap">
+        SELECT
+        id,
+        target_type,
+        target_id,
+        reporter_id,
+        reason,
+        detail,
+        status,
+        reviewed_by,
+        reviewed_at,
+        created_at
+        FROM site_report
+        ORDER BY created_at DESC, id DESC
+    </select>
+
+    <select id="getPendingReportList" resultMap="reportResultMap">
+        SELECT
+        id,
+        target_type,
+        target_id,
+        reporter_id,
+        reason,
+        detail,
+        status,
+        reviewed_by,
+        reviewed_at,
+        created_at
+        FROM site_report
+        WHERE status = 'PENDING'
+        ORDER BY created_at DESC, id DESC
+    </select>
+
+    <select id="getReportListByTarget" resultMap="reportResultMap">
+        SELECT
+        id,
+        target_type,
+        target_id,
+        reporter_id,
+        reason,
+        detail,
+        status,
+        reviewed_by,
+        reviewed_at,
+        created_at
+        FROM site_report
+        WHERE target_type = #{targetType}
+        AND target_id = #{targetId}
+        ORDER BY created_at DESC, id DESC
+    </select>
+
+    <select id="getReportDetail" resultMap="reportResultMap">
+        SELECT
+        id,
+        target_type,
+        target_id,
+        reporter_id,
+        reason,
+        detail,
+        status,
+        reviewed_by,
+        reviewed_at,
+        created_at
+        FROM site_report
+        WHERE id = #{id}
+    </select>
+
+    <select id="getReportByReporter" resultMap="reportResultMap">
+        SELECT
+        id,
+        target_type,
+        target_id,
+        reporter_id,
+        reason,
+        detail,
+        status,
+        reviewed_by,
+        reviewed_at,
+        created_at
+        FROM site_report
+        WHERE target_type = #{targetType}
+        AND target_id = #{targetId}
+        AND reporter_id = #{reporterId}
+    </select>
+
+    <insert id="insertReport"
+            parameterType="com.dawne.com2usbaseball.domain.community.entity.ReportEntity"
+            useGeneratedKeys="true"
+            keyProperty="id">
+        INSERT INTO site_report (
+            target_type,
+            target_id,
+            reporter_id,
+            reason,
+            detail,
+            status,
+            reviewed_by,
+            reviewed_at
+        ) VALUES (
+                     #{targetType},
+                     #{targetId},
+                     #{reporterId},
+                     #{reason},
+                     #{detail},
+                     #{status},
+                     #{reviewedBy},
+                     #{reviewedAt}
+                 )
+    </insert>
+
+    <update id="updateReportStatus">
+        UPDATE site_report
+        SET
+            status = #{status},
+            reviewed_by = #{reviewedBy},
+            reviewed_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteReport">
+        DELETE FROM site_report
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
