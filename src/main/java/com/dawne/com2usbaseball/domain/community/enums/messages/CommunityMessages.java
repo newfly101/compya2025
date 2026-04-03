@@ -26,4 +26,8 @@ public enum CommunityMessages {
     COMMUNITY_COMMENT_REACTION_NOT_FOUND,        // ("댓글 반응 정보를 찾을 수 없습니다."),
     COMMUNITY_COMMENT_REACTION_SAVED,            // ("댓글 반응이 저장되었습니다."),
     COMMUNITY_COMMENT_REACTION_DELETED,          // ("댓글 반응이 삭제되었습니다.");
+
+    COMMUNITY_POST_REACTION_NOT_FOUND,           // ("게시글 반응 정보를 찾을 수 없습니다."),
+    COMMUNITY_POST_REACTION_SAVED,               // ("게시글 반응이 저장되었습니다."),
+    COMMUNITY_POST_REACTION_DELETED,             // ("게시글 반응이 삭제되었습니다."),
 }
