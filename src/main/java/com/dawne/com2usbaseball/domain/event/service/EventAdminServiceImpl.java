@@ -3,6 +3,8 @@ package com.dawne.com2usbaseball.domain.event.service;
 import com.dawne.com2usbaseball.common.support.ListAssembler;
 import com.dawne.com2usbaseball.common.support.dto.ListResponse;
 import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
+import com.dawne.com2usbaseball.domain.event.dto.mapstruct.EventMapStruct;
+import com.dawne.com2usbaseball.domain.event.dto.request.ChangeEventRequest;
 import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
 import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
 import com.dawne.com2usbaseball.domain.event.enums.EventMessages;
@@ -22,22 +24,25 @@ import java.util.List;
 public class EventAdminServiceImpl implements EventAdminService {
 
     private final EventRepository repository;
+    private final EventMapStruct eventMapStruct;
 
     @Override
     @Transactional(readOnly = true)
-    @Cacheable(value="events", key="'external::admin'")
+    @Cacheable(value = "events", key = "'external::admin'")
     public ListResponse<EventResponse> getExternalEventList() {
         List<EventEntity> events = repository.selectCafeEvents();
 
-        return ListAssembler.assemble(events, EventResponse::from);
+        return ListAssembler.assemble(events, eventMapStruct::toResponse);
     }
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'", condition="#result.success == true"),
-            @CacheEvict(value = "events", key = "'external::public'", condition="#result.success == true")
+            @CacheEvict(value = "events", key = "'external::admin'", condition = "#result.success == true"),
+            @CacheEvict(value = "events", key = "'external::public'", condition = "#result.success == true")
     })
-    public OperationResponse<EventMessages> createEvent(EventEntity event) {
+    public OperationResponse<EventMessages> createEvent(ChangeEventRequest request) {
+        EventEntity event = eventMapStruct.toEntity(request);
+
         return repository.insertCafeEvent(event)
                 ? OperationResponse.success(EventMessages.EVENT_CREATED, event.getId())
                 : OperationResponse.fail(EventMessages.EVENT_FAILED);
@@ -45,10 +50,12 @@ public class EventAdminServiceImpl implements EventAdminService {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'", condition="#result.success == true"),
-            @CacheEvict(value = "events", key = "'external::public'", condition="#result.success == true")
+            @CacheEvict(value = "events", key = "'external::admin'", condition = "#result.success == true"),
+            @CacheEvict(value = "events", key = "'external::public'", condition = "#result.success == true")
     })
-    public OperationResponse<EventMessages> updateEvent(EventEntity event) {
+    public OperationResponse<EventMessages> updateEvent(ChangeEventRequest request, Long id) {
+        EventEntity event = eventMapStruct.toEntity(request, id);
+
         return repository.updateCafeEvent(event)
                 ? OperationResponse.success(EventMessages.EVENT_UPDATED, event.getId())
                 : OperationResponse.fail(EventMessages.EVENT_FAILED);
@@ -56,8 +63,8 @@ public class EventAdminServiceImpl implements EventAdminService {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'", condition="#result.success == true"),
-            @CacheEvict(value = "events", key = "'external::public'", condition="#result.success == true")
+            @CacheEvict(value = "events", key = "'external::admin'", condition = "#result.success == true"),
+            @CacheEvict(value = "events", key = "'external::public'", condition = "#result.success == true")
     })
     public OperationResponse<EventMessages> updateEventVisible(Long id, boolean visible) {
         return repository.updateCafeEventVisible(id, visible)

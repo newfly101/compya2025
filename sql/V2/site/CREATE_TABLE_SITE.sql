@@ -40,3 +40,24 @@ CREATE TABLE site_notices
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
     COMMENT ='사이트 공지사항 통합 관리';
+
+CREATE TABLE site_events
+(
+    id            BIGINT AUTO_INCREMENT COMMENT '이벤트 고유 식별자 (PK)',
+    event_type    ENUM ('OFFICIAL', 'INTERNAL') NOT NULL DEFAULT 'OFFICIAL' COMMENT '이벤트 유형 (OFFICIAL: 외부 공개 이벤트, INTERNAL: 내부 이벤트)',
+    title         VARCHAR(255)                  NOT NULL COMMENT '이벤트 제목',
+    start_at      DATETIME                      NOT NULL COMMENT '이벤트 시작 일시',
+    expire_at     DATETIME                      NOT NULL COMMENT '이벤트 종료 일시',
+    image_url     VARCHAR(500)                  NOT NULL COMMENT '이벤트 이미지 URL',
+    external_link VARCHAR(500)                           COMMENT '이벤트 외부 연결 링크',
+    is_visible    BOOLEAN                       NOT NULL DEFAULT TRUE COMMENT '이벤트 노출 여부',
+    created_at    DATETIME                      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
+    updated_at    DATETIME                      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
+
+    PRIMARY KEY (id),
+
+    CONSTRAINT chk_site_events_expire_after_start
+        CHECK (expire_at > start_at),
+
+    INDEX idx_site_events_visible_period (is_visible, start_at, expire_at)
+) COMMENT = '사이트 이벤트 정보';

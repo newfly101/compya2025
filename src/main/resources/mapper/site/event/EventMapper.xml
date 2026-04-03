@@ -4,7 +4,30 @@
 
 <mapper namespace="com.dawne.com2usbaseball.domain.event.repository.mapper.EventMapper">
 
-    <select id="selectEventByExternalForUser" resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+    <!-- USER -->
+    <select id="selectEventByExternalForUser"
+            resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        SELECT
+        id,
+        event_type,
+        title,
+        start_at,
+        expire_at,
+        image_url,
+        external_link,
+        is_visible AS visible,
+        created_at,
+        updated_at
+        FROM site_events
+        WHERE is_visible = true
+        AND start_at &lt;= NOW()
+        AND expire_at &gt;= NOW()
+        ORDER BY start_at DESC
+    </select>
+
+    <!-- ADMIN -->
+    <select id="selectEventByExternal"
+            resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
             id,
             event_type,
@@ -16,27 +39,12 @@
             is_visible AS visible,
             created_at,
             updated_at
-        FROM events
-        WHERE is_visible = true
-    </select>
-
-    <select id="selectEventByExternal" resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
-        SELECT
-           id,
-           event_type,
-           title,
-           start_at,
-           expire_at,
-           image_url,
-           external_link,
-           is_visible AS visible,
-           created_at,
-           updated_at
-        FROM events
+        FROM site_events
+        ORDER BY created_at DESC
     </select>
 
     <insert id="insertEvent" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO events (
+        INSERT INTO site_events (
             event_type,
             title,
             start_at,
@@ -47,21 +55,21 @@
             created_at,
             updated_at
         ) VALUES (
-            #{eventType},
-            #{title},
-            #{startAt},
-            #{expireAt},
-            #{imageUrl},
-            #{externalLink},
-            #{visible},
-            NOW(),
-            NOW()
-        )
-
+                     #{eventType},
+                     #{title},
+                     #{startAt},
+                     #{expireAt},
+                     #{imageUrl},
+                     #{externalLink},
+                     #{visible},
+                     NOW(),
+                     NOW()
+                 )
     </insert>
 
-    <update id="updateEventByExternal" parameterType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
-        UPDATE events
+    <update id="updateEventByExternal"
+            parameterType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        UPDATE site_events
         <set>
             <if test="eventType != null">
                 event_type = #{eventType},
@@ -87,14 +95,14 @@
             updated_at = NOW()
         </set>
         WHERE id = #{id}
-
     </update>
 
     <update id="updateEventVisible">
-        UPDATE events
+        UPDATE site_events
         SET
             is_visible = #{visible},
             updated_at = NOW()
         WHERE id = #{id}
     </update>
+
 </mapper>

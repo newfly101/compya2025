@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.domain.event.controller;
 
 import com.dawne.com2usbaseball.common.support.dto.ListResponse;
 import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
+import com.dawne.com2usbaseball.domain.event.controller.docs.AdminEventSwaggerDocs;
 import com.dawne.com2usbaseball.domain.event.dto.request.ChangeEventRequest;
 import com.dawne.com2usbaseball.domain.event.dto.request.ChangeEventVisibleRequest;
 import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
@@ -15,25 +16,29 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/events")
-public class AdminEventController {
+public class AdminEventController implements AdminEventSwaggerDocs {
 
     private final EventAdminService eventAdminService;
 
+    @Override
     @GetMapping("/external")
     public ListResponse<EventResponse> getExternalEventList() {
         return eventAdminService.getExternalEventList();
     }
 
+    @Override
     @PostMapping
     public OperationResponse<EventMessages> insertNewEvent(@RequestBody ChangeEventRequest request) {
-        return eventAdminService.createEvent(request.toEntity());
+        return eventAdminService.createEvent(request);
     }
 
+    @Override
     @PatchMapping("/{id}")
     public OperationResponse<EventMessages> updateExternalEvent(@RequestBody ChangeEventRequest request, @PathVariable Long id) {
-        return eventAdminService.updateEvent(request.toEntity(id));
+        return eventAdminService.updateEvent(request, id);
     }
 
+    @Override
     @PatchMapping("/{id}/visible")
     public OperationResponse<EventMessages> updateExternalEventVisible(@PathVariable Long id, @RequestBody ChangeEventVisibleRequest request) {
         return eventAdminService.updateEventVisible(id, request.visible());

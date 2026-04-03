@@ -1,6 +1,5 @@
 package com.dawne.com2usbaseball.domain.event.dto.response;
 
-import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
 import com.dawne.com2usbaseball.domain.event.enums.EventType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -17,17 +16,4 @@ public record EventResponse(
         String imageUrl,
         String externalLink,
         boolean visible
-) {
-    public static EventResponse from(EventEntity e) {
-        return new EventResponse(
-                e.getId(),
-                e.getEventType(),
-                e.getTitle(),
-                e.getStartAt(),
-                e.getExpireAt(),
-                e.getImageUrl(),
-                e.getExternalLink(),
-                e.isVisible()
-        );
-    }
-}
+) { }

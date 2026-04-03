@@ -1,6 +1,5 @@
 package com.dawne.com2usbaseball.domain.event.dto.request;
 
-import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
 import com.dawne.com2usbaseball.domain.event.enums.EventType;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -16,27 +15,4 @@ public record ChangeEventRequest(
         String imageUrl,
         String externalLink,
         boolean visible
-) {
-    public EventEntity toEntity() {
-        EventEntity e = new EventEntity();
-        applyTo(e);
-        return e;
-    }
-
-    public EventEntity toEntity(Long id) {
-        EventEntity e = new EventEntity();
-        e.setId(id);
-        applyTo(e);
-        return e;
-    }
-
-    private void applyTo(EventEntity e) {
-        e.setEventType(eventType);
-        e.setTitle(title);
-        e.setStartAt(startAt);
-        e.setExpireAt(expireAt);
-        e.setImageUrl(imageUrl);
-        e.setExternalLink(externalLink);
-        e.setVisible(visible);
-    }
-}
+) { }
