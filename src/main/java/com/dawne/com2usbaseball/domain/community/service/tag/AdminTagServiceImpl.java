@@ -40,7 +40,7 @@ public class AdminTagServiceImpl implements AdminTagService {
     @Override
     @Transactional
     public TagResponse createTag(TagRequest request) {
-        TagEntity exists = tagRepository.getTagDetailByCode(request.getCode());
+        TagEntity exists = tagRepository.getTagDetailByCode(request.code());
         if (exists != null) {
             throw new BaseException(CommunityMessages.COMMUNITY_TAG_CODE_ALREADY_EXISTS, HttpStatus.CONFLICT);
         }
@@ -70,7 +70,7 @@ public class AdminTagServiceImpl implements AdminTagService {
     @Transactional
     public void updateTagVisible(Long id, ChangeTagVisibleRequest request) {
         getTagEntity(id);
-        tagRepository.updateTagVisible(id, request.getIsVisible());
+        tagRepository.updateTagVisible(id, request.isVisible());
     }
 
     @Override

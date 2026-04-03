@@ -48,7 +48,7 @@ public class AdminCommentServiceImpl implements AdminCommentService {
     @Transactional
     public void updateCommentVisible(Long id, ChangeCommentVisibleRequest request) {
         getCommentEntity(id);
-        commentRepository.updateCommentVisible(id, request.getIsVisible());
+        commentRepository.updateCommentVisible(id, request.isVisible());
     }
 
     @Override
