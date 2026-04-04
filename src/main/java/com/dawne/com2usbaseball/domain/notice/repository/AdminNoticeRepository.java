@@ -1,11 +1,15 @@
 package com.dawne.com2usbaseball.domain.notice.repository;
 
 import com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity;
+import com.dawne.com2usbaseball.domain.notice.enums.NoticeMessages;
+import com.dawne.com2usbaseball.domain.notice.exception.NoticeException;
 import com.dawne.com2usbaseball.domain.notice.repository.mapper.NoticeMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -18,7 +22,15 @@ public class AdminNoticeRepository {
     }
 
     public NoticeEntity getAdminNoticeDetail(Long noticeId) {
-        return noticeMapper.getAdminNoticeDetail(noticeId);
+        NoticeEntity notice = noticeMapper.getAdminNoticeDetail(noticeId);
+        if (notice == null) {
+            throw new NoticeException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+        return notice;
+    }
+
+    public Optional<NoticeEntity> findById(Long noticeId) {
+        return Optional.ofNullable(noticeMapper.selectNoticeById(noticeId));
     }
 
     public boolean insertNotice(NoticeEntity entity) {

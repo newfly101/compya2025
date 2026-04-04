@@ -19,6 +19,7 @@ CREATE TABLE site_notices
     summary        TEXT NULL COMMENT '목록용 요약',
     content        LONGTEXT NULL COMMENT '내부 공지 본문',
     external_url   VARCHAR(500) NULL COMMENT '외부 공지 링크',
+    image_url      VARCHAR(500) NULL COMMENT '공지사항 이미지 URL',
 
     is_visible     BOOLEAN NOT NULL DEFAULT true COMMENT '사용자 노출 여부',
     is_pinned      BOOLEAN NOT NULL DEFAULT false COMMENT '상단 고정 여부',

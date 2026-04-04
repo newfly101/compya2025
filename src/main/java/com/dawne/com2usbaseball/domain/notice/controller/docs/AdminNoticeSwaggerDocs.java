@@ -1,12 +1,10 @@
 package com.dawne.com2usbaseball.domain.notice.controller.docs;
 
-import com.dawne.com2usbaseball.common.support.dto.ListResponse;
-import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
-import com.dawne.com2usbaseball.domain.notice.dto.request.ChangeNoticePinnedRequest;
-import com.dawne.com2usbaseball.domain.notice.dto.request.ChangeNoticeRequest;
-import com.dawne.com2usbaseball.domain.notice.dto.request.ChangeNoticeVisibleRequest;
+import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
+import com.dawne.com2usbaseball.domain.notice.dto.request.NoticePinnedRequest;
+import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeRequest;
+import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeVisibleRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.response.NoticeResponse;
-import com.dawne.com2usbaseball.domain.notice.enums.NoticeMessages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,6 +15,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
 
 @Tag(name = "1. [Site] Notice", description = "관리자 공지사항 관리 API")
 public interface AdminNoticeSwaggerDocs {
@@ -31,7 +31,7 @@ public interface AdminNoticeSwaggerDocs {
                     description = "공지사항 목록 조회 성공"
             )
     })
-    ListResponse<NoticeResponse> getAdminNoticeList();
+    GlobalResponse<List<NoticeResponse>> getAdminNoticeList();
 
     @Operation(
             summary = "관리자 공지사항 상세 조회",
@@ -47,7 +47,7 @@ public interface AdminNoticeSwaggerDocs {
                     description = "공지사항을 찾을 수 없음"
             )
     })
-    NoticeResponse getAdminNoticeDetail(
+    GlobalResponse<NoticeResponse> getAdminNoticeDetail(
             @Parameter(description = "공지사항 ID", example = "1")
             @PathVariable Long noticeId
     );
@@ -66,12 +66,12 @@ public interface AdminNoticeSwaggerDocs {
                     description = "잘못된 요청 데이터"
             )
     })
-    OperationResponse<NoticeMessages> createNotice(
+    GlobalResponse<NoticeResponse> createNotice(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "공지사항 등록 요청",
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = ChangeNoticeRequest.class),
+                            schema = @Schema(implementation = NoticeRequest.class),
                             examples = {
                                     @ExampleObject(
                                             name = "내부 공지 등록 예시",
@@ -106,7 +106,7 @@ public interface AdminNoticeSwaggerDocs {
                             }
                     )
             )
-            @RequestBody ChangeNoticeRequest request
+            @RequestBody NoticeRequest request
     );
 
     @Operation(
@@ -127,7 +127,7 @@ public interface AdminNoticeSwaggerDocs {
                     description = "공지사항을 찾을 수 없음"
             )
     })
-    OperationResponse<NoticeMessages> updateNotice(
+    GlobalResponse<NoticeResponse> updateNotice(
             @Parameter(description = "공지사항 ID", example = "1")
             @PathVariable Long noticeId,
 
@@ -135,7 +135,7 @@ public interface AdminNoticeSwaggerDocs {
                     description = "공지사항 수정 요청",
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = ChangeNoticeRequest.class),
+                            schema = @Schema(implementation = NoticeRequest.class),
                             examples = {
                                     @ExampleObject(
                                             name = "내부 공지 수정 예시",
@@ -155,7 +155,7 @@ public interface AdminNoticeSwaggerDocs {
                             }
                     )
             )
-            @RequestBody ChangeNoticeRequest request
+            @RequestBody NoticeRequest request
     );
 
     @Operation(
@@ -172,7 +172,7 @@ public interface AdminNoticeSwaggerDocs {
                     description = "공지사항을 찾을 수 없음"
             )
     })
-    OperationResponse<NoticeMessages> updateNoticeVisible(
+    GlobalResponse<Void> updateNoticeVisible(
             @Parameter(description = "공지사항 ID", example = "1")
             @PathVariable Long noticeId,
 
@@ -180,7 +180,7 @@ public interface AdminNoticeSwaggerDocs {
                     description = "노출 여부 변경 요청",
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = ChangeNoticeVisibleRequest.class),
+                            schema = @Schema(implementation = NoticeVisibleRequest.class),
                             examples = {
                                     @ExampleObject(
                                             name = "노출 숨김 예시",
@@ -193,7 +193,7 @@ public interface AdminNoticeSwaggerDocs {
                             }
                     )
             )
-            @RequestBody ChangeNoticeVisibleRequest request
+            @RequestBody NoticeVisibleRequest request
     );
 
     @Operation(
@@ -210,7 +210,7 @@ public interface AdminNoticeSwaggerDocs {
                     description = "공지사항을 찾을 수 없음"
             )
     })
-    OperationResponse<NoticeMessages> updateNoticePinned(
+    GlobalResponse<Void> updateNoticePinned(
             @Parameter(description = "공지사항 ID", example = "1")
             @PathVariable Long noticeId,
 
@@ -218,7 +218,7 @@ public interface AdminNoticeSwaggerDocs {
                     description = "상단 고정 여부 변경 요청",
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = ChangeNoticePinnedRequest.class),
+                            schema = @Schema(implementation = NoticePinnedRequest.class),
                             examples = {
                                     @ExampleObject(
                                             name = "상단 고정 예시",
@@ -231,7 +231,7 @@ public interface AdminNoticeSwaggerDocs {
                             }
                     )
             )
-            @RequestBody ChangeNoticePinnedRequest request
+            @RequestBody NoticePinnedRequest request
     );
 
     @Operation(
@@ -248,7 +248,7 @@ public interface AdminNoticeSwaggerDocs {
                     description = "공지사항을 찾을 수 없음"
             )
     })
-    OperationResponse<NoticeMessages> deleteNotice(
+    GlobalResponse<Void> deleteNotice(
             @Parameter(description = "공지사항 ID", example = "1")
             @PathVariable Long noticeId
     );

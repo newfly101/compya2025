@@ -47,7 +47,7 @@ public interface AdminCouponSwaggerDocs {
                                                   "couponCode": "WELCOME_2026",
                                                   "title": "신규 가입 웰컴 쿠폰",
                                                   "detail": "회원가입 사용자 대상 10% 할인 쿠폰",
-                                                  "expireAt": "2026-12-31T23:59:59",
+                                                  "expireAt": "2026-12-31 23:59:59",
                                                   "visible": true
                                                 }
                                                 """
@@ -79,7 +79,7 @@ public interface AdminCouponSwaggerDocs {
                                                   "couponCode": "SPRING_2026",
                                                   "title": "봄맞이 할인 쿠폰",
                                                   "detail": "전 상품 5% 할인",
-                                                  "expireAt": "2026-04-30T23:59:59",
+                                                  "expireAt": "2026-04-30 23:59:59",
                                                   "visible": false
                                                 }
                                                 """

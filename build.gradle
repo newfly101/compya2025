@@ -54,6 +54,9 @@ dependencies {
 
 //	swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+//	XSS 공격과 HTML 새니타이징
+	implementation 'org.jsoup:jsoup:1.17.2'
 }
 
 tasks.named('test') {
