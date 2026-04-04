@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.quiz.repository.mapper.QuizMapper">
+
+    <select id="selectLatestVisible" resultType="com.dawne.com2usbaseball.domain.quiz.entity.QuizEntity">
+        SELECT
+            id,
+            round,
+            image_url  AS imageUrl,
+            is_visible AS isVisible,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM fun_quiz
+        WHERE is_visible = true
+        ORDER BY id DESC
+        LIMIT 1
+    </select>
+
+    <select id="selectAll" resultType="com.dawne.com2usbaseball.domain.quiz.entity.QuizEntity">
+        SELECT
+            id,
+            round,
+            image_url  AS imageUrl,
+            is_visible AS isVisible,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM fun_quiz
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectById" resultType="com.dawne.com2usbaseball.domain.quiz.entity.QuizEntity">
+        SELECT
+            id,
+            round,
+            image_url  AS imageUrl,
+            is_visible AS isVisible,
+            created_at AS createdAt,
+            updated_at AS updatedAt
+        FROM fun_quiz
+        WHERE id = #{id}
+    </select>
+
+    <insert id="insertQuiz" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO fun_quiz (round, image_url, is_visible)
+        VALUES (#{round}, #{imageUrl}, #{isVisible})
+    </insert>
+
+    <update id="updateQuiz">
+        UPDATE fun_quiz
+        <set>
+            <if test="round != null">round = #{round},</if>
+            <if test="imageUrl != null">image_url = #{imageUrl},</if>
+            is_visible = #{isVisible}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteQuiz">
+        DELETE FROM fun_quiz WHERE id = #{id}
+    </delete>
+
+</mapper>

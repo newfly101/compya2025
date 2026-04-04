@@ -113,3 +113,14 @@ CREATE TABLE fun_player_card_positions
         FOREIGN KEY (card_id) REFERENCES fun_player_card (id)
             ON DELETE CASCADE
 );
+
+CREATE TABLE fun_quiz
+(
+    id         BIGINT       AUTO_INCREMENT PRIMARY KEY,
+    round      INT          NOT NULL COMMENT '퀴즈 회차 (예: 877)',
+    image_url  VARCHAR(500) NOT NULL COMMENT '정답 이미지 (S3)',
+    is_visible BOOLEAN      NOT NULL DEFAULT true,
+    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_round (round)
+);
