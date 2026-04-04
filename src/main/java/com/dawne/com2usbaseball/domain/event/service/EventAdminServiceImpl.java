@@ -1,18 +1,17 @@
 package com.dawne.com2usbaseball.domain.event.service;
 
-import com.dawne.com2usbaseball.common.support.ListAssembler;
-import com.dawne.com2usbaseball.common.support.dto.ListResponse;
-import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.event.dto.mapstruct.EventMapStruct;
-import com.dawne.com2usbaseball.domain.event.dto.request.ChangeEventRequest;
+import com.dawne.com2usbaseball.domain.event.dto.request.EventRequest;
 import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
 import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
 import com.dawne.com2usbaseball.domain.event.enums.EventMessages;
+import com.dawne.com2usbaseball.domain.event.exception.EventException;
 import com.dawne.com2usbaseball.domain.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,46 +28,56 @@ public class EventAdminServiceImpl implements EventAdminService {
     @Override
     @Transactional(readOnly = true)
     @Cacheable(value = "events", key = "'external::admin'")
-    public ListResponse<EventResponse> getExternalEventList() {
-        List<EventEntity> events = repository.selectCafeEvents();
+    public List<EventResponse> getExternalEventList() {
+        List<EventEntity> events = repository.findExternalEvents();
 
-        return ListAssembler.assemble(events, eventMapStruct::toResponse);
+        return eventMapStruct.toResponseList(events);
     }
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'", condition = "#result.success == true"),
-            @CacheEvict(value = "events", key = "'external::public'", condition = "#result.success == true")
+            @CacheEvict(value = "events", key = "'external::admin'"),
+            @CacheEvict(value = "events", key = "'external::public'")
     })
-    public OperationResponse<EventMessages> createEvent(ChangeEventRequest request) {
+    public EventResponse createEvent(EventRequest request) {
         EventEntity event = eventMapStruct.toEntity(request);
 
-        return repository.insertCafeEvent(event)
-                ? OperationResponse.success(EventMessages.EVENT_CREATED, event.getId())
-                : OperationResponse.fail(EventMessages.EVENT_FAILED);
+        if (!repository.saveEvent(event)) {
+            throw new EventException(EventMessages.EVENT_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        EventEntity saved = repository.findById(event.getId())
+                .orElseThrow(() -> new EventException(EventMessages.EVENT_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
+
+        return eventMapStruct.toResponse(saved);
     }
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'", condition = "#result.success == true"),
-            @CacheEvict(value = "events", key = "'external::public'", condition = "#result.success == true")
+            @CacheEvict(value = "events", key = "'external::admin'"),
+            @CacheEvict(value = "events", key = "'external::public'")
     })
-    public OperationResponse<EventMessages> updateEvent(ChangeEventRequest request, Long id) {
-        EventEntity event = eventMapStruct.toEntity(request, id);
+    public EventResponse updateEvent(EventRequest request, Long id) {
+        EventEntity event = repository.findById(id)
+                .orElseThrow(() -> new EventException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
 
-        return repository.updateCafeEvent(event)
-                ? OperationResponse.success(EventMessages.EVENT_UPDATED, event.getId())
-                : OperationResponse.fail(EventMessages.EVENT_FAILED);
+        eventMapStruct.updateEntity(request, event);
+
+        if(!repository.updateEvent(event)) {
+            throw new EventException(EventMessages.EVENT_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return eventMapStruct.toResponse(event);
     }
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'", condition = "#result.success == true"),
-            @CacheEvict(value = "events", key = "'external::public'", condition = "#result.success == true")
+            @CacheEvict(value = "events", key = "'external::admin'"),
+            @CacheEvict(value = "events", key = "'external::public'")
     })
-    public OperationResponse<EventMessages> updateEventVisible(Long id, boolean visible) {
-        return repository.updateCafeEventVisible(id, visible)
-                ? OperationResponse.success(EventMessages.EVENT_VISIBLE_UPDATED, id)
-                : OperationResponse.fail(EventMessages.EVENT_FAILED);
+    public void updateEventVisible(Long id, boolean visible) {
+        repository.findById(id)
+                .orElseThrow(() -> new EventException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
+
+        repository.updateEventVisible(id, visible);
     }
 }

@@ -1,5 +1,5 @@
 package com.dawne.com2usbaseball.domain.event.dto.request;
 
-public record ChangeEventVisibleRequest(
+public record EventVisibleRequest(
         boolean visible
 ) { }

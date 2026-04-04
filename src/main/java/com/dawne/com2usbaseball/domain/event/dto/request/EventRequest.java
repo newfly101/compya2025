@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
 
-public record ChangeEventRequest(
+public record EventRequest(
         EventType eventType,
         String title,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")

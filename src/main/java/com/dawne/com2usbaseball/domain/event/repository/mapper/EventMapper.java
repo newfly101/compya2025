@@ -15,6 +15,7 @@ public interface EventMapper {
     // admin
     List<EventEntity> selectEventByExternal();                  // 이벤트 리스트 확인
     int insertEvent(EventEntity event);                         // 이벤트 추가
+    EventEntity selectEventById(Long id);
     int updateEventByExternal(EventEntity event);               // 이벤트 수정
     int updateEventVisible(
             @Param("id") Long id,

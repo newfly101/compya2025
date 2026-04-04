@@ -1,6 +1,5 @@
 package com.dawne.com2usbaseball.domain.coupon.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.time.LocalDateTime;

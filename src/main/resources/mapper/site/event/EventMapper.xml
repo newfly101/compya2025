@@ -9,15 +9,15 @@
             resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
         id,
-        event_type,
+        event_type      AS evemtType,
         title,
-        start_at,
-        expire_at,
-        image_url,
-        external_link,
-        is_visible AS visible,
-        created_at,
-        updated_at
+        start_at        AS startAt,
+        expire_at       AS expireAt,
+        image_url       AS imageUrl,
+        external_link   AS externalLink,
+        is_visible      AS visible,
+        created_at      AS createdAt,
+        updated_at      AS updatedAt
         FROM site_events
         WHERE is_visible = true
         AND start_at &lt;= NOW()
@@ -30,17 +30,33 @@
             resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
             id,
-            event_type,
+            event_type      AS evemtType,
             title,
-            start_at,
-            expire_at,
-            image_url,
-            external_link,
-            is_visible AS visible,
-            created_at,
-            updated_at
+            start_at        AS startAt,
+            expire_at       AS expireAt,
+            image_url       AS imageUrl,
+            external_link   AS externalLink,
+            is_visible      AS visible,
+            created_at      AS createdAt,
+            updated_at      AS updatedAt
         FROM site_events
         ORDER BY created_at DESC
+    </select>
+
+    <select id="selectEventById" resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        SELECT
+            id,
+            event_type      AS evemtType,
+            title,
+            start_at        AS startAt,
+            expire_at       AS expireAt,
+            image_url       AS imageUrl,
+            external_link   AS externalLink,
+            is_visible      AS visible,
+            created_at      AS createdAt,
+            updated_at      AS updatedAt
+        FROM site_events
+        WHERE id = #{id}
     </select>
 
     <insert id="insertEvent" useGeneratedKeys="true" keyProperty="id">

@@ -1,13 +1,13 @@
 package com.dawne.com2usbaseball.domain.event.entity;
 
 import com.dawne.com2usbaseball.domain.event.enums.EventType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventEntity {

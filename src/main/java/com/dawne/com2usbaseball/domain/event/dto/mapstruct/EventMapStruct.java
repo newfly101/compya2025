@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.domain.event.dto.mapstruct;
 
-import com.dawne.com2usbaseball.domain.event.dto.request.ChangeEventRequest;
+import com.dawne.com2usbaseball.domain.event.dto.request.EventRequest;
 import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
 import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
 import org.mapstruct.*;
@@ -11,15 +11,16 @@ import java.util.List;
 public interface EventMapStruct {
 
     @Mapping(target = "id", ignore = true)
-    EventEntity toEntity(ChangeEventRequest request);
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    EventEntity toEntity(EventRequest request);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateEntity(EventRequest request, @MappingTarget EventEntity entity);
 
     EventResponse toResponse(EventEntity entity);
 
     List<EventResponse> toResponseList(List<EventEntity> entities);
-
-    default EventEntity toEntity(ChangeEventRequest request, Long id) {
-        EventEntity entity = toEntity(request);
-        entity.setId(id);
-        return entity;
-    }
 }

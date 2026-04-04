@@ -44,7 +44,10 @@ public class CouponAdminServiceImpl implements CouponAdminService {
         if (!repository.insertCoupon(coupon)) {
             throw new CouponException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return couponMapStruct.toResponse(coupon);
+        CouponEntity saved = repository.findById(coupon.getId())
+                .orElseThrow(() -> new CouponException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
+
+        return couponMapStruct.toResponse(saved);
     }
 
     @Override
