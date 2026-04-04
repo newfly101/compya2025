@@ -32,6 +32,20 @@
         FROM site_coupons
     </select>
 
+    <select id="selectCouponById" resultType="com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity">
+        SELECT
+            id,
+            coupon_code   AS couponCode,
+            title,
+            detail,
+            expire_at     AS expireAt,
+            is_visible    AS visible,
+            created_at    AS createdAt,
+            updated_at    AS updatedAt
+        FROM coupons
+        WHERE id = #{id}
+    </select>
+
     <insert id="insertCoupon" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO site_coupons (
             coupon_code,

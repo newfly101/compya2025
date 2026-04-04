@@ -1,16 +1,17 @@
 package com.dawne.com2usbaseball.domain.coupon.controller;
 
-import com.dawne.com2usbaseball.common.support.dto.ListResponse;
-import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
+import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.coupon.controller.docs.AdminCouponSwaggerDocs;
-import com.dawne.com2usbaseball.domain.coupon.dto.request.ChangeCouponRequest;
-import com.dawne.com2usbaseball.domain.coupon.dto.request.ChangeCouponVisibleRequest;
+import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponRequest;
+import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponVisibleRequest;
 import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
 import com.dawne.com2usbaseball.domain.coupon.enums.CouponMessages;
 import com.dawne.com2usbaseball.domain.coupon.service.CouponAdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,30 +23,35 @@ public class AdminCouponController implements AdminCouponSwaggerDocs {
 
     @Override
     @GetMapping
-    public ListResponse<CouponResponse> getCouponLists() {
-        return couponAdminService.getCouponLists();
+    public GlobalResponse<List<CouponResponse>> getCouponLists() {
+        List<CouponResponse> couponList = couponAdminService.getCouponLists();
+
+        return GlobalResponse.success(CouponMessages.COUPON_SUCCESS, couponList);
     }
 
     @Override
     @PostMapping
-    public OperationResponse<CouponMessages> insertNewCoupons(@RequestBody ChangeCouponRequest request) {
-        return couponAdminService.createCoupon(request);
+    public GlobalResponse<CouponResponse> insertNewCoupons(@RequestBody CouponRequest request) {
+        CouponResponse createdCoupon = couponAdminService.createCoupon(request);
+        return GlobalResponse.success(CouponMessages.COUPON_CREATED, createdCoupon);
     }
 
     @Override
     @PatchMapping("/{id}")
-    public OperationResponse<CouponMessages> updateCoupon(
-            @RequestBody ChangeCouponRequest request, @PathVariable Long id
+    public GlobalResponse<CouponResponse> updateCoupon(
+            @RequestBody CouponRequest request, @PathVariable Long id
     ) {
-        return couponAdminService.updateCoupon(request, id);
+        CouponResponse updatedCoupon = couponAdminService.updateCoupon(request, id);
+        return GlobalResponse.success(CouponMessages.COUPON_UPDATED, updatedCoupon);
     }
 
     @Override
     @PatchMapping("/{id}/visible")
-    public OperationResponse<CouponMessages> updateCouponVisible(
+    public GlobalResponse<Void> updateCouponVisible(
             @PathVariable Long id,
-            @RequestBody ChangeCouponVisibleRequest request
+            @RequestBody CouponVisibleRequest request
     ) {
-        return couponAdminService.updateCouponVisible(id, request.visible());
+        couponAdminService.updateCouponVisible(id, request.visible());
+        return GlobalResponse.success(CouponMessages.COUPON_VISIBLE_UPDATED, null);
     }
 }

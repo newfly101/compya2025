@@ -1,11 +1,9 @@
 package com.dawne.com2usbaseball.domain.coupon.controller.docs;
 
-import com.dawne.com2usbaseball.common.support.dto.ListResponse;
-import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
-import com.dawne.com2usbaseball.domain.coupon.dto.request.ChangeCouponRequest;
-import com.dawne.com2usbaseball.domain.coupon.dto.request.ChangeCouponVisibleRequest;
+import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
+import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponRequest;
+import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponVisibleRequest;
 import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
-import com.dawne.com2usbaseball.domain.coupon.enums.CouponMessages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.List;
+
 @Tag(name = "1. [Site] Coupon", description = "관리자 쿠폰 관리 API")
 public interface AdminCouponSwaggerDocs {
 
@@ -24,7 +24,7 @@ public interface AdminCouponSwaggerDocs {
             description = "관리자가 등록된 쿠폰 목록을 조회한다."
     )
     @ApiResponse(responseCode = "200", description = "쿠폰 목록 조회 성공")
-    ListResponse<CouponResponse> getCouponLists();
+    GlobalResponse<List<CouponResponse>> getCouponLists();
 
     @Operation(
             summary = "쿠폰 등록",
@@ -32,12 +32,12 @@ public interface AdminCouponSwaggerDocs {
     )
     @ApiResponse(responseCode = "200", description = "쿠폰 등록 성공")
     @ApiResponse(responseCode = "400", description = "잘못된 요청", content = @Content)
-    OperationResponse<CouponMessages> insertNewCoupons(
+    GlobalResponse<CouponResponse> insertNewCoupons(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "쿠폰 등록 요청 값",
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = ChangeCouponRequest.class),
+                            schema = @Schema(implementation = CouponRequest.class),
                             examples = {
                                     @ExampleObject(
                                             name = "쿠폰 등록 예시",
@@ -55,7 +55,7 @@ public interface AdminCouponSwaggerDocs {
                             }
                     )
             )
-            @RequestBody ChangeCouponRequest request
+            @RequestBody CouponRequest request
     );
 
     @Operation(
@@ -64,12 +64,12 @@ public interface AdminCouponSwaggerDocs {
     )
     @ApiResponse(responseCode = "200", description = "쿠폰 수정 성공")
     @ApiResponse(responseCode = "404", description = "쿠폰을 찾을 수 없음", content = @Content)
-    OperationResponse<CouponMessages> updateCoupon(
+    GlobalResponse<CouponResponse> updateCoupon(
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "쿠폰 수정 요청 값",
                     required = true,
                     content = @Content(
-                            schema = @Schema(implementation = ChangeCouponRequest.class),
+                            schema = @Schema(implementation = CouponRequest.class),
                             examples = {
                                     @ExampleObject(
                                             name = "쿠폰 수정 예시",
@@ -87,7 +87,7 @@ public interface AdminCouponSwaggerDocs {
                             }
                     )
             )
-            @RequestBody ChangeCouponRequest request,
+            @RequestBody CouponRequest request,
 
             @Parameter(description = "쿠폰 ID", required = true, example = "1")
             @PathVariable Long id
@@ -99,15 +99,15 @@ public interface AdminCouponSwaggerDocs {
     )
     @ApiResponse(responseCode = "200", description = "쿠폰 노출 여부 수정 성공")
     @ApiResponse(responseCode = "404", description = "쿠폰을 찾을 수 없음", content = @Content)
-    OperationResponse<CouponMessages> updateCouponVisible(
+    GlobalResponse<Void> updateCouponVisible(
             @Parameter(description = "쿠폰 ID", required = true, example = "1")
             @PathVariable Long id,
 
             @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "쿠폰 노출 여부 변경 요청 값",
                     required = true,
-                    content = @Content(schema = @Schema(implementation = ChangeCouponVisibleRequest.class))
+                    content = @Content(schema = @Schema(implementation = CouponVisibleRequest.class))
             )
-            @RequestBody ChangeCouponVisibleRequest request
+            @RequestBody CouponVisibleRequest request
     );
 }

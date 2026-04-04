@@ -15,6 +15,7 @@ public interface CouponMapper {
     // admin
     List<CouponEntity> selectCouponList();
     int insertCoupon(CouponEntity coupon);
+    CouponEntity selectCouponById(@Param("id") Long id);
     int updateCouponById(CouponEntity coupon);
     int updateCouponVisible(
             @Param("id") Long id,
