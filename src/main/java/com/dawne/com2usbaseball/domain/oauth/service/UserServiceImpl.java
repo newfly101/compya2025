@@ -6,6 +6,8 @@ import com.dawne.com2usbaseball.domain.oauth.dto.response.NaverOAuthUserResponse
 import com.dawne.com2usbaseball.domain.oauth.dto.response.UserMeResponse;
 import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
+import com.dawne.com2usbaseball.domain.oauth.enums.UserRole;
+import com.dawne.com2usbaseball.domain.oauth.enums.UserStatus;
 import com.dawne.com2usbaseball.domain.oauth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +27,12 @@ public class UserServiceImpl implements UserService {
     public UserEntity findOrCreateNaverUser(NaverOAuthUserResponse info) {
         UserEntity user = repository
                 .findByProviderAndProviderId("NAVER", info.id())
-                .orElseGet(() -> repository.save(userMapStruct.toEntity(info)));
+                .orElseGet(() -> {
+                    UserEntity newUser = userMapStruct.toEntity(info);
+                    newUser.setUserRole(UserRole.USER);
+                    newUser.setUserStatus(UserStatus.ACTIVE);
+                    return repository.save(newUser);
+                });
 
         repository.updateUserLastLogin(user.getId());
         return user;
@@ -33,9 +40,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserEntity findActiveUserById(Long userId) {
-        return repository.findById(userId)
+        UserEntity user = repository.findById(userId)
                 .orElseThrow(() ->
                         new BaseException(AuthMessages.AUTH_USER_NOT_FOUND, HttpStatus.NOT_FOUND));
+
+        switch (user.getUserStatus()) {
+            case BLOCKED, SUSPENDED, WITHDRAWN ->
+                    throw new BaseException(AuthMessages.AUTH_USER_BLOCKED, HttpStatus.FORBIDDEN);
+            case ACTIVE -> { /* 정상 */ }
+        }
+
+        return user;
     }
 
     @Override

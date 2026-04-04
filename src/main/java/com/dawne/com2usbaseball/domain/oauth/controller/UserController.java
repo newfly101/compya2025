@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.oauth.controller;
 
+import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.oauth.controller.docs.UserSwaggerDocs;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.UserMeResponse;
 import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
@@ -20,8 +21,7 @@ public class UserController implements UserSwaggerDocs {
 
     @Override
     @GetMapping("/me")
-    public UserMeResponse getMe(HttpServletRequest request) {
-
+    public GlobalResponse<UserMeResponse> getMe(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
 
         if (userId == null) {
@@ -29,7 +29,8 @@ public class UserController implements UserSwaggerDocs {
         }
 
         UserEntity user = userService.findActiveUserById(userId);
+        UserMeResponse data = userService.getUserHealth(user);
 
-        return userService.getUserHealth(user);
+        return GlobalResponse.success(AuthMessages.AUTH_SUCCESS, data);
     }
 }

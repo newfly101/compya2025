@@ -48,8 +48,16 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
             } catch (Exception e) {
+                // 토큰은 있는데 유효하지 않음 → 즉시 401
                 SecurityContextHolder.clearContext();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().write(
+                        "{\"success\":false,\"code\":\"AUTH_UNAUTHORIZED\",\"data\":null}"
+                );
+                return; // 필터 체인 중단
             }
         }
 

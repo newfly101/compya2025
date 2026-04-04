@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.oauth.controller.docs;
 
+import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.UserMeResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,22 +24,22 @@ public interface UserSwaggerDocs {
                     examples = @ExampleObject(
                             name = "응답 예시",
                             value = """
-                                {
-                                  "success": true,
-                                  "code": "COMMON_200",
-                                  "data": {
-                                    "id": 1,
-                                    "nickname": "dawne",
-                                    "email": "dawne@naver.com",
-                                    "profileImage": "https://example.com/image.jpg",
-                                    "lastLoginAt": "2026-04-04 13:00"
-                                  }
-                                }
-                                """
+                                    {
+                                      "success": true,
+                                      "code": "AUTH_SUCCESS",
+                                      "data": {
+                                        "id": 1,
+                                        "nickname": "dawne",
+                                        "email": "dawne@naver.com",
+                                        "profileImage": "https://example.com/image.jpg",
+                                        "lastLoginAt": "2026-04-04 13:00"
+                                      }
+                                    }
+                                    """
                     )
             )
     )
     @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content)
     @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자", content = @Content)
-    UserMeResponse getMe(HttpServletRequest request);
+    GlobalResponse<UserMeResponse> getMe(HttpServletRequest request);
 }
