@@ -1,0 +1,38 @@
+// ============================================================
+// mixins/_table.scss
+// TABLE / LIST PATTERNS
+// ============================================================
+
+// ── 리스트 행 기본 ────────────────────────────────────────────
+@mixin list-row($height: 60px) {
+  display: flex;
+  align-items: center;
+  min-height: $height;
+  padding: 0 16px;
+  position: relative;
+
+  // 하단 구분선
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 16px;
+    right: 16px;
+    height: 1px;
+    background-color: var(--color-border);
+  }
+
+  &:last-child::after {
+    display: none;
+  }
+}
+
+// ── 리스트 섹션 헤더 ─────────────────────────────────────────
+@mixin section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 16px;
+  background-color: var(--color-bg-overlay);
+}

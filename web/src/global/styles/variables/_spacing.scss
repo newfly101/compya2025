@@ -1,0 +1,36 @@
+// ============================================================
+// _spacing.scss
+// 8pt GRID SYSTEM — space-N 으로만 참조
+// ============================================================
+
+// ── Base Unit ─────────────────────────────────────────────────
+$space-base: 8px;
+
+// ── Scale ─────────────────────────────────────────────────────
+$space-1:  4px;   // space-1  — 4px  : 아이콘 내부, 뱃지 패딩
+$space-2:  8px;   // space-2  — 8px  : 섹션 구분선, gap 최소
+$space-3:  12px;  // space-3  — 12px : 인풋 내부 패딩
+$space-4:  16px;  // space-4  — 16px : 화면 수평 패딩 (H_PAD)
+$space-5:  20px;  // space-5  — 20px : 카드 내부 상하 패딩
+$space-6:  24px;  // space-6  — 24px : 섹션 간 gap
+$space-8:  32px;  // space-8  — 32px : 섹션 상단 여백
+$space-10: 40px;  // space-10 — 40px
+$space-12: 48px;  // space-12 — 48px : 페이지 상단 여백
+
+// ── Layout Constants ──────────────────────────────────────────
+$layout-screen-width:    375px;
+$layout-card-width:      343px;  // 375 - 16×2
+$layout-h-pad:           16px;   // $space-4 동일
+$layout-topbar-height:   52px;
+$layout-bottombar-height:56px;
+$layout-section-sep:     8px;    // $space-2 동일
+
+// ── Border Radius ─────────────────────────────────────────────
+$radius-sm:   4px;   // badge / chip
+$radius-md:   6px;   // input / tag
+$radius-lg:   8px;   // modal / sheet
+$radius-xl:   10px;  // card
+$radius-full: 9999px; // pill / avatar
+
+// ── Z-index ───────────────────────────────────────────────────
+// → _zindex.scss 참고

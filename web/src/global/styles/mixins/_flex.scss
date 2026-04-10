@@ -1,0 +1,41 @@
+// ============================================================
+// mixins/_flex.scss
+// FLEXBOX SHORTCUTS
+// ============================================================
+
+// 기본 flex row
+@mixin flex-row($gap: 0, $align: center, $justify: flex-start) {
+  display: flex;
+  flex-direction: row;
+  align-items: $align;
+  justify-content: $justify;
+  @if $gap > 0 { gap: $gap; }
+}
+
+// flex column
+@mixin flex-col($gap: 0, $align: stretch, $justify: flex-start) {
+  display: flex;
+  flex-direction: column;
+  align-items: $align;
+  justify-content: $justify;
+  @if $gap > 0 { gap: $gap; }
+}
+
+// 자주 쓰는 패턴
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-end {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}

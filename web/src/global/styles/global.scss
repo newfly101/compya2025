@@ -19,3 +19,17 @@
 body {
   background: $ui-surface-page;
 }
+
+// ── 모바일 격리 ──────────────────────────────
+// .mobile-root 안에서는 pc 스타일이 작동 안 함
+.mobile-root {
+  // pc body 스타일 리셋
+  max-width: 375px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background-color: #0f0a14;  // mobile bg-deepest
+  overflow-x: hidden;
+
+  // pc 전역 클래스 무력화
+  * { box-sizing: border-box; }
+}

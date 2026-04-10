@@ -1,0 +1,77 @@
+// ============================================================
+// base/_typography.scss
+// TYPOGRAPHY SYSTEM — 타입 스케일 클래스
+// ============================================================
+
+@use '../variables/font' as *;
+
+// ── 타입 스케일 클래스 ────────────────────────────────────────
+// 사용: <h1 class="text-hero">, <p class="text-body">
+
+.text-hero {
+  font-size: $font-size-28;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+}
+
+.text-page-title {
+  font-size: $font-size-22;
+  font-weight: $font-weight-bold;
+  line-height: $line-height-tight;
+  letter-spacing: $letter-spacing-tight;
+}
+
+.text-topbar {
+  font-size: $font-size-17;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-tight;
+}
+
+.text-section-title {
+  font-size: $font-size-15;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-base;
+}
+
+.text-body-bold {
+  font-size: $font-size-13;
+  font-weight: $font-weight-semibold;
+  line-height: $line-height-base;
+}
+
+.text-body {
+  font-size: $font-size-12;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-base;
+}
+
+.text-caption {
+  font-size: $font-size-11;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-base;
+}
+
+.text-micro {
+  font-size: $font-size-10;
+  font-weight: $font-weight-regular;
+  line-height: $line-height-base;
+}
+
+.text-badge {
+  font-size: $font-size-9;
+  font-weight: $font-weight-semibold;
+  line-height: 1;
+  letter-spacing: $letter-spacing-wide;
+  text-transform: uppercase;
+}
+
+// ── 색상 유틸 ─────────────────────────────────────────────────
+.text-primary   { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted     { color: var(--color-text-muted); }
+.text-code      { color: var(--color-text-code); }
+.text-brand     { color: var(--color-brand); }
+.text-violet    { color: var(--color-brand-violet); }
+.text-success   { color: var(--color-success); }
+.text-danger    { color: var(--color-danger); }

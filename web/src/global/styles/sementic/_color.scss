@@ -1,0 +1,49 @@
+// ============================================================
+// semantic/_color.scss
+// CSS CUSTOM PROPERTIES (CSS 변수) — 런타임 참조 단위
+// 컴포넌트에서는 반드시 이 변수만 사용
+// ============================================================
+
+@use '../variables/colors' as *;
+
+:root {
+  // ── Background ─────────────────────────────────────────────
+  --color-bg-deepest:  #{$color-bg-900};
+  --color-bg-deep:     #{$color-bg-800};
+  --color-bg-overlay:  #{$color-bg-700};
+  --color-bg-card:     #{$color-bg-600};
+  --color-bg-elevated: #{$color-bg-500};
+
+  // ── Brand ──────────────────────────────────────────────────
+  --color-brand:        #{$color-brand-400};
+  --color-brand-dark:   #{$color-brand-500};
+  --color-brand-violet: #{$color-brand-600};
+  --color-brand-tint:   #{$color-brand-700};
+
+  // ── Brand Alpha (overlay용) ────────────────────────────────
+  --color-brand-alpha-15: rgba(168, 106, 240, 0.15);
+  --color-brand-dark-alpha-15: rgba(109, 74, 211, 0.15);
+  --color-brand-violet-alpha-12: rgba(108, 92, 231, 0.12);
+
+  // ── Text ───────────────────────────────────────────────────
+  --color-text-primary:   #{$color-white-92};
+  --color-text-secondary: #{$color-white-60};
+  --color-text-muted:     #{$color-white-38};
+  --color-text-code:      #{$color-gray-300};
+  --color-text-placeholder: #{$color-gray-500};
+
+  // ── Border ─────────────────────────────────────────────────
+  --color-border:        #{$color-white-06};
+  --color-border-strong: #{$color-white-12};
+
+  // ── Status ─────────────────────────────────────────────────
+  --color-success:       #{$color-success-400};
+  --color-danger:        #{$color-danger-400};
+  --color-danger-dim:    #{$color-danger-100};
+  --color-warning:       #{$color-warning-400};
+  --color-warning-dim:   #{$color-warning-100};
+
+  // ── Surface (이벤트·커뮤니티 특수 배경) ──────────────────────
+  --color-surface-event:     #3c1e50;
+  --color-surface-community: #19284b;
+}

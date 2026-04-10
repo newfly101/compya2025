@@ -1,0 +1,76 @@
+// ============================================================
+// mixins/_layout.scss
+// LAYOUT PATTERNS — 페이지/카드/섹션 공통 레이아웃
+// ============================================================
+
+@use '../variables/spacing' as *;
+
+// ── 페이지 기본 레이아웃 ──────────────────────────────────────
+@mixin page-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background-color: var(--color-bg-deepest);
+  position: relative;
+}
+
+// ── 스크롤 가능 본문 영역 ─────────────────────────────────────
+// TopBar(52px) 아래 스크롤 영역
+@mixin page-content($topbar-h: $layout-topbar-height) {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: $topbar-h;
+
+  &.has-bottombar {
+    padding-bottom: $layout-bottombar-height;
+  }
+}
+
+// ── 수평 패딩 래퍼 ───────────────────────────────────────────
+@mixin h-pad {
+  padding-left: $layout-h-pad;
+  padding-right: $layout-h-pad;
+}
+
+// ── 카드 너비 고정 ────────────────────────────────────────────
+@mixin card-width {
+  width: $layout-card-width;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// ── 섹션 구분선 ───────────────────────────────────────────────
+@mixin section-sep {
+  height: $layout-section-sep;
+  background-color: var(--color-bg-card);
+  flex-shrink: 0;
+}
+
+// ── 수평 스크롤 행 (ChipRow, HeroScroll 등) ──────────────────
+@mixin scroll-row($gap: 8px, $pad: $layout-h-pad) {
+  display: flex;
+  flex-direction: row;
+  gap: $gap;
+  overflow-x: auto;
+  padding-left: $pad;
+  padding-right: $pad;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+// ── 2열 그리드 (CombinationCard) ─────────────────────────────
+@mixin grid-2col($gap: 8px) {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $gap;
+  @include h-pad;
+}
+
+// ── 절대 위치 오버레이 ────────────────────────────────────────
+@mixin overlay($z: 0) {
+  position: absolute;
+  inset: 0;
+  z-index: $z;
+}

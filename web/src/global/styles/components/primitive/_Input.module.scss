@@ -1,0 +1,81 @@
+// ============================================================
+// primitive/_Input.module.scss
+// C/INPUT — variant × state
+// ============================================================
+
+@use '../../variables/font' as *;
+@use '../../variables/radius' as *;
+@use '../../variables/spacing' as *;
+@use '../../mixins/flex' as *;
+
+.input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 0 $space-3;
+  background-color: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-size: $font-size-12;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+
+  &::placeholder {
+    color: var(--color-text-placeholder);
+  }
+}
+
+// ── variant: search ───────────────────────────────────────────
+.search {
+  padding-left: 36px;   // 아이콘 공간
+  border-radius: $radius-lg;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-placeholder);
+  pointer-events: none;
+}
+
+// ── variant: textarea ─────────────────────────────────────────
+.textarea {
+  height: auto;
+  min-height: 120px;
+  padding: $space-3;
+  resize: none;
+  border-radius: $radius-md;
+  line-height: $line-height-base;
+}
+
+// ── state: active (focus) ─────────────────────────────────────
+.active,
+.input:focus {
+  border-color: var(--color-brand-violet);
+  background-color: var(--color-bg-overlay);
+  outline: none;
+}
+
+// ── state: error ──────────────────────────────────────────────
+.error {
+  border-color: var(--color-danger);
+}
+
+.error-msg {
+  margin-top: 4px;
+  font-size: $font-size-10;
+  color: var(--color-danger);
+  padding-left: $space-1;
+}
+
+// ── state: disabled ───────────────────────────────────────────
+.disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}

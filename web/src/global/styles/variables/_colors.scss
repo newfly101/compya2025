@@ -1,0 +1,39 @@
+// ============================================================
+// _colors.scss
+// RAW COLOR PALETTE — 직접 사용 금지
+// 반드시 semantic/_color.scss 를 통해서만 참조할 것
+// ============================================================
+
+// ── Background Scale ─────────────────────────────────────────
+$color-bg-900: #0f0a14;   // deepest — 최하단 배경
+$color-bg-800: #140f1f;   // deep    — 서브 배경
+$color-bg-700: #18141f;   // overlay — 오버레이
+$color-bg-600: #1f1a29;   // card    — 카드 배경
+$color-bg-500: #332947;   // elevated — 뜨는 엘리먼트
+
+// ── Brand Purple Scale ────────────────────────────────────────
+$color-brand-100: #ede0ff;  // 가장 연한
+$color-brand-300: #c9a5f8;
+$color-brand-400: #a86af0;  // brand-purple  — 메인
+$color-brand-500: #6d4ad3;  // brand-dark    — 강조
+$color-brand-600: #6c5ce7;  // brand-violet  — 액션
+$color-brand-700: #3c1e50;  // tint          — 서피스
+
+// ── Neutral White Alpha ───────────────────────────────────────
+$color-white-100: rgba(255, 255, 255, 1.00);
+$color-white-92:  rgba(255, 255, 255, 0.92);  // text-primary
+$color-white-60:  rgba(255, 255, 255, 0.60);  // text-secondary
+$color-white-38:  rgba(255, 255, 255, 0.38);  // text-muted
+$color-white-12:  rgba(255, 255, 255, 0.12);  // border-strong
+$color-white-06:  rgba(255, 255, 255, 0.06);  // border
+
+// ── Neutral Gray ─────────────────────────────────────────────
+$color-gray-300: #d9d3e0;   // text-code
+$color-gray-500: #7c6f8f;   // placeholder
+
+// ── Status Colors ─────────────────────────────────────────────
+$color-success-400: #03c75a;  // 네이버 그린
+$color-danger-400:  #e84141;
+$color-danger-100:  rgba(232, 65, 65, 0.18);
+$color-warning-400: #e8d541;
+$color-warning-100: rgba(232, 213, 65, 0.33);

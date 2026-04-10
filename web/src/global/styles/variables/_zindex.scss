@@ -1,0 +1,14 @@
+// ============================================================
+// _zindex.scss
+// Z-INDEX SCALE — 레이어 충돌 방지
+// ============================================================
+
+$z-base:      0;
+$z-above:     1;
+$z-dropdown:  100;
+$z-sticky:    200;   // TopBar sticky
+$z-drawer:    300;   // Drawer panel
+$z-modal-bg:  400;   // Modal backdrop
+$z-modal:     410;   // Modal content
+$z-sheet:     420;   // BottomSheet
+$z-toast:     500;   // Toast (최상위)

@@ -1,0 +1,113 @@
+// ============================================================
+// primitive/_Button.module.scss
+// C/BUTTON — variant × size × state
+// ============================================================
+
+@use '../../variables/font' as *;
+@use '../../variables/radius' as *;
+@use '../../variables/spacing' as *;
+@use '../../mixins/flex' as *;
+
+.button {
+  @include flex-center;
+  display: inline-flex;
+  gap: 6px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: $font-weight-semibold;
+  border-radius: $radius-md;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &:active { transform: scale(0.97); }
+}
+
+// ── size ──────────────────────────────────────────────────────
+.sm {
+  height: 28px;
+  padding: 0 10px;
+  font-size: $font-size-10;
+  border-radius: $radius-sm;
+}
+
+.md {
+  height: 36px;
+  padding: 0 16px;
+  font-size: $font-size-12;
+}
+
+.lg {
+  height: 48px;
+  padding: 0 24px;
+  font-size: $font-size-13;
+  border-radius: $radius-lg;
+}
+
+.full {
+  width: 100%;
+  height: 48px;
+  font-size: $font-size-13;
+  border-radius: $radius-lg;
+}
+
+// ── variant: primary ──────────────────────────────────────────
+.primary {
+  background-color: var(--color-brand-dark);
+  color: #fff;
+
+  &:hover  { opacity: 0.9; }
+}
+
+// ── variant: ghost ────────────────────────────────────────────
+.ghost {
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-strong);
+
+  &:hover { background-color: var(--color-bg-card); }
+}
+
+// ── variant: danger ───────────────────────────────────────────
+.danger {
+  background-color: var(--color-danger);
+  color: #fff;
+}
+
+// ── variant: go (쿠폰 바로가기) ─────────────────────────────
+.go {
+  height: 24px;
+  padding: 0 10px;
+  font-size: $font-size-9;
+  border-radius: $radius-sm;
+  background-color: var(--color-brand-dark);
+  color: #fff;
+}
+
+// ── state ─────────────────────────────────────────────────────
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+  }
+}
+
+.disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

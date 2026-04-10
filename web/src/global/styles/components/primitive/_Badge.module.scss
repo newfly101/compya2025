@@ -1,0 +1,90 @@
+// ============================================================
+// primitive/_Badge.module.scss
+// C/BADGE — variant(스타일) × type(의미) × state(상태)
+// ============================================================
+
+@use '../../variables/font' as *;
+@use '../../variables/radius' as *;
+@use '../../mixins/flex' as *;
+
+// ── Base ──────────────────────────────────────────────────────
+.badge {
+  @include flex-center;
+  display: inline-flex;
+  padding: 0 6px;
+  height: 20px;
+  border-radius: $radius-sm;
+  font-size: $font-size-9;
+  font-weight: $font-weight-semibold;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+
+  // code badge는 더 큰 높이
+  &.size-md {
+    height: 22px;
+    padding: 0 8px;
+    font-size: $font-size-9;
+  }
+}
+
+// ── variant: filled ───────────────────────────────────────────
+.filled {
+  // type별 색상은 type 클래스에서 오버라이드
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-code);
+}
+
+// ── variant: outline ──────────────────────────────────────────
+.outline {
+  background-color: transparent;
+  border: 1px solid currentColor;
+}
+
+// ── variant: subtle ───────────────────────────────────────────
+.subtle {
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-code);
+}
+
+// ── type: grade ───────────────────────────────────────────────
+.grade-legend { background-color: var(--color-brand);       color: #fff; }
+.grade-epic   { background-color: var(--color-brand-dark);  color: #fff; }
+.grade-rare   { background-color: var(--color-brand-violet);color: #fff; }
+.grade-normal { background-color: var(--color-bg-elevated); color: var(--color-text-code); }
+
+// outline 타입 오버라이드
+.outline.grade-legend { color: var(--color-brand);       border-color: var(--color-brand); }
+.outline.grade-epic   { color: var(--color-brand-dark);  border-color: var(--color-brand-dark); }
+.outline.grade-rare   { color: var(--color-brand-violet);border-color: var(--color-brand-violet); }
+
+// ── type: status ──────────────────────────────────────────────
+.status-active   { background-color: var(--color-brand-violet); color: #fff; }
+.status-expired  { background-color: var(--color-text-placeholder); color: #fff; }
+.status-upcoming { background-color: var(--color-bg-elevated); color: var(--color-text-secondary); }
+
+// ── type: pinned ──────────────────────────────────────────────
+.pinned-notice { background-color: var(--color-bg-elevated); color: var(--color-text-code); }
+.pinned-hot    { background-color: var(--color-danger);      color: #fff; }
+.pinned-new    { background-color: var(--color-success);     color: #fff; }
+.pinned-event  { background-color: var(--color-brand-dark);  color: #fff; }
+
+// ── type: code ────────────────────────────────────────────────
+.code {
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-code);
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.06em;
+}
+
+// ── state ─────────────────────────────────────────────────────
+.state-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.state-active {
+  box-shadow: 0 0 0 2px var(--color-brand-violet);
+}

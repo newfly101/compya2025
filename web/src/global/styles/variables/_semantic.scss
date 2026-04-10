@@ -1,0 +1,39 @@
+// ============================================================
+// _semantic.scss (variables)
+// RAW → ROLE 매핑 참조 테이블
+// 실제 CSS 변수는 semantic/_color.scss 에서 선언
+// ============================================================
+
+// 이 파일은 Sass 변수 별칭 참조용
+// (CSS custom property 는 semantic/_color.scss 에 있음)
+
+@use 'colors' as *;
+
+// ── Background Role ───────────────────────────────────────────
+$bg-deepest:  $color-bg-900;
+$bg-deep:     $color-bg-800;
+$bg-overlay:  $color-bg-700;
+$bg-card:     $color-bg-600;
+$bg-elevated: $color-bg-500;
+
+// ── Brand Role ────────────────────────────────────────────────
+$brand:       $color-brand-400;
+$brand-dark:  $color-brand-500;
+$brand-violet:$color-brand-600;
+$brand-tint:  $color-brand-700;
+
+// ── Text Role ─────────────────────────────────────────────────
+$text-primary:   $color-white-92;
+$text-secondary: $color-white-60;
+$text-muted:     $color-white-38;
+$text-code:      $color-gray-300;
+$text-holder:    $color-gray-500;
+
+// ── Border Role ───────────────────────────────────────────────
+$border-default: $color-white-06;
+$border-strong:  $color-white-12;
+
+// ── Status Role ───────────────────────────────────────────────
+$status-success: $color-success-400;
+$status-danger:  $color-danger-400;
+$status-warning: $color-warning-400;

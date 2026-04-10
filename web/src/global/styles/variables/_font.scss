@@ -1,0 +1,34 @@
+// ============================================================
+// _font.scss
+// TYPOGRAPHY SCALE — raw 값 정의
+// ============================================================
+
+// ── Font Family ───────────────────────────────────────────────
+$font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+// ── Font Size Scale (px) ──────────────────────────────────────
+$font-size-9:  0.5625rem;  //  9px — badge / code label
+$font-size-10: 0.625rem;   // 10px — micro / link
+$font-size-11: 0.6875rem;  // 11px — caption / date
+$font-size-12: 0.75rem;    // 12px — body
+$font-size-13: 0.8125rem;  // 13px — body-bold / 공지 제목
+$font-size-15: 0.9375rem;  // 15px — section-title
+$font-size-17: 1.0625rem;  // 17px — topbar logo
+$font-size-22: 1.375rem;   // 22px — page-title
+$font-size-28: 1.75rem;    // 28px — hero
+
+// ── Font Weight ───────────────────────────────────────────────
+$font-weight-regular:  400;
+$font-weight-medium:   500;
+$font-weight-semibold: 600;
+$font-weight-bold:     700;
+
+// ── Line Height ───────────────────────────────────────────────
+$line-height-tight:   1.2;  // hero / page-title
+$line-height-base:    1.5;  // body
+$line-height-relaxed: 1.6;  // long-form content
+
+// ── Letter Spacing ────────────────────────────────────────────
+$letter-spacing-tight:  -0.02em;  // heading
+$letter-spacing-base:    0em;
+$letter-spacing-wide:    0.04em;  // badge / code

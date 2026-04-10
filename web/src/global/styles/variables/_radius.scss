@@ -1,0 +1,12 @@
+// ============================================================
+// _radius.scss
+// BORDER RADIUS TOKENS
+// ============================================================
+
+$radius-none: 0;
+$radius-sm:   4px;    // badge, chip, tag
+$radius-md:   6px;    // input, small card
+$radius-lg:   8px;    // modal, sheet, search input
+$radius-xl:   10px;   // card (CouponCard, EventCard, NoticeCard)
+$radius-2xl:  12px;   // bottom sheet
+$radius-full: 9999px; // pill button, avatar

@@ -1,0 +1,34 @@
+// ============================================================
+// mixins/_media.scss
+// MEDIA QUERY HELPERS
+// ============================================================
+
+@use '../variables/breakpoints' as *;
+
+// ── 모바일 우선 (min-width) ───────────────────────────────────
+@mixin from-mobile-lg {
+  @media screen and (min-width: #{$bp-mobile-lg}) { @content; }
+}
+
+@mixin from-tablet {
+  @media screen and (min-width: #{$bp-tablet}) { @content; }
+}
+
+@mixin from-desktop {
+  @media screen and (min-width: #{$bp-desktop}) { @content; }
+}
+
+// ── 모바일 전용 (max-width) ───────────────────────────────────
+@mixin only-mobile {
+  @media screen and (max-width: #{$bp-mobile-lg - 1px}) { @content; }
+}
+
+// ── 소형 모바일 ───────────────────────────────────────────────
+@mixin small-mobile {
+  @media screen and (max-width: #{$bp-mobile-sm}) { @content; }
+}
+
+// ── 고해상도 디스플레이 ───────────────────────────────────────
+@mixin retina {
+  @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) { @content; }
+}
