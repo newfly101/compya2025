@@ -7,13 +7,13 @@
 
 // 1. Reset & 기본 요소 스타일
 @use "reset";           // html font-size: 62.5% (1rem = 10px) + Eric Meyer reset
-@use "base/base";       // img, 기타 기본 요소
+@use "pc/base/base";       // img, 기타 기본 요소
 
 // 2. 타이포그래피 (body font, h1~h6 스케일)
-@use "base/typography";
+@use "pc/base/typography";
 
 // 3. 변수 — body 배경 등 글로벌 스타일에 사용
-@use "variables/semantic" as *;
+@use "pc/variables/semantic" as *;
 
 // 4. 전역 body 스타일
 body {

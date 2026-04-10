@@ -2,9 +2,14 @@ https://maketintsandshades.com/#colors=000000,532B72&hashtag=0&steps=20
 
 
 # 📦 도메인 구조 설계 문서
-## 1. 목적
-### 향후 구조 일관성을 유지하기 위해 프로젝트 구조 규칙을 확정한다.
 
+
+### 백엔드 구조화 아키텍처 설계도
+![img.png](img.png)
+
+---
+
+### 프론트엔드 구조화 
 이 문서는 다음을 정의한다.
 - 도메인 디렉토리 구조 기준
 - page / components / hooks / store 역할 분리

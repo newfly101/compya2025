@@ -9,16 +9,16 @@
 // ============================================================
 
 /* ===== TOKENS ===== */
-@forward "variables/colors";      // 팔레트 원색
-@forward "variables/semantic";    // UI 시맨틱 토큰 (surface, border, btn, ...)
-@forward "variables/font";        // $fs-11 ~ $fs-28
-@forward "variables/spacing";     // $space-4 ~ $space-64
-@forward "variables/radius";      // $radius-4 ~ $radius-full
-@forward "variables/zindex";      // $z-header, $z-modal, $z-toast
-@forward "variables/breakpoints"; // $mobile, $tablet, $laptop, ...
+@forward "pc/variables/colors";      // 팔레트 원색
+@forward "pc/variables/semantic";    // UI 시맨틱 토큰 (surface, border, btn, ...)
+@forward "pc/variables/font";        // $fs-11 ~ $fs-28
+@forward "pc/variables/spacing";     // $space-4 ~ $space-64
+@forward "pc/variables/radius";      // $radius-4 ~ $radius-full
+@forward "pc/variables/zindex";      // $z-header, $z-modal, $z-toast
+@forward "pc/variables/breakpoints"; // $mobile, $tablet, $laptop, ...
 
 /* ===== MIXINS ===== */
-@forward "mixins/flex";    // flex-center, flex-between, flex-column
-@forward "mixins/media";   // mobile(), tablet(), desktop()
-@forward "mixins/layout";  // card-base(), container()
-@forward "mixins/table";   // tableBase(), columW()
+@forward "pc/mixins/flex";    // flex-center, flex-between, flex-column
+@forward "pc/mixins/media";   // mobile(), tablet(), desktop()
+@forward "pc/mixins/layout";  // card-base(), container()
+@forward "pc/mixins/table";   // tableBase(), columW()
