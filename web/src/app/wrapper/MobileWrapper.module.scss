@@ -1,0 +1,14 @@
+// src/app/wrapper/MobileApp.module.scss
+// v2.0.0 mobile 분기 처리를 위한 hooks 26.04.10
+.mobileRoot {
+  width: 100%;
+  max-width: 375px;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background-color: #0f0a14;
+  position: relative;
+  overflow-x: hidden;
+
+  // pc global 스타일 차단
+  * { box-sizing: border-box; }
+}
