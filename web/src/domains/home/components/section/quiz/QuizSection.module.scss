@@ -1,0 +1,37 @@
+.quizCard {
+  border-radius: $radius-xl;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  aspect-ratio: 16 / 9;
+  position: relative;
+  background-color: var(--color-bg-card);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.empty {
+  @include flex-col-center;
+  gap: $space-2;
+  position: absolute;
+  inset: 0;
+}
+
+.emptyIcon {
+  font-size: 28px;
+  opacity: 0.4;
+}
+
+.emptyText {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.quizNotice {
+  @include text-micro;
+  color: var(--color-text-muted);
+}
