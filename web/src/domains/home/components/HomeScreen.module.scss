@@ -2,8 +2,8 @@
 // Home.module.scss
 // ============================================================
 
-// ── 1. 페이지 래퍼 ───────────────────────────────────────────
-.home {
+// ── 페이지 래퍼 ───────────────────────────────────────────
+.homeWrapper {
   display: flex;
   flex-direction: column;
   min-height: 100%;
@@ -17,109 +17,9 @@
   flex-shrink: 0;
 }
 
-// ── 2. 히어로 배너 ────────────────────────────────────────────
-.hero {
-  position: relative;
-  width: 100%;
-  height: 160px;
-  background-image: url("@/assets/new/compyafun2026.jpg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-
-  @include flex-col($justify: flex-end);
-  padding: $space-5 $layout-h-pad;
-  overflow: hidden;
-
-  // 오버레이는 ::before 로
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(rgba(0, 0, 0, 0.06), var(--color-bg-deepest));
-    z-index: $z-base;
-  }
-
-  // 텍스트 콘텐츠가 오버레이 위에 오도록
-  > * {
-    position: relative;
-    z-index: $z-above;
-  }
-}
-
-.heroBadge {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  height: 20px;
-  padding: 0 $space-2;
-  border-radius: $radius-sm;
-  background-color: var(--color-brand-violet);
-  color: #fff;
-  @include text-badge;
-  width: fit-content;
-}
-
-.heroTitle {
-  position: relative;
-  z-index: $z-above;
-  @include text-hero;
-  color: var(--color-text-primary);
-}
-
-.heroSub {
-  position: relative;
-  @include text-caption;
-  z-index: $z-above;
-  color: var(--color-text-secondary);
-  margin-top: $space-1;
-}
-
-// ── 3. 퀵메뉴 ────────────────────────────────────────────────
-.quickMenu {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: $space-2;
-  padding: $space-5 $layout-h-pad;    // 20px 16px
-  background-color: var(--color-bg-deep);
-}
-
-.quickItem {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $space-2;
-  text-decoration: none;
-  color: var(--color-text-primary);
-  transition: opacity 0.15s ease;
-
-  &:active { opacity: 0.7; }
-}
-
-.quickIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: $radius-xl;           // 10px
-  background-color: var(--color-bg-elevated);
-  font-size: 24px;
-}
-
-.quickLabel {
-  font-size: $font-size-10;
-  font-weight: $font-weight-regular;
-  color: var(--color-text-secondary);
-  text-align: center;
-  white-space: pre-line;
-  line-height: $line-height-base;
-}
-
-// ── 4. 공통 섹션 ──────────────────────────────────────────────
+// ── 공통 섹션 ──────────────────────────────────────────────
 .section {
-  padding: $space-5 $layout-h-pad;    // 20px 16px
+  padding: $layout-h-pad $layout-h-pad;    // 20px 16px
   display: flex;
   flex-direction: column;
   gap: $space-3;
@@ -134,9 +34,8 @@
 .sectionTitle {
   display: flex;
   align-items: center;
+  @include text-section-title;
   gap: $space-2;
-  font-size: $font-size-15;
-  font-weight: $font-weight-semibold;
   color: var(--color-text-primary);
 }
 
@@ -146,172 +45,10 @@
 }
 
 .more {
-  font-size: $font-size-11;
+  @include text-caption;
   color: var(--color-text-muted);
   white-space: nowrap;
   transition: color 0.15s ease;
 
   &:active { color: var(--color-text-secondary); }
-}
-
-// ── 5. 퀴즈 카드 ──────────────────────────────────────────────
-.quizCard {
-  border-radius: $radius-xl;
-  background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  padding: $space-5;
-  display: flex;
-  flex-direction: column;
-  gap: $space-3;
-}
-
-.quizQuestion {
-  font-size: $font-size-13;
-  font-weight: $font-weight-semibold;
-  color: var(--color-text-primary);
-  line-height: $line-height-base;
-}
-
-.quizOptions {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
-}
-
-.quizOption {
-  display: flex;
-  align-items: center;
-  gap: $space-2;
-  font-size: $font-size-12;
-  color: var(--color-text-secondary);
-}
-
-.optionDot {
-  width: 8px;
-  height: 8px;
-  border-radius: $radius-full;
-  background-color: var(--color-bg-elevated);
-  flex-shrink: 0;
-}
-
-.quizActions {
-  display: flex;
-  gap: $space-2;
-  margin-top: $space-1;
-}
-
-.submitBtn {
-  flex: 1;
-  height: 40px;
-  border-radius: $radius-md;
-  background-color: var(--color-brand-dark);
-  color: #fff;
-  font-size: $font-size-12;
-  font-weight: $font-weight-semibold;
-  transition: opacity 0.15s ease;
-
-  &:active { opacity: 0.85; }
-}
-
-.hintBtn {
-  flex: 1;
-  height: 40px;
-  border-radius: $radius-md;
-  background-color: var(--color-danger);
-  color: #fff;
-  font-size: $font-size-12;
-  font-weight: $font-weight-semibold;
-  transition: opacity 0.15s ease;
-
-  &:active { opacity: 0.85; }
-}
-
-.quizNotice {
-  font-size: $font-size-10;
-  color: var(--color-text-muted);
-  line-height: $line-height-base;
-}
-
-// ── 6. 쿠폰 가로 스크롤 ───────────────────────────────────────
-.couponScroll {
-  display: flex;
-  flex-direction: row;
-  gap: $space-3;
-  overflow-x: auto;
-  padding-bottom: $space-1;
-  margin: 0 (-$layout-h-pad);        // 섹션 패딩 상쇄, 풀 블리드
-  padding-left: $layout-h-pad;
-  padding-right: $layout-h-pad;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-
-  &::-webkit-scrollbar { display: none; }
-}
-
-.couponCard {
-  flex-shrink: 0;
-  width: 200px;
-  border-radius: $radius-xl;
-  background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  padding: $space-3 $space-4;
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
-}
-
-.couponTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $space-2;
-}
-
-.couponCode {
-  font-size: $font-size-10;
-  font-weight: $font-weight-semibold;
-  color: var(--color-text-code);
-  background: var(--color-bg-elevated);
-  padding: 4px 8px;
-  letter-spacing: $letter-spacing-wide;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.couponGoBtn {
-  flex-shrink: 0;
-  height: 24px;
-  padding: 0 $space-2;
-  border-radius: $radius-sm;
-  background-color: var(--color-brand-dark);
-  color: #fff;
-  font-size: $font-size-9;
-  font-weight: $font-weight-semibold;
-  white-space: nowrap;
-  transition: opacity 0.15s ease;
-
-  &:active { opacity: 0.85; }
-}
-
-.couponTitle {
-  font-size: $font-size-12;
-  font-weight: $font-weight-semibold;
-  color: var(--color-text-primary);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.couponExpire {
-  display: flex;
-  align-items: center;
-  gap: $space-1;
-  font-size: $font-size-10;
-  color: var(--color-text-muted);
-}
-
-.expireDot {
-  font-size: 6px;
-  color: var(--color-text-muted);
 }
