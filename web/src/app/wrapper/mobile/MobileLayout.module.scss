@@ -1,0 +1,23 @@
+@use '@/global/styles/mixins/layout' as *;
+
+.appWrapper {
+  @include page-layout;
+
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+.pageContent {
+  @include page-content(52px);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  font-size: 1.4rem;
+  color: var(--color-text-secondary);
+}
