@@ -1,0 +1,33 @@
+// ── HomeScreen - 퀵메뉴 ────────────────────────────────────────────────
+.quickMenu {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-2;
+  padding: $layout-h-pad;    // 20px 16px
+  background-color: var(--color-bg-deep);
+}
+
+.quickItem {
+  @include flex-col-center;
+  color: var(--color-text-primary);
+  gap: $space-2;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+  &:active { opacity: 0.7; }
+}
+
+.quickIcon {
+  @include flex-center;
+  @include text-page-title;
+  border-radius: $radius-xl;
+  background-color: var(--color-bg-elevated);
+  width: 52px;
+  aspect-ratio: 1/1;
+}
+
+.quickLabel {
+  @include text-micro;
+  color: var(--color-text-secondary);
+  text-align: center;
+  white-space: pre-line;
+}
