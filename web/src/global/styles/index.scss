@@ -4,21 +4,23 @@
 //  ⚠️  이 파일은 모든 .module.scss 에 자동 주입됩니다.
 //      CSS 출력(셀렉터 / 규칙)이 있는 파일은 절대 @forward 하지 마세요.
 //      변수(tokens) 와 믹스인(mixins) 만 포함해야 합니다.
-//
-//  10px 기준(html { font-size: 62.5% }) → 1rem = 10px
 // ============================================================
 
-/* ===== TOKENS ===== */
-@forward "pc/variables/colors";      // 팔레트 원색
-@forward "pc/variables/semantic";    // UI 시맨틱 토큰 (surface, border, btn, ...)
-@forward "pc/variables/font";        // $fs-11 ~ $fs-28
-@forward "pc/variables/spacing";     // $space-4 ~ $space-64
-@forward "pc/variables/radius";      // $radius-4 ~ $radius-full
-@forward "pc/variables/zindex";      // $z-header, $z-modal, $z-toast
-@forward "pc/variables/breakpoints"; // $mobile, $tablet, $laptop, ...
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  [MOBILE] 신규 토큰 & 믹스인
+//  mobile .module.scss 에서 @use 없이 바로 사용 가능
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-/* ===== MIXINS ===== */
-@forward "pc/mixins/flex";    // flex-center, flex-between, flex-column
-@forward "pc/mixins/media";   // mobile(), tablet(), desktop()
-@forward "pc/mixins/layout";  // card-base(), container()
-@forward "pc/mixins/table";   // tableBase(), columW()
+// ── Variables (tokens) ────────────────────────────────────
+@forward "variables/colors";       // $color-bg-900 ~ $color-warning-100
+@forward "variables/font";         // $font-size-9 ~ $font-size-28, weight, line-height
+@forward "variables/spacing";      // $space-1 ~ $space-12, layout constants
+@forward "variables/radius";       // $radius-sm ~ $radius-full
+@forward "variables/breakpoints"; // $bp-mobile-sm ~ $bp-desktop
+@forward "variables/zindex";      // $z-base ~ $z-toast
+
+// ── Mixins ────────────────────────────────────────────────
+@forward "mixins/flex";    // flex-row, flex-col, flex-center, flex-between, flex-end
+@forward "mixins/layout";  // page-layout, page-content, h-pad, scroll-row, grid-2col, overlay
+@forward "mixins/media";   // from-mobile-lg, from-tablet, from-desktop, small-mobile, retina
+@forward "mixins/table";   // list-row, section-header

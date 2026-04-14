@@ -1,92 +1,92 @@
-/* TodayMatchSection */
-
-.section {
-  padding: $space-40 0 $space-48;
-}
-
-.container {
-  max-width: $ui-container-width;
-  margin: 0 auto;
-  padding: 0 $ui-container-padding;
-}
-
-/* ─── 섹션 헤더 ────────────────────────────── */
-.sectionHeader {
-  @include flex-between;
-  margin-bottom: $space-24;
-  gap: $space-12;
-}
-
-.titleGroup {
-  @include flex-column($space-4);
-}
-
-.title {
-  font-size: $fs-18;
-  font-weight: 700;
-  color: $ui-text-main;
-  letter-spacing: -0.01em;
-}
-
-.date {
-  font-size: $fs-13;
-  color: $ui-text-muted;
-}
-
-.viewAll {
-  font-size: $fs-13;
-  color: $ui-text-sub;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: color 0.15s ease;
-
-  &:hover {
-    color: $ui-text-main;
-  }
-}
-
-/* ─── 카드 그리드 ──────────────────────────── */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: $space-16;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-
-  @include tablet {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  @include mobile {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* ─── 스켈레톤 ─────────────────────────────── */
-.skeleton {
-  height: 240px;
-  border-radius: $radius-12;
-  background: linear-gradient(
-    90deg,
-    $surface1 25%,
-    $surface2 50%,
-    $surface1 75%
-  );
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-/* ─── 빈 상태 / 에러 ───────────────────────── */
-.emptyMsg,
-.errorMsg {
-  padding: $space-48 0;
-  text-align: center;
-  font-size: $fs-14;
-  color: $ui-text-muted;
-}
+///* TodayMatchSection */
+//
+//.section {
+//  padding: $space-40 0 $space-48;
+//}
+//
+//.container {
+//  max-width: $ui-container-width;
+//  margin: 0 auto;
+//  padding: 0 $ui-container-padding;
+//}
+//
+///* ─── 섹션 헤더 ────────────────────────────── */
+//.sectionHeader {
+//  @include flex-between;
+//  margin-bottom: $space-24;
+//  gap: $space-12;
+//}
+//
+//.titleGroup {
+//  @include flex-column($space-4);
+//}
+//
+//.title {
+//  font-size: $fs-18;
+//  font-weight: 700;
+//  color: $ui-text-main;
+//  letter-spacing: -0.01em;
+//}
+//
+//.date {
+//  font-size: $fs-13;
+//  color: $ui-text-muted;
+//}
+//
+//.viewAll {
+//  font-size: $fs-13;
+//  color: $ui-text-sub;
+//  text-decoration: none;
+//  white-space: nowrap;
+//  transition: color 0.15s ease;
+//
+//  &:hover {
+//    color: $ui-text-main;
+//  }
+//}
+//
+///* ─── 카드 그리드 ──────────────────────────── */
+//.grid {
+//  display: grid;
+//  grid-template-columns: repeat(3, 1fr);
+//  gap: $space-16;
+//  list-style: none;
+//  margin: 0;
+//  padding: 0;
+//
+//  @include tablet {
+//    grid-template-columns: repeat(2, 1fr);
+//  }
+//
+//  @include mobile {
+//    grid-template-columns: 1fr;
+//  }
+//}
+//
+///* ─── 스켈레톤 ─────────────────────────────── */
+//.skeleton {
+//  height: 240px;
+//  border-radius: $radius-12;
+//  background: linear-gradient(
+//    90deg,
+//    $surface1 25%,
+//    $surface2 50%,
+//    $surface1 75%
+//  );
+//  background-size: 200% 100%;
+//  animation: shimmer 1.5s infinite;
+//}
+//
+//@keyframes shimmer {
+//  0%   { background-position: 200% 0; }
+//  100% { background-position: -200% 0; }
+//}
+//
+///* ─── 빈 상태 / 에러 ───────────────────────── */
+//.emptyMsg,
+//.errorMsg {
+//  padding: $space-48 0;
+//  text-align: center;
+//  font-size: $fs-14;
+//  color: $ui-text-muted;
+//}

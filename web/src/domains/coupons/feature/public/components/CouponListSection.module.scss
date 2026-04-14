@@ -1,23 +1,23 @@
-.couponListWrapper {
-  display: flex;
-  flex-direction: column;
-  gap: $space-32;
-}
-
-.couponGroupSection {
-  display: flex;
-  flex-direction: column;
-  gap: $space-16;
-}
-
-.couponGrid {
-  display: grid;
-  gap: $space-16;
-  grid-template-columns: 1fr;
-}
-
-@media (min-width: 768px) {
-  .couponGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
+//.couponListWrapper {
+//  display: flex;
+//  flex-direction: column;
+//  gap: $space-32;
+//}
+//
+//.couponGroupSection {
+//  display: flex;
+//  flex-direction: column;
+//  gap: $space-16;
+//}
+//
+//.couponGrid {
+//  display: grid;
+//  gap: $space-16;
+//  grid-template-columns: 1fr;
+//}
+//
+//@media (min-width: 768px) {
+//  .couponGrid {
+//    grid-template-columns: repeat(2, 1fr);
+//  }
+//}

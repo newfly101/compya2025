@@ -1,23 +1,23 @@
+@use '@/global/styles/mixins/layout' as *;
+
 .appWrapper {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
+  @include page-layout;
 
-/* main 영역 */
-.pageMain {
-  flex: 1;
   width: 100%;
-}
-
-.pageFrame {
-  width: 100%;
+  max-width: 430px;
   margin: 0 auto;
-  padding: 1.6rem;
+  overflow-x: hidden;
 }
 
-@media (min-width: 1024px) {
-  .pageFrame {
-    max-width: 1200px;
-  }
+.pageContent {
+  @include page-content(5.2rem);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100dvh;
+  font-size: 1.4rem;
+  color: var(--color-text-secondary);
 }

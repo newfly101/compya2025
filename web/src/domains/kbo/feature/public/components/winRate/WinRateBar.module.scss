@@ -1,52 +1,52 @@
-.winRateBar {
-  display: flex;
-  flex-direction: column;
-  gap: $space-8;
-}
-
-.labels {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.aiLabel {
-  font-size: $fs-11;
-  color: $ui-text-muted;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-.rate {
-  font-size: $fs-13;
-  font-weight: 600;
-  color: $ui-text-sub;
-  transition: color 0.2s ease;
-}
-
-.dominant {
-  font-size: $fs-14;
-  color: $ui-text-main;
-}
-
-.track {
-  display: flex;
-  height: 6px;
-  border-radius: $radius-full;
-  overflow: hidden;
-  background: $ui-border;
-}
-
-.homeBar {
-  height: 100%;
-  border-radius: $radius-full 0 0 $radius-full;
-  transition: width 0.5s ease;
-  opacity: 0.85;
-}
-
-.awayBar {
-  height: 100%;
-  border-radius: 0 $radius-full $radius-full 0;
-  transition: width 0.5s ease;
-  opacity: 0.85;
-}
+//.winRateBar {
+//  display: flex;
+//  flex-direction: column;
+//  gap: $space-8;
+//}
+//
+//.labels {
+//  display: flex;
+//  align-items: center;
+//  justify-content: space-between;
+//}
+//
+//.aiLabel {
+//  font-size: $fs-11;
+//  color: $ui-text-muted;
+//  letter-spacing: 0.04em;
+//  white-space: nowrap;
+//}
+//
+//.rate {
+//  font-size: $fs-13;
+//  font-weight: 600;
+//  color: $ui-text-sub;
+//  transition: color 0.2s ease;
+//}
+//
+//.dominant {
+//  font-size: $fs-14;
+//  color: $ui-text-main;
+//}
+//
+//.track {
+//  display: flex;
+//  height: 6px;
+//  border-radius: $radius-full;
+//  overflow: hidden;
+//  background: $ui-border;
+//}
+//
+//.homeBar {
+//  height: 100%;
+//  border-radius: $radius-full 0 0 $radius-full;
+//  transition: width 0.5s ease;
+//  opacity: 0.85;
+//}
+//
+//.awayBar {
+//  height: 100%;
+//  border-radius: 0 $radius-full $radius-full 0;
+//  transition: width 0.5s ease;
+//  opacity: 0.85;
+//}

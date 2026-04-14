@@ -1,63 +1,63 @@
-
-.table {
-  @include tableBase($align: left);
-}
-
-//th, td {
-//  padding: 1.2rem;
-//  border-bottom: 1px solid $border;
-//  text-align: center;
+//
+//.table {
+//  @include tableBase($align: left);
 //}
-
-.actionBar {
-  margin-bottom: 1.6rem;
-}
-
-.primary {
-  background: $primary-bg;
-  color: $primary-text;
-  padding: 0.8rem 1.6rem;
-  border-radius: 0.6rem;
-  border: none;
-}
-
-.title {
-  max-width: 420px;
-  //display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  word-break: break-word;
-  cursor: help;
-}
-
-
-.titleWrapper {
-  position: relative;
-  max-width: 420px;
-}
-
-.titleText {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.tooltip {
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 25%;
-  background: #222;
-  color: #fff;
-  padding: 6px 8px;
-  border-radius: 4px;
-  white-space: normal;
-  z-index: 10;
-  width: 100%;
-  min-width: 400px;
-}
-
-.titleWrapper:hover .tooltip {
-  display: block;
-}
+//
+////th, td {
+////  padding: 1.2rem;
+////  border-bottom: 1px solid $border;
+////  text-align: center;
+////}
+//
+//.actionBar {
+//  margin-bottom: 1.6rem;
+//}
+//
+//.primary {
+//  background: $primary-bg;
+//  color: $primary-text;
+//  padding: 0.8rem 1.6rem;
+//  border-radius: 0.6rem;
+//  border: none;
+//}
+//
+//.title {
+//  max-width: 420px;
+//  //display: -webkit-box;
+//  -webkit-box-orient: vertical;
+//  overflow: hidden;
+//  word-break: break-word;
+//  cursor: help;
+//}
+//
+//
+//.titleWrapper {
+//  position: relative;
+//  max-width: 420px;
+//}
+//
+//.titleText {
+//  display: block;
+//  white-space: nowrap;
+//  overflow: hidden;
+//  text-overflow: ellipsis;
+//}
+//
+//.tooltip {
+//  display: none;
+//  position: absolute;
+//  left: 0;
+//  top: 25%;
+//  background: #222;
+//  color: #fff;
+//  padding: 6px 8px;
+//  border-radius: 4px;
+//  white-space: normal;
+//  z-index: 10;
+//  width: 100%;
+//  min-width: 400px;
+//}
+//
+//.titleWrapper:hover .tooltip {
+//  display: block;
+//}

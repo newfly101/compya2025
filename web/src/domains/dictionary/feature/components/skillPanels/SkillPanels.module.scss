@@ -1,63 +1,63 @@
-// skillPanels.jsx
-.group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
-  .groupTitle {
-    font-size: 1.5rem;
-    color: #aaa;
-    letter-spacing: 0.08em;
-  }
-
-  .buttonGrid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-}
-
-.skillBtn {
-  padding: 1rem 1.2rem;
-  border-radius: 0.5rem;
-  font-size: 1.2rem;
-  border: 1px solid transparent;
-  background: #1e1e2e;
-  width: 12rem;
-  color: #ccc;
-  white-space: nowrap;
-  &.legend {
-    background: $ui-btn-skill-legend;
-
-    border: 1px solid #4c43c7;
-    color: #302a82;
-  }
-  &.platinum {
-    background: $ui-btn-skill-platinum;
-
-    border-color: #b89100;
-    color: #2b2100;
-  }
-  &.hero {
-    background: $ui-btn-skill-hero;
-
-    border-color: #198f4a;
-    color: #0f2f1d;
-  }
-  &.normal {
-    background: $ui-btn-skill-normal;
-
-    border-color: #6f7684;
-    color: #1f2937;
-  }
-  &.active {
-    outline: 2px solid #ccc;
-    color: white;
-    transform: scale(0.97);
-  }
-  &:disabled {
-    opacity: 0.35 !important;
-    cursor: not-allowed !important;
-    filter: grayscale(1) !important;
-  }
-}
+//// skillPanels.jsx
+//.group {
+//  display: flex;
+//  flex-direction: column;
+//  gap: 0.5rem;
+//
+//  .groupTitle {
+//    font-size: 1.5rem;
+//    color: #aaa;
+//    letter-spacing: 0.08em;
+//  }
+//
+//  .buttonGrid {
+//    display: flex;
+//    flex-wrap: wrap;
+//    gap: 0.5rem;
+//  }
+//}
+//
+//.skillBtn {
+//  padding: 1rem 1.2rem;
+//  border-radius: 0.5rem;
+//  font-size: 1.2rem;
+//  border: 1px solid transparent;
+//  background: #1e1e2e;
+//  width: 12rem;
+//  color: #ccc;
+//  white-space: nowrap;
+//  &.legend {
+//    background: $ui-btn-skill-legend;
+//
+//    border: 1px solid #4c43c7;
+//    color: #302a82;
+//  }
+//  &.platinum {
+//    background: $ui-btn-skill-platinum;
+//
+//    border-color: #b89100;
+//    color: #2b2100;
+//  }
+//  &.hero {
+//    background: $ui-btn-skill-hero;
+//
+//    border-color: #198f4a;
+//    color: #0f2f1d;
+//  }
+//  &.normal {
+//    background: $ui-btn-skill-normal;
+//
+//    border-color: #6f7684;
+//    color: #1f2937;
+//  }
+//  &.active {
+//    outline: 2px solid #ccc;
+//    color: white;
+//    transform: scale(0.97);
+//  }
+//  &:disabled {
+//    opacity: 0.35 !important;
+//    cursor: not-allowed !important;
+//    filter: grayscale(1) !important;
+//  }
+//}

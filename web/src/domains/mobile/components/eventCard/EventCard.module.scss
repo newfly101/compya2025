@@ -1,0 +1,86 @@
+// EventCard.module.scss
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #1f1a29;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  text-align: left;
+  transition: opacity 0.15s;
+
+  &:active { opacity: 0.8; }
+}
+
+// ── 썸네일 ────────────────────────────────────────────────────
+.thumb {
+  position: relative;
+  width: 100%;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.thumbImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+  position: absolute;
+  inset: 0;
+}
+
+.thumbPlaceholder {
+  font-size: 24px;
+  position: relative;
+  z-index: 1;
+}
+
+// ── 뱃지 ─────────────────────────────────────────────────────
+.badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.badge_active   { background-color: #6c5ce7; color: #fff; }
+.badge_expired  { background-color: #7c6f8f; color: #fff; }
+.badge_upcoming { background-color: #332947; color: rgba(255,255,255,0.6); }
+
+// ── 텍스트 ────────────────────────────────────────────────────
+.body {
+  padding: 8px 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.title {
+  font-size: 12px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.3;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.deadline {
+  font-size: 10px;
+  color: rgba(255,255,255,0.38);
+}

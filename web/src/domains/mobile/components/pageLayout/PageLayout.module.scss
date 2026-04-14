@@ -1,0 +1,18 @@
+// PageLayout.module.scss
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background-color: #0f0a14;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding-top: 52px;   // TopBar 높이
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar { display: none; }
+}

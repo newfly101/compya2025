@@ -5,31 +5,20 @@
 //  여기서 로드된 스타일은 전역으로 한 번만 적용됩니다.
 // ============================================================
 
-// 1. Reset & 기본 요소 스타일
-@use "reset";           // html font-size: 62.5% (1rem = 10px) + Eric Meyer reset
-@use "pc/base/base";       // img, 기타 기본 요소
+@use "reset";
+// 1. CSS 변수 주입 (:root custom properties)
+//    → var(--color-*) 를 전역에서 참조할 수 있게 됩니다
+@use "semantic/color";
 
-// 2. 타이포그래피 (body font, h1~h6 스케일)
-@use "pc/base/typography";
+// 2. Reset & 기본 요소 스타일 + 유틸 클래스
+//    → *, html, body, a, button, input ... + .sr-only .ellipsis 등
+@use "base/base";
 
-// 3. 변수 — body 배경 등 글로벌 스타일에 사용
-@use "pc/variables/semantic" as *;
+// 3. 타이포그래피 클래스
+//    → .text-hero .text-body .text-caption .text-brand 등
+@use "base/typography";
 
-// 4. 전역 body 스타일
+// [PC] body 배경 — 추후 삭제
 body {
-  background: $ui-surface-page;
-}
-
-// ── 모바일 격리 ──────────────────────────────
-// .mobile-root 안에서는 pc 스타일이 작동 안 함
-.mobile-root {
-  // pc body 스타일 리셋
-  max-width: 375px;
-  margin: 0 auto;
-  min-height: 100dvh;
-  background-color: #0f0a14;  // mobile bg-deepest
-  overflow-x: hidden;
-
-  // pc 전역 클래스 무력화
-  * { box-sizing: border-box; }
+  background: var(--color-bg-deepest);   // 추후 삭제
 }

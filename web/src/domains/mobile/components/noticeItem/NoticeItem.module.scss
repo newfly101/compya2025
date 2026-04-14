@@ -1,0 +1,80 @@
+// NoticeItem.module.scss
+.item {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  min-height: 64px;
+  padding: 12px 16px;
+  background-color: #18141f;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  transition: opacity 0.15s;
+
+  &:active { opacity: 0.75; }
+}
+
+.dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: rgba(255,255,255,0.38);
+  margin-top: 5px;
+}
+
+.dotNew {
+  background-color: #a86af0;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255,255,255,0.92);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+
+.date {
+  font-size: 10px;
+  color: rgba(255,255,255,0.38);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.summary {
+  font-size: 11px;
+  color: rgba(255,255,255,0.38);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.divider {
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+  height: 1px;
+  background-color: rgba(255,255,255,0.04);
+}

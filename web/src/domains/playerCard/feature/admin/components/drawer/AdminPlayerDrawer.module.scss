@@ -1,182 +1,182 @@
-.adminPlayerDrawerWrapper {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-}
-
-.adminPlayerDrawerOverlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.6);
-}
-
-.adminPlayerDrawerContainer {
-  position: absolute;
-  right: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  max-width: 480px;
-
-  background: $ui-surface-elevated;
-  padding: $space-24;
-
-  display: flex;
-  flex-direction: column;
-}
-.slideIn {
-  animation: slideIn 0.25s ease forwards;
-}
-
-.slideOut {
-  animation: slideOut 0.25s ease forwards;
-}
-
-@keyframes slideIn {
-  from { transform: translateX(100%); }
-  to { transform: translateX(0); }
-}
-
-@keyframes slideOut {
-  from { transform: translateX(0); }
-  to { transform: translateX(100%); }
-}
-
-.adminPlayerDrawerHeaderSection {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-
-  margin-bottom: $space-24;
-}
-
-.adminPlayerDrawerBodySection {
-  flex: 1;
-  overflow-y: auto;
-
-  display: flex;
-  flex-direction: column;
-  gap: $space-8;
-}
-
-.adminPlayerDrawerFooterSection {
-  margin-top: $space-24;
-
-  display: flex;
-  justify-content: flex-end;
-  gap: $space-12;
-
-  & > button {
-    background: white;
-    padding: $space-8 $space-16;
-    border-radius: $radius-8;
-  }
-}
-
-.adminPlayerDrawerCloseButton {
-  background: none;
-  border: none;
-  cursor: pointer;
-}
-
-// meta
-
-.adminPlayerDrawerMetaSection {
-  margin-bottom: $space-24;
-}
-
-.adminPlayerDrawerSectionTitle {
-  font-size: $fs-16;
-  font-weight: 600;
-  margin-bottom: $space-12;
-  color: #fff;
-}
-
-.adminPlayerDrawerMetaGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: $space-16;
-}
-
-.adminPlayerDrawerField {
-  display: flex;
-  flex-direction: column;
-  gap: $space-8;
-
-  label {
-    font-size: $fs-12;
-    color: #aaa;
-  }
-
-  input,
-  select {
-    padding: $space-8 $space-12;
-    border-radius: $radius-8;
-    border: 1px solid #333;
-    background: #2a263b;
-    color: #fff;
-  }
-}
-
-.adminPlayerDrawerTagSection {
-  display: flex;
-  flex-wrap: wrap;
-  gap: $space-8;
-  margin-top: $space-8;
-}
-
-.adminPlayerDrawerTag {
-  display: flex;
-  align-items: center;
-  gap: $space-4;
-  padding: $space-4 $space-12;
-  border-radius: $radius-20;
-  background: #2f2f44;
-  border: 1px solid #555;
-
-  button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #fff;
-  }
-}
-
-// drawer modal
-.drawerConfirmWrapper {
-  position: fixed;
-  inset: 0;
-  z-index: 1100;
-}
-
-.drawerConfirmContainer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
-  background: #1e1b2e;
-  padding: $space-24;
-  border-radius: $radius-12;
-
-  display: flex;
-  flex-direction: column;
-  gap: $space-16;
-  min-width: 320px;
-
-  & > p {
-    font-size: $fs-16;
-  }
-}
-
-.drawerConfirmActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: $space-12;
-
-  & > button {
-    background: white;
-    padding: $space-8 $space-16;
-    border-radius: $radius-8;
-  }
-}
+//.adminPlayerDrawerWrapper {
+//  position: fixed;
+//  inset: 0;
+//  z-index: 1000;
+//}
+//
+//.adminPlayerDrawerOverlay {
+//  position: absolute;
+//  inset: 0;
+//  background: rgba(0, 0, 0, 0.6);
+//}
+//
+//.adminPlayerDrawerContainer {
+//  position: absolute;
+//  right: 0;
+//  top: 0;
+//  height: 100%;
+//  width: 100%;
+//  max-width: 480px;
+//
+//  background: $ui-surface-elevated;
+//  padding: $space-24;
+//
+//  display: flex;
+//  flex-direction: column;
+//}
+//.slideIn {
+//  animation: slideIn 0.25s ease forwards;
+//}
+//
+//.slideOut {
+//  animation: slideOut 0.25s ease forwards;
+//}
+//
+//@keyframes slideIn {
+//  from { transform: translateX(100%); }
+//  to { transform: translateX(0); }
+//}
+//
+//@keyframes slideOut {
+//  from { transform: translateX(0); }
+//  to { transform: translateX(100%); }
+//}
+//
+//.adminPlayerDrawerHeaderSection {
+//  display: flex;
+//  justify-content: space-between;
+//  align-items: center;
+//
+//  margin-bottom: $space-24;
+//}
+//
+//.adminPlayerDrawerBodySection {
+//  flex: 1;
+//  overflow-y: auto;
+//
+//  display: flex;
+//  flex-direction: column;
+//  gap: $space-8;
+//}
+//
+//.adminPlayerDrawerFooterSection {
+//  margin-top: $space-24;
+//
+//  display: flex;
+//  justify-content: flex-end;
+//  gap: $space-12;
+//
+//  & > button {
+//    background: white;
+//    padding: $space-8 $space-16;
+//    border-radius: $radius-8;
+//  }
+//}
+//
+//.adminPlayerDrawerCloseButton {
+//  background: none;
+//  border: none;
+//  cursor: pointer;
+//}
+//
+//// meta
+//
+//.adminPlayerDrawerMetaSection {
+//  margin-bottom: $space-24;
+//}
+//
+//.adminPlayerDrawerSectionTitle {
+//  font-size: $fs-16;
+//  font-weight: 600;
+//  margin-bottom: $space-12;
+//  color: #fff;
+//}
+//
+//.adminPlayerDrawerMetaGrid {
+//  display: grid;
+//  grid-template-columns: 1fr 1fr;
+//  gap: $space-16;
+//}
+//
+//.adminPlayerDrawerField {
+//  display: flex;
+//  flex-direction: column;
+//  gap: $space-8;
+//
+//  label {
+//    font-size: $fs-12;
+//    color: #aaa;
+//  }
+//
+//  input,
+//  select {
+//    padding: $space-8 $space-12;
+//    border-radius: $radius-8;
+//    border: 1px solid #333;
+//    background: #2a263b;
+//    color: #fff;
+//  }
+//}
+//
+//.adminPlayerDrawerTagSection {
+//  display: flex;
+//  flex-wrap: wrap;
+//  gap: $space-8;
+//  margin-top: $space-8;
+//}
+//
+//.adminPlayerDrawerTag {
+//  display: flex;
+//  align-items: center;
+//  gap: $space-4;
+//  padding: $space-4 $space-12;
+//  border-radius: $radius-20;
+//  background: #2f2f44;
+//  border: 1px solid #555;
+//
+//  button {
+//    background: none;
+//    border: none;
+//    cursor: pointer;
+//    color: #fff;
+//  }
+//}
+//
+//// drawer modal
+//.drawerConfirmWrapper {
+//  position: fixed;
+//  inset: 0;
+//  z-index: 1100;
+//}
+//
+//.drawerConfirmContainer {
+//  position: absolute;
+//  top: 50%;
+//  left: 50%;
+//  transform: translate(-50%, -50%);
+//
+//  background: #1e1b2e;
+//  padding: $space-24;
+//  border-radius: $radius-12;
+//
+//  display: flex;
+//  flex-direction: column;
+//  gap: $space-16;
+//  min-width: 320px;
+//
+//  & > p {
+//    font-size: $fs-16;
+//  }
+//}
+//
+//.drawerConfirmActions {
+//  display: flex;
+//  justify-content: flex-end;
+//  gap: $space-12;
+//
+//  & > button {
+//    background: white;
+//    padding: $space-8 $space-16;
+//    border-radius: $radius-8;
+//  }
+//}

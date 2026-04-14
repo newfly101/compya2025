@@ -1,79 +1,79 @@
-/* KBOHeroBanner */
-
-$kbo-orange: #ff6a41;
-
-.banner {
-  position: relative;
-  overflow: hidden;
-  padding: $space-48 0 $space-40;
-  background: $ui-surface-page;
-  border-bottom: 1px solid $ui-border;
-}
-
-.inner {
-  position: relative;
-  z-index: 1;
-  max-width: $ui-container-width;
-  margin: 0 auto;
-  padding: 0 $ui-container-padding;
-  @include flex-column($space-8);
-}
-
-.eyebrow {
-  @include flex-center;
-  justify-content: flex-start;
-  gap: $space-4;
-  font-size: $fs-13;
-  color: $ui-text-muted;
-  font-weight: 500;
-  letter-spacing: 0.04em;
-}
-
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: $kbo-orange;
-  flex-shrink: 0;
-}
-
-.title {
-  font-size: $fs-28;
-  font-weight: 800;
-  color: $ui-text-main;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
-}
-
-.accent {
-  color: $kbo-orange;
-}
-
-.description {
-  font-size: $fs-14;
-  color: $ui-text-sub;
-  margin-top: $space-4;
-}
-
-/* 배경 glow 장식 */
-.glow {
-  position: absolute;
-  top: -60px;
-  right: -80px;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba($kbo-orange, 0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-/* 반응형 */
-@include mobile {
-  .banner {
-    padding: $space-32 0 $space-24;
-  }
-
-  .title {
-    font-size: $fs-20;
-  }
-}
+///* KBOHeroBanner */
+//
+//$kbo-orange: #ff6a41;
+//
+//.banner {
+//  position: relative;
+//  overflow: hidden;
+//  padding: $space-48 0 $space-40;
+//  background: $ui-surface-page;
+//  border-bottom: 1px solid $ui-border;
+//}
+//
+//.inner {
+//  position: relative;
+//  z-index: 1;
+//  max-width: $ui-container-width;
+//  margin: 0 auto;
+//  padding: 0 $ui-container-padding;
+//  @include flex-column($space-8);
+//}
+//
+//.eyebrow {
+//  @include flex-center;
+//  justify-content: flex-start;
+//  gap: $space-4;
+//  font-size: $fs-13;
+//  color: $ui-text-muted;
+//  font-weight: 500;
+//  letter-spacing: 0.04em;
+//}
+//
+//.dot {
+//  width: 6px;
+//  height: 6px;
+//  border-radius: 50%;
+//  background: $kbo-orange;
+//  flex-shrink: 0;
+//}
+//
+//.title {
+//  font-size: $fs-28;
+//  font-weight: 800;
+//  color: $ui-text-main;
+//  line-height: 1.2;
+//  letter-spacing: -0.02em;
+//}
+//
+//.accent {
+//  color: $kbo-orange;
+//}
+//
+//.description {
+//  font-size: $fs-14;
+//  color: $ui-text-sub;
+//  margin-top: $space-4;
+//}
+//
+///* 배경 glow 장식 */
+//.glow {
+//  position: absolute;
+//  top: -60px;
+//  right: -80px;
+//  width: 400px;
+//  height: 400px;
+//  border-radius: 50%;
+//  background: radial-gradient(circle, rgba($kbo-orange, 0.08) 0%, transparent 70%);
+//  pointer-events: none;
+//}
+//
+///* 반응형 */
+//@include mobile {
+//  .banner {
+//    padding: $space-32 0 $space-24;
+//  }
+//
+//  .title {
+//    font-size: $fs-20;
+//  }
+//}

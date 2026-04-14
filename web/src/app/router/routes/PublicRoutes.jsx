@@ -1,81 +1,51 @@
-// src/app/router/routes/PublicRoutes.jsx
-//
-// 핵심 아이디어:
-// route의 element 자체에서 PC/모바일 분기
-// AppWrapper, MobileWrapper 불필요
-// router.js 변경 불필요
-
-import { lazy } from "react";
-import { useIsMobile } from "@/app/hooks/useIsMobile";
-
-// ── PC 컴포넌트 (기존) ────────────────────────────────────────
-const KBOLeaguePage    = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
-const NoticeLayout     = lazy(() => import("@/app/page/notice/NoticeLayout.jsx"));
-const FunNoticeList    = lazy(() => import("@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx"));
+import React, { lazy } from "react";
+const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
+const NoticeLayout = lazy(() => import("@/app/page/notice/NoticeLayout.jsx"));
+const FunNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx"));
 const OfficialNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx"));
-const EventListPage    = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
-const CouponListPage   = lazy(() => import("@/domains/coupons/feature/public/pages/CouponListPage.jsx"));
-const FunNoticePage    = lazy(() => import("@/domains/notices/page/funNotice/FunNoticePage.jsx"));
-const SkillSimulator   = lazy(() => import("@/domains/simulate/page/SkillSimulator.jsx"));
+const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
+const Home = lazy(() => import("@/app/page/home/Home.jsx"));
+const CouponListPage = lazy(() => import("@/domains/coupons/feature/public/pages/CouponListPage.jsx"));
+
+
+const FunNoticePage = lazy(() => import("@/domains/notices/page/funNotice/FunNoticePage.jsx"));
+const SkillSimulator = lazy(() => import("@/domains/simulate/page/SkillSimulator.jsx"));
 const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
-const HitterSkillChange  = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
-const LegendCalendar   = lazy(() => import("@/domains/historyMode/page/LegendCalendar.jsx"));
-const PrivacyPolicy    = lazy(() => import("@/app/page/legal/PrivacyPolicy.jsx"));
-const AuthCallBack     = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
-const UserCommunityPage = lazy(() => import("@/domains/community/page/user/UserCommunityPage.jsx"));
-const DictionaryHome   = lazy(() => import("@/domains/dictionary/page/DictionaryHomePage.jsx"));
-const Dictionary       = lazy(() => import("@/domains/dictionary/page/DictionaryPage.jsx"));
+const HitterSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
+const LegendCalendar = lazy(() => import("@/domains/historyMode/page/LegendCalendar.jsx"));
+const PrivacyPolicy = lazy(() => import("@/app/page/legal/PrivacyPolicy.jsx"));
+const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
+const UserCommunityPage = lazy( () => import ("@/domains/community/page/user/UserCommunityPage.jsx"));
+const DictionaryHome = lazy(() => import("@/domains/dictionary/page/DictionaryHomePage.jsx"));
+const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.jsx"));
 
-// ── 모바일 컴포넌트 (신규) ────────────────────────────────────
-const MobileHomePage   = lazy(() => import("@/domains/mobile/Home/pages/MobileHomePage.jsx"));
-// 추가되면 주석 해제
-// const MobileNoticePage   = lazy(() => import("@/domains/mobile/notice/pages/MobileNoticePage.jsx"));
-// const MobileCouponPage   = lazy(() => import("@/domains/mobile/coupon/pages/MobileCouponPage.jsx"));
-// const MobileEventPage    = lazy(() => import("@/domains/mobile/event/pages/MobileEventPage.jsx"));
-// const MobileCommunityPage = lazy(() => import("@/domains/mobile/community/pages/MobileCommunityPage.jsx"));
-// const MobileDictionary   = lazy(() => import("@/domains/mobile/dictionary/pages/MobileDictionaryPage.jsx"));
-
-// ── 분기 래퍼 (훅을 라우트 element에서 쓰기 위한 최소 래퍼) ──
-// lazy 컴포넌트는 훅을 못 쓰므로 일반 컴포넌트로 감쌈
-const HomeRoute = () => {
-  const isMobile = useIsMobile();
-  return isMobile ? <MobileHomePage /> : <PcHome />;
-};
-
-// PC Home은 원래 있던 것
-const PcHome = lazy(() => import("@/app/page/home/Home.jsx"));
 
 export const PublicRoutes = [
-  { index: true, element: <HomeRoute />, handle: { title: "컴프야펀 | 홈" } },
-
+  { index: true, element: <Home />, handle: { title: "컴프야펀 | 홈" } },
   {
     path: "notice",
     element: <NoticeLayout />,
     children: [
-      { index: true,        element: <FunNoticeList />,     handle: { title: "컴프야펀 | 펀 공지사항" } },
-      { path: "official",   element: <OfficialNoticeList />,handle: { title: "컴프야펀 | 공식 공지사항" } },
-      { path: "events",     element: <EventListPage />,     handle: { title: "컴프야펀 | 공식 이벤트" } },
-      { path: "coupons",    element: <CouponListPage />,    handle: { title: "컴프야펀 | 쿠폰 코드" } },
+      { index: true, element: <FunNoticeList />, handle: { title: "컴프야펀 | 펀 공지사항" } },
+      { path: "official", element: <OfficialNoticeList />, handle: { title: "컴프야펀 | 공식 공지사항" }  },
+      { path: "events", element: <EventListPage />, handle: { title: "컴프야펀 | 공식 이벤트" }  },
+      { path: "coupons", element: <CouponListPage />, handle: { title: "컴프야펀 | 쿠폰 코드" }  },
     ],
   },
+  { path: "notice/:id", element: <FunNoticePage /> },
+  { path: "simulate", element: <SkillSimulator />, handle: { title: "컴프야펀 | 스킬 변경 시뮬레이터" } },
+  { path: "simulate/pitcher", element: <PitcherSkillChange />, handle: { title: "컴프야펀 | 투수 고스변 시뮬레이터" } },
+  { path: "simulate/hitter", element: <HitterSkillChange />, handle: { title: "컴프야펀 | 타자 고스변 시뮬레이터" } },
+  { path: "mode/history", element: <LegendCalendar />, handle: { title: "컴프야펀 | 히스토리 모드 레전드 재료" } },
+  { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
+  { path: "auth/callback", element: <AuthCallBack />, handle: { title: "컴프야펀 | 로그인 콜백" } },
+  { path: "community", element: <UserCommunityPage />, handle: { title: "컴프야펀 | 커뮤니티" } },
 
-  { path: "notice/:id",        element: <FunNoticePage /> },
-  { path: "simulate",          element: <SkillSimulator />,     handle: { title: "컴프야펀 | 스킬 변경 시뮬레이터" } },
-  { path: "simulate/pitcher",  element: <PitcherSkillChange />, handle: { title: "컴프야펀 | 투수 고스변 시뮬레이터" } },
-  { path: "simulate/hitter",   element: <HitterSkillChange />,  handle: { title: "컴프야펀 | 타자 고스변 시뮬레이터" } },
-  { path: "mode/history",      element: <LegendCalendar />,     handle: { title: "컴프야펀 | 히스토리 모드" } },
-  { path: "privacy",           element: <PrivacyPolicy />,      handle: { title: "컴프야펀 | 개인정보처리방침" } },
-  { path: "auth/callback",     element: <AuthCallBack />,       handle: { title: "컴프야펀 | 로그인 콜백" } },
-  { path: "community",         element: <UserCommunityPage />,  handle: { title: "컴프야펀 | 커뮤니티" } },
-
-  {
-    path: "dictionary",
-    children: [
-      { index: true,      element: <DictionaryHome />, handle: { title: "컴프야펀 | 백과사전 홈" } },
-      { path: "pitcher",  element: <Dictionary />,     handle: { title: "컴프야펀 | 투수 스킬 백과사전" } },
-      { path: "hitter",   element: <Dictionary />,     handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
-    ],
+  { path: "dictionary", children: [
+      {index: true, element: <DictionaryHome />, handle: { title: "컴프야펀 | 백과사전 홈" } },
+      { path: "pitcher", element: <Dictionary />, handle: { title: "컴프야펀 | 투수 스킬 백과사전" } },
+      { path: "hitter", element: <Dictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
+    ]
   },
-
-  { path: "kbo", element: <KBOLeaguePage />, handle: { title: "컴프야펀 | KBO 승부예측" } },
+  { path: "kbo" , element: <KBOLeaguePage />, handle: {title: "컴프야펀 | KBO 승부예측"} }
 ];

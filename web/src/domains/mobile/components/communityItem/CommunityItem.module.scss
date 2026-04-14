@@ -1,0 +1,58 @@
+// CommunityItem.module.scss
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 52px;
+  padding: 10px 12px 10px 16px;
+  background-color: #18141f;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  text-align: left;
+  gap: 8px;
+  transition: opacity 0.15s;
+
+  &:active { opacity: 0.75; }
+}
+
+.left {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: 17px;
+  padding: 0 5px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.title {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255,255,255,0.92);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stats {
+  font-size: 11px;
+  color: rgba(255,255,255,0.38);
+}
+
+.chevron {
+  font-size: 18px;
+  color: rgba(255,255,255,0.38);
+  flex-shrink: 0;
+  line-height: 1;
+}

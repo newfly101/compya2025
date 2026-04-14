@@ -1,0 +1,119 @@
+// FullEventCard.module.scss
+.card {
+  width: 343px;
+  max-width: 100%;
+  background-color: #1f1a29;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  transition: opacity 0.15s;
+
+  &:active { opacity: 0.8; }
+}
+
+.expired {
+  background-color: #18141f;
+}
+
+// ── 썸네일 ────────────────────────────────────────────────────
+.thumb {
+  position: relative;
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.thumbImg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5;
+}
+
+.thumbEmpty {
+  font-size: 11px;
+  color: rgba(255,255,255,0.2);
+  position: relative;
+  z-index: 1;
+}
+
+// ── 상태 뱃지 ─────────────────────────────────────────────────
+.badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+.badge_active   { background-color: #6c5ce7; color: #fff; }
+.badge_expired  { background-color: #2a2e3a; color: rgba(255,255,255,0.38); }
+.badge_upcoming { background-color: #332947; color: rgba(255,255,255,0.6); }
+
+// ── 본문 ─────────────────────────────────────────────────────
+.body {
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.92);
+  line-height: 1.3;
+  margin: 0;
+  text-align: left;
+}
+
+.titleExpired {
+  color: rgba(255,255,255,0.6);
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cal {
+  font-size: 11px;
+  color: rgba(255,255,255,0.38);
+}
+
+.date {
+  font-size: 11px;
+  color: rgba(255,255,255,0.38);
+}
+
+.divider {
+  height: 1px;
+  background-color: rgba(255,255,255,0.06);
+}
+
+.detailLink {
+  font-size: 10px;
+  color: #7c6f8f;
+  text-align: left;
+}
+
+.expiredNote {
+  font-size: 11px;
+  color: rgba(255,255,255,0.38);
+}
