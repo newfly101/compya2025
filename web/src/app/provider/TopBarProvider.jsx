@@ -12,8 +12,18 @@ export function TopBarProvider({ children }) {
     onBurger: null,
   })
 
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+  const openDrawer  = () => setIsDrawerOpen(true)
+  const closeDrawer = () => setIsDrawerOpen(false)
+
   return (
-    <TopBarContext.Provider value={{ config, setConfig }}>
+    <TopBarContext.Provider value={{
+      config,
+      setConfig,
+      isDrawerOpen,
+      openDrawer,
+      closeDrawer,
+    }}>
       {children}
     </TopBarContext.Provider>
   )
@@ -23,7 +33,6 @@ export function useTopBar() {
   return useContext(TopBarContext)
 }
 
-// 페이지에서 편하게 쓸 수 있는 커스텀 훅
 export function useSetTopBar(config) {
   const { setConfig } = useTopBar()
   useEffect(() => {

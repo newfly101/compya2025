@@ -1,0 +1,153 @@
+// ============================================================
+// app/wrapper/mobile/parts/Drawer.module.scss
+// ============================================================
+
+// ── 오버레이 ──────────────────────────────────────────────────
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: $z-drawer - 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+
+  &.overlayVisible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+// ── 패널 ──────────────────────────────────────────────────────
+.drawer {
+  top: $layout-topbar-height;  // 52px 아래부터 시작
+  height: calc(100dvh - $layout-topbar-height);
+  position: fixed;
+  left: 0;
+  width: 75%;
+  max-width: 250px;
+  background-color: var(--color-bg-deep);
+  z-index: $z-drawer;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+
+  &.drawerOpen {
+    transform: translateX(0);
+  }
+}
+
+// ── 유저 프로필 ───────────────────────────────────────────────
+.profile {
+  @include flex-row(12px);
+  padding: $space-3;
+  margin: $space-3 $space-4 0 $space-4;
+  background-color: var(--color-bg-card);
+  border-radius: $radius-xl;
+  border: 1px solid var(--color-border);
+}
+
+.avatar {
+  @include flex-center;
+  width: 44px;
+  aspect-ratio: 1/1;
+  border-radius: $radius-full;
+  background-color: var(--color-brand-dark);
+  @include text-topBar;
+  flex-shrink: 0;
+}
+
+.userInfo {
+  @include flex-col(4px);
+}
+
+.userName {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.userStatus {
+  @include text-micro;
+  color: var(--color-text-muted);
+}
+
+// ── 네비게이션 ────────────────────────────────────────────────
+.nav {
+  @include flex-col;
+  padding: $space-3 0 $space-8;
+  flex: 1;
+}
+
+// ── 그룹 ──────────────────────────────────────────────────────
+.group {
+  @include flex-col;
+}
+
+.groupLabel {
+  @include text-micro;
+  color: var(--color-text-muted);
+  padding: $space-4 $space-4 $space-2;
+  text-transform: uppercase;
+}
+
+// ── 메뉴 아이템 ───────────────────────────────────────────────
+.menuList {
+  @include flex-col;
+}
+
+.menuItem {
+  @include flex-row(12px);
+  color: var(--color-text-secondary);
+  position: relative;
+  height: 52px;
+  padding: 0 $space-4;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:active {
+    background-color: var(--color-bg-overlay);
+  }
+
+  &.menuItemActive {
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-overlay);
+
+    // 좌측 액센트 바
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 24px;
+      border-radius: 0 $radius-sm $radius-sm 0;
+      background-color: var(--color-brand-violet);
+    }
+  }
+}
+
+.menuIcon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.menuLabel {
+  flex: 1;
+  @include text-body-bold;
+}
+
+// ── 뱃지 ──────────────────────────────────────────────────────
+.badge {
+  @include flex-center;
+  @include text-badge;
+  min-width: 20px;
+  aspect-ratio: 1/1;
+  //height: 20px;
+  padding: 0 $space-1;
+  border-radius: $radius-full;
+  background-color: var(--color-brand-violet);
+}
