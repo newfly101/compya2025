@@ -1,0 +1,65 @@
+// ── HomeScreen - 쿠폰 가로 스크롤 ───────────────────────────────────────
+.couponScroll {
+  @include scroll-row($space-3, $layout-h-pad);
+}
+
+.couponCard {
+  flex-shrink: 0;
+  width: 200px;
+  border-radius: $radius-xl;
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  padding: $space-3 $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.couponTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+}
+
+.couponCode {
+  @include text-micro;
+  @include text-ellipsis;
+  color: var(--color-text-code);
+  background: var(--color-bg-elevated);
+  padding: 4px 8px;
+  letter-spacing: $letter-spacing-wide;
+}
+
+.couponGoBtn {
+  @include text-badge;
+  background-color: var(--color-brand-dark);
+  flex-shrink: 0;
+  height: 24px;
+  padding: 0 $space-2;
+  border-radius: $radius-sm;
+  color: #fff;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+
+  &:active { opacity: 0.85; }
+}
+
+.couponTitle {
+  @include text-body;
+  @include text-ellipsis;
+  color: var(--color-text-primary);
+}
+
+.couponExpire {
+  @include text-micro;
+  display: flex;
+  align-items: center;
+  color: var(--color-text-muted);
+  gap: $space-1;
+}
+
+.expireDot {
+  font-size: 6px;
+  color: var(--color-text-muted);
+}
