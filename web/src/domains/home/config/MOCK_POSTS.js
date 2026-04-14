@@ -1,0 +1,36 @@
+// MOCK_COMMUNITY_POSTS.js
+export const MOCK_POSTS = [
+  {
+    id: 1,
+    authorName: "야구팬123",
+    title: "손아섭 히스토리 공략 총정리",
+    likeCount: 24,
+    commentCount: 12,
+    viewCount: 340,
+    createdAt: "2026-01-14",
+    tags: [{ code: "hot", name: "HOT" }],
+    isPinned: false,
+  },
+  {
+    id: 2,
+    authorName: "레전드유저",
+    title: "레전드 스킬 + 이닝이터 조합 후기",
+    likeCount: 18,
+    commentCount: 9,
+    viewCount: 210,
+    createdAt: "2026-01-13",
+    tags: [{ code: "hot", name: "HOT" }],
+    isPinned: false,
+  },
+  {
+    id: 3,
+    authorName: "뉴비입니다",
+    title: "3보라 떴어요 드디어 졸업!!",
+    likeCount: 6,
+    commentCount: 4,
+    viewCount: 89,
+    createdAt: "2026-01-12",
+    tags: [{ code: "new", name: "NEW" }],
+    isPinned: false,
+  },
+]
