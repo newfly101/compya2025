@@ -39,3 +39,10 @@
   align-items: center;
   justify-content: flex-end;
 }
+
+@mixin flex-col-center {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}

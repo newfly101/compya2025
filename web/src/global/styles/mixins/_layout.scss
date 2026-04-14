@@ -8,6 +8,7 @@
 // ── 페이지 기본 레이아웃 ──────────────────────────────────────
 @mixin page-layout {
   display: flex;
+  width: 100%;
   flex-direction: column;
   min-height: 100dvh;
   background-color: var(--color-bg-deepest);

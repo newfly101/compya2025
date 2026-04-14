@@ -1,10 +1,11 @@
 import React, { lazy } from "react";
+const HomePage = lazy(() => import("@/app/page/HomePage.jsx"));
+
 const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
 const NoticeLayout = lazy(() => import("@/app/page/notice/NoticeLayout.jsx"));
 const FunNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx"));
 const OfficialNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx"));
 const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
-const Home = lazy(() => import("@/app/page/home/Home.jsx"));
 const CouponListPage = lazy(() => import("@/domains/coupons/feature/public/pages/CouponListPage.jsx"));
 
 
@@ -21,7 +22,7 @@ const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.j
 
 
 export const PublicRoutes = [
-  { index: true, element: <Home />, handle: { title: "컴프야펀 | 홈" } },
+  { index: true, element: <HomePage />, handle: { title: "컴프야펀 | 홈" } },
   {
     path: "notice",
     element: <NoticeLayout />,

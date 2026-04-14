@@ -6,6 +6,7 @@
 @use '../variables/spacing' as *;
 @use '../variables/font' as *;
 @use '../semantic/color';  // :root CSS 변수 주입
+@use '../variables/breakpoints' as *;
 
 *,
 *::before,
@@ -32,7 +33,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 
   // 모바일 기준 중앙 정렬
-  max-width: $layout-screen-width;
+  max-width: $bp-mobile-lg;
   margin: 0 auto;
   min-height: 100dvh;
   position: relative;
