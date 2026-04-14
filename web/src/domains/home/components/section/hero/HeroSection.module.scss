@@ -1,0 +1,58 @@
+// ── HomeScreen - 히어로 배너 ────────────────────────────────────────────
+.hero {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  background-image: url("@/assets/new/compyafun2026.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  @include flex-col($justify: flex-end);
+  padding: $space-5 $layout-h-pad;
+  overflow: hidden;
+
+  // 오버레이는 ::before 로
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.06), var(--color-bg-deepest));
+    z-index: $z-base;
+  }
+
+  // 텍스트 콘텐츠가 오버레이 위에 오도록
+  > * {
+    position: relative;
+    z-index: $z-above;
+  }
+}
+
+.heroBadge {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 $space-2;
+  border-radius: $radius-sm;
+  background-color: var(--color-brand-violet);
+  color: #fff;
+  @include text-badge;
+  width: fit-content;
+}
+
+.heroTitle {
+  position: relative;
+  @include text-hero;
+  color: var(--color-text-primary);
+  z-index: $z-above;
+}
+
+.heroSub {
+  position: relative;
+  @include text-caption;
+  color: var(--color-text-secondary);
+  z-index: $z-above;
+  margin-top: $space-1;
+}
