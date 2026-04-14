@@ -1,0 +1,12 @@
+@mixin bg-image(
+  $position: center,
+  $overlay-color: rgba(0, 0, 0, 0.4),
+  $size: cover,
+  $repeat: no-repeat
+) {
+  background-image: linear-gradient($overlay-color, $overlay-color), url(#{$url});
+  //background-image: url("#{$url}");
+  background-repeat: $repeat;
+  background-position: $position;
+  background-size: $size;
+}

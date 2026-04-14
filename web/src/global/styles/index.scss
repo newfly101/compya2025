@@ -24,3 +24,5 @@
 @forward "mixins/layout";  // page-layout, page-content, h-pad, scroll-row, grid-2col, overlay
 @forward "mixins/media";   // from-mobile-lg, from-tablet, from-desktop, small-mobile, retina
 @forward "mixins/table";   // list-row, section-header
+@forward "mixins/background";   // bg-*
+@forward "mixins/typography";   // text-*
