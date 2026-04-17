@@ -1,0 +1,35 @@
+// ── 공통 섹션 ──────────────────────────────────────────────
+.section {
+  padding: $layout-h-pad $layout-h-pad;    // 20px 16px
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  @include text-section-title;
+  gap: $space-2;
+  color: var(--color-text-primary);
+}
+
+.accent {
+  color: var(--color-brand);
+  font-weight: $font-weight-bold;
+}
+
+.more {
+  @include text-caption;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  transition: color 0.15s ease;
+
+  &:active { color: var(--color-text-secondary); }
+}
