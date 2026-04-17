@@ -16,14 +16,11 @@ export const useAuthentication = () => {
   const login = () => {
     sessionStorage.setItem("redirectPath", window.location.pathname);
 
-    const url =
-      "https://nid.naver.com/oauth2.0/authorize" +
+    window.location.href = "https://nid.naver.com/oauth2.0/authorize" +
       "?response_type=code" +
       `&client_id=${NAVER_CLIENT_ID}` +
       `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
       `&state=${crypto.randomUUID()}`;
-
-    window.location.href = url;
   };
 
   const logout = async () => {
