@@ -1,22 +1,22 @@
 import React from "react";
 import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
 import CouponListVertical from "@/domains/coupons/containers/public/CouponListVertical.jsx";
-import { MOCK_COUPONS2 } from "@/domains/home/config/MOCK_COUPONS.js";
+import { useCouponList } from "@/domains/coupons/hooks/useCouponList.js";
 
 const CouponScreen = () => {
-  const coupons = MOCK_COUPONS2;
+  const { activeCoupon, expiredCoupon } = useCouponList();
   return (
       <>
         <SectionBlock title="최신 쿠폰">
           <CouponListVertical
-            coupons={coupons.filter((coupon) => !coupon.isExpired)}
+            coupons={activeCoupon}
             isExpired={false}
           />
         </SectionBlock>
 
         <SectionBlock title="종료된 쿠폰">
           <CouponListVertical
-            coupons={coupons.filter((coupon) => coupon.isExpired)}
+            coupons={expiredCoupon}
             isExpired={true}
           />
         </SectionBlock>
