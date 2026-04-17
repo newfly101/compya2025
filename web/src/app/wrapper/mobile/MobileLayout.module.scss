@@ -1,5 +1,7 @@
 .appWrapper {
+  position: relative;
   @include page-layout;
+  overflow: hidden;
 }
 
 .pageContent {

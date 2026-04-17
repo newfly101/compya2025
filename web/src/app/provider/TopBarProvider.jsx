@@ -1,20 +1,31 @@
 // src/app/provider/TopBarProvider.jsx
 import { createContext, useContext, useEffect, useState } from "react";
 
-const TopBarContext = createContext(null)
+const TopBarContext = createContext(null);
 
 export function TopBarProvider({ children }) {
   const [config, setConfig] = useState({
-    variant: 'home',
+    variant: "home",
     title: null,
     rightAction: null,
     onBack: null,
     onBurger: null,
-  })
+  });
 
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const openDrawer  = () => setIsDrawerOpen(true)
-  const closeDrawer = () => setIsDrawerOpen(false)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const openDrawer = () => setIsDrawerOpen(true);
+  const closeDrawer = () => setIsDrawerOpen(false);
+
+  useEffect(() => {
+    if (isDrawerOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isDrawerOpen]);
 
   return (
     <TopBarContext.Provider value={{
@@ -26,16 +37,16 @@ export function TopBarProvider({ children }) {
     }}>
       {children}
     </TopBarContext.Provider>
-  )
+  );
 }
 
 export function useTopBar() {
-  return useContext(TopBarContext)
+  return useContext(TopBarContext);
 }
 
 export function useSetTopBar(config) {
-  const { setConfig } = useTopBar()
+  const { setConfig } = useTopBar();
   useEffect(() => {
-    setConfig(config)
-  }, [])
+    setConfig(config);
+  }, []);
 }
