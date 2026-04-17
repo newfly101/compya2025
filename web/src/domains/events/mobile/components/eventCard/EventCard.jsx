@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./EventCard.module.scss";
+import { trackEventClick } from "@/app/analytics/events/eventEvents.js";
 
 const EventCard = ({ event, showDetail = false, isExpired = false }) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
+    trackEventClick(event.id, event.title, event.eventType);
     if (event.externalLink) {
       window.open(event.externalLink, "_blank");
     } else {

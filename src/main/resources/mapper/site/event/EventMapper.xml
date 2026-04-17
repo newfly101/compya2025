@@ -9,7 +9,7 @@
             resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
         id,
-        event_type      AS evemtType,
+        event_type      AS eventType,
         title,
         start_at        AS startAt,
         expire_at       AS expireAt,
