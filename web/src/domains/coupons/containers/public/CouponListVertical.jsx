@@ -9,7 +9,7 @@ const CouponListVertical = ({ coupons = [], isExpired = false }) => {
         <CouponCard
           key={coupon.id}
           coupon={coupon}
-          children={coupon.rewards}
+          showDetail={true}
           isExpired={isExpired}
         />
       ))}

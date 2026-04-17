@@ -9,6 +9,7 @@ const CouponListHorizontal = ({ coupons = [] }) => {
         <CouponCard
           key={coupon.id}
           coupon={coupon}
+          showDetail={false}
           isExpired={false}
         />
       ))}
