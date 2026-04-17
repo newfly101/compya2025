@@ -1,5 +1,4 @@
 import React, { lazy } from "react";
-import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import AuthCallback from "@/domains/authentication/callback/AuthCallBack.jsx";
 const HomePage = lazy(() => import("@/app/page/HomePage.jsx"));

@@ -25,7 +25,7 @@ const authSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(requestUserHealthCheck.fulfilled, (state, action) => {
+      .addCase(requestUserHealthCheck.fulfilled, (state) => {
         state.initialized = true;
       })
       .addCase(requestUserHealthCheck.rejected, (state) => {

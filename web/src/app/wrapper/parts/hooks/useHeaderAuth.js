@@ -15,14 +15,11 @@ export const useHeaderAuth = () => {
   const login = () => {
     const STATE = crypto.randomUUID(); // CSRF 방어용
 
-    const url =
-      "https://nid.naver.com/oauth2.0/authorize" +
+    window.location.href = "https://nid.naver.com/oauth2.0/authorize" +
       "?response_type=code" +
       `&client_id=${NAVER_CLIENT_ID}` +
       `&redirect_uri=${encodeURIComponent(REDIRECT_URI)}` +
       `&state=${STATE}`;
-
-    window.location.href = url;
   }
 
   const logout = async () => {

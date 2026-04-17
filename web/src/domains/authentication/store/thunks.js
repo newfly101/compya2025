@@ -4,7 +4,7 @@ import { fetchHealthCheck, fetchLogout } from "@/domains/authentication/store/ap
 import { setUser } from "@/domains/authentication/store/slices.js";
 
 export const requestUserHealthCheck = createAsyncThunk(
-  AUTH.HEALTH, async (_, { dispatch, getState, rejectWithValue }) => {
+  AUTH.HEALTH, async (_, { dispatch, rejectWithValue }) => {
     try {
       const { data } = await fetchHealthCheck();
       console.log("health check: ",data);
@@ -20,7 +20,7 @@ export const requestUserHealthCheck = createAsyncThunk(
   });
 
 export const requestUserLogout = createAsyncThunk(
-  AUTH.LOGOUT, async (_, { dispatch, getState, rejectWithValue }) => {
+  AUTH.LOGOUT, async (_, { rejectWithValue }) => {
     try {
       await fetchLogout();
     } catch (error) {
