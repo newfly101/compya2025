@@ -1,5 +1,6 @@
 import React, { lazy } from "react";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
+import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 const HomePage = lazy(() => import("@/app/page/HomePage.jsx"));
 const CouponPage = lazy(() => import("@/app/page/CouponPage.jsx"));
 
@@ -24,32 +25,36 @@ const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.j
 
 
 export const PublicRoutes = [
-  { index: true, element: <HomePage />, handle: { title: "컴프야펀 | 홈" } },
-  { path: ROUTE_PATHS.coupons, element: <CouponPage />, handle: {title: "컴프야펀 | 쿠폰 모아보기 "}},
-  {
-    path: "notice",
-    element: <NoticeLayout />,
-    children: [
-      { index: true, element: <FunNoticeList />, handle: { title: "컴프야펀 | 펀 공지사항" } },
-      { path: "official", element: <OfficialNoticeList />, handle: { title: "컴프야펀 | 공식 공지사항" }  },
-      { path: "events", element: <EventListPage />, handle: { title: "컴프야펀 | 공식 이벤트" }  },
-      { path: "coupons", element: <CouponListPage />, handle: { title: "컴프야펀 | 쿠폰 코드" }  },
-    ],
-  },
-  { path: "notice/:id", element: <FunNoticePage /> },
-  { path: "simulate", element: <SkillSimulator />, handle: { title: "컴프야펀 | 스킬 변경 시뮬레이터" } },
-  { path: "simulate/pitcher", element: <PitcherSkillChange />, handle: { title: "컴프야펀 | 투수 고스변 시뮬레이터" } },
-  { path: "simulate/hitter", element: <HitterSkillChange />, handle: { title: "컴프야펀 | 타자 고스변 시뮬레이터" } },
-  { path: "mode/history", element: <LegendCalendar />, handle: { title: "컴프야펀 | 히스토리 모드 레전드 재료" } },
-  { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
-  { path: "auth/callback", element: <AuthCallBack />, handle: { title: "컴프야펀 | 로그인 콜백" } },
-  { path: "community", element: <UserCommunityPage />, handle: { title: "컴프야펀 | 커뮤니티" } },
+  { index: true, element: <HomePage />, handle: ROUTE_META.HOME.title },
+  { path: ROUTE_META.COUPONS.path, element: <CouponPage />, handle: ROUTE_META.COUPONS.title},
+  { path: ROUTE_META.EVENTS.path, element: <EventListPage />, handle: ROUTE_META.EVENTS.title}, // 새로 만들어야 함
+  { path: ROUTE_META.NOTICES.path, element: <FunNoticePage />, handle: ROUTE_META.NOTICES.title}, // 새로 만들어야 함
+  { path: ROUTE_META.HISTORY_MODE.path, element: <LegendCalendar />, handle: ROUTE_META.HISTORY_MODE.title}, // 새로 만들어야 함
 
-  { path: "dictionary", children: [
-      {index: true, element: <DictionaryHome />, handle: { title: "컴프야펀 | 백과사전 홈" } },
-      { path: "pitcher", element: <Dictionary />, handle: { title: "컴프야펀 | 투수 스킬 백과사전" } },
-      { path: "hitter", element: <Dictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
-    ]
-  },
-  { path: "kbo" , element: <KBOLeaguePage />, handle: {title: "컴프야펀 | KBO 승부예측"} }
+  // {
+  //   path: "notice",
+  //   element: <NoticeLayout />,
+  //   children: [
+  //     { index: true, element: <FunNoticeList />, handle: { title: "컴프야펀 | 펀 공지사항" } },
+  //     { path: "official", element: <OfficialNoticeList />, handle: { title: "컴프야펀 | 공식 공지사항" }  },
+  //     { path: "events", element: <EventListPage />, handle: { title: "컴프야펀 | 공식 이벤트" }  },
+  //     { path: "coupons", element: <CouponListPage />, handle: { title: "컴프야펀 | 쿠폰 코드" }  },
+  //   ],
+  // },
+  // { path: "notice/:id", element: <FunNoticePage /> },
+  // { path: "simulate", element: <SkillSimulator />, handle: { title: "컴프야펀 | 스킬 변경 시뮬레이터" } },
+  // { path: "simulate/pitcher", element: <PitcherSkillChange />, handle: { title: "컴프야펀 | 투수 고스변 시뮬레이터" } },
+  // { path: "simulate/hitter", element: <HitterSkillChange />, handle: { title: "컴프야펀 | 타자 고스변 시뮬레이터" } },
+  // { path: "mode/history", element: <LegendCalendar />, handle: { title: "컴프야펀 | 히스토리 모드 레전드 재료" } },
+  // { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
+  // { path: "auth/callback", element: <AuthCallBack />, handle: { title: "컴프야펀 | 로그인 콜백" } },
+  // { path: "community", element: <UserCommunityPage />, handle: { title: "컴프야펀 | 커뮤니티" } },
+  //
+  // { path: "dictionary", children: [
+  //     {index: true, element: <DictionaryHome />, handle: { title: "컴프야펀 | 백과사전 홈" } },
+  //     { path: "pitcher", element: <Dictionary />, handle: { title: "컴프야펀 | 투수 스킬 백과사전" } },
+  //     { path: "hitter", element: <Dictionary />, handle: { title: "컴프야펀 | 타자 스킬 백과사전" } },
+  //   ]
+  // },
+  // { path: "kbo" , element: <KBOLeaguePage />, handle: {title: "컴프야펀 | KBO 승부예측"} }
 ];
