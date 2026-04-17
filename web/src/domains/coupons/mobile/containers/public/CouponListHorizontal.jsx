@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./CouponList.module.scss";
-import CouponCard from "@/domains/coupons/components/couponCard/CouponCard.jsx";
+import CouponCard from "@/domains/coupons/mobile/components/couponCard/CouponCard.jsx";
 
 const CouponListHorizontal = ({ coupons = [] }) => {
   return (

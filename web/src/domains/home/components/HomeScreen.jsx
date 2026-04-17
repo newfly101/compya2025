@@ -11,11 +11,13 @@ import { MOCK_TEAM_POSTS } from "@/domains/home/config/MOCK_TEAM_POSTS.js";
 import PostSection from "@/domains/home/components/section/community/PostSection.jsx";
 import { MOCK_POSTS } from "@/domains/home/config/MOCK_POSTS.js";
 import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
-import CouponListHorizontal from "@/domains/coupons/containers/public/CouponListHorizontal.jsx";
-import { MOCK_COUPONS2 } from "@/domains/home/config/MOCK_COUPONS.js";
+import CouponListHorizontal from "@/domains/coupons/mobile/containers/public/CouponListHorizontal.jsx";
+import { ROUTE_META } from "@/app/router/config/routeMeta.js";
+import { useCouponList } from "@/domains/coupons/mobile/hooks/useCouponList.js";
 
 const HomeScreen = () => {
   useSetTopBar({ variant: "home" });
+  const {activeCoupon} = useCouponList();
 
   return (
     <div className={styles.homeWrapper}>
@@ -29,12 +31,12 @@ const HomeScreen = () => {
         children={<QuizSection />}
       />
 
-      {/* ── 최신 쿠폰 ── */}
+      {/* ── 최신 쿠폰 ── @@@작업 완료@@@*/}
       <SectionBlock
         title={`최신 쿠폰`}
-        to={"/coupons"}
+        to={ROUTE_META.COUPONS.path}
       >
-        <CouponListHorizontal coupons={MOCK_COUPONS2.filter(c => !c.isExpired)} />
+        <CouponListHorizontal coupons={activeCoupon} />
       </ SectionBlock>
 
       {/* ── 공지사항 ── */}

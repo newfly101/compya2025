@@ -1,7 +1,7 @@
 import React from "react";
 import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
-import CouponListVertical from "@/domains/coupons/containers/public/CouponListVertical.jsx";
-import { useCouponList } from "@/domains/coupons/hooks/useCouponList.js";
+import CouponListVertical from "@/domains/coupons/mobile/containers/public/CouponListVertical.jsx";
+import { useCouponList } from "@/domains/coupons/mobile/hooks/useCouponList.js";
 
 const CouponScreen = () => {
   const { activeCoupon, expiredCoupon } = useCouponList();
