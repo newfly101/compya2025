@@ -14,10 +14,13 @@ import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
 import CouponListHorizontal from "@/domains/coupons/mobile/containers/public/CouponListHorizontal.jsx";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { useCouponList } from "@/domains/coupons/mobile/hooks/useCouponList.js";
+import EventListHorizontal from "@/domains/events/mobile/containers/EventListHorizontal.jsx";
+import { useEventList } from "@/domains/events/mobile/hooks/useEventList.js";
 
 const HomeScreen = () => {
   useSetTopBar({ variant: "home" });
-  const {activeCoupon} = useCouponList();
+  const { activeCoupon } = useCouponList();
+  const { activeEvents } = useEventList();
 
   return (
     <div className={styles.homeWrapper}>
@@ -49,9 +52,10 @@ const HomeScreen = () => {
       {/* ── 진행 중인 이벤트 ── */}
       <SectionBlock
         title={`진행 중인 이벤트`}
-        to={"/events"}
-        children={<EventSection />}
-      />
+        to={ROUTE_META.EVENTS.path}
+      >
+        <EventListHorizontal events={activeEvents} />
+      </SectionBlock>
 
       {/* 커뮤니티 인기글 */}
       <SectionBlock

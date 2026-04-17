@@ -1,0 +1,19 @@
+.eventListScroll {
+  @include scroll-row($space-3, $layout-h-pad);
+
+  & > * {
+    flex-shrink: 0;
+    width: 160px;
+    --thumb-height: 72px;
+  }
+}
+
+.eventList {
+  @include flex-col($space-3);
+
+  & > * {
+    --thumb-height: 120px;
+    --title-font-size: #{$font-size-15};
+    --event-card-info-height: 100px;
+  }
+}

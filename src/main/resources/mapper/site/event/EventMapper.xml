@@ -20,8 +20,6 @@
         updated_at      AS updatedAt
         FROM site_events
         WHERE is_visible = true
-        AND start_at &lt;= NOW()
-        AND expire_at &gt;= NOW()
         ORDER BY start_at DESC
     </select>
 
