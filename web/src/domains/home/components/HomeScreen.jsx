@@ -1,11 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { useSetTopBar } from "@/app/provider/TopBarProvider";
 import styles from "./HomeScreen.module.scss";
 import HeroSection from "@/domains/home/components/section/hero/HeroSection.jsx";
 import QuickSection from "@/domains/home/components/section/quick/QuickSection.jsx";
 import QuizSection from "@/domains/home/components/section/quiz/QuizSection.jsx";
-import CouponSection from "@/domains/home/components/section/coupon/CouponSection.jsx";
 import NoticeSection from "@/domains/home/components/section/notice/NoticeSection.jsx";
 import EventSection from "@/domains/home/components/section/event/EventSection.jsx";
 import { MOCK_QUIZ } from "@/domains/home/config/MOCK_QUIZ.js";
@@ -13,6 +11,8 @@ import { MOCK_TEAM_POSTS } from "@/domains/home/config/MOCK_TEAM_POSTS.js";
 import PostSection from "@/domains/home/components/section/community/PostSection.jsx";
 import { MOCK_POSTS } from "@/domains/home/config/MOCK_POSTS.js";
 import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
+import CouponListHorizontal from "@/domains/coupons/containers/public/CouponListHorizontal.jsx";
+import { MOCK_COUPONS2 } from "@/domains/home/config/MOCK_COUPONS.js";
 
 const HomeScreen = () => {
   useSetTopBar({ variant: "home" });
@@ -33,8 +33,9 @@ const HomeScreen = () => {
       <SectionBlock
         title={`최신 쿠폰`}
         to={"/coupons"}
-        children={<CouponSection />}
-      />
+      >
+        <CouponListHorizontal coupons={MOCK_COUPONS2.filter(c => !c.isExpired)} />
+      </ SectionBlock>
 
       {/* ── 공지사항 ── */}
       <SectionBlock
@@ -54,7 +55,7 @@ const HomeScreen = () => {
       <SectionBlock
         title={`커뮤니티 인기글`}
         to={"/posts/hot"}
-        children={<PostSection posts={MOCK_POSTS}/>}
+        children={<PostSection posts={MOCK_POSTS} />}
       />
 
 
@@ -62,7 +63,7 @@ const HomeScreen = () => {
       <SectionBlock
         title={`팁 게시글`}
         to={"/posts/tip"}
-        children={<PostSection posts={MOCK_TEAM_POSTS}/>}
+        children={<PostSection posts={MOCK_TEAM_POSTS} />}
       />
 
     </div>
