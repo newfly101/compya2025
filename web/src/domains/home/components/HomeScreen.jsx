@@ -12,6 +12,7 @@ import { MOCK_QUIZ } from "@/domains/home/config/MOCK_QUIZ.js";
 import { MOCK_TEAM_POSTS } from "@/domains/home/config/MOCK_TEAM_POSTS.js";
 import PostSection from "@/domains/home/components/section/community/PostSection.jsx";
 import { MOCK_POSTS } from "@/domains/home/config/MOCK_POSTS.js";
+import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
 
 const HomeScreen = () => {
   useSetTopBar({ variant: "home" });
@@ -23,78 +24,46 @@ const HomeScreen = () => {
       <QuickSection />
 
       {/* ── 퀴즈 ── */}
-      <section className={styles.section}>
-        <div className={styles.sectionHead}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.accent}>|</span>
-            컴프야 퀴즈 {MOCK_QUIZ.round}회 정답
-          </h2>
-        </div>
-        <QuizSection />
-      </section>
-
+      <SectionBlock
+        title={`컴프야 퀴즈 ${MOCK_QUIZ.round}회 정답`}
+        children={<QuizSection />}
+      />
 
       {/* ── 최신 쿠폰 ── */}
-      <section className={styles.section}>
-        <div className={styles.sectionHead}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.accent}>|</span>
-            최신 쿠폰
-          </h2>
-          <Link to="/coupons" className={styles.more}>전체 보기 →</Link>
-        </div>
-        <CouponSection />
-      </section>
-
+      <SectionBlock
+        title={`최신 쿠폰`}
+        to={"/coupons"}
+        children={<CouponSection />}
+      />
 
       {/* ── 공지사항 ── */}
-      <section className={styles.section}>
-        <div className={styles.sectionHead}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.accent}>|</span>
-            공지사항
-          </h2>
-          <Link to="/notices" className={styles.more}>전체 보기 →</Link>
-        </div>
-        <NoticeSection />
-      </section>
-
+      <SectionBlock
+        title={`공지사항`}
+        to={"/notices"}
+        children={<NoticeSection />}
+      />
 
       {/* ── 진행 중인 이벤트 ── */}
-      <section className={styles.section}>
-        <div className={styles.sectionHead}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.accent}>|</span>
-            진행 중인 이벤트
-          </h2>
-          <Link to="/events" className={styles.more}>전체 보기 →</Link>
-        </div>
-        <EventSection />
-      </section>
-
+      <SectionBlock
+        title={`진행 중인 이벤트`}
+        to={"/events"}
+        children={<EventSection />}
+      />
 
       {/* 커뮤니티 인기글 */}
-      <section className={styles.section}>
-        <div className={styles.sectionHead}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.accent}>|</span>커뮤니티 인기글
-          </h2>
-          <Link to="/posts/hot" className={styles.more}>전체 보기 →</Link>
-        </div>
-        <PostSection posts={MOCK_POSTS} />
-      </section>
+      <SectionBlock
+        title={`커뮤니티 인기글`}
+        to={"/posts/hot"}
+        children={<PostSection posts={MOCK_POSTS}/>}
+      />
 
 
       {/* 팀 게시글 */}
-      <section className={styles.section}>
-        <div className={styles.sectionHead}>
-          <h2 className={styles.sectionTitle}>
-            <span className={styles.accent}>|</span>팀 게시글
-          </h2>
-          <Link to="/posts/team" className={styles.more}>전체 보기 →</Link>
-        </div>
-        <PostSection posts={MOCK_TEAM_POSTS} />
-      </section>
+      <SectionBlock
+        title={`팁 게시글`}
+        to={"/posts/tip"}
+        children={<PostSection posts={MOCK_TEAM_POSTS}/>}
+      />
 
     </div>
   );
