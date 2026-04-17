@@ -7,7 +7,6 @@ export const requestUserHealthCheck = createAsyncThunk(
   AUTH.HEALTH, async (_, { dispatch, rejectWithValue }) => {
     try {
       const { data } = await fetchHealthCheck();
-      console.log("health check: ",data);
 
       const { userRole, ...userDetail } = data;
 

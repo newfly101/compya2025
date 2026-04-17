@@ -3,10 +3,21 @@ const isDev = window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"
 
 export const pushEvent = (event) => {
-  if (isDev) {
-    console.log("[GA]", event)
-    return
-  }
   const { event: eventName, ...params } = event
-  window.gtag?.("event", eventName, params)
+  if (!isDev) {
+    window.gtag?.("event", eventName, params)
+  } else {
+    console.log("[GA]", event)
+    window.gtag?.("event", `[GA]${eventName}`, params)
+  }
+}
+
+export const setUserProperties = (userRole) => {
+  console.log("setUserProperties:", userRole);
+  window.gtag?.('set', 'user_properties', {
+    user_role: isDev ? `[GA]${userRole}` : userRole,
+  })
+  window.gtag?.('event', 'user_role_set', {
+    user_role: isDev ? `[GA]${userRole}` : userRole,
+  })
 }

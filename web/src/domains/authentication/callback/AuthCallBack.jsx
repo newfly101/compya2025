@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { requestUserHealthCheck } from "@/domains/authentication/store/thunks";
 import { trackLogin } from "@/app/analytics/events/authEvents.js";
+import { setUserProperties } from "@/app/analytics/ga.js";
 
 const AuthCallback = () => {
   const dispatch = useDispatch();
@@ -10,7 +11,8 @@ const AuthCallback = () => {
     dispatch(requestUserHealthCheck())
       .unwrap()
       .then((data) => {
-        trackLogin(data.userRole)
+        setUserProperties(data.userRole);
+        trackLogin(data.userRole);
       })
       .finally(() => {
         const redirectPath = sessionStorage.getItem("redirectPath") ?? "/";
