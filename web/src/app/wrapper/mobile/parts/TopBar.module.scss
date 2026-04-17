@@ -80,6 +80,19 @@ $color-naver-font: $color-white-100;
 
   &:active { opacity: 0.85; }
 }
+.logoutBtn {
+  height: 28px;
+  padding: 0 $space-3;
+  border-radius: $radius-sm;
+  background-color: var(--color-bg-card);
+  color: $color-naver-font;
+  @include text-micro;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+
+  &:active { opacity: 0.85; }
+}
 
 // ── 뒤로가기 버튼 ─────────────────────────────────────────────
 .backBtn {

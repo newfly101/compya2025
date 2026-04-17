@@ -2,6 +2,10 @@
 // app/wrapper/mobile/parts/Drawer.module.scss
 // ============================================================
 
+
+$color-naver-background: #03c75a;
+$color-naver-font: $color-white-100;
+
 // ── 오버레이 ──────────────────────────────────────────────────
 .overlay {
   position: fixed;
@@ -74,12 +78,18 @@
 
 .avatar {
   @include flex-center;
+  position: relative;
   width: 44px;
   aspect-ratio: 1/1;
   border-radius: $radius-full;
   background-color: var(--color-brand-dark);
   @include text-topBar;
   flex-shrink: 0;
+  overflow: hidden;
+  & > img {
+    width: 100%;
+    height: 100%;
+  }
 }
 
 .userInfo {
@@ -171,4 +181,33 @@
   padding: 0 $space-1;
   border-radius: $radius-full;
   background-color: var(--color-brand-violet);
+}
+
+// ── 비로그인 프로필 ───────────────────────────────────────────
+.guestInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  flex: 1;
+  overflow: hidden;
+}
+
+.guestTitle {
+  @include text-body;
+  @include text-ellipsis;
+  color: var(--color-text-primary);
+}
+
+.loginBtn {
+  height: 28px;
+  padding: 0 $space-3;
+  border-radius: $radius-sm;
+  background-color: $color-naver-background;
+  color: $color-naver-font;
+  @include text-micro;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease;
+
+  &:active { opacity: 0.85; }
 }

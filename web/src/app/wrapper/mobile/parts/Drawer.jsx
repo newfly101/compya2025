@@ -3,14 +3,13 @@ import { Link, useLocation } from "react-router-dom";
 import { useTopBar } from "@/app/provider/TopBarProvider";
 import styles from "./Drawer.module.scss";
 import { MENU_GROUPS } from "@/app/wrapper/mobile/config/MENU_GROUPS.js";
+import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
 
 
 const Drawer = () => {
   const { isDrawerOpen, closeDrawer } = useTopBar();
   const location = useLocation();
-
-  // 추후 zustand store로 교체
-  const user = { name: "김야구팬님", status: "네이버 로그인 중" };
+  const { user, login } = useAuthentication();
 
   return (
     <>
@@ -24,15 +23,27 @@ const Drawer = () => {
       <aside className={`${styles.drawer} ${isDrawerOpen ? styles.drawerOpen : ""}`}>
 
         {/* 유저 프로필 */}
-        <div className={styles.profile}>
-          <div className={styles.avatar}>
-            {user.name.charAt(0)}
+        {user ?
+          <div className={styles.profile}>
+            <div className={styles.avatar}>
+              <img src={user?.profileImage} alt="" />
+            </div>
+            <div className={styles.userInfo}>
+              <span className={styles.userName}>{user?.nickname}</span>
+              <span className={styles.userStatus}>{user?.email}</span>
+            </div>
           </div>
-          <div className={styles.userInfo}>
-            <span className={styles.userName}>{user.name}</span>
-            <span className={styles.userStatus}>{user.status}</span>
+          :
+          <div className={styles.profile}>
+            <div className={styles.guestInfo}>
+              <span className={styles.guestTitle}>로그인하고 더 많은 컨텐츠 이용하기!</span>
+              <button className={styles.loginBtn} onClick={login}>
+                N 네이버 로그인
+              </button>
+            </div>
+
           </div>
-        </div>
+        }
 
         {/* 메뉴 그룹 */}
         <nav className={styles.nav}>

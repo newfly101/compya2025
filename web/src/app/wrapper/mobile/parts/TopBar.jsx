@@ -6,7 +6,7 @@ import { useAuthentication } from "@/domains/authentication/hooks/useAuthenticat
 
 const TopBar = () => {
   const { config, openDrawer } = useTopBar();
-  const { isAuthenticated, user, login } = useAuthentication();
+  const { isAuthenticated, login, logout } = useAuthentication();
   const { variant, title, rightAction, onBack } = config;
 
   if (variant === "page") {
@@ -41,7 +41,7 @@ const TopBar = () => {
 
       <div className={styles.right}>
         {isAuthenticated
-          ? <span className={styles.userName}>{user.name}</span>
+          ? <button className={styles.logoutBtn} onClick={logout}>로그아웃</button>
           : <button className={styles.loginBtn} onClick={login}>N 네이버 로그인</button>
         }
       </div>
