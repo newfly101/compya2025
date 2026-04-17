@@ -1,5 +1,5 @@
 import { API } from "@/app/store/APIConfig.js";
-import { AUTH } from "@/domains/auth/store/endpoints.js";
+import { AUTH } from "@/domains/authentication/store/endpoints.js";
 
 /**
  * User Health Check API

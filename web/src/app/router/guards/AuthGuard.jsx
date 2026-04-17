@@ -3,24 +3,21 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet } from "react-router-dom";
 
 const AuthGuard = ({ allow }) => {
-  const { initialized, isAuthenticated, authority } = useSelector(state => state.auth);
-  console.log("authority", authority);
+  const { initialized, user, userRole } = useSelector(state => state.auth);
+  const isAuthenticated = user !== null;
 
   if (!initialized) return null;
 
   if (!isAuthenticated) {
-    return <Navigate to="/" replace />;
+    sessionStorage.setItem("redirectPath", window.location.pathname)
+    return <Navigate to="/" replace />
   }
 
-  const role =
-    typeof authority === "string"
-      ? authority
-      : authority?.role;
-
-  const allowList = Array.isArray(allow) ? allow : [allow];
-
-  if (allow && !allowList.includes(role)) {
-    return <Navigate to="/" replace />;
+  if (allow) {
+    const allowList = Array.isArray(allow) ? allow : [allow];
+    if (!allowList.includes(userRole)) {
+      return <Navigate to="/" replace />;
+    }
   }
 
   return <Outlet />;

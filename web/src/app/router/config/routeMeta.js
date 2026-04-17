@@ -6,5 +6,6 @@ export const ROUTE_META = {
   EVENTS: {path: ROUTE_PATHS.events, title: "컴프야펀 | 이벤트"},
   NOTICES: {path: ROUTE_PATHS.notices, title: "컴프야펀 | 공지사항"},
   // NOTICE_DETAILS: {path: ROUTE_PATHS.notice_details(id), title: "컴프야펀 | 공지사항"}
-  HISTORY_MODE: {path: ROUTE_PATHS.history_mode, title: "컴프야펀 | 히스토리모드"}
+  HISTORY_MODE: {path: ROUTE_PATHS.history_mode, title: "컴프야펀 | 히스토리모드"},
+  AUTH_CALL_BACK: {path: ROUTE_PATHS.authentication},
 };

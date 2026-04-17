@@ -2,13 +2,12 @@
 import { Link } from "react-router-dom";
 import { useTopBar } from "@/app/provider/TopBarProvider";
 import styles from "./TopBar.module.scss";
+import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
 
 const TopBar = () => {
   const { config, openDrawer } = useTopBar();
+  const { isAuthenticated, user, login } = useAuthentication();
   const { variant, title, rightAction, onBack } = config;
-
-  // 로그인 상태 — 추후 zustand store로 교체
-  const isLoggedIn = false;
 
   if (variant === "page") {
     return (
@@ -41,11 +40,10 @@ const TopBar = () => {
       </Link>
 
       <div className={styles.right}>
-        {!isLoggedIn && (
-          <button className={styles.loginBtn}>
-            N&nbsp;네이버 로그인
-          </button>
-        )}
+        {isAuthenticated
+          ? <span className={styles.userName}>{user.name}</span>
+          : <button className={styles.loginBtn} onClick={login}>N 네이버 로그인</button>
+        }
       </div>
     </header>
   );

@@ -1,4 +1,4 @@
 export const AUTH = {
-  HEALTH: "/auth/health",
+  HEALTH: "/users/me",
   LOGOUT: "/auth/logout",
 }

@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.oauth.dto.response;
 
+import com.dawne.com2usbaseball.domain.oauth.enums.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ public record UserMeResponse(
         String nickname,
         String email,
         String profileImage,
+        UserRole userRole,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime lastLoginAt
 ) {}

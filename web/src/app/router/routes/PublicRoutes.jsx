@@ -1,6 +1,7 @@
 import React, { lazy } from "react";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
+import AuthCallback from "@/domains/authentication/callback/AuthCallBack.jsx";
 const HomePage = lazy(() => import("@/app/page/HomePage.jsx"));
 const CouponPage = lazy(() => import("@/app/page/CouponPage.jsx"));
 
@@ -9,7 +10,6 @@ const NoticeLayout = lazy(() => import("@/app/page/notice/NoticeLayout.jsx"));
 const FunNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx"));
 const OfficialNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx"));
 const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
-const CouponListPage = lazy(() => import("@/domains/coupons/feature/public/pages/CouponListPage.jsx"));
 
 
 const FunNoticePage = lazy(() => import("@/domains/notices/page/funNotice/FunNoticePage.jsx"));
@@ -26,6 +26,7 @@ const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.j
 
 export const PublicRoutes = [
   { index: true, element: <HomePage />, handle: ROUTE_META.HOME.title },
+  { path: ROUTE_META.AUTH_CALL_BACK.path, element: <AuthCallback /> },
   { path: ROUTE_META.COUPONS.path, element: <CouponPage />, handle: ROUTE_META.COUPONS.title},
   { path: ROUTE_META.EVENTS.path, element: <EventListPage />, handle: ROUTE_META.EVENTS.title}, // 새로 만들어야 함
   { path: ROUTE_META.NOTICES.path, element: <FunNoticePage />, handle: ROUTE_META.NOTICES.title}, // 새로 만들어야 함

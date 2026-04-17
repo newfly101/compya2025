@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearUser } from "@/domains/auth/store/slices.js";
-import { requestUserLogout } from "@/domains/auth/store/thunks.js";
+import { clearUser } from "@/domains/authentication/store/slices.js";
+import { requestUserLogout } from "@/domains/authentication/store/thunks.js";
 
 export const useHeaderAuth = () => {
   const dispatch = useDispatch();
