@@ -1,5 +1,7 @@
 import React, { lazy } from "react";
+import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 const HomePage = lazy(() => import("@/app/page/HomePage.jsx"));
+const CouponPage = lazy(() => import("@/app/page/CouponPage.jsx"));
 
 const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
 const NoticeLayout = lazy(() => import("@/app/page/notice/NoticeLayout.jsx"));
@@ -23,6 +25,7 @@ const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.j
 
 export const PublicRoutes = [
   { index: true, element: <HomePage />, handle: { title: "컴프야펀 | 홈" } },
+  { path: ROUTE_PATHS.coupons, element: <CouponPage />, handle: {title: "컴프야펀 | 쿠폰 모아보기 "}},
   {
     path: "notice",
     element: <NoticeLayout />,
