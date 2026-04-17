@@ -4,7 +4,7 @@ import { formatNow } from "@/global/utils/datetime/dateUtils";
 import { useDispatch, useSelector } from "react-redux";
 import { requestGetExternalEventList } from "@/domains/events/store/public/thunks.js";
 
-export const useEventList = (events = []) => {
+export const useEventList = () => {
   const dispatch = useDispatch();
   const eventList = useSelector(state => state.events.events);
 

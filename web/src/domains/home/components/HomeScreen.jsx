@@ -5,7 +5,6 @@ import HeroSection from "@/domains/home/components/section/hero/HeroSection.jsx"
 import QuickSection from "@/domains/home/components/section/quick/QuickSection.jsx";
 import QuizSection from "@/domains/home/components/section/quiz/QuizSection.jsx";
 import NoticeSection from "@/domains/home/components/section/notice/NoticeSection.jsx";
-import EventSection from "@/domains/home/components/section/event/EventSection.jsx";
 import { MOCK_QUIZ } from "@/domains/home/config/MOCK_QUIZ.js";
 import { MOCK_TEAM_POSTS } from "@/domains/home/config/MOCK_TEAM_POSTS.js";
 import PostSection from "@/domains/home/components/section/community/PostSection.jsx";
