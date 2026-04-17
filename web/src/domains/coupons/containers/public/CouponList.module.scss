@@ -1,0 +1,12 @@
+.couponListScroll {
+  @include scroll-row($space-3, $layout-h-pad);
+
+  & > * {
+    flex-shrink: 0;
+    width: 200px;
+  }
+}
+
+.couponList {
+  @include flex-col($space-2);
+}
