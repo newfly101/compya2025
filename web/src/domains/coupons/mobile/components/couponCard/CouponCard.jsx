@@ -1,11 +1,13 @@
 // domains/coupon/components/CouponCard.jsx
 import styles from "./CouponCard.module.scss";
+import { trackCouponGo } from "@/app/analytics/events/couponEvents.js";
 
 const CouponCard = ({ coupon, showDetail = false, isExpired = false }) => {
   const details = coupon.detail?.split("\n") ?? [];
 
   const handleGoCoupon = () => {
     if (isExpired) return;
+    trackCouponGo(coupon.couponCode);
     window.open(`http://withhive.me/399/${coupon.couponCode}`, "_blank");
   };
 
