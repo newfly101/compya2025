@@ -12,11 +12,9 @@ const AuthProvider = ({ children }) => {
     }
   }, [initialized, dispatch]);
 
-  return !initialized
-    ?
-    <div>로딩중...</div>
-    :
-    children;
+  if (!initialized) return null;
+
+  return children;
 };
 
 

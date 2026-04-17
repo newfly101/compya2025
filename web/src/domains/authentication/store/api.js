@@ -5,8 +5,16 @@ import { AUTH } from "@/domains/authentication/store/endpoints.js";
  * User Health Check API
  */
 export const fetchHealthCheck = async () => {
-  const { data } = await API.get(`${AUTH.HEALTH}`);
-  return data;
+  try {
+    const { data } = await API.get(`${AUTH.HEALTH}`);
+
+    return data;
+  } catch (error) {
+    if (error.response?.status === 401) {
+      return null;
+    }
+    throw error;
+  }
 };
 
 export const fetchLogout = async () => {

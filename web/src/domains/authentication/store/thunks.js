@@ -15,6 +15,9 @@ export const requestUserHealthCheck = createAsyncThunk(
 
       return data;
     } catch (error) {
+      if (error.response?.status === 401) {
+        return rejectWithValue(null);
+      }
       return rejectWithValue(error.message);
     }
   });

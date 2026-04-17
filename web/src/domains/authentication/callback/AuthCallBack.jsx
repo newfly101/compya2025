@@ -1,12 +1,17 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { requestUserHealthCheck } from "@/domains/authentication/store/thunks";
+import { trackLogin } from "@/app/analytics/events/authEvents.js";
 
 const AuthCallback = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(requestUserHealthCheck())
+      .unwrap()
+      .then((data) => {
+        trackLogin(data.userRole)
+      })
       .finally(() => {
         const redirectPath = sessionStorage.getItem("redirectPath") ?? "/";
         sessionStorage.removeItem("redirectPath");

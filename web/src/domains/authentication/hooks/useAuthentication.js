@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "@/domains/authentication/store/slices.js";
 import { requestUserLogout } from "@/domains/authentication/store/thunks.js";
+import { trackLogin, trackLogout } from "@/app/analytics/events/authEvents.js";
 
 const NAVER_CLIENT_ID = "Ltp6btmLGcZZGgCIxYqv";
 
@@ -15,6 +16,7 @@ export const useAuthentication = () => {
 
   const login = () => {
     sessionStorage.setItem("redirectPath", window.location.pathname);
+    trackLogin();
 
     window.location.href = "https://nid.naver.com/oauth2.0/authorize" +
       "?response_type=code" +
@@ -24,6 +26,7 @@ export const useAuthentication = () => {
   };
 
   const logout = async () => {
+    trackLogout();
     await dispatch(requestUserLogout());
     dispatch(clearUser());
     window.location.replace("/");
