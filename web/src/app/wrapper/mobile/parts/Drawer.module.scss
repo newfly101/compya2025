@@ -47,21 +47,6 @@
     transform: translateX(0);
   }
 
-  //@include from-tablet {
-  //  left: calc(50% - #{$bp-mobile-lg} / 2);
-  //  visibility: hidden;
-  //  transform: translateX(-100%);
-  //  clip-path: inset(0 0 0 100%);
-  //  transition: transform 0.25s ease, clip-path 0.25s ease;
-  //
-  //  &.drawerOpen {
-  //    visibility: visible;
-  //    transform: translateX(0);
-  //    clip-path: inset(0);
-  //  }
-  //}
-
-  // todo : 세로 스크롤 막아야 함
   @include from-tablet {
     left: calc(50% - #{$bp-mobile-lg} / 2);
     position: absolute;
