@@ -1,6 +1,4 @@
 .couponCard {
-  flex-shrink: 0;
-  width: 200px;
   border-radius: $radius-xl;
   background-color: var(--color-bg-card);
   border: 1px solid var(--color-border);
@@ -8,6 +6,12 @@
   display: flex;
   flex-direction: column;
   gap: $space-2;
+}
+
+.expired {
+  background-color: var(--color-bg-deep);
+  border-color: transparent;
+  opacity: 0.55;
 }
 
 .couponTop {
@@ -59,6 +63,8 @@
   padding: $space-2 0;
   @include text-caption;
   color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
 
   & > p {
     @include text-caption;
