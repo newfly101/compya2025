@@ -7,9 +7,6 @@ const EventPage = lazy(() => import("@/app/page/EventPage.jsx"));
 const NoticePage = lazy(() => import("@/app/page/NoticePage.jsx"));
 
 const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
-const NoticeLayout = lazy(() => import("@/app/page/notice/NoticeLayout.jsx"));
-const FunNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx"));
-const OfficialNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx"));
 // const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
 
 
