@@ -1,0 +1,66 @@
+.page {
+  @include page-layout;
+  background-color: var(--color-bg-deepest);
+}
+
+.categoryRow {
+  @include scroll-row($space-2, $layout-h-pad);
+  padding-top: $space-2;
+  padding-bottom: $space-2;
+  background-color: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.hotScroll {
+  @include scroll-row($space-2, 0);
+}
+
+.hotSentinel {
+  width: 1px;
+  flex-shrink: 0;
+}
+
+.postsSentinel {
+  height: 1px;
+}
+
+.fab {
+  position: fixed;
+  right: $layout-h-pad;
+  bottom: 20px;
+  z-index: 50;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 44px;
+  padding: 0 $space-4;
+  border: none;
+  border-radius: $radius-full;
+  background-color: var(--color-community-fab-bg);
+  color: #fff;
+  cursor: pointer;
+  @include text-body-bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px var(--color-brand-dark-alpha-15);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.92;
+  }
+}
+
+.fabIcon {
+  font-size: $font-size-13;
+  line-height: 1;
+}
+
+.fabLabel {
+  white-space: nowrap;
+}

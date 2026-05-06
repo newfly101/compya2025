@@ -1,0 +1,9 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.sentinel {
+  height: 1px;
+}

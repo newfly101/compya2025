@@ -7,4 +7,5 @@ export const ROUTE_PATHS = {
   notice_details_pattern: "/notice/:id",
   notice_details: (id) => `/notice/${id}`,
   history_mode: "/mode/history",
+  community: "/community",
 }

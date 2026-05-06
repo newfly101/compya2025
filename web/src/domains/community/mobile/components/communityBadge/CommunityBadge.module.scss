@@ -1,0 +1,15 @@
+// PinnedBadge 와 동일 사이즈/형태(padding 3px 8px, border 0.5px, radius-sm)
+// 색만 도메인 로컬 토큰으로 override
+.newBadge {
+  @include text-badge;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px $space-2;
+  border-radius: $radius-sm;
+  border: 0.5px solid var(--color-community-new-border);
+  background-color: var(--color-community-new-bg);
+  color: var(--color-community-new-text);
+  white-space: nowrap;
+  flex-shrink: 0;
+}

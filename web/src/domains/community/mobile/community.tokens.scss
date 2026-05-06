@@ -1,0 +1,15 @@
+// ============================================================
+// community 도메인 로컬 토큰
+// 글로벌 _colors.scss 에는 추가하지 않음
+// CommunityScreen.jsx 에서 side-effect import 로 1회 주입
+// ============================================================
+
+:root {
+  // FAB(글쓰기) 전용 — brand-dark(#6d4ad3) 와 brand-tint(#3c1e50) 사이
+  --color-community-fab-bg: #4a2c93;
+
+  // 신규 badge — emerald(#34d399, 청록빛) 보다 밝은 연두~초록
+  --color-community-new-bg:     rgba(74, 222, 128, 0.18);
+  --color-community-new-border: #4ade80;
+  --color-community-new-text:   #4ade80;
+}

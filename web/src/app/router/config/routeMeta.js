@@ -13,5 +13,6 @@ export const ROUTE_META = {
         : "컴프야펀 | 공지사항 상세",
   },
   HISTORY_MODE: {path: ROUTE_PATHS.history_mode, title: "컴프야펀 | 히스토리모드"},
+  COMMUNITY: {path: ROUTE_PATHS.community, title: "컴프야펀 | 커뮤니티"},
   AUTH_CALL_BACK: {path: ROUTE_PATHS.authentication},
 };

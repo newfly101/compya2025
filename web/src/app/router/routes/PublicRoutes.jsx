@@ -7,6 +7,7 @@ const EventPage = lazy(() => import("@/app/page/EventPage.jsx"));
 const NoticePage = lazy(() => import("@/app/page/NoticePage.jsx"));
 const NoticeDetailPage = lazy(() => import("@/app/page/NoticeDetailPage.jsx"));
 const HistoryModePage = lazy(() => import("@/app/page/HistoryModePage.jsx"));
+const CommunityPage = lazy(() => import("@/app/page/CommunityPage.jsx"));
 
 const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
 // const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
@@ -30,6 +31,7 @@ export const PublicRoutes = [
   { path: ROUTE_META.NOTICES.path, element: <NoticePage />, handle: ROUTE_META.NOTICES.title },
   { path: ROUTE_META.NOTICE_DETAILS.path, element: <NoticeDetailPage />, handle: ROUTE_META.NOTICE_DETAILS },
   { path: ROUTE_META.HISTORY_MODE.path, element: <HistoryModePage />, handle: ROUTE_META.HISTORY_MODE.title},
+  { path: ROUTE_META.COMMUNITY.path, element: <CommunityPage />, handle: ROUTE_META.COMMUNITY},
 
   // {
   //   path: "notice",
