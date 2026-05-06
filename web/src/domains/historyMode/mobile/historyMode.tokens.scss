@@ -1,0 +1,16 @@
+// ============================================================
+// historyMode 도메인 로컬 토큰
+// 글로벌 _colors.scss / semantic/_color.scss 에는 추가하지 않음
+// HistoryModeScreen.jsx 에서 side-effect import 로 1회 주입
+// ============================================================
+
+:root {
+  // chip / row 기본 배경 (비선택 상태)
+  --color-history-chip-bg:        #272033;
+  // Day / 라벨 chip 배경 (강조 비활성)
+  --color-history-chip-bg-strong: #2e263c;
+  // 선택된 StageCard 배경 (brand alpha 8%)
+  --color-history-brand-alpha-08: rgba(168, 106, 240, 0.08);
+  // 선택된 PlayerRow 배경 (brand alpha 6%)
+  --color-history-brand-alpha-06: rgba(168, 106, 240, 0.06);
+}

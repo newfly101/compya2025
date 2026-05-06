@@ -4,6 +4,7 @@ export const ROUTE_PATHS = {
   coupons: "/coupons",
   events: "/events",
   notices: "/notices",
+  notice_details_pattern: "/notice/:id",
   notice_details: (id) => `/notice/${id}`,
-  history_mode: "/history_mode",
+  history_mode: "/mode/history",
 }

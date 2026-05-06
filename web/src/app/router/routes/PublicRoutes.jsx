@@ -6,6 +6,7 @@ const CouponPage = lazy(() => import("@/app/page/CouponPage.jsx"));
 const EventPage = lazy(() => import("@/app/page/EventPage.jsx"));
 const NoticePage = lazy(() => import("@/app/page/NoticePage.jsx"));
 const NoticeDetailPage = lazy(() => import("@/app/page/NoticeDetailPage.jsx"));
+const HistoryModePage = lazy(() => import("@/app/page/HistoryModePage.jsx"));
 
 const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
 // const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
@@ -14,7 +15,6 @@ const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOL
 const SkillSimulator = lazy(() => import("@/domains/simulate/page/SkillSimulator.jsx"));
 const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
 const HitterSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
-const LegendCalendar = lazy(() => import("@/domains/historyMode/page/LegendCalendar.jsx"));
 const PrivacyPolicy = lazy(() => import("@/app/page/legal/PrivacyPolicy.jsx"));
 const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
 const UserCommunityPage = lazy( () => import ("@/domains/community/page/user/UserCommunityPage.jsx"));
@@ -28,8 +28,8 @@ export const PublicRoutes = [
   { path: ROUTE_META.COUPONS.path, element: <CouponPage />, handle: ROUTE_META.COUPONS.title},
   { path: ROUTE_META.EVENTS.path, element: <EventPage />, handle: ROUTE_META.EVENTS.title}, // 새로 만들어야 함
   { path: ROUTE_META.NOTICES.path, element: <NoticePage />, handle: ROUTE_META.NOTICES.title },
-  { path: "notice/:id", element: <NoticeDetailPage />, handle: "컴프야펀 | 공지 상세" },
-  { path: ROUTE_META.HISTORY_MODE.path, element: <LegendCalendar />, handle: ROUTE_META.HISTORY_MODE.title}, // 새로 만들어야 함
+  { path: ROUTE_META.NOTICE_DETAILS.path, element: <NoticeDetailPage />, handle: ROUTE_META.NOTICE_DETAILS },
+  { path: ROUTE_META.HISTORY_MODE.path, element: <HistoryModePage />, handle: ROUTE_META.HISTORY_MODE.title},
 
   // {
   //   path: "notice",
