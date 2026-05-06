@@ -1,12 +1,9 @@
 import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import "./historyMode.tokens.scss";
 import Chip from "./components/chip/Chip.jsx";
 import StageCard from "./components/stageCard/StageCard.jsx";
 import { useHistoryMode } from "./hooks/useHistoryMode.js";
 import styles from "./HistoryModeScreen.module.scss";
-
-const APP_VERSION = "v0.2.0";
 
 const POSITIONS = [
   { key: "all", label: "전체" },
@@ -15,7 +12,6 @@ const POSITIONS = [
 ];
 
 const HistoryModeScreen = () => {
-  const navigate = useNavigate();
   const autoCompleteWrapRef = useRef(null);
   const {
     inputValue,
@@ -63,18 +59,6 @@ const HistoryModeScreen = () => {
 
   return (
     <main className={styles.page}>
-      <header className={styles.header}>
-        <button
-          type="button"
-          className={styles.headerBack}
-          onClick={() => navigate(-1)}
-        >
-          ←
-        </button>
-        <h1 className={styles.headerTitle}>히스토리모드 재료 탐색기</h1>
-        <span className={styles.headerVersion}>{APP_VERSION}</span>
-      </header>
-
       <div className={styles.body}>
         {isStageSelected && selectedLegendMeta ? (
           <div className={styles.compactBar}>
