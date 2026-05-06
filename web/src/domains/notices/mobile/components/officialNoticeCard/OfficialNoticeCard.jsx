@@ -1,3 +1,4 @@
+import PinnedBadge from "@/global/ui/badge/PinnedBadge.jsx";
 import styles from "./OfficialNoticeCard.module.scss";
 
 const OfficialNoticeCard = ({ notice }) => {
@@ -8,7 +9,7 @@ const OfficialNoticeCard = ({ notice }) => {
   return (
     <article className={styles.card} onClick={handleClick}>
       <div className={styles.cardTop}>
-        <span className={styles.sourceBadge}>공식</span>
+        <PinnedBadge variant="cafe" />
         <span className={styles.externalLabel}>외부 링크 →</span>
       </div>
       <p className={styles.title}>{notice.title}</p>

@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useNoticeDetail } from "@/domains/notices/mobile/hooks/useNoticeDetail.js";
-import Badge from "@/global/ui/badge/Badge.jsx";
+import LabelBadge from "@/global/ui/badge/LabelBadge.jsx";
 import styles from "./NoticeDetailScreen.module.scss";
 
 const NoticeDetailScreen = () => {
@@ -24,7 +24,7 @@ const NoticeDetailScreen = () => {
       {/* ── 메타 헤더 (배지 + 날짜 + 제목) ──────────────── */}
       <div className={styles.metaHeader}>
         <div className={styles.metaRow}>
-          {notice.category && <Badge label={notice.category} variant="brand" />}
+          {notice.category && <LabelBadge variant="update" label={notice.category} />}
           <span className={styles.metaDate}>{notice.publishedAt?.slice(0, 10)}</span>
         </div>
         <h1 className={styles.title}>{notice.title}</h1>

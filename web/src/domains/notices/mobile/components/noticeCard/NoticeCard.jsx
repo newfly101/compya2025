@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
-import Badge from "@/global/ui/badge/Badge.jsx";
+import LabelBadge from "@/global/ui/badge/LabelBadge.jsx";
 import styles from "./NoticeCard.module.scss";
 
 const NoticeCard = ({ notice, isFeatured = false }) => {
@@ -18,7 +18,7 @@ const NoticeCard = ({ notice, isFeatured = false }) => {
           }
         </div>
         <div className={styles.featuredMeta}>
-          {notice.category && <Badge label={notice.category} variant="brand" />}
+          {notice.category && <LabelBadge variant="update" label={notice.category} />}
           <span className={styles.metaDate}>{notice.publishedAt?.slice(0, 10)}</span>
           <span className={styles.chevron}>›</span>
         </div>

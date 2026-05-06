@@ -1,0 +1,40 @@
+// ============================================================
+// LabelBadge.module.scss
+// 카드 섹션 카테고리 분류 배지 — alpha 채우기, border 없음
+// 참조: global/styles/components/primitive/_Badge.module.scss
+// ============================================================
+
+// ── badge-specific color tokens ───────────────────────────────
+$label-purple-bg:    rgba(168, 106, 240, 0.15);
+$label-purple-text:  #a86af0;
+$label-blue-bg:      rgba(96, 165, 250, 0.15);
+$label-blue-text:    #60a5fa;
+$label-gray-bg:      rgba(156, 163, 175, 0.15);
+$label-gray-text:    #9ca3af;
+$label-emerald-bg:   rgba(52, 211, 153, 0.15);
+$label-emerald-text: #34d399;
+$label-yellow-bg:    rgba(254, 204, 26, 0.15);
+$label-yellow-text:  #fecc1a;
+$label-red-bg:       rgba(248, 113, 113, 0.15);
+$label-red-text:     #f87171;
+
+// ── Base ──────────────────────────────────────────────────────
+.badge {
+  @include text-badge;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px $space-2;
+  height: 20px;
+  border-radius: 3px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ── Variants ──────────────────────────────────────────────────
+.update    { background-color: $label-purple-bg;  color: $label-purple-text; }
+.patch     { background-color: $label-blue-bg;    color: $label-blue-text; }
+.cafe      { background-color: $label-gray-bg;    color: $label-gray-text; }
+.tip       { background-color: $label-emerald-bg; color: $label-emerald-text; }
+.important { background-color: $label-yellow-bg;  color: $label-yellow-text; }
+.mustread  { background-color: $label-red-bg;     color: $label-red-text; }

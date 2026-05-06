@@ -1,0 +1,42 @@
+// ============================================================
+// PinnedBadge.module.scss
+// 이벤트성 하이라이트 강조 배지 — alpha 채우기 + border
+// LabelBadge와 동일한 색상 팔레트, border 추가로 강조 효과
+// 참조: global/styles/components/primitive/_Badge.module.scss
+// ============================================================
+
+// ── badge-specific color tokens ───────────────────────────────
+$pinned-purple-bg:    rgba(167, 139, 250, 0.18);
+$pinned-purple-border:#a78bfa;
+$pinned-blue-bg:      rgba(96, 165, 250, 0.18);
+$pinned-blue-border:  #60a5fa;
+$pinned-gray-bg:      rgba(156, 163, 175, 0.18);
+$pinned-gray-border:  #9ca3af;
+$pinned-emerald-bg:   rgba(52, 211, 153, 0.18);
+$pinned-emerald-border:#34d399;
+$pinned-yellow-bg:    rgba(254, 204, 26, 0.18);
+$pinned-yellow-border:#fecc1a;
+$pinned-red-bg:       rgba(248, 113, 113, 0.18);
+$pinned-red-border:   #f87171;
+
+// ── Base ──────────────────────────────────────────────────────
+.badge {
+  @include text-badge;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px $space-2;
+  border-radius: $radius-sm;
+  border-width: 0.5px;
+  border-style: solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ── Variants ──────────────────────────────────────────────────
+.update    { background-color: $pinned-purple-bg;  border-color: $pinned-purple-border;  color: $pinned-purple-border; }
+.patch     { background-color: $pinned-blue-bg;    border-color: $pinned-blue-border;    color: $pinned-blue-border; }
+.cafe      { background-color: $pinned-gray-bg;    border-color: $pinned-gray-border;    color: $pinned-gray-border; }
+.tip       { background-color: $pinned-emerald-bg; border-color: $pinned-emerald-border; color: $pinned-emerald-border; }
+.important { background-color: $pinned-yellow-bg;  border-color: $pinned-yellow-border;  color: $pinned-yellow-border; }
+.mustread  { background-color: $pinned-red-bg;     border-color: $pinned-red-border;     color: $pinned-red-border; }

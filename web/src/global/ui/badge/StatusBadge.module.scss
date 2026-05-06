@@ -1,0 +1,38 @@
+// ============================================================
+// StatusBadge.module.scss
+// 카드 섹션 상태 표시 배지 — solid 채우기, border 없음
+// 참조: global/styles/components/primitive/_Badge.module.scss
+// ============================================================
+
+// ── badge-specific color tokens ───────────────────────────────
+$status-new-color:     #16a34a;
+$status-hot-color:     #ff3b3b;
+$status-ended-color:   #2a2e3a;
+$status-pick-color:    #2563eb;
+$status-limited-color: #f59e0b;
+$status-event-color:   #ec4899;
+$status-reward-color:  #14b8a6;
+
+// ── Base ──────────────────────────────────────────────────────
+.badge {
+  @include text-badge;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 $space-2;
+  height: 20px;
+  border-radius: $radius-sm;
+  white-space: nowrap;
+  flex-shrink: 0;
+  color: #fff;
+}
+
+// ── Variants ──────────────────────────────────────────────────
+.active  { background-color: var(--color-brand-violet); }
+.new     { background-color: $status-new-color; }
+.hot     { background-color: $status-hot-color; }
+.ended   { background-color: $status-ended-color; }
+.pick    { background-color: $status-pick-color; }
+.limited { background-color: $status-limited-color; }
+.event   { background-color: $status-event-color; }
+.reward  { background-color: $status-reward-color; }
