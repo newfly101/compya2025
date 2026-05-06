@@ -16,5 +16,5 @@ export const useNoticeList = () => {
   const listedNotices   = siteNotices.filter(n => n !== featuredNotice).slice(0, 3);
   const listedOfficials = officialNotices.slice(0, 3);
 
-  return { featuredNotice, listedNotices, listedOfficials };
+  return { featuredNotice, listedNotices, listedOfficials, siteNotices };
 };
