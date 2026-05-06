@@ -1,15 +1,14 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { requestGetSiteNoticeList, requestGetOfficialNoticeList } from "@/domains/notices/store/public/thunks.js";
+import { requestGetNoticeList } from "@/domains/notices/store/public/thunks.js";
 
 export const useNoticeList = () => {
-  const dispatch = useDispatch();
+  const dispatch        = useDispatch();
   const siteNotices     = useSelector(state => state.notices.siteNotices);
   const officialNotices = useSelector(state => state.notices.officialNotices);
 
   useEffect(() => {
-    dispatch(requestGetSiteNoticeList());
-    dispatch(requestGetOfficialNoticeList());
+    dispatch(requestGetNoticeList());
   }, [dispatch]);
 
   const featuredNotice  = siteNotices.find(n => n.isPinned) ?? siteNotices[0] ?? null;

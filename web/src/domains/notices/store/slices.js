@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
-import { requestGetSiteNoticeList, requestGetOfficialNoticeList } from "@/domains/notices/store/public/thunks.js";
+import { requestGetNoticeList } from "@/domains/notices/store/public/thunks.js";
 import {
   requestAdminGetNoticeList,
   requestAdminInsertNotice,
@@ -20,18 +20,15 @@ const noticeSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    /* ── 사이트 공지 조회 ─────────────────────────────────────── */
-    applyAsyncHandlers(builder, requestGetSiteNoticeList, (state, action) => {
-      state.siteNotices = action.payload;
+    /* ── 전체 공지 조회 (source 기준 분리) ───────────────────── */
+    applyAsyncHandlers(builder, requestGetNoticeList, (state, action) => {
+      state.siteNotices     = action.payload.siteNotices;
+      state.officialNotices = action.payload.officialNotices;
     });
 
+    /* ── 어드민 조회 (전체 목록) ─────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminGetNoticeList, (state, action) => {
       state.siteNotices = action.payload;
-    });
-
-    /* ── 공식 공지 조회 ───────────────────────────────────────── */
-    applyAsyncHandlers(builder, requestGetOfficialNoticeList, (state, action) => {
-      state.officialNotices = action.payload;
     });
 
     /* ── 신규 등록 ────────────────────────────────────────────── */
