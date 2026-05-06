@@ -3,7 +3,9 @@
     "allow": [
       "mcp__claude_ai_Figma__get_design_context",
       "mcp__figma-dev-mode__get_design_context",
-      "mcp__figma-dev-mode__get_screenshot"
+      "mcp__figma-dev-mode__get_screenshot",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(npm *)"
     ]
   }
 }
