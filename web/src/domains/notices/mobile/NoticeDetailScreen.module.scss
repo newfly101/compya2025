@@ -1,0 +1,96 @@
+// ── 전체 레이아웃 ──────────────────────────────────────────────
+.screen {
+  @include flex-col;
+  width: 100%;
+  min-height: 100dvh;
+  background-color: var(--color-bg-deepest);
+}
+
+// ── 히어로 이미지 ──────────────────────────────────────────────
+.hero {
+  width: 100%;
+  height: 200px;
+  background-color: var(--color-brand-tint);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.heroImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.heroEmpty {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-brand-tint), var(--color-bg-deep));
+}
+
+// ── 메타 헤더 ─────────────────────────────────────────────────
+.metaHeader {
+  @include flex-col($space-3);
+  @include h-pad;
+  padding-top: $space-5;
+  padding-bottom: $space-5;
+  background-color: var(--color-bg-overlay);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.metaRow {
+  @include flex-row($space-3);
+  align-items: center;
+}
+
+.metaDate {
+  @include text-micro;
+  color: var(--color-text-muted);
+}
+
+.title {
+  font-size: $font-size-22;
+  font-weight: $font-weight-bold;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+  word-break: keep-all;
+}
+
+// ── 요약 ──────────────────────────────────────────────────────
+.summary {
+  @include flex-col($space-2);
+  @include h-pad;
+  padding-top: $space-4;
+  padding-bottom: $space-4;
+  background-color: var(--color-bg-card);
+  border-top: 3px solid rgba(168, 106, 240, 0.5);
+}
+
+.summaryLabel {
+  @include text-micro;
+  font-weight: $font-weight-semibold;
+  color: var(--color-brand);
+}
+
+.summaryText {
+  @include text-body-bold;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  white-space: pre-line;    // \n → 줄바꿈 렌더링
+}
+
+// ── 본문 ──────────────────────────────────────────────────────
+.body {
+  @include flex-col;
+  @include h-pad;
+  padding-top: $space-5;
+  padding-bottom: $space-8;
+  background-color: var(--color-bg-deepest);
+}
+
+.bodyText {
+  @include text-body;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  white-space: pre-line;    // \n → 줄바꿈 렌더링
+}

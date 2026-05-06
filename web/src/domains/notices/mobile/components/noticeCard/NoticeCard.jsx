@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
+import Badge from "@/global/ui/badge/Badge.jsx";
 import styles from "./NoticeCard.module.scss";
 
 const NoticeCard = ({ notice, isFeatured = false }) => {
   const navigate = useNavigate();
 
-  const handleClick = () => navigate(`/notices/${notice.id}`);
+  const handleClick = () => navigate(ROUTE_PATHS.notice_details(notice.id));
 
   if (isFeatured) {
     return (
@@ -16,14 +18,14 @@ const NoticeCard = ({ notice, isFeatured = false }) => {
           }
         </div>
         <div className={styles.featuredMeta}>
-          {notice.category && (
-            <span className={styles.categoryBadge}>{notice.category}</span>
-          )}
+          {notice.category && <Badge label={notice.category} variant="brand" />}
           <span className={styles.metaDate}>{notice.publishedAt?.slice(0, 10)}</span>
           <span className={styles.chevron}>›</span>
         </div>
         <p className={styles.featuredTitle}>{notice.title}</p>
-        {notice.summary && <p className={styles.featuredSummary}>{notice.summary}</p>}
+        {notice.summary && (
+          <p className={styles.featuredSummary}>{notice.summary.split("\n")[0]}</p>
+        )}
       </article>
     );
   }
@@ -33,7 +35,9 @@ const NoticeCard = ({ notice, isFeatured = false }) => {
       <div className={styles.cardRow}>
         <div className={styles.cardContent}>
           <p className={styles.title}>{notice.title}</p>
-          {notice.summary && <p className={styles.summary}>{notice.summary}</p>}
+          {notice.summary && (
+            <p className={styles.summary}>{notice.summary.split("\n")[0]}</p>
+          )}
         </div>
         {notice.imageUrl && (
           <div className={styles.smallThumb}>
