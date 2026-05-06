@@ -1,11 +1,10 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useNoticeDetail } from "@/domains/notices/mobile/hooks/useNoticeDetail.js";
 import LabelBadge from "@/global/ui/badge/LabelBadge.jsx";
 import styles from "./NoticeDetailScreen.module.scss";
 
 const NoticeDetailScreen = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { notice } = useNoticeDetail(id);
 
   if (!notice) return <div className={styles.screen} />;
