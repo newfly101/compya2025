@@ -1,6 +1,6 @@
 import React from "react";
 import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
-import EventListVertical from "@/domains/events/mobile/containers/EventListVertical.jsx";
+import EventListVertical from "@/domains/events/mobile/containers/public/EventListVertical.jsx";
 import { useEventList } from "@/domains/events/mobile/hooks/useEventList.js";
 
 const EventScreen = () => {
