@@ -13,7 +13,7 @@ import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
 import CouponListHorizontal from "@/domains/coupons/mobile/containers/public/CouponListHorizontal.jsx";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { useCouponList } from "@/domains/coupons/mobile/hooks/useCouponList.js";
-import EventListHorizontal from "@/domains/events/mobile/containers/EventListHorizontal.jsx";
+import EventListHorizontal from "@/domains/events/mobile/containers/public/EventListHorizontal.jsx";
 import { useEventList } from "@/domains/events/mobile/hooks/useEventList.js";
 
 const HomeScreen = () => {

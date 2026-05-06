@@ -4,15 +4,15 @@ import AuthCallback from "@/domains/authentication/callback/AuthCallBack.jsx";
 const HomePage = lazy(() => import("@/app/page/HomePage.jsx"));
 const CouponPage = lazy(() => import("@/app/page/CouponPage.jsx"));
 const EventPage = lazy(() => import("@/app/page/EventPage.jsx"));
+const NoticePage = lazy(() => import("@/app/page/NoticePage.jsx"));
 
 const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
 const NoticeLayout = lazy(() => import("@/app/page/notice/NoticeLayout.jsx"));
 const FunNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/FunNoticeList/FunNoticeList.jsx"));
 const OfficialNoticeList = lazy(() => import("@/domains/notices/feature/components/user/lists/officialNoticeList/OfficialNoticeList.jsx"));
-const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
+// const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
 
 
-const FunNoticePage = lazy(() => import("@/domains/notices/page/funNotice/FunNoticePage.jsx"));
 const SkillSimulator = lazy(() => import("@/domains/simulate/page/SkillSimulator.jsx"));
 const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
 const HitterSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
@@ -29,7 +29,7 @@ export const PublicRoutes = [
   { path: ROUTE_META.AUTH_CALL_BACK.path, element: <AuthCallback /> },
   { path: ROUTE_META.COUPONS.path, element: <CouponPage />, handle: ROUTE_META.COUPONS.title},
   { path: ROUTE_META.EVENTS.path, element: <EventPage />, handle: ROUTE_META.EVENTS.title}, // 새로 만들어야 함
-  { path: ROUTE_META.NOTICES.path, element: <FunNoticePage />, handle: ROUTE_META.NOTICES.title}, // 새로 만들어야 함
+  { path: ROUTE_META.NOTICES.path, element: <NoticePage />, handle: ROUTE_META.NOTICES.title },
   { path: ROUTE_META.HISTORY_MODE.path, element: <LegendCalendar />, handle: ROUTE_META.HISTORY_MODE.title}, // 새로 만들어야 함
 
   // {
