@@ -79,11 +79,29 @@ tools: Read, Edit, Grep, Glob, Bash, Write
 2. Part A 는 한 글자도 건드리지 않음
 3. Part B 의 placeholder 구조 (B.1 ~ B.5) 유지 — 다른 도메인과 형식 통일
 
-### Step 6 — 종료 보고 (300자 이내)
+### Step 6 — 히스토리 갱신 (`docs/prd/_history.md`) — 의무
+1. **누적 표 (`## 작업 히스토리`)** 의 헤더 바로 아래에 row 1개 append (최신이 위):
+   - `Date`: 오늘 날짜 (YYYY-MM-DD)
+   - `Domain`: 처리한 도메인명
+   - `Type`: `IA-CONFIRM`
+   - `Action`: 한 줄 요약 (P0/P1/P2 기능 수 + 신규 기능 유무)
+   - `Files Changed`: `~ docs/prd/domains/{domain}.md`
+   - `Impact`: Part A.2 의 핵심 화면 / 라우트 cite
+   - `Commit`: `(대기)` (사용자 commit 후 채움)
+   - `By`: `agent: prd-ia-interactive`
+   - `Notes`: Owner 결정 변경 / 모호 사항 follow-up 등
+2. **`## Type 별 최근 작업 빠른 인덱스`** 의 `### 최근 IA-CONFIRM` 섹션에 한 줄 추가 (도메인 + 날짜)
+3. **`## 도메인별 진척도 스냅샷`** 표에서 해당 도메인의 `Part B (IA)` 셀을 `✅` 로 변경
+4. ★ Owner 결정 항목 (Part A.8 의 도메인 한정 항목) 변경 시:
+   - 누적 표에 `OWNER-DECISION` row 별도 추가
+   - **`## ★ Owner 결정 5건 추적`** 표 갱신 (상태 / 결정일 / 결정 내용)
+
+### Step 7 — 종료 보고 (300자 이내)
 - 도메인명
-- 수정한 파일 경로 1개
+- 수정한 파일 경로 (PRD + history 2개)
 - 확정한 P0 기능 수 / P1 기능 수 / P2 기능 수
 - 신규 기능 (B.2) 수 + 그 중 BE/DB 영향 있는 항목 수
+- Owner 결정 변경 항목 (있다면)
 - 다음 단계 안내: "wireframe-generator + design-sync 자동 실행 가능 (백그라운드 병렬). `/prd-pipeline {domain}` 또는 직접 sub-agent 호출."
 
 ## 작성 원칙

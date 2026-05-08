@@ -57,6 +57,7 @@
 docs/prd/
 ├── _overview.md                # 시스템 횡단 (PRD synthesizer 산출)
 ├── _workflow.md                # 본 문서
+├── _history.md                 # 작업 히스토리 누적 (모든 agent 가 종료 시 append)
 ├── domains/                    # 도메인별 Part A (사실 baseline) + Part B (확정 IA)
 │   ├── coupons.md
 │   ├── events.md
@@ -70,6 +71,20 @@ docs/prd/
     ├── events.md
     └── ...
 ```
+
+### 1.4 작업 히스토리 추적 (`docs/prd/_history.md`)
+
+모든 PRD pipeline 작업은 `_history.md` 의 누적 표에 row 형태로 기록된다:
+
+- **자동 append**: 3개 agent (`prd-ia-interactive`, `prd-wireframe-generator`, `prd-design-sync`) 가 종료 직전 의무적으로 갱신
+- **수동 append**: 코드 변경, 폐기, Owner 결정, runtime 검증, migration 작업 시 사용자 또는 어시스턴트가 직접 추가
+- **추적 항목**:
+  - 누적 표 (시간순 역정렬, 최신이 위)
+  - Type 별 최근 작업 인덱스
+  - ★ Owner 결정 5건 추적 표
+  - 도메인별 진척도 스냅샷 (Part A / Part B / Wireframe / Design-Sync / 코드 반영 / 폐기)
+
+자세한 컨벤션은 `_history.md` 상단 "표기 규칙" 섹션 참조.
 
 ---
 
@@ -161,12 +176,14 @@ t30: events background 완료 → 결과 보고
 ### 4.1 prd-ia-interactive
 - 사전 조건: Part A 채워져 있음 (`docs/prd/domains/{domain}.md`)
 - 보호장치: 사용자 "확정" 명시 없이 Edit 금지. Part A 절대 수정 금지
+- 종료 의무: `_history.md` 에 `IA-CONFIRM` row append + 진척도 스냅샷 갱신
 
 ### 4.2 prd-wireframe-generator
 - 사전 조건: Part B 가 placeholder 가 아닌 확정 내용
 - 보호장치:
   - Part B 미확정 시 즉시 종료 보고 (백그라운드 모드)
   - figma MCP 실패 시 텍스트 wireframe 만 생성 + figma 미연결 표기
+- 종료 의무: `_history.md` 에 `WIREFRAME` row append + 진척도 스냅샷 갱신
 
 ### 4.3 prd-design-sync
 - 사전 조건: Part A.1 분류 = live / partial-mock + wireframe 산출물 존재
@@ -174,6 +191,7 @@ t30: events background 완료 → 결과 보고
   - 분류 부적합 시 즉시 종료 보고
   - 코드 수정 / figma 수정 직접 X — 분석 + 제안만
   - ★ 재사용성 / 통일성 우선: figma 가 표준 컴포넌트와 다르면 figma 변경 권장이 기본
+- 종료 의무: `_history.md` 에 `DESIGN-SYNC` row append + 진척도 스냅샷 갱신
 
 ---
 
@@ -228,9 +246,41 @@ t30: events background 완료 → 결과 보고
 - ★ "figma 변경 권장" vs "코드 변경 권장" 비율 — 통일성 우선이면 figma 변경 권장이 다수여야 정상
 - "코드 변경 권장" 항목 들이 실제로 figma 가 더 정확한 케이스인지 검토
 
+### 6.4 히스토리 검증
+- `docs/prd/_history.md` 누적 표 상단에 본 작업 row 가 추가됐는지
+- 도메인별 진척도 스냅샷 표의 해당 도메인 셀이 갱신됐는지
+- ★ Owner 결정 변경이 있었다면 "★ Owner 결정 5건 추적" 표도 갱신됐는지
+
 ---
 
-## 7. 다음 단계 (모바일 리뉴얼)
+## 7. 작업 히스토리 갱신 (수동)
+
+agent 가 처리하지 못하는 작업은 사용자/어시스턴트가 `_history.md` 에 직접 row 추가:
+
+| 상황 | Type | 갱신 시점 |
+|---|---|---|
+| 도메인 관련 코드 변경 (web/, src/main/, sql/) | `CODE` | commit 직후 |
+| PRD 파일 / 컴포넌트 폐기 | `DEPRECATE` | 폐기 commit 직후 |
+| ★ Owner 결정 5건 중 하나 확정 / 보류 → 결정 전환 | `OWNER-DECISION` | 결정 즉시 + 추적 표 갱신 |
+| runtime-analyzer 결과로 Part A 사실 보강 | `RUNTIME-VERIFY` | runtime 결과 반영 후 |
+| 폴더/파일 이동 (예: home 표준 패턴 정렬) | `MIGRATE` | 이동 commit 직후 |
+| 이전 작업 되돌림 | `REVERT` | revert commit 직후 |
+
+수동 갱신 시 컨벤션은 `_history.md` 상단 "표기 규칙" 섹션 참조.
+
+### 예시: mobile 도메인 폐기
+
+`mobile.md` 가 폐기 권고 → 코드 폐기 + PRD 파일 삭제 시 `_history.md` 에 다음 row 추가:
+
+```
+| 2026-05-XX | mobile | DEPRECATE | domains/mobile/ 전체 폴더 + MobileHomePage 폐기 (Owner 결정 #3) | `- web/src/domains/mobile/**`, `- docs/prd/domains/mobile.md` | route: 영향 없음 (HomeScreen 이 활성 진입점), component: MobileHomePage 등 dead chain 9건 | abc1234 | manual | dead-confirmed.md 1-A 항목 |
+```
+
+또한 진척도 스냅샷의 mobile row 의 `폐기` 컬럼을 `✅` 로 변경. mobile row 자체는 삭제하지 않음 (히스토리 보존).
+
+---
+
+## 8. 다음 단계 (모바일 리뉴얼)
 
 PRD pipeline 이 도메인 단위로 완료되면 다음 단계로:
 

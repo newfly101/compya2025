@@ -133,15 +133,30 @@ tools: Read, Grep, Glob, Bash, Write, Edit, mcp__figma-dev-mode__get_design_cont
 - 본 도메인이 표준 패턴 (coupons / events) 의 컴포넌트와 다른 figma 디자인을 제시한다면 별도 섹션으로 강조
 - ★ 본 프로젝트 원칙: figma 변경이 우선
 
-### Step 7 — 파일 작성 + 종료 보고
+### Step 7 — 파일 작성
 - `docs/prd/design-sync/{domain}.md` Write (덮어쓰기 OK)
-- 종료 보고 (300자 이내):
-  - 도메인명
-  - 산출물 경로 1개
-  - 비교한 화면 수 / figma 매칭 수
-  - 발견 갭 수 (디자인 토큰 / 레이아웃 / 컴포넌트 변형 / state 미반영 별 카운트)
-  - figma 갱신 요청 항목 수 / 코드 수정 제안 수
-  - 미해결 항목 (있다면 1~2 개)
+
+### Step 8 — 히스토리 갱신 (`docs/prd/_history.md`) — 의무
+1. **누적 표 (`## 작업 히스토리`)** 의 헤더 바로 아래에 row 1개 append (최신이 위):
+   - `Date`: 오늘 날짜 (YYYY-MM-DD)
+   - `Domain`: 처리한 도메인명
+   - `Type`: `DESIGN-SYNC`
+   - `Action`: 갭 수 요약 (e.g. "갭 12건: 디자인 토큰 5 / 레이아웃 3 / 컴포넌트 변형 4")
+   - `Files Changed`: `+ docs/prd/design-sync/{domain}.md`
+   - `Impact`: figma 갱신 요청 항목 수 / 코드 수정 제안 수
+   - `Commit`: `(대기)`
+   - `By`: `agent: prd-design-sync`
+   - `Notes`: 통일성 위반 발견 항목 / 미해결 spot-check 항목
+2. **`## Type 별 최근 작업 빠른 인덱스`** 의 `### 최근 DESIGN-SYNC` 섹션에 한 줄 추가
+3. **`## 도메인별 진척도 스냅샷`** 표에서 해당 도메인의 `Design-Sync` 셀을 `✅` 로 변경
+
+### Step 9 — 종료 보고 (300자 이내)
+- 도메인명
+- 산출물 경로 (design-sync + history 2개)
+- 비교한 화면 수 / figma 매칭 수
+- 발견 갭 수 (디자인 토큰 / 레이아웃 / 컴포넌트 변형 / state 미반영 별 카운트)
+- figma 갱신 요청 항목 수 / 코드 수정 제안 수
+- 미해결 항목 (있다면 1~2 개)
 
 ## 작성 원칙
 

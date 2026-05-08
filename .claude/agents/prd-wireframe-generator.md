@@ -123,14 +123,29 @@ tools: Read, Write, Edit, Grep, Glob, Bash, mcp__figma-dev-mode__get_design_cont
 - 도메인 분류 기준으로 design-sync 진행 여부 권장 명시
 - 화면 ↔ figma node 페어 표 정리 (design-sync 가 그대로 입력으로 사용)
 
-### Step 5 — 파일 작성 + 종료 보고
+### Step 5 — 파일 작성
 - `docs/prd/wireframes/{domain}.md` Write (덮어쓰기 OK)
-- 종료 보고 (250자 이내):
-  - 도메인명
-  - 산출물 경로 1개
-  - 처리한 화면 수 + figma node 매칭 수 / 미매칭 수
-  - design-sync 진행 권장 여부 (live/partial-mock 면 권장, mock-only/미구현이면 보류)
-  - 미해결 사항 1~2 개 (figma 미연결 화면 등)
+
+### Step 6 — 히스토리 갱신 (`docs/prd/_history.md`) — 의무
+1. **누적 표 (`## 작업 히스토리`)** 의 헤더 바로 아래에 row 1개 append (최신이 위):
+   - `Date`: 오늘 날짜 (YYYY-MM-DD)
+   - `Domain`: 처리한 도메인명
+   - `Type`: `WIREFRAME`
+   - `Action`: 처리한 화면 수 + figma 매칭률
+   - `Files Changed`: `+ docs/prd/wireframes/{domain}.md` (또는 `~` 갱신 시)
+   - `Impact`: 매핑한 figma node 목록 요약 (3개 이상이면 "node N개")
+   - `Commit`: `(대기)`
+   - `By`: `agent: prd-wireframe-generator`
+   - `Notes`: figma 미연결 화면 / design-sync 진행 권장 여부
+2. **`## Type 별 최근 작업 빠른 인덱스`** 의 `### 최근 WIREFRAME` 섹션에 한 줄 추가
+3. **`## 도메인별 진척도 스냅샷`** 표에서 해당 도메인의 `Wireframe` 셀을 `✅` 로 변경
+
+### Step 7 — 종료 보고 (250자 이내)
+- 도메인명
+- 산출물 경로 (wireframe + history 2개)
+- 처리한 화면 수 + figma node 매칭 수 / 미매칭 수
+- design-sync 진행 권장 여부 (live/partial-mock 면 권장, mock-only/미구현이면 보류)
+- 미해결 사항 1~2 개 (figma 미연결 화면 등)
 
 ## 작성 원칙
 
