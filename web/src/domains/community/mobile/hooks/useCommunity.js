@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { COMMUNITY_CATEGORIES } from "@/data/community/categories.js";
 import { COMMUNITY_NOTICES } from "@/data/community/notices.js";
 import { COMMUNITY_HOT_POSTS } from "@/data/community/hotPosts.js";
@@ -10,7 +11,10 @@ const POSTS_PAGE_SIZE = 10;
 
 // 메인 화면("전체") 전용 — 카테고리 단일 화면은 useCategoryFeed 사용
 export const useCommunity = () => {
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedCategory, setSelectedCategory] = useState(
+    () => searchParams.get("category") ?? "all"
+  );
   const [hotPage, setHotPage] = useState(1);
   const [postsPage, setPostsPage] = useState(1);
   const postsSentinelRef = useRef(null);
@@ -41,11 +45,24 @@ export const useCommunity = () => {
     setPostsPage((p) => p + 1);
   }, []);
 
-  const handleCategoryChange = useCallback((key) => {
-    setSelectedCategory(key);
+  const handleCategoryChange = useCallback(
+    (key) => {
+      setSelectedCategory(key);
+      setHotPage(1);
+      setPostsPage(1);
+      // URL 동기화 → MobileLayout이 search 변경 감지해서 스크롤 top
+      setSearchParams(key === "all" ? {} : { category: key });
+    },
+    [setSearchParams]
+  );
+
+  // URL ?category=xxx 가 변경되면 selectedCategory 동기화 (home → community 진입)
+  useEffect(() => {
+    const cat = searchParams.get("category") ?? "all";
+    setSelectedCategory(cat);
     setHotPage(1);
     setPostsPage(1);
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
     if (selectedCategory !== "all") return;

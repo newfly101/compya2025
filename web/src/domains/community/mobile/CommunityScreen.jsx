@@ -45,6 +45,14 @@ const CommunityScreen = () => {
 
   const isCategoryView = selectedCategory !== "all";
 
+  // selectedCategory 변경 시 (lazy 마운트 / URL 변경 / chip 변경 모두) 스크롤 top
+  useEffect(() => {
+    document.querySelector("[data-scroll-root]")?.scrollTo(0, 0);
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+  }, [selectedCategory]);
+
   return (
     <main className={styles.page}>
       <div className={styles.categoryRow}>
