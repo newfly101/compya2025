@@ -45,7 +45,7 @@
 | **dictionary** | Legacy PC 보류 | `domain/skill/SkillController` (`/api/skills/{target}`) | player_skills, skill_score_config, skill_pitcher_grade_stat (V1, V2 보류) | `domains/dictionary.md` |
 | **simulate** | Legacy PC 보류 | (skill + player 호출 — 자체 BE 없음) | player_skills, player_card*, player_legend* | `domains/simulate.md` |
 | **kbo** | Legacy PC 보류 (보류 도메인) | `domain/kbo/KboGameController` | kbo_seasons/teams/games/players/batter_logs (V2 보류) + kbo_team_code_mappings | `domains/kbo.md` |
-| **mobile** | 폐기 권고 (공용 더미) | (n/a) | (n/a) | `domains/mobile.md` |
+| ~~**mobile**~~ | ~~폐기 권고 (공용 더미)~~ | — | — | **2026-05-09 폐기 완료** (`_history.md` DEPRECATE row 참조) |
 
 > **BE 단독 도메인 (FE 미흡수)**:
 > - `domain/skill/coach/*` — `GET /api/skills/coach` wired (BE+DB 모두 살아있음, FE 호출 0건). `coach`, `coach_skill_buff`, `coach_skill_condition` 운영 중. `domains/dictionary.md` Part A 에 흡수 명시.
@@ -125,7 +125,7 @@
 ### 4.4 폐기 예정 / 유보 (Owner 정책)
 
 - **legacy PC 도메인** (`dictionary`, `simulate`, `kbo`): 라우트 주석 처리. 코드 보존 (기능 참고용 — `fe-map.md ★ Owner 확정 #1`). **삭제 금지**
-- **MobileHomePage / domains/mobile/**: import 0건 + placeholder. (★ Owner 결정 #3 — 즉시 폐기 권고)
+- ~~**MobileHomePage / domains/mobile/**: import 0건 + placeholder.~~ (★ Owner 결정 #3 ✅ 2026-05-09 (A) 즉시 폐기 채택 — 폴더 + PRD 파일 제거 완료)
 - **legacy V1 운영 데이터** (users, events, boards, posts, tags, posts_tags, notices, quiz_answers — 8개): mapper 0건, V2 이전 완료. 운영 row 보존 정책 결정 후 DROP 가능
 
 ---
@@ -171,7 +171,7 @@
 
 | 항목 | 위치 | 영향 |
 |---|---|---|
-| `domains/mobile/` 전체 (MobileHomePage 포함) | `web/src/domains/mobile/**` | 폴더 통째 삭제 가능. import 0건 (`fe/dead-suspects.md:14`) |
+| ~~`domains/mobile/` 전체 (MobileHomePage 포함)~~ | ~~`web/src/domains/mobile/**`~~ | **2026-05-09 폐기 완료** (Owner 결정 #3 ✅, `_history.md` 참조) |
 | `app/wrapper/parts/{Header,Footer}.jsx` + `.module.scss` + `useHeader{Auth,Nav,UI}.js` | `web/src/app/wrapper/parts/**` | 6 파일 삭제. 현재 layout 은 `wrapper/mobile/parts/{TopBar,Drawer}.jsx` 사용 |
 | `domains/admin/store/{api,endpoints,thunks}.js` | `web/src/domains/admin/store/**` | 파일 전체 주석 — 즉시 삭제 |
 | `data/{CafeNotice,FunNotice,HistoryMode}.js` | `web/src/data/**` | import 0건 |
@@ -206,7 +206,7 @@
 
 - **R3** `state.auth` shape 정리 (★ 모든 인증 분기) — 도메인: **authentication**
 - **R9 부분** quiz public path 수정 (`/quiz-answers/latest` → `/quiz/latest`) + HomeScreen quiz dispatch 추가 — 도메인: **quiz**, **home**
-- **Dead 코드 즉시 정리 (영향 0)** — 도메인: **mobile**(폐기), 횡단
+- **Dead 코드 즉시 정리 (영향 0)** — 도메인: ~~**mobile**(폐기)~~ ✅ 2026-05-09 완료, 횡단 (잔여)
 
 ### Phase 1 — 보안 별개 fix (모바일 차단 무관, 우선순위 별개)
 
@@ -255,12 +255,12 @@
 - **차단성**: ★ 모바일 player_card 화면 신규 작업 시 차단
 - **분산 도메인**: **playerCard**
 
-### 결정 3 (◐): MobileHomePage / domains/mobile/ 폐기
+### 결정 3 ✅ (2026-05-09): MobileHomePage / domains/mobile/ 폐기 — **(A) 즉시 폐기 채택**
 
-- **현황**: `domains/mobile/` 전체 import 0건. `MobileHomePage.jsx` 는 placeholder ("어????????????")
-- **옵션**: (A) 즉시 폐기 (권장) / (B) 공용 승격 / (C) `domains/home/` 흡수
-- **차단성**: ◐ 모바일 리뉴얼 직접 차단 아님
-- **분산 도메인**: **mobile** (폐기 권고), **home** (흡수 후보 검토)
+- **결정**: (A) 즉시 폐기. `web/src/domains/mobile/**` 폴더 + `docs/prd/domains/mobile.md` 통째 제거
+- **사유** (Owner 진술): "도메인이 아닌 dead 더미 폴더라서 삭제, 기능이 아니다"
+- **영향**: route 영향 0 (HomeScreen 이 활성 진입). dead chain 17 파일 정리
+- **참조**: `_history.md` DEPRECATE row 2026-05-09
 
 ### 결정 4 (◐): legacy PC 도메인 (dictionary / simulate / kbo) 운명
 

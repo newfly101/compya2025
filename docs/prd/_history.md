@@ -71,6 +71,7 @@
 
 | Date | Domain | Type | Action | Files Changed | Impact | Commit | By | Notes |
 |---|---|---|---|---|---|---|---|---|
+| 2026-05-09 | mobile | DEPRECATE | `domains/mobile/` 폴더 + `MobileHomePage` 통째 폐기 + PRD 파일 제거 (Owner 결정 #3 → ✅ 즉시 폐기 채택) | `- web/src/domains/mobile/**` (17 파일: MobileHomePage.jsx + 8 컴포넌트 jsx/scss), `- docs/prd/domains/mobile.md` | route: 영향 없음 (HomeScreen 이 활성 진입), component: MobileHomePage 등 dead chain 17건, import 0건 (`fe/dead-suspects.md A`, `dead-confirmed.md 1-A`) | (대기) | manual | "도메인 아닌 dead 더미 폴더라 삭제, 기능이 아님" — Owner 명시. Part B 작성 없이 도메인 자체 제거 |
 | 2026-05-09 | _meta | INIT | PRD 작업 히스토리 추적 문서 신설 + 3개 PRD agent 에 history append 의무 추가 | `+ docs/prd/_history.md`, `~ .claude/agents/prd-ia-interactive.md`, `~ .claude/agents/prd-wireframe-generator.md`, `~ .claude/agents/prd-design-sync.md` | none (메타 문서) | (대기) | manual | 본 표는 PRD 도메인 작업 시작 전 baseline. 향후 모든 도메인 작업 누적 |
 
 ---
@@ -89,10 +90,10 @@
 - (없음)
 
 ### 최근 DEPRECATE
-- (없음)
+- 2026-05-09 — mobile 도메인 통째 폐기 (`web/src/domains/mobile/**` + `docs/prd/domains/mobile.md`). Owner 결정 #3 ✅ (A) 즉시 폐기 채택
 
 ### 최근 OWNER-DECISION
-- (없음 — `docs/prd/_overview.md § 8` 의 5건 모두 미해결 상태)
+- 2026-05-09 — 결정 #3 ✅ (A) 즉시 폐기. `domains/mobile/` 통째 제거. 잔여 4건 미결
 
 ---
 
@@ -104,7 +105,7 @@
 |---:|---|---|---|---|---|---|
 | 1 | coupon dual-write 정책 | 🔥 admin coupon 차단 | coupons | ☐ 미결 | — | runtime row 수 검증 후 결정 예정 |
 | 2 | contact ↔ discipline 컬럼 의미 | 🔥 모바일 player_card 차단 | playerCard | ☐ 미결 | — | Owner 도메인 의도 명확화 필요 |
-| 3 | MobileHomePage / domains/mobile/ 폐기 | ◐ 직접 차단 X | mobile (주), home | ☐ 미결 | — | (A) 즉시 폐기 권장 |
+| 3 | MobileHomePage / domains/mobile/ 폐기 | ◐ 직접 차단 X | mobile (주), home | ✅ 결정 | 2026-05-09 | (A) 즉시 폐기. `domains/mobile/` 폴더 + `mobile.md` PRD 통째 제거 완료 |
 | 4 | legacy PC 도메인 운명 | ◐ 정리 라운드 | dictionary, simulate, kbo | ☐ 미결 | — | 정리 라운드까지 보류 OK |
 | 5 | V2 통폐합 진입 시점 | ⚠ figma 결과 따라 | playerCard (주), coupons | ☐ 미결 | — | figma 도착 시 결정 |
 
@@ -132,7 +133,7 @@
 | dictionary | ✅ baseline | 보류 (legacy PC) | n/a | n/a | — | — |
 | simulate | ✅ baseline | 보류 (legacy PC) | n/a | n/a | — | — |
 | kbo | ✅ baseline | 보류 (legacy PC + 신규 보류) | n/a | n/a | — | — |
-| mobile | ✅ baseline | n/a (폐기 권고) | n/a | n/a | ☐ 폐기 대기 | ☐ |
+| mobile | ✅ baseline (제거됨) | n/a (폐기 완료) | n/a | n/a | ✅ 2026-05-09 | ✅ 2026-05-09 |
 
 ### 진척도 마커
 

@@ -6,7 +6,7 @@
 - **모바일 전환 진척도**: **변종** (coupons/events 표준 패턴과 거리 있음 — `mobile/` 없이 `components/` 에 직접 Screen 위치)
   - 진입점: `web/src/domains/home/components/HomeScreen.jsx` (라우트 `/`)
   - PC/모바일 분기 없음. `MobileLayout` 단일 레이아웃
-- **중복 의심**: `web/src/domains/mobile/home/pages/MobileHomePage.jsx` (placeholder "어????????????") — import 0건, 활성 진입은 HomeScreen (★ Owner 결정 #3 — 즉시 폐기 권고)
+- ~~**중복 의심**: `web/src/domains/mobile/home/pages/MobileHomePage.jsx`~~ — Owner 결정 #3 ✅ 2026-05-09 (A) 즉시 폐기 채택. `domains/mobile/` 통째 제거 완료. 활성 진입은 HomeScreen 단일 (`_history.md` DEPRECATE row 참조)
 
 ## A.2 화면 목록
 
@@ -71,12 +71,11 @@
 
 ## A.7 dead 항목 (이 도메인 안)
 
-- **MobileHomePage** (`web/src/domains/mobile/home/pages/MobileHomePage.jsx`): placeholder. import 0건 — 즉시 폐기 후보 (★ Owner 결정 #3, `dead-confirmed.md 1-A`)
+- ~~**MobileHomePage**~~ — Owner 결정 #3 ✅ 2026-05-09 폐기 완료 (`_history.md` DEPRECATE row 참조)
 
 ## A.8 ★ Owner 결정 필요 (도메인 한정)
 
-- **결정 #3** (도메인 한정): MobileHomePage / `domains/mobile/` 처리
-  - 옵션 (A) 즉시 폐기 (권장) / (B) 공용 승격 / (C) `domains/home/` 흡수
+- ~~**결정 #3** (도메인 한정): MobileHomePage / `domains/mobile/` 처리~~ ✅ 2026-05-09 (A) 즉시 폐기 채택. 본 도메인 한정 영향 0
 - **추가 모호**:
   - HomeScreen 을 `domains/home/mobile/HomeScreen.jsx` 위치로 이동해 표준 패턴 정렬할지 — Owner 결정 보류 (이동 시 진입점 영향)
   - 인기글/자유게시판 mock 영역의 BE 연결 시점 (community 도메인 BE 연결 마일스톤과 연동)
