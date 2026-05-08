@@ -7,7 +7,8 @@ import QuizSection from "@/domains/home/components/section/quiz/QuizSection.jsx"
 import NoticeSection from "@/domains/home/components/section/notice/NoticeSection.jsx";
 import { MOCK_QUIZ } from "@/domains/home/config/MOCK_QUIZ.js";
 import { MOCK_TEAM_POSTS } from "@/domains/home/config/MOCK_TEAM_POSTS.js";
-import PostSection from "@/domains/home/components/section/community/PostSection.jsx";
+import PostRow from "@/domains/community/mobile/components/postRow/PostRow.jsx";
+import BoardTagBadge from "@/domains/community/mobile/components/boardTagBadge/BoardTagBadge.jsx";
 import { MOCK_POSTS } from "@/domains/home/config/MOCK_POSTS.js";
 import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
 import CouponListHorizontal from "@/domains/coupons/mobile/containers/public/CouponListHorizontal.jsx";
@@ -15,6 +16,20 @@ import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { useCouponList } from "@/domains/coupons/mobile/hooks/useCouponList.js";
 import EventListHorizontal from "@/domains/events/mobile/containers/public/EventListHorizontal.jsx";
 import { useEventList } from "@/domains/events/mobile/hooks/useEventList.js";
+
+const HOME_PREVIEW_LIMIT = 3;
+
+// home의 mock post → community PostRow shape 변환 (badge 데이터는 그대로 통과)
+const toPostRowItem = (post) => ({
+  id: post.id,
+  title: post.title,
+  badge: post.tags?.[0]?.code ?? null,
+  author: post.authorName,
+  timeText: post.createdAt,
+  views: post.viewCount,
+  comments: post.commentCount,
+  thumbnail: null,
+});
 
 const HomeScreen = () => {
   useSetTopBar({ variant: "home" });
@@ -58,18 +73,35 @@ const HomeScreen = () => {
 
       {/* 커뮤니티 인기글 */}
       <SectionBlock
-        title={`커뮤니티 인기글`}
-        to={"/posts/hot"}
-        children={<PostSection posts={MOCK_POSTS} />}
-      />
+        title="커뮤니티 인기글"
+        to="/community?category=trending"
+      >
+        <div className={styles.postRowList}>
+          {MOCK_POSTS.slice(0, HOME_PREVIEW_LIMIT).map((p) => (
+            <PostRow key={p.id} post={toPostRowItem(p)} />
+          ))}
+        </div>
+      </SectionBlock>
 
 
-      {/* 팀 게시글 */}
+      {/* 자유게시판 — 첫 tag 라벨을 BoardTagBadge로 title 앞에 prepend */}
       <SectionBlock
-        title={`팁 게시글`}
-        to={"/posts/tip"}
-        children={<PostSection posts={MOCK_TEAM_POSTS} />}
-      />
+        title="자유게시판"
+        to="/community?category=free"
+      >
+        <div className={styles.postRowList}>
+          {MOCK_TEAM_POSTS.slice(0, HOME_PREVIEW_LIMIT).map((p) => {
+            const tag = p.tags?.[0];
+            return (
+              <PostRow
+                key={p.id}
+                post={{ ...toPostRowItem(p), badge: null }}
+                tagBadge={tag && <BoardTagBadge label={tag.name} />}
+              />
+            );
+          })}
+        </div>
+      </SectionBlock>
 
     </div>
   );

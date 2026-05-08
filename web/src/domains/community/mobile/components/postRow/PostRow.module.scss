@@ -50,6 +50,11 @@
   line-height: 1.35;
 }
 
+// title 라인 안에 inline prepend 되는 board tag(예: "투수 공략") 슬롯
+.titleTagSlot {
+  margin-right: $space-2;
+}
+
 .meta {
   @include text-micro;
   color: var(--color-text-muted);

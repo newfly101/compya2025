@@ -2,7 +2,7 @@ import CommunityBadge from "@/domains/community/mobile/components/communityBadge
 import { formatCount, getEffectiveBadge } from "@/domains/community/mobile/utils.js";
 import styles from "./PostRow.module.scss";
 
-const PostRow = ({ post, defaultBadge }) => {
+const PostRow = ({ post, defaultBadge, tagBadge }) => {
   const { title, author, timeText, views, comments, thumbnail } = post;
   const badgeKind = getEffectiveBadge(post) ?? defaultBadge ?? null;
 
@@ -15,7 +15,10 @@ const PostRow = ({ post, defaultBadge }) => {
               <CommunityBadge kind={badgeKind} />
             </span>
           )}
-          <p className={styles.title}>{title}</p>
+          <p className={styles.title}>
+            {tagBadge && <span className={styles.titleTagSlot}>{tagBadge}</span>}
+            {title}
+          </p>
         </div>
         <p className={styles.meta}>
           <span>{author}</span>

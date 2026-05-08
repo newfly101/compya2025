@@ -24,7 +24,8 @@ community/
         ├── categoryChip/CategoryChip.{jsx,module.scss}   ← 상단 카테고리 chip
         ├── postRow/PostRow.{jsx,module.scss}             ← 모든 게시글 row 공용 (notice/hot/post 모두)
         ├── hotPostCard/HotPostCard.{jsx,module.scss}     ← 메인 인기 급상승 가로 카드 전용
-        └── communityBadge/CommunityBadge.{jsx,module.scss} ← 공지/신규/인기 3종 badge
+        ├── communityBadge/CommunityBadge.{jsx,module.scss} ← 공지/신규/인기 3종 post 상태 badge
+        └── boardTagBadge/BoardTagBadge.{jsx,module.scss} ← 자유게시판 등 게시판 카테고리 tag 라벨
 ```
 
 `@/data/community/`
@@ -67,7 +68,8 @@ community/
 | `CategoryChip` | 단일 chip (선택 시 brand) | 카테고리 행 |
 | `PostRow` | 게시글 1행 — badge + title + 메타 + (옵션)썸네일 + 댓글 박스 | 메인 공지/최신 + CategoryScreen 모든 카테고리 |
 | `HotPostCard` | 가로 스크롤 카드 (썸네일 위, 타이틀/메타 아래) | 메인 인기 급상승 **전용** |
-| `CommunityBadge` | 공지/신규/인기 3종 badge | `PostRow` 안 |
+| `CommunityBadge` | 공지/신규/인기 3종 post 상태 badge | `PostRow` 안 (`badgeSlot`) |
+| `BoardTagBadge` | 게시판 카테고리 tag 라벨 (예: "투수 공략") | `PostRow.tagBadge` prop, HomeScreen 자유게시판 등 |
 
 ### 분리 원칙 (memory `feedback_component_decomposition.md` 따름)
 - **반복 렌더 + 도메인 의미가 명확한 것만** 별도 컴포넌트로 분리
@@ -115,7 +117,8 @@ community/
 ### Badge 시스템
 - **`PinnedBadge`(글로벌) 사용**: 공지(`important`/노랑) / 인기(`mustread`/빨강)
 - **`CommunityBadge`가 신규만 자체 styled span 처리** — 색을 도메인 로컬 토큰으로 override
-- `PostRow`에서 badge는 `width: 40px` 고정 wrapper(`.badgeSlot`)에 감싸서 모든 행이 같은 위치로 정렬되도록 함 — 라벨 길이 차이로 leading text가 어긋나지 않음
+- `PostRow`에서 status badge(공지/신규/인기)는 `width: 40px` 고정 wrapper(`.badgeSlot`)에 감싸서 모든 행이 같은 위치로 정렬되도록 함 — 라벨 길이 차이로 leading text가 어긋나지 않음
+- **`BoardTagBadge`** — 게시판 카테고리 tag 라벨용 (자유게시판 등). status badge와 의미가 달라 별도 컴포넌트. `PostRow`의 `tagBadge` prop으로 주입되며 `.badgeSlot`이 아닌 title 안 inline으로 렌더(가변 폭)
 
 ### 폼 패턴
 - 행 카드: `padding: $space-2 $space-3` + `border-radius: $radius-sm` + `background: var(--color-bg-overlay)` + `border: 1px solid var(--color-border)`
