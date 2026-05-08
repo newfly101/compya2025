@@ -5,7 +5,9 @@
       "mcp__figma-dev-mode__get_design_context",
       "mcp__figma-dev-mode__get_screenshot",
       "PowerShell(Remove-Item *)",
-      "PowerShell(npm *)"
+      "PowerShell(npm *)",
+      "mcp__figma-dev-mode__get_metadata",
+      "Bash(claude mcp *)"
     ]
   }
 }
