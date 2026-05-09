@@ -1,12 +1,12 @@
 import React, { lazy } from "react";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import AuthCallback from "@/domains/authentication/callback/AuthCallBack.jsx";
-const HomePage = lazy(() => import("@/app/page/HomePage.jsx"));
-const CouponPage = lazy(() => import("@/app/page/CouponPage.jsx"));
-const EventPage = lazy(() => import("@/app/page/EventPage.jsx"));
-const NoticePage = lazy(() => import("@/app/page/NoticePage.jsx"));
-const NoticeDetailPage = lazy(() => import("@/app/page/NoticeDetailPage.jsx"));
-const HistoryModePage = lazy(() => import("@/app/page/HistoryModePage.jsx"));
+const HomePage = lazy(() => import("@/domains/home/components/HomeScreen.jsx"));
+const CouponPage = lazy(() => import("@/domains/coupons/mobile/CouponScreen.jsx"));
+const EventPage = lazy(() => import("@/domains/events/mobile/EventScreen.jsx"));
+const NoticePage = lazy(() => import("@/domains/notices/mobile/NoticeScreen.jsx"));
+const NoticeDetailPage = lazy(() => import("@/domains/notices/mobile/NoticeDetailScreen.jsx"));
+const HistoryModePage = lazy(() => import("@/domains/historyMode/mobile/HistoryModeScreen.jsx"));
 // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
 // CommunityPage 는 community IA 재개 시 도메인 mobile/feature 흡수 후 재도입
 
