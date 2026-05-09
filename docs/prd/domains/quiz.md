@@ -187,3 +187,16 @@
 - **v2 (사용자 4 라운드 대화 확정)**: P0×2 = 2 기능. admin / 신규 기능 / 도메인 한정 Owner 결정 보류 항목 모두 DROP
 - **DROP 사유**: 모바일 리뉴얼 phase 0 의 quiz scope 는 HomeScreen QuizSection R9 fix 단 1건. admin 영역 / 운영 정책은 Phase 3 admin 정리 라운드에서 별도 PRD 라운드 진행
 - **figma node 확정**: v1 미정 → v2 `node-id=2-34`
+
+## B.9 admin UI legacy 폐기 (2026-05-09)
+
+> ⚠ 직전 코드 작업 라운드 commit `6519288` 에서 admin path 정렬 / visible 컬럼/UI 제거 / form title input 제거 등 admin 변경 진행 → **본 라운드 (2026-05-09) UI 통째 폐기**.
+
+- **사용자 정책**: "src/domains/{domain}/ 내 admin 관련 page UI 전부 삭제. UI 는 신규 기획을 통해 디자인. API 는 보존"
+- **폐기 (UI 레이어)**:
+  - `web/src/domains/quiz/feature/admin/**` 통째 삭제 (pages/AdminQuizPage.jsx + components/AdminQuizTable.jsx + components/{table,modal}/** + hooks/useAdminQuizTable.js + useQuizForm.js + useQuizCreate.js + useQuizEdit.js = 12 파일)
+  - `web/src/domains/quiz/config/quizTable.config.js` 삭제 (UI 전용)
+  - `AdminRoutes.jsx` 의 `/admin/content/quiz` 라우트 + lazy import 주석
+- **보존 (데이터 레이어)**: `store/admin/{api, endpoints, thunks, dto, slices}` 미터치 (admin endpoint 호출 로직 그대로)
+- **신규 기획 후 재구현**: 어느 도메인 우선 진행할지 사용자 결정 필요 (admin.md TODO 참조). admin path 정렬 / visible 토글 정책 / form 필드 등 신규 기획에서 재정의
+- **모바일 quiz scope (B.1) 영향**: 0건 (모바일 quiz 는 HomeScreen QuizSection 1개 카드만 — admin 폐기 무관)

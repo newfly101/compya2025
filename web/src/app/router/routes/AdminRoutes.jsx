@@ -7,13 +7,16 @@ import AuthGuard from "@/app/router/guards/AuthGuard.jsx";
 // const AdminUserManagePage = lazy(() => import("@/domains/admin/pages/user/AdminUserManagePage.jsx"));
 // const AdminUserDetailPage = lazy(() => import("@/domains/admin/pages/user/AdminUserDetailPage.jsx"));
 // const AdminEventPage = lazy(() => import("@/domains/events/feature/admin/pages/AdminEventPage.jsx"));
-const AdminNoticeManagePage = lazy(() => import("@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx"));
+// admin UI legacy 폐기 — 2026-05-09 (UI 신규 기획 후 src/domains/{domain}/feature/admin/ 패턴 재구현. API store 보존. docs/prd/domains/admin.md TODO 참조)
+// const AdminNoticeManagePage = lazy(() => import("@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx"));
 // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
 // const AdminCommunityPage = lazy(() => import("@/domains/community/page/admin/AdminCommunityPage.jsx"));
-const AdminCouponListPage = lazy(() => import("@/domains/coupons/feature/admin/pages/AdminCouponListPage.jsx"));
+// admin UI legacy 폐기 — 2026-05-09 (UI 신규 기획 후 src/domains/{domain}/feature/admin/ 패턴 재구현. API store 보존. docs/prd/domains/admin.md TODO 참조)
+// const AdminCouponListPage = lazy(() => import("@/domains/coupons/feature/admin/pages/AdminCouponListPage.jsx"));
 // playerCard 도메인 폐기 (legacy PC) — 2026-05-09 (사용자 특화 컨텐츠 240명 user 기반 신규 기획 IA 후 admin 재구현. docs/prd/domains/playerCard.md TODO 참조)
 // const AdminPlayerPage = lazy(() => import("@/domains/playerCard/feature/admin/pages/AdminPlayerPage.jsx"));
-const AdminQuizPage = lazy(() => import("@/domains/quiz/feature/admin/pages/AdminQuizPage.jsx"));
+// admin UI legacy 폐기 — 2026-05-09 (UI 신규 기획 후 src/domains/{domain}/feature/admin/ 패턴 재구현. API store 보존. docs/prd/domains/admin.md TODO 참조)
+// const AdminQuizPage = lazy(() => import("@/domains/quiz/feature/admin/pages/AdminQuizPage.jsx"));
 
 export const AdminRoutes = [
   {
@@ -29,11 +32,14 @@ export const AdminRoutes = [
           {
             path: "content", children: [
               // { path: "event", element: <AdminEventPage />, handle: { title: "컴프야펀 | 어드민 | 이벤트 관리" } },
-              { path: "notice", element: <AdminNoticeManagePage />, handle: { title: "컴프야펀 | 어드민 | 공지 관리" } },
-              { path: "coupon", element: <AdminCouponListPage />, handle: { title: "컴프야펀 | 어드민 | 쿠폰 관리" } },
+              // admin UI legacy 폐기 — 2026-05-09 (UI 신규 기획 후 src/domains/{domain}/feature/admin/ 패턴 재구현. API store 보존. docs/prd/domains/admin.md TODO 참조)
+              // { path: "notice", element: <AdminNoticeManagePage />, handle: { title: "컴프야펀 | 어드민 | 공지 관리" } },
+              // admin UI legacy 폐기 — 2026-05-09 (UI 신규 기획 후 src/domains/{domain}/feature/admin/ 패턴 재구현. API store 보존. docs/prd/domains/admin.md TODO 참조)
+              // { path: "coupon", element: <AdminCouponListPage />, handle: { title: "컴프야펀 | 어드민 | 쿠폰 관리" } },
               // playerCard 도메인 폐기 (legacy PC) — 2026-05-09 (사용자 특화 컨텐츠 240명 user 기반 신규 기획 IA 후 admin 재구현. docs/prd/domains/playerCard.md TODO 참조)
               // { path: "player", element: <AdminPlayerPage />, handle: { title: "컴프야펀 | 어드민 | 선수 카드 관리" } },
-              { path: "quiz", element: <AdminQuizPage />, handle: { title: "컴프야펀 | 어드민 | 퀴즈 관리" } },
+              // admin UI legacy 폐기 — 2026-05-09 (UI 신규 기획 후 src/domains/{domain}/feature/admin/ 패턴 재구현. API store 보존. docs/prd/domains/admin.md TODO 참조)
+              // { path: "quiz", element: <AdminQuizPage />, handle: { title: "컴프야펀 | 어드민 | 퀴즈 관리" } },
             ],
           },
           // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)

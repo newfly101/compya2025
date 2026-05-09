@@ -131,16 +131,22 @@
 
 ### T2 — admin 라우트 활성화 + AdminCouponListPage 컴포넌트 신규 작성 (P0)
 
-- **사용자 시나리오**: 시나리오 2 전체
-- **acceptance criteria**:
+- ⚠ **상태 (2026-05-09)**: 직전 라운드 commit `05723ae` 에서 P0 완료 (라우트 주석 해제 + AdminCouponListPage + 12 파일 + couponTable.config.js 신규 작성) → **본 라운드 (2026-05-09) UI 폐기** (사용자 정책: "src/domains/{domain}/ 내 admin 관련 page UI 전부 삭제. UI 는 신규 기획을 통해 디자인. API 는 보존"). 폐기 결과:
+  - `web/src/domains/coupons/feature/admin/**` 통째 삭제 (pages/AdminCouponListPage.jsx + components/AdminCouponTable.jsx + components/{table,modal}/** + hooks/** = 12 파일)
+  - `web/src/domains/coupons/config/couponTable.config.js` 삭제 (UI 전용)
+  - `AdminRoutes.jsx` 의 `/admin/content/coupon` 라우트 + lazy import 다시 주석
+  - **보존 (데이터 레이어)**: `store/admin/{api, endpoints, thunks, dto, slices}` 미터치
+- **신규 기획 후 재구현**: ⚠ **UI 신규 기획 라운드** 진행 후 `src/domains/coupons/feature/admin/` 패턴으로 재구현 — 어느 도메인 우선 진행할지 사용자 결정 필요 (admin.md TODO 참조)
+- **사용자 시나리오** (재구현 시 참고): 시나리오 2 전체
+- **acceptance criteria** (재구현 시 참고):
   - `AdminRoutes.jsx` 의 `/admin/content/coupon` 라우트 주석 해제
-  - `AdminCouponListPage.jsx` 신규 작성 (현재 파일 부재)
+  - `AdminCouponListPage.jsx` 신규 작성
   - 입력 필드: `couponCode` / `title` / `detail` / `expireAt` / `visible` — 추가 필드 없음
   - admin URL 가드 `/api/admin/**` hasRole(ADMIN) 으로 자연 보호 (`A.5`)
-- **의존 API/테이블**: GET/POST/PATCH `/api/admin/coupons*` (`A.3`, 4건 매칭) → `site_coupons`
-- **우선순위**: **P0** (모바일 리뉴얼 일환)
-- **신규/기존**: 라우트 주석 해제 (기존) + AdminCouponListPage 컴포넌트 신규 작성
-- **figma node**: 미정 — wireframe 단계 신규 정의
+- **의존 API/테이블**: GET/POST/PATCH `/api/admin/coupons*` (`A.3`, 4건 매칭) → `site_coupons` — store/admin/** 에 보존됨
+- **우선순위**: **P0** (모바일 리뉴얼 일환) — 단 UI 신규 기획 의존
+- **신규/기존**: 신규 기획 후 재작성
+- **figma node**: 미정 — 신규 기획 단계에서 정의
 
 ### T3 — admin 4 capability 정합 검증 (P0)
 
