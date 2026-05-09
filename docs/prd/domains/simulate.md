@@ -1,6 +1,42 @@
 # 도메인: simulate
 
-> ★ Legacy PC 보류 (`fe-map.md ★ Owner 확정 #1`). 라우트 주석 처리 = 운영 미사용. **삭제 금지** (코드 기능 참고용 보존).
+> ★ Legacy PC 폐기 — 2026-05-09 (사용자 특화 컨텐츠 240명 user 기반 신규 기획 IA 후 모바일 재구현 예정). FE 폴더 통째 삭제 + 외부 호출 주석. BE / DB 보류 (운영 데이터 보존). 아래 § TODO 참조.
+
+## TODO (2026-05-09 — 기획 IA 작업 우선)
+
+> 사용자 정책 (2026-05-09): "simulate 는 legacy 만 남음. 사용자 특화 컨텐츠 (240명 user 기반) 로 변경 예정. 폴더 + 연관 파일 삭제 → 기획 IA 후 다시 코드 개발 진행"
+
+### 즉시 (P0)
+
+- [ ] **기획 IA 작업 재개** — `prd-ia-interactive` sub-agent 호출 (`/prd-pipeline simulate`)
+  - 사용자 특화 컨텐츠 scope 재정의 (240명 user 데이터 활용 컨셉)
+  - 모바일 simulate scope 재정의 (시뮬레이션 흐름 / 입력 / 결과 표시 등)
+  - playerCard 도메인과 통합 검토 (둘 다 사용자 특화 컨텐츠 후보)
+  - admin / DB / BE 보존 정책 검토 (현재 BE `domain.player.*` + `domain.skill.*` 의존 잔존)
+
+### IA 완료 후 코드 개발 (P1)
+
+- [ ] simulate.md Part B v1 확정사항 코드 반영
+- [ ] `web/src/domains/simulate/**` 모바일 표준 패턴 신규 작성
+- [ ] 외부 호출 (라우트 / store reducer / 메뉴) 주석 해제 + 동작 확인
+
+### 본 라운드 (2026-05-09) 처리 결과
+
+- `web/src/domains/simulate/**` 폴더 통째 폐기 (27 파일: page 3 + feature 13 + store 4 + scss 4 + hooks 3)
+- 외부 호출 주석 처리:
+  - `web/src/app/store/store.js` (`simulateReducer` import + reducer 등록 주석)
+  - `web/src/app/router/routes/PublicRoutes.jsx` (`SkillSimulator` / `PitcherSkillChange` / `HitterSkillChange` lazy import 주석 — 라우트 등록은 이미 주석 dead 상태 유지)
+- 기획 IA 미진행 (P0 후속)
+
+### 보존 항목 (의도)
+
+- DB: `player_skills`, `skill_*`, `player_card*`, `player_legend*`, `teams`, `fun_player_card*`, `fun_teams` — 운영 데이터 보존
+- BE 의존성 있는 클래스 보류:
+  - `domain.player.entity.PlayerSkillsEntity` 가 `domain.skill.repository.PlayerSkillsRepository` / `domain.skill.repository.mapper.PlayerSkillsMapper` / `domain.skill.service.PlayerSkillsServiceImpl` / `domain.skill.service.support.SkillItemConvertor` 에서 import — `domain/player/**` BE 통째 삭제 시 4 파일 컴파일 실패 → 본 라운드 BE 미터치
+  - `domain/fun/playerCard/**` (V2 빈 컨트롤러) — 외부 의존성 없으나 BE 일괄 정리 라운드까지 보류
+  - `kbocrol/**` 미터치 (별도 시스템)
+
+---
 
 ## A.1 현재 상태
 

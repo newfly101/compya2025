@@ -1,6 +1,42 @@
 # 도메인: playerCard
 
-> ★ **차단 위험 도메인** — V2 작동 불능 (빈 DTO + namespace mismatch + fun_teams FK 위반 위험). 모바일 player_card 화면 신규 작업 시 즉시 차단.
+> ★ Legacy PC 폐기 — 2026-05-09 (사용자 특화 컨텐츠 240명 user 기반 신규 기획 IA 후 admin / 모바일 재구현 예정). FE 폴더 통째 삭제 + admin 라우트 + reducer 주석. BE / DB 보류 (운영 데이터 보존). 아래 § TODO 참조.
+
+## TODO (2026-05-09 — 기획 IA 작업 우선)
+
+> 사용자 정책 (2026-05-09): "playerCard 는 legacy 만 남음. 사용자 특화 컨텐츠 (240명 user 기반) 로 변경 예정. 폴더 + 연관 파일 삭제 → 기획 IA 후 다시 코드 개발 진행"
+
+### 즉시 (P0)
+
+- [ ] **기획 IA 작업 재개** — `prd-ia-interactive` sub-agent 호출 (`/prd-pipeline playerCard`)
+  - 사용자 특화 컨텐츠 scope 재정의 (240명 user 데이터 활용 컨셉)
+  - simulate 도메인과 통합 검토 (둘 다 사용자 특화 컨텐츠 후보)
+  - V2 `fun_player_card*` schema 활용 검토 (이미 운영 중인 V1 `player_card*` / `player_legend*` 와 정합)
+  - admin player 페이지 신규 기획 (Owner 결정 #2: contact ↔ discipline 컬럼 의미 / 결정 #5: V2 통폐합 진입 시점 동시 해소 필요)
+
+### IA 완료 후 코드 개발 (P1)
+
+- [ ] playerCard.md Part B v1 확정사항 코드 반영
+- [ ] `web/src/domains/playerCard/**` 모바일 표준 패턴 신규 작성
+- [ ] admin 라우트 (`/admin/content/player`) + reducer 주석 해제 + 동작 확인
+
+### 본 라운드 (2026-05-09) 처리 결과
+
+- `web/src/domains/playerCard/**` 폴더 통째 폐기 (25 파일: feature/admin/pages 1 + feature/admin/components 8 + feature/admin/hooks 5 + store 5 + config 1 + utils 1 + scss 4)
+- 외부 호출 주석 처리:
+  - `web/src/app/router/routes/AdminRoutes.jsx` (`AdminPlayerPage` lazy import + `/admin/content/player` active 라우트 주석)
+  - `web/src/app/store/store.js` (`playerCardReducer` import + reducer 등록 주석)
+
+### 보존 항목 (의도)
+
+- DB: `player_card`, `player_card_hitter_attributes`, `player_card_pitcher_attributes`, `player_legend*` (4 테이블), `teams`, `fun_player_card*` (5 테이블), `fun_teams` — 운영 데이터 보존 (재도입 시 schema 활용)
+- BE 의존성 있는 클래스 보류 (BE 통째 미터치):
+  - V1 `domain/player/**` 전체 (Controller·Service·Repository·Mapper·Entity·DTO) — `domain.skill.*` 4 파일이 `PlayerSkillsEntity` import 중 (의존성 검증 결과 BE 삭제 unsafe)
+  - V2 `domain/fun/playerCard/**` (빈 컨트롤러 + 빈 DTO + namespace mismatch mapper) — 외부 의존성 없으나 본 FE 정리 라운드 scope 외 (BE 일괄 정리 라운드 후속)
+  - `mapper/player/*.xml`, `mapper/fun/playerCard/*.xml` 미터치
+  - SecurityConfig: `/api/admin/**` ADMIN 가드 일괄 처리 (도메인별 path 가드 없음 → 정리 항목 없음)
+
+---
 
 ## A.1 현재 상태
 

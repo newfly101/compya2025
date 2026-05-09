@@ -9,9 +9,11 @@ const AdminPageLayout = lazy(() => import("@/global/layout/adminPageLayout/Admin
 const AdminContentPage = lazy(() => import("@/global/layout/adminPageLayout/content/AdminContentPage.jsx"));
 // const AdminEventPage = lazy(() => import("@/domains/events/feature/admin/pages/AdminEventPage.jsx"));
 const AdminNoticeManagePage = lazy(() => import("@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx"));
-const AdminCommunityPage = lazy(() => import("@/domains/community/page/admin/AdminCommunityPage.jsx"));
+// community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
+// const AdminCommunityPage = lazy(() => import("@/domains/community/page/admin/AdminCommunityPage.jsx"));
 const AdminCouponListPage = lazy(() => import("@/domains/coupons/feature/admin/pages/AdminCouponListPage.jsx"));
-const AdminPlayerPage = lazy(() => import("@/domains/playerCard/feature/admin/pages/AdminPlayerPage.jsx"));
+// playerCard 도메인 폐기 (legacy PC) — 2026-05-09 (사용자 특화 컨텐츠 240명 user 기반 신규 기획 IA 후 admin 재구현. docs/prd/domains/playerCard.md TODO 참조)
+// const AdminPlayerPage = lazy(() => import("@/domains/playerCard/feature/admin/pages/AdminPlayerPage.jsx"));
 const AdminQuizPage = lazy(() => import("@/domains/quiz/feature/admin/pages/AdminQuizPage.jsx"));
 
 export const AdminRoutes = [
@@ -31,11 +33,13 @@ export const AdminRoutes = [
               // { path: "event", element: <AdminEventPage />, handle: { title: "컴프야펀 | 어드민 | 이벤트 관리" } },
               { path: "notice", element: <AdminNoticeManagePage />, handle: { title: "컴프야펀 | 어드민 | 공지 관리" } },
               { path: "coupon", element: <AdminCouponListPage />, handle: { title: "컴프야펀 | 어드민 | 쿠폰 관리" } },
-              { path: "player", element: <AdminPlayerPage />, handle: { title: "컴프야펀 | 어드민 | 선수 카드 관리" } },
+              // playerCard 도메인 폐기 (legacy PC) — 2026-05-09 (사용자 특화 컨텐츠 240명 user 기반 신규 기획 IA 후 admin 재구현. docs/prd/domains/playerCard.md TODO 참조)
+              // { path: "player", element: <AdminPlayerPage />, handle: { title: "컴프야펀 | 어드민 | 선수 카드 관리" } },
               { path: "quiz", element: <AdminQuizPage />, handle: { title: "컴프야펀 | 어드민 | 퀴즈 관리" } },
             ],
           },
-          { path: "community", element: <AdminCommunityPage />, handle: { title: "컴프야펀 | 어드민 | 커뮤니티 관리" } },
+          // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
+          // { path: "community", element: <AdminCommunityPage />, handle: { title: "컴프야펀 | 어드민 | 커뮤니티 관리" } },
 
         ],
       },
