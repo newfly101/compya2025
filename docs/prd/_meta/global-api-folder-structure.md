@@ -294,21 +294,55 @@ web/src/infra/
 
 ---
 
-## 6. 향후 추가될 전역 API 후보 (사용자 확인용)
+## 6. 향후 추가될 전역 API 후보 (Q6 결정)
 
-현 코드베이스에서 식별한 후보 + 일반적 횡단 API:
+### 6.1 결정 배경
 
-| 후보 | 위치 (옵션 C 기준) | 현 상태 | 우선순위 |
-|---|---|---|---|
-| **uploads** | `infra/api/uploads/` | ✅ 존재 (`src/infra/uploads/`) — 이전 대상 | P0 (본 제안 핵심) |
-| **analytics** | `infra/api/analytics/` 또는 별도 | ✅ 존재 (`src/app/analytics/`) — 위치 부적절 가능 | P0 (본 제안과 동시 정리 권고) |
-| **http client** | `infra/http/` | ✅ 존재 (`src/app/store/APIConfig.js`) — 위치 부적절 | P0 (본 제안과 동시 정리 권고) |
-| **runtime config / env** | `infra/config/` | 부분 존재 (`web/public/runtime-config.js` + 하드코딩) | P1 (env 화 결정 시) |
-| **health check** | `infra/api/health/` | 도메인 종속 (authentication 의 `fetchHealthCheck`) | P2 (현재 도메인 책임 — 이전 불요) |
-| **file utilities** | `infra/api/files/` | 미존재 — 향후 download / blob URL / 파일 변환 필요 시 | P2 (요구 발생 시) |
-| **device info** | `infra/api/device/` | 미존재 — 모바일 / desktop / OS 분기 hooks 필요 시 | P2 (요구 발생 시) |
-| **settings / config fetch** | `infra/api/settings/` | 미존재 — 글로벌 BE 설정 fetch 필요 시 | P2 (요구 발생 시) |
-| **notifications / push** | `infra/api/notifications/` | 미존재 | P3 (기획 시) |
+옵션 C (commit `ee57758` 채택, `fa52ef1` 적용 — `infra/api/uploads/` + `infra/http/client.js` 마이그) + global 재구조 1차 (commit `fdf8ef2` — A 18 항목 폐기 + applyAsyncHandlers `app/store/utils/` 이전) 후 상태 기준.
+
+storageCrypto (`global/utils/crypto/storageCrypto.js`) 는 `fdf8ef2` 에서 dead 폐기 — `infra/storage/` 후보 자동 소멸.
+
+### 6.2 후보 표 (확정)
+
+| 후보 | 위치 (옵션 C) | 현 상태 | 우선순위 | 도입 시점 추정 |
+|---|---|---|---|---|
+| **uploads** | `infra/api/uploads/` | ✅ 적용 (commit `fa52ef1`) | **완료 (P0)** | — |
+| **http client** | `infra/http/client.js` | ✅ 적용 (commit `fa52ef1`) | **완료 (P0)** | — |
+| **analytics** | `infra/analytics/` (api 가 아닌 sibling) | ⚠ 현 `app/analytics/` — FE 계층 권고 1 이전 대기 | **P1 (대기)** | FE 계층 권고 1·3·4·6·7 라운드 (2026-05-09) 내 권고 1 commit |
+| **file utilities** (download / blob URL) | `infra/api/files/` | ❌ 미존재 — 사용처 grep `URL.createObjectURL` / `saveAs` / `blob` 모두 0건 (2026-05-09 검증) | **P2 (보류)** | 요구 발생 시 (admin export / report download 기획 시) |
+| **settings / config fetch** | `infra/api/settings/` | ❌ 미존재 — runtime-config 만 `web/public/runtime-config.js` (하드코딩 + VITE_API_BASE_URL 통합 완료) | **P2 (보류)** | 글로벌 BE 설정 fetch 요구 발생 시 (예: feature flag, A/B test, maintenance banner) |
+| **device info** | `infra/api/device/` | ❌ 미존재 — 모바일 단일 진입 (`MobileLayout`) 라 분기 불요 | **P3 (보류)** | desktop 재진입 기획 시 (현 모바일 only 정책에서는 불요) |
+| **auth (token)** | `infra/auth/` 또는 도메인 보존 | ⚠ 현 cookie-based (`withCredentials: true` in `infra/http/client.js:11`) — token 직접 관리 코드 없음. `sessionStorage` 는 `redirectPath` 만 사용 (3 파일: `AuthCallBack.jsx`, `useAuthentication.js`, `AuthGuard.jsx`) | **P3 (보류 — 도메인 유지)** | BE 정책 변경 시 (cookie → header bearer 전환) — 현 정책 유지 시 도메인 영역 유지 |
+| **runtime config / env** | `infra/config/` | ✅ 부분 적용 (`infra/http/client.js:3` 의 `import.meta.env.VITE_API_BASE_URL` 통합) | **P3 (현 위치 유지)** | env 추가 항목 다수화 시 별도 모듈 분리 검토 |
+| **health check** | (도메인 유지) | 도메인 종속 (`authentication` 의 `requestUserHealthCheck`) | **유지 (이전 불요)** | — |
+| **storageCrypto (sessionStorage AES)** | (폐기) | ❌ 폐기 (commit `fdf8ef2` — dictionary/simulate 도메인 폐기 후 dead) | **폐기 완료** | — |
+| **notifications / push** | `infra/api/notifications/` | ❌ 미존재 | **P3 (보류)** | 기획 시 |
+
+### 6.3 우선순위 정의
+
+- **완료 (P0)**: 옵션 C 채택 라운드 (`fa52ef1`) 에서 이미 처리됨
+- **P1 (대기)**: 본 라운드 또는 직후 라운드 (2026-05-09 ~ 단기) 내 처리
+- **P2 (보류)**: 요구 발생 시 도입 — 코드베이스 진입 트리거 명시 (예: download 기획, settings fetch 기획)
+- **P3 (보류 — 장기)**: BE 정책 변경 또는 큰 기획 변동 시 재검토 (예: desktop 재진입, push notification 기획, cookie → bearer 전환)
+
+### 6.4 신규 모듈 도입 절차
+
+신규 후보가 P2 → P1 / P1 → 도입 으로 격상 시:
+
+1. `docs/specs/fe/module-conventions.md` § 2.1 (`infra/api/{moduleName}/`) 표준 5 파일 layout 따름
+2. 본 표 (§ 6.2) 의 우선순위 / 도입 시점 갱신
+3. `_history.md` MIGRATE 또는 INIT row append
+4. 신규 모듈 README 옵션 (활성 도메인 / 신규 인프라 모듈은 권장)
+
+### 6.5 위치 결정 규칙 (재확인)
+
+`docs/specs/fe/module-conventions.md` § 5 cite:
+
+- `infra/`: 외부 통신 + 도메인 횡단 (≥ 2 도메인)
+- `domains/{domain}/`: 도메인 단일 / 도메인 의미 단위
+- `global/`: 순수 / UI / 스타일 횡단
+
+> auth (token / session) 가 `infra/auth/` 가 아닌 `domains/authentication/` 에 유지되는 사유: 현 cookie-based + redirectPath 만 sessionStorage 사용 → authentication 도메인 단일 의미 (§ 5.2 기준 2: 도메인 의미 단위)
 
 ---
 
