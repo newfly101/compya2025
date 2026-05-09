@@ -108,3 +108,40 @@
 ## B.4 KPI / 성공지표 (보류)
 
 ## B.5 디자인 / Figma 참조 (보류)
+
+---
+
+## TODO (2026-05-09 — 기획 IA 작업 우선)
+
+> 사용자 정책 (2026-05-09): "dictionary 는 legacy 로만 남아있음. 디자인이 PC 기준이라 폴더 통째 삭제. 기획 IA 후 다시 코드 개발 진행"
+
+### 즉시 (P0)
+
+- [ ] **기획 IA 작업 재개** — `prd-ia-interactive` sub-agent 호출 (`/prd-pipeline dictionary`)
+  - 모바일 dictionary scope 재정의 (선수 / 코치 / 팀 / 스킬 사전 등 어떤 컨텐츠가 모바일에 노출될지)
+  - BE 보존 정책 검토: V1 `player_skills` / `skill_score_config` / `skill_pitcher_grade_stat` 테이블은 보류 유지 (`_overview.md § 1.3`). 모바일 재도입 시 schema 활용 가능
+  - admin dictionary scope 분리 결정
+
+### IA 완료 후 코드 개발 (P1)
+
+- [ ] dictionary.md Part B v1 확정사항 코드 반영 (FE / BE / mapper / SQL)
+- [ ] `src/domains/dictionary/**` 모바일 표준 패턴 신규 작성 (본 라운드 폐기된 PC 디자인 대체)
+- [ ] 외부 호출 (라우트 / 메뉴 / 컴포넌트 등) 주석 해제 + 동작 확인
+
+### 본 라운드 (2026-05-09) 처리 결과
+
+- `web/src/domains/dictionary/**` 폴더 통째 폐기 (35 파일 — PC legacy 디자인)
+- 외부 호출 주석 처리 (실제 주석 처리한 파일):
+  - `web/src/app/store/store.js` — `dictionaryReducer` import + reducer 등록 주석
+  - `web/src/app/router/routes/PublicRoutes.jsx` — `DictionaryHome` / `Dictionary` lazy import 주석 (route 등록은 이전 라운드부터 이미 주석 상태 — `commit c2955b7` 보고)
+  - `web/src/app/wrapper/parts/hooks/useHeaderNav.js` — `/dictionary` 헤더 메뉴 항목 주석
+  - `web/src/domains/simulate/feature/hooks/usePitcherSkillChange.js` — `requestPlayerSkillSet` import + dispatch + `state.dictionary` selector 주석 (simulate 도 PC legacy)
+  - `web/src/domains/simulate/feature/hooks/useHitterSkillChange.js` — 동일 (PITCHER → HITTER)
+- 모바일 활성 도메인 영향 0건 (home / coupons / events / notices / quiz / historyMode / profile / authentication 모두 dictionary 미참조 grep 검증)
+- 기획 IA 미진행 (P0 후속)
+
+### 보존 항목 (의도)
+
+- BE: `domain/skill/SkillController` (`/api/skills/{target}`, `/api/skills/coach`, `/api/skills/score-config`) — 모바일 재도입 시 BE 활용 가능
+- DB: `player_skills`, `skill_score_config`, `skill_pitcher_grade_stat`, `coach`, `coach_skill_buff`, `coach_skill_condition` — 운영 데이터 보존
+- BE 단독 도메인 `domain/skill/coach/*` (`GET /api/skills/coach`) — 본 라운드 무관 (FE 호출 0건)

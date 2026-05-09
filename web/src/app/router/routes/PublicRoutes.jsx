@@ -7,20 +7,23 @@ const EventPage = lazy(() => import("@/app/page/EventPage.jsx"));
 const NoticePage = lazy(() => import("@/app/page/NoticePage.jsx"));
 const NoticeDetailPage = lazy(() => import("@/app/page/NoticeDetailPage.jsx"));
 const HistoryModePage = lazy(() => import("@/app/page/HistoryModePage.jsx"));
-const CommunityPage = lazy(() => import("@/app/page/CommunityPage.jsx"));
+// community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
+// const CommunityPage = lazy(() => import("@/app/page/CommunityPage.jsx"));
 
 // LEGACY kbo 도메인 잠정 보류 — 2026-05-09 (frontend kbo 화면 폐기. BE API 미구현 / DB 는 kbocrol 운영)
 // const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
 // const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
 
 
-const SkillSimulator = lazy(() => import("@/domains/simulate/page/SkillSimulator.jsx"));
-const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
-const HitterSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
+// simulate 도메인 폐기 (legacy PC) — 2026-05-09 (사용자 특화 컨텐츠 240명 user 기반 신규 기획 IA 후 모바일 재구현. docs/prd/domains/simulate.md TODO 참조)
+// const SkillSimulator = lazy(() => import("@/domains/simulate/page/SkillSimulator.jsx"));
+// const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
+// const HitterSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
 const PrivacyPolicy = lazy(() => import("@/app/page/legal/PrivacyPolicy.jsx"));
 const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
-const DictionaryHome = lazy(() => import("@/domains/dictionary/page/DictionaryHomePage.jsx"));
-const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.jsx"));
+// dictionary 도메인 폐기 (legacy PC) — 2026-05-09 (기획 IA 후 모바일 재구현. docs/prd/domains/dictionary.md TODO 참조)
+// const DictionaryHome = lazy(() => import("@/domains/dictionary/page/DictionaryHomePage.jsx"));
+// const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.jsx"));
 
 
 export const PublicRoutes = [
@@ -31,7 +34,8 @@ export const PublicRoutes = [
   { path: ROUTE_META.NOTICES.path, element: <NoticePage />, handle: ROUTE_META.NOTICES.title },
   { path: ROUTE_META.NOTICE_DETAILS.path, element: <NoticeDetailPage />, handle: ROUTE_META.NOTICE_DETAILS },
   { path: ROUTE_META.HISTORY_MODE.path, element: <HistoryModePage />, handle: ROUTE_META.HISTORY_MODE.title},
-  { path: ROUTE_META.COMMUNITY.path, element: <CommunityPage />, handle: ROUTE_META.COMMUNITY},
+  // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
+  // { path: ROUTE_META.COMMUNITY.path, element: <CommunityPage />, handle: ROUTE_META.COMMUNITY},
 
   // {
   //   path: "notice",

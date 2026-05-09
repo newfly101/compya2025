@@ -5,7 +5,8 @@ export const useHeaderNav = (isAuthenticated, authority) => {
     { to: "/notice/coupons", label: "쿠폰 코드" },
     { to: "/notice", label: "공지사항" },
     { to: "/community", label: "커뮤니티" },
-    { to: "/dictionary", label: "📌추천 백과사전" },
+    // dictionary 도메인 폐기 (legacy PC) — 2026-05-09 (기획 IA 후 모바일 재구현. docs/prd/domains/dictionary.md TODO 참조)
+    // { to: "/dictionary", label: "📌추천 백과사전" },
   ];
 
   if (isAuthenticated) {
