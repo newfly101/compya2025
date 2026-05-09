@@ -1,11 +1,11 @@
 ---
 name: planner-edge-cases
-description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-spec + api-spec 확정 후 호출. 입력 유효성 / 권한 / 동시성 / 외부 의존 실패 / 데이터 부재 등 분류. 산출물 docs/plan/{name}/edge-cases.md.
+description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-spec + endpoint-spec-draft 확정 후 호출. 입력 유효성 / 권한 / 동시성 / 외부 의존 실패 / 데이터 부재 등 분류. 산출물 docs/plan/{name}/edge-cases.md.
 ---
 
 # Skill: planner-edge-cases
 
-10년차 기획자 시점에서 **예외 케이스(Edge Cases)** 를 정리한다. feature-spec 의 1차 예외를 베이스로 **심화 예외** 를 분류 / 표 형태로 정리.
+10년차 기획자 시점에서 **예외 케이스(Edge Cases)** 를 정리한다. feature-spec 의 1차 예외 + endpoint-spec-draft 의 4xx/5xx 응답을 베이스로 **심화 예외** 를 분류 / 표 형태로 정리.
 
 > **Edge Case 한 줄 풀이 (주니어 친화)**:
 > "정상 흐름(happy path) 이 아닌 모든 분기. 입력이 이상할 때 / 권한이 없을 때 / 동시 요청일 때 / 외부 시스템이 실패할 때 / 데이터가 없을 때 등."
@@ -23,12 +23,12 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 
 - **선행 산출물**:
   - `docs/plan/{name}/feature-spec.md` (필수)
-  - `docs/plan/{name}/api-spec-draft.yaml` (필수 — Draft OK)
+  - `docs/plan/{name}/endpoint-spec-draft.md` (필수 — Draft OK, 마크다운 표)
 - (선택) `docs/plan/{name}/policy-draft.md` — 운영 정책 의존 케이스 cite
 - 호출 args:
   ```
   feature-spec-path: docs/plan/{name}/feature-spec.md
-  api-spec-draft-path: docs/plan/{name}/api-spec-draft.yaml
+  endpoint-spec-draft-path: docs/plan/{name}/endpoint-spec-draft.md
   policy-draft-path: docs/plan/{name}/policy-draft.md  # 선택
   ```
 
@@ -36,7 +36,7 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 
 ### Step 1 — 선행 산출물 로드
 - feature-spec 의 SC (시나리오) 1차 예외 추출
-- api-spec-draft 의 4xx / 5xx 응답 추출 (마커 표시된 항목 — 후속 cite 시 마커 유지)
+- endpoint-spec-draft 의 4xx / 5xx 응답 추출 (마커 표시된 항목 — 후속 cite 시 마커 유지)
 - policy-draft 의 정책 의존 분기 추출 (있다면)
 
 ### Step 2 — 카테고리별 강제 점검
@@ -86,7 +86,7 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 # 예외 케이스 — {도메인/기능명}
 
 > 작성일: YYYY-MM-DD
-> 선행 문서: [feature-spec.md](./feature-spec.md), [api-spec.yaml](./api-spec.yaml)
+> 선행 문서: [feature-spec.md](./feature-spec.md), [endpoint-spec-draft.md](./endpoint-spec-draft.md)
 > (선택) [policy.md](./policy.md)
 
 ## 1. 개요
@@ -258,7 +258,7 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 
 - [ ] qa-checklist.md 작성 (`planner-qa-checklist`)
 - [ ] (필요 시) policy-draft.md 갱신 — 정책 의존 케이스 명시
-- [ ] (필요 시) api-spec-draft.yaml 갱신 — 4xx 응답 보강
+- [ ] (필요 시) endpoint-spec-draft.md 갱신 — 4xx 응답 보강
 
 ## 8. 변경 이력
 
@@ -273,7 +273,7 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 - [ ] 각 케이스 ID 부여 + 카테고리 분류
 - [ ] 각 케이스 조건 / 예상 결과 / 처리 방식 / 우선순위 모두 채움
 - [ ] P0 케이스는 처리 방식 명확 (FE / BE / 운영 분담)
-- [ ] api-spec 의 4xx / 5xx 응답이 ≥ 1 케이스에서 cite 됨
+- [ ] endpoint-spec-draft 의 4xx / 5xx 응답이 ≥ 1 케이스에서 cite 됨
 - [ ] feature-spec 의 1차 예외가 모두 EC 로 흡수됨
 
 ## 6. HITL (Human-in-the-Loop) 지점
@@ -309,7 +309,7 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 
 ### 짧은 예시
 ```
-입력: feature-spec-path: ..., api-spec-path: ...
+입력: feature-spec-path: ..., endpoint-spec-draft-path: ...
 
 카테고리 점검:
 1. 입력 유효성 → EC-CPN-01 (ID 형식)
@@ -328,6 +328,6 @@ P1 (UX): 2건
 
 - **카테고리 강제 점검**: 7 카테고리 모두 명시 — 누락 방지
 - **처리 주체 분담**: FE / BE / 운영 누가 처리할지 명확히 — 작업 분리 가능
-- **정책 cite**: 운영 정책 의존 케이스는 policy.md 의 POL ID cite
+- **정책 cite**: 운영 정책 의존 케이스는 policy-draft.md 의 POL ID cite
 - **★ Owner 결정 cite**: ia.md 의 미결 항목과 겹치면 cite — 결정 후 갱신
 - **side effect 명시**: "GA4 이벤트 발화 / 보안 로그 기록 / 알림 발송" 모두 적기

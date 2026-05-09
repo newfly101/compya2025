@@ -1,6 +1,6 @@
 ---
 name: planner-qa-checklist
-description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모든 선행 산출물 (ia / requirements / feature-spec / api-spec / edge-cases / policy) 종합. 시나리오별 체크박스 + 우선순위. 산출물 docs/plan/{name}/qa-checklist.md.
+description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모든 선행 산출물 (ia / requirements / feature-spec / endpoint-spec-draft / edge-cases / policy-draft) 종합. 시나리오별 체크박스 + 우선순위. 산출물 docs/plan/{name}/qa-checklist.md.
 ---
 
 # Skill: planner-qa-checklist
@@ -15,8 +15,8 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 - feature-spec 시나리오 → 수동 테스트 케이스
 - edge-cases → 예외 테스트 케이스
 - requirements (NFR) → 비기능 테스트 (성능 / 접근성 / 보안)
-- api-spec → API 계약 테스트
-- policy → 정책 준수 검증
+- endpoint-spec-draft → API 계약 테스트 (BE Swagger 정합 검증 포함)
+- policy-draft → 정책 준수 검증
 - 우선순위별 분류 (P0 = 출시 전 / P1 = 다음 마일스톤 / P2 = 보류)
 
 **산출물**: `docs/plan/{name}/qa-checklist.md`
@@ -27,7 +27,7 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
   - `docs/plan/{name}/ia.md`
   - `docs/plan/{name}/requirements.md`
   - `docs/plan/{name}/feature-spec.md` (필수)
-  - `docs/plan/{name}/api-spec-draft.yaml` (필수 — Draft OK)
+  - `docs/plan/{name}/endpoint-spec-draft.md` (필수 — Draft OK, 마크다운 표)
   - `docs/plan/{name}/edge-cases.md` (필수)
   - (선택) `docs/plan/{name}/policy-draft.md`
 - 호출 args:
@@ -38,7 +38,7 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 ## 3. 절차 (steps)
 
 ### Step 1 — 모든 선행 산출물 로드
-- ia / requirements / feature-spec / api-spec-draft / edge-cases / policy-draft 순으로 Read
+- ia / requirements / feature-spec / endpoint-spec-draft / edge-cases / policy-draft 순으로 Read
 - ID 매핑 표 작성:
   - SC ID (시나리오) → 테스트 케이스
   - EC ID (예외) → 테스트 케이스
@@ -96,7 +96,7 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 # QA 체크리스트 — {도메인/기능명}
 
 > 작성일: YYYY-MM-DD
-> 선행 문서: [ia](./ia.md), [requirements](./requirements.md), [feature-spec](./feature-spec.md), [api-spec-draft](./api-spec-draft.yaml), [edge-cases](./edge-cases.md), [policy-draft](./policy-draft.md)
+> 선행 문서: [ia](./ia.md), [requirements](./requirements.md), [feature-spec](./feature-spec.md), [endpoint-spec-draft](./endpoint-spec-draft.md), [edge-cases](./edge-cases.md), [policy-draft](./policy-draft.md)
 
 ## 0. 사용 안내 (주니어 QA 친화)
 
@@ -279,7 +279,7 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 - [ ] 모든 SC (시나리오) → ≥ 1 TC
 - [ ] 모든 EC (예외) → ≥ 1 TC
 - [ ] 모든 NFR → ≥ 1 TC
-- [ ] 모든 API endpoint → ≥ 1 계약 TC (200 + 4xx 최소)
+- [ ] 모든 endpoint (endpoint-spec-draft.md) → ≥ 1 계약 TC (200 + 4xx 최소)
 - [ ] 모든 POL → ≥ 1 검증 TC
 - [ ] § 1 "출시 전 P0 체크리스트" 별도 섹션 작성 — P0 만 모음
 - [ ] 각 TC 자동화 레벨 명시 (auto/manual)
@@ -305,7 +305,7 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 
 선행 산출물 미완 항목 (마커 표시) 발견 시:
 - "policy-draft.md 의 POL-CPN-03 🔴 → 본 qa-checklist 에서 TC-CPN-NN 🔴 사용자 답변 대기"
-- "api-spec-draft.yaml 의 권한 schema 🔴 → TC-CPN-NN 🔴"
+- "endpoint-spec-draft.md 의 권한 (auth) 🔴 → TC-CPN-NN 🔴"
 
 ### 마커
 
@@ -331,9 +331,9 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 - ia.md (P0 기능 3건)
 - requirements.md (FR 3건 + NFR 3건)
 - feature-spec.md (SC 8건)
-- api-spec.yaml (3 endpoint)
+- endpoint-spec-draft.md (3 endpoint)
 - edge-cases.md (EC 17건)
-- policy.md (POL 3건)
+- policy-draft.md (POL 3건)
 
 → TC 매핑:
    기능 8건 (SC → TC)

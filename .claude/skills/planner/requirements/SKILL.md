@@ -82,7 +82,7 @@ description: 기능 요구사항 정의서 작성 (functional + non-functional).
 
 ## 1. 개요
 
-본 문서는 {도메인} 의 **기능 요구사항 (FR)** 과 **비기능 요구사항 (NFR)** 을 정의한다. 각 요구사항은 ID 로 추적 가능하며, 후속 feature-spec / api-spec / qa-checklist 에서 본 ID 를 cite 한다.
+본 문서는 {도메인} 의 **기능 요구사항 (FR)** 과 **비기능 요구사항 (NFR)** 을 정의한다. 각 요구사항은 ID 로 추적 가능하며, 후속 feature-spec / endpoint-spec-draft / qa-checklist 에서 본 ID 를 cite 한다.
 
 용어:
 - **FR (Functional Requirement)**: 기능 요구사항 — "무엇을 해야 하는가"
@@ -109,7 +109,7 @@ description: 기능 요구사항 정의서 작성 (functional + non-functional).
   - [ ] 발급된 쿠폰이 0개일 때 empty 상태 표시
   - [ ] 사용 완료 / 만료 / 활성 상태 시각적 구분
 - **우선순위**: P0
-- **의존**: `GET /api/coupons` (api-spec.yaml 참조)
+- **의존**: `GET /api/coupons` (endpoint-spec-draft.md 참조)
 - **관련 화면**: ia.md § 4 "쿠폰 목록"
 - **비고**: {필요 시}
 
@@ -183,7 +183,7 @@ NFR-02 ── (depends on) ── 인증 미들웨어
 
 - [ ] (Forward) policy-draft.md 작성 (`planner-policy-draft`) — requirements 의 4 분야 NFR 기반 정책 결정 항목 도출
 - [ ] feature-spec.md 작성 (`planner-feature-spec`)
-- [ ] (선택) api-spec-draft.yaml 작성 (`planner-api-spec-draft`)
+- [ ] (선택) endpoint-spec-draft.md 작성 (`planner-endpoint-spec-draft`)
 
 ## 9. 변경 이력
 
@@ -236,7 +236,7 @@ NFR-02 ── (depends on) ── 인증 미들웨어
 
 - **Forward 표준**: `planner-policy-draft` (requirements → 정책 결정 템플릿)
 - **Reverse 표준**: `planner-feature-spec` (Given/When/Then 형태로 시나리오화)
-- (선택) `planner-api-spec-draft` (API 의존이 명확한 경우 병렬 가능)
+- (선택) `planner-endpoint-spec-draft` (endpoint 의존이 명확한 경우 병렬 가능)
 
 ## 8. 예시
 

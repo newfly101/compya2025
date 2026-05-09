@@ -64,7 +64,7 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 - 시나리오 수
 - 1차 예외 수 (edge-cases 에서 심화 필요)
 - 마커 분포 (🔴 / 🟨 / ❓) — 4 분야 시나리오 식별
-- 다음 skill: `planner-api-spec-draft` 또는 `planner-edge-cases`
+- 다음 skill: `planner-endpoint-spec-draft` 또는 `planner-edge-cases`
 
 ## 4. 템플릿 (산출물)
 
@@ -116,7 +116,7 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 
 **참고**:
 - 화면: ia.md § 4 "쿠폰 목록"
-- API: api-spec.yaml `GET /api/coupons` (작성 시점에 미작성이면 "TBD")
+- API: endpoint-spec-draft.md `GET /api/coupons` (작성 시점에 미작성이면 "TBD")
 
 ---
 
@@ -188,7 +188,7 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 
 ## 6. 다음 단계
 
-- [ ] api-spec-draft.yaml 작성 (`planner-api-spec-draft`) — API 명세 초안
+- [ ] endpoint-spec-draft.md 작성 (`planner-endpoint-spec-draft`) — endpoint 명세 초안 (마크다운 표)
 - [ ] edge-cases.md 작성 (`planner-edge-cases`) — 심화 예외
 - [ ] qa-checklist.md 작성 (`planner-qa-checklist`) — 본 시나리오 → 테스트 케이스
 
@@ -235,7 +235,7 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 
 ## 7. 다음 skill 추천
 
-- **표준**: `planner-api-spec-draft` (시나리오 → API 명세 초안 도출)
+- **표준**: `planner-endpoint-spec-draft` (시나리오 → endpoint 명세 초안 도출 — 마크다운 표)
 - **병렬 가능**: `planner-edge-cases` (심화 예외 정리)
 - **최종**: `planner-qa-checklist` (모든 산출물 종합)
 
