@@ -18,7 +18,6 @@ const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChang
 const HitterSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
 const PrivacyPolicy = lazy(() => import("@/app/page/legal/PrivacyPolicy.jsx"));
 const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
-const UserCommunityPage = lazy( () => import ("@/domains/community/page/user/UserCommunityPage.jsx"));
 const DictionaryHome = lazy(() => import("@/domains/dictionary/page/DictionaryHomePage.jsx"));
 const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.jsx"));
 
@@ -50,7 +49,6 @@ export const PublicRoutes = [
   // { path: "mode/history", element: <LegendCalendar />, handle: { title: "컴프야펀 | 히스토리 모드 레전드 재료" } },
   // { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
   // { path: "auth/callback", element: <AuthCallBack />, handle: { title: "컴프야펀 | 로그인 콜백" } },
-  // { path: "community", element: <UserCommunityPage />, handle: { title: "컴프야펀 | 커뮤니티" } },
   //
   // { path: "dictionary", children: [
   //     {index: true, element: <DictionaryHome />, handle: { title: "컴프야펀 | 백과사전 홈" } },
