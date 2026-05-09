@@ -184,8 +184,8 @@
 |---|---|---|---|
 | T1 AdminRoutes 통합 가드 검증 | **P0** | 모바일 리뉴얼 admin | 각 도메인 admin 흡수 후 통합 검증 필수. event 라우트 활성화는 events.md T1 의존 |
 | T2 Swagger 운영 노출 정책 | **P1** | 정리 라운드 | 결정 후 후속 라운드. authentication.md T2 의 `@Profile("!prod")` 패턴과 정합 |
-| T3 Step 3a `store/` 6 파일 삭제 | **P0** | 즉시 정리 | A.7, dead-confirmed 1-C — interim cleanup |
-| T3 Step 3b `domains/admin/` 통째 폐기 | **P1** | 후속 라운드 | Owner 진술 (sample/layout 자투리). 4 consumer 흡수 후 |
+| T3 Step 3a `store/` 6 파일 삭제 | **P0** | ✅ 완료 (2026-05-09 commit 79c8127) | A.7, dead-confirmed 1-C — interim cleanup |
+| T3 Step 3b `domains/admin/` 통째 폐기 | **P0** | ✅ 완료 (2026-05-09) | 사용자 정책 즉시 처리. 4 consumer 흡수 (AdminRoutes 주석 / AdminNavigation inline / VisibleToggle 글로벌 / coupons import 갱신) |
 
 ## B.5 KPI / 성공지표
 
@@ -218,16 +218,19 @@
 
 - 각 도메인 하위에서 구현: `src/domains/{domain}/feature/admin/...`
 - 이미 적용 도메인: **coupons** (`web/src/domains/coupons/feature/admin/`)
-- 별도 admin 폴더 (`web/src/admin/` 또는 `web/src/domains/admin/`) 존재하지 않을 예정
-- `web/src/domains/admin/` 의 잔여 (pages/config/feature) 처리는 본 PRD TODO P1 (Step 3b cross-domain commit) 참조
+- 별도 admin 폴더 (`web/src/admin/` 또는 `web/src/domains/admin/`) 존재하지 않음 — 2026-05-09 폐기 완료
+- `web/src/domains/admin/` 통째 폐기 결과 (T3 Step 3a + 3b 모두 완료, 2026-05-09):
+  - Step 3a: `store/**` 6 파일 (commit 79c8127)
+  - Step 3b: `pages/**` (8) + `config/**` (1) + `feature/**` (2) = 11 파일 + 4 consumer 흡수 (본 라운드 commit)
+  - 글로벌 공용 신규: `web/src/global/ui/visibleToggle/**` (VisibleToggle 이전)
 
 ## B.8 후속 작업 (본 라운드 외)
 
-- **T3 Step 3b — `domains/admin/` 통째 폐기 라운드** (Owner 결정 2026-05-09): 4 consumer 흡수 후 폴더 제거. 흡수 매핑:
-  - `AdminDashBoardPage` → 신규 admin home 정의 (sample 폐기 — 별도 기획)
-  - `AdminUserManagePage` / `AdminUserDetailPage` + hooks → `profile` 또는 신규 `user` 도메인 admin 흡수
-  - `AdminNavigation.js` → 글로벌 layout config 로 이동
-  - `VisibleToggle.jsx` → 글로벌 공용 컴포넌트 또는 각 도메인 admin 자체 흡수 (현재 coupons admin 만 사용)
+- ~~**T3 Step 3b — `domains/admin/` 통째 폐기 라운드**~~ → ✅ 완료 (2026-05-09, commit 본 라운드). 4 consumer 흡수 결과:
+  - `AdminDashBoardPage` → AdminRoutes index 라우트 주석 + 페이지 파일 삭제. 신규 admin home 은 별도 기획 라운드
+  - `AdminUserManagePage` / `AdminUserDetailPage` + hooks → 라우트 주석 + 파일 삭제. 신규 user 관리는 추후 `profile` 또는 `user` 도메인 admin 흡수
+  - `AdminNavigation.js` → `AdminPageLayout.jsx` 내부 inline const 로 흡수 (외부 사용처 1건만)
+  - `VisibleToggle.jsx` → `web/src/global/ui/visibleToggle/` 글로벌 공용 컴포넌트 이전 (events/notices/quiz admin 도 사용 예정)
 - **BE 패키지 재배치**: 도메인별 흩어진 `Admin*Controller` 7개 (coupon/event/notice/quiz/community 4개 + player 1개 + UploadController/SwaggerController) 위치 표준화 — 별도 라운드. 본 도메인 task 화 안 함 (각 도메인 PRD 가 자기 admin 부분 흡수했으므로 이동 시 cross-domain commit 필요)
 - **운영 시크릿 평문 노출** (`naver.client-id/secret`, `jwt.secret`, `cloud.aws.credentials.*`): authentication.md A.6 cite — 별도 보안 라운드
 - **AdminPlayerCardController 주석 핸들러 6개**: playerCard.md A.7 흡수 — 본 라운드 무관
@@ -266,21 +269,29 @@
 
 - [x] **legacy `web/src/admin/` 폐기** (2026-05-09) — 과거 legacy PC 버전 admin 도메인 샘플 폴더 통째 폐기. 작업 시점 폴더 부재 + 외부 import 0건 검증 (`@/admin`, `src/admin`, `../admin`, `../../admin` 모두 grep 매치 0). PRD 문서 기록 (B.7 § legacy `web/src/admin/` 폐기) + frontend admin 정책 명시 (B.7 § Frontend admin 구현 정책 — `src/domains/{domain}/feature/admin/` 패턴, coupons 적용 사례). 코드 변경 0건 ✅
 - [x] **T3 Step 3a** — `web/src/domains/admin/store/**` 6 파일 통째 삭제 (api/endpoints/thunks/dto/slices/index — `dead-confirmed.md 1-C` cite). 본 라운드 commit 으로 처리 ✅
+- [x] **T3 Step 3b 완료** (2026-05-09) — `web/src/domains/admin/` 잔여 폴더 (pages/config/feature) 통째 폐기 + 4 consumer 흡수 완료 ✅
+  - 삭제: `pages/dashboard/**` (jsx + scss 2 파일), `pages/user/**` (jsx 2 + hooks 2 + scss 2 = 6 파일), `config/AdminNavigation.js`, `feature/components/toggle/**` (jsx + scss 2 파일) — 합 11 파일
+  - 4 consumer 흡수 결과:
+    - **AdminRoutes.jsx**: `AdminDashBoardPage` / `AdminUserManagePage` / `AdminUserDetailPage` 3 lazy import + 3 active route 주석 처리 (사용자 정책 — 신규 admin home / user 페이지는 별도 기획 후 `src/domains/{domain}/feature/admin/` 패턴 재구현)
+    - **AdminPageLayout.jsx**: `AdminNavigation` const 를 layout 파일 내부 inline 으로 흡수 (외부 사용처 1건만 — 별도 config 파일 분리 불요)
+    - **coupons CouponTableBody.jsx**: `VisibleToggle` import path 만 갱신 (`@/domains/admin/feature/components/toggle/VisibleToggle.jsx` → `@/global/ui/visibleToggle/VisibleToggle.jsx`)
+    - **VisibleToggle 글로벌 공용**: `web/src/global/ui/visibleToggle/{VisibleToggle.jsx, VisibleToggle.module.scss, index.js}` 신규 생성 (events/notices/quiz admin 등 다른 도메인 admin 도 visible 토글 사용 가능성 있음 — global ui 패턴 정합)
+  - 검증: `@/domains/admin` import grep 0건 (코드 활성 사용 0건, 주석 잔존만)
 - [ ] **T1** — AdminRoutes.jsx 통합 가드 검증 (5 활성 라우트 AuthGuard ADMIN 통과 + 비-ADMIN 401/403). event 라우트는 events.md T1 활성화 후 합류
   - 의존: `AdminRoutes.jsx`, `SecurityConfig.java:52`
   - 본 라운드는 검증만 가능 (코드 변경 0건 — 통과 시 close)
 
 ### 다음 라운드 (P1) — Step 3b cross-domain commit (위험)
 
-- [ ] **T3 Step 3b** — `web/src/domains/admin/` 잔여 폴더 통째 폐기 (4 consumer 흡수 후)
-  - **흡수 매핑** (admin.md B.7 cite):
-    - `pages/dashboard/AdminDashBoardPage.jsx` (+ scss) → 신규 admin home 화면. **별도 기획 필요** (sample 폐기). 소비처: `AdminRoutes.jsx:5`
-    - `pages/user/AdminUserManagePage.jsx` + `useAdminUserForm.js` + `useUserFilter.js` + scss → 신규 `domains/profile/admin/**` 또는 신규 `domains/user/admin/**` 도메인 흡수. 소비처: `AdminRoutes.jsx:6`
-    - `pages/user/AdminUserDetailPage.jsx` (+ scss) → 위와 동일 흡수처. 소비처: `AdminRoutes.jsx:7`
-    - `config/AdminNavigation.js` → 글로벌 layout config 로 이동 (`global/layout/adminPageLayout/config/AdminNavigation.js` 권장). 소비처: `AdminPageLayout.jsx:4`
-    - `feature/components/toggle/VisibleToggle.jsx` (+ scss) → 글로벌 공용 컴포넌트 (`global/components/toggle/VisibleToggle.jsx`) 또는 coupons admin 자체 흡수. 소비처: `coupons/feature/admin/components/table/CouponTableBody.jsx:3` (현재 1곳만 사용)
-  - 위험: 4 consumer 동시 수정 + cross-domain commit (admin / profile or user / coupons / global layout)
-  - 의존: 신규 admin home 기획 (Owner 결정), profile/user 도메인 admin 흡수 합의
+- [x] **T3 Step 3b 완료 (2026-05-09)** — `web/src/domains/admin/` 잔여 폴더 통째 폐기 (4 consumer 흡수 완료) ✅
+  - **흡수 결과** (admin.md B.7 cite):
+    - `pages/dashboard/AdminDashBoardPage.jsx` (+ scss) → AdminRoutes index 라우트 주석 + 페이지 파일 삭제 (legacy sample 폐기). 신규 admin home 은 별도 기획 라운드. 소비처 `AdminRoutes.jsx:5`
+    - `pages/user/AdminUserManagePage.jsx` + `useAdminUserForm.js` + `useUserFilter.js` + scss → 라우트 주석 + 파일 삭제 (legacy sample 폐기). 신규 user 관리는 추후 `profile` 또는 `user` 도메인 admin 흡수. 소비처 `AdminRoutes.jsx:6`
+    - `pages/user/AdminUserDetailPage.jsx` (+ scss) → 위와 동일 처리. 소비처 `AdminRoutes.jsx:7`
+    - `config/AdminNavigation.js` → `web/src/global/layout/adminPageLayout/AdminPageLayout.jsx` 내부 inline const 로 흡수 (외부 import 1건만 — 별도 config 파일 분리 불요). 소비처 `AdminPageLayout.jsx:4`
+    - `feature/components/toggle/VisibleToggle.jsx` (+ scss) → **글로벌 공용** `web/src/global/ui/visibleToggle/` 로 이전 (events/notices/quiz admin 도 사용 예정 — global ui 패턴 정합). 소비처 `coupons/feature/admin/components/table/CouponTableBody.jsx:3` import 갱신
+  - 처리 결과: `web/src/domains/admin/**` 11 파일 통째 삭제 + 4 consumer 흡수 완료 + import 0건 검증 (`@/domains/admin` grep 0건, comment 잔존만)
+  - cross-domain commit 영향: AdminRoutes / coupons admin (CouponTableBody) / global layout (AdminPageLayout) / global ui (visibleToggle 신규)
 
 - [ ] **T2** — Swagger UI / `/v3/api-docs/**` 운영 노출 정책 결정
   - **옵션 (a)** prod profile 에서 swagger 경로 차단 (`@Profile("!prod")` SpringDoc bean 또는 SecurityConfig 분기)

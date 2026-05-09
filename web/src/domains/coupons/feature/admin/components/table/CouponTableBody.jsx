@@ -1,6 +1,6 @@
 import React from "react";
 import { COUPON_TABLE } from "@/domains/coupons/config/couponTable.config.js";
-import VisibleToggle from "@/domains/admin/feature/components/toggle/VisibleToggle.jsx";
+import VisibleToggle from "@/global/ui/visibleToggle/VisibleToggle.jsx";
 
 const cellEllipsis = {
   maxWidth: 220,

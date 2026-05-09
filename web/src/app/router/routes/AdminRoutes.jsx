@@ -2,9 +2,10 @@ import { lazy } from "react";
 import AuthGuard from "@/app/router/guards/AuthGuard.jsx";
 
 const AdminPageLayout = lazy(() => import("@/global/layout/adminPageLayout/AdminPageLayout.jsx"));
-const AdminDashBoardPage = lazy(() => import("@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx"));
-const AdminUserManagePage = lazy(() => import("@/domains/admin/pages/user/AdminUserManagePage.jsx"));
-const AdminUserDetailPage = lazy(() => import("@/domains/admin/pages/user/AdminUserDetailPage.jsx"));
+// LEGACY admin sample - 2026-05-09 폐기. 신규 admin 페이지는 src/domains/{domain}/feature/admin/ 패턴으로 재구현 예정 (admin home / user 관리 별도 기획)
+// const AdminDashBoardPage = lazy(() => import("@/domains/admin/pages/dashboard/AdminDashBoardPage.jsx"));
+// const AdminUserManagePage = lazy(() => import("@/domains/admin/pages/user/AdminUserManagePage.jsx"));
+// const AdminUserDetailPage = lazy(() => import("@/domains/admin/pages/user/AdminUserDetailPage.jsx"));
 const AdminContentPage = lazy(() => import("@/global/layout/adminPageLayout/content/AdminContentPage.jsx"));
 // const AdminEventPage = lazy(() => import("@/domains/events/feature/admin/pages/AdminEventPage.jsx"));
 const AdminNoticeManagePage = lazy(() => import("@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx"));
@@ -21,9 +22,10 @@ export const AdminRoutes = [
         path: "admin",
         element: <AdminPageLayout />,
         children: [
-          { index: true, element: <AdminDashBoardPage />, handle: { title: "컴프야펀 | 어드민 | 대시보드" } },
-          { path: "users", element: <AdminUserManagePage />, handle: { title: "컴프야펀 | 어드민 | 유저 관리" } },
-          { path: "users/:userId", element: <AdminUserDetailPage />, handle: { title: "컴프야펀 | 어드민 | 유저 상세 관리" } },
+          // LEGACY admin sample - 2026-05-09 폐기. 신규 admin 페이지는 src/domains/{domain}/feature/admin/ 패턴으로 재구현 예정
+          // { index: true, element: <AdminDashBoardPage />, handle: { title: "컴프야펀 | 어드민 | 대시보드" } },
+          // { path: "users", element: <AdminUserManagePage />, handle: { title: "컴프야펀 | 어드민 | 유저 관리" } },
+          // { path: "users/:userId", element: <AdminUserDetailPage />, handle: { title: "컴프야펀 | 어드민 | 유저 상세 관리" } },
           {
             path: "content", element: <AdminContentPage />, children: [
               // { path: "event", element: <AdminEventPage />, handle: { title: "컴프야펀 | 어드민 | 이벤트 관리" } },
