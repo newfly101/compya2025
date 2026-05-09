@@ -1,4 +1,4 @@
-import { API } from "@/app/store/APIConfig.js";
+import { API } from "@/infra/http/client.js";
 import { ADMIN_COMMUNITY, USER_COMMUNITY } from "@/domains/community/store/endpoints.js";
 
 /**

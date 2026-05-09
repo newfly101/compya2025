@@ -9,7 +9,7 @@ import couponReducer from "@/domains/coupons/store/slices.js";
 // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
 // import communityReducer from "@/domains/community/store/slices.js";
 // import playerCardReducer from "@/domains/playerCard/store/slices.js";
-import upLoadReducer from "@/infra/uploads/store/slices.js";
+import upLoadReducer from "@/infra/api/uploads/slices.js";
 import quizReducer from "@/domains/quiz/store/slices.js";
 // LEGACY kbo 도메인 잠정 보류 — 2026-05-09 (frontend kbo 화면 폐기. BE API 미구현 / DB 는 kbocrol 운영)
 // import kboReducer from "@/domains/kbo/store/slices.js";

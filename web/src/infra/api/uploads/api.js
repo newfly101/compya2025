@@ -1,4 +1,4 @@
-import { API } from "@/app/store/APIConfig.js";
+import { API } from "@/infra/http/client.js";
 
 export const fetchAdminUploadImageFile = async (file, path) => {
   const { data } = await API.post(path, file, {

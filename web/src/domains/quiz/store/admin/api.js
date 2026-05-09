@@ -1,4 +1,4 @@
-import { API } from "@/app/store/APIConfig.js";
+import { API } from "@/infra/http/client.js";
 import { ADMIN_QUIZ } from "@/domains/quiz/store/admin/endpoints.js";
 
 export const fetchAdminQuizAll = async () => {

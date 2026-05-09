@@ -1,4 +1,4 @@
-import { API } from "@/app/store/APIConfig.js";
+import { API } from "@/infra/http/client.js";
 import { ADMIN_NOTICES } from "@/domains/notices/store/admin/endpoints.js";
 
 export const fetchAdminGetNoticeList   = async ()       => { const { data } = await API.get(ADMIN_NOTICES.GET_LIST);               return data; };

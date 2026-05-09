@@ -1,4 +1,4 @@
-import { API } from "@/app/store/APIConfig.js";
+import { API } from "@/infra/http/client.js";
 import { AUTH } from "@/domains/authentication/store/endpoints.js";
 
 /**

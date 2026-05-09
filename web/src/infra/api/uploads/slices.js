@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
-import { requestUploadImage } from "@/infra/uploads/store/thunks.js";
+import { requestUploadImage } from "@/infra/api/uploads/thunks.js";
 
 const initialState  = {
   imageFile: null,

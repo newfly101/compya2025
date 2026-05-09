@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAdminUploadImageFile } from "@/infra/uploads/store/api.js";
-import { UPLOAD_FILE } from "@/infra/uploads/store/endpoints.js";
+import { fetchAdminUploadImageFile } from "@/infra/api/uploads/api.js";
+import { UPLOAD_FILE } from "@/infra/api/uploads/endpoints.js";
 
 export const requestUploadImage = createAsyncThunk(
   UPLOAD_FILE.IMAGES, async ({ file, directory }, { rejectWithValue }) => {

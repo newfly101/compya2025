@@ -6,7 +6,7 @@ import {
 } from "@/domains/events/store/admin/api.js";
 import { ADMIN_EVENT_ACTIONS } from "@/domains/events/store/admin/endpoints.js";
 import { baseEventDTO } from "@/domains/events/store/dto.js";
-import { requestUploadImage } from "@/infra/uploads/store/index.js";
+import { requestUploadImage } from "@/infra/api/uploads/index.js";
 
 export const requestAdminGetExEventList = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.GET_EVENT_LISTS, async (_, { rejectWithValue }) => {

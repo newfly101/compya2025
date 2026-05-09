@@ -6,7 +6,7 @@ import {
 } from "@/domains/quiz/store/admin/api.js";
 import { ADMIN_QUIZ_ACTIONS } from "@/domains/quiz/store/admin/endpoints.js";
 import { baseQuizAnswerDTO } from "@/domains/quiz/store/dto.js";
-import { requestUploadImage } from "@/infra/uploads/store/index.js";
+import { requestUploadImage } from "@/infra/api/uploads/index.js";
 
 export const requestAdminQuizAll = createAsyncThunk(
   ADMIN_QUIZ_ACTIONS.GET_ALL,
