@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { requestUserHealthCheck } from "@/domains/authentication/store/thunks";
-import { trackLogin } from "@/app/analytics/events/authEvents.js";
-import { setUserProperties } from "@/app/analytics/ga.js";
+import { trackLogin } from "@/infra/analytics/events/authEvents.js";
+import { setUserProperties } from "@/infra/analytics/ga.js";
 
 const AuthCallback = () => {
   const dispatch = useDispatch();

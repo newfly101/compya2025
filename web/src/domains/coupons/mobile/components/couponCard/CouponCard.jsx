@@ -1,6 +1,6 @@
 // domains/coupon/components/CouponCard.jsx
 import styles from "./CouponCard.module.scss";
-import { trackCouponGo } from "@/app/analytics/events/couponEvents.js";
+import { trackCouponGo } from "@/infra/analytics/events/couponEvents.js";
 
 const COUPON_BASE_URL =
   import.meta.env.VITE_COUPON_BASE_URL ?? "http://withhive.me/399";

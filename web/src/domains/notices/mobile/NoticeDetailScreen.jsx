@@ -3,7 +3,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { useNoticeDetail } from "@/domains/notices/mobile/hooks/useNoticeDetail.js";
 import LabelBadge from "@/global/ui/badge/LabelBadge.jsx";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
-import { pushEvent } from "@/app/analytics/ga.js";
+import { pushEvent } from "@/infra/analytics/ga.js";
 import styles from "./NoticeDetailScreen.module.scss";
 
 const NoticeDetailScreen = () => {

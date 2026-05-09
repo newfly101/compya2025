@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { requestUserHealthCheck } from "@/domains/authentication/store/thunks.js";
-import { setUserProperties } from "@/app/analytics/ga.js";
+import { setUserProperties } from "@/infra/analytics/ga.js";
 
 const AuthProvider = ({ children }) => {
   const dispatch = useDispatch();

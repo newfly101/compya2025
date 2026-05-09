@@ -10,7 +10,7 @@ Google Analytics 4(GA4) 기반 사용자 행동 데이터 수집을 담당한다
 ## 2. 폴더 구조
 
 ```text
-app/analytics/
+infra/analytics/
 ├── events/
 │   └── authEvents.js       ← 인증 관련 이벤트
 └── hooks/
@@ -121,7 +121,7 @@ export const trackCouponApply = (couponCode) => {
 
 사용:
 ```js
-import { trackCouponCopy } from '@/app/analytics/events/couponEvents'
+import { trackCouponCopy } from '@/infra/analytics/events/couponEvents'
 
 const handleCopy = () => {
   trackCouponCopy(coupon.code)

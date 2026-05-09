@@ -1,5 +1,5 @@
-// app/analytics/events/authEvents.js
-import { pushEvent } from "@/app/analytics/ga.js";
+// infra/analytics/events/authEvents.js
+import { pushEvent } from "@/infra/analytics/ga.js";
 
 const isDev = window.location.hostname === "localhost" ||
   window.location.hostname === "127.0.0.1"

@@ -1,6 +1,6 @@
 import { useLocation, useMatches } from "react-router-dom";
 import { useEffect } from "react";
-import { pushEvent } from "@/app/analytics/ga.js";
+import { pushEvent } from "@/infra/analytics/ga.js";
 
 export const useGA4PageView = () => {
   const location = useLocation();

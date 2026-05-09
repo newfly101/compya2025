@@ -1,4 +1,4 @@
-import { pushEvent } from "@/app/analytics/ga.js";
+import { pushEvent } from "@/infra/analytics/ga.js";
 
 export const trackCouponGo = (couponCode) => {
   pushEvent({

@@ -166,7 +166,7 @@ authentication/
 | `admin_logout` | 어드민 로그아웃 |
 | `dev_logout` | localhost 로그아웃 |
 
-이벤트는 `app/analytics/events/authEvents.js` 에서 관리한다.
+이벤트는 `infra/analytics/events/authEvents.js` 에서 관리한다.
 
 ---
 
@@ -174,7 +174,7 @@ authentication/
 
 | 모듈 | 경로 | 용도 |
 |------|------|------|
-| `pushEvent` | `@/app/analytics/ga` | GA4 이벤트 전송 |
+| `pushEvent` | `@/infra/analytics/ga` | GA4 이벤트 전송 |
 | `AuthProvider` | `@/app/provider/AuthProvider` | 앱 진입 시 healthCheck |
 | `AuthGuard` | `@/app/router/guards/AuthGuard` | 라우트 접근 제어 |
 
@@ -208,7 +208,7 @@ authentication/
 - `store/api.js`
 
 ### GA 이벤트를 수정할 때
-- `app/analytics/events/authEvents.js`
+- `infra/analytics/events/authEvents.js`
 
 ---
 

@@ -133,7 +133,7 @@ const isExpired = event.expireAt < now
 |------------|----------|---------|
 | `event_click` | 이벤트 카드 클릭 | `event_id`, `event_title` |
 
-이벤트는 `app/analytics/events/eventEvents.js` 에서 관리한다.
+이벤트는 `infra/analytics/events/eventEvents.js` 에서 관리한다.
 
 ```js
 export const trackEventClick = (eventId, eventTitle) => {
@@ -153,7 +153,7 @@ export const trackEventClick = (eventId, eventTitle) => {
 |------|------|------|
 | `formatNow` | `@/global/utils/datetime/dateUtils` | 현재 시각 포맷 — 진행중/종료 분기 기준 |
 | `SectionBlock` | `@/global/ui/mobile/section/SectionBlock` | 섹션 공통 레이아웃 |
-| `pushEvent` | `@/app/analytics/ga` | GA4 이벤트 전송 |
+| `pushEvent` | `@/infra/analytics/ga` | GA4 이벤트 전송 |
 
 ---
 
@@ -177,7 +177,7 @@ export const trackEventClick = (eventId, eventTitle) => {
 - `store/slices.js`
 
 ### GA 이벤트를 수정할 때
-- `app/analytics/events/eventEvents.js`
+- `infra/analytics/events/eventEvents.js`
 
 ---
 
