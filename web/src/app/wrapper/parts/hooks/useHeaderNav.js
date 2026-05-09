@@ -9,9 +9,10 @@ export const useHeaderNav = (isAuthenticated, authority) => {
     // { to: "/dictionary", label: "📌추천 백과사전" },
   ];
 
-  if (isAuthenticated) {
-    nav.push({ to: "/mypage", label: "마이페이지" });
-  }
+  // profile 도메인 폐기 — 2026-05-09 (기획 IA 후 모바일 재구현. docs/prd/domains/profile.md TODO 참조)
+  // if (isAuthenticated) {
+  //   nav.push({ to: "/mypage", label: "마이페이지" });
+  // }
 
   if (authority?.role === "ADMIN") {
     nav.push({ to: "/admin/users", label: "사이트 관리"});

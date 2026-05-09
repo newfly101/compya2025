@@ -80,3 +80,40 @@
 ## B.5 디자인 / Figma 참조 (미작성)
 
 - figma-spec-validator 단계에서 채워질 영역
+
+---
+
+## TODO (2026-05-09 — 기획 IA 작업 우선)
+
+> 사용자 정책 (2026-05-09): "profile 폐기 → 기획 IA 후 코드 개발 재개"
+
+### 즉시 (P0)
+
+- [ ] **기획 IA 작업 재개** — `prd-ia-interactive` sub-agent 호출 (`/prd-pipeline profile`)
+  - 모바일 profile scope 재정의 (사용자 정보 표시 / 수정 / 알림 / 활동 이력 등)
+  - authentication 도메인과의 cross-domain 정합 (`state.auth.user` 사용 범위)
+  - admin profile / user 관리 분리 결정 (admin.md TODO 와 정합)
+
+### IA 완료 후 코드 개발 (P1)
+
+- [ ] profile.md Part B v1 확정사항 코드 반영 (FE / BE / mapper)
+- [ ] `src/domains/profile/**` 모바일 표준 패턴 신규 작성
+- [ ] 외부 호출 (라우트 / 메뉴 등) 주석 해제 + 동작 확인
+
+### 본 라운드 (2026-05-09) 처리 결과
+
+- `web/src/domains/profile/**` 폴더 통째 폐기 (3 파일 삭제):
+  - `web/src/domains/profile/page/UserProfile.jsx`
+  - `web/src/domains/profile/page/UserProfile.module.scss`
+  - `web/src/domains/profile/utils/userStatusUtils.js`
+- 외부 호출 주석 처리 (2 파일):
+  - `web/src/app/router/routes/UserRoutes.jsx` (UserProfile lazy import + `/mypage` route 등록 주석 — AuthGuard 자체 보존)
+  - `web/src/app/wrapper/parts/hooks/useHeaderNav.js` (`/mypage` 헤더 nav push 블록 주석)
+- 기획 IA 미진행 (P0 후속)
+
+### 보존 항목 (의도)
+
+- BE: `domain/oauth/UserController` (`/api/users/me`) — authentication 도메인 health check 에서 사용 중 (`AuthProvider.jsx:11`). 미터치
+- DB: `site_users` — 운영 중 (모든 활성 도메인 이용). 미터치
+- AuthGuard / AuthProvider / authentication 도메인 — 미터치
+- `/mypage` 진입 시 라우트 미등록 → 404 / 부모 라우트 fallback (정상 동작)
