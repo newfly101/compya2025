@@ -1,4 +1,18 @@
-export const legendStuff = [
+/**
+ * historyMode 도메인 — 스테이지 (KBO 역사 이벤트 타임라인) mock 데이터
+ *
+ * 사용처: `web/src/domains/historyMode/mobile/hooks/useHistoryMode.js`
+ *   - 선택된 레전드(이름)와 일치하는 stage 필터링 (allMatchedStages)
+ *   - 레전드 ↔ 선수 조합(player+years) 산출 → 화면 카드(StageCard)에 표시
+ *
+ * 형태: { day, name, roaster, item: [{ legend, player, years } | {}] }
+ *   - day: 묶음 단위 (1~14)
+ *   - roaster: day 내 정렬 키 (1~5)
+ *   - item: 해당 stage 에 등장하는 레전드↔선수 조합 (빈 객체 = 대상 레전드 없음)
+ *
+ * 임시 mock — 실제 데이터는 BE history stage 테이블 응답으로 교체 예정.
+ */
+export const MOCK_HISTORY_STAGES = [
   {
     day: 1,
     name: "한국 프로야구 시작",

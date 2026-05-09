@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { legendStuff } from "@/data/historyMode/LegendStuff.js";
-import { legendMeta } from "@/data/historyMode/LegendMeta.js";
+import { MOCK_HISTORY_STAGES } from "@/domains/historyMode/config/MOCK_HISTORY_STAGES.js";
+import { MOCK_HISTORY_LEGENDS } from "@/domains/historyMode/config/MOCK_HISTORY_LEGENDS.js";
 
 export const fmt = (player, years) => `${player}'${String(years).slice(-2)}`;
 
 const stageKey = (stage) =>
   stage ? `${stage.day}-${stage.roaster}` : null;
 
-const findMeta = (name) => legendMeta.find((m) => m.name === name) ?? null;
+const findMeta = (name) =>
+  MOCK_HISTORY_LEGENDS.find((m) => m.name === name) ?? null;
 
 export const useHistoryMode = () => {
   const [inputValue, setInputValue] = useState("");
@@ -19,8 +20,8 @@ export const useHistoryMode = () => {
   const [selectedStage, setSelectedStage] = useState(null);
 
   const legendsByPosition = useMemo(() => {
-    if (positionFilter === "all") return legendMeta;
-    return legendMeta.filter((m) => m.position === positionFilter);
+    if (positionFilter === "all") return MOCK_HISTORY_LEGENDS;
+    return MOCK_HISTORY_LEGENDS.filter((m) => m.position === positionFilter);
   }, [positionFilter]);
 
   const availableTeams = useMemo(() => {
@@ -51,7 +52,7 @@ export const useHistoryMode = () => {
 
   const allMatchedStages = useMemo(() => {
     if (!query) return [];
-    return legendStuff.filter((s) =>
+    return MOCK_HISTORY_STAGES.filter((s) =>
       s.item.some((it) => it.legend && it.legend === query)
     );
   }, [query]);

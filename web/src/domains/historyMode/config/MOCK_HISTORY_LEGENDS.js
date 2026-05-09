@@ -1,12 +1,18 @@
 /**
- * 임시 목 데이터
- * 실제 데이터는 player_legend JOIN teams API 응답으로 교체 예정
- * 형태: { name, position, team, teamId }
+ * historyMode 도메인 — 레전드 메타 mock 데이터
  *
+ * 사용처: `web/src/domains/historyMode/mobile/hooks/useHistoryMode.js`
+ *   - 포지션/구단 필터 옵션 산출
+ *   - 자동완성 후보 리스트 (이름 검색 매칭)
+ *   - 선택된 레전드의 team/position 표기 (HistoryModeScreen 헤더)
+ *
+ * 형태: { name, position, team }
+ *
+ * 임시 mock — 실제 데이터는 player_legend JOIN teams API 응답으로 교체 예정.
  * 구단명은 현재 프랜차이즈 기준으로 매핑
  * (해태→KIA, OB→두산, 빙그레/MBC 계보→한화/LG, SK→SSG, 현대/태평양→키움)
  */
-export const legendMeta = [
+export const MOCK_HISTORY_LEGENDS = [
   { name: "강민호",  position: "타자", team: "삼성" },
   { name: "구대성",  position: "투수", team: "한화" },
   { name: "김광현",  position: "투수", team: "SSG" },
