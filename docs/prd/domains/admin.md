@@ -207,6 +207,20 @@
 | **authentication** | R3 (state.auth shape) / R5 (test-token 가드) / R6 (`@EnableMethodSecurity` 활성화) 모두 authentication.md T1/T2/T3 흡수 — 본 라운드 무관 |
 | **profile (또는 신규 user 도메인)** | T3 Step 3b 흡수 대상 — `AdminUserManagePage` / `AdminUserDetailPage` + hooks 가 profile/user 도메인 admin 으로 이동 |
 
+### legacy `web/src/admin/` 폐기 (2026-05-09)
+
+- 과거 legacy PC 버전 admin 도메인 샘플 폴더 (`web/src/admin/**`) 통째 폐기 완료
+- 본 폴더는 `web/src/domains/admin/` (별도 폴더, T3 Step 3a/3b 대상) 와 혼동 금지 — 본 항목은 `web/src/` 직접 하위의 legacy 샘플 영역
+- 사전 검증 (2026-05-09): 작업 시작 시점에 폴더 자체가 부재 + 외부 import 0건 (`@/admin`, `src/admin`, `../admin`, `../../admin` 모두 grep 매치 0). 따라서 추가 삭제 / 주석 처리 대상 없음 (이미 부재 상태)
+- 추후 복원 가능성 보존 차원에서 PRD 문서로만 기록 (코드 변경 0건)
+
+### Frontend admin 구현 정책 (2026-05-09 사용자 정책)
+
+- 각 도메인 하위에서 구현: `src/domains/{domain}/feature/admin/...`
+- 이미 적용 도메인: **coupons** (`web/src/domains/coupons/feature/admin/`)
+- 별도 admin 폴더 (`web/src/admin/` 또는 `web/src/domains/admin/`) 존재하지 않을 예정
+- `web/src/domains/admin/` 의 잔여 (pages/config/feature) 처리는 본 PRD TODO P1 (Step 3b cross-domain commit) 참조
+
 ## B.8 후속 작업 (본 라운드 외)
 
 - **T3 Step 3b — `domains/admin/` 통째 폐기 라운드** (Owner 결정 2026-05-09): 4 consumer 흡수 후 폴더 제거. 흡수 매핑:
@@ -250,6 +264,7 @@
 
 ### 본 라운드 즉시 (P0) — 진행 중 / 완료
 
+- [x] **legacy `web/src/admin/` 폐기** (2026-05-09) — 과거 legacy PC 버전 admin 도메인 샘플 폴더 통째 폐기. 작업 시점 폴더 부재 + 외부 import 0건 검증 (`@/admin`, `src/admin`, `../admin`, `../../admin` 모두 grep 매치 0). PRD 문서 기록 (B.7 § legacy `web/src/admin/` 폐기) + frontend admin 정책 명시 (B.7 § Frontend admin 구현 정책 — `src/domains/{domain}/feature/admin/` 패턴, coupons 적용 사례). 코드 변경 0건 ✅
 - [x] **T3 Step 3a** — `web/src/domains/admin/store/**` 6 파일 통째 삭제 (api/endpoints/thunks/dto/slices/index — `dead-confirmed.md 1-C` cite). 본 라운드 commit 으로 처리 ✅
 - [ ] **T1** — AdminRoutes.jsx 통합 가드 검증 (5 활성 라우트 AuthGuard ADMIN 통과 + 비-ADMIN 401/403). event 라우트는 events.md T1 활성화 후 합류
   - 의존: `AdminRoutes.jsx`, `SecurityConfig.java:52`
