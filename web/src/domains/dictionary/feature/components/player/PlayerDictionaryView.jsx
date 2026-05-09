@@ -4,7 +4,7 @@ import { DICTIONARY_TAB_KEY, DictionaryNavTab } from "@/domains/dictionary/featu
 import { useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
 import { requestPlayerSkillSet } from "@/domains/dictionary/store/index.js";
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
-import MetaHeader from "@/global/ui/metaHeader/MetaHeader.jsx";
+import ContentPageHeader from "@/global/ui/contentPageHeader/ContentPageHeader";
 import CommonNavigationTab from "@/global/ui/navigation/tabs/CommonNavigationTab.jsx";
 import PlayerSkillCombination
   from "@/domains/dictionary/feature/components/player/combination/PlayerSkillCombination.jsx";
@@ -28,7 +28,8 @@ const PlayerDictionaryView = ({ config, type }) => {
   return (
     <ContentPageLayout
       header={
-        <MetaHeader
+        <ContentPageHeader
+          title={type === "pitcher" ? "투수 스킬 백과사전" : "타자 스킬 백과사전"}
           backLabel="백과사전 홈으로"
           onBack={() => moveTo("/dictionary")}
         />

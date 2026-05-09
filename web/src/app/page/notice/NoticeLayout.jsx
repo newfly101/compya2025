@@ -1,5 +1,5 @@
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
-import MetaHeader from "@/global/ui/metaHeader/MetaHeader.jsx";
+import ContentPageHeader from "@/global/ui/contentPageHeader/ContentPageHeader";
 import React from "react";
 import styles from "@/app/page/notice/Notice.module.scss";
 import { Outlet, useNavigate } from "react-router-dom";
@@ -18,9 +18,8 @@ const NoticeLayout = () => {
   return (
     <ContentPageLayout
       header={
-        <MetaHeader
+        <ContentPageHeader
           title="공지사항"
-          description="공식/컴투스프로야구 공지, 이벤트, 쿠폰을 한 곳에서 확인하세요."
           backLabel="홈으로"
           onBack={() => navigate("/")}
         />

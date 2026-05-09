@@ -4,7 +4,7 @@ import NavigationCard from "@/global/ui/navigationCard/NavigationCard.jsx";
 
 import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
 import { useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
-import MetaHeader from "@/global/ui/metaHeader/MetaHeader.jsx";
+import ContentPageHeader from "@/global/ui/contentPageHeader/ContentPageHeader";
 import { DICTIONARY_HOME_CARDS } from "@/domains/dictionary/feature/config/home/dictionaryHomeConfig.js";
 
 const DictionaryHomePage = () => {
@@ -15,7 +15,8 @@ const DictionaryHomePage = () => {
   return (
     <ContentPageLayout
       header={
-        <MetaHeader
+        <ContentPageHeader
+          title="백과사전 홈"
           backLabel={"메인으로"}
           onBack={moveHome}
         />
