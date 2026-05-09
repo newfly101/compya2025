@@ -23,12 +23,12 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 ## 2. 입력 (input)
 
 - **선행 산출물**: `docs/plan/{name}/requirements.md` (필수 — 없으면 즉시 중단)
-- (선택) `docs/plan/{name}/policy.md`
+- (선택) `docs/plan/{name}/policy-draft.md` — Forward 흐름: requirements → policy-draft → feature-spec
 - (선택) `docs/plan/{name}/ia.md` — Flow cite 용
 - 호출 args:
   ```
   requirements-path: docs/plan/{name}/requirements.md
-  policy-path: docs/plan/{name}/policy.md  # 선택
+  policy-draft-path: docs/plan/{name}/policy-draft.md  # 선택
   ```
 
 ## 3. 절차 (steps)
@@ -63,7 +63,8 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 - 산출물 경로
 - 시나리오 수
 - 1차 예외 수 (edge-cases 에서 심화 필요)
-- 다음 skill: `planner-api-spec` 또는 `planner-edge-cases`
+- 마커 분포 (🔴 / 🟨 / ❓) — 4 분야 시나리오 식별
+- 다음 skill: `planner-api-spec-draft` 또는 `planner-edge-cases`
 
 ## 4. 템플릿 (산출물)
 
@@ -187,7 +188,7 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 
 ## 6. 다음 단계
 
-- [ ] api-spec.yaml 작성 (`planner-api-spec`) — API 명세
+- [ ] api-spec-draft.yaml 작성 (`planner-api-spec-draft`) — API 명세 초안
 - [ ] edge-cases.md 작성 (`planner-edge-cases`) — 심화 예외
 - [ ] qa-checklist.md 작성 (`planner-qa-checklist`) — 본 시나리오 → 테스트 케이스
 
@@ -207,15 +208,34 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 - [ ] Then 의 부작용 (GA4 이벤트 / DB 변경 / 다른 화면 영향) 명시
 - [ ] alt / exception 분류된 시나리오 ≥ 1 (단순 happy 만 있으면 부족)
 
-## 6. ★ HITL 지점
+## 6. HITL (Human-in-the-Loop) 지점
 
-- **선택 HITL**: 사용자 흐름 분기 (예: "guest 진입 시 로그인 강제 vs 빈 목록") 가 IA 에서 결정 안 됐다면 본 단계에서 재확인
-- **필수 HITL 없음** (IA 단계에서 분기 확정됨)
-- IA 의 ★ Owner 결정 항목이 본 시나리오에 영향 주면 cite 후 사용자 확인
+### 강제 HITL (자동 진행 금지)
+
+본 skill 의 산출물 중 다음 분야 시나리오는 사용자 답변 전 확정 금지:
+- **권한 분기 시나리오** — 비로그인 / 권한 부족 / 토큰 만료 처리 (예: "guest 진입 시 로그인 강제 vs 빈 목록")
+- **결제 시나리오** — 결제 / 환불 / 정산 흐름
+- **법무 시나리오** — 약관 동의 / 개인정보 처리 동의 흐름
+- **DB 파괴적 변경 시나리오** — 마이그레이션 시점 사용자 흐름
+
+→ 위 항목은 🔴 마커 명시. 사용자 답변 받기 전 Then 결과 확정 X.
+
+### 완화 HITL (가정/미정 표시 후 진행)
+
+위 4 분야 외 일반 시나리오는:
+- 합리적 default / 추정으로 진행 OK (정상 흐름 / empty / 네트워크 실패 등)
+- 산출물에 🟨 가정 / ❓ 미정 마커 명시
+- 시나리오 표 / 상세에 마커 부여
+
+### 마커
+
+- 🟨 가정: default. 사용자 수정 가능
+- ❓ 미정: 결정 필요. 사용자 답변 후 확정
+- 🔴 위험: 강제 HITL — 사용자 답변 전 확정 X (4 분야)
 
 ## 7. 다음 skill 추천
 
-- **표준**: `planner-api-spec` (시나리오 → API 명세 도출)
+- **표준**: `planner-api-spec-draft` (시나리오 → API 명세 초안 도출)
 - **병렬 가능**: `planner-edge-cases` (심화 예외 정리)
 - **최종**: `planner-qa-checklist` (모든 산출물 종합)
 

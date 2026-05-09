@@ -20,11 +20,10 @@ description: 기능 요구사항 정의서 작성 (functional + non-functional).
 ## 2. 입력 (input)
 
 - **선행 산출물**: `docs/plan/{name}/ia.md` (필수 — 없으면 즉시 중단 + `planner-ia` 안내)
-- (선택) `docs/plan/{name}/policy.md` (forward 모드에서 정책서가 먼저 있다면 cite)
+- ⭐ Forward 흐름 변경: `requirements` 가 `policy-draft` 보다 **먼저** 진행됨 — requirements 의 NFR 결과가 policy-draft 의 결정 항목 도출에 사용됨
 - 호출 args:
   ```
   ia-path: docs/plan/{name}/ia.md
-  policy-path: docs/plan/{name}/policy.md  # 선택
   ```
 
 ## 3. 절차 (steps)
@@ -68,7 +67,9 @@ description: 기능 요구사항 정의서 작성 (functional + non-functional).
 - 산출물 경로
 - FR 수 / NFR 수
 - 우선순위별 분포 (P0/P1/P2 수)
-- 다음 skill: `planner-feature-spec` (Given/When/Then 기능 명세)
+- 마커 분포 (🔴 위험 / 🟨 가정 / ❓ 미정) — 4 분야 NFR 항목 (보안/결제/법무/DB) 식별
+- 다음 skill (Forward): `planner-policy-draft` (requirements 후 정책 결정 항목 도출)
+- 다음 skill (Reverse): `planner-feature-spec` (Given/When/Then 기능 명세)
 
 ## 4. 템플릿 (산출물)
 
@@ -172,12 +173,19 @@ NFR-02 ── (depends on) ── 인증 미들웨어
 |---|---|---|---|
 | FR-{ABBR}-N | ... | 운영 정책 미정 | policy.md 합의 후 |
 
-## 7. 다음 단계
+## 7. 사용자 확인 필요 항목
 
+- [ ] 🔴 위험 마커 NFR (권한 / 결제 / 법무 / DB) — 사용자 답변 필수
+- [ ] 🟨 가정 마커 항목 — 추정 default 검토
+- [ ] ❓ 미정 마커 항목 — TBD 결정
+
+## 8. 다음 단계
+
+- [ ] (Forward) policy-draft.md 작성 (`planner-policy-draft`) — requirements 의 4 분야 NFR 기반 정책 결정 항목 도출
 - [ ] feature-spec.md 작성 (`planner-feature-spec`)
-- [ ] (선택) api-spec.yaml 작성 (`planner-api-spec`)
+- [ ] (선택) api-spec-draft.yaml 작성 (`planner-api-spec-draft`)
 
-## 8. 변경 이력
+## 9. 변경 이력
 
 | 날짜 | 변경 | 변경자 |
 |---|---|---|
@@ -193,16 +201,42 @@ NFR-02 ── (depends on) ── 인증 미들웨어
 - [ ] 우선순위 분포 표 작성
 - [ ] IA 와 정합성 검증 (IA 의 P0 가 FR 에 모두 포함)
 
-## 6. ★ HITL 지점
+## 6. HITL (Human-in-the-Loop) 지점
 
-- **선택 HITL**: 우선순위 변경 / 외부 의존 항목 결정 시 사용자 confirm 권장
-- **필수 HITL 없음** (IA 단계에서 이미 우선순위 확정됨)
-- 단 IA 와 충돌 발견 시 사용자 cite 후 재확인
+### 강제 HITL (자동 진행 금지)
+
+본 skill 의 산출물 중 다음 분야는 사용자 답변 전 확정 금지:
+- **권한 NFR** — 인증 / 권한 등급 / SecurityConfig 관련 NFR (예: NFR-N "토큰 만료 시간")
+- **결제 FR/NFR** — PG / 환불 / 정산 관련 요구사항
+- **법무 FR/NFR** — 개인정보 / 약관 / 이용권리 관련 (예: NFR "개인정보 보관 기간")
+- **DB 파괴적 변경** — 마이그레이션 / DROP / DELETE 관련 NFR
+
+→ 위 항목은 🔴 마커 명시. 사용자 답변 받기 전 추정 default 작성 금지.
+
+### 완화 HITL (가정/미정 표시 후 진행)
+
+위 4 분야 외 일반 FR / NFR 은:
+- 합리적 default / 추정으로 진행 OK
+- 산출물에 🟨 가정 / ❓ 미정 마커 명시
+- § 끝 "사용자 확인 필요 항목" 섹션 명시
+
+예시 (완화 OK 항목):
+- 일반 FR (목록 조회 / 상세 조회 / 입력 폼)
+- 성능 NFR (p95 응답 시간 추정)
+- 접근성 NFR (WCAG / 키보드)
+- 국제화 / 호환성 NFR
+
+### 마커
+
+- 🟨 가정: default. 사용자 수정 가능
+- ❓ 미정: 결정 필요. 사용자 답변 후 확정
+- 🔴 위험: 강제 HITL — 사용자 답변 전 확정 X (4 분야: 법무/결제/권한/DB 파괴적)
 
 ## 7. 다음 skill 추천
 
-- **표준**: `planner-feature-spec` (Given/When/Then 형태로 시나리오화)
-- (선택) `planner-api-spec` (API 의존이 명확한 경우 병렬 가능)
+- **Forward 표준**: `planner-policy-draft` (requirements → 정책 결정 템플릿)
+- **Reverse 표준**: `planner-feature-spec` (Given/When/Then 형태로 시나리오화)
+- (선택) `planner-api-spec-draft` (API 의존이 명확한 경우 병렬 가능)
 
 ## 8. 예시
 

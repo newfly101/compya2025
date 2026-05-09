@@ -23,21 +23,21 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 
 - **선행 산출물**:
   - `docs/plan/{name}/feature-spec.md` (필수)
-  - `docs/plan/{name}/api-spec.yaml` (필수)
-- (선택) `docs/plan/{name}/policy.md` — 운영 정책 의존 케이스 cite
+  - `docs/plan/{name}/api-spec-draft.yaml` (필수 — Draft OK)
+- (선택) `docs/plan/{name}/policy-draft.md` — 운영 정책 의존 케이스 cite
 - 호출 args:
   ```
   feature-spec-path: docs/plan/{name}/feature-spec.md
-  api-spec-path: docs/plan/{name}/api-spec.yaml
-  policy-path: docs/plan/{name}/policy.md  # 선택
+  api-spec-draft-path: docs/plan/{name}/api-spec-draft.yaml
+  policy-draft-path: docs/plan/{name}/policy-draft.md  # 선택
   ```
 
 ## 3. 절차 (steps)
 
 ### Step 1 — 선행 산출물 로드
 - feature-spec 의 SC (시나리오) 1차 예외 추출
-- api-spec 의 4xx / 5xx 응답 추출
-- policy 의 정책 의존 분기 추출 (있다면)
+- api-spec-draft 의 4xx / 5xx 응답 추출 (마커 표시된 항목 — 후속 cite 시 마커 유지)
+- policy-draft 의 정책 의존 분기 추출 (있다면)
 
 ### Step 2 — 카테고리별 강제 점검
 다음 7 카테고리를 점검 — 각 카테고리에 케이스가 있는지 강제 확인:
@@ -257,8 +257,8 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 ## 7. 다음 단계
 
 - [ ] qa-checklist.md 작성 (`planner-qa-checklist`)
-- [ ] (필요 시) policy.md 갱신 — 정책 의존 케이스 명시
-- [ ] (필요 시) api-spec.yaml 갱신 — 4xx 응답 보강
+- [ ] (필요 시) policy-draft.md 갱신 — 정책 의존 케이스 명시
+- [ ] (필요 시) api-spec-draft.yaml 갱신 — 4xx 응답 보강
 
 ## 8. 변경 이력
 
@@ -276,12 +276,30 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 - [ ] api-spec 의 4xx / 5xx 응답이 ≥ 1 케이스에서 cite 됨
 - [ ] feature-spec 의 1차 예외가 모두 EC 로 흡수됨
 
-## 6. ★ HITL 지점
+## 6. HITL (Human-in-the-Loop) 지점
 
-**선택 HITL 4**: 운영 정책 의존 케이스 발견 시
-- 예: "결제 실패 시 자동 재시도 N회 vs 즉시 환불"
-- policy.md 미정 항목과 겹치면 사용자 / 운영자 답변 받기
-- 답변 없으면 "★ 운영 정책 합의 필요" 명시
+### 강제 HITL (자동 진행 금지)
+
+본 skill 의 산출물 중 다음 분야 케이스는 사용자 답변 전 확정 금지:
+- **법무 케이스** — 개인정보 처리 / 약관 동의 / 데이터 보관 기간 분기 (예: "탈퇴 시 데이터 즉시 삭제 vs 30일 보관")
+- **결제 케이스** — 결제 실패 / 환불 자동 재시도 / 정산 분기 (예: "결제 실패 시 자동 재시도 N회 vs 즉시 환불")
+- **권한 케이스** — 토큰 만료 / 권한 없음 처리 분기 (인증 정책 의존)
+- **DB 파괴적 변경 케이스** — 마이그레이션 도중 동시 요청 / 데이터 불일치
+
+→ 위 항목은 🔴 마커 명시. policy-draft.md 의 🔴 항목과 겹치면 cite + "사용자 답변 대기" 명시.
+
+### 완화 HITL (가정/미정 표시 후 진행)
+
+위 4 분야 외 일반 예외 케이스는:
+- 합리적 default / 추정으로 진행 OK (입력 검증 / 동시 클릭 / 네트워크 timeout / empty / offline 등)
+- 산출물에 🟨 가정 / ❓ 미정 마커 명시
+- 케이스 표 / 상세에 마커 부여
+
+### 마커
+
+- 🟨 가정: default. 사용자 수정 가능
+- ❓ 미정: 결정 필요. 사용자 답변 후 확정
+- 🔴 위험: 강제 HITL — 사용자 답변 전 확정 X (4 분야)
 
 ## 7. 다음 skill 추천
 

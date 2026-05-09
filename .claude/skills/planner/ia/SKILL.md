@@ -57,15 +57,19 @@ domain: rewards, mode: forward, user-input: "리워드 시스템 신규 도입..
 - Step 2 결과를 아래 템플릿에 채움
 - 빈 항목은 "미정" 명시 — 임의 추측 금지
 
-### Step 4 — ★ HITL 1: 사용자 확정
-다음 항목을 사용자에게 명시적으로 묻고 답변 받기:
+### Step 4 — HITL: 가정/미정 마커 표시 + (4 분야 시) 사용자 확정
+일반 항목은 합리적 default 추정 + 마커 표시 후 진행 OK. 강제 HITL 4 분야 (법무/결제/권한/DB 파괴적) scope 면 사용자 답변 필수:
 
-1. **도메인 scope 경계** — 어디까지 본 IA 가 다루나? 다루지 않는 것은?
-2. **사용자 시나리오 우선순위** — 핵심 흐름이 무엇? (한 가지만 P0)
-3. **기능 우선순위 P0/P1/P2** — 각 기능 우선순위
-4. **Owner 결정 항목** — 결정자가 누구? 결정 사유?
+1. **도메인 scope 경계** — 어디까지 본 IA 가 다루나?
+   - 일반 도메인 → 🟨 가정 / ❓ 미정 마커로 진행 OK
+   - 4 분야 도메인 (auth / payment / legal 등) → 🔴 마커 (사용자 답변 필요)
+2. **사용자 시나리오 우선순위** — 핵심 흐름이 무엇? → 🟨 가정 (default: 사용자 진입 빈도 높은 흐름) — 진행 OK
+3. **기능 우선순위 P0/P1/P2** — 각 기능 우선순위 → 🟨 가정 (default 추정) — 진행 OK
+4. **Owner 결정 항목** — 결정자가 누구?
+   - 일반 결정 → 🟨 / ❓ 마커 — 진행 OK
+   - 4 분야 결정 → 🔴 마커 — 사용자 답변 받기 전 확정 X
 
-답변 없이 진행 금지. 모호한 답변은 follow-up 질문.
+산출물에 모든 결정 항목 마커 명시. § 끝 "사용자 확인 필요 항목" 섹션 명시.
 
 ### Step 5 — 산출물 Write
 - `docs/plan/{name}/ia.md` 에 Write
@@ -75,8 +79,8 @@ domain: rewards, mode: forward, user-input: "리워드 시스템 신규 도입..
 보고:
 - 산출물 경로
 - 확정 P0 / P1 / P2 기능 수
-- 보류 항목 (있다면)
-- 다음 skill: `planner-requirements` (forward 의 경우 `planner-policy` 먼저 권고)
+- 마커 분포 (🔴 위험 / 🟨 가정 / ❓ 미정) — 사용자 확인 필요 항목 명시
+- 다음 skill: `planner-requirements` (Forward 흐름 변경 — requirements 가 policy-draft 보다 먼저)
 
 ## 4. 템플릿 (산출물)
 
@@ -155,11 +159,12 @@ domain: rewards, mode: forward, user-input: "리워드 시스템 신규 도입..
 ### P2 (보류 — 차후 결정)
 - [ ] 기능 M: ...
 
-## 6. ★ Owner 결정 항목
+## 6. Owner 결정 항목 (마커 표시)
 
-| 항목 | 결정 옵션 | 결정자 | 결정 상태 | 결정 사유 |
-|---|---|---|---|---|
-| {분기 결정 1} | A / B / C | PO | 결정 / 보류 | ... |
+| 항목 | 결정 옵션 | 결정자 | 마커 | 추정 default | 결정 사유 |
+|---|---|---|---|---|---|
+| {분기 결정 1} | A / B / C | PO | 🟨 가정 | A | ... |
+| {권한 분기} | user / admin | 보안 + BE | 🔴 위험 (권한) | (대기 — 사용자 답변 필요) | ... |
 
 ## 7. 의존 / 제약
 
@@ -171,10 +176,16 @@ domain: rewards, mode: forward, user-input: "리워드 시스템 신규 도입..
 ### 제약
 - 시간 / 인력 / 외부 규정
 
-## 8. 다음 단계
+## 8. 사용자 확인 필요 항목
 
-- [ ] requirements.md 작성 (`planner-requirements` skill)
-- [ ] (forward) policy.md 운영자 합의 (`planner-policy` skill)
+- [ ] 🔴 위험 마커 항목 — 사용자 답변 필수 (4 분야)
+- [ ] 🟨 가정 마커 항목 — 추정 default 검토 + 수정 권고 (있다면)
+- [ ] ❓ 미정 마커 항목 — TBD 항목 결정 권고
+
+## 9. 다음 단계
+
+- [ ] requirements.md 작성 (`planner-requirements` skill) — Forward 흐름: requirements 가 policy-draft 보다 먼저
+- [ ] (forward) policy-draft.md 작성 (`planner-policy-draft` skill) — requirements 후
 - [ ] feature-spec.md 작성 (`planner-feature-spec` skill)
 
 ## 9. 변경 이력
@@ -195,16 +206,39 @@ domain: rewards, mode: forward, user-input: "리워드 시스템 신규 도입..
 - [ ] ★ Owner 결정 항목 표 작성 (없으면 "없음" 명시)
 - [ ] 의존 / 제약 작성
 
-## 6. ★ HITL 지점
+## 6. HITL (Human-in-the-Loop) 지점
 
-**HITL 1 (강제)**: Step 4 — scope 경계 / 우선순위 / Owner 결정 사용자 답변 받기
+### 강제 HITL (자동 진행 금지)
 
-자동 진행 금지. 답변 없이 산출물 Write 금지.
+본 skill 의 산출물 중 다음 분야는 사용자 답변 전 확정 금지:
+- 도메인 scope 가 4 분야 (법무 / 결제 / 권한 / DB 파괴적) 에 해당 (예: auth / payment / legal 도메인)
+- Owner 결정 항목이 4 분야에 해당 (예: 인증 방식 결정 / 환불 정책 결정자)
+
+→ 위 항목은 🔴 마커 명시. 사용자 답변 받기 전 확정 X.
+
+### 완화 HITL (가정/미정 표시 후 진행)
+
+일반 도메인 / 일반 결정 항목은:
+- 합리적 default / 추정으로 진행 OK
+- 산출물에 🟨 가정 / ❓ 미정 마커 명시
+- § 끝 "사용자 확인 필요 항목" 섹션 명시
+
+예시 (완화 OK 항목):
+- 도메인 scope 경계 (일반 도메인)
+- 우선순위 P0 / P1 / P2 추정
+- Persona 추정
+- Flow 흐름 추정
+
+### 마커
+
+- 🟨 가정: default. 사용자 수정 가능
+- ❓ 미정: 결정 필요. 사용자 답변 후 확정
+- 🔴 위험: 강제 HITL — 사용자 답변 전 확정 X (4 분야: 법무/결제/권한/DB 파괴적)
 
 ## 7. 다음 skill 추천
 
-- **표준**: `planner-requirements` (IA → 요구사항 정의)
-- **forward 모드**: `planner-policy` 우선 (정책 운영자 합의 후 requirements 작성하면 충돌 적음)
+- **표준**: `planner-requirements` (IA → 요구사항 정의) — Forward 흐름 변경: requirements 가 policy-draft 보다 먼저
+- **forward 모드**: requirements → `planner-policy-draft` 순서로 진행
 
 ## 8. 예시
 

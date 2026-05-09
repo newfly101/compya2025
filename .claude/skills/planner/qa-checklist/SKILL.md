@@ -27,9 +27,9 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
   - `docs/plan/{name}/ia.md`
   - `docs/plan/{name}/requirements.md`
   - `docs/plan/{name}/feature-spec.md` (필수)
-  - `docs/plan/{name}/api-spec.yaml` (필수)
+  - `docs/plan/{name}/api-spec-draft.yaml` (필수 — Draft OK)
   - `docs/plan/{name}/edge-cases.md` (필수)
-  - (선택) `docs/plan/{name}/policy.md`
+  - (선택) `docs/plan/{name}/policy-draft.md`
 - 호출 args:
   ```
   plan-dir: docs/plan/{name}/
@@ -38,13 +38,14 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 ## 3. 절차 (steps)
 
 ### Step 1 — 모든 선행 산출물 로드
-- ia / requirements / feature-spec / api-spec / edge-cases / policy 순으로 Read
+- ia / requirements / feature-spec / api-spec-draft / edge-cases / policy-draft 순으로 Read
 - ID 매핑 표 작성:
   - SC ID (시나리오) → 테스트 케이스
   - EC ID (예외) → 테스트 케이스
   - FR / NFR → 테스트 케이스
   - API endpoint → 계약 테스트
   - POL → 정책 준수 검증
+- 마커 표시된 항목 추적 (🔴 / 🟨 / ❓) — TC 에 마커 유지
 
 ### Step 2 — 테스트 케이스 ID 부여
 - `TC-{도메인약어}-{번호}` (예: `TC-CPN-01`)
@@ -95,7 +96,7 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 # QA 체크리스트 — {도메인/기능명}
 
 > 작성일: YYYY-MM-DD
-> 선행 문서: [ia](./ia.md), [requirements](./requirements.md), [feature-spec](./feature-spec.md), [api-spec](./api-spec.yaml), [edge-cases](./edge-cases.md), [policy](./policy.md)
+> 선행 문서: [ia](./ia.md), [requirements](./requirements.md), [feature-spec](./feature-spec.md), [api-spec-draft](./api-spec-draft.yaml), [edge-cases](./edge-cases.md), [policy-draft](./policy-draft.md)
 
 ## 0. 사용 안내 (주니어 QA 친화)
 
@@ -284,11 +285,33 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 - [ ] 각 TC 자동화 레벨 명시 (auto/manual)
 - [ ] 각 TC 우선순위 명시 (P0/P1/P2)
 
-## 6. ★ HITL 지점
+## 6. HITL (Human-in-the-Loop) 지점
 
-- **필수 HITL 없음** (모든 선행 산출물에서 결정 완료된 내용 종합)
-- 단 선행 산출물 미완 항목 (TBD / ★ 합의 필요) 발견 시 사용자 안내
-  - "policy.md 의 POL-CPN-03 미결 → 본 qa-checklist 에서 TC-CPN-NN 보류"
+### 강제 HITL (자동 진행 금지)
+
+본 skill 의 산출물 중 다음 분야 테스트 케이스는 사용자 답변 전 확정 금지:
+- **보안 테스트** — 인증 / 권한 / SQL injection / XSS — 권한 분야 의존 (🔴)
+- **결제 테스트** — PG 결제 / 환불 / 정산 검증 케이스 (🔴)
+- **법무 테스트** — 개인정보 보관 기간 자동 삭제 / 약관 동의 검증 (🔴)
+- **DB 마이그레이션 테스트** — 마이그레이션 rollback / 데이터 정합 검증 (🔴)
+
+→ 위 항목은 🔴 마커 명시. 선행 산출물의 🔴 항목과 겹치면 cite + "사용자 답변 대기" 명시.
+
+### 완화 HITL (가정/미정 표시 후 진행)
+
+위 4 분야 외 일반 TC 는:
+- 합리적 default / 추정으로 진행 OK (기능 / 성능 / 접근성 / 호환성 등)
+- 산출물에 🟨 가정 / ❓ 미정 마커 명시
+
+선행 산출물 미완 항목 (마커 표시) 발견 시:
+- "policy-draft.md 의 POL-CPN-03 🔴 → 본 qa-checklist 에서 TC-CPN-NN 🔴 사용자 답변 대기"
+- "api-spec-draft.yaml 의 권한 schema 🔴 → TC-CPN-NN 🔴"
+
+### 마커
+
+- 🟨 가정: default. 사용자 수정 가능
+- ❓ 미정: 결정 필요. 사용자 답변 후 확정
+- 🔴 위험: 강제 HITL — 사용자 답변 전 확정 X (4 분야)
 
 ## 7. 다음 skill 추천
 
