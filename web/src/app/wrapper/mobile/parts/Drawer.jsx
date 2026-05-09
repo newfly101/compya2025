@@ -1,15 +1,25 @@
 // src/app/wrapper/mobile/parts/Drawer.jsx
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTopBar } from "@/app/provider/TopBarProvider";
 import styles from "./Drawer.module.scss";
 import { MENU_GROUPS } from "@/app/wrapper/mobile/config/MENU_GROUPS.js";
 import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
+import { RenewalNoticeModal } from "@/global/ui/renewalNoticeModal";
 
 
 const Drawer = () => {
   const { isDrawerOpen, closeDrawer } = useTopBar();
   const location = useLocation();
   const { user, login } = useAuthentication();
+  const [renewalOpen, setRenewalOpen] = useState(false);
+
+  // 폐기 도메인 (comingSoon) 클릭 시 navigate 차단 + 모달 표시. drawer 도 함께 닫음.
+  const handleComingSoonClick = (e) => {
+    e.preventDefault();
+    closeDrawer();
+    setRenewalOpen(true);
+  };
 
   return (
     <>
@@ -58,7 +68,7 @@ const Drawer = () => {
                       <Link
                         to={item.to}
                         className={`${styles.menuItem} ${isActive ? styles.menuItemActive : ""}`}
-                        onClick={closeDrawer}
+                        onClick={item.comingSoon ? handleComingSoonClick : closeDrawer}
                       >
                         <span className={styles.menuIcon}>{item.icon}</span>
                         <span className={styles.menuLabel}>{item.label}</span>
@@ -75,6 +85,11 @@ const Drawer = () => {
         </nav>
 
       </aside>
+
+      <RenewalNoticeModal
+        isOpen={renewalOpen}
+        onClose={() => setRenewalOpen(false)}
+      />
     </>
   );
 };
