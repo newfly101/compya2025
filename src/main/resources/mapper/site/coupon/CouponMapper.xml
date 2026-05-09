@@ -42,7 +42,7 @@
             is_visible    AS visible,
             created_at    AS createdAt,
             updated_at    AS updatedAt
-        FROM coupons
+        FROM site_coupons
         WHERE id = #{id}
     </select>
 

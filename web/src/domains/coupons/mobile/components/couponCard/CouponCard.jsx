@@ -2,13 +2,16 @@
 import styles from "./CouponCard.module.scss";
 import { trackCouponGo } from "@/app/analytics/events/couponEvents.js";
 
+const COUPON_BASE_URL =
+  import.meta.env.VITE_COUPON_BASE_URL ?? "http://withhive.me/399";
+
 const CouponCard = ({ coupon, showDetail = false, isExpired = false }) => {
   const details = coupon.detail?.split("\n") ?? [];
 
   const handleGoCoupon = () => {
     if (isExpired) return;
     trackCouponGo(coupon.couponCode);
-    window.open(`http://withhive.me/399/${coupon.couponCode}`, "_blank");
+    window.open(`${COUPON_BASE_URL}/${coupon.couponCode}`, "_blank");
   };
 
   return (

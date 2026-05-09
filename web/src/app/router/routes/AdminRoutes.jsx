@@ -9,7 +9,7 @@ const AdminContentPage = lazy(() => import("@/global/layout/adminPageLayout/cont
 // const AdminEventPage = lazy(() => import("@/domains/events/feature/admin/pages/AdminEventPage.jsx"));
 const AdminNoticeManagePage = lazy(() => import("@/domains/notices/feature/components/admin/AdminNoticeManagePage.jsx"));
 const AdminCommunityPage = lazy(() => import("@/domains/community/page/admin/AdminCommunityPage.jsx"));
-// const AdminCouponListPage = lazy(() => import("@/domains/coupons/feature/admin/pages/AdminCouponListPage.jsx"));
+const AdminCouponListPage = lazy(() => import("@/domains/coupons/feature/admin/pages/AdminCouponListPage.jsx"));
 const AdminPlayerPage = lazy(() => import("@/domains/playerCard/feature/admin/pages/AdminPlayerPage.jsx"));
 const AdminQuizPage = lazy(() => import("@/domains/quiz/feature/admin/pages/AdminQuizPage.jsx"));
 
@@ -28,7 +28,7 @@ export const AdminRoutes = [
             path: "content", element: <AdminContentPage />, children: [
               // { path: "event", element: <AdminEventPage />, handle: { title: "컴프야펀 | 어드민 | 이벤트 관리" } },
               { path: "notice", element: <AdminNoticeManagePage />, handle: { title: "컴프야펀 | 어드민 | 공지 관리" } },
-              // { path: "coupon", element: <AdminCouponListPage />, handle: { title: "컴프야펀 | 어드민 | 쿠폰 관리" } },
+              { path: "coupon", element: <AdminCouponListPage />, handle: { title: "컴프야펀 | 어드민 | 쿠폰 관리" } },
               { path: "player", element: <AdminPlayerPage />, handle: { title: "컴프야펀 | 어드민 | 선수 카드 관리" } },
               { path: "quiz", element: <AdminQuizPage />, handle: { title: "컴프야펀 | 어드민 | 퀴즈 관리" } },
             ],
