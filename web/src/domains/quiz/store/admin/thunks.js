@@ -3,7 +3,6 @@ import {
   fetchAdminQuizAll,
   fetchAdminQuizCreate,
   fetchAdminQuizUpdate,
-  fetchAdminQuizUpdateVisible,
 } from "@/domains/quiz/store/admin/api.js";
 import { ADMIN_QUIZ_ACTIONS } from "@/domains/quiz/store/admin/endpoints.js";
 import { baseQuizAnswerDTO } from "@/domains/quiz/store/dto.js";
@@ -39,18 +38,6 @@ export const requestAdminQuizUpdate = createAsyncThunk(
     try {
       const { id: updatedId, ...options } = await fetchAdminQuizUpdate(id, baseQuizAnswerDTO(quiz));
       return { ...quiz, id: updatedId, options };
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const requestAdminQuizUpdateVisible = createAsyncThunk(
-  ADMIN_QUIZ_ACTIONS.UPDATE_VISIBLE,
-  async ({ id, visible }, { rejectWithValue }) => {
-    try {
-      const { id: updatedId, ...options } = await fetchAdminQuizUpdateVisible(id, visible);
-      return { id: updatedId, visible, options };
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -1,8 +1,16 @@
+import { useSelector } from "react-redux";
 import QuizModal from "./QuizModal.jsx";
 import { useQuizCreate } from "@/domains/quiz/feature/admin/hooks/useQuizCreate.js";
 
 const QuizCreateModal = ({ onClose }) => {
-  const hook = useQuizCreate({ onSuccess: onClose });
+  const quizAnswers = useSelector((state) => state.quiz?.quizAnswers) ?? [];
+  const latestRound = quizAnswers.reduce(
+    (max, q) => (Number(q.round) > max ? Number(q.round) : max),
+    0
+  );
+  const initialRound = latestRound > 0 ? latestRound + 1 : "";
+
+  const hook = useQuizCreate({ onSuccess: onClose, initialRound });
 
   return (
     <QuizModal

@@ -1,7 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { VisibleToggleHandler } from "@/global/handler/VisibleToggleHandler.js";
-import { requestAdminQuizAll, requestAdminQuizUpdateVisible } from "@/domains/quiz/store/admin/thunks.js";
+import { requestAdminQuizAll } from "@/domains/quiz/store/admin/thunks.js";
 
 export const useAdminQuizTable = () => {
   const dispatch = useDispatch();
@@ -11,7 +10,5 @@ export const useAdminQuizTable = () => {
     dispatch(requestAdminQuizAll());
   }, [dispatch]);
 
-  const changeVisible = VisibleToggleHandler(dispatch, requestAdminQuizUpdateVisible);
-
-  return { quizAnswers, changeVisible, loading, error };
+  return { quizAnswers, loading, error };
 };

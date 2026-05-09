@@ -57,18 +57,7 @@ public interface AdminQuizSwaggerDocs {
                         value = """
                             {
                               "round": 1,
-                              "imageUrl": "https://cdn.example.com/quiz/round1.png",
-                              "isVisible": true
-                            }
-                            """
-                    ),
-                    @ExampleObject(
-                        name = "비노출 퀴즈 등록 예시",
-                        value = """
-                            {
-                              "round": 2,
-                              "imageUrl": "https://cdn.example.com/quiz/round2.png",
-                              "isVisible": false
+                              "imageUrl": "https://cdn.example.com/quiz/round1.png"
                             }
                             """
                     )
@@ -111,18 +100,7 @@ public interface AdminQuizSwaggerDocs {
                         value = """
                             {
                               "round": 1,
-                              "imageUrl": "https://cdn.example.com/quiz/round1-updated.png",
-                              "isVisible": true
-                            }
-                            """
-                    ),
-                    @ExampleObject(
-                        name = "노출 끄기 예시",
-                        value = """
-                            {
-                              "round": 1,
-                              "imageUrl": "https://cdn.example.com/quiz/round1.png",
-                              "isVisible": false
+                              "imageUrl": "https://cdn.example.com/quiz/round1-updated.png"
                             }
                             """
                     )

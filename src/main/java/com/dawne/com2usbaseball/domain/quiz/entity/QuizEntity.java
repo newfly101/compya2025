@@ -13,7 +13,6 @@ public class QuizEntity {
     private Long id;
     private Integer round;
     private String imageUrl;
-    private boolean isVisible;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

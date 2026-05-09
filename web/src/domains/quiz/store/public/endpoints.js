@@ -1,3 +1,3 @@
 export const QUIZ = {
-  GET_LATEST: "/quiz-answers/latest",
+  GET_LATEST: "/quiz/latest",
 };

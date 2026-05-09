@@ -9,7 +9,7 @@ import QuizCreateModal from "./modal/QuizCreateModal.jsx";
 import QuizEditModal from "./modal/QuizEditModal.jsx";
 
 const AdminQuizTable = () => {
-  const { quizAnswers, changeVisible } = useAdminQuizTable();
+  const { quizAnswers } = useAdminQuizTable();
   const { createOpen, editTarget, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
 
   return (
@@ -22,7 +22,6 @@ const AdminQuizTable = () => {
         tbody={
           <QuizTableBody
             quizAnswers={quizAnswers}
-            changeVisible={changeVisible}
             setEditQuiz={openEdit}
           />
         }

@@ -4,7 +4,6 @@ import {
   requestAdminQuizAll,
   requestAdminQuizCreate,
   requestAdminQuizUpdate,
-  requestAdminQuizUpdateVisible,
 } from "@/domains/quiz/store/admin/thunks.js";
 import { requestLatestQuizAnswer } from "@/domains/quiz/store/public/thunks.js";
 
@@ -38,13 +37,6 @@ const quizSlice = createSlice({
       if (index !== -1) {
         state.quizAnswers[index] = { ...state.quizAnswers[index], ...updated };
       }
-    });
-
-    applyAsyncHandlers(builder, requestAdminQuizUpdateVisible, (state, action) => {
-      const { id, visible } = action.payload;
-      state.quizAnswers = state.quizAnswers.map((q) =>
-        Number(q.id) === Number(id) ? { ...q, visible } : q
-      );
     });
   },
 });

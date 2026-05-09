@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 public record QuizResponse(
         Long id,
         Integer round,
+        String title,
         String imageUrl,
-        boolean isVisible,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime createdAt,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")

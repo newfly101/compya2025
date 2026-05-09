@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useSetTopBar } from "@/app/provider/TopBarProvider";
 import styles from "./HomeScreen.module.scss";
 import HeroSection from "@/domains/home/components/section/hero/HeroSection.jsx";
 import QuickSection from "@/domains/home/components/section/quick/QuickSection.jsx";
 import QuizSection from "@/domains/home/components/section/quiz/QuizSection.jsx";
 import NoticeSection from "@/domains/home/components/section/notice/NoticeSection.jsx";
-import { MOCK_QUIZ } from "@/domains/home/config/MOCK_QUIZ.js";
 import { MOCK_TEAM_POSTS } from "@/domains/home/config/MOCK_TEAM_POSTS.js";
 import PostRow from "@/domains/community/mobile/components/postRow/PostRow.jsx";
 import BoardTagBadge from "@/domains/community/mobile/components/boardTagBadge/BoardTagBadge.jsx";
@@ -16,6 +16,7 @@ import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { useCouponList } from "@/domains/coupons/mobile/hooks/useCouponList.js";
 import EventListHorizontal from "@/domains/events/mobile/containers/public/EventListHorizontal.jsx";
 import { useEventList } from "@/domains/events/mobile/hooks/useEventList.js";
+import { requestLatestQuizAnswer } from "@/domains/quiz/store/public/thunks.js";
 
 const HOME_PREVIEW_LIMIT = 3;
 
@@ -33,8 +34,20 @@ const toPostRowItem = (post) => ({
 
 const HomeScreen = () => {
   useSetTopBar({ variant: "home" });
+  const dispatch = useDispatch();
   const { activeCoupon } = useCouponList();
   const { activeEvents } = useEventList();
+  const latestQuiz = useSelector((state) => state.quiz?.latest) ?? null;
+
+  useEffect(() => {
+    dispatch(requestLatestQuizAnswer());
+  }, [dispatch]);
+
+  const quizSectionTitle =
+    latestQuiz?.title ??
+    (latestQuiz?.round
+      ? `🎉컴프야 퀴즈 이벤트 ${latestQuiz.round}회 정답`
+      : "컴프야 퀴즈 정답");
 
   return (
     <div className={styles.homeWrapper}>
@@ -44,8 +57,8 @@ const HomeScreen = () => {
 
       {/* ── 퀴즈 ── */}
       <SectionBlock
-        title={`컴프야 퀴즈 ${MOCK_QUIZ.round}회 정답`}
-        children={<QuizSection />}
+        title={quizSectionTitle}
+        children={<QuizSection quiz={latestQuiz} />}
       />
 
       {/* ── 최신 쿠폰 ── @@@작업 완료@@@*/}

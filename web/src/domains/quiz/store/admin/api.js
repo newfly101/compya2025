@@ -15,8 +15,3 @@ export const fetchAdminQuizUpdate = async (id, body) => {
   const { data } = await API.patch(ADMIN_QUIZ.UPDATE(id), body);
   return data;
 };
-
-export const fetchAdminQuizUpdateVisible = async (id, visible) => {
-  const { data } = await API.patch(ADMIN_QUIZ.UPDATE_VISIBLE(id), { visible });
-  return data;
-};

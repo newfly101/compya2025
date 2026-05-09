@@ -5,12 +5,10 @@ export const useQuizEdit = ({ quiz, onSuccess }) =>
   useQuizForm({
     initialForm: {
       round: quiz.round,
-      title: quiz.title,
       imageUrl: quiz.imageUrl,
       imageType: "URL",
       imagePreview: "",
       imageFile: null,
-      visible: quiz.visible,
     },
     submitThunk: requestAdminQuizUpdate,
     onSuccess,

@@ -13,8 +13,8 @@ public interface QuizSwaggerDocs {
     @Operation(
         summary = "최신 퀴즈 조회",
         description = """
-            현재 노출(isVisible=true) 중인 퀴즈 중 가장 최근 퀴즈를 반환합니다.
-            노출 중인 퀴즈가 없으면 404를 반환하며, 프론트엔드는 이를 기준으로 퀴즈 영역을 숨김 처리합니다.
+            가장 최근 등록된 퀴즈를 반환합니다 (id 기준 desc).
+            등록된 퀴즈가 없으면 404를 반환하며, 프론트엔드는 이를 기준으로 빈 카드 placeholder 를 노출합니다.
             """
 )
 @ApiResponses({

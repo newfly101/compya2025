@@ -18,11 +18,6 @@ const QuizModal = ({ title, submitLabel, form, onChange, onSubmit, onCancel, onI
             <input name="round" type="number" value={form.round} onChange={onChange} required />
           </label>
 
-          <label className={styles.eventModalField}>
-            <span className={styles.fieldLabel}>제목</span>
-            <input name="title" value={form.title} onChange={onChange} required />
-          </label>
-
           <div className={styles.eventModalSwitch}>
             {["URL", "FILE"].map((type) => (
               <button

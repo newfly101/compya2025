@@ -100,26 +100,90 @@
 
 ---
 
-## B.1 기능 요구사항 (미작성 — Owner 채움)
+## B.1 모바일 scope 정의 (v2 — 사용자 4 라운드 대화 확정)
 
-> 이 섹션은 도메인별 상세 기획 시 채울 영역. A 섹션을 사실 baseline 으로 사용.
+> **v1 대비 변경**: 이전 라운드 (2026-05-09 첫 IA-CONFIRM) 의 admin / 신규 기능 / Owner 결정 보류 항목 (visible toggle / V2 title 컬럼) 은 본 라운드 결정으로 **모두 DROP**. 모바일 quiz scope 는 **HomeScreen QuizSection** 1개 화면으로 단일화.
 
-- [ ] 기능 1: ...
-  - 사용자 시나리오:
-  - acceptance criteria:
-  - 의존 API/테이블:
-- [ ] 기능 2: ...
+- **모바일 quiz 화면**: 신규 단독 화면 없음. `/` (HomeScreen) 의 QuizSection 카드 1개로 노출
+- **admin 영역**: 본 라운드 scope 외 (Phase 3 미루기 — 모바일 리뉴얼 직접 차단 아님)
+- **사용자 접점**: guest / user 가 홈 진입 시 자동 노출되는 카드 1개. 별도 인터랙션 (정답 제출 / 스타 적립 / 상세 페이지 진입) 없음
+- **figma node**: `node-id=2-34` (확정)
 
-## B.2 신규 기능 (미작성)
+## B.2 기능 요구사항
 
-- [ ] ...
+### 기능 1: 최신 fun_quiz 1건 자동 조회 + 카드 노출 (R9 fix)
 
-## B.3 우선순위 (미작성)
+- [ ] **사용자 시나리오**:
+  - guest / user 가 `/` 진입 → HomeScreen 마운트 시 최신 visible=true quiz 자동 fetch → QuizSection 카드에 imageUrl + round 표시
+  - 응답이 비어있을 때 (DB 0건 또는 visible=true 행 없음) 빈 카드 placeholder 유지
+- [ ] **acceptance criteria**:
+  - HomeScreen 마운트 시 `requestLatestQuizAnswer` dispatch 1회 발생 (Part A.7 dead chain 해소)
+  - FE endpoint 가 `/quiz/latest` (GET, permitAll) 로 호출 (Part A.6 R9 권장 fix #1)
+  - 응답 200 + payload 존재 시 `QuizSection` 에 `quiz={imageUrl, round}` props 전달 (`QuizSection.jsx:4` 의 `quiz?.imageUrl` 분기 동작)
+  - 응답 204 / 빈 객체 시 빈 카드 fallback 유지 (B.3 기능 2)
+- [ ] **의존 API/테이블**: GET `/api/quiz/latest` (Part A.3 BE 노출 1행), `fun_quiz` (Part A.4)
+- [ ] **우선순위**: **P0** (모바일 리뉴얼 차단성 — `_overview.md § 7 Phase 0` 명시)
+- [ ] **figma node**: `node-id=2-34`
 
-- P0 / P1 / P2
+### 기능 2: QuizSection 빈 상태 / 로딩 상태 UX 보존
 
-## B.4 KPI / 성공지표 (미작성)
+- [ ] **사용자 시나리오**:
+  - 응답 도착 전 (loading) 빈 카드 + 안내문 노출 유지
+  - DB 가 비었거나 visible=true 행 없음 → 동일 빈 카드 노출 (사용자 구분 불필요)
+- [ ] **acceptance criteria**:
+  - `QuizSection.jsx:11-15` 의 empty placeholder 마크업 변경하지 않음
+  - 안내문 (`L17-19`) 텍스트 변경하지 않음 (정답/스타 적립 기능 미구현 상태에서 안내만 유지)
+- [ ] **의존 API/테이블**: 없음 (FE 컴포넌트 보존)
+- [ ] **우선순위**: **P0** (기능 1 의 fallback path)
+- [ ] **figma node**: `node-id=2-34` (동일 카드 — 빈 상태 variant)
 
-## B.5 디자인 / Figma 참조 (미작성)
+## B.3 자동화 정책 (사용자 결정 4종)
 
-- figma-spec-validator 단계에서 채워질 영역
+> 본 라운드 질문 2 답변. 모바일 quiz 가 별도 인터랙션 없는 read-only 카드인 만큼 자동화 4종은 단순 / 검증 가능 형태로 결정.
+
+| # | 자동화 항목 | 결정 | 사유 |
+|---|---|---|---|
+| 1 | HomeScreen 마운트 시 `requestLatestQuizAnswer` 자동 dispatch | ✅ 채택 | R9 fix 의 핵심. 사용자 액션 없이 카드 자동 표시 |
+| 2 | 응답 캐시 / refetch 정책 | 페이지 마운트 1회만 fetch (refetch 없음) | quiz 는 주 1회 갱신 빈도 → SWR / polling 불필요 |
+| 3 | 빈 응답 (204 / null) → placeholder fallback 자동 전환 | ✅ 채택 | 사용자 구분 불필요. 동일 빈 카드 |
+| 4 | 에러 응답 (4xx/5xx) → placeholder fallback (조용히 실패) | ✅ 채택 | quiz 는 비차단 보조 기능. 에러 토스트 / 재시도 UI 노출 안 함 |
+
+## B.4 우선순위
+
+| 우선순위 | 기능 | Phase 매핑 | 차단성 |
+|---|---|---|---|
+| **P0** | 기능 1 (R9 fix: path 정정 + dispatch 추가 + props 전달) | Phase 0 | ★ HomeScreen 빈 퀴즈 카드 차단 해소 |
+| **P0** | 기능 2 (빈 상태 UX 보존) | Phase 0 | 기능 1 fallback |
+
+> v1 의 P1 / P2 (admin path 정렬, visible toggle, V2 title 컬럼 처리) 모두 DROP — 본 라운드 모바일 scope 외.
+
+## B.5 KPI / 성공지표
+
+- **P0 검증 지표**:
+  - HomeScreen 마운트 시 `GET /api/quiz/latest` 호출 1회 발생 (현재 0회) — runtime 검증 가능
+  - QuizSection 카드의 imageUrl 표시율 (응답 도착률 — DB 에 visible=true row 존재 시 100%)
+- **운영 KPI** (참고): 이번 라운드 범위 밖 — 정답 제출 / 스타 적립 기능 부재로 사용자 engagement 측정 불가
+
+## B.6 디자인 / Figma 참조
+
+- **모바일**: HomeScreen QuizSection — figma `node-id=2-34` 확정
+- **기존 스타일**: `web/src/domains/home/components/section/quiz/QuizSection.module.scss` 유지 가정 (wireframe-generator + design-sync 단계에서 figma vs 코드 갭 분석)
+- **신규 화면 없음**: 본 라운드 모바일 quiz 단독 화면 신설하지 않음
+
+## B.7 Owner 결정 (도메인 한정 — 본 라운드 해소)
+
+> Part A.8 의 도메인 한정 ★ Owner 결정 항목. v1 IA-CONFIRM 라운드에서 보류 → 본 라운드 해소.
+
+| # | 결정 항목 | v1 상태 | v2 결정 | 사유 |
+|---|---|---|---|---|
+| (a) | visible toggle BE 추가 vs FE 토글 제거 | ☐ 보류 | ✅ **DROP** | 본 라운드 모바일 scope 외 (admin 영역). Phase 3 admin 정리 라운드까지 본 PRD 에서 제외 |
+| (b) | V2 `fun_quiz.title` 컬럼 손실 처리 | ☐ 보류 | ✅ **DROP** | 모바일 QuizSection 은 imageUrl 만 표시 → title 영향 0. admin form 영향만 남음 → admin 정리 라운드에서 결정 |
+
+## B.8 v1 → v2 변경 사항 (재정립 근거)
+
+> 본 라운드 (2026-05-09 두 번째 IA-CONFIRM) 가 첫 라운드와 결정이 다른 이유 추적용.
+
+- **v1 (Auto mode 합리적 가정)**: P0×2 / P1×2 / P2×2 = 6 기능. admin path 정렬 + visible toggle + V2 title 컬럼 처리 포함
+- **v2 (사용자 4 라운드 대화 확정)**: P0×2 = 2 기능. admin / 신규 기능 / 도메인 한정 Owner 결정 보류 항목 모두 DROP
+- **DROP 사유**: 모바일 리뉴얼 phase 0 의 quiz scope 는 HomeScreen QuizSection R9 fix 단 1건. admin 영역 / 운영 정책은 Phase 3 admin 정리 라운드에서 별도 PRD 라운드 진행
+- **figma node 확정**: v1 미정 → v2 `node-id=2-34`

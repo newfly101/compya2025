@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,8 +41,13 @@ public class QuizAdminServiceImpl implements QuizAdminService {
     })
     public QuizResponse createQuiz(QuizRequest request) {
         QuizEntity entity = quizMapStruct.toEntity(request);
-        if (!repository.save(entity)) {
-            throw new QuizException(QuizMessages.QUIZ_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            if (!repository.save(entity)) {
+                throw new QuizException(QuizMessages.QUIZ_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (DuplicateKeyException e) {
+            // round UNIQUE 제약 (uq_round) 위반 — admin inline error 로 안내
+            throw new QuizException(QuizMessages.QUIZ_ROUND_DUPLICATED, HttpStatus.CONFLICT);
         }
         // insertQuiz useGeneratedKeys로 entity.id가 채워짐
         QuizEntity saved = repository.findById(entity.getId())
@@ -58,8 +64,13 @@ public class QuizAdminServiceImpl implements QuizAdminService {
         QuizEntity entity = repository.findById(id)
                 .orElseThrow(() -> new QuizException(QuizMessages.QUIZ_NOT_FOUND, HttpStatus.NOT_FOUND));
         quizMapStruct.updateEntity(request, entity);
-        if (!repository.update(entity)) {
-            throw new QuizException(QuizMessages.QUIZ_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            if (!repository.update(entity)) {
+                throw new QuizException(QuizMessages.QUIZ_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (DuplicateKeyException e) {
+            // round UNIQUE 제약 (uq_round) 위반 — admin inline error 로 안내
+            throw new QuizException(QuizMessages.QUIZ_ROUND_DUPLICATED, HttpStatus.CONFLICT);
         }
         return quizMapStruct.toResponse(entity);
     }
