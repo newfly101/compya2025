@@ -1,6 +1,5 @@
+// global/layout/adminPageLayout 폐기 (2026-05-09) — AdminTableLayout / AdminFilterBar wrap 제거. children (head / body / 등록 액션) 만 인라인 유지
 import React from "react";
-import AdminTableLayout from "@/global/layout/adminPageLayout/table/AdminTableLayout.jsx";
-import AdminFilterBar from "@/global/layout/adminPageLayout/table/AdminFilterBar.jsx";
 import { useAdminQuizTable } from "@/domains/quiz/feature/admin/hooks/useAdminQuizTable.js";
 import { useTableModal } from "@/global/hooks/useTableModal.js";
 import QuizTableHead from "./table/QuizTableHead.jsx";
@@ -14,19 +13,19 @@ const AdminQuizTable = () => {
 
   return (
     <>
-      <AdminTableLayout
-        filters={
-          <AdminFilterBar title="퀴즈 정답" onCreate={openCreate} />
-        }
-        head={<QuizTableHead />}
-        tbody={
+      <h2>퀴즈 정답</h2>
+      <button type="button" onClick={openCreate}>퀴즈 정답 등록</button>
+      <table className="adminTableQuiz">
+        <thead>
+          <QuizTableHead />
+        </thead>
+        <tbody>
           <QuizTableBody
             quizAnswers={quizAnswers}
             setEditQuiz={openEdit}
           />
-        }
-        tableClass="adminTableQuiz"
-      />
+        </tbody>
+      </table>
       {createOpen && <QuizCreateModal onClose={closeCreate} />}
       {editTarget && <QuizEditModal quiz={editTarget} onClose={closeEdit} />}
     </>

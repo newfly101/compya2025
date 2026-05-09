@@ -1,19 +1,10 @@
+// global/layout/contentPageLayout 폐기 (2026-05-09) — ContentPageLayout wrap 제거. children section/footer 만 유지
 import React from "react";
 import styles from "./legal.module.scss";
-import { ContentPageHeader, useContentPageHeader } from "@/global/ui/contentPageHeader/index.js";
-import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
 
 const PrivacyPolicy = () => {
-  const { moveHome } = useContentPageHeader();
-
   return (
-    <ContentPageLayout
-      header={<ContentPageHeader title={"개인정보처리방침"}
-                                 meta={["시행일자 2026-01-01"]}
-                                 backLabel={"메인으로"}
-                                 onBack={moveHome}
-      />}
-      children={<>
+    <>
         <section className={styles.summary}>
           <h2>수집 항목</h2>
           <ul>
@@ -90,8 +81,8 @@ const PrivacyPolicy = () => {
             수정될 수 있으며, 변경 시 사이트를 통해 안내합니다.
           </p>
         </footer>
-      </>}
-    />);
+      </>
+  );
 };
 
 export default PrivacyPolicy;

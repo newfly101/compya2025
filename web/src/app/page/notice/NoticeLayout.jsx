@@ -1,13 +1,10 @@
-import { ContentPageLayout } from "@/global/layout/contentPageLayout/index.js";
-import ContentPageHeader from "@/global/ui/contentPageHeader/ContentPageHeader";
+// global/layout/contentPageLayout 폐기 (2026-05-09) — ContentPageLayout wrap 제거. children section 만 유지
 import React from "react";
 import styles from "@/app/page/notice/Notice.module.scss";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import TabNavigation from "@/global/ui/navigation/tabNav/TabNavigation.jsx";
 
 const NoticeLayout = () => {
-  const navigate = useNavigate();
-
   const NOTICE_TAB = [
     { key: "", label: "펀 공지", path: "/notice", exact: true },
     { key: "official", label: "공식 공지", path: "/notice/official" },
@@ -16,22 +13,12 @@ const NoticeLayout = () => {
   ];
 
   return (
-    <ContentPageLayout
-      header={
-        <ContentPageHeader
-          title="공지사항"
-          backLabel="홈으로"
-          onBack={() => navigate("/")}
-        />
-      }
-    >
-      <section className={styles.noticeContentSection}>
+    <section className={styles.noticeContentSection}>
 
-        <TabNavigation tabs={NOTICE_TAB} />
+      <TabNavigation tabs={NOTICE_TAB} />
 
-        <Outlet />
-      </section>
-    </ContentPageLayout>
+      <Outlet />
+    </section>
   );
 };
 
