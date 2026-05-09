@@ -9,7 +9,8 @@ const NoticeDetailPage = lazy(() => import("@/app/page/NoticeDetailPage.jsx"));
 const HistoryModePage = lazy(() => import("@/app/page/HistoryModePage.jsx"));
 const CommunityPage = lazy(() => import("@/app/page/CommunityPage.jsx"));
 
-const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
+// LEGACY kbo 도메인 잠정 보류 — 2026-05-09 (frontend kbo 화면 폐기. BE API 미구현 / DB 는 kbocrol 운영)
+// const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
 // const EventListPage = lazy(() => import("@/domains/events/feature/public/pages/EventListPage.jsx"));
 
 

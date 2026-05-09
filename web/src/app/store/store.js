@@ -8,7 +8,8 @@ import communityReducer from "@/domains/community/store/slices.js";
 import playerCardReducer from "@/domains/playerCard/store/slices.js";
 import upLoadReducer from "@/infra/uploads/store/slices.js";
 import quizReducer from "@/domains/quiz/store/slices.js";
-import kboReducer from "@/domains/kbo/store/slices.js";
+// LEGACY kbo 도메인 잠정 보류 — 2026-05-09 (frontend kbo 화면 폐기. BE API 미구현 / DB 는 kbocrol 운영)
+// import kboReducer from "@/domains/kbo/store/slices.js";
 import noticesReducer from "@/domains/notices/store/slices.js";
 import operationReducer from "@/app/store/operation/slices.jsx";
 import { operationListener } from "@/app/store/operation/operationListener.js";
@@ -25,7 +26,8 @@ export const store = configureStore({
     upload: upLoadReducer,
     playerCard: playerCardReducer,
     quiz: quizReducer,
-    kbo: kboReducer,
+    // LEGACY kbo 도메인 잠정 보류 — 2026-05-09 (frontend kbo 화면 폐기. BE API 미구현 / DB 는 kbocrol 운영)
+    // kbo: kboReducer,
     notices: noticesReducer,
   },
   middleware: (getDefaultMiddleware) =>
