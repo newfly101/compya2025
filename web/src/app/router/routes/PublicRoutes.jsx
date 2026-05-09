@@ -8,7 +8,7 @@ const NoticePage = lazy(() => import("@/app/page/NoticePage.jsx"));
 const NoticeDetailPage = lazy(() => import("@/app/page/NoticeDetailPage.jsx"));
 const HistoryModePage = lazy(() => import("@/app/page/HistoryModePage.jsx"));
 // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
-// const CommunityPage = lazy(() => import("@/app/page/CommunityPage.jsx"));
+// CommunityPage 는 community IA 재개 시 도메인 mobile/feature 흡수 후 재도입
 
 // LEGACY kbo 도메인 잠정 보류 — 2026-05-09 (frontend kbo 화면 폐기. BE API 미구현 / DB 는 kbocrol 운영)
 // const KBOLeaguePage = lazy(() => import("@/domains/kbo/feature/public/pages/KBOLeaguePage.jsx"));
@@ -19,7 +19,7 @@ const HistoryModePage = lazy(() => import("@/app/page/HistoryModePage.jsx"));
 // const SkillSimulator = lazy(() => import("@/domains/simulate/page/SkillSimulator.jsx"));
 // const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
 // const HitterSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
-const PrivacyPolicy = lazy(() => import("@/app/page/legal/PrivacyPolicy.jsx"));
+// PrivacyPolicy 폐기 (2026-05-09) — line 54 dead route chain (`{ path: "privacy", ... }` 주석) 만 사용. `app/page/legal/` 폴더 통째 폐기
 // dictionary 도메인 폐기 (legacy PC) — 2026-05-09 (기획 IA 후 모바일 재구현. docs/prd/domains/dictionary.md TODO 참조)
 // const DictionaryHome = lazy(() => import("@/domains/dictionary/page/DictionaryHomePage.jsx"));
 // const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.jsx"));
@@ -34,7 +34,7 @@ export const PublicRoutes = [
   { path: ROUTE_META.NOTICE_DETAILS.path, element: <NoticeDetailPage />, handle: ROUTE_META.NOTICE_DETAILS },
   { path: ROUTE_META.HISTORY_MODE.path, element: <HistoryModePage />, handle: ROUTE_META.HISTORY_MODE.title},
   // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
-  // { path: ROUTE_META.COMMUNITY.path, element: <CommunityPage />, handle: ROUTE_META.COMMUNITY},
+  // community IA 재개 시 ROUTE_META.COMMUNITY + 도메인 mobile/feature 흡수 후 재도입
 
   // {
   //   path: "notice",
@@ -51,7 +51,7 @@ export const PublicRoutes = [
   // { path: "simulate/pitcher", element: <PitcherSkillChange />, handle: { title: "컴프야펀 | 투수 고스변 시뮬레이터" } },
   // { path: "simulate/hitter", element: <HitterSkillChange />, handle: { title: "컴프야펀 | 타자 고스변 시뮬레이터" } },
   // { path: "mode/history", element: <LegendCalendar />, handle: { title: "컴프야펀 | 히스토리 모드 레전드 재료" } },
-  // { path: "privacy", element: <PrivacyPolicy />, handle: { title: "컴프야펀 | 개인정보처리방침" } },
+  // PrivacyPolicy route 폐기 (2026-05-09) — `app/page/legal/PrivacyPolicy.jsx` + `legal.module.scss` 폴더 통째 폐기
   // { path: "auth/callback", element: <AuthCallBack />, handle: { title: "컴프야펀 | 로그인 콜백" } },
   //
   // { path: "dictionary", children: [

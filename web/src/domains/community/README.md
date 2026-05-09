@@ -36,7 +36,7 @@ community/
 ## 2. 라우팅 / 진입
 
 - `routePath.js`: `community: "/community"` / `routeMeta.js`: `COMMUNITY`
-- `app/page/CommunityPage.jsx` → `<CommunityScreen />` thin wrapper
+- `app/page/CommunityPage.jsx` (2026-05-09 폐기 — community 정리 보류 中. IA 재개 시 도메인 mobile/feature 직접 lazy 흡수)
 - 자체 헤더 없음 — 글로벌 `MobileLayout` TopBar(home variant: 햄버거 + 로고 + 로그인) 그대로 사용
 
 ---
