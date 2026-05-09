@@ -9,7 +9,8 @@ const AdminNavigation = [
   { url: "/admin/content/event", name: "이벤트 관리" },
   { url: "/admin/content/coupon", name: "쿠폰 관리" },
   { url: "/admin/users", name: "유저 관리@" },
-  { url: "/admin/community", name: "게시판 관리@" },
+  // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
+  // { url: "/admin/community", name: "게시판 관리@" },
   { url: "/admin/content/player", name: "선수 카드 관리@" },
   { url: "/admin/content/quiz", name: "퀴즈 관리" },
 ];

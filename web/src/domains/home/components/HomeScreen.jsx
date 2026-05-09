@@ -7,8 +7,9 @@ import QuickSection from "@/domains/home/components/section/quick/QuickSection.j
 import QuizSection from "@/domains/home/components/section/quiz/QuizSection.jsx";
 import NoticeSection from "@/domains/home/components/section/notice/NoticeSection.jsx";
 import { MOCK_TEAM_POSTS } from "@/domains/home/config/MOCK_TEAM_POSTS.js";
-import PostRow from "@/domains/community/mobile/components/postRow/PostRow.jsx";
-import BoardTagBadge from "@/domains/community/mobile/components/boardTagBadge/BoardTagBadge.jsx";
+// community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
+// import PostRow from "@/domains/community/mobile/components/postRow/PostRow.jsx";
+// import BoardTagBadge from "@/domains/community/mobile/components/boardTagBadge/BoardTagBadge.jsx";
 import { MOCK_POSTS } from "@/domains/home/config/MOCK_POSTS.js";
 import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
 import CouponListHorizontal from "@/domains/coupons/mobile/containers/public/CouponListHorizontal.jsx";
@@ -84,7 +85,9 @@ const HomeScreen = () => {
         <EventListHorizontal events={activeEvents} />
       </SectionBlock>
 
+      {/* community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조) */}
       {/* 커뮤니티 인기글 */}
+      {/*
       <SectionBlock
         title="커뮤니티 인기글"
         to="/community?category=trending"
@@ -95,9 +98,11 @@ const HomeScreen = () => {
           ))}
         </div>
       </SectionBlock>
+      */}
 
 
       {/* 자유게시판 — 첫 tag 라벨을 BoardTagBadge로 title 앞에 prepend */}
+      {/*
       <SectionBlock
         title="자유게시판"
         to="/community?category=free"
@@ -115,6 +120,7 @@ const HomeScreen = () => {
           })}
         </div>
       </SectionBlock>
+      */}
 
     </div>
   );

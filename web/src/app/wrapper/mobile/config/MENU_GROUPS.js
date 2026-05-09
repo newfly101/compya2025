@@ -18,11 +18,12 @@ export const MENU_GROUPS = [
       // { icon: '⚾', label: 'KBO 승부예측',   to: '/kbo',          badge: null },
     ]
   },
-  {
-    label: '커뮤니티',
-    items: [
-      { icon: '💬', label: '인기글',   to: '/posts/hot',  badge: null },
-      { icon: '💡', label: '팀 게시판', to: '/posts/team', badge: null },
-    ]
-  },
+  // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
+  // {
+  //   label: '커뮤니티',
+  //   items: [
+  //     { icon: '💬', label: '인기글',   to: '/posts/hot',  badge: null },
+  //     { icon: '💡', label: '팀 게시판', to: '/posts/team', badge: null },
+  //   ]
+  // },
 ]

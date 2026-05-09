@@ -172,3 +172,41 @@
 ## B.5 디자인 / Figma 참조 (미작성)
 
 - figma-spec-validator 단계에서 채워질 영역
+
+---
+
+## TODO (2026-05-09 — 기획 IA 작업 우선)
+
+> 사용자 정책 (2026-05-09): "메인화면 작업 중 community 도메인 정리 시작 시점. 폴더 자체는 건드리지 않고, 외부 호출만 주석 처리. 기획 IA 작업 진행 후 다시 코드 개발 진행"
+
+### 즉시 (P0)
+
+- [ ] **기획 IA 작업 재개** — `prd-ia-interactive` sub-agent 호출 (`/prd-pipeline community`)
+  - 모바일 community scope 재정의 (보드 / 게시글 / 댓글 / 반응 / 신고 / 태그 / 익명 등 V2 site_* 테이블 정합 검증)
+  - admin community scope 분리 결정
+  - 글로벌 ★ Owner 결정 추적 (있으면 cite)
+
+### IA 완료 후 코드 개발 (P1)
+
+- [ ] community.md Part B v1 확정사항 코드 반영 (BE / FE / mapper / SQL)
+- [ ] `src/domains/community/**` 정리 — 본 라운드 보류된 폴더 작업
+- [ ] 외부 호출 (HomeScreen / GNB / Footer / 라우트 등) 주석 해제 + 동작 확인
+- [ ] AdminRoutes.jsx 의 community admin 주석 해제 (본 라운드 race 로 인해 다른 background agent commit 에 흡수됨)
+
+### 본 라운드 (2026-05-09) 처리 결과
+
+- 외부 호출 주석 처리 완료 (cite — 실제 주석 처리한 파일):
+  - `web/src/app/store/store.js` (communityReducer import + reducer 등록) — 동시 진행 중인 dictionary cleanup background agent commit `823c6ac` 에 흡수됨
+  - `web/src/app/router/routes/PublicRoutes.jsx` (CommunityPage lazy import + `/community` 라우트 등록) — 동시 진행 중인 dictionary cleanup background agent commit `823c6ac` 에 흡수됨
+  - `web/src/app/router/routes/AdminRoutes.jsx` (AdminCommunityPage lazy import + `/admin/community` 어드민 라우트) — 본 라운드 작업 했으나 동시 진행 중인 playerCard background agent commit 에 흡수 예정 (race 회피)
+  - `web/src/app/wrapper/mobile/config/MENU_GROUPS.js` (커뮤니티 메뉴 그룹 — 인기글 / 팀 게시판) — 본 commit 포함
+  - `web/src/domains/home/components/HomeScreen.jsx` (PostRow / BoardTagBadge import + 커뮤니티 인기글 / 자유게시판 SectionBlock 2개) — 본 commit 포함
+  - `web/src/domains/notices/mobile/NoticeScreen.jsx` ("사이트 공지" 섹션의 `/community/notices` link target 임시 제거) — 본 commit 포함
+  - `web/src/global/layout/adminPageLayout/AdminPageLayout.jsx` (admin nav `/admin/community` 항목) — 본 commit 포함
+- `src/domains/community/**` 미터치 (사용자 명시: 폴더 자체 건드리지 않음)
+- 기획 IA 미진행 (P0 후속)
+- 미터치 (touched-elsewhere / dead chain):
+  - `web/src/app/page/CommunityPage.jsx` (`PublicRoutes.jsx` 만 사용 → lazy import 주석 후 unreferenced. 폴더 정리 라운드에서 처리)
+  - `web/src/app/router/config/{routePath,routeMeta}.js` (constant 정의만, 호출 아님 — `PublicRoutes.jsx` 주석 후 미사용)
+  - `web/src/app/wrapper/parts/hooks/useHeaderNav.js` (PC dead chain — `Header.jsx` 만 사용. `_overview.md § 6.1` 별도 dead 정리 라운드)
+  - `web/src/data/community/**` (community 폴더 내부에서만 사용 — 외부 호출 아님)

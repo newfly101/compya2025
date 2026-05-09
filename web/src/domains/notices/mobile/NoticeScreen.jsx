@@ -16,7 +16,8 @@ const NoticeScreen = () => {
         </SectionBlock>
       )}
 
-      <SectionBlock title="사이트 공지" to="/community/notices" linkText="전체 보기 →">
+      {/* community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조). community 라우트 비활성 동안 link target 임시 제거 */}
+      <SectionBlock title="사이트 공지">
         <NoticeListVertical notices={listedNotices} />
       </SectionBlock>
 
