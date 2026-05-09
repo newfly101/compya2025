@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
+import { applyAsyncHandlers } from "@/app/store/utils/applyAsyncHandlers.js";
 import {
   requestAdminGetExEventList,
   requestAdminInsertNewExEvent,

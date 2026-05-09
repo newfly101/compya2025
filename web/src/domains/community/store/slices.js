@@ -12,7 +12,7 @@ import {
   requestUpdateNewPost,
   requestUpdateNewTag,
 } from "@/domains/community/store/thunks/index.js";
-import { applyAsyncHandlers } from "@/global/handler/applyAsyncHandlers.js";
+import { applyAsyncHandlers } from "@/app/store/utils/applyAsyncHandlers.js";
 
 const initialState  = {
   boardLists: [],

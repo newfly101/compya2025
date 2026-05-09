@@ -20,7 +20,6 @@ const HistoryModePage = lazy(() => import("@/app/page/HistoryModePage.jsx"));
 // const PitcherSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/PitcherSkillChange.jsx"));
 // const HitterSkillChange = lazy(() => import("@/domains/simulate/page/skillChange/HitterSkillChange.jsx"));
 const PrivacyPolicy = lazy(() => import("@/app/page/legal/PrivacyPolicy.jsx"));
-const AuthCallBack = lazy(() => import("@/global/layout/callBack/AuthCallBack.jsx"));
 // dictionary 도메인 폐기 (legacy PC) — 2026-05-09 (기획 IA 후 모바일 재구현. docs/prd/domains/dictionary.md TODO 참조)
 // const DictionaryHome = lazy(() => import("@/domains/dictionary/page/DictionaryHomePage.jsx"));
 // const Dictionary = lazy(() => import("@/domains/dictionary/page/DictionaryPage.jsx"));

@@ -1,4 +1,4 @@
-// @/global/handler/asyncHandlers.js
+// @/app/store/utils/applyAsyncHandlers.js
 export const applyAsyncHandlers = (builder, thunk, onFulfilled) => {
   builder
     .addCase(thunk.pending, (state) => {
