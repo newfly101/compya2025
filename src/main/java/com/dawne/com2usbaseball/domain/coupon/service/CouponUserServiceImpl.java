@@ -3,7 +3,7 @@ package com.dawne.com2usbaseball.domain.coupon.service;
 import com.dawne.com2usbaseball.domain.coupon.dto.mapstruct.CouponMapStruct;
 import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
 import com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity;
-import com.dawne.com2usbaseball.domain.coupon.repository.CouponPublicRepository;
+import com.dawne.com2usbaseball.domain.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ import java.util.List;
 @Transactional
 public class CouponUserServiceImpl implements CouponUserService {
 
-    private final CouponPublicRepository repository;
+    private final CouponRepository repository;
     private final CouponMapStruct couponMapStruct;
 
     @Override

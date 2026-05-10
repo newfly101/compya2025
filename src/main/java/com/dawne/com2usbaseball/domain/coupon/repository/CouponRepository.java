@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class CouponPublicRepository {
+public class CouponRepository {
 
     private final CouponMapper mapper;
 

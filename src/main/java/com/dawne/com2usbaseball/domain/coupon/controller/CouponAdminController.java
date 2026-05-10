@@ -1,7 +1,7 @@
 package com.dawne.com2usbaseball.domain.coupon.controller;
 
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
-import com.dawne.com2usbaseball.domain.coupon.controller.docs.AdminCouponSwaggerDocs;
+import com.dawne.com2usbaseball.domain.coupon.controller.docs.CouponAdminSwaggerDocs;
 import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponRequest;
 import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponVisibleRequest;
 import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
@@ -17,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/coupons")
-public class AdminCouponController implements AdminCouponSwaggerDocs {
+public class CouponAdminController implements CouponAdminSwaggerDocs {
 
     private final CouponAdminService couponAdminService;
 
