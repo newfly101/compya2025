@@ -10,5 +10,5 @@ public record CouponRequest(
         String detail,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime expireAt,
-        boolean visible
+        Boolean visible
 ) { }

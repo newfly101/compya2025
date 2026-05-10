@@ -3,6 +3,8 @@ package com.dawne.com2usbaseball.domain.coupon.dto.mapstruct;
 import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponRequest;
 import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
 import com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -15,6 +17,7 @@ public interface CouponMapStruct {
     @Mapping(target = "updatedAt", ignore = true)
     CouponEntity toEntity(CouponRequest request);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
