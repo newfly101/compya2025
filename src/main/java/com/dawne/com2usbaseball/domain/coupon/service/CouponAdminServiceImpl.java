@@ -8,9 +8,8 @@ import com.dawne.com2usbaseball.domain.coupon.enums.CouponMessages;
 import com.dawne.com2usbaseball.domain.coupon.exception.CouponException;
 import com.dawne.com2usbaseball.domain.coupon.repository.CouponRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -25,6 +24,7 @@ public class CouponAdminServiceImpl implements CouponAdminService {
 
     private final CouponRepository repository;
     private final CouponMapStruct couponMapStruct;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,10 +36,6 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "coupons", key = "'admin'"),
-            @CacheEvict(value = "coupons", key = "'public'")
-    })
     public CouponResponse createCoupon(CouponRequest request) {
         CouponEntity coupon = couponMapStruct.toEntity(request);
         try {
@@ -49,6 +45,7 @@ public class CouponAdminServiceImpl implements CouponAdminService {
             CouponEntity saved = repository.findById(coupon.getId())
                     .orElseThrow(() -> new CouponException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
 
+            eventPublisher.publishEvent(new CouponCacheEvictEvent());
             return couponMapStruct.toResponse(saved);
         } catch (DataIntegrityViolationException e) {
             throw new CouponException(CouponMessages.COUPON_CODE_DUPLICATED, HttpStatus.CONFLICT);
@@ -56,10 +53,6 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "coupons", key = "'admin'"),
-            @CacheEvict(value = "coupons", key = "'public'")
-    })
     public CouponResponse updateCoupon(CouponRequest request, Long id) {
         CouponEntity coupon = repository.findById(id)
                 .orElseThrow(() -> new CouponException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -69,17 +62,15 @@ public class CouponAdminServiceImpl implements CouponAdminService {
         if (!repository.updateCoupon(coupon)) {
             throw new CouponException(CouponMessages.COUPON_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        eventPublisher.publishEvent(new CouponCacheEvictEvent());
         return couponMapStruct.toResponse(coupon);
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "coupons", key = "'admin'"),
-            @CacheEvict(value = "coupons", key = "'public'")
-    })
     public void updateCouponVisible(Long id, boolean visible) {
         repository.findById(id)
                 .orElseThrow(() -> new CouponException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
         repository.updateCouponVisible(id, visible);
+        eventPublisher.publishEvent(new CouponCacheEvictEvent());
     }
 }
