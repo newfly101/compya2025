@@ -14,6 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<GlobalResponse<Void>> handle(BaseException e) {
+        log.warn("[{}] {} (status={})", e.getDomain(), e.getCode(), e.getStatus());
         return ResponseEntity
                 .status(e.getStatus())
                 .body(GlobalResponse.fail(e.getCode()));

@@ -13,4 +13,12 @@ public class BaseException extends RuntimeException {
         this.code = code;
         this.status = status;
     }
+
+    public String getDomain() {
+        String simpleName = code.getDeclaringClass().getSimpleName();
+        if (simpleName.endsWith("Messages")) {
+            simpleName = simpleName.substring(0, simpleName.length() - "Messages".length());
+        }
+        return simpleName.toLowerCase();
+    }
 }
