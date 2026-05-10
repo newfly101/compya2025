@@ -3,7 +3,9 @@ package com.dawne.com2usbaseball.common.util;
 import jakarta.servlet.http.HttpServletRequest;
 
 public final class ClientInfoExtractor {
-    public ClientInfoExtractor() {    }
+    private ClientInfoExtractor() {
+        throw new UnsupportedOperationException();
+    }
 
     public static String getClientIp(HttpServletRequest request) {
         String xff = request.getHeader("X-Forwarded-For");

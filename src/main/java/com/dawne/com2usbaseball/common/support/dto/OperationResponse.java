@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.common.support.dto;
 
-public record OperationResponse <M>(
+public record OperationResponse<M>(
         boolean success,
         M message,
         Long id

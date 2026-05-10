@@ -2,16 +2,16 @@ package com.dawne.com2usbaseball.common.util;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.List;
 
-@Component
-@RequiredArgsConstructor
-public class JsonUtils {
+public final class JsonUtils {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    private JsonUtils() {
+        throw new UnsupportedOperationException();
+    }
 
     /** JSON 배열 → List<String> */
     public static List<String> toList(String json) {
