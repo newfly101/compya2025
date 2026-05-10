@@ -53,4 +53,5 @@ docs/temp/
 # code.ts 는 designer agent 가 매번 덮어쓰지만, 다른 컴터에서도 동일 plugin 실행이 필요하므로 추적 유지.
 # node_modules / 빌드 결과 (code.js) 만 ignore.
 /figma-plugin/node_modules/
-/figma-plugin/code.js
+/figma-plugin/code.*
+/figma-plugin/domains/
