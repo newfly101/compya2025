@@ -10,12 +10,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CouponEntity {
-    Long id;
-    String couponCode;
-    String title;
-    String detail;
-    LocalDateTime expireAt;
-    boolean visible;
-    LocalDateTime createdAt;
-    LocalDateTime updatedAt;
+    private Long id;
+    private String couponCode;
+    private String title;
+    private String detail;
+    private LocalDateTime expireAt;
+    private boolean visible;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
