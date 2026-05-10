@@ -3,7 +3,9 @@
     "target": "es2017",
     "lib": ["es2017"],
     "strict": true,
+    "module": "none",
+    "outFile": "code.js",
     "typeRoots": ["./node_modules/@types", "./node_modules/@figma"]
   },
-  "include": ["code.ts"]
+  "include": ["code.ts", "domains/**/*.ts", "shared/**/*.ts"]
 }
