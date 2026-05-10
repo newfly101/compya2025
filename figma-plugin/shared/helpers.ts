@@ -41,6 +41,7 @@ namespace Helpers {
     autoResize?: 'WIDTH_AND_HEIGHT' | 'HEIGHT' | 'NONE';
     fixedWidth?: number;     // autoResize='HEIGHT' 시 width 고정
     layoutAlign?: 'INHERIT' | 'STRETCH' | 'MIN' | 'CENTER' | 'MAX';
+    layoutGrow?: number;     // text node 도 layoutGrow 1 적용 가능 (flex:1 효과)
   }
 
   // 텍스트 노드 1개 생성 — PHASE 3 의 child 사전 준비
@@ -61,6 +62,7 @@ namespace Helpers {
       t.resize(opts.fixedWidth, t.height);
     }
     if (opts.layoutAlign) t.layoutAlign = opts.layoutAlign;
+    if (opts.layoutGrow !== undefined) t.layoutGrow = opts.layoutGrow;
     return t;
   }
 
