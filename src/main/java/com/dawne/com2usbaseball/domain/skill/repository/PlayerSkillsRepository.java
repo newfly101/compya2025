@@ -1,7 +1,7 @@
 package com.dawne.com2usbaseball.domain.skill.repository;
 
 import com.dawne.com2usbaseball.domain.player.entity.PlayerSkillsEntity;
-import com.dawne.com2usbaseball.common.enums.Target;
+import com.dawne.com2usbaseball.common.enums.site.Target;
 import com.dawne.com2usbaseball.domain.skill.repository.mapper.PlayerSkillsMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

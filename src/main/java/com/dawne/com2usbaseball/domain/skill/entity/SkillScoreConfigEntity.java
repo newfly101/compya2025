@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.domain.skill.entity;
 
-import com.dawne.com2usbaseball.common.enums.Target;
+import com.dawne.com2usbaseball.common.enums.site.Target;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

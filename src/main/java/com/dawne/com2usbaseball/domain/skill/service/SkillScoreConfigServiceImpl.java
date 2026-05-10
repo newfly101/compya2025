@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.domain.skill.service;
 
-import com.dawne.com2usbaseball.common.enums.Target;
+import com.dawne.com2usbaseball.common.enums.site.Target;
 import com.dawne.com2usbaseball.domain.skill.dto.response.SkillScoreConfigEntry;
 import com.dawne.com2usbaseball.domain.skill.dto.response.SkillScoreConfigResponse;
 import com.dawne.com2usbaseball.domain.skill.entity.SkillScoreConfigEntity;

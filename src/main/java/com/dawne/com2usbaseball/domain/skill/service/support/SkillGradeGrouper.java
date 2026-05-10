@@ -1,7 +1,7 @@
 package com.dawne.com2usbaseball.domain.skill.service.support;
 
 import com.dawne.com2usbaseball.domain.skill.dto.response.SkillItemResponse;
-import com.dawne.com2usbaseball.common.enums.Grade;
+import com.dawne.com2usbaseball.common.enums.site.Grade;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;

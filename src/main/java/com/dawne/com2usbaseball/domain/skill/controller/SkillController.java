@@ -2,7 +2,7 @@ package com.dawne.com2usbaseball.domain.skill.controller;
 
 import com.dawne.com2usbaseball.domain.skill.dto.response.SkillScoreConfigResponse;
 import com.dawne.com2usbaseball.domain.skill.dto.response.SkillSetResponse;
-import com.dawne.com2usbaseball.common.enums.Target;
+import com.dawne.com2usbaseball.common.enums.site.Target;
 import com.dawne.com2usbaseball.domain.skill.dto.response.coach.CoachSkillSetResponse;
 import com.dawne.com2usbaseball.domain.skill.service.PlayerSkillsService;
 import com.dawne.com2usbaseball.domain.skill.service.SkillScoreConfigService;

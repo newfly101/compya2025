@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.domain.skill.dto.response.coach;
 
-import com.dawne.com2usbaseball.common.enums.Target;
+import com.dawne.com2usbaseball.common.enums.site.Target;
 import com.dawne.com2usbaseball.domain.skill.entity.CoachSkillOptionEntity;
 import com.dawne.com2usbaseball.domain.skill.enums.CoachSkillGrade;
 

@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.domain.skill.dto.response;
 
-import com.dawne.com2usbaseball.common.enums.Grade;
+import com.dawne.com2usbaseball.common.enums.site.Grade;
 
 public record SkillItemResponse(
         Long id,

@@ -1,7 +1,7 @@
 package com.dawne.com2usbaseball.domain.player.repository;
 
 import com.dawne.com2usbaseball.domain.player.entity.PlayerLegendCardEntity;
-import com.dawne.com2usbaseball.common.enums.Target;
+import com.dawne.com2usbaseball.common.enums.site.Target;
 import com.dawne.com2usbaseball.domain.player.repository.mapper.PlayerCardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

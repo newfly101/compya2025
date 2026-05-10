@@ -1,6 +1,6 @@
 package com.dawne.com2usbaseball.domain.player.dto.command;
 
-import com.dawne.com2usbaseball.common.enums.Target;
+import com.dawne.com2usbaseball.common.enums.site.Target;
 import com.dawne.com2usbaseball.domain.player.entity.HitterAttributeEntity;
 import com.dawne.com2usbaseball.domain.player.entity.PitcherAttributeEntity;
 import com.dawne.com2usbaseball.domain.player.entity.PlayerCardEntity;

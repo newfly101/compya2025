@@ -1,7 +1,7 @@
 package com.dawne.com2usbaseball.domain.player.service;
 
 import com.dawne.com2usbaseball.domain.player.dto.response.LegendPlayerCardResponse;
-import com.dawne.com2usbaseball.common.enums.Target;
+import com.dawne.com2usbaseball.common.enums.site.Target;
 
 import java.util.List;
 

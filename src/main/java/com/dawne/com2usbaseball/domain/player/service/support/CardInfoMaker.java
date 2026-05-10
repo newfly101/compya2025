@@ -9,7 +9,7 @@ import com.dawne.com2usbaseball.domain.player.dto.response.game.attributes.Playe
 import com.dawne.com2usbaseball.domain.player.dto.response.identity.LegendPlayerIdentityResponse;
 import com.dawne.com2usbaseball.domain.player.dto.response.team.TeamResponse;
 import com.dawne.com2usbaseball.domain.player.entity.PlayerLegendCardEntity;
-import com.dawne.com2usbaseball.common.enums.Target;
+import com.dawne.com2usbaseball.common.enums.site.Target;
 import com.dawne.com2usbaseball.common.util.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

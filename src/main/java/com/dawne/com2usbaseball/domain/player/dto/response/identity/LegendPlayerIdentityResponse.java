@@ -1,7 +1,7 @@
 package com.dawne.com2usbaseball.domain.player.dto.response.identity;
 
 import com.dawne.com2usbaseball.domain.player.dto.response.team.TeamResponse;
-import com.dawne.com2usbaseball.common.enums.Grade;
+import com.dawne.com2usbaseball.common.enums.site.Grade;
 
 import java.time.LocalDate;
 

@@ -9,7 +9,7 @@ import com.dawne.com2usbaseball.domain.player.service.support.CardInfoMaker;
 import com.dawne.com2usbaseball.domain.player.service.support.CardNameGrouper;
 import com.dawne.com2usbaseball.domain.player.entity.PlayerLegendCardEntity;
 import com.dawne.com2usbaseball.domain.player.entity.TeamsEntity;
-import com.dawne.com2usbaseball.common.enums.Target;
+import com.dawne.com2usbaseball.common.enums.site.Target;
 import com.dawne.com2usbaseball.domain.player.repository.LegendPlayerCareerRepository;
 import com.dawne.com2usbaseball.domain.player.repository.PlayerCardInfoRepository;
 import com.dawne.com2usbaseball.domain.player.repository.TeamRepository;
