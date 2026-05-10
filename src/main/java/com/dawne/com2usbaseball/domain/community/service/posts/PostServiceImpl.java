@@ -2,7 +2,7 @@ package com.dawne.com2usbaseball.domain.community.service.posts;
 
 import com.dawne.com2usbaseball.domain.community.entity.PostEntity;
 import com.dawne.com2usbaseball.domain.community.enums.UserRoleType;
-import com.dawne.com2usbaseball.domain.community.exception.CommunityException;
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.community.enums.messages.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class PostServiceImpl implements PostService {
     public PostEntity getPostDetail(Long id) {
         PostEntity post = postRepository.getPostDetail(id);
         if (post == null) {
-            throw new CommunityException(CommunityMessages.COMMUNITY_POST_NOT_FOUND, HttpStatus.NOT_FOUND);
+            throw new BaseException(CommunityMessages.COMMUNITY_POST_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
         return post;
     }

@@ -5,7 +5,7 @@ import com.dawne.com2usbaseball.domain.quiz.dto.request.QuizRequest;
 import com.dawne.com2usbaseball.domain.quiz.dto.response.QuizResponse;
 import com.dawne.com2usbaseball.domain.quiz.entity.QuizEntity;
 import com.dawne.com2usbaseball.domain.quiz.enums.QuizMessages;
-import com.dawne.com2usbaseball.domain.quiz.exception.QuizException;
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.quiz.repository.QuizRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -43,15 +43,15 @@ public class QuizAdminServiceImpl implements QuizAdminService {
         QuizEntity entity = quizMapStruct.toEntity(request);
         try {
             if (!repository.save(entity)) {
-                throw new QuizException(QuizMessages.QUIZ_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new BaseException(QuizMessages.QUIZ_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (DuplicateKeyException e) {
             // round UNIQUE 제약 (uq_round) 위반 — admin inline error 로 안내
-            throw new QuizException(QuizMessages.QUIZ_ROUND_DUPLICATED, HttpStatus.CONFLICT);
+            throw new BaseException(QuizMessages.QUIZ_ROUND_DUPLICATED, HttpStatus.CONFLICT);
         }
         // insertQuiz useGeneratedKeys로 entity.id가 채워짐
         QuizEntity saved = repository.findById(entity.getId())
-                .orElseThrow(() -> new QuizException(QuizMessages.QUIZ_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
+                .orElseThrow(() -> new BaseException(QuizMessages.QUIZ_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
         return quizMapStruct.toResponse(saved);
     }
 
@@ -62,15 +62,15 @@ public class QuizAdminServiceImpl implements QuizAdminService {
     })
     public QuizResponse updateQuiz(Long id, QuizRequest request) {
         QuizEntity entity = repository.findById(id)
-                .orElseThrow(() -> new QuizException(QuizMessages.QUIZ_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(QuizMessages.QUIZ_NOT_FOUND, HttpStatus.NOT_FOUND));
         quizMapStruct.updateEntity(request, entity);
         try {
             if (!repository.update(entity)) {
-                throw new QuizException(QuizMessages.QUIZ_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new BaseException(QuizMessages.QUIZ_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
             }
         } catch (DuplicateKeyException e) {
             // round UNIQUE 제약 (uq_round) 위반 — admin inline error 로 안내
-            throw new QuizException(QuizMessages.QUIZ_ROUND_DUPLICATED, HttpStatus.CONFLICT);
+            throw new BaseException(QuizMessages.QUIZ_ROUND_DUPLICATED, HttpStatus.CONFLICT);
         }
         return quizMapStruct.toResponse(entity);
     }
@@ -83,9 +83,9 @@ public class QuizAdminServiceImpl implements QuizAdminService {
     public void deleteQuiz(Long id) {
         // 존재 여부 먼저 확인
         repository.findById(id)
-                .orElseThrow(() -> new QuizException(QuizMessages.QUIZ_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(QuizMessages.QUIZ_NOT_FOUND, HttpStatus.NOT_FOUND));
         if (!repository.delete(id)) {
-            throw new QuizException(QuizMessages.QUIZ_DELETED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException(QuizMessages.QUIZ_DELETED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

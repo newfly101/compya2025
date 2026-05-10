@@ -5,7 +5,7 @@ import com.dawne.com2usbaseball.domain.event.dto.request.EventRequest;
 import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
 import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
 import com.dawne.com2usbaseball.domain.event.enums.EventMessages;
-import com.dawne.com2usbaseball.domain.event.exception.EventException;
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.event.repository.EventRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -43,11 +43,11 @@ public class EventAdminServiceImpl implements EventAdminService {
         EventEntity event = eventMapStruct.toEntity(request);
 
         if (!repository.saveEvent(event)) {
-            throw new EventException(EventMessages.EVENT_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException(EventMessages.EVENT_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         EventEntity saved = repository.findById(event.getId())
-                .orElseThrow(() -> new EventException(EventMessages.EVENT_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
+                .orElseThrow(() -> new BaseException(EventMessages.EVENT_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
 
         return eventMapStruct.toResponse(saved);
     }
@@ -59,12 +59,12 @@ public class EventAdminServiceImpl implements EventAdminService {
     })
     public EventResponse updateEvent(EventRequest request, Long id) {
         EventEntity event = repository.findById(id)
-                .orElseThrow(() -> new EventException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         eventMapStruct.updateEntity(request, event);
 
         if(!repository.updateEvent(event)) {
-            throw new EventException(EventMessages.EVENT_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException(EventMessages.EVENT_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return eventMapStruct.toResponse(event);
     }
@@ -76,7 +76,7 @@ public class EventAdminServiceImpl implements EventAdminService {
     })
     public void updateEventVisible(Long id, boolean visible) {
         repository.findById(id)
-                .orElseThrow(() -> new EventException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         repository.updateEventVisible(id, visible);
     }

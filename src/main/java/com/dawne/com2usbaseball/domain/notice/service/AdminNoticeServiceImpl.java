@@ -6,7 +6,7 @@ import com.dawne.com2usbaseball.domain.notice.dto.response.NoticeResponse;
 import com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity;
 import com.dawne.com2usbaseball.domain.notice.enums.NoticeMessages;
 import com.dawne.com2usbaseball.domain.notice.enums.NoticeSource;
-import com.dawne.com2usbaseball.domain.notice.exception.NoticeException;
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.notice.repository.AdminNoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
@@ -38,7 +38,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     @Override
     @Cacheable(value = "noticeDetail", key = "#noticeId + '_admin'")
     public NoticeResponse getAdminNoticeDetail(Long noticeId) {
-        // Repository에서 null 시 NoticeException 처리
+        // Repository에서 null 시 BaseException 처리
         NoticeEntity notice = adminNoticeRepository.getAdminNoticeDetail(noticeId);
         return noticeMapStruct.toResponse(notice);
     }
@@ -58,11 +58,11 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
         }
 
         if (!adminNoticeRepository.insertNotice(notice)) {
-            throw new NoticeException(NoticeMessages.NOTICE_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException(NoticeMessages.NOTICE_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         NoticeEntity saved = adminNoticeRepository.findById(notice.getId())
-                .orElseThrow(() -> new NoticeException(NoticeMessages.NOTICE_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
+                .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
 
         return noticeMapStruct.toResponse(saved);
     }
@@ -79,7 +79,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
         validateSourcePayload(request);
 
         NoticeEntity notice = adminNoticeRepository.findById(noticeId)
-                .orElseThrow(() -> new NoticeException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         noticeMapStruct.updateEntity(request, notice);
 
@@ -89,7 +89,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
         }
 
         if (!adminNoticeRepository.updateNotice(notice)) {
-            throw new NoticeException(NoticeMessages.NOTICE_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException(NoticeMessages.NOTICE_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         return noticeMapStruct.toResponse(notice);
@@ -106,10 +106,10 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     public void updateNoticeVisible(Long noticeId, Boolean isVisible) {
         // 존재 여부 먼저 확인
         adminNoticeRepository.findById(noticeId)
-                .orElseThrow(() -> new NoticeException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         if (!adminNoticeRepository.updateNoticeVisible(noticeId, isVisible)) {
-            throw new NoticeException(NoticeMessages.NOTICE_VISIBLE_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException(NoticeMessages.NOTICE_VISIBLE_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -123,10 +123,10 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     })
     public void updateNoticePinned(Long noticeId, Boolean isPinned) {
         adminNoticeRepository.findById(noticeId)
-                .orElseThrow(() -> new NoticeException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         if (!adminNoticeRepository.updateNoticePinned(noticeId, isPinned)) {
-            throw new NoticeException(NoticeMessages.NOTICE_PINNED_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException(NoticeMessages.NOTICE_PINNED_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -140,34 +140,34 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     })
     public void deleteNotice(Long noticeId) {
         adminNoticeRepository.findById(noticeId)
-                .orElseThrow(() -> new NoticeException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         if (!adminNoticeRepository.deleteNotice(noticeId)) {
-            throw new NoticeException(NoticeMessages.NOTICE_DELETED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException(NoticeMessages.NOTICE_DELETED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     // DB CHECK 제약 미러링
     private void validateSourcePayload(NoticeRequest request) {
         if (request.source() == null) {
-            throw new NoticeException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
+            throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
         }
 
         if (request.source() == NoticeSource.INTERNAL) {
             if (request.content() == null || request.content().isBlank()) {
-                throw new NoticeException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
+                throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
             if (request.externalUrl() != null && !request.externalUrl().isBlank()) {
-                throw new NoticeException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
+                throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
         }
 
         if (request.source() == NoticeSource.EXTERNAL) {
             if (request.externalUrl() == null || request.externalUrl().isBlank()) {
-                throw new NoticeException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
+                throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
             if (request.content() != null && !request.content().isBlank()) {
-                throw new NoticeException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
+                throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
         }
     }

@@ -5,7 +5,7 @@ import com.dawne.com2usbaseball.domain.oauth.controller.docs.UserSwaggerDocs;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.UserMeResponse;
 import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
-import com.dawne.com2usbaseball.domain.oauth.exception.AuthException;
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.oauth.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class UserController implements UserSwaggerDocs {
         Long userId = (Long) request.getAttribute("userId");
 
         if (userId == null) {
-            throw new AuthException(AuthMessages.AUTH_UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
+            throw new BaseException(AuthMessages.AUTH_UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
         }
 
         UserEntity user = userService.findActiveUserById(userId);

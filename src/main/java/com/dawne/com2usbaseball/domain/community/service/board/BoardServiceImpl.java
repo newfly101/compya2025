@@ -2,7 +2,7 @@ package com.dawne.com2usbaseball.domain.community.service.board;
 
 import com.dawne.com2usbaseball.domain.community.entity.BoardEntity;
 import com.dawne.com2usbaseball.domain.community.enums.messages.CommunityMessages;
-import com.dawne.com2usbaseball.domain.community.exception.CommunityException;
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.community.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,7 +32,7 @@ public class BoardServiceImpl implements BoardService {
     public BoardEntity getBoardDetail(Long id) {
         BoardEntity board = boardRepository.getBoardDetail(id);
         if (board == null) {
-            throw new CommunityException(CommunityMessages.COMMUNITY_BOARD_NOT_FOUND, HttpStatus.NOT_FOUND);
+            throw new BaseException(CommunityMessages.COMMUNITY_BOARD_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
         return board;
     }
@@ -41,7 +41,7 @@ public class BoardServiceImpl implements BoardService {
     public BoardEntity getBoardDetailByCode(String code) {
         BoardEntity board = boardRepository.getBoardDetailByCode(code);
         if (board == null) {
-            throw new CommunityException(CommunityMessages.COMMUNITY_BOARD_NOT_FOUND, HttpStatus.NOT_FOUND);
+            throw new BaseException(CommunityMessages.COMMUNITY_BOARD_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
         return board;
     }

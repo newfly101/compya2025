@@ -6,7 +6,7 @@ import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponRequest;
 import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
 import com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity;
 import com.dawne.com2usbaseball.domain.coupon.enums.CouponMessages;
-import com.dawne.com2usbaseball.domain.coupon.exception.CouponException;
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.coupon.repository.CouponAdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -41,14 +41,14 @@ public class CouponAdminServiceImpl implements CouponAdminService {
         CouponEntity coupon = couponMapStruct.toEntity(request);
         try {
             if (!repository.insertCoupon(coupon)) {
-                throw new CouponException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+                throw new BaseException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
             }
             CouponEntity saved = repository.findById(coupon.getId())
-                    .orElseThrow(() -> new CouponException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
+                    .orElseThrow(() -> new BaseException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
 
             return couponMapStruct.toResponse(saved);
         } catch (DataIntegrityViolationException e) {
-            throw new CouponException(CouponMessages.COUPON_CODE_DUPLICATED, HttpStatus.CONFLICT);
+            throw new BaseException(CouponMessages.COUPON_CODE_DUPLICATED, HttpStatus.CONFLICT);
         }
     }
 
@@ -57,12 +57,12 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     @CacheEvictAfterCommit(cacheName = "coupons", keys = {"admin", "public"})
     public CouponResponse updateCoupon(CouponRequest request, Long id) {
         CouponEntity coupon = repository.findById(id)
-                .orElseThrow(() -> new CouponException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         couponMapStruct.updateEntity(request, coupon);
 
         if (!repository.updateCoupon(coupon)) {
-            throw new CouponException(CouponMessages.COUPON_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new BaseException(CouponMessages.COUPON_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return couponMapStruct.toResponse(coupon);
     }
@@ -72,7 +72,7 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     @CacheEvictAfterCommit(cacheName = "coupons", keys = {"admin", "public"})
     public void updateCouponVisible(Long id, boolean visible) {
         repository.findById(id)
-                .orElseThrow(() -> new CouponException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
         repository.updateCouponVisible(id, visible);
     }
 }
