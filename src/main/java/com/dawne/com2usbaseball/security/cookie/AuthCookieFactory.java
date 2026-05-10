@@ -4,9 +4,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+
 @Component
 public class AuthCookieFactory {
-    private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+
+    public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
+    public static final String REFRESH_TOKEN = "REFRESH_TOKEN";
+
+    /** refresh cookie 는 /api/auth 경로에만 노출 (refresh + logout endpoint 한정) */
+    private static final String REFRESH_COOKIE_PATH = "/api/auth";
 
     public ResponseCookie createAccessToken(String token, HttpServletRequest request) {
         return applyEnvOptions(
@@ -22,6 +29,26 @@ public class AuthCookieFactory {
                 ResponseCookie.from(ACCESS_TOKEN, "")
                         .httpOnly(true)
                         .path("/")
+                        .maxAge(0),
+                request
+        ).build();
+    }
+
+    public ResponseCookie createRefreshToken(String token, Duration ttl, HttpServletRequest request) {
+        return applyEnvOptions(
+                ResponseCookie.from(REFRESH_TOKEN, token)
+                        .httpOnly(true)
+                        .path(REFRESH_COOKIE_PATH)
+                        .maxAge(ttl),
+                request
+        ).build();
+    }
+
+    public ResponseCookie expireRefreshToken(HttpServletRequest request) {
+        return applyEnvOptions(
+                ResponseCookie.from(REFRESH_TOKEN, "")
+                        .httpOnly(true)
+                        .path(REFRESH_COOKIE_PATH)
                         .maxAge(0),
                 request
         ).build();

@@ -12,5 +12,11 @@ public enum AuthMessages {
     // 추가: WITHDRAWN / SUSPENDED 상태 구분이 필요할 경우
     AUTH_USER_INACTIVE,
     // 네이버 인증 실패
-    AUTH_NAVER_TOKEN_FAILED
+    AUTH_NAVER_TOKEN_FAILED,
+    // refresh token 없음/위변조
+    AUTH_REFRESH_TOKEN_INVALID,
+    // refresh token 만료/revoke
+    AUTH_REFRESH_TOKEN_EXPIRED,
+    // 로그아웃 성공
+    AUTH_LOGOUT_SUCCESS
 }

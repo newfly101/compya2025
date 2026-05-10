@@ -10,11 +10,19 @@ import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.time.Duration;
+import java.util.Base64;
 import java.util.Date;
 
 @Component
 @RequiredArgsConstructor
 public class JwtProvider {
+
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final int REFRESH_TOKEN_BYTES = 48; // 64 chars base64-url
 
     private final JwtProperties jwtProperties;
 
@@ -22,7 +30,7 @@ public class JwtProvider {
         return Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
     }
 
-    /** JWT 생성 */
+    /** Access JWT 생성 (stateless) */
     public String createAccessToken(Long userId, String role) {
 
         Date now = new Date();
@@ -53,5 +61,31 @@ public class JwtProvider {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    /** Refresh token (opaque random) 생성 — JWT 아님. DB 매칭 전제 */
+    public String createRefreshToken() {
+        byte[] bytes = new byte[REFRESH_TOKEN_BYTES];
+        RANDOM.nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+
+    /** Refresh token 의 DB 저장용 SHA-256 hash (hex 64자) */
+    public String hashRefreshToken(String rawToken) {
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            byte[] digest = md.digest(rawToken.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hex = new StringBuilder(digest.length * 2);
+            for (byte b : digest) {
+                hex.append(String.format("%02x", b));
+            }
+            return hex.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new IllegalStateException("SHA-256 not available", e);
+        }
+    }
+
+    public Duration getRefreshTokenTtl() {
+        return Duration.ofDays(jwtProperties.getRefreshTokenExpireDays());
     }
 }

@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 public class JwtProperties {
     private String secret;
     private long accessTokenExpireMinutes;
+    private long refreshTokenExpireDays;
 
     @PostConstruct
     void validate() {
@@ -21,6 +22,9 @@ public class JwtProperties {
         }
         if (accessTokenExpireMinutes <= 0) {
             throw new IllegalStateException("jwt.access-token-expire-minutes must be > 0");
+        }
+        if (refreshTokenExpireDays <= 0) {
+            throw new IllegalStateException("jwt.refresh-token-expire-days must be > 0");
         }
     }
 }
