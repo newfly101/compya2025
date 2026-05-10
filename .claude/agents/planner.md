@@ -9,7 +9,7 @@ tools: Read, Write, Edit, Glob, Grep
 
 본 에이전트는 **7개의 sub-skill** 을 오케스트레이션한다. 각 sub-skill 은 `.claude/skills/planner/{skill}/SKILL.md` 에 정의되어 있으며 `Skill` tool 로 호출한다.
 
-> **본 agent 의 권한 (tools)**: `Read, Write, Edit, Glob, Grep` — `docs/plan/**` 산출물 작성 + 기존 코드 read-only 분석 만 수행. **Bash 권한 없음** — git 명령 / 시스템 명령은 메인 어시스턴트에 위임.
+> **본 agent 의 권한 (tools)**: `Read, Write, Edit, Glob, Grep` — `docs/domain/{name}/prd/**` 산출물 작성 + 기존 코드 read-only 분석 만 수행. **Bash 권한 없음** — git 명령 / 시스템 명령은 메인 어시스턴트에 위임.
 
 ---
 
@@ -152,7 +152,7 @@ policy-draft 는 보통 reverse 에서는 작성 안 함 (기존 운영 정책�
 ## 출력 디렉토리 컨벤션
 
 ```
-docs/plan/{feature-or-system-name}/
+docs/domain/{feature-or-system-name}/prd/
 ├── ia.md                          # IA (정보 구조)
 ├── requirements.md                # 요구사항 정의서
 ├── policy-draft.md                # ⭐ 정책 결정 템플릿 (Draft — 사용자 답변 후 promote)
@@ -161,10 +161,10 @@ docs/plan/{feature-or-system-name}/
 ├── edge-cases.md                  # 예외 케이스
 └── qa-checklist.md                # QA 체크리스트
 
-docs/plan/_shared/                 # cross-cutting (auth / payment / 등)
+docs/domain/_shared/prd/           # cross-cutting (auth / payment / 등)
 ├── ...
 
-docs/plan/_meta/                   # planner 자체 메타
+docs/domain/_meta/                 # planner 자체 메타
 ├── conventions.md                 # 산출물 작성 컨벤션
 └── glossary.md                    # 도메인 용어집
 ```
@@ -175,9 +175,9 @@ docs/plan/_meta/                   # planner 자체 메타
 - promote 시 마커 (🔴/🟨/❓) 모두 제거 — 확정 값으로 대체.
 
 **기존 PRD 와의 정합**:
-- `docs/prd/` (기존 prd-* agent 산출물) 는 본 라운드 보존
-- `docs/plan/` (planner 산출물) 은 **신규** — planner 전용
-- 사용자 정책: 기존 prd-* 삭제 예정 (별도 라운드). 별도 라운드에서 `docs/prd/` → `docs/plan/` 마이그 결정 가능
+- `docs/domain/legacy/` (기존 prd-* agent 산출물 보관) 는 본 라운드 보존
+- `docs/domain/{name}/prd/` (planner 산출물) 은 **신규** — planner 전용
+- 사용자 정책: 기존 prd-* 삭제 예정 (별도 라운드). 별도 라운드에서 `docs/domain/legacy/` → `docs/domain/{name}/prd/` 마이그 결정 가능
 
 ---
 
@@ -191,21 +191,21 @@ docs/plan/_meta/                   # planner 자체 메타
 ```
 Skill(skill="planner-ia", args="domain: coupons, mode: reverse, source: web/src/domains/coupons/")
 → (일반 완화 OK — 가정/미정 마커 표시 후 진행)
-Skill(skill="planner-requirements", args="ia-path: docs/plan/coupons/ia.md")
-Skill(skill="planner-feature-spec", args="requirements-path: docs/plan/coupons/requirements.md")
+Skill(skill="planner-requirements", args="ia-path: docs/domain/coupons/prd/ia.md")
+Skill(skill="planner-feature-spec", args="requirements-path: docs/domain/coupons/prd/requirements.md")
 ```
 
 **Forward design (풀패키지)**:
 ```
 Skill(skill="planner-ia", args="domain: rewards, mode: forward, user-input: '...'")
-Skill(skill="planner-requirements", args="ia-path: docs/plan/rewards/ia.md")
-Skill(skill="planner-policy-draft", args="ia-path: docs/plan/rewards/ia.md, requirements-path: docs/plan/rewards/requirements.md")
+Skill(skill="planner-requirements", args="ia-path: docs/domain/rewards/prd/ia.md")
+Skill(skill="planner-policy-draft", args="ia-path: docs/domain/rewards/prd/ia.md, requirements-path: docs/domain/rewards/prd/requirements.md")
 → 강제 HITL 4 분야 항목은 🔴 마커 — 사용자 답변 받기 전 확정 X
-Skill(skill="planner-feature-spec", args="requirements-path: ..., policy-draft-path: docs/plan/rewards/policy-draft.md")
-Skill(skill="planner-endpoint-spec-draft", args="feature-spec-path: docs/plan/rewards/feature-spec.md")
+Skill(skill="planner-feature-spec", args="requirements-path: ..., policy-draft-path: docs/domain/rewards/prd/policy-draft.md")
+Skill(skill="planner-endpoint-spec-draft", args="feature-spec-path: docs/domain/rewards/prd/feature-spec.md")
 → 권한 분야는 🔴 마커 — 사용자 답변 받기 전 확정 X
 Skill(skill="planner-edge-cases", args="feature-spec-path: ..., endpoint-spec-draft-path: ...")
-Skill(skill="planner-qa-checklist", args="plan-dir: docs/plan/rewards/")
+Skill(skill="planner-qa-checklist", args="plan-dir: docs/domain/rewards/prd/")
 ```
 
 ### 주의
@@ -219,7 +219,7 @@ Skill(skill="planner-qa-checklist", args="plan-dir: docs/plan/rewards/")
 ## 본 프로젝트 컨텍스트
 
 - 본 프로젝트 v2.0.0-refactor-mobile 브랜치 진행 중. 모바일 리뉴얼 우선
-- 기존 `docs/prd/` 는 보존 — planner 는 `docs/plan/` 사용
+- 기존 `docs/domain/legacy/` 는 보존 — planner 는 `docs/domain/{name}/prd/` 사용
 - 사용자 메모 (영구):
   - `feedback_no_domain_header`: 도메인별 자체 헤더 만들지 않음 (글로벌 MobileLayout TopBar 사용)
   - `feedback_component_decomposition`: 단일 페이지 상태분기형 화면은 sub-컴포넌트 분리 최소화

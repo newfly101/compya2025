@@ -1,6 +1,6 @@
 ---
 name: planner-ia
-description: 정보 구조(IA) 정립. 도메인 scope / 화면 구조 / 사용자 시나리오 / 우선순위 정리. reverse(코드→IA) 와 forward(요구→IA) 두 모드 지원. 산출물 docs/plan/{name}/ia.md. ★ HITL 1 (scope·우선순위 사용자 확정).
+description: 정보 구조(IA) 정립. 도메인 scope / 화면 구조 / 사용자 시나리오 / 우선순위 정리. reverse(코드→IA) 와 forward(요구→IA) 두 모드 지원. 산출물 docs/domain/{name}/prd/ia.md. ★ HITL 1 (scope·우선순위 사용자 확정).
 ---
 
 # Skill: planner-ia
@@ -15,7 +15,7 @@ description: 정보 구조(IA) 정립. 도메인 scope / 화면 구조 / 사용�
 - 우선순위 P0 / P1 / P2 를 분리한다
 - ★ Owner 결정 필요 항목을 표시한다 (자동 결정 금지)
 
-**산출물**: `docs/plan/{feature-or-domain-name}/ia.md`
+**산출물**: `docs/domain/{feature-or-domain-name}/prd/ia.md`
 
 ## 2. 입력 (input)
 
@@ -51,7 +51,7 @@ domain: rewards, mode: forward, user-input: "리워드 시스템 신규 도입..
 
 **Forward mode**:
 1. 사용자 요구를 줄별로 분해 (한 줄 = 한 요구)
-2. 비슷한 도메인 (이미 있는 docs/plan / docs/prd) 참고
+2. 비슷한 도메인 (이미 있는 docs/domain / docs/prd legacy) 참고
 
 ### Step 3 — IA 합성 (초안)
 - Step 2 결과를 아래 템플릿에 채움
@@ -72,7 +72,7 @@ domain: rewards, mode: forward, user-input: "리워드 시스템 신규 도입..
 산출물에 모든 결정 항목 마커 명시. § 끝 "사용자 확인 필요 항목" 섹션 명시.
 
 ### Step 5 — 산출물 Write
-- `docs/plan/{name}/ia.md` 에 Write
+- `docs/domain/{name}/prd/ia.md` 에 Write
 - 부모 디렉토리 없으면 자동 생성 (Write tool 처리)
 
 ### Step 6 — 다음 skill 안내

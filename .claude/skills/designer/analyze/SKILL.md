@@ -1,6 +1,6 @@
 ---
 name: designer-analyze
-description: Figma + 코드 + 기획자 산출물 분석 → 디자인 시스템 추출 + mismatch 식별. 산출물 docs/plan/{name}/design-analysis.md. 다음 skill (designer-plugin-code) 의 입력.
+description: Figma + 코드 + 기획자 산출물 분석 → 디자인 시스템 추출 + mismatch 식별. 산출물 docs/domain/{name}/design/design-analysis.md. 다음 skill (designer-plugin-code) 의 입력.
 ---
 
 # Skill: designer-analyze
@@ -11,11 +11,11 @@ description: Figma + 코드 + 기획자 산출물 분석 → 디자인 시스템
 
 - Figma 디자인 시스템 (토큰 / 컴포넌트 / 레이아웃 컨벤션) 을 추출한다
 - 코드의 실제 토큰/컴포넌트 사용 현황을 파악한다 (있다면)
-- 기획자 산출물 (`docs/plan/{name}/`) 과의 정합 여부를 본다
+- 기획자 산출물 (`docs/domain/{name}/prd/`) 과의 정합 여부를 본다
 - ★ 재사용 가능 자산 vs 신규 정의 필요 항목을 분리한다 (다음 skill 의 결정 기준)
 - ★ Figma ↔ 코드 mismatch 를 명시한다 (있다면)
 
-**산출물**: `docs/plan/{feature-or-domain-name}/design-analysis.md`
+**산출물**: `docs/domain/{feature-or-domain-name}/design/design-analysis.md`
 
 ## 2. 입력 (input)
 
@@ -24,13 +24,13 @@ description: Figma + 코드 + 기획자 산출물 분석 → 디자인 시스템
 - 작업 단위 이름 (`{feature-or-domain-name}`)
 
 ### 선택 (있으면 더 깊은 분석)
-- 기획자 산출물 디렉토리 (`docs/plan/{name}/feature-spec.md`, `edge-cases.md` 등)
+- 기획자 산출물 디렉토리 (`docs/domain/{name}/prd/feature-spec.md`, `edge-cases.md` 등)
 - 기존 코드 디렉토리 (`web/src/domains/{domain}/`, `web/src/global/styles/variables/`)
 - 사용자 요구 자유 서술 (한 단락)
 
 ### 호출 args 예시
 ```
-name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3, plan-dir: docs/plan/coupons-admin/, code-dir: web/src/domains/coupons/
+name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3, plan-dir: docs/domain/coupons-admin/prd/, code-dir: web/src/domains/coupons/
 ```
 
 ## 3. 절차 (steps)
@@ -62,7 +62,7 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 
 ### Step 4 — 기획자 산출물 read (있다면)
 
-`docs/plan/{name}/` 의 다음 파일 우선순위:
+`docs/domain/{name}/prd/` 의 다음 파일 우선순위:
 - `feature-spec.md` ⭐ — 화면 분기 / 인터랙션
 - `edge-cases.md` — 예외 화면 (empty / error / overflow)
 - `requirements.md` — 화면 요소 / NFR
@@ -84,7 +84,7 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 
 ### Step 6 — 산출물 Write
 
-- `docs/plan/{name}/design-analysis.md` 에 Write
+- `docs/domain/{name}/design/design-analysis.md` 에 Write
 - 부모 디렉토리 없으면 자동 생성
 
 ### Step 7 — 다음 skill 안내
@@ -102,7 +102,7 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 
 > 작성일: YYYY-MM-DD
 > Figma URL: ...
-> 기획자 산출물: docs/plan/{name}/...
+> 기획자 산출물: docs/domain/{name}/prd/...
 > 코드 참조: web/src/...
 
 ## 1. Figma 디자인 시스템 (현행)
@@ -250,7 +250,7 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 
 ### 예시 (신규 어드민 화면)
 ```
-입력: name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3, plan-dir: docs/plan/coupons-admin/
+입력: name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3, plan-dir: docs/domain/coupons-admin/prd/
 
 → Figma read (mcp__figma-dev-mode__*)
 → 디자인 시스템 추출: 보라 #a78bfa, Inter, padding 16/24, radius 8
@@ -258,7 +258,7 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 → feature-spec.md → AdminCouponList / Form 화면 명세 확인
 → 재사용: MobileLayout, Button, $color-accent
 → 신규: AdminCard, FAB, FilterChipRow (글로벌 후보, 🟨 가정)
-→ 산출물: docs/plan/coupons-admin/design-analysis.md
+→ 산출물: docs/domain/coupons-admin/design/design-analysis.md
 → 다음: designer-plugin-code
 ```
 

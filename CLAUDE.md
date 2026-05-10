@@ -9,9 +9,9 @@
 
 | 트랙 | 무엇 | 1차 참조 | 산출물 위치 |
 |---|---|---|---|
-| **develop** | 코드 작성/수정/리팩터/디버그 (FE/BE/auth/db) | `docs/develop/*-developer.md` | 코드 + `docs/specs/{fe,be}/*` 갱신 |
-| **planner** | 기능 정의 / IA / feature spec / endpoint spec / qa-checklist | `docs/planner/*.md` (TBD) | `docs/prd/domains/*.md`, `docs/prd/_meta/*.md` |
-| **designer** | Figma MCP 비교 / 디자인 토큰 / wireframe 검증 | `docs/designer/*.md` (TBD) | `docs/prd/wireframes/*.md`, `docs/prd/design-sync/*.md` |
+| **develop** | 코드 작성/수정/리팩터/디버그 (FE/BE/auth/db) | `docs/develop/*-developer.md` | 코드 + `docs/global-guide/develop/specs/{fe,be,db}/*` 갱신 |
+| **planner** | 기능 정의 / IA / feature spec / endpoint spec / qa-checklist | `docs/global-guide/plan/*.md` (TBD) | `docs/domain/{name}/prd/*.md` |
+| **designer** | Figma MCP 비교 / 디자인 토큰 / wireframe 검증 | `docs/global-guide/design/*.md` (TBD) | `docs/domain/{name}/design/*.md` |
 | **ops** | devops / db migration / CI / 배포 / 환경설정 / 보안정책 / 트랙 외 작업 | `docs/ops/*.md` (TBD) | `docs/ops/*.md`, `sql/`, `application*.properties` |
 
 한 요청에 여러 트랙이 섞이면 **트랙별 agent 분리**.
@@ -46,23 +46,22 @@
 
 ```
 docs/
-├── develop/                # 1차 (Claude 작업 진입점)
+├── domain/                  # 도메인 단위 entry (planner/designer/develop 산출물)
+│   ├── legacy/              # 참고용 (PC 버전 — 보존, prd-* 라인)
+│   └── {feature}/{prd,design,develop}/   # 신규 라인
+├── develop/                 # (위치 유지) 글로벌 개발자 가이드
 │   ├── frontend-developer.md
 │   ├── auth-developer.md
 │   └── backend-developer.md   (TBD)
-├── planner/                # 1차 (TBD)
-├── designer/               # 1차 (TBD)
-├── ops/                    # 1차 (TBD)
-├── specs/                  # 깊이 (develop 트랙에서 참조)
-│   ├── fe/  (frontend-structure, module-conventions, api-calls, dead-suspects)
-│   └── be/  (backend-structure, endpoints, services, auth-and-flags, dead-suspects, unused-apis)
-├── prd/                    # 깊이 (planner/designer 산출물)
-│   ├── domains/
-│   ├── wireframes/
-│   ├── design-sync/
-│   └── _meta/
-└── reconciliation/         # 차이 조정 보고
+├── global-guide/            # 전역 참조 (신규)
+│   ├── plan/                  (TBD)
+│   ├── design/                (TBD)
+│   └── develop/specs/{be,db,fe}/   # 코드 reference (신규)
+└── ops/                     # 1차 (TBD)
 ```
+
+⚠️ `docs/specs/` 는 옛 위치 (stale, phase out 예정 — `docs/global-guide/develop/specs/` 로 새로 작성됨)
+⚠️ `docs/prd/` 는 prd-* 보존 라인 — 손대지 않음 (`docs/domain/legacy/` 로도 일부 이동됨)
 
 **규칙**:
 - 메인 세션은 1차만 읽음 (토큰/사고 비용 최소화)
@@ -77,11 +76,14 @@ docs/
 |---|---|
 | FE 코드 | `web/src/**` |
 | BE 코드 | `src/main/java/**`, `src/main/resources/**` |
-| FE 컨벤션 갱신 | `docs/specs/fe/*` |
-| BE 컨벤션 갱신 | `docs/specs/be/*` |
-| 도메인 기능 기획 | `docs/prd/domains/{domain}.md` |
-| 도메인 wireframe | `docs/prd/wireframes/{domain}.md` |
-| 디자인 ↔ 구현 차이 보고 | `docs/prd/design-sync/{domain}.md` |
+| 도메인 기능 기획 | `docs/domain/{feature}/prd/*.md` |
+| 도메인 wireframe / 디자인 | `docs/domain/{feature}/design/*.md` |
+| 도메인 BE/FE 통합 / 통합검증 | `docs/domain/{feature}/develop/*.md` |
+| BE 코드 reference | `docs/global-guide/develop/specs/be/*.md` |
+| DB reference | `docs/global-guide/develop/specs/db/*.md` |
+| FE 코드 reference | `docs/global-guide/develop/specs/fe/*.md` |
+| 개발자 컨벤션 가이드 | `docs/develop/*.md` (위치 유지) |
+| (legacy) PC 버전 PRD | `docs/domain/legacy/*.md` |
 | 보안 / 환경 / 배포 정책 | `docs/ops/*.md` |
 | DB schema | `sql/V2/{site,fun}/*.sql` |
 
@@ -120,7 +122,7 @@ Track C: domain notices
 ## 6. 메모리 vs 가이드 경계
 
 - **auto memory** (`C:\Users\hibee\.claude\projects\D--NewProjects-com2usbaseball\memory\`) — user / feedback / project / reference. 세션 간 영속, 짧은 fact
-- **`docs/develop/*`, `docs/planner/*` 등** — 코드 컨벤션, 프로세스, 트랙 가이드. 사람도 읽고 Claude 도 참조
+- **`docs/develop/*`, `docs/global-guide/plan/*` 등** — 코드 컨벤션, 프로세스, 트랙 가이드. 사람도 읽고 Claude 도 참조
 - **`MEMORY.md`** — 메모리 인덱스 (자동 로드)
 - **CLAUDE.md** (이 파일) — 워크플로우 룰. 모든 세션 자동 로드
 
@@ -163,8 +165,8 @@ Track C: domain notices
 - ✅ `docs/develop/frontend-developer.md`
 - ✅ `docs/develop/auth-developer.md`
 - ⏳ `docs/develop/backend-developer.md`
-- ⏳ `docs/planner/*.md` (ia / feature-spec / endpoint-spec / qa-checklist)
-- ⏳ `docs/designer/*.md` (figma-sync / token-spec)
+- ⏳ `docs/global-guide/plan/*.md` (ia / feature-spec / endpoint-spec / qa-checklist)
+- ⏳ `docs/global-guide/design/*.md` (figma-sync / token-spec)
 - ⏳ `docs/ops/*.md` (deploy / env / security-policy)
 
 작성 시: 200~350줄, 표/체크리스트/짧은 코드 위주, history 서술 제거, "신규 추가 N단계 체크리스트" 필수 포함.

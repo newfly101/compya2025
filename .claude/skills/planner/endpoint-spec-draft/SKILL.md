@@ -27,19 +27,19 @@ description: endpoint 명세 마크다운 표 — 주니어 개발자 친화. �
 - BE Swagger UI (`/swagger-ui/**`) 와 정합 검증 도구
 - 사용자 합의 후 별도 라운드에서 `endpoint-spec.md` (확정) 로 promote
 
-**산출물**: `docs/plan/{name}/endpoint-spec-draft.md` (확정 X — Draft)
+**산출물**: `docs/domain/{name}/prd/endpoint-spec-draft.md` (확정 X — Draft)
 
 ## 2. 입력 (input)
 
-- **선행 산출물**: `docs/plan/{name}/feature-spec.md` (필수 — 확정 후 진행)
-  - (선택) `docs/plan/{name}/policy-draft.md` — 권한 / 데이터 정책 cite
-  - (권장) `docs/plan/{name}/requirements.md`
+- **선행 산출물**: `docs/domain/{name}/prd/feature-spec.md` (필수 — 확정 후 진행)
+  - (선택) `docs/domain/{name}/prd/policy-draft.md` — 권한 / 데이터 정책 cite
+  - (권장) `docs/domain/{name}/prd/requirements.md`
 - **BE 팀 합의**: 권한 분야 (auth) 만 강제 HITL — 그 외 method / path / body / response 는 추정 진행 OK (마커 표시)
 - 호출 args:
   ```
-  feature-spec-path: docs/plan/{name}/feature-spec.md
-  policy-draft-path: docs/plan/{name}/policy-draft.md  # 선택
-  requirements-path: docs/plan/{name}/requirements.md  # 선택
+  feature-spec-path: docs/domain/{name}/prd/feature-spec.md
+  policy-draft-path: docs/domain/{name}/prd/policy-draft.md  # 선택
+  requirements-path: docs/domain/{name}/prd/requirements.md  # 선택
   ```
 
 ## 3. 절차 (steps)
@@ -65,7 +65,7 @@ description: endpoint 명세 마크다운 표 — 주니어 개발자 친화. �
 - 본 라운드 미진행 — 사용자 명시 요청 후 별도 라운드
 
 ### Step 5: 산출물 Write
-- `docs/plan/{name}/endpoint-spec-draft.md` Write
+- `docs/domain/{name}/prd/endpoint-spec-draft.md` Write
 - 마크다운 표 형식 + 마커
 
 ### Step 6: 다음 skill 안내
@@ -78,7 +78,7 @@ description: endpoint 명세 마크다운 표 — 주니어 개발자 친화. �
 
 ## 4. 템플릿 (산출물)
 
-산출물 위치: `docs/plan/{feature-or-system}/endpoint-spec-draft.md`
+산출물 위치: `docs/domain/{feature-or-system}/prd/endpoint-spec-draft.md`
 
 ```markdown
 # {Feature 이름} — endpoint 명세 (Draft)
@@ -258,7 +258,7 @@ Authorization: Bearer {token}
 ## 8. 예시 (짧은)
 
 ```
-입력: feature-spec-path: docs/plan/coupons/feature-spec.md
+입력: feature-spec-path: docs/domain/coupons/prd/feature-spec.md
 
 시나리오 SC-CPN-01 (쿠폰 목록) → GET /api/coupons (🟨 가정)
 시나리오 SC-CPN-05 (쿠폰 상세) → GET /api/coupons/{id} (🟨 가정)
@@ -277,7 +277,7 @@ Authorization: Bearer {token}
 - pagination (offset / limit)
 - Idempotency-Key 사용 여부
 
-→ 산출물 docs/plan/coupons/endpoint-spec-draft.md — 모든 항목 마커 표시
+→ 산출물 docs/domain/coupons/prd/endpoint-spec-draft.md — 모든 항목 마커 표시
 → 후속 edge-cases.md 에서 4xx 응답 cite 시 마커 유지
 ```
 

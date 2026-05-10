@@ -1,6 +1,6 @@
 ---
 name: planner-edge-cases
-description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-spec + endpoint-spec-draft 확정 후 호출. 입력 유효성 / 권한 / 동시성 / 외부 의존 실패 / 데이터 부재 등 분류. 산출물 docs/plan/{name}/edge-cases.md.
+description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-spec + endpoint-spec-draft 확정 후 호출. 입력 유효성 / 권한 / 동시성 / 외부 의존 실패 / 데이터 부재 등 분류. 산출물 docs/domain/{name}/prd/edge-cases.md.
 ---
 
 # Skill: planner-edge-cases
@@ -17,19 +17,19 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 - QA 가 그대로 테스트 케이스화할 수 있는 수준
 - 누락 위험 큰 카테고리 강제 점검
 
-**산출물**: `docs/plan/{name}/edge-cases.md`
+**산출물**: `docs/domain/{name}/prd/edge-cases.md`
 
 ## 2. 입력 (input)
 
 - **선행 산출물**:
-  - `docs/plan/{name}/feature-spec.md` (필수)
-  - `docs/plan/{name}/endpoint-spec-draft.md` (필수 — Draft OK, 마크다운 표)
-- (선택) `docs/plan/{name}/policy-draft.md` — 운영 정책 의존 케이스 cite
+  - `docs/domain/{name}/prd/feature-spec.md` (필수)
+  - `docs/domain/{name}/prd/endpoint-spec-draft.md` (필수 — Draft OK, 마크다운 표)
+- (선택) `docs/domain/{name}/prd/policy-draft.md` — 운영 정책 의존 케이스 cite
 - 호출 args:
   ```
-  feature-spec-path: docs/plan/{name}/feature-spec.md
-  endpoint-spec-draft-path: docs/plan/{name}/endpoint-spec-draft.md
-  policy-draft-path: docs/plan/{name}/policy-draft.md  # 선택
+  feature-spec-path: docs/domain/{name}/prd/feature-spec.md
+  endpoint-spec-draft-path: docs/domain/{name}/prd/endpoint-spec-draft.md
+  policy-draft-path: docs/domain/{name}/prd/policy-draft.md  # 선택
   ```
 
 ## 3. 절차 (steps)
@@ -71,7 +71,7 @@ description: 예외 케이스 정리 (정상 흐름 외 모든 분기). feature-
 - **P2**: 매우 드문 경우 / 차후 처리 가능
 
 ### Step 5 — 산출물 Write
-- `docs/plan/{name}/edge-cases.md` Write
+- `docs/domain/{name}/prd/edge-cases.md` Write
 
 ### Step 6 — 다음 skill 안내
 보고:

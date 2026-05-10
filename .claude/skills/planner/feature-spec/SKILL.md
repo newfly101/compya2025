@@ -1,6 +1,6 @@
 ---
 name: planner-feature-spec
-description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / 행동 / 결과). requirements 확정 후 호출. 시나리오별 정상 흐름 + 1차 예외 정리. 산출물 docs/plan/{name}/feature-spec.md.
+description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / 행동 / 결과). requirements 확정 후 호출. 시나리오별 정상 흐름 + 1차 예외 정리. 산출물 docs/domain/{name}/prd/feature-spec.md.
 ---
 
 # Skill: planner-feature-spec
@@ -18,17 +18,17 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 - QA / 개발자가 동일하게 해석 가능한 명확한 행동 묘사
 - edge-cases 의 베이스 (전체 예외는 별도 skill 에서 심화)
 
-**산출물**: `docs/plan/{name}/feature-spec.md`
+**산출물**: `docs/domain/{name}/prd/feature-spec.md`
 
 ## 2. 입력 (input)
 
-- **선행 산출물**: `docs/plan/{name}/requirements.md` (필수 — 없으면 즉시 중단)
-- (선택) `docs/plan/{name}/policy-draft.md` — Forward 흐름: requirements → policy-draft → feature-spec
-- (선택) `docs/plan/{name}/ia.md` — Flow cite 용
+- **선행 산출물**: `docs/domain/{name}/prd/requirements.md` (필수 — 없으면 즉시 중단)
+- (선택) `docs/domain/{name}/prd/policy-draft.md` — Forward 흐름: requirements → policy-draft → feature-spec
+- (선택) `docs/domain/{name}/prd/ia.md` — Flow cite 용
 - 호출 args:
   ```
-  requirements-path: docs/plan/{name}/requirements.md
-  policy-draft-path: docs/plan/{name}/policy-draft.md  # 선택
+  requirements-path: docs/domain/{name}/prd/requirements.md
+  policy-draft-path: docs/domain/{name}/prd/policy-draft.md  # 선택
   ```
 
 ## 3. 절차 (steps)
@@ -56,7 +56,7 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 - 디자인 / Figma 노드 ID 가 있으면 명시 (없으면 "wireframe-generator 단계에서 채움")
 
 ### Step 5 — 산출물 Write
-- `docs/plan/{name}/feature-spec.md` Write
+- `docs/domain/{name}/prd/feature-spec.md` Write
 
 ### Step 6 — 다음 skill 안내
 보고:
@@ -243,7 +243,7 @@ description: Given/When/Then 기능 명세 (BDD 패턴 — 주어진 상황 / �
 
 ### 짧은 예시
 ```
-입력: requirements-path: docs/plan/coupons/requirements.md
+입력: requirements-path: docs/domain/coupons/prd/requirements.md
 
 FR-CPN-01 (쿠폰 목록 조회) →
   SC-CPN-01: 정상 진입 (happy)

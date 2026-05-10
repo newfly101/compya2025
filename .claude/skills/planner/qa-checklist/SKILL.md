@@ -1,6 +1,6 @@
 ---
 name: planner-qa-checklist
-description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모든 선행 산출물 (ia / requirements / feature-spec / endpoint-spec-draft / edge-cases / policy-draft) 종합. 시나리오별 체크박스 + 우선순위. 산출물 docs/plan/{name}/qa-checklist.md.
+description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모든 선행 산출물 (ia / requirements / feature-spec / endpoint-spec-draft / edge-cases / policy-draft) 종합. 시나리오별 체크박스 + 우선순위. 산출물 docs/domain/{name}/prd/qa-checklist.md.
 ---
 
 # Skill: planner-qa-checklist
@@ -19,20 +19,20 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 - policy-draft → 정책 준수 검증
 - 우선순위별 분류 (P0 = 출시 전 / P1 = 다음 마일스톤 / P2 = 보류)
 
-**산출물**: `docs/plan/{name}/qa-checklist.md`
+**산출물**: `docs/domain/{name}/prd/qa-checklist.md`
 
 ## 2. 입력 (input)
 
 - **선행 산출물 (모두 권장 — 가능한 만큼 cite)**:
-  - `docs/plan/{name}/ia.md`
-  - `docs/plan/{name}/requirements.md`
-  - `docs/plan/{name}/feature-spec.md` (필수)
-  - `docs/plan/{name}/endpoint-spec-draft.md` (필수 — Draft OK, 마크다운 표)
-  - `docs/plan/{name}/edge-cases.md` (필수)
-  - (선택) `docs/plan/{name}/policy-draft.md`
+  - `docs/domain/{name}/prd/ia.md`
+  - `docs/domain/{name}/prd/requirements.md`
+  - `docs/domain/{name}/prd/feature-spec.md` (필수)
+  - `docs/domain/{name}/prd/endpoint-spec-draft.md` (필수 — Draft OK, 마크다운 표)
+  - `docs/domain/{name}/prd/edge-cases.md` (필수)
+  - (선택) `docs/domain/{name}/prd/policy-draft.md`
 - 호출 args:
   ```
-  plan-dir: docs/plan/{name}/
+  plan-dir: docs/domain/{name}/prd/
   ```
 
 ## 3. 절차 (steps)
@@ -82,7 +82,7 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 - 주니어 QA 가 출시 직전 한 번에 확인 가능
 
 ### Step 6 — 산출물 Write
-- `docs/plan/{name}/qa-checklist.md` Write
+- `docs/domain/{name}/prd/qa-checklist.md` Write
 
 ### Step 7 — 종료 보고
 - 산출물 경로
@@ -325,7 +325,7 @@ description: QA 체크리스트 작성 (수동/자동 테스트 가이드). 모�
 
 ### 짧은 예시
 ```
-입력: plan-dir: docs/plan/coupons/
+입력: plan-dir: docs/domain/coupons/prd/
 
 선행 산출물 로드:
 - ia.md (P0 기능 3건)

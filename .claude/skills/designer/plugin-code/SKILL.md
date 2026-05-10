@@ -1,6 +1,6 @@
 ---
 name: designer-plugin-code
-description: design-analysis.md 토대로 figma-plugin/code.ts 통째 덮어쓰기 + tsc 빌드 + 사용자 액션 안내. Figma 에 디자인을 직접 그리거나 수정하는 plugin code 를 생성. 산출물 figma-plugin/code.ts (+ code.js 자동 생성) + docs/plan/{name}/design-report.md + implementation-handoff.md.
+description: design-analysis.md 토대로 figma-plugin/code.ts 통째 덮어쓰기 + tsc 빌드 + 사용자 액션 안내. Figma 에 디자인을 직접 그리거나 수정하는 plugin code 를 생성. 산출물 figma-plugin/code.ts (+ code.js 자동 생성) + docs/domain/{name}/design/design-report.md + implementation-handoff.md.
 ---
 
 # Skill: designer-plugin-code
@@ -19,13 +19,13 @@ description: design-analysis.md 토대로 figma-plugin/code.ts 통째 덮어쓰�
 **산출물**:
 - `figma-plugin/code.ts` (단일 파일 덮어쓰기)
 - `figma-plugin/code.js` (tsc 빌드 결과 — 자동 생성)
-- `docs/plan/{name}/design-report.md`
-- `docs/plan/{name}/implementation-handoff.md`
+- `docs/domain/{name}/design/design-report.md`
+- `docs/domain/{name}/design/implementation-handoff.md`
 
 ## 2. 입력 (input)
 
 ### 필수
-- `design-analysis.md` 경로 (`docs/plan/{name}/design-analysis.md`)
+- `design-analysis.md` 경로 (`docs/domain/{name}/design/design-analysis.md`)
 - 작업 단위 이름 (`{name}`)
 - 작업 모드 (create / update)
 
@@ -35,7 +35,7 @@ description: design-analysis.md 토대로 figma-plugin/code.ts 통째 덮어쓰�
 
 ### 호출 args 예시
 ```
-name: coupons-admin, mode: create, analysis: docs/plan/coupons-admin/design-analysis.md
+name: coupons-admin, mode: create, analysis: docs/domain/coupons-admin/design/design-analysis.md
 name: bg-color-change, mode: update, target-node: 212:3, change: "fill #3B82F6"
 ```
 
@@ -135,8 +135,8 @@ watch 모드 띄웠으면 skip (자동 컴파일됨). 사용자 watch 여부 모
 ### Step 8 — design-report.md / implementation-handoff.md Write
 
 각 산출물 위치:
-- `docs/plan/{name}/design-report.md`
-- `docs/plan/{name}/implementation-handoff.md`
+- `docs/domain/{name}/design/design-report.md`
+- `docs/domain/{name}/design/implementation-handoff.md`
 
 템플릿은 `.claude/agents/designer.md` 의 "산출물 형식" 섹션 참조.
 
@@ -285,7 +285,7 @@ function hexToRgb(h: string): RGB {
 
 ### 예시 2: 어드민 화면 신규 frame + 컴포넌트 생성
 ```
-입력: name: coupons-admin, mode: create, analysis: docs/plan/coupons-admin/design-analysis.md
+입력: name: coupons-admin, mode: create, analysis: docs/domain/coupons-admin/design/design-analysis.md
 
 → design-analysis.md read → 재사용/신규 항목 식별
 → HITL: 🔴 없음 → 진행

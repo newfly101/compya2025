@@ -1,6 +1,6 @@
 ---
 name: planner-requirements
-description: 기능 요구사항 정의서 작성 (functional + non-functional). IA 확정 후 호출. 기능별 ID / 내용 / 우선순위 / 의존 / acceptance criteria 표 산출. 산출물 docs/plan/{name}/requirements.md.
+description: 기능 요구사항 정의서 작성 (functional + non-functional). IA 확정 후 호출. 기능별 ID / 내용 / 우선순위 / 의존 / acceptance criteria 표 산출. 산출물 docs/domain/{name}/prd/requirements.md.
 ---
 
 # Skill: planner-requirements
@@ -15,15 +15,15 @@ description: 기능 요구사항 정의서 작성 (functional + non-functional).
 - 우선순위 P0 / P1 / P2 (IA 와 정합)
 - 의존 관계 명시 (다른 도메인 / 외부 시스템 / DB / API)
 
-**산출물**: `docs/plan/{name}/requirements.md`
+**산출물**: `docs/domain/{name}/prd/requirements.md`
 
 ## 2. 입력 (input)
 
-- **선행 산출물**: `docs/plan/{name}/ia.md` (필수 — 없으면 즉시 중단 + `planner-ia` 안내)
+- **선행 산출물**: `docs/domain/{name}/prd/ia.md` (필수 — 없으면 즉시 중단 + `planner-ia` 안내)
 - ⭐ Forward 흐름 변경: `requirements` 가 `policy-draft` 보다 **먼저** 진행됨 — requirements 의 NFR 결과가 policy-draft 의 결정 항목 도출에 사용됨
 - 호출 args:
   ```
-  ia-path: docs/plan/{name}/ia.md
+  ia-path: docs/domain/{name}/prd/ia.md
   ```
 
 ## 3. 절차 (steps)
@@ -60,7 +60,7 @@ description: 기능 요구사항 정의서 작성 (functional + non-functional).
 해당하지 않는 카테고리는 명시적으로 "해당 없음" 표기.
 
 ### Step 5 — 산출물 Write
-- `docs/plan/{name}/requirements.md` Write
+- `docs/domain/{name}/prd/requirements.md` Write
 
 ### Step 6 — 다음 skill 안내
 보고:
@@ -242,7 +242,7 @@ NFR-02 ── (depends on) ── 인증 미들웨어
 
 ### 짧은 예시
 ```
-입력: ia-path: docs/plan/coupons/ia.md
+입력: ia-path: docs/domain/coupons/prd/ia.md
 
 IA P0 기능 = 3건 (목록 조회 / 상세 / 사용 처리)
 → FR-CPN-01: 쿠폰 목록 조회 (P0, deps: API:GET /coupons)

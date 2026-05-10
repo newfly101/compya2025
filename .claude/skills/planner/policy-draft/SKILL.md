@@ -1,6 +1,6 @@
 ---
 name: planner-policy-draft
-description: 정책 결정 템플릿 (Draft) — 확정 정책이 아니라 "결정 필요 항목 목록". 법무/결제/권한/DB 파괴적 변경 4 분야는 사용자 답변 필수 (🔴). 그 외는 가정 (🟨) / 미정 (❓) 마커 표시 후 진행 가능. 산출물 docs/plan/{name}/policy-draft.md. 사용자 합의 후 별도 라운드에서 policy.md 로 promote.
+description: 정책 결정 템플릿 (Draft) — 확정 정책이 아니라 "결정 필요 항목 목록". 법무/결제/권한/DB 파괴적 변경 4 분야는 사용자 답변 필수 (🔴). 그 외는 가정 (🟨) / 미정 (❓) 마커 표시 후 진행 가능. 산출물 docs/domain/{name}/prd/policy-draft.md. 사용자 합의 후 별도 라운드에서 policy.md 로 promote.
 ---
 
 # Skill: planner-policy-draft
@@ -15,7 +15,7 @@ description: 정책 결정 템플릿 (Draft) — 확정 정책이 아니라 "결
 - 강제 HITL 4 분야는 🔴 마커 — 사용자 답변 전 확정 X
 - requirements / feature-spec / edge-cases 에서 cite 할 수 있는 ID 부여
 
-**산출물**: `docs/plan/{name}/policy-draft.md` (확정 X — Draft)
+**산출물**: `docs/domain/{name}/prd/policy-draft.md` (확정 X — Draft)
 
 ⭐ **promote 컨벤션**:
 - `policy-draft.md` 는 사용자 / 운영자 / 법무 / 사업팀 합의 후 별도 라운드에서 `policy.md` 로 이름 변경 (promote)
@@ -24,13 +24,13 @@ description: 정책 결정 템플릿 (Draft) — 확정 정책이 아니라 "결
 ## 2. 입력 (input)
 
 - **선행 산출물**:
-  - `docs/plan/{name}/ia.md` (필수)
-  - `docs/plan/{name}/requirements.md` (필수 — Forward 흐름 변경: requirements 가 policy 보다 먼저)
+  - `docs/domain/{name}/prd/ia.md` (필수)
+  - `docs/domain/{name}/prd/requirements.md` (필수 — Forward 흐름 변경: requirements 가 policy 보다 먼저)
 - **사용자 운영 정책 입력**: 강제 HITL 4 분야 (법무 / 결제 / 권한 / DB 파괴적) 만 사용자 답변 필수
 - 호출 args:
   ```
-  ia-path: docs/plan/{name}/ia.md
-  requirements-path: docs/plan/{name}/requirements.md
+  ia-path: docs/domain/{name}/prd/ia.md
+  requirements-path: docs/domain/{name}/prd/requirements.md
   ```
 
 ## 3. 절차 (steps)
@@ -69,7 +69,7 @@ description: 정책 결정 템플릿 (Draft) — 확정 정책이 아니라 "결
 - 🔴 (위험) 항목 → 사용자 답변 받기 전 **확정 금지** — 후속 산출물에서 "🔴 사용자 답변 대기" 명시
 
 ### Step 4 — 산출물 Write
-- `docs/plan/{name}/policy-draft.md` Write
+- `docs/domain/{name}/prd/policy-draft.md` Write
 - 헤더에 "Draft — 확정 X" 명시
 - 모든 항목에 마커 부여
 
@@ -329,7 +329,7 @@ description: 정책 결정 템플릿 (Draft) — 확정 정책이 아니라 "결
 
 ### 짧은 예시
 ```
-입력: ia-path: docs/plan/coupons/ia.md, requirements-path: docs/plan/coupons/requirements.md
+입력: ia-path: docs/domain/coupons/prd/ia.md, requirements-path: docs/domain/coupons/prd/requirements.md
 
 → 카테고리 점검 + 마커 부여:
    1. 사업 → POL-CPN-01 (쿠폰 1인 1회) 🟨 가정 (default: 1인 1회)
@@ -337,7 +337,7 @@ description: 정책 결정 템플릿 (Draft) — 확정 정책이 아니라 "결
    3. 사업 (결제) → POL-CPN-03 (환불) 🔴 위험 — 결제 답변 필요
    4. 보안 → POL-CPN-04 (인증) 🔴 위험 — 권한 답변 필요
 
-→ 산출물 docs/plan/coupons/policy-draft.md:
+→ 산출물 docs/domain/coupons/prd/policy-draft.md:
    POL-CPN-01: 🟨 (자동 진행 OK)
    POL-CPN-02 / 03 / 04: 🔴 (사용자 답변 대기)
 
