@@ -1,0 +1,13 @@
+{
+  "name": "compyafun-designer-bridge",
+  "version": "0.1.0",
+  "description": "Designer agent ↔ Figma bridge — paste & run plugin code",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "watch": "tsc -p tsconfig.json --watch"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.100.0",
+    "typescript": "^5.4.0"
+  }
+}
