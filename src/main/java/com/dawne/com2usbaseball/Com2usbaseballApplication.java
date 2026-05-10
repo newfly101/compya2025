@@ -3,11 +3,13 @@ package com.dawne.com2usbaseball;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = "com.dawne.com2usbaseball")
 @EnableCaching
+@ConfigurationPropertiesScan("com.dawne.com2usbaseball.config.properties")
 @EntityScan("com.dawne.com2usbaseball")
 @MapperScan(basePackages = "com.dawne.com2usbaseball",
 		annotationClass = org.apache.ibatis.annotations.Mapper.class)
