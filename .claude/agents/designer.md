@@ -340,7 +340,6 @@ docs/domain/{feature}/design/
 - auto-layout (Flex): direction column, gap $spacing-sm
 
 **구조 (트리)**
-```
 <Page>
 ├── <TopBar>  (글로벌, 도메인 헤더 X)
 ├── <FilterChipRow>  (가로 스크롤)
