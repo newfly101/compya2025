@@ -13,9 +13,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
@@ -41,16 +44,25 @@ public class NaverOAuthService {
     }
 
     private String getAccessToken(String code, String state) {
-        String url = "https://nid.naver.com/oauth2.0/token" +
-                "?grant_type=authorization_code" +
-                "&client_id=" + naverProperties.getClientId() +
-                "&client_secret=" + naverProperties.getClientSecret() +
-                "&code=" + code +
-                "&state=" + state +
-                "&redirect_uri=" + naverProperties.getRedirectUri();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "authorization_code");
+        body.add("client_id", naverProperties.getClientId());
+        body.add("client_secret", naverProperties.getClientSecret());
+        body.add("code", code);
+        body.add("state", state);
+        body.add("redirect_uri", naverProperties.getRedirectUri());
 
+        ResponseEntity<Map> tokenResponse = restTemplate.exchange(
+                "https://nid.naver.com/oauth2.0/token",
+                HttpMethod.POST,
+                new HttpEntity<>(body, headers),
+                Map.class
+        );
+
+        Map<String, Object> response = tokenResponse.getBody();
         log.trace("NAVER TOKEN RESPONSE = {}", response);
 
         if (response == null || !response.containsKey("access_token")) {
