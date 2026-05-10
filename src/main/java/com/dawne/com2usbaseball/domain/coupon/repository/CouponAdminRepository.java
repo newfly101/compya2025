@@ -10,17 +10,9 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class CouponRepository {
+public class CouponAdminRepository {
 
     private final CouponMapper mapper;
-
-    // public
-
-    public List<CouponEntity> selectCouponsUser() {
-        return mapper.selectCouponListForUser();
-    }
-
-    // admin
 
     public List<CouponEntity> selectCoupons() {
         return mapper.selectCouponList();
@@ -41,6 +33,4 @@ public class CouponRepository {
     public boolean updateCouponVisible(Long couponId, boolean visible) {
         return mapper.updateCouponVisible(couponId, visible) > 0;
     }
-
-
 }

@@ -6,7 +6,7 @@ import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
 import com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity;
 import com.dawne.com2usbaseball.domain.coupon.enums.CouponMessages;
 import com.dawne.com2usbaseball.domain.coupon.exception.CouponException;
-import com.dawne.com2usbaseball.domain.coupon.repository.CouponRepository;
+import com.dawne.com2usbaseball.domain.coupon.repository.CouponAdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationEventPublisher;
@@ -22,7 +22,7 @@ import java.util.List;
 @Transactional
 public class CouponAdminServiceImpl implements CouponAdminService {
 
-    private final CouponRepository repository;
+    private final CouponAdminRepository repository;
     private final CouponMapStruct couponMapStruct;
     private final ApplicationEventPublisher eventPublisher;
 
