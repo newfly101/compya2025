@@ -36,6 +36,7 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     }
 
     @Override
+    @Transactional
     public CouponResponse createCoupon(CouponRequest request) {
         CouponEntity coupon = couponMapStruct.toEntity(request);
         try {
@@ -53,6 +54,7 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     }
 
     @Override
+    @Transactional
     public CouponResponse updateCoupon(CouponRequest request, Long id) {
         CouponEntity coupon = repository.findById(id)
                 .orElseThrow(() -> new CouponException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -67,6 +69,7 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     }
 
     @Override
+    @Transactional
     public void updateCouponVisible(Long id, boolean visible) {
         repository.findById(id)
                 .orElseThrow(() -> new CouponException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
