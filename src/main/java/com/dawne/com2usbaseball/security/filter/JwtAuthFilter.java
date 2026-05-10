@@ -65,13 +65,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-
-        if (header != null && header.startsWith("Bearer ")) {
-            return header.substring(7);
-        }
-
-        // cookie fallback
+        // 인증은 HttpOnly 쿠키 단일 채널로 한정 (Authorization 헤더 차단)
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
                 if ("ACCESS_TOKEN".equals(cookie.getName())) {

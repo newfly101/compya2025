@@ -5,12 +5,14 @@ import com.dawne.com2usbaseball.security.provider.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name="0. Swagger 인증", description = "Swagger 로그인 인증 토큰 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/dev")
+@Profile("local")
 public class SwaggerController {
 
     private final JwtProvider jwtProvider;
