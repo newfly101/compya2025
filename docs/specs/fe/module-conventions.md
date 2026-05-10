@@ -1,7 +1,7 @@
-# FE 표준 모듈 구조 명문화 (Q2)
+# FE 표준 모듈 구조
 
-> 작성: 2026-05-09 (FE 계층 권고 6 적용 — `docs/specs/fe/infra-layers.md` § 5 권고 6, commit `48813e5`)
-> 본 문서: 코드 변경 0건 — 표준 명문화 only. 신규 도메인 / 신규 infra 모듈 작성 시 본 문서 cite
+> 분석 시점: v2.0.0-refactor-mobile (2026-05-09 이후 정리 상태)
+> 본 문서: 모바일 리뉴얼 후 정착된 도메인 / infra / global 모듈 컨벤션 명문화. 신규 도메인 작성 시 본 문서 cite.
 
 ---
 
@@ -9,50 +9,55 @@
 
 ```text
 domains/{domain}/
-├── mobile/                     # 모바일 화면 (Screen + sub component)
-│   ├── {Domain}Screen.jsx
-│   └── {Domain}Screen.module.scss
-├── feature/                    # 별도 진입 화면 묶음 (예: admin 전용, 디테일, 등)
-│   ├── admin/                  # admin 화면 (활성 도메인만)
-│   │   ├── {Domain}AdminScreen.jsx
-│   │   └── ...
-│   └── detail/                 # 상세/하위 화면 (옵션)
-├── components/                 # 도메인 전용 sub component (외부 재사용 X)
-│   ├── {ComponentName}.jsx
-│   └── {ComponentName}.module.scss
-├── hooks/                      # 도메인 hook (use* prefix)
-│   └── use{Domain}List.js
-├── config/                     # 정책 const (MOCK_*.js, *_TYPES.js)
-│   └── {DOMAIN}_CONFIG.js      # SCREAMING_SNAKE_CASE
-├── store/                      # Redux store 모듈 (§ 1.1 참조)
-└── README.md                   # 도메인 가이드 (옵션, 활성 도메인 권장)
+├── README.md                       # 도메인 가이드 (활성 도메인 권장)
+├── mobile/                         # 모바일 화면 (Screen + sub component)
+│   ├── {Domain}Screen.jsx          # 라우트 진입 (lazy)
+│   ├── {Domain}Screen.module.scss
+│   ├── {domain}.tokens.scss        # (옵션) 도메인 로컬 :root 토큰
+│   ├── components/                 # 도메인 전용 sub component (외부 재사용 X)
+│   │   └── {componentName}/
+│   │       ├── {ComponentName}.jsx
+│   │       └── {ComponentName}.module.scss
+│   ├── containers/                 # (옵션) 리스트/composer 컨테이너
+│   │   └── public/                 # public/admin 분기 시
+│   │       └── {Domain}List{Horizontal\|Vertical}.jsx
+│   └── hooks/                      # 도메인 hook (use* prefix)
+│       └── use{Domain}List.js
+├── feature/                        # (옵션) 별도 진입 화면 묶음
+│   └── admin/                      # Admin TBD — 기획 대기
+│       ├── components/
+│       ├── hooks/
+│       └── pages/
+├── config/                         # 정책 const (MOCK_*.js, *_TYPES.js)
+│   └── {DOMAIN_CONFIG}.js          # SCREAMING_SNAKE_CASE
+└── store/                          # Redux store 모듈 (§ 1.1)
 ```
 
-### 1.1 `store/` 표준 5 파일 layout
+### 1.1 `store/` 표준 layout
 
 #### Variant A — public/admin 분기 (권장 — 활성 패턴)
 
-활성 도메인 (events, coupons, notices, quiz) 채택 패턴:
+활성 도메인 (events, coupons, notices, quiz) 채택:
 
 ```text
 domains/{domain}/store/
 ├── public/
 │   ├── api.js                  # axios call (infra/http/client.js)
-│   ├── endpoints.js            # path const (export const URL_*)
+│   ├── endpoints.js            # path const + thunk type identifier
 │   └── thunks.js               # createAsyncThunk (사용자 화면용 — payload.options 미반환)
-├── admin/
+├── admin/                      # Admin TBD — 기획 대기, 코드 보존
 │   ├── api.js                  # axios call
-│   ├── endpoints.js            # path const
+│   ├── endpoints.js            # path const + thunk type identifier
 │   └── thunks.js               # createAsyncThunk (admin 전용 — payload.options 반환)
-├── dto.js                      # 응답 ↔ state shape 변환 (옵션)
-└── slices.js                   # createSlice + applyAsyncHandlers (public/admin thunk 모두 처리)
+├── dto.js                      # (옵션) 응답 ↔ state shape 변환
+└── slices.js                   # createSlice + applyAsyncHandlers (public/admin 통합)
 ```
 
 cite:
-- `web/src/domains/events/store/{public,admin}/{api,endpoints,thunks}.js`
-- `web/src/domains/quiz/store/{public,admin}/{api,endpoints,thunks}.js`
-- `web/src/domains/coupons/store/{public,admin}/{api,endpoints,thunks}.js`
-- `web/src/domains/notices/store/{public,admin}/{api,endpoints,thunks}.js`
+- `web/src/domains/events/store/{public,admin}/{api,endpoints,thunks}.js` + `dto.js` + `slices.js`
+- `web/src/domains/quiz/store/{public,admin}/{api,endpoints,thunks}.js` + `dto.js` + `slices.js`
+- `web/src/domains/coupons/store/{public,admin}/{api,endpoints,thunks}.js` + `slices.js`
+- `web/src/domains/notices/store/{public,admin}/{api,endpoints,thunks}.js` + `slices.js`
 
 #### Variant B — 단일 layout (admin 분기 없는 도메인)
 
@@ -68,7 +73,7 @@ domains/{domain}/store/
 
 cite: `web/src/domains/authentication/store/{api,endpoints,thunks,slices}.js`
 
-#### Variant C — thunks 분기 (community legacy — IA 재개 후 Variant A 로 정렬 예정)
+#### Variant C — thunks 분기 (community legacy)
 
 community 가 board/post/tag/user 4개 thunk 그룹으로 분기:
 
@@ -87,20 +92,34 @@ domains/community/store/
 └── index.js
 ```
 
-> ⚠ community IA 재개 시 Variant A (public/admin) 로 마이그 권장 — `docs/prd/domains/community.md` TODO
+> ⚠ community IA 재개 시 Variant A (public/admin) 로 마이그 권장. 현재 reducer 가 store 등록에서도 빠져있음 (`store.js:17-18` 주석).
+
+#### Variant D — store 없음 (mock-only)
+
+historyMode 처럼 BE 연동 없이 mock 만 사용:
+
+```text
+domains/historyMode/
+├── config/                     # MOCK_*.js
+├── mobile/                     # Screen + components + hooks (useState/useMemo 만)
+└── (store/ 없음)
+```
+
+cite: `web/src/domains/historyMode/`
 
 ### 1.2 `payload.options` 컨벤션
 
 - **admin thunk** 만 `return { ..., options }` 으로 BE 메타 (`{ success, message, kind, scope, ts }`) 반환
-- **public (사용자 화면) thunk** 는 `options` **미반환** — operationListener (commit `8ba8b65` 후 `state.auth.userRole === 'ADMIN'` 분기 추가) 가 admin role 일 때만 toast 발화
-- BE 가 사용자 thunk 응답에 메타를 추가해도 admin 분기로 차단됨 — 단 thunk 코드에서 `options` destructure 하면 `payload.options` 가 채워지므로 thunk 작성 시 의도 명시
-- cite: `docs/specs/fe/infra-layers.md` § 3.4, § 5 권고 3
+- **public (사용자 화면) thunk** 는 `options` 미반환 — operationListener 가 `state.auth.userRole === 'ADMIN'` 일 때만 toast 발화
+- BE 가 사용자 thunk 응답에 메타를 추가해도 admin role 분기로 차단됨
+- thunk 작성 시 의도 명시: admin 만 `const { id, ...options } = await fetch...()` 패턴 사용
+- cite: `web/src/app/store/operation/operationListener.js`, `web/src/app/store/operation/ResponseListener.jsx`
 
 ---
 
 ## 2. infra 표준 (`web/src/infra/`)
 
-### 2.1 `infra/api/{moduleName}/` (옵션 C — commit `fa52ef1`)
+### 2.1 `infra/api/{moduleName}/` (5 파일 표준)
 
 도메인 횡단 외부 통신 API:
 
@@ -117,24 +136,33 @@ infra/api/{moduleName}/
 
 cite: `web/src/infra/api/uploads/{api,endpoints,thunks,slices,index}.js`
 
-> 도메인 store 의 5 파일 layout 과 동일 — infra 와 도메인 사이의 차이는 **import 경계** (도메인 = 사용자 / 컨텐츠 단위, infra = 시스템 횡단). 폴더 구조는 동일.
+> 도메인 store 의 layout 과 동일 — infra 와 도메인 사이의 차이는 **import 경계** (도메인 = 사용자/컨텐츠 단위, infra = 시스템 횡단). 폴더 구조는 동일.
 
 ### 2.2 `infra/http/`
 
 ```text
 infra/http/
-├── client.js                   # 단일 axios instance + interceptor
-├── interceptors/               # (옵션 — 분리 시)
-└── types.js                    # (옵션 — 응답 envelope 타입)
+└── client.js                   # 단일 axios instance + interceptor + import.meta.env.VITE_API_BASE_URL 우선
 ```
 
 cite: `web/src/infra/http/client.js`
 
-### 2.3 향후 후보 (`docs/prd/_meta/global-api-folder-structure.md` § 6)
+### 2.3 `infra/analytics/`
 
-- `infra/analytics/` (GA4 — FE 계층 권고 1)
-- `infra/storage/` (storageCrypto — live 면 후보)
-- `infra/config/` (예약)
+GA4 wrapper + 이벤트 카탈로그:
+
+```text
+infra/analytics/
+├── ga.js                       # gtag wrapper (pushEvent, setUserProperties)
+├── events/
+│   ├── authEvents.js           # trackLogin, trackLogout
+│   ├── couponEvents.js         # trackCouponGo
+│   └── eventEvents.js          # trackEventClick
+└── hooks/
+    └── useGA4PageView.js       # 라우트 변경 page_view
+```
+
+cite: `web/src/infra/analytics/`
 
 ---
 
@@ -144,14 +172,16 @@ cite: `web/src/infra/http/client.js`
 |---|---|---|
 | 컴포넌트 파일 | PascalCase + `.jsx` | `HomeScreen.jsx`, `ResponseModal.jsx` |
 | 컴포넌트 SCSS | PascalCase + `.module.scss` | `HomeScreen.module.scss` |
+| 컴포넌트 폴더 | camelCase (단수) | `couponCard/`, `categoryChip/` |
 | hook 파일 | camelCase + `use` prefix | `useEventList.js`, `useGA4PageView.js` |
 | util 파일 | camelCase | `dateUtils.js`, `applyAsyncHandlers.js` |
-| const 파일 | SCREAMING_SNAKE_CASE | `MENU_GROUPS.js`, `ROUTE_PATHS.js`, `QUICK_MENUS.js` |
+| const 파일 | SCREAMING_SNAKE_CASE | `MENU_GROUPS.js`, `MOCK_HISTORY_LEGENDS.js`, `QUICK_MENUS.js` |
 | barrel | `index.js` | (lowercase, 확장자 `.js`) |
 | store slice 파일 | `slices.js` (복수) | (단일 도메인이라도 복수형 일관) |
 | store thunk 파일 | `thunks.js` 또는 `{name}Thunks.js` | community variant C 만 분리 |
 | Redux action type | slice prefix + `/` + verb | `auth/setUser`, `operation/setLastOperation` |
-| BE endpoint const | `URL_` prefix | `URL_GET_EVENT_LIST` |
+| BE endpoint const | `URL_*` 또는 `{DOMAIN_NOUN}` | `URL_GET_EVENT_LIST`, `EVENTS.GET_EVENTS` |
+| 도메인 로컬 토큰 | `{domain}.tokens.scss` (camelCase) | `community.tokens.scss`, `historyMode.tokens.scss` |
 
 ---
 
@@ -160,7 +190,7 @@ cite: `web/src/infra/http/client.js`
 ### 4.1 사용 권장 위치
 
 - `infra/api/{moduleName}/index.js` — **필수** (외부 import 단일 진입점)
-- `domains/{domain}/store/index.js` — **권장** (하위 변형 흡수)
+- `domains/{domain}/store/index.js` — **권장** (하위 변형 흡수, 현재는 community 만 채택)
 - `global/ui/{component}/index.js` — **필수** (responseModal, visibleToggle, renewalNoticeModal 패턴)
 - `domains/{domain}/components/index.js` — **선택** (도메인 외부 재사용 0이면 생략 가능)
 
@@ -180,7 +210,7 @@ export { default as ResponseModal } from './ResponseModal.jsx';
 
 ---
 
-## 5. 도메인 vs infra 경계
+## 5. 도메인 vs infra vs global 경계
 
 ### 5.1 infra 에 두는 기준
 
@@ -192,7 +222,7 @@ export { default as ResponseModal } from './ResponseModal.jsx';
 예:
 - `infra/api/uploads/` — S3 (외부) + events/quiz admin 횡단 → infra OK
 - `infra/http/client.js` — axios + 모든 도메인 → infra OK
-- `infra/analytics/` (예정) — GA4 (외부) + 모든 도메인 → infra 후보
+- `infra/analytics/` — GA4 (외부) + 모든 도메인 → infra OK
 
 ### 5.2 도메인에 두는 기준
 
@@ -204,7 +234,7 @@ export { default as ResponseModal } from './ResponseModal.jsx';
 
 예:
 - `domains/authentication/callback/AuthCallBack.jsx` — OAuth callback (외부 통신이지만 authentication 도메인 의미)
-- `domains/coupons/hooks/useCouponList.js` — coupons 단일 사용
+- `domains/coupons/mobile/hooks/useCouponList.js` — coupons 단일 사용
 - `domains/home/config/QUICK_MENUS.js` — home 단일 사용
 
 ### 5.3 global vs infra 경계
@@ -212,9 +242,15 @@ export { default as ResponseModal } from './ResponseModal.jsx';
 - `global/ui/`: **시각 컴포넌트** 도메인 횡단 (badge, mobile/section, responseModal, visibleToggle, renewalNoticeModal)
 - `global/styles/`: **전역 SCSS** (variables, mixins, base, components, semantic)
 - `global/utils/`: **pure 함수** 도메인 횡단 (datetime/dateUtils.js)
-- `infra/`: **외부 통신 어댑터** (api, http, analytics 예정)
+- `infra/`: **외부 통신 어댑터** (api, http, analytics)
 
 > 차이: `global/` 은 **순수 / UI / 스타일** 횡단, `infra/` 는 **외부 통신 / 시스템 어댑터** 횡단
+
+### 5.4 app vs global 경계
+
+- `app/`: **앱 조립 / 라우팅 / 글로벌 store 조립** (router, store, provider, wrapper)
+- `app/store/utils/`: Redux slice helper (`applyAsyncHandlers`) — `app/store/` 영역 (slice 와 같은 추상 레벨)
+- `app/store/operation/`: 글로벌 operation slice + admin 전용 listener — store 의 일부
 
 ---
 
@@ -222,19 +258,28 @@ export { default as ResponseModal } from './ResponseModal.jsx';
 
 신규 도메인 작성 / 기존 도메인 변형 시:
 
-1. **store/ 패턴 결정**: Variant A (public/admin) / Variant B (단일) / Variant C (thunks 분기) 중 선택 — 사용자 vs admin 분기 여부 기준
-2. **infra 후보 검증**: § 5.1 두 기준 충족 시 `infra/` 신규 모듈 추가 검토 (`docs/prd/_meta/global-api-folder-structure.md` § 6 후보 표 갱신)
+1. **store/ 패턴 결정**: Variant A (public/admin) / B (단일) / C (thunks 분기) / D (store 없음) 중 선택
+2. **infra 후보 검증**: § 5.1 두 기준 충족 시 `infra/` 신규 모듈 추가 검토
 3. **명명 컨벤션 준수**: § 3 표 cite
 4. **barrel 추가 여부**: § 4.1 / § 4.2 기준
-5. **README.md**: 활성 도메인은 권장 — `web/src/domains/authentication/README.md` 패턴
+5. **README.md**: 활성 도메인은 권장 — `web/src/domains/coupons/README.md`, `web/src/domains/events/README.md`, `web/src/domains/community/README.md` 패턴
 
 ---
 
-## 7. 관련 문서
+## 7. Admin 영역 정책
 
-- `docs/specs/fe/infra-layers.md` (commit `48813e5`) — 본 권고 6 의 출처
-- `docs/prd/_meta/global-api-folder-structure.md` (commit `ee57758`) — 옵션 C 채택 + 향후 후보
-- `docs/prd/_meta/global-folder-restructure.md` (commit `b780b90`) — global 재구조 제안서
-- `docs/specs/fe/state-and-data.md` — Redux store 등록 reducer 표
-- `docs/specs/fe/api-calls.md` — 도메인별 endpoint 카탈로그
-- `docs/specs/fe/routes-and-screens.md` — 라우트 ↔ 화면 매핑
+> **Admin: TBD (기획 대기)**
+
+- admin 화면 코드는 **`domains/{domain}/feature/admin/` 패턴**으로 재구현 예정 (현재 모두 비활성)
+- admin store 코드 (api/endpoints/thunks) 는 **현재 보존** (`domains/{events,coupons,notices,quiz}/store/admin/`) — UI 재기획 후 재활성화 가능
+- admin endpoint 정책: thunk 가 `payload.options` 반환 → operationListener 가 admin role 일 때만 toast trigger
+- `feature/admin/pages/` 진입 컴포넌트는 lazy import 후 `app/router/routes/AdminRoutes.jsx` 에 등록
+- 본 문서의 컨벤션은 admin 재구현 시점에도 동일 적용 (도메인 표준의 일부)
+
+---
+
+## 8. 관련 문서
+
+- `docs/specs/fe/frontend-structure.md` — 폴더/파일 구조 + 신규 도메인 스캐폴드 가이드 (본 문서 상위)
+- `docs/specs/fe/api-calls.md` — 도메인별 활성 endpoint 카탈로그
+- `docs/specs/fe/dead-suspects.md` — dead 후보 audit
