@@ -78,8 +78,8 @@ public class CouponAdminServiceImpl implements CouponAdminService {
             @CacheEvict(value = "coupons", key = "'public'")
     })
     public void updateCouponVisible(Long id, boolean visible) {
-        if (!repository.updateCouponVisible(id, visible)) {
-            throw new CouponException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
+        repository.findById(id)
+                .orElseThrow(() -> new CouponException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
+        repository.updateCouponVisible(id, visible);
     }
 }
