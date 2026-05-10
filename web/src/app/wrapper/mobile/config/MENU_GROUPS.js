@@ -9,10 +9,8 @@ export const MENU_GROUPS = [
     ]
   },
   {
-    label: '기능',
+    label: '컨텐츠',
     items: [
-      // comingSoon: true → /skill, /encyclopedia 폐기 도메인 (simulate bc147f9 / dictionary 823c6ac).
-      // Drawer 에서 click 시 navigate 차단 + RenewalNoticeModal 표시.
       { icon: '🎮', label: '스킬 시뮬레이터', to: '/skill',       badge: null, comingSoon: true },
       { icon: '📖', label: '추천 백과사전',   to: '/encyclopedia', badge: null, comingSoon: true },
       { icon: '🎯', label: '히스토리 탐색기', to: '/mode/history', badge: null },

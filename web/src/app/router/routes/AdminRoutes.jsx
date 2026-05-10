@@ -1,4 +1,3 @@
-import { lazy } from "react";
 import AuthGuard from "@/app/router/guards/AuthGuard.jsx";
 
 // global/layout/adminPageLayout 폐기 (2026-05-09) — AdminPageLayout / AdminContentPage wrap 제거. children 라우트는 유지
