@@ -7,7 +7,11 @@
       "PowerShell(Remove-Item *)",
       "PowerShell(npm *)",
       "mcp__figma-dev-mode__get_metadata",
-      "Bash(claude mcp *)"
+      "Bash(claude mcp *)",
+      "Bash(findstr *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(powershell *)"
     ]
   }
 }
