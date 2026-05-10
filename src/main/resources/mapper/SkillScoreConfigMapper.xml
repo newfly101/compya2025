@@ -5,7 +5,7 @@
 
     <select id="selectActiveConfigsByTarget"
             resultType="com.dawne.com2usbaseball.domain.skill.entity.SkillScoreConfigEntity"
-            parameterType="com.dawne.com2usbaseball.common.enums.Target">
+            parameterType="com.dawne.com2usbaseball.common.enums.site.Target">
         SELECT skill_code,
                target,
                point,
