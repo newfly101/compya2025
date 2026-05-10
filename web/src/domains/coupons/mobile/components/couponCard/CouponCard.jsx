@@ -1,9 +1,7 @@
 // domains/coupon/components/CouponCard.jsx
 import styles from "./CouponCard.module.scss";
 import { trackCouponGo } from "@/infra/analytics/events/couponEvents.js";
-
-const COUPON_BASE_URL =
-  import.meta.env.VITE_COUPON_BASE_URL ?? "http://withhive.me/399";
+import { COUPON_BASE_URL } from "@/config/env.js";
 
 const CouponCard = ({ coupon, showDetail = false, isExpired = false }) => {
   const details = coupon.detail?.split("\n") ?? [];
