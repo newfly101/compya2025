@@ -25,7 +25,6 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-**/src/main/resources/application-prod.properties
 
 ### NetBeans ###
 /nbproject/private/
@@ -37,3 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 /.env
+
+### docs/temp (로컬 분석 산출물 — commit 금지) ###
+docs/temp/
