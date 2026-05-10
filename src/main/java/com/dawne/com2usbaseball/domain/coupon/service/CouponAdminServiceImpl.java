@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,13 +42,17 @@ public class CouponAdminServiceImpl implements CouponAdminService {
     })
     public CouponResponse createCoupon(CouponRequest request) {
         CouponEntity coupon = couponMapStruct.toEntity(request);
-        if (!repository.insertCoupon(coupon)) {
-            throw new CouponException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        CouponEntity saved = repository.findById(coupon.getId())
-                .orElseThrow(() -> new CouponException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
+        try {
+            if (!repository.insertCoupon(coupon)) {
+                throw new CouponException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+            CouponEntity saved = repository.findById(coupon.getId())
+                    .orElseThrow(() -> new CouponException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
 
-        return couponMapStruct.toResponse(saved);
+            return couponMapStruct.toResponse(saved);
+        } catch (DataIntegrityViolationException e) {
+            throw new CouponException(CouponMessages.COUPON_CODE_DUPLICATED, HttpStatus.CONFLICT);
+        }
     }
 
     @Override
