@@ -135,3 +135,66 @@ $ npm run build
 | `docs/domain/applayout/design/design-analysis.md` | 신규 |
 | `docs/domain/applayout/design/design-report.md` | 신규 (본 문서) |
 | `docs/domain/applayout/design/implementation-handoff.md` | 신규 |
+
+---
+
+## 9. 4px Grid 검증 (사후)
+
+> 2026-05-11 사용자 임의 수정 후 재검증
+> 글로벌 룰: `docs/global-guide/design/figma-plugin-rules.md`
+> 환경: figma-dev-mode MCP 미등록 — 코드 baseline + 본 문서 § 1 frame 정의 기준 fallback 검증
+
+### 9.1 Frame 사이즈 4 배수 검증
+
+| Frame | 항목 | 값 | 4 배수? | 권고 |
+|---|---|---|---|---|
+| F1 Mobile wrapper | width | 428 | YES (4×107) | 유지 |
+| F1 Mobile wrapper | height | 932 | YES (4×233) | 유지 |
+| F2 TopBar home | width | 428 | YES | 유지 |
+| F2 TopBar home | height | 120 | YES (4×30) | 유지 |
+| F3 TopBar page | width | 428 | YES | 유지 |
+| F3 TopBar page | height | 84 | YES (4×21) | 유지 |
+| F4 Drawer guest | width | 428 | YES | 유지 |
+| F4 Drawer guest | height | 932 | YES | 유지 |
+| F5 Drawer user | width | 428 | YES | 유지 |
+| F5 Drawer user | height | 932 | YES | 유지 |
+| F6~F10 | width | 428 | YES | 유지 |
+| F6~F10 | height | 932 | YES | 유지 |
+
+→ frame 외형 사이즈는 모두 4 배수 정합.
+
+### 9.2 핵심 컴포넌트 사이즈 정합 (코드 ↔ Figma)
+
+| 컴포넌트 | 코드 baseline | Figma 현재 (추정) | 정합? | 액션 |
+|---|---|---|---|---|
+| **Drawer max-width** (F4/F5 좌측 패널) | **250px** (`Drawer.module.scss` L39) | 사용자 임의 늘림 (값 미확인) | **MISMATCH** | Figma 에서 250 으로 복귀 권고 |
+| Drawer width % | 75% (`Drawer.module.scss` L38) | — | viewport 비율 | OK |
+| TopBar height | 52px (`$layout-topbar-height`) | 52 (F2/F3) | OK | 유지 |
+| Layout H padding | 16px (`$layout-h-pad`) | 16 (frame 정의) | OK | 유지 |
+| BottomBar height | 56px (`$layout-bottombar-height`) | (F1~F10 사용 X) | — | — |
+
+> ⚠️ Drawer max-width = 250px 은 **4 배수 NO** (4×62.5). 사용자 명시 baseline 이므로 250 유지. 마이그레이션 라운드에서 248 (4×62) / 252 (4×63) 검토 권고.
+
+### 9.3 Spacing / Radius 검증
+
+| 항목 | 값 (design-report § 2) | 4 배수? | 액션 |
+|---|---|---|---|
+| Spacing 8 / 12 / 16 / 24 / 28 | 모두 4 배수 | YES | 유지 |
+| Radius 6 (`$radius-md`) | 6 | NO | 토큰 자체 — 유지 (마이그레이션 라운드) |
+| Radius 8 (`$radius-lg`) | 8 | YES | 유지 |
+| Radius 10 (`$radius-xl`) | 10 | NO | 토큰 자체 — 유지 (마이그레이션 라운드) |
+| Radius 9999 (`$radius-full`) | 9999 | (예외 OK) | pill — 유지 |
+
+### 9.4 위반 요약
+
+| 항목 | 위반 유형 | 즉시 조치 |
+|---|---|---|
+| F4/F5 Drawer max-width | Figma 임의 늘림 → 코드 baseline 250 미정합 | Figma 에서 250 복귀 (사용자 액션 또는 다음 designer agent 라운드) |
+| 토큰 `$radius-md` 6, `$radius-xl` 10 | 4 배수 미정합 | 디자인 시스템 마이그레이션 라운드 (별도) |
+
+### 9.5 다음 작업 시 designer agent 반영 사항
+
+1. `docs/global-guide/design/figma-plugin-rules.md` 1차 참조 — frame / 컴포넌트 사이즈 작성 시 4 배수 강제
+2. Drawer max-width = **250px** baseline 고정 (코드 정합)
+3. 신규 frame 추가 시 § 9.1 표 추가 + 위반 항목 § 9.4 갱신
+4. designer agent.md / SKILL.md 의 룰 참조 추가 — 별도 turn (메인 어시스턴트 디스패치 대기)
