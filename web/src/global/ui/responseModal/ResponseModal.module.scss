@@ -1,63 +1,56 @@
 /* ResponseModal.module.scss */
 
 .overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
+  @include modal-backdrop;       // var(--color-overlay) + $z-modal-bg
 }
 
 .modal {
-  width: 320px;
-  background: #1e1e1e;
-  border-radius: 14px;
-  padding: 24px 20px;
+  width: 20rem;                                // 320px (rem)
+  max-width: calc(100% - 2rem);                // 320 보호 (mobile-frame § 5.1 P11)
+  background-color: var(--color-bg-modal);
+  border-radius: $radius-2xl;                  // 12px (14 → 12 정합)
+  padding: $space-6 $space-5;                  // 24px 20px
   text-align: center;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  box-shadow: 0 1.25rem 3.125rem rgba(0, 0, 0, 0.4);
   animation: fadeUp 0.18s ease-out;
 }
 
 .iconSuccess {
-  font-size: 42px;
-  color: #4ade80;
-  margin-bottom: 12px;
+  font-size: 2.625rem;                         // 42px → rem (mobile-frame § 6.4)
+  color: var(--color-success);
+  margin-bottom: $space-3;
 }
 
 .iconFail {
-  font-size: 42px;
-  color: #f87171;
-  margin-bottom: 12px;
+  font-size: 2.625rem;
+  color: var(--color-danger);
+  margin-bottom: $space-3;
 }
 
 .message {
-  font-size: 15px;
-  line-height: 1.5;
-  color: #e5e7eb;
-  margin-bottom: 20px;
+  @include font-size-rem(15, 1.5);   // mobile-frame § 4.3 — font-size rem 강제 (line-height: 1.5)
+  color: var(--color-text-primary);
+  margin-bottom: $space-5;
 }
 
 .confirmBtn {
   width: 100%;
-  padding: 10px 0;
-  border-radius: 8px;
+  padding: $space-3 0;                         // 12px (10 → 12 정합 8pt)
+  border-radius: $radius-lg;                   // 8px
   border: none;
-  background: #6366f1;
-  color: white;
-  font-weight: 600;
+  background-color: var(--color-brand-violet);
+  color: var(--color-text-primary);
+  font-weight: $font-weight-semibold;
   cursor: pointer;
-}
+  transition: opacity 0.15s ease;
 
-.confirmBtn:hover {
-  background: #4f46e5;
+  &:hover { opacity: 0.85; }
 }
 
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(0.5rem);
   }
   to {
     opacity: 1;
