@@ -1,13 +1,7 @@
 .chip {
-  @include flex-center;
-  padding: 6px $space-3;
-  border-radius: $radius-sm;
-  background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  color: var(--color-text-secondary);
-  @include text-caption;
-  white-space: nowrap;
-  flex-shrink: 0;
+  @include chip-base;
+  padding: $space-2 $space-3;
+  min-height: $control-height-md;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease,
     border-color 0.15s ease;

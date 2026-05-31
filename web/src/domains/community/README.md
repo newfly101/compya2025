@@ -23,9 +23,8 @@ community/
         ├── section/Section.{jsx,module.scss}             ← 메인·카테고리 공용 섹션
         ├── categoryChip/CategoryChip.{jsx,module.scss}   ← 상단 카테고리 chip
         ├── postRow/PostRow.{jsx,module.scss}             ← 모든 게시글 row 공용 (notice/hot/post 모두)
-        ├── hotPostCard/HotPostCard.{jsx,module.scss}     ← 메인 인기 급상승 가로 카드 전용
-        ├── communityBadge/CommunityBadge.{jsx,module.scss} ← 공지/신규/인기 3종 post 상태 badge
-        └── boardTagBadge/BoardTagBadge.{jsx,module.scss} ← 자유게시판 등 게시판 카테고리 tag 라벨
+        └── hotPostCard/HotPostCard.{jsx,module.scss}     ← 메인 인기 급상승 가로 카드 전용
+        // (2026-05-31 D1=a) CommunityBadge / BoardTagBadge 제거 — PinnedBadge.new/.neutral 직접 사용
 ```
 
 `@/data/community/`
@@ -68,15 +67,15 @@ community/
 | `CategoryChip` | 단일 chip (선택 시 brand) | 카테고리 행 |
 | `PostRow` | 게시글 1행 — badge + title + 메타 + (옵션)썸네일 + 댓글 박스 | 메인 공지/최신 + CategoryScreen 모든 카테고리 |
 | `HotPostCard` | 가로 스크롤 카드 (썸네일 위, 타이틀/메타 아래) | 메인 인기 급상승 **전용** |
-| `CommunityBadge` | 공지/신규/인기 3종 post 상태 badge | `PostRow` 안 (`badgeSlot`) |
-| `BoardTagBadge` | 게시판 카테고리 tag 라벨 (예: "투수 공략") | `PostRow.tagBadge` prop, HomeScreen 자유게시판 등 |
+| (제거) `CommunityBadge` → `PinnedBadge.new` (신규 red) / `PinnedBadge.important` (공지 yellow) / `PinnedBadge.mustread` (인기 red) | `PostRow.jsx` 안 인라인 renderBadge | — |
+| (제거) `BoardTagBadge` → `PinnedBadge.neutral` (gray) | 호출처에서 PinnedBadge 직접 사용 | — |
 
 ### 분리 원칙 (memory `feedback_component_decomposition.md` 따름)
 - **반복 렌더 + 도메인 의미가 명확한 것만** 별도 컴포넌트로 분리
 - 1회 사용하는 작은 markup은 부모 화면 안에 인라인 (이번 작업의 inline `Section`이 2번째 사용처가 생겨서 별도 파일로 승격된 케이스 참조)
 
 ### 신규 컴포넌트 추가 가이드
-1. 같은 컴포넌트로 표현 가능한 디자인이 이미 있는지 먼저 확인 (특히 `PostRow`, `Section`, `CommunityBadge`, `CategoryChip`)
+1. 같은 컴포넌트로 표현 가능한 디자인이 이미 있는지 먼저 확인 (특히 `PostRow`, `Section`, `PinnedBadge`, `CategoryChip`)
 2. props 추가/옵션화로 해결 가능하면 새 컴포넌트 만들지 말고 기존 확장
 3. 컴포넌트가 새로 필요해도 **반복/변형/외부재사용** 셋 중 하나는 충족할 것
 4. 폴더 위치: `mobile/components/{name}/{Name}.{jsx,module.scss}` (camelCase 폴더, PascalCase 파일)
@@ -114,16 +113,20 @@ community/
 - `--color-community-fab-bg` (#4a2c93) — 글쓰기 FAB 배경 (brand-dark/brand-tint 사이 중간톤)
 - `--color-community-new-bg` `--color-community-new-border` `--color-community-new-text` (#4ade80 계열) — 신규 badge (글로벌 emerald보다 밝은 연두~초록)
 
-### Badge 시스템
-- **`PinnedBadge`(글로벌) 사용**: 공지(`important`/노랑) / 인기(`mustread`/빨강)
-- **`CommunityBadge`가 신규만 자체 styled span 처리** — 색을 도메인 로컬 토큰으로 override
-- `PostRow`에서 status badge(공지/신규/인기)는 `width: 40px` 고정 wrapper(`.badgeSlot`)에 감싸서 모든 행이 같은 위치로 정렬되도록 함 — 라벨 길이 차이로 leading text가 어긋나지 않음
-- **`BoardTagBadge`** — 게시판 카테고리 tag 라벨용 (자유게시판 등). status badge와 의미가 달라 별도 컴포넌트. `PostRow`의 `tagBadge` prop으로 주입되며 `.badgeSlot`이 아닌 title 안 inline으로 렌더(가변 폭)
+### Badge 시스템 (2026-05-31 D1=a 단일화)
+- **`PinnedBadge`(글로벌) 단독 사용** — 도메인 자체 badge 컴포넌트 제거. 매핑:
+  - 신규 → `PinnedBadge.new` (red "NEW")
+  - 공지 → `PinnedBadge.important` (yellow "공지")
+  - 인기 → `PinnedBadge.mustread` (red "인기")
+  - 게시판 카테고리 tag → `PinnedBadge.neutral` (gray)
+- `PostRow.jsx` 안 `renderBadge(kind)` 함수가 kind → PinnedBadge variant 매핑 담당
+- `PostRow`에서 status badge는 `width: rem(40)` 고정 wrapper(`.badgeSlot`)에 감싸서 모든 행이 같은 위치로 정렬 — 라벨 길이 차이로 leading text가 어긋나지 않음
+- 게시판 카테고리 tag(예: "투수 공략") 는 `PostRow.tagBadge` prop 으로 주입, title 안 inline 으로 렌더 (가변 폭)
 
 ### 폼 패턴
 - 행 카드: `padding: $space-2 $space-3` + `border-radius: $radius-sm` + `background: var(--color-bg-overlay)` + `border: 1px solid var(--color-border)`
-- 작은 라벨/카운트 박스: `width:40 height:40 border-radius:$radius-sm`, `background: var(--color-bg-card)`
-- 좌측 보라 accent strip: `width:3 height:13 border-radius:2 bg:var(--color-brand)` (Section 컴포넌트에 캡슐화 — 새 섹션 만들 때 이 패턴 재정의 X)
+- 작은 라벨/카운트 박스: `width: rem(40); height: rem(40); border-radius:$radius-sm`, `background: var(--color-bg-card)`
+- 좌측 보라 accent strip: `width: rem(3); height: rem(13); border-radius:$radius-xs; bg:var(--color-brand)` (Section 컴포넌트에 캡슐화 — 새 섹션 만들 때 이 패턴 재정의 X)
 
 ---
 
@@ -133,7 +136,7 @@ community/
 - **PostRow의 thumb 유무는 우측 폭만 변경**, CommentBox 위치는 항상 row 우측 끝 + 세로 가운데
 - **badge ↔ title은 위쪽 라인 정렬** (`align-items: flex-start`) — 1줄/2줄 모두 일관
 - **카테고리 변경 시** 하단 콘텐츠는 unmount/remount(`key={selectedCategory}`) → page state 자동 리셋
-- **FAB은 항상 fixed, z-index 50** — 액션은 후순위, TODO 주석으로 표시
+- **FAB은 항상 fixed, z-index `$z-dropdown`** — 액션은 후순위, TODO 주석으로 표시
 
 ---
 

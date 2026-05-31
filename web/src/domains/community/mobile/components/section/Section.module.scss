@@ -1,27 +1,21 @@
 .section {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
+  @include flex-col($space-2);
   padding: $space-3 $layout-h-pad;
 }
 
 .head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  @include flex-between;
   gap: $space-2;
 }
 
 .left {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  @include flex-row($space-1);
 }
 
 .bar {
-  width: 3px;
-  height: 13px;
-  border-radius: 2px;
+  width: rem(3);
+  height: rem(13);
+  border-radius: $radius-xs;
   background-color: var(--color-brand);
   flex-shrink: 0;
 }
@@ -33,10 +27,7 @@
 }
 
 .action {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
+  @include reset-button;
   @include text-caption;
   color: var(--color-text-muted);
   white-space: nowrap;

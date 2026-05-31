@@ -1,24 +1,16 @@
 .card {
-  width: 160px;
+  @include card-base(
+    $bg: var(--color-bg-overlay),
+    $radius: $radius-sm,
+    $pad: $space-2
+  );
+  @include flex-col($space-2);
+  width: rem(160);
   flex-shrink: 0;
-  background-color: var(--color-bg-overlay);
-  border: 1px solid var(--color-border);
-  border-radius: $radius-sm;
-  padding: $space-2;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
 }
 
 .thumb {
-  width: 100%;
-  height: 88px;
-  background-color: var(--color-bg-card);
-  border-radius: $radius-sm;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  @include thumb-box($w: 100%, $h: rem(88));
 }
 
 .thumbImg {
@@ -34,12 +26,10 @@
 
 .title {
   @include text-body;
+  @include line-clamp(2);
+  @include hangul-safe;
   color: var(--color-text-primary);
   margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
   min-height: 2.4em;
 }
 

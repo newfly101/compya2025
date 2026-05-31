@@ -1,7 +1,5 @@
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
+  @include flex-col($space-2);
 }
 
 .sentinel {

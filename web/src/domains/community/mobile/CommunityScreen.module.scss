@@ -12,9 +12,7 @@
 }
 
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
+  @include flex-col($space-2);
 }
 
 .hotScroll {
@@ -33,12 +31,12 @@
 .fab {
   position: fixed;
   right: $layout-h-pad;
-  bottom: 20px;
-  z-index: 50;
+  bottom: $space-5;
+  z-index: $z-dropdown;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  height: 44px;
+  gap: $space-1;
+  height: $control-height-md;
   padding: 0 $space-4;
   border: none;
   border-radius: $radius-full;
@@ -46,7 +44,7 @@
   color: #fff;
   cursor: pointer;
   @include text-body-bold;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5),
+  box-shadow: 0 rem(4) rem(12) rgba(0, 0, 0, 0.5),
     0 0 0 1px var(--color-brand-dark-alpha-15);
   transition: transform 0.15s ease, opacity 0.15s ease;
 
