@@ -1,0 +1,135 @@
+@use "@/global/styles/variables/spacing" as *;
+@use "@/global/styles/variables/colors" as *;
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 200;
+}
+
+.modal {
+  background: var(--color-bg-modal);
+  border-radius: 16px 16px 0 0;
+  width: 100%;
+  max-width: 480px;
+  padding: $space-6 $space-4;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: $space-3;
+}
+
+.headerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.gradeBadge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+
+  &.grade_legend   { background: rgba(168, 106, 240, 0.3); color: #c9a5f8; }
+  &.grade_platinum { background: rgba(251, 192, 45, 0.22);  color: #fbc02d; }
+  &.grade_hero     { background: rgba(88, 201, 142, 0.22);  color: #58c98e; }
+  &.grade_normal   { background: rgba(255,255,255,0.08);    color: var(--color-text-muted); }
+}
+
+.skillName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: $space-1;
+  line-height: 1;
+
+  &:active { color: var(--color-text-primary); }
+}
+
+.skillCode {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  margin: 0 0 $space-4;
+}
+
+.section {
+  margin-bottom: $space-4;
+}
+
+.description {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.metaSection {
+  border-top: 1px solid var(--color-border);
+  padding-top: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.metaRow {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+}
+
+.metaLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  padding-top: 2px;
+  min-width: 40px;
+}
+
+.metaChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-1;
+}
+
+.synergyChip {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  background: rgba(3, 199, 90, 0.15);
+  color: var(--color-success);
+  border-radius: 4px;
+}
+
+.conflictChip {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  background: var(--color-danger-dim);
+  color: var(--color-danger);
+  border-radius: 4px;
+}
+
+.noMeta {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  margin: $space-2 0 0;
+}
