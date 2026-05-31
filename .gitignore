@@ -56,3 +56,8 @@ docs/temp/
 /figma-plugin/node_modules/
 /figma-plugin/code.*
 /figma-plugin/domains/
+
+### Python (kbocrol 등) ###
+__pycache__/
+*.py[cod]
+*$py.class
