@@ -21,14 +21,19 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class AdminPlayerCardServiceImpl implements AdminPlayerCardService {
 
     private final PlayerCardRepository repository;
     private final TeamRepository teamRepository;
 
+    /**
+     * 미구현. interface 가 정의된 시점부터 채워질 예정.
+     * 본 라운드에서는 결정 보류 → 호출 시 명시적 실패로 fail-fast.
+     */
     @Override
     public ListResponse<PlayerCardResponse> getPlayerInfo() {
-        return null;
+        throw new UnsupportedOperationException("getPlayerInfo() 는 아직 구현되지 않았습니다.");
     }
 
     @Override
@@ -51,7 +56,7 @@ public class AdminPlayerCardServiceImpl implements AdminPlayerCardService {
         return OperationResponse.success(resultMessage, card.getId());
     }
 
-    protected PlayerMessages insertAttributes(PlayerCardFormat format, Long cardId) {
+    private PlayerMessages insertAttributes(PlayerCardFormat format, Long cardId) {
 
         if (!format.hasAttribute()) {
             return PlayerMessages.PLAYER_CREATED;
@@ -75,8 +80,12 @@ public class AdminPlayerCardServiceImpl implements AdminPlayerCardService {
                 : PlayerMessages.PLAYER_CREATED_WITHOUT_ATTRIBUTE;
     }
 
+    /**
+     * 미구현. interface 가 정의된 시점부터 채워질 예정.
+     * 본 라운드에서는 결정 보류 → 호출 시 명시적 실패로 fail-fast.
+     */
     @Override
     public OperationResponse<PlayerMessages> updatePlayerCard() {
-        return null;
+        throw new UnsupportedOperationException("updatePlayerCard() 는 아직 구현되지 않았습니다.");
     }
 }

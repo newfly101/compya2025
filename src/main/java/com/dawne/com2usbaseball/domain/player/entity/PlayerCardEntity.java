@@ -14,18 +14,18 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class PlayerCardEntity {
-    Long id;
-    String cardCode;
-    String name;
-    Long teamId;
-    Target role;
-    Grade grade;
-    Short seasonYear;
-    Short overall;
-    Short backNumber;
-    LocalDate birthDate;
-    String batThrow;
-    String positions;
-    String traits;
-    LocalDateTime createdAt;
+    private Long id;
+    private String cardCode;
+    private String name;
+    private Long teamId;
+    private Target role;
+    private Grade grade;
+    private Short seasonYear;
+    private Short overall;
+    private Short backNumber;
+    private LocalDate birthDate;
+    private String batThrow;
+    private String positions;
+    private String traits;
+    private LocalDateTime createdAt;
 }
