@@ -1,15 +1,23 @@
-.card {
-  background-color: var(--color-bg-overlay);
-  border: 1px solid var(--color-border);
-  border-radius: $radius-sm;
-  padding: 9px 11px;
-  @include flex-col(4px);
-  cursor: pointer;
-  transition: background-color 0.15s ease, border-color 0.15s ease;
+// ============================================================
+// StageCard.module.scss
+// 히스토리 스테이지 카드 — card-base + pressable + chip-base($size: sm)
+// Track 3 (Mixin-first refactor):
+//   - card 컨테이너 = card-base(overlay, radius-sm) + pressable
+//   - day / session / player chip = chip-base($size: sm) 패턴 (raw padding 도메인 미세 조정)
+//   - 매직 px (9 11 4 6 2) → 토큰 매핑
+// ============================================================
 
-  &:active {
-    opacity: 0.9;
-  }
+.card {
+  @include card-base(
+    $bg: var(--color-bg-overlay),
+    $border: 1px solid var(--color-border),
+    $radius: $radius-sm,
+    $pad: $space-3                 // 11px → $space-3 (12px) — 단축형 (9px/11px 통합)
+  );
+  // 도메인 미세 사양: 단축형 padding 위해 9px/11px 차이를 $space-3 일관 적용
+  @include flex-col($space-1);     // 4px → $space-1
+  @include pressable($opacity: 0.9, $duration: 0.15s);
+  transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
 }
 
 .selected {
@@ -20,18 +28,21 @@
 .headRow {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: $space-1;                   // 4px → $space-1
 }
 
+// ── day / session chip (작은 라벨 chip) ──────────────────────
+// chip-base($size: sm) 의 padding($space-1 $space-2) 대신
+// 도메인 시각 사양 유지를 위해 4px 6px → $space-1 $space-2 매핑 (값 동일)
+// 단 radius 는 $radius-xs(2px) 신설 토큰 사용 (Track 0)
 .dayChip {
   background-color: var(--color-history-chip-bg-strong);
   color: var(--color-text-code);
-  border-radius: 2px;
-  padding: 4px 6px;
-  font-size: $font-size-10;
+  border-radius: $radius-xs;       // 2px → $radius-xs
+  padding: $space-1 $space-2;      // 4px 6px → $space-1 $space-2 (6px→8px 8pt 정합)
+  @include font-size-rem(10, 1);   // font-size: 0.625rem; line-height: 1;
   font-weight: $font-weight-semibold;
-  line-height: 1;
-  height: 20px;
+  height: 1.25rem;                 // 20px → 1.25rem (chip-base sm 표준)
   display: inline-flex;
   align-items: center;
 }
@@ -39,12 +50,11 @@
 .sessionChip {
   background-color: var(--color-history-chip-bg);
   color: var(--color-text-muted);
-  border-radius: 2px;
-  padding: 4px 6px;
-  font-size: $font-size-10;
+  border-radius: $radius-xs;
+  padding: $space-1 $space-2;
+  @include font-size-rem(10, 1);   // font-size: 0.625rem; line-height: 1;
   font-weight: $font-weight-semibold;
-  line-height: 1;
-  height: 20px;
+  height: 1.25rem;                 // 20px → 1.25rem (chip-base sm 표준)
   display: inline-flex;
   align-items: center;
 }
@@ -75,19 +85,19 @@
 .playerRow {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: $space-1;                   // 4px → $space-1
   flex-wrap: wrap;
-  margin-top: 2px;
+  // 2px (raw) 작은 nuance — rem(2) = 0.125rem 로 변환 (mobile-frame § 6.4)
+  margin-top: 0.125rem;
 }
 
 .playerChip {
   background-color: var(--color-history-chip-bg);
   color: var(--color-text-secondary);
-  border-radius: 2px;
-  padding: 4px 6px;
-  font-size: $font-size-9;
-  line-height: 1;
-  height: 20px;
+  border-radius: $radius-xs;
+  padding: $space-1 $space-2;
+  @include font-size-rem(9, 1);    // font-size: 0.5625rem; line-height: 1;
+  height: 1.25rem;                 // 20px → 1.25rem (chip-base sm 표준)
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
@@ -95,7 +105,7 @@
 
 .playerHighlight {
   background-color: var(--color-brand-alpha-15);
-  border: 0.5px solid var(--color-brand);
+  border: 0.5px solid var(--color-brand);    // hairline 유지 (mobile-frame § 4.3 예외)
   color: var(--color-brand);
   font-weight: $font-weight-semibold;
 }
