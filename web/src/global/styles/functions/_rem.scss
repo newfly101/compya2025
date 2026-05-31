@@ -1,0 +1,31 @@
+// ============================================================
+// functions/_rem.scss
+// px → rem 변환 함수 — mobile-frame.md § 4 / § 6.4 정책
+//
+// 도메인 SCSS 에서 토큰 외 사이즈가 부득이 필요할 때만 사용.
+// 1순위: 디자인 토큰 ($space-*, $font-size-*, $radius-*)
+// 2순위: rem() (rem 단위 강제)
+// 3순위: 직접 px (예외: 1px border, 0.5px hairline, 100% width)
+//
+// 16px html base 가정 (base/_base.scss:20 html { font-size: 16px }).
+//
+// 사용 예:
+//   .foo { padding: rem(14); }            → 0.875rem
+//   .bar { font-size: rem(18); }          → 1.125rem
+//   .baz { padding: rem(14) rem(20); }    → 0.875rem 1.25rem
+//   .qux { width: rem(200); }             → 12.5rem
+// ============================================================
+
+@use 'sass:math';
+
+@function rem($px, $base: 16) {
+  @if $px == 0 { @return 0; }
+
+  // px 단위 입력 / 숫자(unitless) 입력 모두 허용.
+  $value: $px;
+  @if math.unit($px) == 'px' {
+    $value: math.div($px, 1px);
+  }
+
+  @return math.div($value, $base) * 1rem;
+}
