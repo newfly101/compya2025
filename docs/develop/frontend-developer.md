@@ -10,6 +10,7 @@
 - Vite (`web/vite.config.js`) + path alias `@` → `web/src/` (절대경로 `@/...` 만 사용, 깊은 `../../` 금지)
 - SCSS auto-inject: `@/global/styles/index.scss` 가 모든 `*.module.scss` 에 자동 prepend → SCSS 안에서 `@use` 불필요
 - 진입: `web/src/main.jsx` → `<AppProvider><RouterProvider /></AppProvider>`
+- 모바일 frame 전략 (375 기준 / 320 보호 / 8pt grid / tap target 44px): [`docs/global-guide/design/mobile-frame.md`](../global-guide/design/mobile-frame.md)
 
 ---
 
