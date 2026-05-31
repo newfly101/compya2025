@@ -3,7 +3,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: $space-2;
-  padding: $layout-h-pad;    // 20px 16px
+  padding: $layout-h-pad;
   background-color: var(--color-bg-deep);
 }
 
@@ -12,8 +12,7 @@
   color: var(--color-text-primary);
   gap: $space-2;
   text-decoration: none;
-  transition: opacity 0.15s ease;
-  &:active { opacity: 0.7; }
+  @include pressable($opacity: 0.7);
 }
 
 .quickIcon {
@@ -21,7 +20,7 @@
   @include text-page-title;
   border-radius: $radius-xl;
   background-color: var(--color-bg-elevated);
-  width: 52px;
+  width: $control-height-lg;   // 52px
   aspect-ratio: 1/1;
 }
 

@@ -4,22 +4,17 @@
 
 // ── 페이지 래퍼 ───────────────────────────────────────────
 .homeWrapper {
-  display: flex;
-  flex-direction: column;
+  @include flex-col;
   min-height: 100%;
   background-color: var(--color-bg-deepest);
 }
 
 // ── 섹션 구분선 ───────────────────────────────────────────────
 .sep {
-  height: $layout-section-sep;         // 8px
-  background-color: var(--color-bg-card);
-  flex-shrink: 0;
+  @include section-sep;
 }
 
 // ── community PostRow 미리보기 리스트 (커뮤니티 인기글 / 자유게시판) ──
 .postRowList {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
+  @include flex-col($space-2);
 }

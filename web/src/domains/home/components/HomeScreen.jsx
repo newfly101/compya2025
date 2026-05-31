@@ -9,7 +9,7 @@ import NoticeSection from "@/domains/home/components/section/notice/NoticeSectio
 import { MOCK_TEAM_POSTS } from "@/domains/home/config/MOCK_TEAM_POSTS.js";
 // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
 // import PostRow from "@/domains/community/mobile/components/postRow/PostRow.jsx";
-// import BoardTagBadge from "@/domains/community/mobile/components/boardTagBadge/BoardTagBadge.jsx";
+// BoardTagBadge → PinnedBadge.neutral 치환 (D1=a, 2026-05-31). 재개 시 PinnedBadge 직접 사용.
 import { MOCK_POSTS } from "@/domains/home/config/MOCK_POSTS.js";
 import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
 import CouponListHorizontal from "@/domains/coupons/mobile/containers/public/CouponListHorizontal.jsx";
@@ -101,7 +101,7 @@ const HomeScreen = () => {
       */}
 
 
-      {/* 자유게시판 — 첫 tag 라벨을 BoardTagBadge로 title 앞에 prepend */}
+      {/* 자유게시판 — 첫 tag 라벨을 PinnedBadge.neutral 로 title 앞에 prepend */}
       {/*
       <SectionBlock
         title="자유게시판"
@@ -114,7 +114,7 @@ const HomeScreen = () => {
               <PostRow
                 key={p.id}
                 post={{ ...toPostRowItem(p), badge: null }}
-                tagBadge={tag && <BoardTagBadge label={tag.name} />}
+                tagBadge={tag && <PinnedBadge variant="neutral" label={tag.name} />}
               />
             );
           })}

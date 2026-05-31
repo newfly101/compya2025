@@ -22,7 +22,7 @@
 }
 
 .emptyIcon {
-  font-size: 28px;
+  @include font-size-rem(28);     // mobile-frame § 4.3 — font-size rem 강제
   opacity: 0.4;
 }
 

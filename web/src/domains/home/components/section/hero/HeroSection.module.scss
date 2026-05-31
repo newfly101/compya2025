@@ -2,7 +2,7 @@
 .hero {
   position: relative;
   width: 100%;
-  height: 160px;
+  height: 10rem;                  // 160px (rem)
   background-image: url("@/assets/new/compyafun2026.jpg");
   background-repeat: no-repeat;
   background-position: center;
@@ -28,18 +28,12 @@
   }
 }
 
-.heroBadge {
+// ── 표준 StatusBadge wrapper (B1 치환) ──────────────────────
+// StatusBadge 자체는 inline-flex 라 width:fit-content 라 그대로 사용
+// hero 안에서 z-index/위치만 보장
+.heroBadgeSlot {
   position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  height: 20px;
-  padding: 0 $space-2;
-  border-radius: $radius-sm;
-  background-color: var(--color-brand-violet);
-  color: #fff;
-  @include text-badge;
-  width: fit-content;
+  z-index: $z-above;
 }
 
 .heroTitle {
@@ -47,6 +41,11 @@
   @include text-hero;
   color: var(--color-text-primary);
   z-index: $z-above;
+
+  // 320 미만 보호 (mobile-frame § 5.1 P5)
+  @include small-mobile {
+    @include font-size-rem(22);   // mobile-frame § 4.3 — font-size rem 강제
+  }
 }
 
 .heroSub {
