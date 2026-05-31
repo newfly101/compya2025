@@ -32,8 +32,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  // 모바일 기준 중앙 정렬
-  max-width: $bp-mobile-lg;
+  // 모바일 기준 중앙 정렬 — mobile-frame.md § 2 (480 wrapper 한도)
+  max-width: $layout-wrapper-max;
   margin: 0 auto;
   min-height: 100dvh;
   position: relative;

@@ -46,4 +46,9 @@
   // ── Surface (이벤트·커뮤니티 특수 배경) ──────────────────────
   --color-surface-event:     #3c1e50;
   --color-surface-community: #19284b;
+
+  // ── Modal / Overlay ────────────────────────────────────────
+  // D3=a: 신규 raw 색 직접 정의 (analysis § 8.5 — 사용자 확정 2026-05-31)
+  --color-bg-modal: #{$color-bg-modal};
+  --color-overlay: rgba(0, 0, 0, 0.55);
 }

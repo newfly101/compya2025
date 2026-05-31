@@ -11,6 +11,9 @@
 //  mobile .module.scss 에서 @use 없이 바로 사용 가능
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+// ── Functions ─────────────────────────────────────────────
+@forward "functions/rem";          // rem($px) — px → rem 변환 (mobile-frame § 4 / § 6.4)
+
 // ── Variables (tokens) ────────────────────────────────────
 @forward "variables/colors";       // $color-bg-900 ~ $color-warning-100
 @forward "variables/font";         // $font-size-9 ~ $font-size-28, weight, line-height
