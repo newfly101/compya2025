@@ -38,8 +38,9 @@ out/
 .vscode/
 
 ### env ###
-# BE 로컬 (env.local | env.prod → .env 로 cp). 운영 서버는 application-prod.properties 직접 사용 — .env 불필요
+# BE 로컬 (env.local | env.prod → .env.properties 로 cp). 운영 서버는 application-prod.properties 직접 사용 — .env 불필요
 /.env
+/.env.properties
 # BE 시크릿 템플릿 (실값 채워서 사용 → 절대 commit 금지). 점/비점 변형 모두 차단
 /.env.local
 /.env.prod
