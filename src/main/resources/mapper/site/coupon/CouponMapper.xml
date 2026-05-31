@@ -97,4 +97,13 @@
             updated_at = NOW()
         WHERE id = #{id}
     </update>
+
+    <!-- soft delete: is_visible = false 처리 -->
+    <update id="deleteCouponById">
+        UPDATE site_coupons
+        SET
+            is_visible = false,
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
 </mapper>

@@ -119,4 +119,37 @@
         WHERE id = #{id}
     </update>
 
+    <!-- 관리자 전체 목록 (동적 필터) -->
+    <select id="selectAdminEventList"
+            resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        SELECT
+            id,
+            event_type      AS eventType,
+            title,
+            start_at        AS startAt,
+            expire_at       AS expireAt,
+            image_url       AS imageUrl,
+            external_link   AS externalLink,
+            is_visible      AS visible,
+            created_at      AS createdAt,
+            updated_at      AS updatedAt
+        FROM site_events
+        <where>
+            <if test="eventType != null">
+                event_type = #{eventType}
+            </if>
+            <if test="visible != null">
+                AND is_visible = #{visible}
+            </if>
+        </where>
+        ORDER BY created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 이벤트 삭제 -->
+    <delete id="deleteEventById">
+        DELETE FROM site_events
+        WHERE id = #{id}
+    </delete>
+
 </mapper>

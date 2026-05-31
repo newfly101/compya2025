@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.wiki.repository.WikiGameInfoMapper">
+
+    <!-- =====================================================
+         Public read — is_active = true 필터
+    ====================================================== -->
+
+    <select id="selectActivePitches"
+            resultType="com.dawne.com2usbaseball.domain.wiki.entity.WikiPitchEntity">
+        SELECT id, code, name, pitch_type AS pitchType, description, display_order AS displayOrder,
+               is_active AS isActive, created_at AS createdAt, updated_at AS updatedAt
+        FROM wiki_pitch
+        WHERE is_active = true
+        ORDER BY display_order, id
+    </select>
+
+    <select id="selectActivePitchGrades"
+            resultType="com.dawne.com2usbaseball.domain.wiki.entity.WikiPitchGradeEntity">
+        SELECT wpg.id, wpg.pitch_code AS pitchCode, wpg.grade,
+               wpg.velocity_min AS velocityMin, wpg.velocity_max AS velocityMax,
+               wpg.break_amount AS breakAmount, wpg.description,
+               wpg.created_at AS createdAt, wpg.updated_at AS updatedAt
+        FROM wiki_pitch_grade wpg
+        INNER JOIN wiki_pitch wp ON wp.code = wpg.pitch_code AND wp.is_active = true
+        ORDER BY wpg.pitch_code, wpg.grade
+    </select>
+
+    <select id="selectActiveStatInfluences"
+            resultType="com.dawne.com2usbaseball.domain.wiki.entity.WikiStatInfluenceEntity">
+        SELECT id, target, stat_code AS statCode, influence_type AS influenceType,
+               influence_target AS influenceTarget, weight, description,
+               display_order AS displayOrder, is_active AS isActive,
+               created_at AS createdAt, updated_at AS updatedAt
+        FROM wiki_stat_influence
+        WHERE is_active = true
+          AND target = #{target}
+        ORDER BY display_order, id
+    </select>
+
+    <!-- =====================================================
+         Admin read — is_active 무관 전체 조회
+    ====================================================== -->
+
+    <select id="selectAllPitches"
+            resultType="com.dawne.com2usbaseball.domain.wiki.entity.WikiPitchEntity">
+        SELECT id, code, name, pitch_type AS pitchType, description, display_order AS displayOrder,
+               is_active AS isActive, created_at AS createdAt, updated_at AS updatedAt
+        FROM wiki_pitch
+        ORDER BY display_order, id
+    </select>
+
+    <select id="selectAllPitchGrades"
+            resultType="com.dawne.com2usbaseball.domain.wiki.entity.WikiPitchGradeEntity">
+        SELECT id, pitch_code AS pitchCode, grade,
+               velocity_min AS velocityMin, velocity_max AS velocityMax,
+               break_amount AS breakAmount, description,
+               created_at AS createdAt, updated_at AS updatedAt
+        FROM wiki_pitch_grade
+        ORDER BY pitch_code, grade
+    </select>
+
+    <select id="selectAllStatInfluences"
+            resultType="com.dawne.com2usbaseball.domain.wiki.entity.WikiStatInfluenceEntity">
+        SELECT id, target, stat_code AS statCode, influence_type AS influenceType,
+               influence_target AS influenceTarget, weight, description,
+               display_order AS displayOrder, is_active AS isActive,
+               created_at AS createdAt, updated_at AS updatedAt
+        FROM wiki_stat_influence
+        <where>
+            <if test="target != null">target = #{target}</if>
+        </where>
+        ORDER BY display_order, id
+    </select>
+
+    <select id="selectPitchById"
+            resultType="com.dawne.com2usbaseball.domain.wiki.entity.WikiPitchEntity">
+        SELECT id, code, name, pitch_type AS pitchType, description, display_order AS displayOrder,
+               is_active AS isActive, created_at AS createdAt, updated_at AS updatedAt
+        FROM wiki_pitch WHERE id = #{id}
+    </select>
+
+    <select id="selectPitchGradeById"
+            resultType="com.dawne.com2usbaseball.domain.wiki.entity.WikiPitchGradeEntity">
+        SELECT id, pitch_code AS pitchCode, grade,
+               velocity_min AS velocityMin, velocity_max AS velocityMax,
+               break_amount AS breakAmount, description,
+               created_at AS createdAt, updated_at AS updatedAt
+        FROM wiki_pitch_grade WHERE id = #{id}
+    </select>
+
+    <select id="selectStatInfluenceById"
+            resultType="com.dawne.com2usbaseball.domain.wiki.entity.WikiStatInfluenceEntity">
+        SELECT id, target, stat_code AS statCode, influence_type AS influenceType,
+               influence_target AS influenceTarget, weight, description,
+               display_order AS displayOrder, is_active AS isActive,
+               created_at AS createdAt, updated_at AS updatedAt
+        FROM wiki_stat_influence WHERE id = #{id}
+    </select>
+
+    <!-- =====================================================
+         Pitch CRUD
+    ====================================================== -->
+
+    <insert id="insertPitch" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wiki_pitch (code, name, pitch_type, description, display_order, is_active, created_at, updated_at)
+        VALUES (#{code}, #{name}, #{pitchType}, #{description}, #{displayOrder}, true, NOW(), NOW())
+    </insert>
+
+    <update id="updatePitch">
+        UPDATE wiki_pitch
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="pitchType != null">pitch_type = #{pitchType},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="displayOrder != null">display_order = #{displayOrder},</if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="softDeletePitch">
+        UPDATE wiki_pitch SET is_active = false, updated_at = NOW() WHERE id = #{id}
+    </update>
+
+    <!-- =====================================================
+         PitchGrade CRUD
+    ====================================================== -->
+
+    <insert id="insertPitchGrade" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wiki_pitch_grade (pitch_code, grade, velocity_min, velocity_max, break_amount, description, created_at, updated_at)
+        VALUES (#{pitchCode}, #{grade}, #{velocityMin}, #{velocityMax}, #{breakAmount}, #{description}, NOW(), NOW())
+    </insert>
+
+    <update id="updatePitchGrade">
+        UPDATE wiki_pitch_grade
+        <set>
+            <if test="velocityMin != null">velocity_min = #{velocityMin},</if>
+            <if test="velocityMax != null">velocity_max = #{velocityMax},</if>
+            <if test="breakAmount != null">break_amount = #{breakAmount},</if>
+            <if test="description != null">description = #{description},</if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deletePitchGrade">
+        DELETE FROM wiki_pitch_grade WHERE id = #{id}
+    </delete>
+
+    <update id="softDeletePitchGradeByCode">
+        UPDATE wiki_pitch_grade
+        SET updated_at = NOW()
+        WHERE pitch_code = #{pitchCode}
+    </update>
+
+    <!-- =====================================================
+         StatInfluence CRUD
+    ====================================================== -->
+
+    <insert id="insertStatInfluence" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO wiki_stat_influence (target, stat_code, influence_type, influence_target, weight, description, display_order, is_active, created_at, updated_at)
+        VALUES (#{target}, #{statCode}, #{influenceType}, #{influenceTarget}, #{weight}, #{description}, #{displayOrder}, true, NOW(), NOW())
+    </insert>
+
+    <update id="updateStatInfluence">
+        UPDATE wiki_stat_influence
+        <set>
+            <if test="statCode != null">stat_code = #{statCode},</if>
+            <if test="influenceType != null">influence_type = #{influenceType},</if>
+            <if test="influenceTarget != null">influence_target = #{influenceTarget},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="displayOrder != null">display_order = #{displayOrder},</if>
+            updated_at = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="softDeleteStatInfluence">
+        UPDATE wiki_stat_influence SET is_active = false, updated_at = NOW() WHERE id = #{id}
+    </update>
+
+</mapper>

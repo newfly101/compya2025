@@ -74,6 +74,37 @@
                  id DESC
     </select>
 
+    <select id="getAdminNoticeListFiltered"
+            resultType="com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity">
+        SELECT id,
+               source,
+               title,
+               summary,
+               content,
+               external_url  AS externalUrl,
+               image_url     AS imageUrl,
+               is_visible    AS isVisible,
+               is_pinned     AS isPinned,
+               published_at  AS publishedAt,
+               created_at    AS createdAt,
+               updated_at    AS updatedAt
+        FROM site_notices
+        <where>
+            <if test="source != null">
+                source = #{source}
+            </if>
+            <if test="isVisible != null">
+                AND is_visible = #{isVisible}
+            </if>
+            <if test="isPinned != null">
+                AND is_pinned = #{isPinned}
+            </if>
+        </where>
+        ORDER BY is_pinned DESC,
+                 published_at DESC,
+                 id DESC
+    </select>
+
     <select id="getAdminNoticeDetail"
             parameterType="long"
             resultType="com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity">
