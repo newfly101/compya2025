@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import styles from "./EventCard.module.scss";
+import StatusBadge from "@/global/ui/badge/StatusBadge.jsx";
 import { trackEventClick } from "@/infra/analytics/events/eventEvents.js";
 
 const EventCard = ({ event, showDetail = false, isExpired = false }) => {
@@ -24,8 +25,11 @@ const EventCard = ({ event, showDetail = false, isExpired = false }) => {
           ? <img src={event.imageUrl} alt="" />
           : <div className={styles.thumbEmpty}><span>이미지 준비 중</span></div>
         }
-        <span className={`${styles.badge} ${isExpired ? styles.badgeExpired : styles.badgeActive}`}>
-          {isExpired ? "종료" : "진행중"}
+        <span className={styles.badgeSlot}>
+          {isExpired
+            ? <StatusBadge variant="expired" label="종료" />
+            : <StatusBadge variant="active" label="진행중" />
+          }
         </span>
       </div>
 

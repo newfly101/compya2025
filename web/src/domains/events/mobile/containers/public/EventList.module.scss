@@ -3,8 +3,8 @@
 
   & > * {
     flex-shrink: 0;
-    width: 160px;
-    --thumb-height: 72px;
+    width: rem(160);                              // 160px → 10rem
+    --thumb-height: #{rem(72)};                   // 72px → 4.5rem (CSS-var 보존)
   }
 }
 
@@ -12,8 +12,8 @@
   @include flex-col($space-3);
 
   & > * {
-    --thumb-height: 120px;
+    --thumb-height: #{rem(120)};                  // 120px → 7.5rem
     --title-font-size: #{$font-size-15};
-    --event-card-info-height: 100px;
+    --event-card-info-height: #{rem(100)};        // 100px → 6.25rem
   }
 }
