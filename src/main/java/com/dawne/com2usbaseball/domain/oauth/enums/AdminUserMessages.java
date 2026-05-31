@@ -1,0 +1,10 @@
+package com.dawne.com2usbaseball.domain.oauth.enums;
+
+public enum AdminUserMessages {
+    ADMIN_USER_LIST_SUCCESS,
+    ADMIN_USER_DETAIL_SUCCESS,
+    ADMIN_USER_NOT_FOUND,
+    ADMIN_USER_ROLE_UPDATED,
+    ADMIN_USER_STATUS_UPDATED,
+    ADMIN_USER_SELF_ROLE_CHANGE_FORBIDDEN
+}

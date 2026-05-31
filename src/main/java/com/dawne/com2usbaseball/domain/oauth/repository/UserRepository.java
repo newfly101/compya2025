@@ -1,10 +1,13 @@
 package com.dawne.com2usbaseball.domain.oauth.repository;
 
 import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
+import com.dawne.com2usbaseball.domain.oauth.enums.UserRole;
+import com.dawne.com2usbaseball.domain.oauth.enums.UserStatus;
 import com.dawne.com2usbaseball.domain.oauth.repository.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -28,5 +31,17 @@ public class UserRepository {
 
     public void updateUserLastLogin(Long userId) {
         mapper.updateUserLogin(userId);
+    }
+
+    public List<UserEntity> findAdminUserList(String nickname, UserRole userRole, UserStatus userStatus, int limit, int offset) {
+        return mapper.selectAdminUserList(nickname, userRole, userStatus, limit, offset);
+    }
+
+    public boolean updateUserRole(Long userId, UserRole userRole) {
+        return mapper.updateUserRole(userId, userRole) > 0;
+    }
+
+    public boolean updateUserStatus(Long userId, UserStatus userStatus) {
+        return mapper.updateUserStatus(userId, userStatus) > 0;
     }
 }

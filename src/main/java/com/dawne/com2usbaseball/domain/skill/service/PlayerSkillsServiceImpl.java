@@ -37,6 +37,7 @@ public class PlayerSkillsServiceImpl implements PlayerSkillsService {
 
         return new SkillSetResponse(
                 grouped.getOrDefault(Grade.LEGEND, List.of()),
+                grouped.getOrDefault(Grade.EPIC, List.of()),
                 grouped.getOrDefault(Grade.PLATINUM, List.of()),
                 grouped.getOrDefault(Grade.HERO, List.of()),
                 grouped.getOrDefault(Grade.NORMAL, List.of())

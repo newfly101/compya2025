@@ -4,6 +4,7 @@ import java.util.List;
 
 public record SkillSetResponse(
         List<SkillItemResponse> legend,
+        List<SkillItemResponse> epic,
         List<SkillItemResponse> platinum,
         List<SkillItemResponse> hero,
         List<SkillItemResponse> normal

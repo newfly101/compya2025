@@ -27,6 +27,7 @@ public class UserEntity {
 
     // 서비스 정보
     private String nickname;
+    private String email;
     private UserRole userRole;
     private UserStatus userStatus;
 
