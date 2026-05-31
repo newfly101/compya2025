@@ -5,7 +5,7 @@ import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
 
 import java.util.List;
 
-public interface CouponAdminService {
+public interface AdminCouponService {
 
     List<CouponResponse> getCouponLists();
     CouponResponse createCoupon(CouponRequest request);

@@ -19,14 +19,13 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
-public class CouponAdminServiceImpl implements CouponAdminService {
+@Transactional(readOnly = true)
+public class AdminCouponServiceImpl implements AdminCouponService {
 
     private final CouponAdminRepository repository;
     private final CouponMapStruct couponMapStruct;
 
     @Override
-    @Transactional(readOnly = true)
     @Cacheable(value = "coupons", key = "'admin'")
     public List<CouponResponse> getCouponLists() {
         List<CouponEntity> coupons = repository.selectCoupons();

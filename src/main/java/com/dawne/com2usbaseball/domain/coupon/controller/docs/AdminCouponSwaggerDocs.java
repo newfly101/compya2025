@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 @Tag(name = "1. [Site] Coupon", description = "관리자 쿠폰 관리 API")
-public interface CouponAdminSwaggerDocs {
+public interface AdminCouponSwaggerDocs {
 
     @Operation(
             summary = "쿠폰 목록 조회",
