@@ -3,7 +3,7 @@
 
   & > * {
     flex-shrink: 0;
-    width: 200px;
+    width: rem(200);             // 200px → 12.5rem (mobile-frame § 6.4)
   }
 }
 

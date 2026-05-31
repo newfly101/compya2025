@@ -1,11 +1,7 @@
+// ── Coupon Card ───────────────────────────────────────────────
 .couponCard {
-  border-radius: $radius-xl;
-  background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  padding: $space-3 $space-4;
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
+  @include card-base($radius: $radius-xl, $pad: $space-3 $space-4);
+  @include flex-col($space-2);
 }
 
 .expired {
@@ -15,9 +11,7 @@
 }
 
 .couponTop {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  @include flex-between;
   gap: $space-2;
 }
 
@@ -26,22 +20,20 @@
   @include text-ellipsis;
   color: var(--color-text-code);
   background: var(--color-bg-elevated);
-  padding: 4px 8px;
+  padding: $space-1 $space-2;
   letter-spacing: $letter-spacing-wide;
 }
 
 .couponGoBtn {
   @include text-badge;
+  @include pressable;
   background-color: var(--color-brand-dark);
   flex-shrink: 0;
-  height: 24px;
+  height: $space-6;        // 24px
   padding: 0 $space-2;
   border-radius: $radius-sm;
   color: #fff;
   white-space: nowrap;
-  transition: opacity 0.15s ease;
-
-  &:active { opacity: 0.85; }
 }
 
 .expiredBtn {
@@ -53,14 +45,12 @@
 
 .couponTitle {
   @include text-body;
-  @include text-ellipsis;
+  @include hangul-safe;
   color: var(--color-text-primary);
 }
 
 .couponBody {
-  display: flex;
-  flex-direction: column;
-  gap: $space-1;
+  @include flex-col($space-1);
   padding: $space-2 0;
   @include text-caption;
   color: var(--color-text-muted);
@@ -74,14 +64,12 @@
 
 .couponExpire {
   @include text-micro;
-  display: flex;
-  align-items: center;
+  @include flex-row($space-1);
   color: var(--color-text-muted);
-  gap: $space-1;
 }
 
 .expireDot {
-  font-size: 6px;
+  @include text-badge;
   align-items: center;
   color: var(--color-text-muted);
 }
