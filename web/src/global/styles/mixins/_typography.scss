@@ -1,4 +1,5 @@
 @use '../variables/font' as *;
+@use '../functions/rem' as *;
 
 @mixin text-hero {
   font-size: $font-size-28;
@@ -61,4 +62,44 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+// ── 한글 안전 줄바꿈 ─────────────────────────────────────────
+// mobile-frame.md § 3.1 필수 패턴. 긴 한글 제목 카드에 적용.
+// `word-break: keep-all` 로 단어 단위 줄바꿈 + `overflow-wrap: anywhere` 로
+// 매우 긴 단어/URL 도 안전하게 잘림 보장.
+@mixin hangul-safe {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+// ── 여러 줄 ellipsis ─────────────────────────────────────────
+// 2줄 이상 카드 제목 / 본문 미리보기에서 사용.
+// 사용 예: `@include line-clamp(2);` / `@include line-clamp(3);`
+@mixin line-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── Fluid Typography ─────────────────────────────────────────
+// mobile-frame.md § 6.2. hero / page-title 같은 큰 글자가 320 미만에서
+// 자연 축소되도록 clamp 사용. 토큰 또는 px 모두 가능.
+// 사용 예: `@include text-fluid($font-size-22, calc(20px + 1vw), $font-size-28);`
+@mixin text-fluid($min, $preferred, $max) {
+  font-size: clamp(#{$min}, #{$preferred}, #{$max});
+}
+
+// ── font-size 강제 rem ───────────────────────────────────────
+// mobile-frame.md § 4.3 — 도메인에서 font-size 직접 px 금지.
+// 부득이 토큰 외 사이즈 필요 시 본 mixin 으로 rem 변환 강제.
+// 사용 예:
+//   .foo { @include font-size-rem(14); }            → font-size: 0.875rem;
+//   .bar { @include font-size-rem(18, 1.4); }        → font-size: 1.125rem; line-height: 1.4;
+@mixin font-size-rem($px, $line-height: normal) {
+  font-size: rem($px);
+  line-height: $line-height;
 }

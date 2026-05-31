@@ -1,11 +1,21 @@
+// ============================================================
+// mixins/_background.scss
+// BACKGROUND IMAGE PATTERNS
+// ============================================================
+
+// ── 배경 이미지 + 어둠 오버레이 ────────────────────────────────
+// 사용 예:
+//   @include bg-image('/images/hero.png');
+//   @include bg-image('/images/hero.png', $position: top, $overlay-color: rgba(0,0,0,0.6));
+//   @include bg-image('/images/hero.png', $overlay-color: transparent);  // overlay 끄고 싶을 때
 @mixin bg-image(
+  $url,
   $position: center,
   $overlay-color: rgba(0, 0, 0, 0.4),
   $size: cover,
   $repeat: no-repeat
 ) {
-  background-image: linear-gradient($overlay-color, $overlay-color), url(#{$url});
-  //background-image: url("#{$url}");
+  background-image: linear-gradient($overlay-color, $overlay-color), url("#{$url}");
   background-repeat: $repeat;
   background-position: $position;
   background-size: $size;

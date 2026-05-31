@@ -4,11 +4,18 @@
 // ============================================================
 
 @use '../variables/spacing' as *;
+@use '../variables/breakpoints' as *;
+@use '../variables/radius' as *;
+@use '../variables/zindex' as *;
+@use 'typography' as *;
 
 // ── 페이지 기본 레이아웃 ──────────────────────────────────────
+// mobile-frame.md § 2 — wrapper max-width 480 + 중앙 정렬 (body 와 이중 안전망)
 @mixin page-layout {
   display: flex;
   width: 100%;
+  max-width: $layout-wrapper-max;
+  margin-inline: auto;
   flex-direction: column;
   min-height: 100dvh;
   background-color: var(--color-bg-deepest);
@@ -28,9 +35,15 @@
 }
 
 // ── 수평 패딩 래퍼 ───────────────────────────────────────────
+// mobile-frame.md § 3.2 — 320 미만에서 자동 축소 (16 → 12)
 @mixin h-pad {
   padding-left: $layout-h-pad;
   padding-right: $layout-h-pad;
+
+  @media (max-width: $bp-mobile-sm) {
+    padding-left: $layout-h-pad-sm;
+    padding-right: $layout-h-pad-sm;
+  }
 }
 
 // ── 카드 너비 고정 ────────────────────────────────────────────
@@ -74,4 +87,141 @@
   position: absolute;
   inset: 0;
   z-index: $z;
+}
+
+// ── 카드 베이스 ───────────────────────────────────────────────
+// 도메인 카드 (CouponCard / EventCard / NoticeCard / HotPostCard / PostRow ...) 공통
+// bg + border + radius + padding 4종 세트. 모든 파라미터 default 제공.
+// 사용 예:
+//   @include card-base;
+//   @include card-base($bg: var(--color-bg-overlay), $radius: $radius-sm, $pad: $space-3 $space-4);
+@mixin card-base(
+  $bg: var(--color-bg-card),
+  $border: 1px solid var(--color-border),
+  $radius: $radius-xl,
+  $pad: $space-4
+) {
+  background-color: $bg;
+  border: $border;
+  border-radius: $radius;
+  padding: $pad;
+}
+
+// ── chip 베이스 ───────────────────────────────────────────────
+// 카테고리 chip / 필터 chip / 작은 라벨 chip. inline-flex + nowrap.
+// $size: sm (h:20, text-badge), md (text-caption, default), lg (text-body)
+// 사용 예:
+//   @include chip-base;
+//   @include chip-base($size: sm, $bg: var(--color-brand-alpha-15), $color: var(--color-brand));
+@mixin chip-base(
+  $size: md,
+  $bg: var(--color-bg-card),
+  $color: var(--color-text-secondary),
+  $border: 1px solid var(--color-border)
+) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-sm;
+  background-color: $bg;
+  color: $color;
+  border: $border;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  @if $size == sm {
+    padding: $space-1 $space-2;
+    height: 20px;
+    @include text-badge;
+  } @else if $size == md {
+    padding: $space-1 $space-3;
+    @include text-caption;
+  } @else if $size == lg {
+    padding: $space-2 $space-3;
+    @include text-body;
+  }
+}
+
+// ── 버튼 리셋 ─────────────────────────────────────────────────
+// <button> 의 native 스타일 제거 — 도메인 클리어 버튼 / 액션 버튼에 적용.
+@mixin reset-button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+// ── 누름 피드백 ───────────────────────────────────────────────
+// 카드 / 버튼 active 시 살짝 어두워짐. 모바일 터치 피드백 표준.
+@mixin pressable($opacity: 0.85, $duration: 0.15s) {
+  cursor: pointer;
+  transition: opacity $duration ease;
+
+  &:active {
+    opacity: $opacity;
+  }
+}
+
+// ── tap target 최소 보장 ─────────────────────────────────────
+// WCAG 2.5.5 + Apple HIG 44×44 충족. 작은 visual 의 chip / icon button 에 적용.
+// padding 으로 늘리고 visual 은 그대로 두려면 별도 처리.
+@mixin tap-target($size: $control-height-md) {
+  min-width: $size;
+  min-height: $size;
+}
+
+// ── 카드 썸네일 박스 ──────────────────────────────────────────
+// 카드 좌측/상단 이미지 영역. width/height 가변, 내부 <img> 자동 cover.
+// 사용 예:
+//   @include thumb-box;
+//   @include thumb-box($w: 88px, $h: 88px, $radius: $radius-sm);
+@mixin thumb-box(
+  $w: 64px,
+  $h: 64px,
+  $bg: var(--color-bg-card),
+  $radius: $radius-sm
+) {
+  width: $w;
+  height: $h;
+  background-color: $bg;
+  border-radius: $radius;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+// ── 모달 backdrop ────────────────────────────────────────────
+// position:fixed + inset:0 + 가운데 정렬 + 어두운 배경 + z-index modal.
+// ResponseModal / RenewalNoticeModal / 향후 신규 모달 공통 backdrop.
+@mixin modal-backdrop(
+  $bg: var(--color-overlay),
+  $z: $z-modal-bg
+) {
+  position: fixed;
+  inset: 0;
+  background-color: $bg;
+  z-index: $z;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── safe-area-inset-bottom 보강 ──────────────────────────────
+// iOS 노치/홈 인디케이터 영역 침범 방지. BottomBar / FAB 에 적용.
+// 사용 예:
+//   @include safe-area-bottom;            // padding-bottom: env(...)
+//   @include safe-area-bottom($space-3);  // padding-bottom: calc(12px + env(...))
+@mixin safe-area-bottom($base: 0) {
+  padding-bottom: calc(#{$base} + env(safe-area-inset-bottom));
 }
