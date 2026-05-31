@@ -1,13 +1,17 @@
 package com.dawne.com2usbaseball.config;
 
+import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.config.filter.AccessLogFilter;
+import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
 import com.dawne.com2usbaseball.security.filter.JwtAuthFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,6 +36,7 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final AccessLogFilter accessLogFilter;
     private final CorsConfigurationSource corsConfigurationSource;
+    private final ObjectMapper objectMapper;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,8 +47,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint()) // 401
-                        .accessDeniedHandler(new CustomAccessDeniedHandler())           // 403
+                        .authenticationEntryPoint(new CustomAuthenticationEntryPoint(objectMapper)) // 401
+                        .accessDeniedHandler(new CustomAccessDeniedHandler(objectMapper))           // 403
                 )
                 .authorizeHttpRequests(auth -> auth
                         // Swagger
@@ -74,7 +79,10 @@ public class SecurityConfig {
 
     // SecurityConfig.java - 401/403 핸들러 부분만
 
+    @RequiredArgsConstructor
     public static class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+        private final ObjectMapper objectMapper;
 
         @Override
         public void commence(HttpServletRequest request,
@@ -82,21 +90,18 @@ public class SecurityConfig {
                              AuthenticationException authException) throws IOException {
 
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
-            response.setContentType("application/json;charset=UTF-8");
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
 
-            String body = """
-            {
-              "success": false,
-              "code": "AUTH_UNAUTHORIZED",
-              "data": null
-            }
-            """;
-
-            response.getWriter().write(body);
+            GlobalResponse<Void> body = GlobalResponse.fail(AuthMessages.AUTH_UNAUTHORIZED);
+            objectMapper.writeValue(response.getWriter(), body);
         }
     }
 
+    @RequiredArgsConstructor
     public static class CustomAccessDeniedHandler implements AccessDeniedHandler {
+
+        private final ObjectMapper objectMapper;
 
         @Override
         public void handle(HttpServletRequest request,
@@ -104,17 +109,11 @@ public class SecurityConfig {
                            AccessDeniedException accessDeniedException) throws IOException {
 
             response.setStatus(HttpStatus.FORBIDDEN.value());
-            response.setContentType("application/json;charset=UTF-8");
+            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+            response.setCharacterEncoding("UTF-8");
 
-            String body = """
-            {
-              "success": false,
-              "code": "AUTH_USER_BLOCKED",
-              "data": null
-            }
-            """;
-
-            response.getWriter().write(body);
+            GlobalResponse<Void> body = GlobalResponse.fail(AuthMessages.AUTH_USER_BLOCKED);
+            objectMapper.writeValue(response.getWriter(), body);
         }
     }
 }
