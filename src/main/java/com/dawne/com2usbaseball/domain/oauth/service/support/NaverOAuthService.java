@@ -31,7 +31,7 @@ public class NaverOAuthService {
 
     private final NaverOauthProperties naverProperties;
     private final UserService userService;
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     public UserEntity findOrCreateUser(String code, String state) {
         NaverOAuthUserResponse userInfo = getUserInfo(code, state);
