@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper
 public interface BoardMapper {
@@ -13,9 +14,9 @@ public interface BoardMapper {
 
     List<BoardEntity> getVisibleBoardList();
 
-    BoardEntity getBoardDetail(@Param("id") Long id);
+    Optional<BoardEntity> getBoardDetail(@Param("id") Long id);
 
-    BoardEntity getBoardDetailByCode(@Param("code") String code);
+    Optional<BoardEntity> getBoardDetailByCode(@Param("code") String code);
 
     int insertBoard(BoardEntity entity);
 

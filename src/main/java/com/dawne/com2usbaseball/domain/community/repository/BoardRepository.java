@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -21,11 +22,11 @@ public class BoardRepository {
         return boardMapper.getVisibleBoardList();
     }
 
-    public BoardEntity getBoardDetail(Long id) {
+    public Optional<BoardEntity> getBoardDetail(Long id) {
         return boardMapper.getBoardDetail(id);
     }
 
-    public BoardEntity getBoardDetailByCode(String code) {
+    public Optional<BoardEntity> getBoardDetailByCode(String code) {
         return boardMapper.getBoardDetailByCode(code);
     }
 

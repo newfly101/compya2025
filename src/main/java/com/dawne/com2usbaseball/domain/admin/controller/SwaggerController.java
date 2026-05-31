@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "0. Swagger 인증", description = "Swagger UI 에서 admin endpoint 테스트용. 로컬 한정.")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/dev")
+@RequestMapping("/api/admin/dev")
 @Profile("local")
 public class SwaggerController {
 

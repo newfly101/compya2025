@@ -30,20 +30,14 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardEntity getBoardDetail(Long id) {
-        BoardEntity board = boardRepository.getBoardDetail(id);
-        if (board == null) {
-            throw new BaseException(CommunityMessages.COMMUNITY_BOARD_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
-        return board;
+        return boardRepository.getBoardDetail(id)
+                .orElseThrow(() -> new BaseException(CommunityMessages.COMMUNITY_BOARD_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     @Override
     public BoardEntity getBoardDetailByCode(String code) {
-        BoardEntity board = boardRepository.getBoardDetailByCode(code);
-        if (board == null) {
-            throw new BaseException(CommunityMessages.COMMUNITY_BOARD_NOT_FOUND, HttpStatus.NOT_FOUND);
-        }
-        return board;
+        return boardRepository.getBoardDetailByCode(code)
+                .orElseThrow(() -> new BaseException(CommunityMessages.COMMUNITY_BOARD_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
     @Override
