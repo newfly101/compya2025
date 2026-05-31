@@ -1,0 +1,17 @@
+# _global-admin 개발 결정 로그
+
+| 시각 | FN | 마커 | 항목 | 적용값 | 사유 |
+|------|----|------|------|--------|------|
+| 2026-05-31 | FN-F0 | 🟨 | admin 라우트 경로 구조 | `/admin/coupon` flat (legacy `/admin/content/` 제거) | legacy 주석 코드 폐기됨 — 신규 flat 구조 채택 |
+| 2026-05-31 | FN-A4 | 🟨 | 유저 목록 표시 필드 | id/nickname/email/userRole/userStatus/lastLoginAt | 개인정보 최소 노출 원칙 |
+| 2026-05-31 | FN-A4 | 🟨 | WITHDRAWN 유저 목록 포함 | 포함 (필터로 제외 가능) | 관리 목적상 전체 상태 조회 필요 |
+| 2026-05-31 | ALL | 🟨 | 페이지네이션 방식 | page 방식 20건/page | admin 정밀 조작 우선 — 무한스크롤 미채택 |
+| 2026-05-31 | ALL | 🟨 | 검색·필터 UI 위치 | 상단 고정 bar | Figma 참조 + 모바일 UX 일관성 |
+| 2026-05-31 | FN-A2 | 🟨 | 이벤트 admin GET list | `/api/admin/events` 신규 추가 | 기존 `/external` 는 external type 전용 — 전체 조회 별도 필요 |
+| 2026-05-31 | FN-F4 | ❓ | 유저 상세 페이지 사양 | TBD — 별도 사이클 | 사용자 사양 미정 |
+| 2026-05-31 | FN-A4 | 🔴 | admin user API 개인정보 노출 범위 | email 포함 / oauthEmail·providerId 제외 가정 | HITL — 개인정보 노출 범위 사용자 결정 필요 |
+| 2026-05-31 | FN-A1 | 🔴 | AdminCouponController @PreAuthorize 누락 | SecurityConfig 레벨 보호 존재하나 메서드 레벨 추가 권고 | 이벤트 컨트롤러와 일관성 불일치 — cleanup |
+| 2026-05-31 | FN-A1 | 🟨 | 쿠폰 DELETE 방식 | soft delete (is_visible=false) 채택 | 데이터 보존 원칙 — hard delete 미채택 |
+| 2026-05-31 | wiki-T2 | 🟨 | wiki_pitch 조회 범위 | target 무관 전체 pitches 반환 (pitch는 PITCHER/HITTER 공용) | statInfluence 만 target 필터 적용 |
+| 2026-05-31 | wiki-T3 | 🟨 | wiki_pitch soft delete 시 grade 처리 | grade soft cascade (updated_at 갱신, 실제 삭제 X) | FK 정합 보존, hard delete 는 grade 단독 삭제로만 허용 |
+| 2026-05-31 | wiki-T3 | 🟨 | /api/admin/wiki/** SecurityConfig 적용 | 기존 /api/admin/** 룰에 포함 확인 — 별도 추가 불필요 | SecurityConfig 순서상 /api/admin/** 먼저 매칭됨 |
