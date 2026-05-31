@@ -21,4 +21,6 @@ public interface CouponMapper {
             @Param("id") Long id,
             @Param("visible") boolean visible);
 
+    int deleteCouponById(@Param("id") Long id);
+
 }

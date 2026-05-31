@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.domain.event.controller.docs;
 
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
+import com.dawne.com2usbaseball.domain.event.dto.request.EventAdminListRequest;
 import com.dawne.com2usbaseball.domain.event.dto.request.EventRequest;
 import com.dawne.com2usbaseball.domain.event.dto.request.EventVisibleRequest;
 import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
@@ -22,11 +23,18 @@ import java.util.List;
 public interface AdminEventSwaggerDocs {
 
     @Operation(
-            summary = "이벤트 목록 조회",
-            description = "관리자가 등록된 이벤트 목록을 조회한다."
+            summary = "이벤트 목록 조회 (외부전용 — legacy)",
+            description = "관리자가 등록된 이벤트 목록을 조회한다. (기존 /external)"
     )
     @ApiResponse(responseCode = "200", description = "이벤트 목록 조회 성공")
     GlobalResponse<List<EventResponse>> getExternalEventList();
+
+    @Operation(
+            summary = "이벤트 전체 목록 조회 (관리자)",
+            description = "관리자가 전체 이벤트 목록을 필터 조건으로 조회한다."
+    )
+    @ApiResponse(responseCode = "200", description = "이벤트 전체 목록 조회 성공")
+    GlobalResponse<List<EventResponse>> getAdminEventList(EventAdminListRequest request);
 
     @Operation(
             summary = "이벤트 등록",
@@ -124,5 +132,16 @@ public interface AdminEventSwaggerDocs {
                     )
             )
             @RequestBody EventVisibleRequest request
+    );
+
+    @Operation(
+            summary = "이벤트 삭제",
+            description = "관리자가 이벤트를 삭제한다."
+    )
+    @ApiResponse(responseCode = "200", description = "이벤트 삭제 성공")
+    @ApiResponse(responseCode = "404", description = "이벤트를 찾을 수 없음", content = @Content)
+    GlobalResponse<Void> deleteEvent(
+            @Parameter(description = "이벤트 ID", required = true, example = "1")
+            @PathVariable Long id
     );
 }

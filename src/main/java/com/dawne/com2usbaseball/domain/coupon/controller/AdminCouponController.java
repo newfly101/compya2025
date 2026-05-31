@@ -8,12 +8,14 @@ import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
 import com.dawne.com2usbaseball.domain.coupon.enums.CouponMessages;
 import com.dawne.com2usbaseball.domain.coupon.service.AdminCouponService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/coupons")
 public class AdminCouponController implements AdminCouponSwaggerDocs {
 
@@ -51,5 +53,12 @@ public class AdminCouponController implements AdminCouponSwaggerDocs {
     ) {
         adminCouponService.updateCouponVisible(id, request.visible());
         return GlobalResponse.success(CouponMessages.COUPON_VISIBLE_UPDATED, null);
+    }
+
+    @Override
+    @DeleteMapping("/{id}")
+    public GlobalResponse<Void> deleteCoupon(@PathVariable Long id) {
+        adminCouponService.deleteCoupon(id);
+        return GlobalResponse.success(CouponMessages.COUPON_DELETED, null);
     }
 }

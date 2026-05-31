@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.domain.notice.repository;
 
 import com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity;
 import com.dawne.com2usbaseball.domain.notice.enums.NoticeMessages;
+import com.dawne.com2usbaseball.domain.notice.enums.NoticeSource;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.notice.repository.mapper.NoticeMapper;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,10 @@ public class AdminNoticeRepository {
 
     public List<NoticeEntity> getAdminNoticeList() {
         return noticeMapper.getAdminNoticeList();
+    }
+
+    public List<NoticeEntity> getAdminNoticeListFiltered(NoticeSource source, Boolean isVisible, Boolean isPinned) {
+        return noticeMapper.getAdminNoticeListFiltered(source, isVisible, isPinned);
     }
 
     public NoticeEntity getAdminNoticeDetail(Long noticeId) {

@@ -3,6 +3,7 @@ package com.dawne.com2usbaseball.domain.event.controller;
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.event.controller.docs.AdminEventSwaggerDocs;
+import com.dawne.com2usbaseball.domain.event.dto.request.EventAdminListRequest;
 import com.dawne.com2usbaseball.domain.event.dto.request.EventRequest;
 import com.dawne.com2usbaseball.domain.event.dto.request.EventVisibleRequest;
 import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
@@ -51,5 +52,19 @@ public class AdminEventController implements AdminEventSwaggerDocs {
         eventAdminService.updateEventVisible(id, request.visible());
 
         return GlobalResponse.success(EventMessages.EVENT_VISIBLE_UPDATED, null);
+    }
+
+    @Override
+    @GetMapping
+    public GlobalResponse<List<EventResponse>> getAdminEventList(EventAdminListRequest request) {
+        List<EventResponse> eventList = eventAdminService.getAdminEventList(request);
+        return GlobalResponse.success(EventMessages.EVENT_SUCCESS, eventList);
+    }
+
+    @Override
+    @DeleteMapping("/{id}")
+    public GlobalResponse<Void> deleteEvent(@PathVariable Long id) {
+        eventAdminService.deleteEvent(id);
+        return GlobalResponse.success(EventMessages.EVENT_DELETED, null);
     }
 }

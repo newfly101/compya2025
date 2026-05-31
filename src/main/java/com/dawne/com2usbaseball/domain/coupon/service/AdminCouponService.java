@@ -11,5 +11,6 @@ public interface AdminCouponService {
     CouponResponse createCoupon(CouponRequest request);
     CouponResponse updateCoupon(CouponRequest request, Long id);
     void updateCouponVisible(Long id, boolean visible);
+    void deleteCoupon(Long id);
 
 }

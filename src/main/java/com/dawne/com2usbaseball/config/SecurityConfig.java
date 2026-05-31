@@ -60,6 +60,7 @@ public class SecurityConfig {
                                 "/swagger-custom.css"
                         ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/wiki/**").permitAll()
                         .requestMatchers("/api/**").permitAll()
                         .anyRequest().denyAll()
                 )

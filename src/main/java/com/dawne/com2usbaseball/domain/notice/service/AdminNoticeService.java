@@ -1,12 +1,13 @@
 package com.dawne.com2usbaseball.domain.notice.service;
 
+import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeAdminListRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.response.NoticeResponse;
 
 import java.util.List;
 
 public interface AdminNoticeService {
-    List<NoticeResponse> getAdminNoticeList();
+    List<NoticeResponse> getAdminNoticeList(NoticeAdminListRequest request);
     NoticeResponse getAdminNoticeDetail(Long noticeId);
     NoticeResponse createNotice(NoticeRequest request);
     NoticeResponse updateNotice(NoticeRequest request, Long noticeId);

@@ -3,18 +3,21 @@ package com.dawne.com2usbaseball.domain.notice.controller;
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.notice.controller.docs.AdminNoticeSwaggerDocs;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticePinnedRequest;
+import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeAdminListRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeVisibleRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.response.NoticeResponse;
 import com.dawne.com2usbaseball.domain.notice.enums.NoticeMessages;
 import com.dawne.com2usbaseball.domain.notice.service.AdminNoticeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/notices")
 public class AdminNoticeController implements AdminNoticeSwaggerDocs {
 
@@ -22,8 +25,8 @@ public class AdminNoticeController implements AdminNoticeSwaggerDocs {
 
     @Override
     @GetMapping
-    public GlobalResponse<List<NoticeResponse>> getAdminNoticeList() {
-        List<NoticeResponse> noticeList = adminNoticeService.getAdminNoticeList();
+    public GlobalResponse<List<NoticeResponse>> getAdminNoticeList(NoticeAdminListRequest request) {
+        List<NoticeResponse> noticeList = adminNoticeService.getAdminNoticeList(request);
 
         return GlobalResponse.success(NoticeMessages.NOTICE_SUCCESS, noticeList);
     }

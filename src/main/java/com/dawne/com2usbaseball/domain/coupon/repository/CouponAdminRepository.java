@@ -33,4 +33,8 @@ public class CouponAdminRepository {
     public boolean updateCouponVisible(Long couponId, boolean visible) {
         return mapper.updateCouponVisible(couponId, visible) > 0;
     }
+
+    public boolean deleteCoupon(Long id) {
+        return mapper.deleteCouponById(id) > 0;
+    }
 }

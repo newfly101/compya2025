@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.domain.notice.controller.docs;
 
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
+import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeAdminListRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticePinnedRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeVisibleRequest;
@@ -31,7 +32,7 @@ public interface AdminNoticeSwaggerDocs {
                     description = "공지사항 목록 조회 성공"
             )
     })
-    GlobalResponse<List<NoticeResponse>> getAdminNoticeList();
+    GlobalResponse<List<NoticeResponse>> getAdminNoticeList(NoticeAdminListRequest request);
 
     @Operation(
             summary = "관리자 공지사항 상세 조회",

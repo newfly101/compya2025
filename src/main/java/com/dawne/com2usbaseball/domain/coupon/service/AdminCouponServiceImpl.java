@@ -74,4 +74,13 @@ public class AdminCouponServiceImpl implements AdminCouponService {
                 .orElseThrow(() -> new BaseException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
         repository.updateCouponVisible(id, visible);
     }
+
+    @Override
+    @Transactional
+    @CacheEvictAfterCommit(cacheName = "coupons", keys = {"admin", "public"})
+    public void deleteCoupon(Long id) {
+        repository.findById(id)
+                .orElseThrow(() -> new BaseException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
+        repository.deleteCoupon(id);
+    }
 }

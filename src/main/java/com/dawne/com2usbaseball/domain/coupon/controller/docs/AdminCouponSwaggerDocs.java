@@ -110,4 +110,15 @@ public interface AdminCouponSwaggerDocs {
             )
             @RequestBody CouponVisibleRequest request
     );
+
+    @Operation(
+            summary = "쿠폰 삭제",
+            description = "관리자가 쿠폰을 삭제(비활성화)한다."
+    )
+    @ApiResponse(responseCode = "200", description = "쿠폰 삭제 성공")
+    @ApiResponse(responseCode = "404", description = "쿠폰을 찾을 수 없음", content = @Content)
+    GlobalResponse<Void> deleteCoupon(
+            @Parameter(description = "쿠폰 ID", required = true, example = "1")
+            @PathVariable Long id
+    );
 }

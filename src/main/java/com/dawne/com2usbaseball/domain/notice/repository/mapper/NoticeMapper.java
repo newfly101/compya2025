@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.domain.notice.repository.mapper;
 
 import com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity;
+import com.dawne.com2usbaseball.domain.notice.enums.NoticeSource;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -15,6 +16,10 @@ public interface NoticeMapper {
 
     // Admin
     List<NoticeEntity> getAdminNoticeList();
+    List<NoticeEntity> getAdminNoticeListFiltered(
+            @Param("source") NoticeSource source,
+            @Param("isVisible") Boolean isVisible,
+            @Param("isPinned") Boolean isPinned);
     NoticeEntity getAdminNoticeDetail(@Param("id") Long noticeId);
 
     // 공통 단건 조회 (insert 후 반환용)

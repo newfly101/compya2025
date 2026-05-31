@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.domain.notice.service;
 
 import com.dawne.com2usbaseball.domain.notice.dto.mapstruct.NoticeMapStruct;
+import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeAdminListRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.response.NoticeResponse;
 import com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity;
@@ -29,9 +30,14 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     private final NoticeMapStruct noticeMapStruct;
 
     @Override
-    @Cacheable(value = "notice", key = "'admin'")
-    public List<NoticeResponse> getAdminNoticeList() {
-        List<NoticeEntity> notices = adminNoticeRepository.getAdminNoticeList();
+    public List<NoticeResponse> getAdminNoticeList(NoticeAdminListRequest request) {
+        List<NoticeEntity> notices;
+        // 필터 조건이 있으면 동적 필터 쿼리 사용, 없으면 전체 조회
+        if (request != null && (request.source() != null || request.isVisible() != null || request.isPinned() != null)) {
+            notices = adminNoticeRepository.getAdminNoticeListFiltered(request.source(), request.isVisible(), request.isPinned());
+        } else {
+            notices = adminNoticeRepository.getAdminNoticeList();
+        }
         return noticeMapStruct.toResponseList(notices);
     }
 

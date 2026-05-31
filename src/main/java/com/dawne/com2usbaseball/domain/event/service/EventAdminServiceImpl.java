@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.domain.event.service;
 
 import com.dawne.com2usbaseball.domain.event.dto.mapstruct.EventMapStruct;
+import com.dawne.com2usbaseball.domain.event.dto.request.EventAdminListRequest;
 import com.dawne.com2usbaseball.domain.event.dto.request.EventRequest;
 import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
 import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
@@ -79,5 +80,23 @@ public class EventAdminServiceImpl implements EventAdminService {
                 .orElseThrow(() -> new BaseException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         repository.updateEventVisible(id, visible);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<EventResponse> getAdminEventList(EventAdminListRequest request) {
+        List<EventEntity> events = repository.findAdminEventList(request);
+        return eventMapStruct.toResponseList(events);
+    }
+
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "events", key = "'external::admin'"),
+            @CacheEvict(value = "events", key = "'external::public'")
+    })
+    public void deleteEvent(Long id) {
+        repository.findById(id)
+                .orElseThrow(() -> new BaseException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
+        repository.deleteEvent(id);
     }
 }
