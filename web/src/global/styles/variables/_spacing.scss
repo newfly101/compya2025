@@ -18,12 +18,19 @@ $space-10: 40px;  // space-10 — 40px
 $space-12: 48px;  // space-12 — 48px : 페이지 상단 여백
 
 // ── Layout Constants ──────────────────────────────────────────
-$layout-screen-width:    375px;
-$layout-card-width:      343px;  // 375 - 16×2
+$layout-screen-width:    480px;  // Figma 기준 = 코드 wrapper (mobile-frame.md § 1 / § 2 — 480 단일)
+$layout-wrapper-max:     480px;  // 코드 wrapper 한도 (mobile-frame.md § 2) — body / page-layout / TopBar / Drawer 공용
+$layout-card-width:      448px;  // 480 - 16×2 (mobile-frame.md § 2 — 480 정합)
 $layout-h-pad:           16px;   // $space-4 동일
+$layout-h-pad-sm:        12px;   // 320 미만 보호용 (mobile-frame.md § 3.2)
 $layout-topbar-height:   52px;
 $layout-bottombar-height:56px;
 $layout-section-sep:     8px;    // $space-2 동일
+
+// ── Control Heights (tap-target 호환, 4의 배수) ──────────────
+$control-height-sm: 36px;   // 검색 input / chip row trigger / autocomplete trigger
+$control-height-md: 44px;   // tap-target 표준 (mobile-frame.md § 5)
+$control-height-lg: 52px;   // drawer menu item / quick icon
 
 // ── Z-index ───────────────────────────────────────────────────
 // → _zindex.scss 참고
