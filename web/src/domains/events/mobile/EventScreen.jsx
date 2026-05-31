@@ -2,8 +2,10 @@ import React from "react";
 import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
 import EventListVertical from "@/domains/events/mobile/containers/public/EventListVertical.jsx";
 import { useEventList } from "@/domains/events/mobile/hooks/useEventList.js";
+import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 
 const EventScreen = () => {
+  useDomainTopBar("이벤트");
   const {activeEvents, expiredEvents} = useEventList();
   return (
     <>

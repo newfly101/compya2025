@@ -3,6 +3,7 @@ import "./historyMode.tokens.scss";
 import Chip from "./components/chip/Chip.jsx";
 import StageCard from "./components/stageCard/StageCard.jsx";
 import { useHistoryMode } from "./hooks/useHistoryMode.js";
+import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import styles from "./HistoryModeScreen.module.scss";
 
 const POSITIONS = [
@@ -12,6 +13,7 @@ const POSITIONS = [
 ];
 
 const HistoryModeScreen = () => {
+  useDomainTopBar("히스토리 재료 탐색기");
   const autoCompleteWrapRef = useRef(null);
   const {
     inputValue,

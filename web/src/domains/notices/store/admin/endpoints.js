@@ -8,6 +8,6 @@ export const ADMIN_NOTICE_ACTIONS = {
 export const ADMIN_NOTICES = {
   GET_LIST:       "/admin/notices",
   INSERT:         "/admin/notices",
-  UPDATE:         "/admin/notices",
-  UPDATE_VISIBLE: "/admin/notices/visible",
+  UPDATE:         (id) => `/admin/notices/${id}`,
+  UPDATE_VISIBLE: (id) => `/admin/notices/${id}/visible`,
 };

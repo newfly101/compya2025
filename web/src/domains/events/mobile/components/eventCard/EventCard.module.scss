@@ -58,6 +58,9 @@
   @include hangul-safe;
   color: var(--color-text-primary);
   font-size: var(--title-font-size, #{$font-size-13});
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   .expired & { color: var(--color-text-muted); }
 }

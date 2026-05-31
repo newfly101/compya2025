@@ -3,9 +3,11 @@ import NoticeCard from "@/domains/notices/mobile/components/noticeCard/NoticeCar
 import NoticeListVertical from "@/domains/notices/mobile/containers/public/NoticeListVertical.jsx";
 import OfficialNoticeListVertical from "@/domains/notices/mobile/containers/public/OfficialNoticeListVertical.jsx";
 import { useNoticeList } from "@/domains/notices/mobile/hooks/useNoticeList.js";
+import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import styles from "./NoticeScreen.module.scss";
 
 const NoticeScreen = () => {
+  useDomainTopBar("공지사항");
   const { featuredNotice, listedNotices, listedOfficials } = useNoticeList();
 
   return (
