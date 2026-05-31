@@ -28,3 +28,11 @@ export const fetchUploadEventImageFile = async (file) => {
   });
   return data;
 };
+export const fetchAdminAllEventList = async () => {
+  const { data } = await API.get(`${EVENTS.GET_ALL_EVENTS}`);
+  return data;
+};
+export const fetchAdminDeleteEvent = async (id) => {
+  const { data } = await API.delete(`${EVENTS.DELETE_EVENT(id)}`);
+  return data;
+};

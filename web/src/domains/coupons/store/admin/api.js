@@ -21,3 +21,7 @@ export const fetchAdminUpdateVisible = async (id, visible) => {
   const { data } = await API.patch(`${ADMIN_COUPONS.UPDATE_COUPON_VISIBLE(id)}`, { visible });
   return data;
 };
+export const fetchAdminDeleteCoupon = async (id) => {
+  const { data } = await API.delete(`${ADMIN_COUPONS.DELETE_COUPON(id)}`);
+  return data;
+};

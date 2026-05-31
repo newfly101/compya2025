@@ -4,6 +4,7 @@ import {
   requestAdminInsertNewCoupon,
   requestAdminUpdateCoupon, requestAdminUpdateCouponVisible,
   requestGetAdminCouponList,
+  requestAdminDeleteCoupon,
 } from "@/domains/coupons/store/admin/thunks.js";
 import { requestGetUserCouponList } from "@/domains/coupons/store/public/thunks.js";
 
@@ -59,6 +60,12 @@ const couponSlice = createSlice({
           ? { ...c, visible: updated.visible }
           : c
       );
+    });
+    /* ===============================
+     * 쿠폰 삭제
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminDeleteCoupon, (state, action) => {
+      state.coupons = state.coupons.filter(c => Number(c.id) !== Number(action.payload));
     });
   },
 });

@@ -2,7 +2,8 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   fetchAdminExEventList,
   fetchAdminInsertExEvent,
-  fetchAdminUpdateExEvent, fetchAdminUpdateExVisible
+  fetchAdminUpdateExEvent, fetchAdminUpdateExVisible,
+  fetchAdminAllEventList, fetchAdminDeleteEvent,
 } from "@/domains/events/store/admin/api.js";
 import { ADMIN_EVENT_ACTIONS } from "@/domains/events/store/admin/endpoints.js";
 import { baseEventDTO } from "@/domains/events/store/dto.js";
@@ -70,3 +71,23 @@ export const requestAdminUploadEventImage = (file) => {
     directory: "events"
   });
 };
+
+export const requestAdminGetAllEventList = createAsyncThunk(
+  ADMIN_EVENT_ACTIONS.GET_ALL_LISTS, async (_, { rejectWithValue }) => {
+    try {
+      const { items } = await fetchAdminAllEventList();
+      return [...items].reverse();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  });
+
+export const requestAdminDeleteEvent = createAsyncThunk(
+  ADMIN_EVENT_ACTIONS.DELETE, async (id, { rejectWithValue }) => {
+    try {
+      await fetchAdminDeleteEvent(id);
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  });

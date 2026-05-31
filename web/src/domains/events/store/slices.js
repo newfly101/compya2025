@@ -4,6 +4,7 @@ import {
   requestAdminGetExEventList,
   requestAdminInsertNewExEvent,
   requestAdminUpdateExEvent, requestAdminUpdateExEventVisible,
+  requestAdminGetAllEventList, requestAdminDeleteEvent,
 } from "@/domains/events/store/admin/thunks.js";
 import { requestGetExternalEventList } from "@/domains/events/store/public/thunks.js";
 
@@ -59,6 +60,18 @@ const eventsSlice = createSlice({
           ? { ...e, visible: updated.visible }
           : e
       );
+    });
+    /* ===============================
+     * 전체 이벤트 목록 조회 (admin)
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminGetAllEventList, (state, action) => {
+      state.events = action.payload;
+    });
+    /* ===============================
+     * 이벤트 삭제
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminDeleteEvent, (state, action) => {
+      state.events = state.events.filter(e => Number(e.id) !== Number(action.payload));
     });
   },
 });

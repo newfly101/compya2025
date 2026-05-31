@@ -1,0 +1,292 @@
+.page {
+  @include page-layout;
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.searchInput {
+  width: 100%;
+  height: $control-height-md;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-size: $font-size-12;
+  box-sizing: border-box;
+
+  &::placeholder { color: var(--color-text-placeholder); }
+}
+
+.filterChips {
+  display: flex;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+.chip {
+  @include chip-base($size: sm);
+  cursor: pointer;
+  min-height: $control-height-sm;
+
+  &Active {
+    background-color: var(--color-brand);
+    border-color: var(--color-brand);
+    color: #fff;
+  }
+
+  &On {
+    background-color: rgba(3, 199, 90, 0.15);
+    border-color: $color-success-400;
+    color: $color-success-400;
+  }
+
+  &Off {
+    background-color: var(--color-bg-elevated);
+    border-color: var(--color-border);
+    color: var(--color-text-muted);
+  }
+}
+
+.addRow {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.addBtn {
+  height: $control-height-md;
+  padding: 0 $space-4;
+  background: var(--color-brand);
+  color: #fff;
+  border: none;
+  border-radius: $radius-lg;
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+}
+
+.stateBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-12 0;
+}
+
+.stateText {
+  @include text-body;
+  color: var(--color-text-muted);
+}
+
+.stateError {
+  @include text-body;
+  color: var(--color-danger);
+  text-align: center;
+}
+
+.retryBtn {
+  height: $control-height-md;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-danger);
+  border-radius: $radius-lg;
+  background: transparent;
+  color: var(--color-danger);
+  @include text-body;
+  cursor: pointer;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.card {
+  @include card-base($radius: $radius-xl);
+  display: flex;
+  flex-direction: row;
+  gap: $space-3;
+  overflow: hidden;
+}
+
+.thumbnail {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: $radius-md;
+  flex-shrink: 0;
+}
+
+.cardBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  min-width: 0;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $space-2;
+}
+
+.cardTitle {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+  @include line-clamp(2);
+  flex: 1;
+}
+
+.cardMeta {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+.typeChip {
+  @include chip-base($size: sm, $bg: var(--color-brand-alpha-15), $color: var(--color-brand));
+}
+
+.cardDate {
+  @include text-micro;
+  color: var(--color-text-muted);
+}
+
+.cardActions {
+  display: flex;
+  gap: $space-2;
+  margin-top: $space-1;
+}
+
+.editBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: 1px solid var(--color-brand);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-brand);
+  @include text-caption;
+  font-weight: 500;
+  cursor: pointer;
+  @include pressable;
+}
+
+.deleteBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: 1px solid var(--color-danger);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-danger);
+  @include text-caption;
+  font-weight: 500;
+  cursor: pointer;
+  @include pressable;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  z-index: $z-modal-bg;
+  display: flex;
+  align-items: flex-end;
+}
+
+.sheet {
+  width: 100%;
+  background: var(--color-bg-modal);
+  border-radius: $radius-2xl $radius-2xl 0 0;
+  padding: $space-5 $space-4 $space-8;
+  max-height: 80dvh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.sheetTitle {
+  @include text-section-title;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  @include text-caption;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.input {
+  height: $control-height-md;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  font-size: $font-size-12;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  box-sizing: border-box;
+
+  &:focus { outline: none; border-color: var(--color-brand); }
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  @include text-body;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.formActions {
+  display: flex;
+  gap: $space-2;
+  margin-top: $space-2;
+}
+
+.cancelBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  @include text-body;
+  cursor: pointer;
+}
+
+.submitBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: none;
+  border-radius: $radius-md;
+  background: var(--color-brand);
+  color: #fff;
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+}

@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   fetchAdminCouponList,
   fetchAdminInsertCoupon,
-  fetchAdminUpdateCoupon, fetchAdminUpdateVisible,
+  fetchAdminUpdateCoupon, fetchAdminUpdateVisible, fetchAdminDeleteCoupon,
 } from "@/domains/coupons/store/admin/api.js";
 import { ADMIN_COUPON_ACTIONS } from "@/domains/coupons/store/admin/endpoints.js";
 
@@ -60,6 +60,17 @@ export const requestAdminUpdateCouponVisible = createAsyncThunk(
         visible,
         options
       }
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+export const requestAdminDeleteCoupon = createAsyncThunk(
+  ADMIN_COUPON_ACTIONS.DELETE, async (id, { rejectWithValue }) => {
+    try {
+      await fetchAdminDeleteCoupon(id);
+      return id;
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -1,0 +1,133 @@
+.page {
+  @include page-layout;
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.searchInput {
+  width: 100%;
+  height: $control-height-md;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-size: $font-size-12;
+  box-sizing: border-box;
+
+  &::placeholder { color: var(--color-text-placeholder); }
+}
+
+.filterRow {
+  display: flex;
+  gap: $space-2;
+}
+
+.filterSelect {
+  flex: 1;
+  height: $control-height-sm;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  cursor: pointer;
+  appearance: auto;
+}
+
+.countText {
+  @include text-caption;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.stateBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-12 0;
+}
+
+.stateText {
+  @include text-body;
+  color: var(--color-text-muted);
+}
+
+.stateError {
+  @include text-body;
+  color: var(--color-danger);
+  text-align: center;
+}
+
+.retryBtn {
+  height: $control-height-md;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-danger);
+  border-radius: $radius-lg;
+  background: transparent;
+  color: var(--color-danger);
+  @include text-body;
+  cursor: pointer;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+/* Bottom Sheet — TBD placeholder */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-overlay);
+  z-index: $z-modal-bg;
+  display: flex;
+  align-items: flex-end;
+}
+
+.sheet {
+  width: 100%;
+  background: var(--color-bg-modal);
+  border-radius: $radius-2xl $radius-2xl 0 0;
+  padding: $space-5 $space-4 $space-8;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.sheetTitle {
+  @include text-section-title;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.tbd {
+  @include text-body;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.closeBtn {
+  height: $control-height-md;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  @include text-body;
+  cursor: pointer;
+  @include pressable;
+}
