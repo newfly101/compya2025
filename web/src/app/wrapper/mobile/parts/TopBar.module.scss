@@ -4,6 +4,7 @@
 // ============================================================
 
 @use '@/global/styles/mixins/flex' as *;
+@use '@/global/styles/mixins/layout' as *;
 @use '@/global/styles/variables/spacing' as *;
 @use '@/global/styles/variables/font' as *;
 @use '@/global/styles/variables/zindex' as *;
@@ -22,7 +23,7 @@ $color-naver-font: $color-white-100;
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  max-width: $bp-mobile-lg;
+  max-width: $layout-wrapper-max;  // mobile-frame.md § 2 — body / page-layout 와 정합
   height: $layout-topbar-height;
   padding: 0 $layout-h-pad;
   background-color: var(--color-bg-deepest);
@@ -44,15 +45,15 @@ $color-naver-font: $color-white-100;
 
 // ── 버거 버튼 ─────────────────────────────────────────────────
 .burger {
-  @include flex-col(4px);
-  width: 24px;
+  @include flex-col($space-1);
+  width: $space-6;            // 24px
   flex-shrink: 0;
 
   span {
     display: block;
     width: 100%;
-    height: 2px;
-    border-radius: 2px;
+    height: 2px;              // hairline — 토큰화 대상 아님 (mobile-frame § 4.3 예외)
+    border-radius: $radius-xs;
     background-color: var(--color-text-primary);
     transition: opacity 0.2s ease;
   }
@@ -60,44 +61,37 @@ $color-naver-font: $color-white-100;
 
 // ── 로고 ──────────────────────────────────────────────────────
 .logo {
-  @include flex-row(4px, center, center);
+  @include flex-row($space-1, center, center);
   @include text-topBar;
   color: var(--color-text-primary);
   white-space: nowrap;
 }
 
-// ── 로그인 버튼 ───────────────────────────────────────────────
-.loginBtn {
-  height: 28px;
-  padding: 0 $space-3;
-  border-radius: $radius-sm;
-  background-color: $color-naver-background;
-  color: $color-naver-font;
-  @include text-micro;
-  white-space: nowrap;
-  flex-shrink: 0;
-  transition: opacity 0.15s ease;
-
-  &:active { opacity: 0.85; }
-}
+// ── 로그인 / 로그아웃 버튼 (공통 베이스) ───────────────────
+.loginBtn,
 .logoutBtn {
-  height: 28px;
+  height: rem(28);             // mobile-frame § 4.3 — 토큰 외 size, rem 강제
   padding: 0 $space-3;
   border-radius: $radius-sm;
-  background-color: var(--color-bg-card);
   color: $color-naver-font;
   @include text-micro;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: opacity 0.15s ease;
+  @include pressable;
+}
 
-  &:active { opacity: 0.85; }
+.loginBtn {
+  background-color: $color-naver-background;
+}
+
+.logoutBtn {
+  background-color: var(--color-bg-card);
 }
 
 // ── 뒤로가기 버튼 ─────────────────────────────────────────────
 .backBtn {
   @include flex-center;
-  width: 36px;
+  width: $control-height-sm;   // 36px
   aspect-ratio: 1 / 1;
   margin-left: -$space-1;
   flex-shrink: 0;
@@ -117,11 +111,11 @@ $color-naver-font: $color-white-100;
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: center;
-  max-width: 200px;
+  max-width: rem(200);         // 컨텐츠 의도 (긴 타이틀 영역 한도) — rem 강제
 }
 
 // ── 우측 액션 슬롯 ────────────────────────────────────────────
 .rightAction {
-  @include flex-row(8px);
+  @include flex-row($space-2);
   justify-content: flex-end;
 }

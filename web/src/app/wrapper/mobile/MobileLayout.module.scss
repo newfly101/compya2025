@@ -5,12 +5,12 @@
 }
 
 .pageContent {
-  @include page-content(52px);
+  @include page-content($layout-topbar-height);
 }
 
 .loading {
   @include flex-center;
   min-height: 100dvh;
-  font-size: $font-size-13;
+  @include font-size-rem(13);     // mobile-frame § 4.3 — font-size rem 강제 (line-height: normal)
   color: var(--color-text-secondary);
 }

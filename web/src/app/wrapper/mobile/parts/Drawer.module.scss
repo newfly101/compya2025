@@ -10,7 +10,7 @@ $color-naver-font: $color-white-100;
 .overlay {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: var(--color-overlay);   // 0.55 alpha (mobile-frame § 3.1 D3 정합)
   z-index: $z-drawer - 1;
   opacity: 0;
   pointer-events: none;
@@ -22,8 +22,8 @@ $color-naver-font: $color-white-100;
   }
 
   @include from-tablet {
-    left: calc(50% - #{$bp-mobile-lg} / 2);
-    width: $bp-mobile-lg;
+    left: calc(50% - #{$layout-wrapper-max} / 2);  // mobile-frame.md § 2 — wrapper 한도와 정합
+    width: $layout-wrapper-max;
     position: absolute;
     inset: 0;
   }
@@ -32,11 +32,11 @@ $color-naver-font: $color-white-100;
 // ── 패널 ──────────────────────────────────────────────────────
 .drawer {
   top: $layout-topbar-height;  // 52px 아래부터 시작
-  height: calc(100dvh - $layout-topbar-height);
+  height: calc(100dvh - #{$layout-topbar-height});
   position: fixed;
   left: 0;
   width: 75%;
-  max-width: 250px;
+  max-width: rem(250);                       // mobile-frame § 4.3 — 토큰 외 size, rem 강제
   background-color: var(--color-bg-deep);
   z-index: $z-drawer;
   transform: translateX(-100%);
@@ -52,7 +52,7 @@ $color-naver-font: $color-white-100;
   }
 
   @include from-tablet {
-    left: calc(50% - #{$bp-mobile-lg} / 2);
+    left: calc(50% - #{$layout-wrapper-max} / 2);  // mobile-frame.md § 2
     position: absolute;
     transform: translateX(-100%);
     clip-path: inset(0 0 0 100%);
@@ -68,18 +68,16 @@ $color-naver-font: $color-white-100;
 
 // ── 유저 프로필 ───────────────────────────────────────────────
 .profile {
-  @include flex-row(12px);
+  @include flex-row($space-3);
   padding: $space-3;
   margin: $space-3 $space-4 0 $space-4;
-  background-color: var(--color-bg-card);
-  border-radius: $radius-xl;
-  border: 1px solid var(--color-border);
+  @include card-base($radius: $radius-xl, $pad: $space-3);
 }
 
 .avatar {
   @include flex-center;
   position: relative;
-  width: 44px;
+  width: $control-height-md;   // 44px
   aspect-ratio: 1/1;
   border-radius: $radius-full;
   background-color: var(--color-brand-dark);
@@ -93,7 +91,7 @@ $color-naver-font: $color-white-100;
 }
 
 .userInfo {
-  @include flex-col(4px);
+  @include flex-col($space-1);
 }
 
 .userName {
@@ -131,10 +129,10 @@ $color-naver-font: $color-white-100;
 }
 
 .menuItem {
-  @include flex-row(12px);
+  @include flex-row($space-3);
   color: var(--color-text-secondary);
   position: relative;
-  height: 52px;
+  height: $control-height-lg;  // 52px
   padding: 0 $space-4;
   transition: background-color 0.15s ease, color 0.15s ease;
 
@@ -153,8 +151,8 @@ $color-naver-font: $color-white-100;
       left: 0;
       top: 50%;
       transform: translateY(-50%);
-      width: 3px;
-      height: 24px;
+      width: 3px;            // 액센트 strip (콘텐츠 의도, 토큰화 대상 아님)
+      height: $space-6;      // 24px
       border-radius: 0 $radius-sm $radius-sm 0;
       background-color: var(--color-brand-violet);
     }
@@ -162,7 +160,7 @@ $color-naver-font: $color-white-100;
 }
 
 .menuIcon {
-  font-size: 18px;
+  font-size: 1.125rem;   // 18px → rem (도메인 토큰 외, mobile-frame § 6.4)
   flex-shrink: 0;
 }
 
@@ -175,9 +173,8 @@ $color-naver-font: $color-white-100;
 .badge {
   @include flex-center;
   @include text-badge;
-  min-width: 20px;
+  min-width: $space-5;   // 20px
   aspect-ratio: 1/1;
-  //height: 20px;
   padding: 0 $space-1;
   border-radius: $radius-full;
   background-color: var(--color-brand-violet);
@@ -185,9 +182,7 @@ $color-naver-font: $color-white-100;
 
 // ── 비로그인 프로필 ───────────────────────────────────────────
 .guestInfo {
-  display: flex;
-  flex-direction: column;
-  gap: $space-1;
+  @include flex-col($space-1);
   flex: 1;
   overflow: hidden;
 }
@@ -199,7 +194,7 @@ $color-naver-font: $color-white-100;
 }
 
 .loginBtn {
-  height: 28px;
+  height: rem(28);                           // mobile-frame § 4.3 — 토큰 외 size, rem 강제
   padding: 0 $space-3;
   border-radius: $radius-sm;
   background-color: $color-naver-background;
@@ -207,7 +202,5 @@ $color-naver-font: $color-white-100;
   @include text-micro;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: opacity 0.15s ease;
-
-  &:active { opacity: 0.85; }
+  @include pressable;
 }
