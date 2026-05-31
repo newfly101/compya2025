@@ -9,7 +9,7 @@
 // ── 히어로 이미지 ──────────────────────────────────────────────
 .hero {
   width: 100%;
-  height: 200px;
+  height: 12.5rem;        // 200px — 히어로 이미지 표준 높이
   background-color: var(--color-brand-tint);
   overflow: hidden;
   flex-shrink: 0;
@@ -49,11 +49,14 @@
 }
 
 .title {
-  font-size: $font-size-22;
-  font-weight: $font-weight-bold;
-  line-height: 1.3;
+  @include text-page-title;
+  @include hangul-safe;
   color: var(--color-text-primary);
-  word-break: keep-all;
+
+  // 320 미만 큰 제목 잘림 보호 (mobile-frame § 3.2 / 분석 § 5 P3)
+  @include small-mobile {
+    font-size: $font-size-17;
+  }
 }
 
 // ── 요약 ──────────────────────────────────────────────────────
@@ -63,6 +66,7 @@
   padding-top: $space-4;
   padding-bottom: $space-4;
   background-color: var(--color-bg-card);
+  // accent strip — brand violet (168,106,240) @ 0.5 alpha. 토큰 매핑 없음(1회 액센트).
   border-top: 3px solid rgba(168, 106, 240, 0.5);
 }
 
@@ -74,6 +78,7 @@
 
 .summaryText {
   @include text-body-bold;
+  @include hangul-safe;
   color: var(--color-text-secondary);
   line-height: 1.6;
   white-space: pre-line;    // \n → 줄바꿈 렌더링
@@ -90,6 +95,7 @@
 
 .bodyText {
   @include text-body;
+  @include hangul-safe;
   color: var(--color-text-secondary);
   line-height: 1.6;
   white-space: pre-line;    // \n → 줄바꿈 렌더링

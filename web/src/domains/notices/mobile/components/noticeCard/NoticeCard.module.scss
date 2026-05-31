@@ -1,19 +1,14 @@
 // ── Featured Card (중요 공지) ──────────────────────────────────
 .featuredCard {
   @include flex-col;
-  background-color: var(--color-bg-card);
-  border: 1px solid var(--color-border);
-  border-radius: $radius-xl;
+  @include card-base($radius: $radius-xl, $pad: 0);
+  @include pressable;
   overflow: hidden;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
-
-  &:active { opacity: 0.85; }
 }
 
 .featuredThumb {
   width: 100%;
-  height: 160px;
+  height: 10rem;          // 160px — featured 썸네일 표준 높이
   background-color: var(--color-brand-tint);
   overflow: hidden;
   flex-shrink: 0;
@@ -36,7 +31,7 @@
   @include flex-row($space-2);
   align-items: center;
   padding: $space-2 $space-4 0;
-  min-height: 22px;
+  min-height: 1.375rem;   // 22px — meta row tap-area 최소
 }
 
 .metaDate {
@@ -51,15 +46,11 @@
 }
 
 .featuredTitle {
-  font-size: $font-size-15;
-  font-weight: $font-weight-bold;
-  line-height: 1.45;
+  @include text-section-title;
+  @include hangul-safe;
+  @include line-clamp(2);
   color: var(--color-text-primary);
   padding: $space-1 $space-4 0;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
 }
 
 .featuredSummary {
@@ -72,14 +63,12 @@
 // ── Regular Card (사이트 공지) ─────────────────────────────────
 .card {
   @include flex-col($space-1);
-  background-color: var(--color-bg-overlay);
-  border: 1px solid var(--color-border);
-  border-radius: $radius-lg;
-  padding: $space-4 $space-4 $space-3;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
-
-  &:active { opacity: 0.85; }
+  @include card-base(
+    $bg: var(--color-bg-overlay),
+    $radius: $radius-lg,
+    $pad: $space-4 $space-4 $space-3
+  );
+  @include pressable;
 }
 
 .cardRow {
@@ -95,7 +84,7 @@
 
 .title {
   @include text-body-bold;
-  @include text-ellipsis;
+  @include hangul-safe;
   color: var(--color-text-primary);
 }
 
@@ -106,19 +95,11 @@
 }
 
 .smallThumb {
-  width: 64px;
-  height: 64px;
-  border-radius: $radius-md;
-  background-color: var(--color-brand-tint);
-  flex-shrink: 0;
-  overflow: hidden;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
+  // defaults: 64×64 / radius-sm — bg/radius 만 override
+  @include thumb-box(
+    $bg: var(--color-brand-tint),
+    $radius: $radius-md
+  );
 }
 
 .cardBottom {
