@@ -8,4 +8,23 @@ export const ROUTE_PATHS = {
   notice_details: (id) => `/notice/${id}`,
   history_mode: "/mode/history",
   community: "/community",
+  // admin flat 구조
+  admin_coupon: "/admin/coupon",
+  admin_event: "/admin/event",
+  admin_notice: "/admin/notice",
+  admin_user: "/admin/user",
+  // wiki admin
+  admin_wiki: "/admin/wiki",
+  admin_wiki_pitches: "/admin/wiki/pitches",
+  admin_wiki_pitch_grades: "/admin/wiki/pitch-grades",
+  admin_wiki_stat_influences: "/admin/wiki/stat-influences",
+  admin_wiki_game_info: "/admin/wiki/game-info",
+  // wiki public
+  wiki: "/wiki",
+  wiki_skill_pattern: "/wiki/skill/:target",
+  wiki_skill: (target) => `/wiki/skill/${target}`,
+  wiki_recommend_pattern: "/wiki/recommend/:target",
+  wiki_recommend: (target) => `/wiki/recommend/${target}`,
+  wiki_game_info_pattern: "/wiki/game-info/:target",
+  wiki_game_info: (target) => `/wiki/game-info/${target}`,
 }

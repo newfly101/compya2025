@@ -44,6 +44,9 @@ export function useTopBar() {
   return useContext(TopBarContext);
 }
 
+// [NOTE] useSetTopBar 는 deps [] 로 마운트 시 1회 설정만 함.
+// unmount 시 복원(cleanup) 없음 — 이를 원하면 useDomainTopBar 사용.
+// (web/src/app/wrapper/mobile/hooks/useDomainTopBar.js)
 export function useSetTopBar(config) {
   const { setConfig } = useTopBar();
   useEffect(() => {

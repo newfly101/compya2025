@@ -11,8 +11,9 @@ const REDIRECT_URI = window.location.hostname === "localhost"
 
 export const useAuthentication = () => {
   const dispatch = useDispatch();
-  const { user, authority } = useSelector(state => state.auth);
+  const { user, userRole } = useSelector(state => state.auth);
   const isAuthenticated = user !== null;
+  const isAdmin = userRole === "ADMIN";
 
   const login = () => {
     sessionStorage.setItem("redirectPath", window.location.pathname);
@@ -32,5 +33,5 @@ export const useAuthentication = () => {
     window.location.replace("/");
   };
 
-  return { isAuthenticated, user, authority, login, logout };
+  return { isAuthenticated, user, userRole, isAdmin, login, logout };
 };

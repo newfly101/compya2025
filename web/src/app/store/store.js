@@ -7,6 +7,7 @@ import quizReducer from "@/domains/quiz/store/slices.js";
 import noticesReducer from "@/domains/notices/store/slices.js";
 import operationReducer from "@/app/store/operation/slices.jsx";
 import { operationListener } from "@/app/store/operation/operationListener.js";
+import adminUsersReducer from "@/domains/users/store/slices.js";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +20,7 @@ export const store = configureStore({
     upload: upLoadReducer,
     quiz: quizReducer,
     notices: noticesReducer,
+    adminUsers: adminUsersReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(operationListener.middleware),

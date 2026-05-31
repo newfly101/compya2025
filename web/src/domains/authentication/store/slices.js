@@ -12,9 +12,9 @@ const authSlice = createSlice({
   initialState: initialState,
   reducers: {
     setUser(state, action) {
-      const { userDetail, useRole } = action.payload;
+      const { userDetail, userRole } = action.payload;
       state.user = userDetail;
-      state.userRole = useRole;
+      state.userRole = userRole;
       state.initialized = true;
     },
     clearUser(state) {

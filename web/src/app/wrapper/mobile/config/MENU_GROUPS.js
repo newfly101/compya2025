@@ -3,8 +3,8 @@ export const MENU_GROUPS = [
     label: '메인',
     items: [
       { icon: '🏠', label: '홈',           to: '/',         badge: null },
-      { icon: '🎪', label: '이벤트',        to: '/events',   badge: 5 },
-      { icon: '🎫', label: '쿠폰 코드',     to: '/coupons',  badge: 3 },
+      { icon: '🎪', label: '이벤트',        to: '/events',   badge: null },
+      { icon: '🎫', label: '쿠폰 코드',     to: '/coupons',  badge: null },
       { icon: '📢', label: '공지사항',      to: '/notices',  badge: null },
     ]
   },
@@ -12,7 +12,7 @@ export const MENU_GROUPS = [
     label: '컨텐츠',
     items: [
       { icon: '🎮', label: '스킬 시뮬레이터', to: '/skill',       badge: null, comingSoon: true },
-      { icon: '📖', label: '추천 백과사전',   to: '/encyclopedia', badge: null, comingSoon: true },
+      { icon: '📖', label: '추천 백과사전',   to: '/wiki', badge: null },
       { icon: '🎯', label: '히스토리 탐색기', to: '/mode/history', badge: null },
       // LEGACY kbo 도메인 잠정 보류 — 2026-05-09 (frontend kbo 화면 폐기. BE API 미구현 / DB 는 kbocrol 운영)
       // { icon: '⚾', label: 'KBO 승부예측',   to: '/kbo',          badge: null },
@@ -26,4 +26,18 @@ export const MENU_GROUPS = [
   //     { icon: '💡', label: '팀 게시판', to: '/posts/team', badge: null },
   //   ]
   // },
+]
+
+// admin role 한정 노출 — Drawer 가 isAdmin 일 때 MENU_GROUPS 뒤에 append
+export const ADMIN_MENU_GROUPS = [
+  {
+    label: '어드민 사이트 관리',
+    items: [
+      { icon: '🎫', label: '쿠폰 관리',     to: '/admin/coupon', badge: null },
+      { icon: '🎪', label: '이벤트 관리',   to: '/admin/event',  badge: null },
+      { icon: '📢', label: '공지 관리',     to: '/admin/notice', badge: null },
+      { icon: '👥', label: '유저 관리',     to: '/admin/user',   badge: null },
+      { icon: '📖', label: '백과사전 관리', to: '/admin/wiki',   badge: null },
+    ]
+  },
 ]

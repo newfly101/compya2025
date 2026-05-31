@@ -27,6 +27,27 @@ const TopBar = () => {
     );
   }
 
+  if (variant === "section") {
+    return (
+      <header className={styles.topBar}>
+        <div className={styles.left}>
+          <button className={styles.burger} onClick={openDrawer} aria-label="메뉴">
+            <span /><span /><span />
+          </button>
+        </div>
+
+        <span className={styles.pageTitle}>{title}</span>
+
+        <div className={styles.right}>
+          {rightAction
+            ? <div className={styles.rightAction}>{rightAction}</div>
+            : <div className={styles.rightPlaceholder} aria-hidden="true" />
+          }
+        </div>
+      </header>
+    );
+  }
+
   return (
     <header className={styles.topBar}>
       <div className={styles.left}>
