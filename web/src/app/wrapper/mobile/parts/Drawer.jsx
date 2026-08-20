@@ -6,14 +6,17 @@ import styles from "./Drawer.module.scss";
 import { MENU_GROUPS, ADMIN_MENU_GROUPS } from "@/app/wrapper/mobile/config/MENU_GROUPS.js";
 import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
 import { RenewalNoticeModal } from "@/global/ui/renewalNoticeModal";
+import { LoginRequiredModal } from "@/global/ui/loginRequiredModal";
+import PinnedBadge from "@/global/ui/badge/PinnedBadge.jsx";
 import { useMenuCounts } from "@/app/wrapper/mobile/hooks/useMenuCounts.js";
 
 
 const Drawer = () => {
   const { isDrawerOpen, closeDrawer } = useTopBar();
   const location = useLocation();
-  const { user, isAdmin, login } = useAuthentication();
+  const { user, isAuthenticated, isAdmin, login } = useAuthentication();
   const [renewalOpen, setRenewalOpen] = useState(false);
+  const [loginRequiredOpen, setLoginRequiredOpen] = useState(false);
   const menuCounts = useMenuCounts();
 
   // to 경로 → 동적 카운트 매핑
@@ -29,6 +32,19 @@ const Drawer = () => {
     e.preventDefault();
     closeDrawer();
     setRenewalOpen(true);
+  };
+
+  // 로그인 필요 (loginRequired) 메뉴, 비로그인 클릭 시 navigate 차단 + 안내 모달 표시. drawer 도 함께 닫음.
+  const handleLoginRequiredClick = (e) => {
+    e.preventDefault();
+    closeDrawer();
+    setLoginRequiredOpen(true);
+  };
+
+  const getClickHandler = (item) => {
+    if (item.comingSoon) return handleComingSoonClick;
+    if (item.loginRequired && !isAuthenticated) return handleLoginRequiredClick;
+    return closeDrawer;
   };
 
   return (
@@ -78,10 +94,11 @@ const Drawer = () => {
                       <Link
                         to={item.to}
                         className={`${styles.menuItem} ${isActive ? styles.menuItemActive : ""}`}
-                        onClick={item.comingSoon ? handleComingSoonClick : closeDrawer}
+                        onClick={getClickHandler(item)}
                       >
                         <span className={styles.menuIcon}>{item.icon}</span>
                         <span className={styles.menuLabel}>{item.label}</span>
+                        {item.tag && <PinnedBadge variant={item.tag} />}
                         {(() => {
                           const badge = getDynamicBadge(item.to) ?? item.badge;
                           return badge ? <span className={styles.badge}>{badge}</span> : null;
@@ -100,6 +117,11 @@ const Drawer = () => {
       <RenewalNoticeModal
         isOpen={renewalOpen}
         onClose={() => setRenewalOpen(false)}
+      />
+      <LoginRequiredModal
+        isOpen={loginRequiredOpen}
+        onClose={() => setLoginRequiredOpen(false)}
+        onLogin={login}
       />
     </>
   );
