@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.domain.admin.controller;
 
 import com.dawne.com2usbaseball.domain.admin.service.UploadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/upload")
 public class UploadController {
 
