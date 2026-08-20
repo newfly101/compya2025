@@ -20,8 +20,14 @@ API.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// 401 발생 시 /api/auth/refresh 호출 → 성공 시 원 요청 재시도.
+// 401 발생 시 refresh 호출 → 성공 시 원 요청 재시도.
 // refresh 자체가 401 이거나 이미 한 번 재시도한 요청은 그대로 실패 처리.
+//
+// 경로는 baseURL 기준 상대경로로 쓴다. API_BASE_URL 이 이미 /api 로 끝나므로
+// 여기에 /api 를 또 붙이면 /api/api/... 가 되어 404 가 난다.
+const REFRESH_PATH = "/auth/refresh";
+const LOGOUT_PATH = "/auth/logout";
+
 let refreshing = null;
 
 API.interceptors.response.use(
@@ -33,7 +39,7 @@ API.interceptors.response.use(
 
     // refresh / logout endpoint 자체의 401 은 retry 안 함 (무한루프 방지)
     const isAuthEndpoint =
-      url.includes("/api/auth/refresh") || url.includes("/api/auth/logout");
+      url.includes(REFRESH_PATH) || url.includes(LOGOUT_PATH);
 
     if (status !== 401 || original?._retried || isAuthEndpoint) {
       if (status === 401) return Promise.resolve({ data: null });
@@ -45,7 +51,7 @@ API.interceptors.response.use(
     try {
       // 동시 다발 401 → refresh 호출은 한 번만
       if (!refreshing) {
-        refreshing = API.post("/api/auth/refresh").finally(() => {
+        refreshing = API.post(REFRESH_PATH).finally(() => {
           refreshing = null;
         });
       }
