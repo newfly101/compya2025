@@ -7,11 +7,6 @@ const EventPage = lazy(() => import("@/domains/events/mobile/EventScreen.jsx"));
 const NoticePage = lazy(() => import("@/domains/notices/mobile/NoticeScreen.jsx"));
 const NoticeDetailPage = lazy(() => import("@/domains/notices/mobile/NoticeDetailScreen.jsx"));
 const HistoryModePage = lazy(() => import("@/domains/historyMode/mobile/HistoryModeScreen.jsx"));
-// wiki public
-const WikiPage = lazy(() => import("@/domains/wiki/screens/WikiScreen.jsx"));
-const WikiSkillPage = lazy(() => import("@/domains/wiki/screens/WikiSkillScreen.jsx"));
-const WikiRecommendPage = lazy(() => import("@/domains/wiki/screens/WikiRecommendScreen.jsx"));
-const WikiGameInfoPage = lazy(() => import("@/domains/wiki/screens/WikiGameInfoScreen.jsx"));
 // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
 // CommunityPage 는 community IA 재개 시 도메인 mobile/feature 흡수 후 재도입
 
@@ -23,11 +18,6 @@ export const PublicRoutes = [
   { path: ROUTE_META.NOTICES.path, element: <NoticePage />, handle: ROUTE_META.NOTICES.title },
   { path: ROUTE_META.NOTICE_DETAILS.path, element: <NoticeDetailPage />, handle: ROUTE_META.NOTICE_DETAILS },
   { path: ROUTE_META.HISTORY_MODE.path, element: <HistoryModePage />, handle: ROUTE_META.HISTORY_MODE.title},
-  // wiki public routes
-  { path: ROUTE_META.WIKI_HOME.path, element: <WikiPage />, handle: ROUTE_META.WIKI_HOME.title },
-  { path: ROUTE_META.WIKI_SKILL.path, element: <WikiSkillPage />, handle: ROUTE_META.WIKI_SKILL.title },
-  { path: ROUTE_META.WIKI_RECOMMEND.path, element: <WikiRecommendPage />, handle: ROUTE_META.WIKI_RECOMMEND.title },
-  { path: ROUTE_META.WIKI_GAME_INFO.path, element: <WikiGameInfoPage />, handle: ROUTE_META.WIKI_GAME_INFO.title },
   // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
   // community IA 재개 시 ROUTE_META.COMMUNITY + 도메인 mobile/feature 흡수 후 재도입
 

@@ -1,18 +1,5 @@
 USE compyafun;
 
-CREATE TABLE player_skills
-(
-    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-    skill_code  VARCHAR(10)                                NOT NULL, -- L1, P3, H10 ...
-    name        VARCHAR(50)                                NOT NULL, -- 슈퍼스타, 닥터K
-    description TEXT,
-    grade       ENUM ('LEGEND','PLATINUM','HERO','NORMAL') NOT NULL,
-    target      ENUM ('PITCHER','HITTER')                  NOT NULL,
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
-
-    UNIQUE KEY uk_skill_code_target (skill_code, target)
-);
-
 CREATE TABLE teams
 (
     id             BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -176,32 +163,6 @@ CREATE TABLE legend_pitcher_pitch_slot
         )
 );
 
-CREATE TABLE skill_pitcher_grade_stat
-(
-    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-
-    skill_code  VARCHAR(10)               NOT NULL,
-    target      ENUM ('PITCHER','HITTER') NOT NULL,
-    grade       CHAR(1)                   NOT NULL, -- E D C B A S
-
-    control     INT DEFAULT 0,                      -- 제구
-    velocity    INT DEFAULT 0,                      -- 구위
-    stamina     INT DEFAULT 0,                      -- 체력
-    fastball    INT DEFAULT 0,                      -- 직구
-    breaking    INT DEFAULT 0,                      -- 변화
-
-    effect_text VARCHAR(255)              NULL,
-
-    CONSTRAINT uk_skill_grade
-        UNIQUE (skill_code, target, grade),
-
-    CONSTRAINT fk_skill_grade_stat_skill
-        FOREIGN KEY (skill_code, target)
-            REFERENCES player_skills (skill_code, target)
-            ON DELETE CASCADE
-);
-
-
 CREATE TABLE users
 (
     id                  BIGINT AUTO_INCREMENT PRIMARY KEY,
@@ -356,45 +317,6 @@ CREATE TABLE posts_tags
     FOREIGN KEY (tag_id) REFERENCES tags (id)
 );
 
-CREATE TABLE coach
-(
-    id       TINYINT AUTO_INCREMENT PRIMARY KEY,
-
-    role     ENUM ('HITTER','PITCHER') NOT NULL COMMENT '타자 계열 / 투수 계열',
-    name     VARCHAR(30)               NOT NULL COMMENT '감독, 타격코치, 주수코치, 수석코치, 투수코치, 불펜코치',
-    position VARCHAR(2)                NOT NULL COMMENT 'M, HD, HC, DC, PC, BC',
-    scope    VARCHAR(30)               NOT NULL COMMENT 'MASTER SKILL 적용 범위'
-);
-
-CREATE TABLE coach_skill_condition
-(
-    id                 INT AUTO_INCREMENT PRIMARY KEY,
-
-    grade              ENUM ('MASTER','PLATINUM') NOT NULL COMMENT '마스터 / 일반',
-    target             ENUM ('HITTER','PITCHER')  NOT NULL COMMENT '타자/투수',
-
-    name               VARCHAR(50)                NOT NULL COMMENT '조건명',
-    description        VARCHAR(100)               NOT NULL COMMENT '간단 설명',
-    detail_description VARCHAR(255)               NOT NULL COMMENT '상세 설명',
-
-    UNIQUE KEY uk_condition (grade, target, name)
-);
-
-CREATE TABLE coach_skill_buff
-(
-    id                 INT AUTO_INCREMENT PRIMARY KEY,
-
-    grade              ENUM ('MASTER','PLATINUM') NOT NULL COMMENT '마스터 / 일반',
-    target             ENUM ('HITTER','PITCHER')  NOT NULL COMMENT '타자 / 투수',
-
-    name               VARCHAR(50)                NOT NULL COMMENT '버프명',
-    description        VARCHAR(100)               NOT NULL COMMENT '간단 설명',
-    detail_description VARCHAR(255)               NOT NULL COMMENT '상세 설명',
-
-    UNIQUE KEY uk_buff (grade, target, name)
-);
-
-
 CREATE TABLE notices
 (
     id           BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -498,35 +420,6 @@ CREATE TABLE player_card_pitcher_attributes
             ON DELETE CASCADE
 );
 
--- 점수표 관리 테이블
-CREATE TABLE skill_score_config
-(
-    id               BIGINT AUTO_INCREMENT PRIMARY KEY,
-    skill_code       VARCHAR(10)                              NOT NULL,
-    target           ENUM ('PITCHER', 'HITTER')              NOT NULL,
-    point            INT                                      NOT NULL DEFAULT 1,
-
-    -- 같은 카드 내 스킬 공존 조건만
-    condition_type   ENUM ('NONE', 'WITH_SKILL')             NOT NULL DEFAULT 'NONE',
-    condition_value  VARCHAR(10)                              NULL,  -- 공존 스킬코드
-    effect_type      ENUM ('ADD', 'SUB')                     NOT NULL DEFAULT 'ADD',
-    effect_point     INT                                      NULL,
-
-    is_active        BOOLEAN                                  NOT NULL DEFAULT true,
-    updated_by       BIGINT                                   NULL,
-    updated_at       DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    created_at       DATETIME DEFAULT CURRENT_TIMESTAMP,
-
-    UNIQUE KEY uk_skill_condition
-        (skill_code, target, condition_type, condition_value),
-
-    CONSTRAINT fk_score_config_skill
-        FOREIGN KEY (skill_code, target)
-            REFERENCES player_skills (skill_code, target)
-            ON DELETE CASCADE
-);
-
-
 CREATE TABLE quiz_answers
 (
     id         BIGINT       AUTO_INCREMENT PRIMARY KEY,
@@ -538,22 +431,3 @@ CREATE TABLE quiz_answers
     updated_at DATETIME     NOT NULL,
     UNIQUE KEY uq_round (round)
 );
-
-CREATE TABLE kbo_team_code_mappings
-(
-    id                    BIGINT AUTO_INCREMENT PRIMARY KEY,
-    source_system         VARCHAR(50) NOT NULL,
-    external_team_code    VARCHAR(20) NOT NULL,
-    external_team_name    VARCHAR(20),
-    internal_team_id      BIGINT NOT NULL,
-    internal_team_code    VARCHAR(20) NOT NULL,
-    is_active             BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at            TIMESTAMP NOT NULL DEFAULT NOW(),
-    updated_at            TIMESTAMP NOT NULL DEFAULT NOW(),
-
-    CONSTRAINT uq_external_team_mapping
-        UNIQUE (source_system, external_team_code),
-
-    CONSTRAINT fk_external_team_mappings_internal_team
-        FOREIGN KEY (internal_team_id) REFERENCES teams(id)
-)

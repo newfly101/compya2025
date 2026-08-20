@@ -12,10 +12,7 @@ export const MENU_GROUPS = [
     label: '컨텐츠',
     items: [
       { icon: '🎮', label: '스킬 시뮬레이터', to: '/skill',       badge: null, comingSoon: true },
-      { icon: '📖', label: '추천 백과사전',   to: '/wiki', badge: null },
       { icon: '🎯', label: '히스토리 탐색기', to: '/mode/history', badge: null },
-      // LEGACY kbo 도메인 잠정 보류 — 2026-05-09 (frontend kbo 화면 폐기. BE API 미구현 / DB 는 kbocrol 운영)
-      // { icon: '⚾', label: 'KBO 승부예측',   to: '/kbo',          badge: null },
     ]
   },
   // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
@@ -37,7 +34,6 @@ export const ADMIN_MENU_GROUPS = [
       { icon: '🎪', label: '이벤트 관리',   to: '/admin/event',  badge: null },
       { icon: '📢', label: '공지 관리',     to: '/admin/notice', badge: null },
       { icon: '👥', label: '유저 관리',     to: '/admin/user',   badge: null },
-      { icon: '📖', label: '백과사전 관리', to: '/admin/wiki',   badge: null },
     ]
   },
 ]

@@ -11,7 +11,6 @@ const ADMIN_MENUS = [
   { id: "event",  icon: "🎪", label: "이벤트\n관리",    to: "/admin/event"  },
   { id: "notice", icon: "📢", label: "공지\n관리",     to: "/admin/notice" },
   { id: "user",   icon: "👥", label: "유저\n관리",     to: "/admin/user"   },
-  { id: "wiki",   icon: "📖", label: "백과사전\n관리", to: "/admin/wiki"   },
 ];
 
 export default function AdminDashboardScreen() {
