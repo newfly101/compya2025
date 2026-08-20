@@ -195,7 +195,7 @@
             report_count
         ) VALUES (
                      #{boardId},
-                     #{authorType},
+                     #{userRoleType},
                      #{authorId},
                      #{authorName},
                      #{title},

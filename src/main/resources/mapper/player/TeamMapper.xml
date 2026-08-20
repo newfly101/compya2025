@@ -8,12 +8,17 @@
             id,
             team_code     AS teamCode,
             team_name,
-            latest_team_id       AS teamId
+            latest_team_id       AS latestTeam
         FROM teams
         WHERE id = #{id}
     </select>
 
     <select id="selectTeamAll" resultType="com.dawne.com2usbaseball.domain.player.entity.TeamsEntity">
-        SELECT * FROM teams
+        SELECT
+            id,
+            team_code     AS teamCode,
+            team_name,
+            latest_team_id       AS latestTeam
+        FROM teams
     </select>
 </mapper>

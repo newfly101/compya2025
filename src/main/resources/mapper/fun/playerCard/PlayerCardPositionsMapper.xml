@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dawne.com2usbaseball.domain.fun.playerCard.mapper.PlayerCardPositionsMapper">
+<mapper namespace="com.dawne.com2usbaseball.domain.fun.playerCard.repository.mapper.PlayerCardPositionsMapper">
 
     <resultMap id="PlayerCardPositionsResultMap"
                type="com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardPositionsEntity">
