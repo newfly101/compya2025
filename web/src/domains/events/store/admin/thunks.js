@@ -12,9 +12,9 @@ import { requestUploadImage } from "@/infra/api/uploads/index.js";
 export const requestAdminGetExEventList = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.GET_EVENT_LISTS, async (_, { rejectWithValue }) => {
     try {
-      const { items } = await fetchAdminExEventList();
+      const list = await fetchAdminExEventList();
 
-      return [...items].reverse();
+      return [...list].reverse();
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -54,11 +54,11 @@ export const requestAdminUpdateExEvent = createAsyncThunk(
 export const requestAdminUpdateExEventVisible = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.UPDATE_VISIBLE, async ({ id, visible }, { rejectWithValue }) => {
     try {
-      const { id:eventId, ...options } = await fetchAdminUpdateExVisible(id, visible);
+      // visible 토글 응답의 data 는 Void(null) — 응답에서 id 를 꺼내지 않고 요청 param 을 그대로 사용.
+      await fetchAdminUpdateExVisible(id, visible);
       return {
-        id: eventId,
+        id,
         visible,
-        options
       };
     } catch (e) {
       return rejectWithValue(e.message);
@@ -75,8 +75,8 @@ export const requestAdminUploadEventImage = (file) => {
 export const requestAdminGetAllEventList = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.GET_ALL_LISTS, async (_, { rejectWithValue }) => {
     try {
-      const { items } = await fetchAdminAllEventList();
-      return [...items].reverse();
+      const list = await fetchAdminAllEventList();
+      return [...list].reverse();
     } catch (error) {
       return rejectWithValue(error.message);
     }

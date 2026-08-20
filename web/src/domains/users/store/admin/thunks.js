@@ -11,8 +11,8 @@ export const requestAdminGetUserList = createAsyncThunk(
   ADMIN_USER_ACTIONS.GET_LIST,
   async (params, { rejectWithValue }) => {
     try {
-      const { items } = await fetchAdminUserList(params);
-      return items ?? [];
+      const list = await fetchAdminUserList(params);
+      return list ?? [];
     } catch (error) {
       return rejectWithValue(error.message);
     }
