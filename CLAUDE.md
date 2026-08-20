@@ -9,10 +9,10 @@
 
 | 트랙 | 무엇 | 1차 참조 | 산출물 위치 |
 |---|---|---|---|
-| **develop** | 코드 작성/수정/리팩터/디버그 (FE/BE/auth/db) | `docs/develop/*-developer.md`, `docs/global-guide/develop/backend-develop.md` (BE 단일 가이드) | 코드 + `docs/global-guide/develop/specs/{fe,be,db}/*` 갱신 |
-| **planner** | 기능 정의 / IA / feature spec / endpoint spec / qa-checklist | `docs/global-guide/plan/*.md` (TBD) | `docs/domain/{name}/prd/*.md` |
-| **designer** | Figma MCP 비교 / 디자인 토큰 / wireframe 검증 | `docs/global-guide/design/*.md` (TBD) | `docs/domain/{name}/design/*.md` |
-| **ops** | devops / db migration / CI / 배포 / 환경설정 / 보안정책 / 트랙 외 작업 | `docs/ops/*.md` (TBD) | `docs/ops/*.md`, `sql/`, `application*.properties` |
+| **develop** | 코드 작성/수정/리팩터/디버그 (FE/BE/auth/db) | `docs/convention/frontend.md`, `docs/convention/backend.md` | 코드 |
+| **planner** | 기능 정의 / IA / feature spec / endpoint spec / qa-checklist | (전용 가이드 없음 — 기존 도메인 문서 참조) | `docs/domain/{name}/prd/*.md` |
+| **designer** | Figma MCP 조작 / 디자인 토큰 / wireframe 검증 | `docs/mcp/figma-convention.md`, `docs/convention/design.md` | `docs/domain/{name}/design/*.md` |
+| **ops** | devops / db migration / CI / 배포 / 환경설정 / 보안정책 / 트랙 외 작업 | `docs/global-guide/develop/specs/db/*.md` (DB 실측) | `sql/`, `application*.properties` |
 
 한 요청에 여러 트랙이 섞이면 **트랙별 agent 분리**.
 
@@ -54,22 +54,21 @@
 
 ```
 docs/
-├── domain/                  # 도메인 단위 entry (planner/designer/develop 산출물)
-│   ├── legacy/              # 참고용 (PC 버전 — 보존, prd-* 라인)
-│   └── {feature}/{prd,design,develop}/   # 신규 라인
-├── develop/                 # (위치 유지) 글로벌 개발자 가이드
-│   ├── frontend-developer.md
-│   ├── auth-developer.md
-│   └── backend-developer.md   (TBD)
-├── global-guide/            # 전역 참조 (신규)
-│   ├── plan/                  (TBD)
-│   ├── design/                (TBD)
-│   └── develop/specs/{be,db,fe}/   # 코드 reference (신규)
-└── ops/                     # 1차 (TBD)
+├── convention/              # 코드·디자인 컨벤션 (1차 참조)
+│   ├── frontend.md
+│   ├── backend.md
+│   ├── design.md
+│   └── README.md            # 색인
+├── mcp/                     # MCP 도구 사용 규칙
+│   └── figma-convention.md
+├── domain/                  # 도메인 단위 산출물
+│   ├── admin/{prd,design}/  # admin 재설계 (진행 중)
+│   └── _roadmap/prd/v1-mobile-gap.md   # v1 ↔ mobile 기능 대조표
+└── global-guide/develop/specs/db/      # 운영 DB 실측 (진행 중)
 ```
 
-⚠️ `docs/specs/` 는 옛 위치 (stale, phase out 예정 — `docs/global-guide/develop/specs/` 로 새로 작성됨)
-⚠️ `docs/prd/` 는 prd-* 보존 라인 — 손대지 않음 (`docs/domain/legacy/` 로도 일부 이동됨)
+⚠️ 2026-08-21 대정리 — docs 문서 113개 → 25개. 컨벤션은 `docs/convention/`, MCP 규칙은 `docs/mcp/` 로 일원화.
+⚠️ 삭제된 옛 위치: `docs/develop/`, `docs/global-guide/{plan,design}/`, `docs/ops/`, `docs/temp/`, `docs/todo/`, `docs/domain/legacy/`, `specs/{be,fe}/`. **다시 만들지 않는다.**
 
 **규칙**:
 - 메인 세션은 1차만 읽음 (토큰/사고 비용 최소화)
@@ -86,15 +85,14 @@ docs/
 | BE 코드 | `src/main/java/**`, `src/main/resources/**` |
 | 도메인 기능 기획 | `docs/domain/{feature}/prd/*.md` |
 | 도메인 wireframe / 디자인 | `docs/domain/{feature}/design/*.md` |
-| 도메인 BE/FE 통합 / 통합검증 | `docs/domain/{feature}/develop/*.md` |
-| BE 개발자 가이드 (1차) | `docs/global-guide/develop/backend-develop.md` |
-| BE 코드 reference | `docs/global-guide/develop/specs/be/*.md` |
-| DB reference | `docs/global-guide/develop/specs/db/*.md` |
-| FE 코드 reference | `docs/global-guide/develop/specs/fe/*.md` |
-| 개발자 컨벤션 가이드 | `docs/develop/*.md` (위치 유지) |
-| (legacy) PC 버전 PRD | `docs/domain/legacy/*.md` |
-| 보안 / 환경 / 배포 정책 | `docs/ops/*.md` |
+| FE 컨벤션 | `docs/convention/frontend.md` |
+| BE 컨벤션 | `docs/convention/backend.md` |
+| 디자인 컨벤션 | `docs/convention/design.md` |
+| Figma MCP 규칙 | `docs/mcp/figma-convention.md` |
+| DB 실측 reference | `docs/global-guide/develop/specs/db/*.md` |
+| v1 ↔ mobile 기능 대조 | `docs/domain/_roadmap/prd/v1-mobile-gap.md` |
 | DB schema | `sql/V2/{site,fun}/*.sql` |
+| DB 정리 스크립트 | `sql/cleanup/*.sql`, `sql/migration/*.sql` |
 
 신규 산출물은 **반드시 위 트리 안에**. 임시 파일은 작업 후 삭제.
 
@@ -106,7 +104,7 @@ docs/
 
 ```
 Track A (Edit):  "{도메인} 코드 검증 + 명백 결함 수정"
-Track B (Read):  "{도메인} 함축 가이드 docs/develop/{name}-developer.md"
+Track B (Read):  "{도메인} 코드 ↔ docs/convention/{frontend|backend}.md 정합 검증"
 ```
 
 ### 5.2 멀티 트랙 (개발 + 기획 동시)
@@ -131,7 +129,7 @@ Track C: domain notices
 ## 6. 메모리 vs 가이드 경계
 
 - **auto memory** (`C:\Users\hibee\.claude\projects\D--NewProjects-com2usbaseball\memory\`) — user / feedback / project / reference. 세션 간 영속, 짧은 fact
-- **`docs/develop/*`, `docs/global-guide/plan/*` 등** — 코드 컨벤션, 프로세스, 트랙 가이드. 사람도 읽고 Claude 도 참조
+- **`docs/convention/*`, `docs/mcp/*`** — 코드 컨벤션, 디자인 규칙, MCP 사용법. 사람도 읽고 Claude 도 참조
 - **`MEMORY.md`** — 메모리 인덱스 (자동 로드)
 - **CLAUDE.md** (이 파일) — 워크플로우 룰. 모든 세션 자동 로드
 
@@ -170,16 +168,18 @@ Track C: domain notices
 
 ---
 
-## 10. 트랙별 가이드 작성 순서 (현재 진행)
+## 10. 가이드 현황 (2026-08-21 대정리 완료)
 
-- ✅ `docs/develop/frontend-developer.md`
-- ✅ `docs/develop/auth-developer.md`
-- ✅ `docs/global-guide/develop/backend-develop.md` (BE 단일 1차 가이드)
-- ⏳ `docs/global-guide/plan/*.md` (ia / feature-spec / endpoint-spec / qa-checklist)
-- ⏳ `docs/global-guide/design/*.md` (figma-sync / token-spec)
-- ⏳ `docs/ops/*.md` (deploy / env / security-policy)
+- ✅ `docs/convention/frontend.md` — FE 컨벤션
+- ✅ `docs/convention/backend.md` — BE 컨벤션 (인증 포함)
+- ✅ `docs/convention/design.md` — 디자인·토큰 컨벤션
+- ✅ `docs/mcp/figma-convention.md` — Figma MCP 규칙 (플러그인 방식 폐기 반영)
+- ⏳ ops (배포 / 환경 / 보안정책) — 미작성
 
-작성 시: 200~350줄, 표/체크리스트/짧은 코드 위주, history 서술 제거, "신규 추가 N단계 체크리스트" 필수 포함.
+작성 시: 200~250줄, 표/체크리스트/짧은 코드 위주, history 서술 제거.
+
+⚠️ **삭제된 도메인** — `wiki` / `skill`(스킬 백과사전) / `coach` / `kbo` / 크롤러 `kbocrol` 은 2026-08-20 에 코드·문서 전부 제거됨. 예시로 쓰지 않는다.
+살아있는 도메인: `home` `coupons` `events` `notices` `users` `quiz` `authentication` `historyMode` `community`(동결) `admin`
 
 ---
 
