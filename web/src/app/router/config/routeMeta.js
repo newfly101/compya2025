@@ -12,6 +12,15 @@ export const ROUTE_META = {
         ? `컴프야펀 | 공지사항 | ${noticeTitle}`
         : "컴프야펀 | 공지사항 상세",
   },
+  ODDS: {path: ROUTE_PATHS.odds, title: "컴프야펀 | 확률 공시"},
+  ODDS_SECTION: {
+    path: ROUTE_PATHS.odds_section_pattern,
+    title: (sectionTitle) =>
+      sectionTitle
+        ? `컴프야펀 | 확률 공시 | ${sectionTitle}`
+        : "컴프야펀 | 확률 공시 상세",
+  },
+  PLAYERS: {path: ROUTE_PATHS.players, title: "컴프야펀 | 선수 백과사전"},
   HISTORY_MODE: {path: ROUTE_PATHS.history_mode, title: "컴프야펀 | 히스토리모드"},
   COMMUNITY: {path: ROUTE_PATHS.community, title: "컴프야펀 | 커뮤니티"},
   AUTH_CALL_BACK: {path: ROUTE_PATHS.authentication},

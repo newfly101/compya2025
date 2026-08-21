@@ -1,0 +1,258 @@
+.screen {
+  @include flex-col;
+  width: 100%;
+  min-height: 100dvh;
+  background-color: var(--color-bg-deepest);
+}
+
+// ── 셀렉터 행 — 구단 트리거 버튼(모달 오픈) + 연도 검색 드롭다운 ──
+.selectorRow {
+  @include flex-row($space-2, center, flex-start);
+  @include h-pad;
+  padding-top: $space-3;
+  padding-bottom: $space-2;
+}
+
+.teamTrigger {
+  @include reset-button;
+  @include pressable;
+  @include flex-row($space-2, center, flex-start);
+  flex-shrink: 0;
+  height: $control-height-sm;
+  padding: 0 $space-3;
+  background-color: var(--color-bg-overlay);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-sm;
+  max-width: 45%;
+}
+
+.triggerLogo {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.triggerLogoFallback {
+  @include flex-row(0, center, center);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  color: var(--color-text-primary);
+  @include text-badge;
+  flex-shrink: 0;
+}
+
+.triggerLabel {
+  @include text-body-bold;
+  @include hangul-safe;
+  @include line-clamp(1);
+  color: var(--color-text-primary);
+  min-width: 0;
+}
+
+.triggerCaret {
+  @include text-caption;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+// ── 선수/코치 탭 ─────────────────────────────────────────────
+.tabRow {
+  @include flex-row($space-2);
+  @include h-pad;
+}
+
+.tab {
+  @include reset-button;
+  @include pressable;
+  @include text-body-bold;
+  flex: 1;
+  height: $control-height-sm;
+  border-radius: $radius-sm;
+  background-color: var(--color-bg-overlay);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  text-align: center;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.tabActive {
+  background-color: var(--color-brand-tint);
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
+
+// ── 검색 ─────────────────────────────────────────────────────
+.searchWrap {
+  @include h-pad;
+  padding-top: $space-3;
+  padding-bottom: $space-2;
+}
+
+.searchInputBox {
+  position: relative;
+  height: $control-height-sm;
+  background-color: var(--color-bg-overlay);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-sm;
+  display: flex;
+  align-items: center;
+  padding: 0 $space-3;
+}
+
+.searchIcon {
+  @include text-body;
+  color: var(--color-text-muted);
+  margin-right: $space-1;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text-primary);
+  @include text-body;
+  padding: 0;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+}
+
+// ── 카드 타일 그리드 — 셀당 최대 106장까지 렌더될 수 있어 가볍게 유지 ──
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  gap: $space-2;
+  @include h-pad;
+  padding-top: $space-1;
+  padding-bottom: $space-5;
+}
+
+.card {
+  @include card-base(
+    $bg: var(--color-bg-card),
+    $border: 1px solid var(--color-border),
+    $radius: $radius-sm,
+    $pad: $space-2
+  );
+  @include flex-col($space-1, flex-start);
+  min-width: 0;
+}
+
+.cardLabel {
+  @include text-caption;
+  @include hangul-safe;
+  @include line-clamp(2);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  width: 100%;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.cardName {
+  @include text-micro;
+  color: var(--color-text-muted);
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 구단 전체 선택 시에만 표시 — 어느 팀 소속인지 구분
+.cardTeam {
+  @include text-micro;
+  color: var(--color-text-secondary);
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cardMetaRow {
+  @include flex-row($space-1, center);
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+// ── 카드 종류(cardTypes) 칩 — 9종. 색으로만 구분, 수치 없음 ──────
+.chip {
+  @include chip-base($size: sm);
+}
+
+.typeLegend {
+  background-color: var(--color-cardtype-legend-bg);
+  border-color: var(--color-cardtype-legend-border);
+  color: var(--color-cardtype-legend-text);
+}
+
+.typeEpic {
+  background-color: var(--color-cardtype-epic-bg);
+  border-color: var(--color-cardtype-epic-border);
+  color: var(--color-cardtype-epic-text);
+}
+
+.typeMvp {
+  background-color: var(--color-cardtype-mvp-bg);
+  border-color: var(--color-cardtype-mvp-border);
+  color: var(--color-cardtype-mvp-text);
+}
+
+.typeGoldenGlove {
+  background-color: var(--color-cardtype-goldenglove-bg);
+  border-color: var(--color-cardtype-goldenglove-border);
+  color: var(--color-cardtype-goldenglove-text);
+}
+
+.typeAllstar {
+  background-color: var(--color-cardtype-allstar-bg);
+  border-color: var(--color-cardtype-allstar-border);
+  color: var(--color-cardtype-allstar-text);
+}
+
+.typeNational {
+  background-color: var(--color-cardtype-national-bg);
+  border-color: var(--color-cardtype-national-border);
+  color: var(--color-cardtype-national-text);
+}
+
+.typeSignature {
+  background-color: var(--color-cardtype-signature-bg);
+  border-color: var(--color-cardtype-signature-border);
+  color: var(--color-cardtype-signature-text);
+}
+
+.typeEraSignature {
+  background-color: var(--color-cardtype-erasignature-bg);
+  border-color: var(--color-cardtype-erasignature-border);
+  color: var(--color-cardtype-erasignature-text);
+}
+
+.typeNormal {
+  background-color: var(--color-cardtype-normal-bg);
+  border-color: var(--color-cardtype-normal-border);
+  color: var(--color-cardtype-normal-text);
+}
+
+.topGradeText {
+  @include text-micro;
+  color: var(--color-text-muted);
+}
+
+// ── empty / error ──────────────────────────────────────────────
+.emptyText {
+  @include text-body;
+  @include h-pad;
+  padding-top: $space-8;
+  color: var(--color-text-muted);
+  text-align: center;
+}

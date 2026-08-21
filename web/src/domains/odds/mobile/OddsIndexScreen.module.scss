@@ -1,0 +1,89 @@
+.screen {
+  @include flex-col;
+  width: 100%;
+  min-height: 100dvh;
+  background-color: var(--color-bg-deepest);
+}
+
+// ── intro (공통 적용 사항) ──────────────────────────────────────
+.intro {
+  @include flex-col($space-2);
+  @include h-pad;
+  padding-top: $space-5;
+  padding-bottom: $space-5;
+  background-color: var(--color-bg-overlay);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.introHeading {
+  @include flex-row($space-1);
+  @include text-body-bold;
+  @include hangul-safe;
+  color: var(--color-text-primary);
+}
+
+.introIcon {
+  color: var(--color-brand);
+  flex-shrink: 0;
+}
+
+.introList {
+  @include flex-col($space-1);
+  margin: 0;
+  padding-left: $space-5;
+  list-style: disc;
+}
+
+.introItem {
+  @include text-caption;
+  @include hangul-safe;
+  color: var(--color-text-secondary);
+  white-space: pre-line;
+}
+
+// ── 카테고리 그룹 ───────────────────────────────────────────────
+.category {
+  @include flex-col;
+  width: 100%;
+}
+
+.categoryHeader {
+  @include section-header;
+  @include text-section-title;
+  color: var(--color-text-secondary);
+}
+
+.categoryList {
+  @include flex-col;
+  width: 100%;
+}
+
+.row {
+  @include reset-button;
+  @include list-row;
+  @include pressable;
+  width: 100%;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.rowTitle {
+  @include text-body-bold;
+  @include hangul-safe;
+  color: var(--color-text-primary);
+}
+
+.chevron {
+  @include text-section-title;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+// ── empty ────────────────────────────────────────────────────
+.emptyText {
+  @include text-body;
+  @include h-pad;
+  padding-top: $space-8;
+  color: var(--color-text-muted);
+  text-align: center;
+}

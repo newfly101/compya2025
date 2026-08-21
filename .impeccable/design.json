@@ -1,0 +1,199 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-12T00:00:00Z",
+  "title": "Design System: 컴프야펀 (COMPYAFUN)",
+  "extensions": {
+    "colorMeta": {
+      "terminal-violet": {
+        "role": "primary",
+        "displayName": "터미널 바이올렛",
+        "canonical": "#a86af0",
+        "tonalRamp": ["#1a0f2b", "#2d1a47", "#3c1e50", "#6d4ad3", "#8a54c8", "#a86af0", "#c9a5f8", "#ede0ff"]
+      },
+      "signal-deep": {
+        "role": "primary",
+        "displayName": "시그널 딥",
+        "canonical": "#6d4ad3",
+        "tonalRamp": ["#140d28", "#211545", "#33206b", "#4a2f9e", "#6d4ad3", "#8a6ee0", "#b39aec", "#ded1f8"]
+      },
+      "action-indigo": {
+        "role": "secondary",
+        "displayName": "액션 인디고",
+        "canonical": "#6c5ce7",
+        "tonalRamp": ["#12102b", "#1d1a47", "#2d2870", "#4239a8", "#6c5ce7", "#8b7dee", "#b3aaf4", "#ddd8fb"]
+      },
+      "night-field": {
+        "role": "neutral",
+        "displayName": "나이트 필드",
+        "canonical": "#0f0a14",
+        "tonalRamp": ["#0a0710", "#0f0a14", "#140f1f", "#18141f", "#1f1a29", "#332947", "#4d4066", "#6b5c8a"]
+      },
+      "card-slate": {
+        "role": "neutral",
+        "displayName": "카드 슬레이트",
+        "canonical": "#1f1a29",
+        "tonalRamp": ["#0a0710", "#0f0a14", "#140f1f", "#18141f", "#1f1a29", "#332947", "#4d4066", "#6b5c8a"]
+      },
+      "modal-charcoal": {
+        "role": "neutral",
+        "displayName": "모달 차콜",
+        "canonical": "#1e1e1e",
+        "tonalRamp": ["#0d0d0d", "#151515", "#1e1e1e", "#2a2a2a", "#3d3d3d", "#5c5c5c", "#8a8a8a", "#c4c4c4"]
+      },
+      "naver-green": {
+        "role": "tertiary",
+        "displayName": "네이버 그린",
+        "canonical": "#03c75a",
+        "tonalRamp": ["#00160a", "#002e15", "#004d24", "#007537", "#03c75a", "#3ddc85", "#82ebb2", "#c9f7dd"]
+      },
+      "alert-red": {
+        "role": "tertiary",
+        "displayName": "얼럿 레드",
+        "canonical": "#e84141",
+        "tonalRamp": ["#2b0a0a", "#4a1212", "#701c1c", "#a52929", "#e84141", "#ef7373", "#f5a5a5", "#fbd8d8"]
+      },
+      "caution-amber": {
+        "role": "tertiary",
+        "displayName": "코션 앰버",
+        "canonical": "#e8d541",
+        "tonalRamp": ["#2b280a", "#4a4412", "#70681c", "#a59829", "#e8d541", "#efe273", "#f5eda5", "#fbf8d8"]
+      }
+    },
+    "typographyMeta": {
+      "hero": { "displayName": "Hero", "purpose": "홈 첫 화면의 사이트 제목. 한 화면에 하나뿐." },
+      "page-title": { "displayName": "Page Title", "purpose": "화면 안 제목." },
+      "topbar": { "displayName": "TopBar", "purpose": "상단 바의 화면 이름과 로고." },
+      "section-title": { "displayName": "Section Title", "purpose": "구역 제목. 목록 위 머리말." },
+      "body-bold": { "displayName": "Body Bold", "purpose": "카드 제목. 목록에서 눈이 처음 닿는 줄." },
+      "body": { "displayName": "Body", "purpose": "본문 기본." },
+      "caption": { "displayName": "Caption", "purpose": "날짜, 보조 설명." },
+      "micro": { "displayName": "Micro", "purpose": "최소 크기 보조 문구, 링크." },
+      "badge": { "displayName": "Badge", "purpose": "배지 안 글자 전용. 자간을 벌려 작아도 읽히게 함." }
+    },
+    "shadows": [
+      {
+        "name": "floating-panel",
+        "value": "0 1.25rem 3.125rem rgba(0, 0, 0, 0.4)",
+        "purpose": "서랍 메뉴와 모달처럼 화면에서 완전히 분리돼 나오는 판에만. 카드·버튼·입력창에는 금지."
+      }
+    ],
+    "motion": [
+      { "name": "color-shift", "value": "0.12s ease", "purpose": "배경색 전환. 칩 선택, 버튼 눌림." },
+      { "name": "state-change", "value": "0.15s ease", "purpose": "테두리·글자색·투명도 전환. 기본값." },
+      { "name": "transform-move", "value": "0.2s ease", "purpose": "위치 이동. 토글 손잡이, 작은 미끄러짐." },
+      { "name": "panel-slide", "value": "0.25s ease", "purpose": "바텀시트·서랍이 올라오고 밀려나오는 움직임." }
+    ],
+    "breakpoints": [
+      { "name": "mobile-sm", "value": "320px" },
+      { "name": "mobile", "value": "375px" },
+      { "name": "mobile-lg", "value": "428px" },
+      { "name": "tablet", "value": "768px" },
+      { "name": "desktop", "value": "1024px" }
+    ],
+    "layout": [
+      { "name": "wrapper-max", "value": "480px", "purpose": "화면 폭 상한. PC에서도 유지." },
+      { "name": "card-width", "value": "448px", "purpose": "480 − 좌우 여백 16×2." },
+      { "name": "h-pad", "value": "16px", "purpose": "화면 좌우 여백 기본." },
+      { "name": "topbar-height", "value": "52px" },
+      { "name": "tap-target", "value": "44px", "purpose": "누를 수 있는 요소의 최소 높이." }
+    ],
+    "zIndex": [
+      { "name": "dropdown", "value": 100 },
+      { "name": "sticky", "value": 200 },
+      { "name": "drawer", "value": 300 },
+      { "name": "modal-backdrop", "value": 400 },
+      { "name": "modal", "value": 410 },
+      { "name": "sheet", "value": 420 },
+      { "name": "toast", "value": 500 }
+    ]
+  },
+  "components": [
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "refersTo": "badge-status",
+      "description": "카드 위 상태 표시. 테두리 없이 색을 채우고 글자는 항상 흰색.",
+      "html": "<span class=\"ds-badge ds-badge-new\">NEW</span> <span class=\"ds-badge ds-badge-hot\">HOT</span> <span class=\"ds-badge ds-badge-ended\">종료</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; justify-content: center; height: 20px; padding: 0 8px; border-radius: 4px; font-family: Inter, -apple-system, sans-serif; font-size: 0.5625rem; font-weight: 600; line-height: 1; letter-spacing: 0.04em; color: #fff; white-space: nowrap; } .ds-badge-new { background: #16a34a; } .ds-badge-hot { background: #ff3b3b; } .ds-badge-ended { background: #2a2e3a; }"
+    },
+    {
+      "name": "Content Card",
+      "kind": "card",
+      "refersTo": "card-content",
+      "description": "목록의 기본 단위. 그림자 없이 바탕 밝기로만 떠 있음을 표현.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-head\"><h3 class=\"ds-card-title\">여름 할인 쿠폰</h3><span class=\"ds-card-flag\">노출</span></div><p class=\"ds-card-meta\">SUMMER24 · 만료 2026-08-31</p></article>",
+      "css": ".ds-card { background: #1f1a29; border-radius: 10px; padding: 20px 16px; display: flex; flex-direction: column; gap: 8px; font-family: Inter, -apple-system, sans-serif; transition: background 0.15s ease; } .ds-card:hover { background: #241e30; } .ds-card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; } .ds-card-title { margin: 0; font-size: 0.8125rem; font-weight: 600; line-height: 1.5; color: rgba(255,255,255,0.92); } .ds-card-flag { height: 20px; padding: 0 8px; display: inline-flex; align-items: center; border-radius: 4px; background: #332947; font-size: 0.5625rem; font-weight: 600; letter-spacing: 0.04em; color: #c9a5f8; } .ds-card-meta { margin: 0; font-size: 0.6875rem; line-height: 1.5; color: rgba(255,255,255,0.60); }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip-filter",
+      "description": "목록 필터. 좁은 화면에서 가로 스크롤되며 줄바꿈하지 않는다.",
+      "html": "<div class=\"ds-chiprow\"><button class=\"ds-chip ds-chip-on\">전체</button><button class=\"ds-chip\">노출</button><button class=\"ds-chip\">숨김</button></div>",
+      "css": ".ds-chiprow { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0; } .ds-chip { flex-shrink: 0; height: 36px; padding: 0 12px; border: none; border-radius: 4px; background: #332947; color: rgba(255,255,255,0.60); font-family: Inter, -apple-system, sans-serif; font-size: 0.6875rem; font-weight: 400; cursor: pointer; transition: background 0.12s ease, color 0.12s ease; } .ds-chip:hover { color: rgba(255,255,255,0.92); } .ds-chip:focus-visible { outline: 2px solid #a86af0; outline-offset: 2px; } .ds-chip-on { background: #6d4ad3; color: #fff; font-weight: 600; }"
+    },
+    {
+      "name": "Search Input",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "주변보다 눌려 보이는 바탕. 초점 시 테두리만 강해지고 빛번짐은 쓰지 않는다.",
+      "html": "<input class=\"ds-input-search\" type=\"text\" placeholder=\"제목 또는 코드\" />",
+      "css": ".ds-input-search { width: 100%; height: 36px; padding: 0 12px; border-radius: 8px; background: #18141f; border: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.92); font-family: Inter, -apple-system, sans-serif; font-size: 0.75rem; line-height: 1.5; transition: border-color 0.15s ease, background 0.15s ease; } .ds-input-search::placeholder { color: #7c6f8f; } .ds-input-search:focus { outline: none; border-color: rgba(255,255,255,0.12); background: #1a1622; } .ds-input-search:focus-visible { border-color: #a86af0; }"
+    },
+    {
+      "name": "Bottom Sheet",
+      "kind": "custom",
+      "refersTo": "sheet-bottom",
+      "description": "등록·수정 입력을 담는 기본 그릇. 위쪽 모서리만 둥글고 아래에서 올라온다.",
+      "html": "<div class=\"ds-sheet\"><div class=\"ds-sheet-grip\"></div><h3 class=\"ds-sheet-title\">쿠폰 등록</h3><p class=\"ds-sheet-body\">입력 항목이 여기 들어간다.</p></div>",
+      "css": ".ds-sheet { background: #1e1e1e; border-radius: 12px 12px 0 0; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; font-family: Inter, -apple-system, sans-serif; box-shadow: 0 1.25rem 3.125rem rgba(0,0,0,0.4); } .ds-sheet-grip { width: 36px; height: 4px; border-radius: 9999px; background: rgba(255,255,255,0.12); align-self: center; } .ds-sheet-title { margin: 0; font-size: 0.9375rem; font-weight: 600; line-height: 1.5; color: rgba(255,255,255,0.92); } .ds-sheet-body { margin: 0; font-size: 0.75rem; line-height: 1.5; color: rgba(255,255,255,0.60); }"
+    },
+    {
+      "name": "Section Block",
+      "kind": "custom",
+      "refersTo": null,
+      "description": "제목 + 본문을 묶는 구역. 목록 화면의 기본 골격이며 구역 사이는 8px 구분선으로 나뉜다.",
+      "html": "<section class=\"ds-section\"><header class=\"ds-section-head\"><h2 class=\"ds-section-title\">최신 쿠폰</h2><span class=\"ds-section-count\">12건</span></header><div class=\"ds-section-body\">목록이 여기 들어간다.</div></section>",
+      "css": ".ds-section { background: #140f1f; padding: 24px 16px; display: flex; flex-direction: column; gap: 12px; font-family: Inter, -apple-system, sans-serif; } .ds-section-head { display: flex; align-items: baseline; justify-content: space-between; } .ds-section-title { margin: 0; font-size: 0.9375rem; font-weight: 600; line-height: 1.5; color: rgba(255,255,255,0.92); } .ds-section-count { font-size: 0.6875rem; color: rgba(255,255,255,0.38); } .ds-section-body { font-size: 0.75rem; line-height: 1.5; color: rgba(255,255,255,0.60); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "덕아웃 단말기",
+    "overview": "선수 대기석에 놓인 데이터 단말이다. 경기를 보러 온 사람이 아니라 경기를 읽으러 온 사람을 위한 화면이다. 그래서 이 시스템의 첫 번째 의무는 아름다움이 아니라 읽히는 것이다. 목록은 빽빽하고, 장식은 없고, 상태는 색 하나로 전달된다.\n\n바탕은 어둡다. 밝기 다섯 단계가 화면의 깊이를 만들고, 그 위에서 보라가 조명처럼 쓰인다. 조명은 켜진 곳이 적을수록 밝다. 보라를 넓게 칠하는 순간 이 체계는 무너진다. 색은 강조가 아니라 신호다 — 지금 눌러야 하는 것, 지금 끝나가는 것, 지금 켜져 있는 것.\n\n이용자 다수가 게임을 켜 둔 채 한 손으로 들어온다. 그래서 부품은 단단하고 명확해야 한다. 누를 수 있는 것은 누르게 생겨야 하고, 영역은 테두리로 분명히 갈려야 한다. 여백을 넉넉히 두어 우아해 보이려는 시도보다, 한 화면에 필요한 정보를 담고 빠르게 훑게 하는 쪽이 항상 옳다.",
+    "keyCharacteristics": [
+      "어두운 바탕 다섯 단계로 깊이를 만든다. 그림자를 쓰지 않는다",
+      "보라는 조명이다 — 적게 쓸수록 강하다",
+      "정보 밀도 우선. 여백보다 읽히는 양이 먼저다",
+      "테두리로 영역을 가른다. 경계가 흐릿한 화면을 만들지 않는다",
+      "글자 크기는 아홉 단계로 고정돼 있다. 새로 만들지 않는다"
+    ],
+    "rules": [
+      { "name": "조명 규칙 (The Floodlight Rule)", "body": "보라는 한 화면에서 10%를 넘지 않는다. 켜진 곳이 적어야 신호가 된다. 보라 바탕을 넓게 깔고 싶어지면, 그건 배경 명도 단계로 해결할 문제다.", "section": "colors" },
+      { "name": "의미 고정 규칙 (The Fixed Meaning Rule)", "body": "초록은 성공과 네이버, 빨강은 위험과 마감, 노랑은 주의다. 세 색을 다른 뜻으로 재활용하지 않는다.", "section": "colors" },
+      { "name": "의미 이름 규칙 (The Named Value Rule)", "body": "화면에서 원시 색값을 직접 쓰지 않는다. 반드시 의미 이름(CSS 변수)을 거친다.", "section": "colors" },
+      { "name": "아홉 단계 규칙 (The Nine Steps Rule)", "body": "글자 크기는 9·10·11·12·13·15·17·22·28px 아홉 개뿐이다. 그 사이 값을 새로 만들지 않는다.", "section": "typography" },
+      { "name": "작을수록 굵게 규칙 (The Small-Gets-Bold Rule)", "body": "13px 이하에서 강조는 색이 아니라 굵기(600)로 준다.", "section": "typography" },
+      { "name": "단일 폭 규칙 (The Single Width Rule)", "body": "화면은 480px 하나로 동작한다. 폭에 따라 배치가 달라지는 화면을 새로 만들지 않는다.", "section": "layout" },
+      { "name": "격자 이탈 금지 규칙 (The Off-Grid Ban)", "body": "간격에 7px, 13px 같은 값을 쓰지 않는다. 격자에 없는 값이 필요하면 배치가 잘못된 것이다.", "section": "layout" },
+      { "name": "그림자 금지 규칙 (The No-Shadow Rule)", "body": "카드, 버튼, 입력창, 칩에 그림자를 넣지 않는다. 떠 보이게 하고 싶으면 한 단계 밝은 바탕으로 올린다.", "section": "elevation" },
+      { "name": "모서리 위계 규칙 (The Corner Hierarchy Rule)", "body": "모서리 값은 요소 크기와 함께 커진다. 배지 4 → 입력 6 → 모달 8 → 카드 10 → 시트 12.", "section": "shapes" }
+    ],
+    "dos": [
+      "Do 색을 쓸 때 의미 이름(CSS 변수)을 거친다. #a86af0을 화면에 직접 적지 않는다.",
+      "Do 깊이가 필요하면 바탕을 한 단계 밝게 올린다 (카드 #1f1a29 → 떠 있는 요소 #332947).",
+      "Do 간격을 8pt 격자 아홉 단계 안에서 고른다.",
+      "Do 누를 수 있는 요소를 최소 44px 높이로 만든다. 게임 중 한 손 조작이 기본 전제다.",
+      "Do 목록에서 눈이 처음 닿는 줄을 13px / 600으로 둔다.",
+      "Do 종료·만료된 항목은 지우지 말고 흐리게 낮춰 남긴다."
+    ],
+    "donts": [
+      "Don't 카드·버튼·입력창·칩에 그림자를 넣는다. 그림자는 화면을 덮는 판에만 허용된다.",
+      "Don't 보라를 넓은 면에 칠한다. 한 화면에서 10%를 넘기지 않는다.",
+      "Don't 글자 크기를 아홉 단계 밖에서 새로 만든다 (14px, 16px 같은 값 금지).",
+      "Don't 초록을 성공·네이버 외의 뜻으로, 빨강을 위험·마감 외의 뜻으로 쓴다.",
+      "Don't 색 있는 테두리를 그린다. 경계는 흰색 투명도 6% 또는 12%로만 만든다.",
+      "Don't 폭 값 480px을 화면 파일에 숫자로 직접 적는다. 이름 붙인 값을 거친다.",
+      "Don't 화면 파일 안에서 버튼·입력창을 새로 꾸민다. 공용 부품이 없다는 건 만들어야 한다는 뜻이지, 각자 만들라는 뜻이 아니다."
+    ]
+  }
+}

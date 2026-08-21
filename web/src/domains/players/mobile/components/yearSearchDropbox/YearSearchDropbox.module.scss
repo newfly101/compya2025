@@ -1,0 +1,83 @@
+.wrap {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+}
+
+.inputBox {
+  position: relative;
+  height: $control-height-sm;
+  background-color: var(--color-bg-overlay);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-sm;
+  display: flex;
+  align-items: center;
+  padding: 0 $space-3;
+}
+
+.input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text-primary);
+  @include text-body;
+  padding: 0;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+}
+
+.caret {
+  @include text-caption;
+  color: var(--color-text-muted);
+  margin-left: $space-1;
+  flex-shrink: 0;
+}
+
+// 드롭다운은 문서 흐름 바깥으로 절대배치 — 그리드/뒤 콘텐츠 레이아웃에 영향 없음
+.optionList {
+  position: absolute;
+  top: calc(100% + #{$space-1});
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  background-color: var(--color-bg-elevated);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-sm;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  z-index: $z-dropdown;
+}
+
+.option {
+  @include reset-button;
+  @include flex-row(0, center, space-between);
+  width: 100%;
+  padding: $space-2 $space-3;
+  color: var(--color-text-primary);
+  @include text-body;
+
+  &:active {
+    background-color: var(--color-bg-card);
+  }
+}
+
+.optionActive {
+  color: var(--color-brand);
+  font-weight: 700;
+  background-color: var(--color-brand-tint);
+}
+
+.optionCount {
+  @include text-micro;
+  color: var(--color-text-muted);
+}
+
+.optionEmpty {
+  @include text-caption;
+  color: var(--color-text-muted);
+  padding: $space-3;
+  text-align: center;
+}

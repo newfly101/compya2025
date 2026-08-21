@@ -1,0 +1,39 @@
+.screen {
+  @include flex-col;
+  width: 100%;
+  min-height: 100dvh;
+  background-color: var(--color-bg-deepest);
+}
+
+.body {
+  @include flex-col($space-4);
+  @include h-pad;
+  padding-top: $space-5;
+  padding-bottom: $space-6;
+}
+
+// ── 섹션 제목 (TopBar 는 "확률 공시" 로 고정, 실제 제목은 본문 최상단) ──
+.sectionHeader {
+  @include flex-col($space-1);
+}
+
+.sectionTitle {
+  @include text-page-title;
+  @include hangul-safe;
+  color: var(--color-text-primary);
+  // 폭 제약 없이 여러 줄로 자연스럽게 흐르게 — ellipsis/nowrap 금지
+  white-space: normal;
+}
+
+.sectionCategory {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.emptyText {
+  @include text-body;
+  @include h-pad;
+  padding-top: $space-8;
+  color: var(--color-text-muted);
+  text-align: center;
+}

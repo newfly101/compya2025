@@ -4,6 +4,7 @@
 // loginRequired: true → 비로그인 클릭 시 navigate 차단 + LoginRequiredModal 표시.
 export const QUICK_MENUS = [
   { id: 1, icon: "🎮", label: "스킬\n시뮬레이터", to: "/skill",       comingSoon: true },
+  { id: 2, icon: "⚾", label: "선수\n백과사전",   to: "/players" },
   { id: 3, icon: "🎯", label: "히스토리\n모드",   to: "/mode/history" },
-  { id: 4, icon: "📊", label: "확률\n공시",       to: "/odds",        loginRequired: true },
+  { id: 4, icon: "📊", label: "확률\n공시",       to: "/probability",        loginRequired: true },
 ];

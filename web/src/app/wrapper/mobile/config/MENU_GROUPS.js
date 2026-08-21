@@ -13,7 +13,8 @@ export const MENU_GROUPS = [
     items: [
       { icon: '🎮', label: '스킬 시뮬레이터', to: '/skill',       badge: null, comingSoon: true },
       { icon: '🎯', label: '히스토리 탐색기', to: '/mode/history', badge: null },
-      { icon: '📊', label: '확률 공시',      to: '/odds',        badge: null, tag: 'new', loginRequired: true },
+      { icon: '📊', label: '확률 공시',      to: '/probability',        badge: null, tag: 'new', loginRequired: true },
+      { icon: '⚾', label: '선수 백과사전',   to: '/players',      badge: null },
     ]
   },
   // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)

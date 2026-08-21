@@ -1,0 +1,46 @@
+// ============================================================
+// players 도메인 로컬 토큰
+// 글로벌 _colors.scss / semantic/_color.scss 에는 추가하지 않음
+// PlayerEncyclopediaScreen.jsx 에서 side-effect import 로 1회 주입
+//
+// 카드 종류(cardTypes) 9종 색상 팔레트 — 유저가 한눈에 종류를 식별하도록
+// 톤을 확실히 분리한다 (레전드=골드 / 골든글러브=오렌지 로 겹치지 않게).
+// ============================================================
+
+:root {
+  --color-cardtype-legend-bg: rgba(232, 213, 65, 0.16);
+  --color-cardtype-legend-border: #e8d541;
+  --color-cardtype-legend-text: #e8d541;
+
+  --color-cardtype-epic-bg: rgba(108, 92, 231, 0.14);
+  --color-cardtype-epic-border: #6c5ce7;
+  --color-cardtype-epic-text: #a29bfe;
+
+  --color-cardtype-mvp-bg: rgba(232, 65, 65, 0.16);
+  --color-cardtype-mvp-border: #e84141;
+  --color-cardtype-mvp-text: #ff7a7a;
+
+  --color-cardtype-goldenglove-bg: rgba(240, 160, 32, 0.16);
+  --color-cardtype-goldenglove-border: #f0a020;
+  --color-cardtype-goldenglove-text: #f0a020;
+
+  --color-cardtype-allstar-bg: rgba(64, 160, 255, 0.16);
+  --color-cardtype-allstar-border: #40a0ff;
+  --color-cardtype-allstar-text: #6cb6ff;
+
+  --color-cardtype-national-bg: rgba(72, 199, 142, 0.16);
+  --color-cardtype-national-border: #48c78e;
+  --color-cardtype-national-text: #48c78e;
+
+  --color-cardtype-signature-bg: rgba(168, 106, 240, 0.15);
+  --color-cardtype-signature-border: #a86af0;
+  --color-cardtype-signature-text: #c9a5f8;
+
+  --color-cardtype-erasignature-bg: rgba(236, 128, 200, 0.16);
+  --color-cardtype-erasignature-border: #ec80c8;
+  --color-cardtype-erasignature-text: #ec80c8;
+
+  --color-cardtype-normal-bg: rgba(255, 255, 255, 0.05);
+  --color-cardtype-normal-border: rgba(255, 255, 255, 0.12);
+  --color-cardtype-normal-text: rgba(255, 255, 255, 0.60);
+}

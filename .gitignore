@@ -61,3 +61,6 @@ docs/temp/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# 외부 확률표 원본 (766MB, 488시트) — 저장소에 넣지 않는다. scripts/fetch-odds-linked 로 재취득
+test-docs/

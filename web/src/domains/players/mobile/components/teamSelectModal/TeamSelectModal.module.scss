@@ -1,0 +1,97 @@
+.overlay {
+  @include modal-backdrop;
+  padding: $space-4;
+}
+
+.modal {
+  width: min(400px, 100%);
+  background-color: var(--color-bg-modal);
+  border-radius: $radius-2xl;
+  padding: $space-4;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+}
+
+.header {
+  @include flex-row(0, center, space-between);
+  margin-bottom: $space-3;
+}
+
+.title {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.closeBtn {
+  @include reset-button;
+  @include flex-row(0, center, center);
+  width: 32px;
+  height: 32px;
+  color: var(--color-text-muted);
+  @include text-body;
+}
+
+// ── 스크롤 없이 22타일(4열×6행) 확보 — 375px 뷰포트 실측 ──────────
+// overlay padding 16*2=32           → modal width  = min(400, 375-32=343) = 343
+// modal 내부 padding 16*2=32        → grid width   = 343-32 = 311
+// 열 간격 8*3                       → tile width   = (311-24)/4 = 71.75px (정사각형)
+// 6행: 71.75*6 + 행간격 8*5         → grid height  = 430.5+40 = 470.5px
+// header(32) + margin(12) + grid(470.5) + modal padding(32) ≈ 546.5px
+// → 667px 뷰포트 내 여유 있게 수용, 스크롤 불필요
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-2;
+}
+
+.tile {
+  @include reset-button;
+  @include pressable;
+  @include flex-col($space-1, center, center);
+  aspect-ratio: 1 / 1;
+  border-radius: $radius-md;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-card);
+  padding: $space-1;
+  text-align: center;
+  min-width: 0;
+}
+
+.tileActive {
+  border-color: var(--color-brand);
+  background-color: var(--color-brand-tint);
+}
+
+.tileLogo {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.tileLogoFallback {
+  @include flex-row(0, center, center);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: var(--color-text-primary);
+  @include text-micro;
+  font-weight: 700;
+}
+
+.tileLabel {
+  @include text-micro;
+  @include hangul-safe;
+  @include line-clamp(1);
+  color: var(--color-text-primary);
+  font-weight: 700;
+  width: 100%;
+}
+
+.tileCount {
+  @include text-badge;
+  color: var(--color-text-muted);
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
