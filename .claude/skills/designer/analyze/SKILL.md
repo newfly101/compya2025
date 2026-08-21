@@ -1,11 +1,11 @@
 ---
 name: designer-analyze
-description: Figma + 코드 + 기획자 산출물 분석 → 디자인 시스템 추출 + mismatch 식별. 산출물 docs/domain/{name}/design/design-analysis.md. 다음 skill (designer-plugin-code) 의 입력.
+description: Figma + 코드 + 기획자 산출물 분석 → 디자인 시스템 추출 + mismatch 식별. 산출물 docs/domain/{name}/design/design-analysis.md. 다음 단계는 MCP(`use_figma`) 직접 조작 — 상세: docs/global-guide/design/figma-mcp-rules.md.
 ---
 
 # Skill: designer-analyze
 
-10년차 디자이너 시점에서 **현재 디자인 시스템 + 코드 + 기획자 산출물** 을 분석한다. 결과는 `design-analysis.md` 단일 파일로 정리해서 다음 skill (`designer-plugin-code`) 의 입력으로 사용.
+10년차 디자이너 시점에서 **현재 디자인 시스템 + 코드 + 기획자 산출물** 을 분석한다. 결과는 `design-analysis.md` 단일 파일로 정리해서 다음 단계인 **MCP 직접 조작** (`use_figma`) 의 입력으로 사용. 상세 룰: `docs/global-guide/design/figma-mcp-rules.md`.
 
 ## 1. 목적
 
@@ -42,9 +42,9 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 ### Step 2 — Figma read
 
 1. URL 파싱 — `file-key` + `node-id` 추출 (URL `212-3` → API `212:3`)
-2. `mcp__figma-dev-mode__get_design_context` — 디자인 토큰 / 노드 구조
-3. `mcp__figma-dev-mode__get_metadata` — frame 메타 (이름 / 사이즈 / variants)
-4. `mcp__figma-dev-mode__get_screenshot` — 시각 캡처 (분석 보고서 임베드용)
+2. `mcp__claude_ai_Figma__get_design_context` — 디자인 토큰 / 노드 구조
+3. `mcp__claude_ai_Figma__get_metadata` — frame 메타 (이름 / 사이즈 / variants)
+4. `mcp__claude_ai_Figma__get_screenshot` — 시각 캡처 (분석 보고서 임베드용)
 
 추출 항목:
 - **Color Tokens** — 사용된 hex 값 + 빈도
@@ -87,13 +87,13 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 - `docs/domain/{name}/design/design-analysis.md` 에 Write
 - 부모 디렉토리 없으면 자동 생성
 
-### Step 7 — 다음 skill 안내
+### Step 7 — 다음 단계 안내
 
 보고:
 - 산출물 경로
 - 재사용 / 신규 항목 수
 - 마커 분포 (🔴 / 🟨 / ❓)
-- 다음 skill: `designer-plugin-code` — 분석 결과 토대로 figma-plugin/code.ts 작성 + 빌드
+- 다음 단계: **MCP 직접 조작** — 분석 결과 토대로 `use_figma` 호출 (선행 필수: `get_figma_skill("skill://figma/figma-use/SKILL.md")`). 상세: `docs/global-guide/design/figma-mcp-rules.md`
 
 ## 4. 템플릿 (산출물)
 
@@ -199,7 +199,7 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 
 ## 8. 다음 단계
 
-- [ ] `designer-plugin-code` skill — 본 분석 토대로 figma-plugin/code.ts 작성 + 빌드
+- [ ] MCP 직접 조작 — 본 분석 토대로 `use_figma` 호출 (스킬 로드 `skill://figma/figma-use/SKILL.md` 필수). 상세: `docs/global-guide/design/figma-mcp-rules.md`
 
 ## 9. 변경 이력
 
@@ -227,7 +227,7 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 - 레이아웃 컨벤션 변경 필요 (예: BottomNav 도입)
 - 외부 자산 도입 필요 (예: 라이선스 불명확 아이콘)
 
-→ 위 항목은 🔴 마커 명시. 다음 skill (`designer-plugin-code`) 진행 전 사용자 확정.
+→ 위 항목은 🔴 마커 명시. MCP 로 Figma 직접 작성 진행 전 사용자 확정.
 
 ### 완화 HITL (가정/미정 표시 후 진행)
 
@@ -242,9 +242,9 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 - ❓ 미정: 결정 필요. 사용자 답변 후 확정
 - 🔴 위험: 강제 HITL — 사용자 답변 전 다음 skill 진행 X
 
-## 7. 다음 skill 추천
+## 7. 다음 단계 추천
 
-- **표준**: `designer-plugin-code` — design-analysis.md 토대로 figma-plugin/code.ts 작성 + 빌드 + 사용자 액션 안내
+- **표준**: MCP 직접 조작 — design-analysis.md 토대로 `use_figma` 호출 (선행 스킬 로드 필수 — `get_figma_skill`). 완성 후 `get_screenshot` 으로 자가 검수. 상세: `docs/global-guide/design/figma-mcp-rules.md`
 
 ## 8. 예시
 
@@ -252,14 +252,14 @@ name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3,
 ```
 입력: name: coupons-admin, figma-url: https://www.figma.com/design/.../?node-id=212-3, plan-dir: docs/domain/coupons-admin/prd/
 
-→ Figma read (mcp__figma-dev-mode__*)
+→ Figma read (mcp__claude_ai_Figma__*)
 → 디자인 시스템 추출: 보라 #a78bfa, Inter, padding 16/24, radius 8
 → 코드 read: web/src/global/styles/variables/_color.scss → $color-accent 매핑 확인
 → feature-spec.md → AdminCouponList / Form 화면 명세 확인
 → 재사용: MobileLayout, Button, $color-accent
 → 신규: AdminCard, FAB, FilterChipRow (글로벌 후보, 🟨 가정)
 → 산출물: docs/domain/coupons-admin/design/design-analysis.md
-→ 다음: designer-plugin-code
+→ 다음: MCP 직접 조작 (`use_figma`)
 ```
 
 ## 9. 작성 원칙

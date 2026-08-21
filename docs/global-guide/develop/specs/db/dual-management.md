@@ -1,7 +1,10 @@
 # DB dual-management
 
+> ⚠️ 2026-08-20: coach/skill(코치) 도메인 서버·DB·시드 완전 삭제됨. 아래 coach 관련 서술은 삭제 이전 기록.
+
 > Java enum ↔ DB ENUM / Java entity field ↔ DB column 정합성 검증.
 > baseline: `domain/**/enums/*.java`, `common/enums/`, `sql/**/*.sql`.
+> **결정 (2026-08-20)**: kbo 6종 완전 삭제 확정. 아래 kbo_* 예외 서술은 삭제 이전 기록.
 
 ---
 

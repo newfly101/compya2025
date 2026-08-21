@@ -23,7 +23,8 @@
 
 ## 3. Figma frame
 
-권장 사이즈: **375 기준 단일** (차선 390, 414 미채택). 더 큰 화면은 auto-layout + constraints 로 표현.
+권장 사이즈: **480 단일** — 코드 wrapper (`$layout-screen-width` / `$layout-wrapper-max`) 와 1:1.
+375 / 390 / 414 / 428 은 별도 frame 을 만들지 않고, 하나의 480 frame 안에서 auto layout + clamp / % 로 자연 축소한다.
 
 ⭐ Frame width 통일 / 320 보호 / 8pt grid / tap target 상세: [`docs/global-guide/design/mobile-frame.md`](../../docs/global-guide/design/mobile-frame.md)
 
@@ -88,16 +89,8 @@
 
 ---
 
-## 9. figma-plugin (분리 구조)
+## 9. Figma 작업 방식
 
-⭐ 코드 위치 = `figma-plugin/domains/{domain}.ts`. code.ts 는 호출만 (누적 보존). 상세: [figma-plugin.md](./figma-plugin.md)
+⭐ Figma 작업은 **MCP 직접 조작** (Claude 가 `use_figma` 로 직접 씀, 사용자 수작업 없음). 상세: [figma-mcp-rules.md](../../docs/global-guide/design/figma-mcp-rules.md)
 
-```typescript
-// figma-plugin/domains/{domain}.ts
-import { createFrame, applyMobileLayout } from "../shared/helpers";
-import { spacing } from "../shared/tokens";
-export async function draw{Domain}() {
-  const frame = createFrame("{Domain} Screen", 375, 812);
-  applyMobileLayout(frame, { padding: spacing.md, gap: spacing.sm });
-}
-```
+`figma-plugin/domains/{domain}.ts` + `code.ts` 누적 append 방식은 ⛔ 폐기 (2026-08-20). [figma-plugin.md](./figma-plugin.md) 는 과거 기록으로만 보존, 재실행 금지.

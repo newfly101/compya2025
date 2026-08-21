@@ -1,7 +1,11 @@
 ---
 name: designer-plugin-code
-description: design-analysis.md 토대로 figma-plugin/code.ts 통째 덮어쓰기 + tsc 빌드 + 사용자 액션 안내. Figma 에 디자인을 직접 그리거나 수정하는 plugin code 를 생성. 산출물 figma-plugin/code.ts (+ code.js 자동 생성) + docs/domain/{name}/design/design-report.md + implementation-handoff.md.
+description: "[폐기 2026-08-20 — 사용하지 말 것] 옛 Figma Plugin code.ts 작성 방식의 기록 보존용. 절대 호출하지 않는다. Figma 작업은 MCP 직접 조작으로 전환됨 — docs/global-guide/design/figma-mcp-rules.md 참조."
 ---
+
+> ⛔ **폐기 — 2026-08-20.** Figma 작업은 MCP 직접 조작으로 전환됐다.
+> 현행 룰: docs/global-guide/design/figma-mcp-rules.md
+> 본 문서는 과거 방식 기록으로만 보존한다. **여기 적힌 절차를 실행하지 말 것.**
 
 # Skill: designer-plugin-code
 

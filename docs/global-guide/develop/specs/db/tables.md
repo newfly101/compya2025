@@ -1,7 +1,10 @@
 # DB tables
 
+> ⚠️ 2026-08-20: coach/skill(코치) 도메인 서버·DB·시드 완전 삭제됨. 아래 coach 관련 서술은 삭제 이전 기록.
+
 > baseline: `sql/V2/{site,fun}/*.sql`, `sql/V3/site/*.sql`, `sql/CREATE_TABLE.sql`(legacy V1), `sql/CREATE_TABLE_KBO.sql`.
 > 분류: 🔵 V2 active / 🔵⏸ V2 보류 / 🟢 legacy 운영 / 🟢⚠ legacy 폐기예정 / ⚪ legacy 이전완료 / 🟣 shared(legacy 운영) / 🟣⏸ shared(BE 미연결).
+> **결정 (2026-08-20)**: KBO 신규(§4) 5종 + `kbo_team_code_mappings` 완전 삭제 확정. 아래 🔵⏸ 표시는 삭제 이전 기록.
 
 ---
 

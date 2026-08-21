@@ -1,6 +1,10 @@
 # Figma Plugin code.ts 작성 컨벤션
 
-> designer-render / code-to-design skill 참조.
+> ⛔ **폐기 — 2026-08-20.** Figma 작업은 MCP 직접 조작으로 전환됐다.
+> 현행 룰: [docs/global-guide/design/figma-mcp-rules.md](../../docs/global-guide/design/figma-mcp-rules.md)
+> 본 문서는 과거 방식 기록으로만 보존한다. **여기 적힌 절차를 실행하지 말 것.**
+
+> designer-render / code-to-design skill 참조. (과거 기록)
 
 ---
 

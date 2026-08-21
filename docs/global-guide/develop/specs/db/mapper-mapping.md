@@ -1,5 +1,7 @@
 # DB mapper-mapping
 
+> ⚠️ 2026-08-20: coach/skill(코치) 도메인 서버·DB·시드 완전 삭제됨. 아래 coach 관련 서술은 삭제 이전 기록.
+
 > Java mapper interface ↔ MyBatis XML namespace 1:1 매핑 검증 + entity ↔ DB column 매핑.
 > baseline: `src/main/java/.../repository/mapper/*.java` + `src/main/resources/mapper/**/*.xml`.
 

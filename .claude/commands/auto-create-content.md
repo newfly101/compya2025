@@ -29,7 +29,7 @@ argument-hint: <domain>
 
 ---
 
-## 2. designer (작성 모드) — 기획 → figma
+## 2. designer (MCP 작성 모드) — 기획 → figma
 
 `subagent_type: designer`
 
@@ -37,12 +37,11 @@ argument-hint: <domain>
 - 입력: `docs/domain/$ARGUMENTS/prd/**` (Phase 1-B 산출)
 - 작업:
   1. 분석 → `docs/domain/$ARGUMENTS/design/design-analysis.md`
-  2. 기존 토큰 기반 신규 frame/컴포넌트 정의 → `figma-plugin/domains/$ARGUMENTS.ts` 작성 (namespace `{Name}Domain`)
-  3. `figma-plugin/code.ts` entry 에 `{Name}Domain.run()` dispatch 1줄 추가
-  4. `npm run build` PASS
-- 산출: `figma-plugin/domains/$ARGUMENTS.ts` (신규), `figma-plugin/code.ts` (entry 1줄 추가), `code.js` (자동 빌드), `design-report.md`, `implementation-handoff.md`
-- 공유 자원: `figma-plugin/shared/{tokens,helpers}.ts` 신규 토큰/헬퍼 필요 시 보강
-- 글로벌 룰: `docs/global-guide/design/figma-plugin-rules.md`
+  2. 선행 필수: `get_figma_skill("skill://figma/figma-use/SKILL.md")` + `figma-generate-design` 로드
+  3. `use_figma` 로 대상 파일 `VCVQzOpSIpwpZw11gxG7N1` 페이지 `0:1` 에 신규 frame/컴포넌트 직접 작성 — 색·간격·타이포 Variable 바인딩, 기존 컴포넌트는 `search_design_system` 으로 인스턴스 재사용, auto layout
+  4. `get_screenshot` 으로 되읽어 자가 검수
+- 산출: `design-report.md`, `implementation-handoff.md` (Figma 파일 자체가 1차 산출물, 로컬 코드 파일 없음)
+- 글로벌 룰: `docs/global-guide/design/figma-mcp-rules.md`
 - HITL: 디자인 토큰 / 컴포넌트 라이브러리 / 레이아웃 / 외부 자산 변경 시 강제 중단
 
 ---
@@ -51,7 +50,7 @@ argument-hint: <domain>
 
 메인 세션 안내:
 ```
-👉 Figma 에서 Ctrl+Alt+P → 신규 frame 시각 확인
+👉 MCP 로 신규 frame 반영 완료 (사용자 수작업 없음) — Figma 에서 직접 시각 확인 가능
    - OK → Step 4 skip 후 Step 5 진행
    - 수정 후 진행 → Step 4 sync 라운드
 ```
@@ -65,9 +64,9 @@ argument-hint: <domain>
 `subagent_type: designer`
 
 **brief (최소)**
-- 입력: figma 현재 상태 (`mcp__figma-dev-mode__get_design_context` / `get_metadata` / `get_screenshot`)
+- 입력: figma 현재 상태 (`get_design_context` / `get_metadata` / `get_screenshot`)
 - 작업: `design-report.md` § 사후검증 + `implementation-handoff.md` 매핑 갱신
-- 제약: code.ts 는 건드리지 않음 (figma 가 source of truth)
+- 제약: 이 라운드는 figma 가 source of truth — 재작성(`use_figma`) 하지 않고 문서만 갱신
 
 ---
 
@@ -150,9 +149,7 @@ argument-hint: <domain>
   - 통합/검수: `docs/domain/$ARGUMENTS/develop/*.md`
   - BE 코드: `src/main/**`, `sql/V*/`
   - FE 코드: `web/src/**`
-  - figma plugin (도메인): `figma-plugin/domains/$ARGUMENTS.ts` (namespace 분리)
-  - figma plugin (entry): `figma-plugin/code.ts` (dispatch 1줄만 추가)
-  - figma plugin (공유): `figma-plugin/shared/{tokens,helpers}.ts`
+  - Figma 반영: MCP (`use_figma`) 직접 조작 — 로컬 파일 산출물 없음. 룰: `docs/global-guide/design/figma-mcp-rules.md`
 - 트랙 외 (CI / 환경설정 / 보안정책) 끼워넣기 금지 — ops 트랙 별도
 
 ---
@@ -163,5 +160,5 @@ argument-hint: <domain>
 |---|---|---|
 | 방향 | 코드 → 기획 → 디자인 (역설계) | 기획 → 디자인 → 코드 (신규 생성) |
 | 1단계 | developer + planner reverse | planner IA + 사용자 합의 |
-| 종착 | figma 적용 (Ctrl+Alt+P) | BE/FE 풀스택 + integrate-review |
+| 종착 | figma 적용 (MCP 직접 반영, 수작업 없음) | BE/FE 풀스택 + integrate-review |
 | HITL | figma 분석 검토 1 회 | IA 합의 + figma 확인 + 최종 검수 |

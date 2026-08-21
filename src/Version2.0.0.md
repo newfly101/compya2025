@@ -1,4 +1,6 @@
 # DB 네이밍 규칙과 전체 매핑표
+
+> ⚠️ 2026-08-20: coach/skill(코치) 도메인 서버·DB·시드 완전 삭제됨. 아래 coach 관련 서술은 삭제 이전 기록.
 - 규칙: {접두어}_{도메인}_{대상}
 - 접두어역할예시
 
@@ -7,7 +9,7 @@
 > |:---|:---:|:---|
 > | site_ | 사이트 서비스 | site_users, site_posts | 
 > | fun_ | 게임 데이터 | fun_player_card, fun_coach | 
-> | kbo_ | 크롤링 원본 | kbo_players, kbo_games |
+> | kbo_ | ~~크롤링 원본~~ | 2026-08-20 kbo 6종 + kbocrol 크롤러 완전 삭제 확정 — 접두어 규칙 자체가 폐기됨 |
 
 ---
 
@@ -44,13 +46,9 @@
 > - teams                     →  fun_teams
 
 > [!IMPORTANT]
-> ── KBO (크롤링 원본, 기존 유지) ──────────────────────
-> - kbo_players               →  kbo_players        (변경 없음)
-> - kbo_teams                 →  kbo_teams          (변경 없음)
-> - kbo_seasons               →  kbo_seasons        (변경 없음)
-> - kbo_games                 →  kbo_games          (변경 없음)
-> - kbo_batter_logs           →  kbo_batter_logs    (변경 없음)
-> - kbo_team_code_mappings    →  kbo_team_code_mappings (변경 없음)
+> ── KBO (크롤링 원본, 2026-08-20 완전 삭제 확정) ──────────
+> - kbo_players / kbo_teams / kbo_seasons / kbo_games / kbo_batter_logs / kbo_team_code_mappings
+> - 리네이밍 대상에서 제외 — 6종 전부 삭제. DROP 순서는 `sql/cleanup/DROP_KBO_WIKI_SKILL.sql` 참고
 
 > [!CAUTION]
 > - players                   →  fun_players           (UUID 관리)

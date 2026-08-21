@@ -1,7 +1,10 @@
 # DB dead-suspects
 
+> ⚠️ 2026-08-20: coach/skill(코치) 도메인 서버·DB·시드 완전 삭제됨. 아래 coach 관련 서술은 삭제 이전 기록.
+
 > mapper 0건 / SELECT 0건 / 컬럼 미사용 의심 항목.
 > 검증 필수 — runtime profile / 마이그레이션 흔적 없으면 제거 후보.
+> **결정 (2026-08-20)**: kbo_team_code_mappings 포함 kbo 6종은 완전 삭제 확정. 아래 kbo 서술은 삭제 이전 기록.
 
 ---
 

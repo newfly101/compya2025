@@ -1,5 +1,5 @@
 ---
-description: 기존 코드 → figma 역설계 워크플로우. 도메인의 기획/코드/scss 를 읽어 figma-plugin/code.ts 로 그림
+description: 기존 코드 → figma 역설계 워크플로우. 도메인의 기획/코드/scss 를 읽어 MCP(use_figma) 로 직접 그림
 argument-hint: <feature>
 ---
 
@@ -52,9 +52,9 @@ Bash: ls docs/domain/$ARGUMENTS/prd/ 2>&1
 **brief (최소)**
 - 입력: `docs/domain/$ARGUMENTS/prd/**`, `web/src/**` (scss / module 위주)
 - 작업: figma 그릴 준비 분석 (frame 목록 + 토큰 매핑 + 컴포넌트 매핑)
-- figma 읽기 가능하면: `mcp__figma-dev-mode__*` 로 현재 상태 분석 추가
+- figma 읽기 가능하면: `mcp__claude_ai_Figma__*` 로 현재 상태 분석 추가
 - 산출: `docs/domain/$ARGUMENTS/design/design-analysis.md` 만
-- 제약: code.ts 작성 X — Step 4 에서 별도 라운드
+- 제약: MCP 로 Figma 작성 X (분석만) — Step 4 에서 별도 라운드
 
 ---
 
@@ -66,26 +66,26 @@ Bash: ls docs/domain/$ARGUMENTS/prd/ 2>&1
 
 ---
 
-## 4. designer (작성 모드) — code.ts 작성
+## 4. designer (MCP 작성 모드) — Figma 직접 반영
 
 `subagent_type: designer`
 
 **brief (최소)**
 - 입력: design-analysis.md (Step 2 산출)
-- 작업: `figma-plugin/domains/$ARGUMENTS.ts` 작성 (namespace `{Name}Domain`) + `figma-plugin/code.ts` entry 에 `{Name}Domain.run()` dispatch 1줄 추가 + `npm run build` (PASS)
-- 산출: `figma-plugin/domains/$ARGUMENTS.ts` (신규), `figma-plugin/code.ts` (entry 1줄 추가), `code.js` (자동 빌드), `docs/domain/$ARGUMENTS/design/design-report.md`, `implementation-handoff.md`
-- 글로벌 룰 1차 참조: `docs/global-guide/design/figma-plugin-rules.md` (4 배수 등)
-- 공유 자원: `figma-plugin/shared/tokens.ts` (namespace `Tokens`) + `shared/helpers.ts` (namespace `Helpers`) — 신규 토큰/헬퍼 필요 시 여기 보강
+- 선행 필수: `get_figma_skill("skill://figma/figma-use/SKILL.md")` (+ 화면 생성이면 `figma-generate-design` 도 로드) — 건너뛰면 안 됨
+- 작업: `use_figma` 로 대상 파일 `VCVQzOpSIpwpZw11gxG7N1` 페이지 `0:1` 에 직접 작성/수정. 색·간격·타이포는 Figma Variable 바인딩(생값 금지), 기존 컴포넌트는 `search_design_system` 으로 찾아 인스턴스 재사용, auto layout 사용
+- 완료 후 `get_screenshot` 으로 되읽어 자가 검수 (어긋나면 즉시 수정)
+- 산출: `docs/domain/$ARGUMENTS/design/design-report.md`, `implementation-handoff.md` (Figma 파일 자체가 1차 산출물, 로컬 코드 파일 없음)
+- 글로벌 룰 1차 참조: `docs/global-guide/design/figma-mcp-rules.md`
 - 제약: 디자인 토큰 / 컴포넌트 라이브러리 / 레이아웃 컨벤션 / 외부 자산 변경 시 HITL 강제 중단
 
 ---
 
-## 5. 사용자 액션 안내 (메인 세션)
+## 5. 결과 확인 (메인 세션)
 
 ```
-✅ figma-plugin/code.ts 작성 + 빌드 완료
-👉 Figma desktop app 에서 Ctrl+Alt+P (Run Last Plugin)
-   → 현재 page 에 frame 자동 생성
+✅ MCP 로 Figma 직접 반영 완료 (사용자 수작업 없음)
+👉 get_screenshot 결과 요약 + design-report.md 경로 안내
 ```
 
 ---
@@ -102,9 +102,9 @@ Bash: ls docs/domain/$ARGUMENTS/prd/ 2>&1
 `subagent_type: designer`
 
 **brief (최소)**
-- 입력: figma 현재 상태 (`mcp__figma-dev-mode__get_design_context` / `get_metadata` / `get_screenshot`)
+- 입력: figma 현재 상태 (`get_design_context` / `get_metadata` / `get_screenshot`)
 - 작업: 사용자 임의 수정 사항 → `docs/domain/$ARGUMENTS/design/design-report.md` § 사후검증 갱신, `implementation-handoff.md` 매핑 갱신
-- 제약: code.ts 는 건드리지 않음 (figma 가 source of truth 라운드)
+- 제약: 이 라운드는 figma 가 source of truth — 재작성(`use_figma`) 하지 않고 문서만 갱신
 - 코드 baseline ↔ figma 정합 위반 발견 시 § 위반 요약 갱신만 (자동 수정 X)
 
 ---
@@ -116,7 +116,5 @@ Bash: ls docs/domain/$ARGUMENTS/prd/ 2>&1
 - 산출물 위치 절대:
   - 기획: `docs/domain/$ARGUMENTS/prd/*.md`
   - 디자인: `docs/domain/$ARGUMENTS/design/*.md`
-  - figma plugin (도메인): `figma-plugin/domains/$ARGUMENTS.ts` (namespace 분리)
-  - figma plugin (entry): `figma-plugin/code.ts` (dispatch 1줄만 추가)
-  - figma plugin (공유): `figma-plugin/shared/{tokens,helpers}.ts` (필요 시 보강)
+  - Figma 반영: MCP (`use_figma`) 직접 조작 — 로컬 파일 산출물 없음. 룰: `docs/global-guide/design/figma-mcp-rules.md`
 - 트랙 외 작업 (CI / DB / 환경설정) 끼워넣기 금지 — ops 트랙으로 분리

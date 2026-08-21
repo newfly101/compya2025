@@ -90,7 +90,8 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 | `sql/**` | DB |
 | `*.env` / `application*.properties` | 환경 secret |
 | `web/src/domains/{name}/pages/**` (있다면) | PC legacy — 신규 작성 X |
-| `*.tsx` / `*.ts` 신규 생성 | 본 프로젝트 JSX. (단 figma-plugin 은 예외) |
+| `*.tsx` / `*.ts` 신규 생성 | 본 프로젝트 JSX. **예외 없음** |
+| `figma-plugin/**` | ⛔ 폐기 (2026-08-20). 참조용 보존 — 수정·삭제·실행 금지 |
 
 ⭐ 영역 외 파일 발견 시 — 즉시 작업 중단 + history "{영역 외 접근 시도}" 기록.
 

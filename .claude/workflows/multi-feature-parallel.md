@@ -73,7 +73,7 @@ Phase 5 — 통합 검증    (developer-integrate)
 | Phase | 도메인 전용 (병렬 OK) | 공용 (순차) |
 |---|---|---|
 | 1 기획 | `docs/domain/{feature}/prd/**` | — |
-| 2 디자인 | `docs/domain/{feature}/design/**` | `figma-plugin/code.ts` (렌더 시만, 사용자 명시 시) |
+| 2 디자인 | `docs/domain/{feature}/design/**` | Figma 파일 `VCVQzOpSIpwpZw11gxG7N1` 페이지 `0:1` (MCP `use_figma` 직접 반영 시만, 순차 필요) |
 | 3 분석 | `docs/domain/{feature}/develop/analysis.md` | `docs/domain/_decision_log.md` (append-only) |
 | 4 BE | `src/main/java/.../{feature}/**`, `src/main/resources/mapper/{feature}/**` | `build.gradle`, `application.properties` |
 | 4 FE | `web/src/domains/{feature}/**` | `web/src/app/router/routes/*.jsx`, `web/src/app/router/config/{routeMeta,routePath}.js`, `web/src/app/store/store.js`, `web/package.json` |
