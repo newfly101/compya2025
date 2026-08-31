@@ -66,6 +66,14 @@
         WHERE id = #{id}
     </update>
 
+    <!-- 닉네임(service_nickname) 수정 -->
+    <update id="updateNickname">
+        UPDATE site_users
+        SET service_nickname = #{nickname},
+            updated_at       = NOW()
+        WHERE id = #{id}
+    </update>
+
     <!-- ID 조회 -->
     <select id="selectUserById"
             resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity">

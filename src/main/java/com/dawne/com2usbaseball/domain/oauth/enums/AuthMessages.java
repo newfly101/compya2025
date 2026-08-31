@@ -18,5 +18,11 @@ public enum AuthMessages {
     // refresh token 만료/revoke
     AUTH_REFRESH_TOKEN_EXPIRED,
     // 로그아웃 성공
-    AUTH_LOGOUT_SUCCESS
+    AUTH_LOGOUT_SUCCESS,
+    // 닉네임 수정 성공
+    AUTH_NICKNAME_UPDATED,
+    // 닉네임 형식 오류 (빈 값/공백만/20자 초과)
+    AUTH_INVALID_NICKNAME,
+    // 회원 탈퇴 성공
+    AUTH_WITHDRAW_SUCCESS
 }

@@ -33,6 +33,10 @@ public class UserRepository {
         mapper.updateUserLogin(userId);
     }
 
+    public boolean updateNickname(Long userId, String nickname) {
+        return mapper.updateNickname(userId, nickname) > 0;
+    }
+
     public List<UserEntity> findAdminUserList(String nickname, UserRole userRole, UserStatus userStatus, int limit, int offset) {
         return mapper.selectAdminUserList(nickname, userRole, userStatus, limit, offset);
     }

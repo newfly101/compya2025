@@ -8,4 +8,6 @@ public interface UserService {
     UserEntity findOrCreateNaverUser(NaverOAuthUserResponse info);
     UserEntity findActiveUserById(Long userId);
     UserMeResponse getUserHealth(UserEntity user);
+    UserMeResponse updateNickname(Long userId, String nickname);
+    void withdraw(Long userId);
 }
