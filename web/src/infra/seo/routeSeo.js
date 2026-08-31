@@ -30,6 +30,11 @@ export const ROUTE_SEO = {
   "/about": "컴프야펀 서비스 소개 페이지입니다.",
 };
 
+// noindex 대상 경로 — matchPath 패턴 문자열. sitemap.xml / prerender 대상에도 넣지 않는다.
+// 커뮤니티: v1 게시글 237건이 전부 본문 없는 외부 링크(북마크) 라 색인되면 "가치 없는 콘텐츠"로
+// 판정될 수 있어 읽기 전용 재오픈(2026-08-31) 시점에는 검색엔진에서 제외한다.
+export const NOINDEX_PATHS = ["/community"];
+
 // 쿼리스트링은 location.pathname 자체에 포함되지 않으므로 별도 정규화 불필요.
 // (예: /players?team=..&year=.. → location.pathname 은 이미 "/players")
 export function buildCanonicalUrl(pathname) {

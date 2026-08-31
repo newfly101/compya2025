@@ -1,3 +1,6 @@
+// [미사용/삭제 대상] 2026-08-31 읽기 전용 재오픈 시 CommunityScreen.jsx 가
+// useUserBoard/useUserPost(실 API) 로 대체 — mock 데이터 기반이라 더 이상 쓰이지 않음.
+// 샌드박스 권한으로 파일 삭제가 막혀 주석만 남김 — 수동 삭제 필요.
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { COMMUNITY_CATEGORIES } from "@/data/community/categories.js";

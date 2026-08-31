@@ -17,14 +17,14 @@ export const MENU_GROUPS = [
       { icon: '⚾', label: '선수 백과사전',   to: '/players',      badge: null, tag: 'beta', loginRequired: true },
     ]
   },
-  // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
-  // {
-  //   label: '커뮤니티',
-  //   items: [
-  //     { icon: '💬', label: '인기글',   to: '/posts/hot',  badge: null },
-  //     { icon: '💡', label: '팀 게시판', to: '/posts/team', badge: null },
-  //   ]
-  // },
+  {
+    // 2026-08-31 읽기 전용 재오픈. 기존 주석의 /posts/hot, /posts/team 은 실제 라우트가 아니었고
+    // 실제 게시판(TIP/CLUB)과도 매핑되지 않아 살리지 않음 — /community 단일 진입점으로 대체.
+    label: '커뮤니티',
+    items: [
+      { icon: '💬', label: '커뮤니티', to: '/community', badge: null },
+    ]
+  },
 ]
 
 // admin role 한정 노출 — Drawer 가 isAdmin 일 때 MENU_GROUPS 뒤에 append

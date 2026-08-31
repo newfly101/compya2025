@@ -27,32 +27,22 @@ export const ADMIN_COMMUNITY_ACTIONS = {
   UPDATE_TAG: "/community/admin/tags/${id}",
 }
 
+// 읽기 전용 재오픈 (2026-08-31) — 실제 BE 컨트롤러 경로(BoardController/PostController)에 맞춤.
+// 기존 /community/* 경로는 실존 컨트롤러와 불일치해 404 원인이었음. 글쓰기/댓글/좋아요 경로는
+// 서버 인증 정비 전이라 여기 추가하지 않는다.
 export const USER_COMMUNITY = {
   // boards
-  BOARD_LIST: "/community/boards",
-  CREATE_BOARD: "/community/boards",
-  UPDATE_BOARD: (id) => `/community/boards/${id}`,
+  BOARD_LIST: "/boards",
+  BOARD_DETAIL: (id) => `/boards/${id}`,
+  BOARD_DETAIL_BY_CODE: (code) => `/boards/code/${code}`,
   // posts
-  POST_LIST: (boardId) => `/community/board/${boardId}/posts`,
-  CREATE_POST: "/community/posts",
-  UPDATE_POST: (id) => `/community/posts/${id}`,
-  // tags
-  TAG_LIST: "/community/tags",
-  CREATE_TAG: "/community/tags",
-  UPDATE_TAG: (id) => `/community/tags/${id}`,
+  POST_LIST: (boardId) => `/posts/boards/${boardId}`,
+  POST_PINNED: (boardId) => `/posts/boards/${boardId}/pinned`,
+  POST_POPULAR: (boardId) => `/posts/boards/${boardId}/popular`,
+  POST_DETAIL: (id) => `/posts/${id}`,
 }
 
 export const USER_COMMUNITY_ACTIONS = {
-  // boards
-  BOARD_LIST: "/community/boards",
-  CREATE_BOARD: "/community/boards/create",
-  UPDATE_BOARD: "/community/boards/${id}",
-  // posts
-  POST_LIST: "/community/board/{boardId}/posts",
-  CREATE_POST: "/community/posts/create",
-  UPDATE_POST: "/community/posts/${id}",
-  // tags
-  TAG_LIST: "/community/tags",
-  CREATE_TAG: "/community/tags/create",
-  UPDATE_TAG: "/community/tags/${id}",
+  BOARD_LIST: "GET/community/boards",
+  POST_LIST: "GET/community/posts/list",
 }

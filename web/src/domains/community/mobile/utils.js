@@ -19,3 +19,18 @@ export const getEffectiveBadge = (post, now = Date.now()) => {
   }
   return post.badge ?? null;
 };
+
+// 서버 PostResponse(레코드) → PostRow 가 기대하는 뷰 모델로 매핑.
+// v1 이관 게시글은 전부 본문 없는 외부 링크(EXTERNAL) — 썸네일 필드 자체가 없다.
+export const mapPostForRow = (post) => ({
+  id: post.id,
+  title: post.title,
+  author: post.authorName ?? "익명",
+  timeText: post.createdAt ? post.createdAt.slice(0, 10) : "",
+  views: post.viewCount ?? 0,
+  comments: post.commentCount ?? 0,
+  thumbnail: null,
+  badge: post.isPinned ? "pinned" : null,
+  linkType: post.linkType,
+  externalUrl: post.externalUrl,
+});

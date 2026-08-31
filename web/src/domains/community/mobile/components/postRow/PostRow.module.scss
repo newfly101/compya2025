@@ -7,6 +7,14 @@
   min-height: rem(72);
 }
 
+.clickable {
+  cursor: pointer;
+
+  &:active {
+    opacity: 0.85;
+  }
+}
+
 .body {
   @include flex-col($space-2, $align: stretch, $justify: center);
   flex: 1;

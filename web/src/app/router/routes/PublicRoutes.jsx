@@ -16,9 +16,9 @@ const PrivacyPolicyPage = lazy(() => import("@/domains/policy/mobile/PrivacyPoli
 const TermsPage = lazy(() => import("@/domains/policy/mobile/TermsScreen.jsx"));
 const ContactPage = lazy(() => import("@/domains/policy/mobile/ContactScreen.jsx"));
 const AboutPage = lazy(() => import("@/domains/policy/mobile/AboutScreen.jsx"));
-
-// community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
-// CommunityPage 는 community IA 재개 시 도메인 mobile/feature 흡수 후 재도입
+// 커뮤니티 — 2026-08-31 읽기 전용 재오픈 (글쓰기/댓글/좋아요는 서버 인증 정비 후). noindex 처리는
+// infra/seo/routeSeo.js 의 NOINDEX_PATHS 참조.
+const CommunityPage = lazy(() => import("@/domains/community/mobile/CommunityScreen.jsx"));
 
 export const PublicRoutes = [
   { index: true, element: <HomePage />, handle: ROUTE_META.HOME },
@@ -37,7 +37,5 @@ export const PublicRoutes = [
   { path: ROUTE_META.TERMS.path, element: <TermsPage />, handle: ROUTE_META.TERMS },
   { path: ROUTE_META.CONTACT.path, element: <ContactPage />, handle: ROUTE_META.CONTACT },
   { path: ROUTE_META.ABOUT.path, element: <AboutPage />, handle: ROUTE_META.ABOUT },
-  // community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조)
-  // community IA 재개 시 ROUTE_META.COMMUNITY + 도메인 mobile/feature 흡수 후 재도입
-
+  { path: ROUTE_META.COMMUNITY.path, element: <CommunityPage />, handle: ROUTE_META.COMMUNITY },
 ];

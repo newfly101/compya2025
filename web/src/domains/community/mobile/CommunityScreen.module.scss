@@ -15,50 +15,18 @@
   @include flex-col($space-2);
 }
 
-.hotScroll {
-  @include scroll-row($space-2, 0);
+.stateText {
+  @include text-body;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: $space-6 0;
+  margin: 0;
 }
 
-.hotSentinel {
-  width: 1px;
-  flex-shrink: 0;
-}
-
-.postsSentinel {
-  height: 1px;
-}
-
-.fab {
-  position: fixed;
-  right: $layout-h-pad;
-  bottom: $space-5;
-  z-index: $z-dropdown;
-  display: inline-flex;
-  align-items: center;
-  gap: $space-1;
-  height: $control-height-md;
-  padding: 0 $space-4;
-  border: none;
-  border-radius: $radius-full;
-  background-color: var(--color-community-fab-bg);
-  color: #fff;
-  cursor: pointer;
-  @include text-body-bold;
-  box-shadow: 0 rem(4) rem(12) rgba(0, 0, 0, 0.5),
-    0 0 0 1px var(--color-brand-dark-alpha-15);
-  transition: transform 0.15s ease, opacity 0.15s ease;
-
-  &:active {
-    transform: scale(0.96);
-    opacity: 0.92;
-  }
-}
-
-.fabIcon {
-  font-size: $font-size-13;
-  line-height: 1;
-}
-
-.fabLabel {
-  white-space: nowrap;
+.writeNotice {
+  @include text-micro;
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: $space-4 0;
+  margin: 0;
 }

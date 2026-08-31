@@ -1,3 +1,5 @@
+// [미사용/삭제 대상] 2026-08-31 읽기 전용 재오픈 시 CategoryScreen.jsx 와 함께 미사용 처리.
+// 샌드박스 권한으로 파일 삭제가 막혀 주석만 남김 — 수동 삭제 필요.
 import { useCallback, useMemo, useRef, useState } from "react";
 import { COMMUNITY_HOT_POSTS } from "@/data/community/hotPosts.js";
 import { COMMUNITY_NOTICES } from "@/data/community/notices.js";

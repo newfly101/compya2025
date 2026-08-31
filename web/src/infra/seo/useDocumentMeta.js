@@ -12,6 +12,7 @@ import {
   ROUTE_SEO,
   DEFAULT_DESCRIPTION,
   NOT_FOUND_DESCRIPTION,
+  NOINDEX_PATHS,
   buildCanonicalUrl,
 } from "@/infra/seo/routeSeo.js";
 
@@ -44,6 +45,10 @@ function findDescription(pathname) {
   return pattern ? ROUTE_SEO[pattern] : DEFAULT_DESCRIPTION;
 }
 
+function isNoindexPath(pathname) {
+  return NOINDEX_PATHS.some((p) => matchPath(p, pathname));
+}
+
 export const useDocumentMeta = () => {
   const location = useLocation();
   const matches = useMatches();
@@ -66,6 +71,13 @@ export const useDocumentMeta = () => {
     }
 
     upsertMeta("description", findDescription(location.pathname));
+
+    if (isNoindexPath(location.pathname)) {
+      upsertMeta("robots", "noindex, follow");
+      removeCanonical();
+      return;
+    }
+
     upsertMeta("robots", "index, follow");
     upsertCanonical(buildCanonicalUrl(location.pathname));
   }, [location.pathname, matches]);

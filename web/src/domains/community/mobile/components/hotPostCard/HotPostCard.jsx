@@ -1,3 +1,5 @@
+// [미사용/삭제 대상] 2026-08-31 읽기 전용 재오픈 — "인기 급상승" 섹션이 실제 BE 스펙에 없어
+// CommunityScreen.jsx 에서 제거. 샌드박스 권한으로 파일 삭제가 막혀 주석만 남김 — 수동 삭제 필요.
 import { formatCount } from "@/domains/community/mobile/utils.js";
 import styles from "./HotPostCard.module.scss";
 
