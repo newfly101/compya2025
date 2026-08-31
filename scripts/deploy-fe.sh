@@ -26,8 +26,8 @@ command -v aws >/dev/null || { echo "✖ aws CLI 가 없다"; exit 1; }
 aws sts get-caller-identity --region "$REGION" >/dev/null 2>&1 \
   || { echo "✖ AWS 자격증명이 없거나 만료됐다"; exit 1; }
 
-echo "▶ 빌드"
-npm --prefix "$WEB_DIR" run build
+echo "▶ 빌드 (+ prerender 스냅샷)"
+npm --prefix "$WEB_DIR" run build:prerender
 
 [[ -f "$WEB_DIR/dist/index.html" ]] || { echo "✖ dist/index.html 이 없다. 빌드 실패"; exit 1; }
 

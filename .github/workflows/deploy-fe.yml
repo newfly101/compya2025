@@ -35,9 +35,9 @@ jobs:
         working-directory: web
         run: npm ci
 
-      - name: 빌드
+      - name: 빌드 (+ prerender 스냅샷)
         working-directory: web
-        run: npm run build
+        run: npm run build:prerender
 
       - name: 빌드 산출물 확인
         run: test -f web/dist/index.html
