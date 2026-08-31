@@ -7,14 +7,21 @@ import {
   requestAdminInsertNewExEvent,
   requestAdminUpdateExEvent,
   requestAdminDeleteEvent,
+  requestAdminUploadEventImage,
+  EVENTS_ADMIN_PAGE_SIZE,
 } from "@/domains/events/store/admin/thunks.js";
 import styles from "./AdminEventScreen.module.scss";
 
-const EVENT_TYPES = ["EXTERNAL", "INTERNAL", "PROMOTION"];
+// DB site_events.event_type enum('OFFICIAL','INTERNAL') — 실데이터 기준. 다른 값 추가 금지.
+const EVENT_TYPES = [
+  { value: "OFFICIAL", label: "공식 이벤트" },
+  { value: "INTERNAL", label: "자체 이벤트" },
+];
+const EVENT_TYPE_LABELS = Object.fromEntries(EVENT_TYPES.map((t) => [t.value, t.label]));
 
 const EMPTY_FORM = {
   title: "",
-  eventType: "EXTERNAL",
+  eventType: "OFFICIAL",
   startAt: "",
   expireAt: "",
   imageUrl: "",
@@ -22,10 +29,20 @@ const EMPTY_FORM = {
   visible: true,
 };
 
+// 업로드 응답 형태가 raw string / { url, fileName } / 래핑된 { data: {...} } 중 무엇이 오든 URL 을 뽑아낸다.
+const extractUploadedUrl = (result) => {
+  if (typeof result === "string") return result;
+  if (result && typeof result === "object") {
+    if (typeof result.url === "string") return result.url;
+    if (result.data) return extractUploadedUrl(result.data);
+  }
+  return null;
+};
+
 export default function AdminEventScreen() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { events, loading, error } = useSelector((s) => s.events);
+  const { events, loading, error, page, hasMore } = useSelector((s) => s.events);
 
   useSetTopBar({ variant: "page", title: "이벤트 관리", onBack: () => navigate(-1) });
 
@@ -35,10 +52,26 @@ export default function AdminEventScreen() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editTarget, setEditTarget] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
 
   useEffect(() => {
-    dispatch(requestAdminGetAllEventList());
+    dispatch(requestAdminGetAllEventList({ page: 0, size: EVENTS_ADMIN_PAGE_SIZE }));
   }, [dispatch]);
+
+  const handleLoadMore = async () => {
+    setLoadingMore(true);
+    try {
+      await dispatch(
+        requestAdminGetAllEventList({ page: page + 1, size: EVENTS_ADMIN_PAGE_SIZE })
+      ).unwrap();
+    } catch {
+      // 실패 시 상단 error 상태로 이미 반영됨 — 별도 처리 없음
+    } finally {
+      setLoadingMore(false);
+    }
+  };
 
   const filtered = events.filter((e) => {
     const matchSearch = e.title?.toLowerCase().includes(search.toLowerCase());
@@ -53,6 +86,7 @@ export default function AdminEventScreen() {
   const openCreate = () => {
     setEditTarget(null);
     setForm(EMPTY_FORM);
+    setUploadError(null);
     setSheetOpen(true);
   };
 
@@ -60,19 +94,39 @@ export default function AdminEventScreen() {
     setEditTarget(event);
     setForm({
       title: event.title ?? "",
-      eventType: event.eventType ?? "EXTERNAL",
+      eventType: event.eventType ?? "OFFICIAL",
       startAt: event.startAt?.slice(0, 10) ?? "",
       expireAt: event.expireAt?.slice(0, 10) ?? "",
       imageUrl: event.imageUrl ?? "",
       externalLink: event.externalLink ?? "",
       visible: event.visible ?? true,
     });
+    setUploadError(null);
     setSheetOpen(true);
   };
 
   const handleDelete = (id) => {
     if (!window.confirm("이벤트를 삭제하시겠습니까?")) return;
     dispatch(requestAdminDeleteEvent(id));
+  };
+
+  const handleImageFileChange = async (e) => {
+    const file = e.target.files?.[0];
+    e.target.value = ""; // 같은 파일 재선택 가능하게 초기화
+    if (!file) return;
+
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const result = await dispatch(requestAdminUploadEventImage(file)).unwrap();
+      const url = extractUploadedUrl(result);
+      if (!url) throw new Error("업로드 응답에서 URL 을 찾을 수 없습니다.");
+      setForm((prev) => ({ ...prev, imageUrl: url }));
+    } catch (err) {
+      setUploadError(typeof err === "string" ? err : err?.message ?? "이미지 업로드에 실패했습니다.");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -90,20 +144,23 @@ export default function AdminEventScreen() {
     setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
-  /* 상태 분기 */
+  /* 상태 분기 — loading 은 "최초 로딩" 만 전체 화면으로 가린다. "더 보기" 는 하단 버튼 상태로 표시. */
   const renderContent = () => {
-    if (loading) {
+    if (loading && events.length === 0) {
       return (
         <div className={styles.stateBox}>
           <p className={styles.stateText}>불러오는 중...</p>
         </div>
       );
     }
-    if (error) {
+    if (error && events.length === 0) {
       return (
         <div className={styles.stateBox}>
           <p className={styles.stateError}>{error}</p>
-          <button className={styles.retryBtn} onClick={() => dispatch(requestAdminGetAllEventList())}>
+          <button
+            className={styles.retryBtn}
+            onClick={() => dispatch(requestAdminGetAllEventList({ page: 0, size: EVENTS_ADMIN_PAGE_SIZE }))}
+          >
             다시 시도
           </button>
         </div>
@@ -117,33 +174,42 @@ export default function AdminEventScreen() {
       );
     }
     return (
-      <ul className={styles.list}>
-        {filtered.map((ev) => (
-          <li key={ev.id} className={styles.card}>
-            {ev.imageUrl && (
-              <img className={styles.thumbnail} src={ev.imageUrl} alt={ev.title} />
-            )}
-            <div className={styles.cardBody}>
-              <div className={styles.cardHeader}>
-                <span className={styles.cardTitle}>{ev.title}</span>
-                <span className={`${styles.chip} ${ev.visible ? styles.chipOn : styles.chipOff}`}>
-                  {ev.visible ? "노출" : "숨김"}
-                </span>
+      <>
+        <ul className={styles.list}>
+          {filtered.map((ev) => (
+            <li key={ev.id} className={styles.card}>
+              {ev.imageUrl && (
+                <img className={styles.thumbnail} src={ev.imageUrl} alt={ev.title} />
+              )}
+              <div className={styles.cardBody}>
+                <div className={styles.cardHeader}>
+                  <span className={styles.cardTitle}>{ev.title}</span>
+                  <span className={`${styles.chip} ${ev.visible ? styles.chipOn : styles.chipOff}`}>
+                    {ev.visible ? "노출" : "숨김"}
+                  </span>
+                </div>
+                <div className={styles.cardMeta}>
+                  <span className={styles.typeChip}>{EVENT_TYPE_LABELS[ev.eventType] ?? ev.eventType}</span>
+                  <span className={styles.cardDate}>
+                    {ev.startAt?.slice(0, 10)} ~ {ev.expireAt?.slice(0, 10)}
+                  </span>
+                </div>
+                <div className={styles.cardActions}>
+                  <button className={styles.editBtn} onClick={() => openEdit(ev)}>수정</button>
+                  <button className={styles.deleteBtn} onClick={() => handleDelete(ev.id)}>삭제</button>
+                </div>
               </div>
-              <div className={styles.cardMeta}>
-                <span className={styles.typeChip}>{ev.eventType}</span>
-                <span className={styles.cardDate}>
-                  {ev.startAt?.slice(0, 10)} ~ {ev.expireAt?.slice(0, 10)}
-                </span>
-              </div>
-              <div className={styles.cardActions}>
-                <button className={styles.editBtn} onClick={() => openEdit(ev)}>수정</button>
-                <button className={styles.deleteBtn} onClick={() => handleDelete(ev.id)}>삭제</button>
-              </div>
-            </div>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+        {hasMore && (
+          <div className={styles.loadMoreRow}>
+            <button className={styles.loadMoreBtn} onClick={handleLoadMore} disabled={loadingMore}>
+              {loadingMore ? "불러오는 중..." : "더 보기"}
+            </button>
+          </div>
+        )}
+      </>
     );
   };
 
@@ -165,10 +231,10 @@ export default function AdminEventScreen() {
           >전체</button>
           {EVENT_TYPES.map((t) => (
             <button
-              key={t}
-              className={`${styles.chip} ${typeFilter === t ? styles.chipActive : ""}`}
-              onClick={() => setTypeFilter(t)}
-            >{t}</button>
+              key={t.value}
+              className={`${styles.chip} ${typeFilter === t.value ? styles.chipActive : ""}`}
+              onClick={() => setTypeFilter(t.value)}
+            >{t.label}</button>
           ))}
           <button
             className={`${styles.chip} ${visibleFilter === "visible" ? styles.chipActive : ""}`}
@@ -197,7 +263,7 @@ export default function AdminEventScreen() {
               <label className={styles.label}>
                 이벤트 타입
                 <select className={styles.input} name="eventType" value={form.eventType} onChange={handleFormChange}>
-                  {EVENT_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
+                  {EVENT_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
                 </select>
               </label>
               <label className={styles.label}>
@@ -209,8 +275,30 @@ export default function AdminEventScreen() {
                 <input className={styles.input} type="date" name="expireAt" value={form.expireAt} onChange={handleFormChange} required />
               </label>
               <label className={styles.label}>
-                이미지 URL
-                <input className={styles.input} name="imageUrl" value={form.imageUrl} onChange={handleFormChange} placeholder="https://..." />
+                이벤트 이미지
+                <div className={styles.uploadRow}>
+                  <label className={styles.uploadBtn}>
+                    {uploading ? "업로드 중..." : "이미지 선택"}
+                    <input
+                      className={styles.uploadInput}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageFileChange}
+                      disabled={uploading}
+                    />
+                  </label>
+                  {form.imageUrl && (
+                    <img className={styles.uploadPreview} src={form.imageUrl} alt="이벤트 이미지 미리보기" />
+                  )}
+                </div>
+                {uploadError && <p className={styles.uploadError}>{uploadError}</p>}
+                <input
+                  className={styles.input}
+                  name="imageUrl"
+                  value={form.imageUrl}
+                  onChange={handleFormChange}
+                  placeholder="업로드하거나 이미지 URL 을 직접 입력하세요"
+                />
               </label>
               <label className={styles.label}>
                 외부 링크

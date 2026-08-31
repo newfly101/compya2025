@@ -198,6 +198,29 @@
   @include pressable;
 }
 
+.loadMoreRow {
+  display: flex;
+  justify-content: center;
+  padding: $space-2 0;
+}
+
+.loadMoreBtn {
+  height: $control-height-md;
+  padding: 0 $space-6;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  @include text-body;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -251,6 +274,51 @@
   box-sizing: border-box;
 
   &:focus { outline: none; border-color: var(--color-brand); }
+}
+
+.uploadRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.uploadBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: $control-height-md;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-brand);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-brand);
+  @include text-caption;
+  font-weight: 500;
+  cursor: pointer;
+  @include pressable;
+}
+
+.uploadInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.uploadPreview {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: $radius-md;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.uploadError {
+  @include text-caption;
+  color: var(--color-danger);
+  margin: 0;
 }
 
 .checkLabel {

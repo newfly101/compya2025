@@ -11,7 +11,7 @@ export const requestGetNoticeList = createAsyncThunk(
       const visible = [...data].filter(notice => notice.isVisible);
       return {
         siteNotices:     visible.filter(n => n.source === "INTERNAL").sort((a, b) => b.id - a.id),
-        officialNotices: visible.filter(n => n.source === "OFFICIAL").sort((a, b) => b.id - a.id),
+        officialNotices: visible.filter(n => n.source === "EXTERNAL").sort((a, b) => b.id - a.id),
       };
     } catch (error) {
       return rejectWithValue(error.message);

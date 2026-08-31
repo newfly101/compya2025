@@ -115,12 +115,6 @@
   margin: 0;
 }
 
-.tbd {
-  @include text-body;
-  color: var(--color-text-muted);
-  margin: 0;
-}
-
 .closeBtn {
   height: $control-height-md;
   border: 1px solid var(--color-border);
@@ -130,4 +124,129 @@
   @include text-body;
   cursor: pointer;
   @include pressable;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+/* 유저 상세 — 조회 필드 */
+.detailFields {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.detailRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.detailLabel {
+  @include text-caption;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.detailValue {
+  @include text-body;
+  color: var(--color-text-primary);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selfNotice {
+  @include text-caption;
+  color: var(--color-warning);
+  background: var(--color-warning-dim);
+  border-radius: $radius-md;
+  padding: $space-2 $space-3;
+  margin: 0;
+}
+
+/* 유저 상세 — 역할/상태 변경 */
+.editRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.applyBtn {
+  height: $control-height-sm;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  @include text-caption;
+  cursor: pointer;
+  white-space: nowrap;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.confirmBox {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding: $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  background: var(--color-bg-elevated);
+}
+
+.confirmWarn {
+  @include text-body;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.confirmWarnStrong {
+  @include text-body;
+  color: var(--color-danger);
+  margin: 0;
+  font-weight: 700;
+}
+
+.agreeLabel {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  @include text-caption;
+  color: var(--color-text-secondary);
+}
+
+.confirmActions {
+  display: flex;
+  gap: $space-2;
+
+  .closeBtn,
+  .confirmBtn {
+    flex: 1;
+  }
+}
+
+.confirmBtn {
+  height: $control-height-md;
+  border: 1px solid var(--color-danger);
+  border-radius: $radius-md;
+  background: var(--color-danger);
+  color: var(--color-bg-card);
+  @include text-body;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 }

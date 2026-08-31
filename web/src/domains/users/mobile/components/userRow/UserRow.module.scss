@@ -49,7 +49,7 @@
   color: $color-success-400;
 }
 
-.statusBanned {
+.statusBlocked {
   background-color: var(--color-danger-dim);
   border-color: var(--color-danger);
   color: var(--color-danger);
@@ -59,6 +59,12 @@
   background-color: var(--color-bg-elevated);
   border-color: var(--color-border);
   color: var(--color-text-muted);
+}
+
+.statusSuspended {
+  background-color: var(--color-warning-dim);
+  border-color: var(--color-warning);
+  color: var(--color-warning);
 }
 
 .lastLogin {

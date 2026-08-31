@@ -72,11 +72,15 @@ export const requestAdminUploadEventImage = (file) => {
   });
 };
 
+export const EVENTS_ADMIN_PAGE_SIZE = 20;
+
 export const requestAdminGetAllEventList = createAsyncThunk(
-  ADMIN_EVENT_ACTIONS.GET_ALL_LISTS, async (_, { rejectWithValue }) => {
+  ADMIN_EVENT_ACTIONS.GET_ALL_LISTS,
+  async ({ page = 0, size = EVENTS_ADMIN_PAGE_SIZE } = {}, { rejectWithValue }) => {
     try {
-      const list = await fetchAdminAllEventList();
-      return [...list].reverse();
+      // BE 는 created_at DESC(최신순)로 내려준다. 페이지를 이어붙여야 하므로 뒤집지 않는다.
+      const list = await fetchAdminAllEventList({ page, size });
+      return list;
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -10,12 +10,18 @@ import {
 } from "@/domains/notices/store/admin/thunks.js";
 import styles from "./AdminNoticeScreen.module.scss";
 
-const SOURCES = ["SITE", "OFFICIAL"];
+// DB enum(site_notices.source) 실측: INTERNAL(사이트 자체 작성) / EXTERNAL(게임사 공식 공지 링크)
+const SOURCES = ["INTERNAL", "EXTERNAL"];
+const SOURCE_LABELS = {
+  INTERNAL: "사이트 공지",
+  EXTERNAL: "공식 공지 링크",
+};
 
 const EMPTY_FORM = {
   title: "",
   content: "",
-  source: "SITE",
+  externalUrl: "",
+  source: "INTERNAL",
   isVisible: true,
   isPinned: false,
 };
@@ -64,7 +70,8 @@ export default function AdminNoticeScreen() {
     setForm({
       title: notice.title ?? "",
       content: notice.content ?? "",
-      source: notice.source ?? "SITE",
+      externalUrl: notice.externalUrl ?? "",
+      source: notice.source ?? "INTERNAL",
       isVisible: notice.isVisible ?? true,
       isPinned: notice.isPinned ?? false,
     });
@@ -73,10 +80,15 @@ export default function AdminNoticeScreen() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // DB CHECK 제약(chk_site_notices_source_payload) 미러링: source 별 content/externalUrl 배타
+    const payload =
+      form.source === "EXTERNAL"
+        ? { ...form, content: null }
+        : { ...form, externalUrl: null };
     if (editTarget) {
-      dispatch(requestAdminUpdateNotice({ id: editTarget.id, ...form }));
+      dispatch(requestAdminUpdateNotice({ id: editTarget.id, ...payload }));
     } else {
-      dispatch(requestAdminInsertNotice(form));
+      dispatch(requestAdminInsertNotice(payload));
     }
     setSheetOpen(false);
   };
@@ -122,7 +134,7 @@ export default function AdminNoticeScreen() {
           <li key={n.id} className={styles.card}>
             <div className={styles.cardHeader}>
               <div className={styles.cardMeta}>
-                <span className={styles.sourceChip}>{n.source}</span>
+                <span className={styles.sourceChip}>{SOURCE_LABELS[n.source] ?? n.source}</span>
                 {n.isPinned && <span className={styles.pinnedChip}>고정</span>}
               </div>
               <span className={`${styles.chip} ${n.isVisible ? styles.chipOn : styles.chipOff}`}
@@ -165,7 +177,7 @@ export default function AdminNoticeScreen() {
               key={s}
               className={`${styles.chip} ${sourceFilter === s ? styles.chipActive : ""}`}
               onClick={() => setSourceFilter(s)}
-            >{s}</button>
+            >{SOURCE_LABELS[s]}</button>
           ))}
           <button
             className={`${styles.chip} ${visibleFilter === "visible" ? styles.chipActive : ""}`}
@@ -196,21 +208,37 @@ export default function AdminNoticeScreen() {
                 <input className={styles.input} name="title" value={form.title} onChange={handleFormChange} required />
               </label>
               <label className={styles.label}>
-                내용
-                <textarea
-                  className={`${styles.input} ${styles.textarea}`}
-                  name="content"
-                  value={form.content}
-                  onChange={handleFormChange}
-                  rows={4}
-                />
-              </label>
-              <label className={styles.label}>
                 소스 구분
                 <select className={styles.input} name="source" value={form.source} onChange={handleFormChange}>
-                  {SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
+                  {SOURCES.map((s) => <option key={s} value={s}>{SOURCE_LABELS[s]}</option>)}
                 </select>
               </label>
+              {form.source === "EXTERNAL" ? (
+                <label className={styles.label}>
+                  외부 링크
+                  <input
+                    className={styles.input}
+                    name="externalUrl"
+                    type="url"
+                    placeholder="https://..."
+                    value={form.externalUrl}
+                    onChange={handleFormChange}
+                    required
+                  />
+                </label>
+              ) : (
+                <label className={styles.label}>
+                  내용
+                  <textarea
+                    className={`${styles.input} ${styles.textarea}`}
+                    name="content"
+                    value={form.content}
+                    onChange={handleFormChange}
+                    rows={4}
+                    required
+                  />
+                </label>
+              )}
               <label className={styles.checkLabel}>
                 <input type="checkbox" name="isVisible" checked={form.isVisible} onChange={handleFormChange} />
                 노출 여부

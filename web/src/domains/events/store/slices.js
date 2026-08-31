@@ -12,6 +12,8 @@ const initialState = {
   events: [],
   loading: false,
   error: null,
+  page: 0,
+  hasMore: false,
 };
 
 const eventsSlice = createSlice({
@@ -62,10 +64,14 @@ const eventsSlice = createSlice({
       );
     });
     /* ===============================
-     * 전체 이벤트 목록 조회 (admin)
+     * 전체 이벤트 목록 조회 (admin) — 더 보기 페이지네이션
      * =============================== */
     applyAsyncHandlers(builder, requestAdminGetAllEventList, (state, action) => {
-      state.events = action.payload;
+      const { page = 0, size = 20 } = action.meta.arg ?? {};
+
+      state.events = page === 0 ? action.payload : [...state.events, ...action.payload];
+      state.page = page;
+      state.hasMore = action.payload.length === size;
     });
     /* ===============================
      * 이벤트 삭제
