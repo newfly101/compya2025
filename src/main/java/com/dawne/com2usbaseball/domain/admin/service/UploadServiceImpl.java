@@ -3,6 +3,7 @@ package com.dawne.com2usbaseball.domain.admin.service;
 import com.dawne.com2usbaseball.config.properties.S3Properties;
 import com.dawne.com2usbaseball.config.properties.UploadProperties;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
+import com.dawne.com2usbaseball.domain.admin.dto.response.UploadResponse;
 import com.dawne.com2usbaseball.domain.admin.enums.UploadMessages;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,7 +45,7 @@ public class UploadServiceImpl implements UploadService {
     private static final Pattern SAFE_EXTENSION_PATTERN = Pattern.compile("^.+\\.([A-Za-z0-9]+)$");
 
     @Override
-    public String uploadImage(MultipartFile file) throws IOException {
+    public UploadResponse uploadImage(MultipartFile file) throws IOException {
         validateNotEmpty(file);
         validateSize(file);
 
@@ -55,7 +56,8 @@ public class UploadServiceImpl implements UploadService {
         byte[] content = file.getBytes();
         validateActualContent(content, extension);
 
-        String key = "uploads/images/" + UUID.randomUUID() + "." + extension;
+        String fileName = UUID.randomUUID() + "." + extension;
+        String key = "uploads/images/" + fileName;
 
         PutObjectRequest request =
                 PutObjectRequest.builder()
@@ -72,7 +74,9 @@ public class UploadServiceImpl implements UploadService {
 
         String baseUrl = props.getS3().getUrl();
         if (!baseUrl.startsWith("http")) baseUrl = "https://" + baseUrl;
-        return baseUrl + "/" + key;
+        String url = baseUrl + "/" + key;
+
+        return new UploadResponse(url, fileName);
     }
 
     private void validateNotEmpty(MultipartFile file) {
