@@ -12,7 +12,7 @@ public interface PostReactionService {
 
     PostReactionResponse getPostReaction(Long postId, Long userId);
 
-    PostReactionResponse savePostReaction(PostReactionRequest request);
+    PostReactionResponse savePostReaction(PostReactionRequest request, Long userId);
 
     void deletePostReaction(Long postId, Long userId);
 }

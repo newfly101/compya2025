@@ -8,5 +8,5 @@ public interface ReportService {
 
     ReportResponse getReportByReporter(ReportTargetType targetType, Long targetId, Long reporterId);
 
-    ReportResponse createReport(ReportRequest request);
+    ReportResponse createReport(ReportRequest request, Long reporterId);
 }

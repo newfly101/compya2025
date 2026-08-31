@@ -51,7 +51,7 @@ public class PostReactionServiceImpl implements PostReactionService {
 
     @Override
     @Transactional
-    public PostReactionResponse savePostReaction(PostReactionRequest request) {
+    public PostReactionResponse savePostReaction(PostReactionRequest request, Long userId) {
         PostEntity postEntity = postRepository.getPostDetail(request.postId());
         if (postEntity == null || Boolean.TRUE.equals(postEntity.getIsDeleted())) {
             throw new BaseException(CommunityMessages.COMMUNITY_POST_NOT_FOUND, HttpStatus.NOT_FOUND);
@@ -59,11 +59,12 @@ public class PostReactionServiceImpl implements PostReactionService {
 
         PostReactionEntity existing = postReactionRepository.getPostReaction(
                 request.postId(),
-                request.userId()
+                userId
         );
 
         if (existing == null) {
             PostReactionEntity entity = postReactionMapStruct.toEntity(request);
+            entity.setUserId(userId);
             postReactionRepository.insertPostReaction(entity);
             applyIncreaseCount(request.reaction(), request.postId());
             return postReactionMapStruct.toResponse(entity);

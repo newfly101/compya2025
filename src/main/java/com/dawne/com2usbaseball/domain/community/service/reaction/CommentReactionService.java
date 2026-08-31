@@ -12,7 +12,7 @@ public interface CommentReactionService {
 
     CommentReactionResponse getCommentReaction(Long commentId, Long userId);
 
-    CommentReactionResponse saveCommentReaction(CommentReactionRequest request);
+    CommentReactionResponse saveCommentReaction(CommentReactionRequest request, Long userId);
 
     void deleteCommentReaction(Long commentId, Long userId);
 }

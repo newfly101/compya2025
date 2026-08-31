@@ -1,10 +1,18 @@
 package com.dawne.com2usbaseball.domain.community.controller;
 
 import com.dawne.com2usbaseball.common.support.dto.ListResponse;
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.community.dto.request.CommentRequest;
 import com.dawne.com2usbaseball.domain.community.dto.response.CommentResponse;
+import com.dawne.com2usbaseball.domain.community.enums.UserRoleType;
 import com.dawne.com2usbaseball.domain.community.service.comment.CommentService;
+import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,14 +38,18 @@ public class CommentController {
     }
 
     @PostMapping
-    public CommentResponse createComment(@RequestBody CommentRequest request) {
-        return commentService.createComment(request);
+    public CommentResponse createComment(@RequestBody CommentRequest request, HttpServletRequest httpRequest) {
+        Long userId = requireUserId(httpRequest);
+        UserRoleType role = isAdmin() ? UserRoleType.ADMIN : UserRoleType.USER;
+        return commentService.createComment(request, userId, role);
     }
 
     @PutMapping("/{id}")
     public CommentResponse updateComment(@PathVariable Long id,
-                                         @RequestBody CommentRequest request) {
-        return commentService.updateComment(id, request);
+                                         @RequestBody CommentRequest request,
+                                         HttpServletRequest httpRequest) {
+        Long userId = requireUserId(httpRequest);
+        return commentService.updateComment(id, request, userId);
     }
 
     @PostMapping("/{id}/like")
@@ -66,7 +78,33 @@ public class CommentController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteComment(@PathVariable Long id) {
-        commentService.deleteComment(id);
+    public void deleteComment(@PathVariable Long id, HttpServletRequest httpRequest) {
+        Long userId = requireUserId(httpRequest);
+        commentService.deleteComment(id, userId, isAdmin());
+    }
+
+    private Long requireUserId(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
+
+        if (userId == null) {
+            throw new BaseException(AuthMessages.AUTH_UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
+        }
+
+        return userId;
+    }
+
+    private boolean isAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return false;
+        }
+
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
+            if ("ROLE_ADMIN".equals(authority.getAuthority())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

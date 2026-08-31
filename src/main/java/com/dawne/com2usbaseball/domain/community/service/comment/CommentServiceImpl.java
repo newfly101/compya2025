@@ -7,6 +7,7 @@ import com.dawne.com2usbaseball.domain.community.dto.mapstruct.CommentMapStruct;
 import com.dawne.com2usbaseball.domain.community.dto.request.CommentRequest;
 import com.dawne.com2usbaseball.domain.community.dto.response.CommentResponse;
 import com.dawne.com2usbaseball.domain.community.entity.CommentEntity;
+import com.dawne.com2usbaseball.domain.community.enums.UserRoleType;
 import com.dawne.com2usbaseball.domain.community.enums.messages.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.repository.CommentRepository;
 import com.dawne.com2usbaseball.domain.community.repository.PostRepository;
@@ -46,8 +47,11 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResponse createComment(CommentRequest request) {
+    public CommentResponse createComment(CommentRequest request, Long authorId, UserRoleType authorRole) {
         CommentEntity entity = commentMapStruct.toEntity(request);
+
+        entity.setAuthorId(authorId);
+        entity.setUserRoleType(authorRole);
 
         if (entity.getIsVisible() == null) {
             entity.setIsVisible(true);
@@ -69,8 +73,9 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentResponse updateComment(Long id, CommentRequest request) {
+    public CommentResponse updateComment(Long id, CommentRequest request, Long userId) {
         CommentEntity entity = getCommentEntity(id);
+        requireOwner(entity, userId);
         commentMapStruct.updateFromRequest(request, entity);
         commentRepository.updateComment(entity);
         return commentMapStruct.toResponse(entity);
@@ -113,8 +118,13 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public void deleteComment(Long id) {
+    public void deleteComment(Long id, Long userId, boolean isAdmin) {
         CommentEntity entity = getCommentEntity(id);
+
+        if (!isAdmin) {
+            requireOwner(entity, userId);
+        }
+
         commentRepository.deleteComment(id);
 
         if (entity.getPostId() != null) {
@@ -128,5 +138,12 @@ public class CommentServiceImpl implements CommentService {
             throw new BaseException(CommunityMessages.COMMUNITY_COMMENT_NOT_FOUND, HttpStatus.NOT_FOUND);
         }
         return entity;
+    }
+
+    // 댓글 수정/삭제는 작성자 본인만 가능 (삭제는 컨트롤러에서 ADMIN 예외 처리 후 호출)
+    private void requireOwner(CommentEntity entity, Long userId) {
+        if (userId == null || !userId.equals(entity.getAuthorId())) {
+            throw new BaseException(CommunityMessages.COMMUNITY_COMMENT_FORBIDDEN, HttpStatus.FORBIDDEN);
+        }
     }
 }

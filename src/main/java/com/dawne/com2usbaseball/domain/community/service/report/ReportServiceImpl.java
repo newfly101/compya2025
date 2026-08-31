@@ -39,13 +39,13 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     @Transactional
-    public ReportResponse createReport(ReportRequest request) {
+    public ReportResponse createReport(ReportRequest request, Long reporterId) {
         validateTarget(request.targetType(), request.targetId());
 
         ReportEntity existing = reportRepository.getReportByReporter(
                 request.targetType(),
                 request.targetId(),
-                request.reporterId()
+                reporterId
         );
 
         if (existing != null) {
@@ -53,6 +53,7 @@ public class ReportServiceImpl implements ReportService {
         }
 
         ReportEntity entity = reportMapStruct.toEntity(request);
+        entity.setReporterId(reporterId);
         entity.setStatus(ReportStatus.PENDING);
         entity.setReviewedBy(null);
         entity.setReviewedAt(null);

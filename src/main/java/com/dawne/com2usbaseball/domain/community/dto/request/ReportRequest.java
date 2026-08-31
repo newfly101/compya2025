@@ -6,7 +6,6 @@ import com.dawne.com2usbaseball.domain.community.enums.ReportTargetType;
 public record ReportRequest(
         ReportTargetType targetType,
         Long targetId,
-        Long reporterId,
         ReportReason reason,
         String detail
 ) {

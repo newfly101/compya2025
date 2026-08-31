@@ -28,6 +28,7 @@ public enum CommunityMessages {
     COMMUNITY_COMMENT_DISLIKE_INCREASED,         // ("댓글 싫어요가 증가되었습니다."),
     COMMUNITY_COMMENT_DISLIKE_DECREASED,         // ("댓글 싫어요가 감소되었습니다."),
     COMMUNITY_COMMENT_REPORTED,                  // ("댓글이 신고되었습니다.");
+    COMMUNITY_COMMENT_FORBIDDEN,                  // ("본인 댓글만 수정/삭제할 수 있습니다.");
 
     COMMUNITY_COMMENT_REACTION_NOT_FOUND,        // ("댓글 반응 정보를 찾을 수 없습니다."),
     COMMUNITY_COMMENT_REACTION_SAVED,            // ("댓글 반응이 저장되었습니다."),

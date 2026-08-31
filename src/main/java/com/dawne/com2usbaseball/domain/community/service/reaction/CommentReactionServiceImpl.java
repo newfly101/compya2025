@@ -51,7 +51,7 @@ public class CommentReactionServiceImpl implements CommentReactionService {
 
     @Override
     @Transactional
-    public CommentReactionResponse saveCommentReaction(CommentReactionRequest request) {
+    public CommentReactionResponse saveCommentReaction(CommentReactionRequest request, Long userId) {
         CommentEntity commentEntity = commentRepository.getCommentDetail(request.commentId());
         if (commentEntity == null || Boolean.TRUE.equals(commentEntity.getIsDeleted())) {
             throw new BaseException(CommunityMessages.COMMUNITY_COMMENT_REACTION_NOT_FOUND, HttpStatus.NOT_FOUND);
@@ -59,11 +59,12 @@ public class CommentReactionServiceImpl implements CommentReactionService {
 
         CommentReactionEntity existing = commentReactionRepository.getCommentReaction(
                 request.commentId(),
-                request.userId()
+                userId
         );
 
         if (existing == null) {
             CommentReactionEntity entity = commentReactionMapStruct.toEntity(request);
+            entity.setUserId(userId);
             commentReactionRepository.insertCommentReaction(entity);
             applyIncreaseCount(request.reaction(), request.commentId());
             return commentReactionMapStruct.toResponse(entity);
