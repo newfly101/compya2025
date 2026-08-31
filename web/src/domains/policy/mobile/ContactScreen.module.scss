@@ -28,6 +28,26 @@
   line-height: $line-height-relaxed;
 }
 
+.link {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+// ── 오픈채팅 바로가기 버튼 ───────────────────────────────────
+.chatButton {
+  @include flex-center;
+  @include text-body;
+  width: 100%;
+  padding: $space-3 $space-4;
+  background-color: var(--color-brand);
+  color: var(--color-bg-deepest);
+  font-weight: $font-weight-semibold;
+  border-radius: $radius-md;
+  text-align: center;
+  text-decoration: none;
+}
+
 // ── 미확정 사실 정보 표시 ─────────────────────────────────────
 .todoNote {
   @include text-caption;

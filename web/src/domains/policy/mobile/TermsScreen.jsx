@@ -4,12 +4,7 @@ import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import styles from "./TermsScreen.module.scss";
 
-// TODO: 운영자 확인 필요
-const TODO_EFFECTIVE_DATE = "확인 필요";
-
-const Todo = ({ children }) => (
-  <span className={styles.todoNote}>[TODO: {children}]</span>
-);
+const EFFECTIVE_DATE = "2026년 1월 1일";
 
 // 이용약관 각 조 — 반복 구조라 데이터 배열로 관리한다.
 const SECTIONS = [
@@ -140,9 +135,7 @@ const TermsScreen = () => {
   return (
     <div className={styles.screen}>
       <div className={styles.intro}>
-        <p className={styles.p}>
-          <Todo>시행일 확인 필요 — 현재 값: {TODO_EFFECTIVE_DATE}</Todo>
-        </p>
+        <p className={styles.p}>본 약관은 {EFFECTIVE_DATE}부터 시행됩니다.</p>
       </div>
 
       {SECTIONS.map((section) => (

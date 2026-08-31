@@ -4,12 +4,8 @@ import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import styles from "./AboutScreen.module.scss";
 
-// TODO: 운영자 확인 필요
-const TODO_OPERATOR_NAME = "확인 필요";
-
-const Todo = ({ children }) => (
-  <span className={styles.todoNote}>[TODO: {children}]</span>
-);
+const OPERATOR_NAME = "김재홍";
+const OPEN_CHAT_URL = "https://open.kakao.com/o/sw9YuV8h";
 
 const FEATURES = [
   { label: "쿠폰 모아보기", desc: "최신 쿠폰 코드를 한곳에 모아 확인" },
@@ -72,11 +68,18 @@ const AboutScreen = () => {
 
       <SectionBlock title="운영자 및 문의">
         <div className={styles.body}>
+          <p className={styles.p}>운영자: {OPERATOR_NAME} (개인 운영)</p>
           <p className={styles.p}>
-            운영자: <Todo>운영자명 확인 필요 — 현재 값: {TODO_OPERATOR_NAME}</Todo>
-          </p>
-          <p className={styles.p}>
-            사이트 이용 중 궁금한 점이나 제안이 있다면{" "}
+            사이트 이용 중 궁금한 점이나 제안이 있다면 아래{" "}
+            <a
+              href={OPEN_CHAT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.link}
+            >
+              카카오톡 오픈채팅방
+            </a>
+            {" "}또는{" "}
             <Link to={ROUTE_PATHS.contact} className={styles.link}>문의하기</Link>
             {" "}페이지를 이용해 주세요.
           </p>
