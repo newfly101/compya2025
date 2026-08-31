@@ -27,6 +27,7 @@ export const ROUTE_META = {
   TERMS: {path: ROUTE_PATHS.terms, title: "컴프야펀 | 이용약관"},
   CONTACT: {path: ROUTE_PATHS.contact, title: "컴프야펀 | 문의하기"},
   ABOUT: {path: ROUTE_PATHS.about, title: "컴프야펀 | 사이트 소개"},
+  MYPAGE: {path: ROUTE_PATHS.mypage, title: "컴프야펀 | 마이페이지"},
   AUTH_CALL_BACK: {path: ROUTE_PATHS.authentication},
   // admin
   ADMIN_COUPON: { path: ROUTE_PATHS.admin_coupon, title: "컴프야펀 | 어드민 | 쿠폰 관리", variant: "page" },

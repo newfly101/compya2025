@@ -6,6 +6,11 @@ import {
   requestAdminPatchUserRole,
   requestAdminPatchUserStatus,
 } from "@/domains/users/store/admin/thunks.js";
+import {
+  requestGetMyInfo,
+  requestUpdateMyNickname,
+  requestDeleteMyAccount,
+} from "@/domains/users/store/public/thunks.js";
 
 const initialState = {
   users: [],
@@ -46,3 +51,33 @@ const adminUsersSlice = createSlice({
 
 export const { actions } = adminUsersSlice;
 export default adminUsersSlice.reducer;
+
+/* ── 마이페이지(본인 정보 조회/수정/탈퇴) ─────────────────────── */
+const initialMyPageState = {
+  profile: null,
+  loading: false,
+  error: null,
+};
+
+const myPageSlice = createSlice({
+  name: "myPage",
+  initialState: initialMyPageState,
+  reducers: {},
+  extraReducers: (builder) => {
+    /* ── 내 정보 조회 ───────────────────────────────────────── */
+    applyAsyncHandlers(builder, requestGetMyInfo, (state, action) => {
+      state.profile = action.payload;
+    });
+    /* ── 닉네임 수정 ────────────────────────────────────────── */
+    applyAsyncHandlers(builder, requestUpdateMyNickname, (state, action) => {
+      state.profile = action.payload;
+    });
+    /* ── 회원 탈퇴 ──────────────────────────────────────────── */
+    applyAsyncHandlers(builder, requestDeleteMyAccount, (state) => {
+      state.profile = null;
+    });
+  },
+});
+
+export const myPageActions = myPageSlice.actions;
+export const myPageReducer = myPageSlice.reducer;

@@ -29,6 +29,7 @@ export const ROUTE_PATHS = {
   terms: "/terms",
   contact: "/contact",
   about: "/about",
+  mypage: "/mypage",
   // admin flat 구조
   admin_coupon: "/admin/coupon",
   admin_event: "/admin/event",

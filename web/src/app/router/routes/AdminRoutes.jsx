@@ -15,10 +15,10 @@ export const AdminRoutes = [
       {
         path: "admin",
         children: [
-          { path: "coupon", element: <AdminCouponPage />, handle: ROUTE_META.ADMIN_COUPON.title },
-          { path: "event", element: <AdminEventPage />, handle: ROUTE_META.ADMIN_EVENT.title },
-          { path: "notice", element: <AdminNoticePage />, handle: ROUTE_META.ADMIN_NOTICE.title },
-          { path: "user", element: <AdminUserPage />, handle: ROUTE_META.ADMIN_USER.title },
+          { path: "coupon", element: <AdminCouponPage />, handle: ROUTE_META.ADMIN_COUPON },
+          { path: "event", element: <AdminEventPage />, handle: ROUTE_META.ADMIN_EVENT },
+          { path: "notice", element: <AdminNoticePage />, handle: ROUTE_META.ADMIN_NOTICE },
+          { path: "user", element: <AdminUserPage />, handle: ROUTE_META.ADMIN_USER },
         ],
       },
     ],

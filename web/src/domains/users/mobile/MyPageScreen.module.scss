@@ -1,0 +1,248 @@
+.page {
+  @include page-layout;
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+/* 상태 박스 (로딩 / 에러 / 빈 데이터) */
+.stateBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-12 0;
+}
+
+.stateText {
+  @include text-body;
+  color: var(--color-text-muted);
+}
+
+.stateError {
+  @include text-body;
+  color: var(--color-danger);
+  text-align: center;
+}
+
+.retryBtn {
+  height: $control-height-md;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-danger);
+  border-radius: $radius-lg;
+  background: transparent;
+  color: var(--color-danger);
+  @include text-body;
+  cursor: pointer;
+}
+
+/* 내 정보 카드 */
+.card {
+  @include card-base($radius: $radius-xl, $pad: $space-4);
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.avatar {
+  width: $space-12;
+  height: $space-12;
+  border-radius: $radius-full;
+  object-fit: cover;
+  align-self: center;
+}
+
+.field {
+  @include flex-col($space-1);
+  padding-bottom: $space-3;
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.fieldLabel {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.viewRow {
+  @include flex-between;
+  gap: $space-2;
+}
+
+.fieldValue {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+  @include hangul-safe;
+}
+
+.fieldValueMuted {
+  @include text-body;
+  color: var(--color-text-secondary);
+  @include hangul-safe;
+}
+
+.fieldError {
+  @include text-caption;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.editBtn {
+  height: $control-height-sm;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-brand);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-brand);
+  @include text-caption;
+  cursor: pointer;
+  @include pressable;
+}
+
+.editRow {
+  @include flex-col($space-2);
+}
+
+.input {
+  height: $control-height-md;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  font-size: $font-size-12;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-brand);
+  }
+}
+
+.editActions {
+  display: flex;
+  gap: $space-2;
+}
+
+.cancelBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  @include text-body;
+  cursor: pointer;
+}
+
+.saveBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: none;
+  border-radius: $radius-md;
+  background: var(--color-brand);
+  color: #fff;
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+/* 위험 영역(탈퇴) */
+.dangerZone {
+  display: flex;
+  justify-content: center;
+  padding-top: $space-4;
+}
+
+.withdrawBtn {
+  height: $control-height-md;
+  padding: 0 $space-4;
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  @include text-caption;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
+/* 탈퇴 확인 모달 */
+.overlay {
+  @include modal-backdrop;
+}
+
+.modal {
+  width: 20rem;
+  max-width: calc(100% - 2rem);
+  background-color: var(--color-bg-modal);
+  border-radius: $radius-2xl;
+  padding: $space-5;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.modalTitle {
+  @include text-section-title;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.modalDesc {
+  @include text-body;
+  color: var(--color-text-secondary);
+  line-height: $line-height-relaxed;
+  margin: 0;
+}
+
+.agreeLabel {
+  @include flex-row($space-2);
+  @include text-caption;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.modalActions {
+  display: flex;
+  gap: $space-2;
+  margin-top: $space-2;
+}
+
+.modalCancelBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  @include text-body;
+  cursor: pointer;
+}
+
+.modalConfirmBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: none;
+  border-radius: $radius-md;
+  background: var(--color-danger);
+  color: #fff;
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
