@@ -26,6 +26,8 @@ public interface UserMapStruct {
     @Mapping(target = "oauthProfileImage", source = "profileImage")
     @Mapping(target = "oauthAgeRange", source = "ageRange")
     @Mapping(target = "nickname", source = "nickname")
+    // 서비스 자체 email 초기값 — 가입 시점 OAuth 이메일로 1회 복사. 이후 email 과 oauthEmail 은 서로 독립적으로 관리됨 (네이버 미동의 시 null 허용)
+    @Mapping(target = "email", source = "email")
     @Mapping(target = "userRole", constant = "USER")
     @Mapping(target = "userStatus", constant = "ACTIVE")
     @Mapping(target = "createdAt", ignore = true)
