@@ -1,0 +1,17 @@
+{
+  "name": "컴프야펀",
+  "short_name": "컴프야펀",
+  "description": "컴투스 프로야구 공식 공지, 이벤트, 쿠폰, 공략 정보를 한눈에 볼 수 있는 팬 사이트",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f0a14",
+  "theme_color": "#0f0a14",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

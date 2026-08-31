@@ -1,11 +1,10 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { DEFAULT_ODDS_DOC } from "@/data/odds";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import styles from "./OddsIndexScreen.module.scss";
 
 const OddsIndexScreen = () => {
-  const navigate = useNavigate();
   useDomainTopBar("확률 공시");
 
   const doc = DEFAULT_ODDS_DOC;
@@ -57,15 +56,14 @@ const OddsIndexScreen = () => {
             <div className={styles.categoryHeader}>{category.label}</div>
             <div className={styles.categoryList}>
               {categorySections.map((section) => (
-                <button
+                <Link
                   key={section.id}
-                  type="button"
+                  to={ROUTE_PATHS.odds_section(section.id)}
                   className={styles.row}
-                  onClick={() => navigate(ROUTE_PATHS.odds_section(section.id))}
                 >
                   <span className={styles.rowTitle}>{section.title}</span>
                   <span className={styles.chevron} aria-hidden="true">›</span>
-                </button>
+                </Link>
               ))}
             </div>
           </section>

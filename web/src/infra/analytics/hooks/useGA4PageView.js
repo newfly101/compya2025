@@ -13,10 +13,7 @@ export const useGA4PageView = () => {
     // title이 함수면 동적 라우트 — 페이지가 데이터 로드 후 직접 처리한다
     if (typeof title === "function") return;
 
-    if (title) {
-      document.title = title;
-    }
-
+    // document.title 세팅 책임은 useDocumentMeta 로 이관됨 (infra/seo/useDocumentMeta.js)
     pushEvent({
       event: "page_view",
       page_path: location.pathname,

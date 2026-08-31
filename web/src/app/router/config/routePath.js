@@ -24,6 +24,11 @@ export const ROUTE_PATHS = {
   players_legacy_year_pattern: "/players/:teamId/:year",
   history_mode: "/mode/history",
   community: "/community",
+  // 정책 페이지 — 구글 애드센스 심사 대비 신설 (2026-08-31)
+  privacy: "/privacy",
+  terms: "/terms",
+  contact: "/contact",
+  about: "/about",
   // admin flat 구조
   admin_coupon: "/admin/coupon",
   admin_event: "/admin/event",

@@ -1,0 +1,37 @@
+// ============================================================
+// app/wrapper/mobile/parts/Footer.module.scss
+// C/Footer — 전역 정책 링크 + 저작권
+// ============================================================
+
+@use '@/global/styles/mixins/flex' as *;
+@use '@/global/styles/mixins/layout' as *;
+@use '@/global/styles/variables/spacing' as *;
+@use '@/global/styles/variables/font' as *;
+
+.footer {
+  @include flex-col($space-3);
+  @include h-pad;
+  padding-top: $space-6;
+  padding-bottom: $space-6;
+  margin-top: $space-8;
+  border-top: 1px solid var(--color-border);
+}
+
+.links {
+  @include flex-row($space-4);
+  flex-wrap: wrap;
+}
+
+.link {
+  @include text-micro;
+  color: var(--color-text-secondary);
+
+  &:active {
+    color: var(--color-text-primary);
+  }
+}
+
+.copyright {
+  @include text-micro;
+  color: var(--color-text-muted);
+}

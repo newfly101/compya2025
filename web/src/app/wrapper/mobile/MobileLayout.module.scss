@@ -6,6 +6,9 @@
 
 .pageContent {
   @include page-content($layout-topbar-height);
+  // Footer 는 이 안(스크롤 흐름)에 위치 — 자체 여백(Footer.module.scss)으로 상단 간격 확보.
+  // 홈 인디케이터 있는 기기 대비 하단 안전 영역만 추가.
+  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
 .loading {

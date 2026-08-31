@@ -14,7 +14,7 @@ import { useMenuCounts } from "@/app/wrapper/mobile/hooks/useMenuCounts.js";
 const Drawer = () => {
   const { isDrawerOpen, closeDrawer } = useTopBar();
   const location = useLocation();
-  const { user, isAuthenticated, isAdmin, login } = useAuthentication();
+  const { user, isAuthenticated, isAdmin, login, logout } = useAuthentication();
   const [renewalOpen, setRenewalOpen] = useState(false);
   const [loginRequiredOpen, setLoginRequiredOpen] = useState(false);
   const menuCounts = useMenuCounts();
@@ -58,7 +58,9 @@ const Drawer = () => {
       {/* 패널 */}
       <aside className={`${styles.drawer} ${isDrawerOpen ? styles.drawerOpen : ""}`}>
 
-        {/* 유저 프로필 */}
+        {/* 유저 프로필
+            로그인 상태일 때 로그아웃 버튼 노출 — TopBar 는 variant 가 page/section 일 때
+            우측 액션이 다른 기능으로 바뀌어 로그아웃 진입점이 사라지므로, 그 공백을 Drawer 에서 메운다. */}
         {user ?
           <div className={styles.profile}>
             <div className={styles.avatar}>
@@ -68,6 +70,7 @@ const Drawer = () => {
               <span className={styles.userName}>{user?.nickname}</span>
               <span className={styles.userStatus}>{user?.email}</span>
             </div>
+            <button className={styles.logoutBtn} onClick={logout}>로그아웃</button>
           </div>
           :
           <div className={styles.profile}>

@@ -23,6 +23,10 @@ export const ROUTE_META = {
   PLAYERS: {path: ROUTE_PATHS.players, title: "컴프야펀 | 선수 백과사전"},
   HISTORY_MODE: {path: ROUTE_PATHS.history_mode, title: "컴프야펀 | 히스토리모드"},
   COMMUNITY: {path: ROUTE_PATHS.community, title: "컴프야펀 | 커뮤니티"},
+  PRIVACY: {path: ROUTE_PATHS.privacy, title: "컴프야펀 | 개인정보처리방침"},
+  TERMS: {path: ROUTE_PATHS.terms, title: "컴프야펀 | 이용약관"},
+  CONTACT: {path: ROUTE_PATHS.contact, title: "컴프야펀 | 문의하기"},
+  ABOUT: {path: ROUTE_PATHS.about, title: "컴프야펀 | 사이트 소개"},
   AUTH_CALL_BACK: {path: ROUTE_PATHS.authentication},
   // admin
   ADMIN_COUPON: { path: ROUTE_PATHS.admin_coupon, title: "컴프야펀 | 어드민 | 쿠폰 관리", variant: "page" },

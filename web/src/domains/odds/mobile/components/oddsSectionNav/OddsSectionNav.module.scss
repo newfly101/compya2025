@@ -21,7 +21,8 @@
   background-color: var(--color-bg-card);
   border: 1px solid var(--color-border);
 
-  &:disabled {
+  &:disabled,
+  &.disabled {
     color: var(--color-text-muted);
     background-color: var(--color-bg-deep);
     cursor: not-allowed;

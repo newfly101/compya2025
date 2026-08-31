@@ -1,16 +1,14 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import LabelBadge from "@/global/ui/badge/LabelBadge.jsx";
 import styles from "./NoticeCard.module.scss";
 
 const NoticeCard = ({ notice, isFeatured = false }) => {
-  const navigate = useNavigate();
-
-  const handleClick = () => navigate(ROUTE_PATHS.notice_details(notice.id));
+  const to = ROUTE_PATHS.notice_details(notice.id);
 
   if (isFeatured) {
     return (
-      <article className={styles.featuredCard} onClick={handleClick}>
+      <Link to={to} className={styles.featuredCard}>
         <div className={styles.featuredThumb}>
           {notice.imageUrl
             ? <img src={notice.imageUrl} alt="" />
@@ -26,12 +24,12 @@ const NoticeCard = ({ notice, isFeatured = false }) => {
         {notice.summary && (
           <p className={styles.featuredSummary}>{notice.summary.split("\n")[0]}</p>
         )}
-      </article>
+      </Link>
     );
   }
 
   return (
-    <article className={styles.card} onClick={handleClick}>
+    <Link to={to} className={styles.card}>
       <div className={styles.cardRow}>
         <div className={styles.cardContent}>
           <p className={styles.title}>{notice.title}</p>
@@ -49,7 +47,7 @@ const NoticeCard = ({ notice, isFeatured = false }) => {
         <span className={styles.date}>{notice.publishedAt?.slice(0, 10)}</span>
         <span className={styles.chevron}>›</span>
       </div>
-    </article>
+    </Link>
   );
 };
 

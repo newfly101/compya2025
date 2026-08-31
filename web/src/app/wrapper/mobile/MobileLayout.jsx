@@ -4,6 +4,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { TopBarProvider } from "@/app/provider/TopBarProvider";
 import TopBar from "@/app/wrapper/mobile/parts/TopBar";
 import Drawer from "@/app/wrapper/mobile/parts/Drawer.jsx";
+import Footer from "@/app/wrapper/mobile/parts/Footer.jsx";
 
 const MobileLayout = () => {
   const { pathname, search } = useLocation();
@@ -72,6 +73,13 @@ const MobileLayout = () => {
           <Suspense fallback={<div className={styles.loading}>로딩중...</div>}>
             <Outlet />
           </Suspense>
+
+          {/* 전역 Footer — pageContent(스크롤 컨테이너) 안쪽 맨 아래 배치.
+              appWrapper 바깥(고정 영역)에 두면 flex:1 인 pageContent 가 그만큼
+              항상 줄어들어 모든 화면의 실사용 뷰포트를 영구 잠식한다.
+              스크롤 콘텐츠 흐름 안에 두면 각 페이지 하단에서 자연스럽게 노출되고,
+              크롤러도 페이지 DOM 안에서 정책 링크를 그대로 발견할 수 있다. */}
+          <Footer />
         </div>
       </div>
     </TopBarProvider>

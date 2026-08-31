@@ -92,6 +92,8 @@ $color-naver-font: $color-white-100;
 
 .userInfo {
   @include flex-col($space-1);
+  flex: 1;
+  overflow: hidden;
 }
 
 .userName {
@@ -102,6 +104,21 @@ $color-naver-font: $color-white-100;
 .userStatus {
   @include text-micro;
   color: var(--color-text-muted);
+  @include text-ellipsis;
+}
+
+// ── 로그아웃 버튼 ─────────────────────────────────────────────
+// TopBar.module.scss 의 .logoutBtn 과 문구·톤 정합
+.logoutBtn {
+  height: rem(28);                           // mobile-frame § 4.3 — 토큰 외 size, rem 강제
+  padding: 0 $space-3;
+  border-radius: $radius-sm;
+  background-color: var(--color-bg-card);
+  color: var(--color-text-primary);
+  @include text-micro;
+  white-space: nowrap;
+  flex-shrink: 0;
+  @include pressable;
 }
 
 // ── 네비게이션 ────────────────────────────────────────────────
