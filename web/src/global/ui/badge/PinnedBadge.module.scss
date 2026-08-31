@@ -44,3 +44,6 @@ $pinned-red-border:   #f87171;
 // D1=a (2026-05-31): CommunityBadge / BoardTagBadge 흡수용 신규 2종
 .new       { background-color: $pinned-red-bg;     border-color: $pinned-red-border;     color: $pinned-red-border; }
 .neutral   { background-color: $pinned-gray-bg;    border-color: $pinned-gray-border;    color: $pinned-gray-border; }
+
+// 선수 백과사전 BETA 뱃지용 — 기존 $pinned-yellow-* 토큰 재사용 (신규 색상 추가 없음)
+.beta      { background-color: $pinned-yellow-bg;  border-color: $pinned-yellow-border;  color: $pinned-yellow-border; }

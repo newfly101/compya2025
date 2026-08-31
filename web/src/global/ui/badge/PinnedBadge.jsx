@@ -4,7 +4,7 @@ import styles from "./PinnedBadge.module.scss";
  * PinnedBadge — 이벤트성 하이라이트 강조 (alpha 채우기 + border)
  * 고정 공지, 이벤트 삽입, 중요 표시 등 강조가 필요한 곳에 사용
  *
- * @param {"update"|"patch"|"cafe"|"tip"|"important"|"mustread"|"new"|"neutral"} variant
+ * @param {"update"|"patch"|"cafe"|"tip"|"important"|"mustread"|"new"|"neutral"|"beta"} variant
  * @param {string} [label] - 기본 레이블 덮어쓰기
  *
  * D1=a (2026-05-31 확정): new (red), neutral (gray) variant 추가.
@@ -20,6 +20,7 @@ const DEFAULT_LABELS = {
   mustread: "필독",
   new:      "NEW",
   neutral:  "",
+  beta:     "BETA",
 };
 
 const PinnedBadge = ({ variant = "important", label }) => {
