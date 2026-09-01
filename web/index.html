@@ -10,12 +10,26 @@
     <!-- End Google Tag Manager -->
 
     <!-- Google Analytics Manager -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KCC3QTZWZW"></script>
     <script>
+      // localhost 에서는 gtag.js 를 아예 로드하지 않는다. 두 가지 이유다.
+      //  (1) 개발 중 클릭이 운영 속성 G-KCC3QTZWZW 에 그대로 쌓인다.
+      //      ga.js 가 [GA] 접두를 붙이는 건 커스텀 이벤트뿐이고, gtag config 가
+      //      자동 수집하는 page_view / session_start / user_engagement 는 접두 없이 나간다.
+      //  (2) gtag.js 내장 web-vitals 가 상호작용(INP)을 측정하다
+      //      reportAllChanges 에서 'startTime' of undefined 예외를 던져 콘솔을 덮는다.
+      // ga.js 는 window.gtag 를 optional chaining 으로 호출하므로 없어도 동작하며,
+      // 개발 중에는 console.log("[GA]", …) 로 이벤트를 확인한다.
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-KCC3QTZWZW');
+      var DEV_HOSTS = ['localhost', '127.0.0.1', '::1', '[::1]'];
+      if (DEV_HOSTS.indexOf(location.hostname) === -1) {
+        window.gtag = function () { window.dataLayer.push(arguments); };
+        gtag('js', new Date());
+        gtag('config', 'G-KCC3QTZWZW');
+        var gaScript = document.createElement('script');
+        gaScript.async = true;
+        gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-KCC3QTZWZW';
+        document.head.appendChild(gaScript);
+      }
     </script>
     <!-- End Google Analytics Manager -->
 

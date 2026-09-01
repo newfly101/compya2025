@@ -54,14 +54,24 @@ export const pushEvent = (event) => {
 
 `gtag` 직접 연동 방식 사용. GTM은 현재 비활성화 상태.
 
+**로컬(localhost)에서는 gtag.js 를 로드하지 않는다.** 개발 중 클릭이 운영 속성에
+그대로 쌓이는 것을 막고, gtag 내장 web-vitals 가 상호작용마다 콘솔에 예외를 뱉는 것도 함께 사라진다.
+로컬에서는 `pushEvent` 의 `console.log("[GA]", …)` 로 이벤트를 확인한다.
+
 ```html
-<!-- index.html -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-KCC3QTZWZW"></script>
+<!-- index.html — 스크립트를 조건부로 주입한다 -->
 <script>
   window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-KCC3QTZWZW');
+  var DEV_HOSTS = ['localhost', '127.0.0.1', '::1', '[::1]'];
+  if (DEV_HOSTS.indexOf(location.hostname) === -1) {
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    gtag('js', new Date());
+    gtag('config', 'G-KCC3QTZWZW');
+    var gaScript = document.createElement('script');
+    gaScript.async = true;
+    gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=G-KCC3QTZWZW';
+    document.head.appendChild(gaScript);
+  }
 </script>
 ```
 
