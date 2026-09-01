@@ -1,0 +1,38 @@
+// ============================================================
+// legendMaterials 도메인 로컬 토큰
+// 글로벌 _colors.scss / semantic/_color.scss 에는 추가하지 않음
+// LegendMaterialScreen.jsx 에서 side-effect import 로 1회 주입
+//
+// 디자인 핸드오프(test-docs/레전드 재료 앱 디자인) 지정값 중
+// 프로젝트 공통 토큰으로 대체할 수 없는 것만 여기 둔다.
+//   · 브랜드 퍼플 → --color-brand 계열 그대로 사용 (핸드오프의 #7C3AED 대응)
+//   · 배경/텍스트/보더 → --color-bg-* / --color-text-* / --color-border* 사용
+// ============================================================
+
+:root {
+  // 보유 체크 그린 — 카드 우측 ✓
+  --color-lm-owned: #4ade80;
+
+  // 획득처 2종 — 배지·모달 칩·이동 버튼
+  --color-lm-history: #38bdf8;
+  --color-lm-history-bg: rgba(56, 189, 248, 0.12);
+  --color-lm-history-border: rgba(56, 189, 248, 0.33);
+
+  --color-lm-mileage: #fbbf24;
+  --color-lm-mileage-bg: rgba(251, 191, 36, 0.12);
+  --color-lm-mileage-border: rgba(251, 191, 36, 0.33);
+
+  // 보유 카드 면 — 브랜드 퍼플 그라데이션
+  --color-lm-card-owned-bg: linear-gradient(160deg, rgba(168, 106, 240, 0.30), rgba(255, 255, 255, 0.03));
+  --color-lm-card-owned-border: rgba(201, 165, 248, 0.55);
+
+  // 미보유 카드 면
+  --color-lm-card-bg: rgba(255, 255, 255, 0.02);
+
+  // 진행률 바
+  --color-lm-progress-track: rgba(255, 255, 255, 0.08);
+  --color-lm-progress-fill: linear-gradient(90deg, #6d4ad3, #a86af0);
+
+  // 하단 시트 스크림
+  --color-lm-scrim: rgba(4, 3, 8, 0.72);
+}

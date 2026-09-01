@@ -21,6 +21,7 @@ export const ROUTE_META = {
         : "컴프야펀 | 확률 공시 상세",
   },
   PLAYERS: {path: ROUTE_PATHS.players, title: "컴프야펀 | 선수 백과사전"},
+  LEGEND_MATERIALS: {path: ROUTE_PATHS.legend_materials, title: "컴프야펀 | 레전드 재료 검색"},
   HISTORY_MODE: {path: ROUTE_PATHS.history_mode, title: "컴프야펀 | 히스토리모드"},
   COMMUNITY: {path: ROUTE_PATHS.community, title: "컴프야펀 | 커뮤니티"},
   PRIVACY: {path: ROUTE_PATHS.privacy, title: "컴프야펀 | 개인정보처리방침"},

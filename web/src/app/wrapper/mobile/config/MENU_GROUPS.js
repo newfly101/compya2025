@@ -15,6 +15,7 @@ export const MENU_GROUPS = [
       { icon: '🎯', label: '히스토리 탐색기', to: '/mode/history', badge: null },
       { icon: '📊', label: '확률 공시',      to: '/probability',        badge: null, tag: 'new', loginRequired: true },
       { icon: '⚾', label: '선수 백과사전',   to: '/players',      badge: null, tag: 'beta', loginRequired: true },
+      { icon: '🧩', label: '레전드 재료 검색', to: '/legend-materials', badge: null, tag: 'beta' },
     ]
   },
   {

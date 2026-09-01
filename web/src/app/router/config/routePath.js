@@ -22,6 +22,16 @@ export const ROUTE_PATHS = {
   },
   players_legacy_team_pattern: "/players/:teamId",
   players_legacy_year_pattern: "/players/:teamId/:year",
+  // 레전드 재료 검색 — 구단/역할/레전드는 쿼리스트링(?team=&role=&legend=)으로 처리
+  legend_materials: "/legend-materials",
+  legend_materials_query: ({ team, role, legend } = {}) => {
+    const params = new URLSearchParams();
+    if (team) params.set("team", team);
+    if (role) params.set("role", role);
+    if (legend) params.set("legend", legend);
+    const qs = params.toString();
+    return qs ? `/legend-materials?${qs}` : "/legend-materials";
+  },
   history_mode: "/mode/history",
   community: "/community",
   // 정책 페이지 — 구글 애드센스 심사 대비 신설 (2026-08-31)
