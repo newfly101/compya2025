@@ -49,6 +49,9 @@ com.dawne.com2usbaseball
 
 리소스 매퍼 XML은 `resources/mapper/{구분}/{도메인명}/*.xml`에 도메인 폴더로 나눠 둔다.
 
+> 위는 **지켜야 할 형태**다. 현재 코드베이스에 **실제로 무엇이 어디 있는지**(도메인 9개 목록, 주소 지도,
+> 매퍼 XML 자리, 예외적으로 규칙에서 벗어난 곳)는 [`backend-structure.md`](./backend-structure.md) 에 있다.
+
 ---
 
 ## 3. 네이밍 규칙
@@ -190,4 +193,5 @@ Controller → Service → Repository → Mapper(인터페이스) ↔ Mapper(xml
 
 ## 13. 참고
 
+- **실제 구조 지도는 [`backend-structure.md`](./backend-structure.md) 참조** — 도메인 목록, 주소 지도, 매퍼 XML 자리, 자주 틀리는 패턴, 새 도메인 확인표. 코드를 새로 짜기 전에 먼저 본다
 - 프론트엔드 쪽 API 호출 규칙은 `docs/convention/frontend.md` 참조
