@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.fun.legendCard.repository.mapper.FunPlayerLegendMaterialMapper">
+
+    <resultMap id="PlayerLegendMaterialResultMap"
+               type="com.dawne.com2usbaseball.domain.fun.legendCard.entity.PlayerLegendMaterialEntity">
+        <id property="id" column="id"/>
+        <result property="legendId" column="legend_id"/>
+        <result property="materialType" column="material_type"/>
+        <result property="slotNo" column="slot_no"/>
+        <result property="teamCode" column="team_code"/>
+        <result property="seasonYear" column="season_year"/>
+        <result property="playerName" column="player_name"/>
+        <result property="playerPositionCode" column="player_position_code"/>
+        <result property="playerCardId" column="player_card_id"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="columns">
+        id,
+        legend_id,
+        material_type,
+        slot_no,
+        team_code,
+        season_year,
+        player_name,
+        player_position_code,
+        player_card_id,
+        created_at,
+        updated_at
+    </sql>
+
+    <!-- 정렬 기준 — 선수 6행 먼저, 그다음 코치 2행. 각 그룹 안에서는 slot_no 순. -->
+    <sql id="orderBy">
+        ORDER BY legend_id,
+                 CASE material_type WHEN 'PLAYER' THEN 0 ELSE 1 END,
+                 slot_no
+    </sql>
+
+    <select id="findByLegendId" resultMap="PlayerLegendMaterialResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM data_player_legend_material
+        WHERE legend_id = #{legendId}
+        <include refid="orderBy"/>
+    </select>
+
+    <!-- 목록 조회에서 N+1 을 피하기 위한 일괄 조회 -->
+    <select id="findByLegendIds" resultMap="PlayerLegendMaterialResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM data_player_legend_material
+        WHERE legend_id IN
+        <foreach collection="legendIds" item="legendId" open="(" separator="," close=")">
+            #{legendId}
+        </foreach>
+        <include refid="orderBy"/>
+    </select>
+
+</mapper>

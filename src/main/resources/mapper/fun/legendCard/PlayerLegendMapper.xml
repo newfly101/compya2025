@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.fun.legendCard.repository.mapper.FunPlayerLegendMapper">
+
+    <resultMap id="PlayerLegendResultMap"
+               type="com.dawne.com2usbaseball.domain.fun.legendCard.entity.PlayerLegendEntity">
+        <id property="id" column="id"/>
+        <result property="legendName" column="legend_name"/>
+        <result property="legendType" column="legend_type"/>
+        <result property="teamCode" column="team_code"/>
+        <result property="playerRole" column="player_role"/>
+        <result property="positionCode" column="position_code"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="columns">
+        id,
+        legend_name,
+        legend_type,
+        team_code,
+        player_role,
+        position_code,
+        created_at,
+        updated_at
+    </sql>
+
+    <select id="findById" resultMap="PlayerLegendResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM data_player_legend
+        WHERE id = #{id}
+    </select>
+
+    <!-- 조건은 전부 선택. 정렬은 구단 → 타자/투수 → 이름 순으로 고정한다. -->
+    <select id="findAll" resultMap="PlayerLegendResultMap">
+        SELECT
+        <include refid="columns"/>
+        FROM data_player_legend
+        <where>
+            <if test="teamCode != null and teamCode != ''">
+                AND team_code = #{teamCode}
+            </if>
+            <if test="legendType != null and legendType != ''">
+                AND legend_type = #{legendType}
+            </if>
+            <if test="playerRole != null and playerRole != ''">
+                AND player_role = #{playerRole}
+            </if>
+        </where>
+        ORDER BY team_code, player_role, legend_name
+    </select>
+
+</mapper>
