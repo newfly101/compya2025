@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.fun.legendStat.repository.mapper.FunLegendStatMapper">
+
+    <!-- LEFT JOIN 이라 타자는 pitch 컬럼이 NULL 이고, <id/> 가 null 인 행은 collection 에 안 들어간다 -->
+    <resultMap id="LegendStatResultMap"
+               type="com.dawne.com2usbaseball.domain.fun.legendStat.entity.LegendStatEntity">
+        <id property="id" column="id"/>
+        <result property="legendName" column="legend_name"/>
+        <result property="legendType" column="legend_type"/>
+        <result property="teamCode" column="team_code"/>
+        <result property="playerRole" column="player_role"/>
+        <result property="positionCode" column="position_code"/>
+        <result property="stat1" column="stat1"/>
+        <result property="stat2" column="stat2"/>
+        <result property="stat3" column="stat3"/>
+        <result property="stat4" column="stat4"/>
+        <result property="stat5" column="stat5"/>
+        <result property="rating" column="rating"/>
+        <result property="ratingRev" column="rating_rev"/>
+
+        <collection property="pitches"
+                    ofType="com.dawne.com2usbaseball.domain.fun.legendStat.entity.LegendPitchEntity">
+            <id property="pitchCode" column="pitch_code"/>
+            <result property="pitchGrade" column="pitch_grade"/>
+        </collection>
+    </resultMap>
+
+    <resultMap id="PitchTypeResultMap"
+               type="com.dawne.com2usbaseball.domain.fun.legendStat.entity.PitchTypeEntity">
+        <id property="pitchCode" column="pitch_code"/>
+        <result property="pitchName" column="pitch_name"/>
+        <result property="statGroup" column="stat_group"/>
+        <result property="sortNo" column="sort_no"/>
+    </resultMap>
+
+    <!--
+      구종을 따로 조회하면 투수 27명에 27번의 왕복이 붙는다. 조인 한 번으로 끝낸다.
+      ovr 은 뽑지 않는다 (정렬 인덱스 용도이고 응답에 실으면 스탯과 어긋난다).
+      마지막 정렬 키 sort_no 는 구종이 부모 행에 붙는 순서를 정한다.
+    -->
+    <select id="findAllWithPitches" resultMap="LegendStatResultMap">
+        SELECT l.id,
+               l.legend_name,
+               l.legend_type,
+               l.team_code,
+               l.player_role,
+               l.position_code,
+               s.stat1,
+               s.stat2,
+               s.stat3,
+               s.stat4,
+               s.stat5,
+               s.rating,
+               s.rating_rev,
+               p.pitch_code,
+               p.pitch_grade
+        FROM data_player_legend l
+                 JOIN data_player_legend_stat s ON s.legend_id = l.id
+                 LEFT JOIN data_player_legend_pitch p ON p.legend_id = l.id
+                 LEFT JOIN data_pitch_type t ON t.pitch_code = p.pitch_code
+        ORDER BY s.rating IS NULL,
+                 s.rating DESC,
+                 s.ovr DESC,
+                 l.legend_name,
+                 t.sort_no
+    </select>
+
+    <select id="findAllPitchTypes" resultMap="PitchTypeResultMap">
+        SELECT pitch_code,
+               pitch_name,
+               stat_group,
+               sort_no
+        FROM data_pitch_type
+        ORDER BY sort_no
+    </select>
+
+</mapper>
