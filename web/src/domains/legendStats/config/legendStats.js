@@ -103,10 +103,15 @@ const sortValue = (legend, key) => {
   return legend.stats[key];
 };
 
-/** 평점 미정은 정렬 방향과 무관하게 항상 맨 아래. 동점 tie-break 는 OVR 내림차순. */
-export const visibleRows = (legends, { team, type, pos, sort, dir }) => {
+/**
+ * 평점 미정은 정렬 방향과 무관하게 항상 맨 아래. 동점 tie-break 는 OVR 내림차순.
+ * 검색은 레전드 이름에만 건다 — 구단은 위 칩으로 고르는 값이라 중복이다.
+ */
+export const visibleRows = (legends, { team, type, pos, query = "", sort, dir }) => {
+  const q = query.trim().toLowerCase();
   const rows = legends.filter(
     (l) =>
+      (!q || l.name.toLowerCase().includes(q)) &&
       (team === ALL || l.team === team) &&
       (type === ALL || l.type === type) &&
       (type === ALL || pos === ALL || l.pos.includes(pos)),
@@ -219,3 +224,12 @@ export const RATING_SOURCE = {
   site: "네이버 카페",
   url: "https://naver.me/5YoRLA75",
 };
+
+/**
+ * 재료 카드에 붙는 배지 안내.
+ * 마일리지는 아직 데이터가 없어 배지가 실제로 붙지 않는다 — 설명만 먼저 둔다.
+ */
+export const BADGE_GUIDE = [
+  { mark: "히", tone: "history", label: "히스토리 모드에서 저격 가능", note: null },
+  { mark: "마", tone: "mileage", label: "마일리지로 저격 가능", note: "업데이트 예정" },
+];

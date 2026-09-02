@@ -19,6 +19,67 @@
   background: linear-gradient(var(--color-bg-deepest) 82%, transparent);
 }
 
+.searchRow {
+  position: relative;
+  padding: 4px 16px 2px;
+
+  input {
+    width: 100%;
+    padding: 10px 34px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 10px;
+    background: var(--color-bg-card);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: 13.5px;
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+  }
+
+  // 브라우저 기본 clear(×)를 죽인다. 커스텀 버튼과 겹쳐 두 개로 보인다
+  input[type="search"] {
+    appearance: none;
+
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-decoration,
+    &::-webkit-search-results-button {
+      display: none;
+      appearance: none;
+    }
+
+    &::-ms-clear {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+  }
+}
+
+// 폰트 문자(⌕)는 서체마다 크기가 달라 SVG 로 그린다
+.searchIcon {
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.clearButton {
+  position: absolute;
+  right: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 2px 6px;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+}
+
 .chipRow {
   display: flex;
   gap: 7px;
@@ -94,7 +155,7 @@
 .meta {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   padding: 10px 16px 6px;
   color: var(--color-text-muted);
   font-size: 11.5px;
@@ -103,6 +164,43 @@
     color: var(--color-text-secondary);
     font-weight: 500;
   }
+}
+
+.metaLeft {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+// 아이콘만 두면 눌러볼 수 있다는 걸 모른다. 라벨을 붙여 버튼처럼 보이게 한다
+.badgeHelp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px 3px 5px;
+  border: 1px solid var(--color-brand-dark);
+  border-radius: 999px;
+  background: var(--color-brand-alpha-15);
+  color: var(--color-ls-chip-on-text);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.badgeHelpMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: var(--color-bg-deepest);
+  font-size: 9.5px;
+  font-weight: 700;
 }
 
 /* ── 표 ───────────────────────────────────────────────── */
@@ -178,9 +276,14 @@ thead .sticky {
   width: 48px;
 }
 
+// .table th / .table td 의 center 를 이기려면 같은 요소 선택자를 써야 한다
 .cName {
   left: 74px;
   width: 82px;
+}
+
+th.cName,
+td.cName {
   padding-left: 6px;
   text-align: left;
 }
@@ -252,6 +355,89 @@ td.cName {
   width: 6px;
   height: 6px;
   border-radius: 50%;
+}
+
+.materialName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 히스토리 모드에서 얻을 수 있다는 표시 겸 그 화면으로 가는 링크
+.historyBadge {
+  flex: 0 0 auto;
+  // 카드 오른쪽 끝에 붙인다
+  margin-left: auto;
+  padding: 0 3px;
+  border: 1px solid var(--color-ls-history-border);
+  border-radius: 3px;
+  background: var(--color-ls-history-bg);
+  color: var(--color-ls-history);
+  font-size: 9.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+
+  &:hover {
+    background: var(--color-ls-history);
+    color: var(--color-bg-deepest);
+  }
+}
+
+// 아직 데이터가 없어 표에는 안 붙고 안내에만 나온다
+.mileage {
+  border-color: var(--color-ls-mileage-border);
+  background: var(--color-ls-mileage-bg);
+  color: var(--color-ls-mileage);
+
+  &:hover {
+    background: var(--color-ls-mileage);
+    color: var(--color-bg-deepest);
+  }
+}
+
+.helpPoints {
+  margin: 10px 0 12px;
+  padding: 0 0 0 14px;
+  color: var(--color-text-secondary);
+  font-size: 12.5px;
+  line-height: 1.6;
+
+  li {
+    margin-bottom: 5px;
+    list-style: none;
+    text-indent: -10px;
+
+    &::before {
+      content: "- ";
+      color: var(--color-text-muted);
+    }
+  }
+}
+
+.badgeList {
+  margin: 10px 0 14px;
+  padding: 0;
+  list-style: none;
+
+  // 표에서는 카드 오른쪽 끝에 붙이려고 margin-left:auto 를 쓰는데,
+  // 안내 목록에서는 설명 앞에 와야 하므로 되돌린다
+  .historyBadge {
+    margin-left: 0;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+    color: var(--color-text-secondary);
+    font-size: 12.5px;
+  }
+}
+
+.badgeNote {
+  color: var(--color-text-muted);
+  font-style: normal;
 }
 
 td.cPos {
@@ -364,12 +550,17 @@ td.cStat {
   font-size: 12px;
 }
 
+// 가장 긴 약칭(쌍방울·태평양·빙그레 = 한글 3자)에 폭을 맞춰 고정한다.
+// 내용대로 두면 카드마다 이름 시작 위치가 어긋난다
 .materialTeam {
-  padding: 1px 4px;
+  flex: 0 0 auto;
+  min-width: 38px;
+  padding: 1px 3px;
   border: 1px solid var(--color-border-strong);
   border-radius: 4px;
   color: var(--color-text-muted);
   font-size: 9.5px;
+  text-align: center;
 }
 
 /* ── 상태 ─────────────────────────────────────────────── */
@@ -398,27 +589,6 @@ td.cStat {
 /* ── 평점 출처 도움말 ─────────────────────────────────── */
 
 // th 안에 들어가므로 클릭이 정렬로 새지 않게 JSX 에서 stopPropagation 한다
-.help {
-  width: 13px;
-  height: 13px;
-  margin-left: 3px;
-  padding: 0;
-  border: 1px solid var(--color-border-strong);
-  border-radius: 50%;
-  background: transparent;
-  color: var(--color-text-muted);
-  font-family: inherit;
-  font-size: 9px;
-  line-height: 1;
-  vertical-align: middle;
-  cursor: pointer;
-
-  &:hover {
-    border-color: var(--color-brand-dark);
-    color: var(--color-ls-chip-on-text);
-  }
-}
-
 .overlay {
   position: fixed;
   inset: 0;
@@ -445,6 +615,7 @@ td.cStat {
   color: var(--color-text-primary);
   font-size: 14px;
   font-weight: 600;
+  text-align: center;
 }
 
 .helpBody {
