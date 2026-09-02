@@ -3,6 +3,7 @@ import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import AuthCallback from "@/domains/authentication/callback/AuthCallBack.jsx";
 import PlayersLegacyRedirect from "@/app/router/routes/PlayersLegacyRedirect.jsx";
+import { Navigate } from "react-router-dom";
 const HomePage = lazy(() => import("@/domains/home/components/HomeScreen.jsx"));
 const CouponPage = lazy(() => import("@/domains/coupons/mobile/CouponScreen.jsx"));
 const EventPage = lazy(() => import("@/domains/events/mobile/EventScreen.jsx"));
@@ -11,7 +12,6 @@ const NoticeDetailPage = lazy(() => import("@/domains/notices/mobile/NoticeDetai
 const OddsIndexPage = lazy(() => import("@/domains/odds/mobile/OddsIndexScreen.jsx"));
 const OddsSectionPage = lazy(() => import("@/domains/odds/mobile/OddsSectionScreen.jsx"));
 const PlayerEncyclopediaPage = lazy(() => import("@/domains/players/mobile/PlayerEncyclopediaScreen.jsx"));
-const LegendMaterialPage = lazy(() => import("@/domains/legendMaterials/mobile/LegendMaterialScreen.jsx"));
 const LegendStatsPage = lazy(() => import("@/domains/legendStats/mobile/LegendStatsScreen.jsx"));
 const HistoryModePage = lazy(() => import("@/domains/historyMode/mobile/HistoryModeScreen.jsx"));
 const PrivacyPolicyPage = lazy(() => import("@/domains/policy/mobile/PrivacyPolicyScreen.jsx"));
@@ -34,7 +34,8 @@ export const PublicRoutes = [
   { path: ROUTE_META.PLAYERS.path, element: <PlayerEncyclopediaPage />, handle: ROUTE_META.PLAYERS },
   { path: ROUTE_PATHS.players_legacy_team_pattern, element: <PlayersLegacyRedirect /> },
   { path: ROUTE_PATHS.players_legacy_year_pattern, element: <PlayersLegacyRedirect /> },
-  { path: ROUTE_META.LEGEND_MATERIALS.path, element: <LegendMaterialPage />, handle: ROUTE_META.LEGEND_MATERIALS },
+  // v1 폐기. 북마크·검색 유입이 404 를 만나지 않도록 리다이렉트만 남긴다
+  { path: ROUTE_PATHS.legend_materials_legacy, element: <Navigate to={ROUTE_PATHS.legend_stats} replace /> },
   { path: ROUTE_META.LEGEND_STATS.path, element: <LegendStatsPage />, handle: ROUTE_META.LEGEND_STATS },
   { path: ROUTE_META.HISTORY_MODE.path, element: <HistoryModePage />, handle: ROUTE_META.HISTORY_MODE },
   { path: ROUTE_META.PRIVACY.path, element: <PrivacyPolicyPage />, handle: ROUTE_META.PRIVACY },
