@@ -208,3 +208,14 @@ export const toMaterialModel = (detail, teamNameByCode = {}) => {
   }
   return { mats, coaches };
 };
+
+/**
+ * 평점 출처.
+ * 게임 내 수치가 아니라 특정 유저가 분석해 산정한 값이고, 원작자에게 사용 허락을
+ * 받은 조건이 출처 표기다. 표에 근거를 남겨야 해서 화면에 노출한다.
+ */
+export const RATING_SOURCE = {
+  author: "리룬지우",
+  site: "네이버 카페",
+  url: "https://naver.me/5YoRLA75",
+};

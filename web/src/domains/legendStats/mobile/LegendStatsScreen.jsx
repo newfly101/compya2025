@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ALL,
+  RATING_SOURCE,
   TYPE_FILTERS,
   columns,
   ovr,
@@ -38,6 +39,14 @@ const LegendStatsScreen = () => {
   const [sort, setSort] = useState("score");
   const [dir, setDir] = useState(-1);
   const [openId, setOpenId] = useState(null);
+  const [helpOpen, setHelpOpen] = useState(false);
+
+  useEffect(() => {
+    if (!helpOpen) return undefined;
+    const onKeyDown = (e) => e.key === "Escape" && setHelpOpen(false);
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [helpOpen]);
 
   const teams = useMemo(() => teamOptions(LEGENDS), [LEGENDS]);
   const positions = useMemo(() => posOptions(LEGENDS, type), [LEGENDS, type]);
@@ -283,6 +292,19 @@ const LegendStatsScreen = () => {
                   onClick={col.sortable ? () => toggleSort(col.key) : undefined}
                 >
                   {col.label}
+                  {col.key === "score" && (
+                    <button
+                      type="button"
+                      className={styles.help}
+                      aria-label="평점 산정 근거 보기"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setHelpOpen(true);
+                      }}
+                    >
+                      ?
+                    </button>
+                  )}
                   {col.sortable && sort === col.key && (
                     <span className={styles.arrow}>{dir < 0 ? "▼" : "▲"}</span>
                   )}
@@ -318,6 +340,44 @@ const LegendStatsScreen = () => {
       {error && <div className={styles.empty}>{error}</div>}
       {loaded && rows.length === 0 && (
         <div className={styles.empty}>조건에 맞는 레전드가 없습니다. 필터를 하나 풀어보세요.</div>
+      )}
+
+      {helpOpen && (
+        <div
+          className={styles.overlay}
+          role="presentation"
+          onClick={() => setHelpOpen(false)}
+        >
+          <div
+            className={styles.helpCard}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="rating-help-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 id="rating-help-title" className={styles.helpTitle}>
+              평점은 어떤 값인가요?
+            </h2>
+            <p className={styles.helpBody}>
+              게임 내 수치가 아니라 <b>{RATING_SOURCE.author}</b> 님이 분석해 산정한
+              점수입니다. 원작자의 사용 허락을 받아 출처를 밝히고 싣습니다.
+            </p>
+            <p className={styles.helpBody}>
+              OVR 과 스탯은 게임 표기 그대로이고, 평점만 분석값입니다.
+            </p>
+            <a
+              className={styles.helpLink}
+              href={RATING_SOURCE.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {`${RATING_SOURCE.site} 원문 보기 →`}
+            </a>
+            <button type="button" className={styles.helpClose} onClick={() => setHelpOpen(false)}>
+              닫기
+            </button>
+          </div>
+        </div>
       )}
 
       <div className={styles.foot}>

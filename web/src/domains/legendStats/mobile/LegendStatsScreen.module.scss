@@ -394,3 +394,95 @@ td.cStat {
     transition: none;
   }
 }
+
+/* ── 평점 출처 도움말 ─────────────────────────────────── */
+
+// th 안에 들어가므로 클릭이 정렬로 새지 않게 JSX 에서 stopPropagation 한다
+.help {
+  width: 13px;
+  height: 13px;
+  margin-left: 3px;
+  padding: 0;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: 9px;
+  line-height: 1;
+  vertical-align: middle;
+  cursor: pointer;
+
+  &:hover {
+    border-color: var(--color-brand-dark);
+    color: var(--color-ls-chip-on-text);
+  }
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.helpCard {
+  width: 100%;
+  max-width: 320px;
+  padding: 18px 18px 14px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 14px;
+  background: var(--color-bg-card);
+  text-align: left;
+}
+
+.helpTitle {
+  margin: 0 0 10px;
+  color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.helpBody {
+  margin: 0 0 8px;
+  color: var(--color-text-secondary);
+  font-size: 12.5px;
+  line-height: 1.6;
+
+  b {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+}
+
+.helpLink {
+  display: inline-block;
+  margin: 4px 0 12px;
+  color: var(--color-brand);
+  font-size: 12.5px;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.helpClose {
+  width: 100%;
+  padding: 9px 0;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 9px;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  font-family: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
