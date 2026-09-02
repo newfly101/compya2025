@@ -14,7 +14,6 @@ const OddsSectionPage = lazy(() => import("@/domains/odds/mobile/OddsSectionScre
 const PlayerEncyclopediaPage = lazy(() => import("@/domains/players/mobile/PlayerEncyclopediaScreen.jsx"));
 const LegendStatsPage = lazy(() => import("@/domains/legendStats/mobile/LegendStatsScreen.jsx"));
 const HistoryLegendPage = lazy(() => import("@/domains/historyLegend/mobile/HistoryLegendScreen.jsx"));
-const HistoryModePage = lazy(() => import("@/domains/historyMode/mobile/HistoryModeScreen.jsx"));
 const PrivacyPolicyPage = lazy(() => import("@/domains/policy/mobile/PrivacyPolicyScreen.jsx"));
 const TermsPage = lazy(() => import("@/domains/policy/mobile/TermsScreen.jsx"));
 const ContactPage = lazy(() => import("@/domains/policy/mobile/ContactScreen.jsx"));
@@ -39,7 +38,7 @@ export const PublicRoutes = [
   { path: ROUTE_PATHS.legend_materials_legacy, element: <Navigate to={ROUTE_PATHS.legend_stats} replace /> },
   { path: ROUTE_META.LEGEND_STATS.path, element: <LegendStatsPage />, handle: ROUTE_META.LEGEND_STATS },
   { path: ROUTE_META.HISTORY_LEGEND.path, element: <HistoryLegendPage />, handle: ROUTE_META.HISTORY_LEGEND },
-  { path: ROUTE_META.HISTORY_MODE.path, element: <HistoryModePage />, handle: ROUTE_META.HISTORY_MODE },
+  { path: ROUTE_PATHS.history_mode_legacy, element: <Navigate to={ROUTE_PATHS.history_legend} replace /> },
   { path: ROUTE_META.PRIVACY.path, element: <PrivacyPolicyPage />, handle: ROUTE_META.PRIVACY },
   { path: ROUTE_META.TERMS.path, element: <TermsPage />, handle: ROUTE_META.TERMS },
   { path: ROUTE_META.CONTACT.path, element: <ContactPage />, handle: ROUTE_META.CONTACT },

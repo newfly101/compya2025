@@ -48,7 +48,7 @@ const COLS = {
 };
 
 const HistoryLegendScreen = () => {
-  useDomainTopBar("히스토리 재료 탐색기");
+  useDomainTopBar("히스토리 재료");
 
   const { rounds, legends, materials, meta, loading, loaded, error } = useHistoryLegend();
   const [searchParams] = useSearchParams();

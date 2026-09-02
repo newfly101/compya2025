@@ -26,7 +26,8 @@ export const ROUTE_PATHS = {
   legend_materials_legacy: "/legend-materials",
   // 레전드 재료
   legend_stats: "/legend-stats",
-  history_mode: "/mode/history",
+  // 구 주소 — v1 폐기 후 history_legend 로 리다이렉트만 한다
+  history_mode_legacy: "/mode/history",
   // 히스토리 재료 탐색기 — 평점표에서 ?legend={레전드명} 으로 진입한다
   history_legend: "/history-mode/legend",
   community: "/community",
