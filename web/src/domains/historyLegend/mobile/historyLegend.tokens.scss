@@ -1,0 +1,30 @@
+// historyLegend 도메인 로컬 토큰 — Screen 에서 side-effect import 로 1회 주입.
+// 공통 토큰(--color-bg-* / --color-text-* / --color-brand)으로 대체 불가한 값만 둔다.
+
+:root {
+  --hl-row-h: 38px;
+  --hl-head-h: 32px;
+
+  // 고정 열 배경 — 가로 스크롤 시 비쳐 보이면 안 되므로 불투명
+  --color-hl-head-bg: #15121c;
+
+  // 일차 홀짝 2색. D1/D2 경계가 안 보인다는 문제 때문에 넣었다
+  --color-hl-row-odd: #100e14;
+  --color-hl-row-even: #17122a;
+  --color-hl-day-odd-bg: #221d30;
+  --color-hl-day-odd-text: #b1a5da;
+  --color-hl-day-even-bg: rgba(139, 92, 246, 0.28);
+  --color-hl-day-even-text: #ddd0ff;
+
+  // 등장 일차 막대
+  --color-hl-bar-off: #2b2538;
+
+  --color-hl-accent-text: #c4b5fd;
+  --color-hl-chip-on-text: #dcd3ff;
+  --color-hl-chip-count-on: #a78bfa;
+
+  --color-hl-card-bg: #171422;
+
+  // 여러 라운드에서 얻을 수 있는 재료 카드
+  --color-hl-card-multi: #5eead4;
+}
