@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.fun.historyMode.repository.mapper.FunHistoryModeMapper">
+
+    <resultMap id="HistoryRoundResultMap"
+               type="com.dawne.com2usbaseball.domain.fun.historyMode.entity.HistoryRoundEntity">
+        <id property="id" column="id"/>
+        <result property="dayNo" column="day_no"/>
+        <result property="roundNo" column="round_no"/>
+        <result property="roundLabel" column="round_label"/>
+
+        <collection property="roster"
+                    ofType="com.dawne.com2usbaseball.domain.fun.historyMode.entity.HistoryRosterEntity">
+            <id property="rosterGroup" column="roster_group"/>
+            <id property="orderNo" column="order_no"/>
+            <result property="playerName" column="player_name"/>
+            <result property="seasonYear" column="season_year"/>
+            <result property="positionCode" column="position_code"/>
+            <result property="legendName" column="legend_name"/>
+        </collection>
+    </resultMap>
+
+    <!--
+      재료 여부는 저장하지 않고 여기서 판정한다. 한 카드(선수+연도)가 두 레전드의
+      재료가 되는 일은 게임 규칙상 없어서 조인 결과가 1건으로 확정된다.
+
+      정렬은 그대로 화면 순서다. roster_group 은 ENUM 선언 순서(선발타자→…→마무리)로
+      정렬되고, 그 안에서 order_no 가 순서를 잡는다.
+    -->
+    <select id="findAllWithRoster" resultMap="HistoryRoundResultMap">
+        SELECT d.id,
+               d.day_no,
+               d.round_no,
+               d.round_label,
+               r.roster_group,
+               r.order_no,
+               r.player_name,
+               r.season_year,
+               r.position_code,
+               l.legend_name
+        FROM data_history_round d
+                 JOIN data_history_roster r ON r.round_id = d.id
+                 LEFT JOIN data_player_legend_material m
+                           ON m.player_name = r.player_name
+                               AND m.season_year = r.season_year
+                               AND m.material_type = 'PLAYER'
+                 LEFT JOIN data_player_legend l ON l.id = m.legend_id
+        ORDER BY d.day_no, d.round_no, r.roster_group, r.order_no
+    </select>
+
+</mapper>
