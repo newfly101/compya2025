@@ -8,7 +8,6 @@ import { useAuthentication } from "@/domains/authentication/hooks/useAuthenticat
 import { RenewalNoticeModal } from "@/global/ui/renewalNoticeModal";
 import { LoginRequiredModal } from "@/global/ui/loginRequiredModal";
 import PinnedBadge from "@/global/ui/badge/PinnedBadge.jsx";
-import { useMenuCounts } from "@/app/wrapper/mobile/hooks/useMenuCounts.js";
 
 
 const Drawer = () => {
@@ -17,15 +16,7 @@ const Drawer = () => {
   const { user, isAuthenticated, isAdmin, login, logout } = useAuthentication();
   const [renewalOpen, setRenewalOpen] = useState(false);
   const [loginRequiredOpen, setLoginRequiredOpen] = useState(false);
-  const menuCounts = useMenuCounts();
 
-  // to 경로 → 동적 카운트 매핑
-  const getDynamicBadge = (to) => {
-    if (to === "/notices") return menuCounts.notices;
-    if (to === "/events")  return menuCounts.events;
-    if (to === "/coupons") return menuCounts.coupons;
-    return null;
-  };
 
   // 폐기 도메인 (comingSoon) 클릭 시 navigate 차단 + 모달 표시. drawer 도 함께 닫음.
   const handleComingSoonClick = (e) => {
@@ -101,11 +92,11 @@ const Drawer = () => {
                       >
                         <span className={styles.menuIcon}>{item.icon}</span>
                         <span className={styles.menuLabel}>{item.label}</span>
-                        {item.tag && <PinnedBadge variant={item.tag} />}
-                        {(() => {
-                          const badge = getDynamicBadge(item.to) ?? item.badge;
-                          return badge ? <span className={styles.badge}>{badge}</span> : null;
-                        })()}
+                        {item.tag && (
+                          <span className={styles.menuTag}>
+                            <PinnedBadge variant={item.tag.variant} label={item.tag.label} />
+                          </span>
+                        )}
                       </Link>
                     </li>
                   );

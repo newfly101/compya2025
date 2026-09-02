@@ -25,6 +25,9 @@ $pinned-red-border:   #f87171;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  // 글자 수가 달라도 폭이 같아야 목록에서 오른쪽 끝이 맞는다.
+  // 가장 긴 축(공사중 = 한글 3자) 기준. 그보다 긴 라벨은 자연히 늘어난다
+  min-width: 42px;
   padding: 3px $space-2;
   border-radius: $radius-sm;
   border-width: 0.5px;

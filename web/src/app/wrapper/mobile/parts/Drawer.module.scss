@@ -179,11 +179,22 @@ $color-naver-font: $color-white-100;
 .menuIcon {
   font-size: 1.125rem;   // 18px → rem (도메인 토큰 외, mobile-frame § 6.4)
   flex-shrink: 0;
+  // 이모지는 글자마다 폭이 달라(⚾ vs 🎮) 그대로 두면 라벨 시작점이 어긋난다
+  width: 1.375rem;       // 22px
+  text-align: center;
 }
 
 .menuLabel {
   flex: 1;
+  min-width: 0;
   @include text-body-bold;
+}
+
+// 뱃지 자리 — 있고 없고에 따라 라벨 폭만 달라지고 위치는 고정된다
+.menuTag {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 // ── 뱃지 ──────────────────────────────────────────────────────
