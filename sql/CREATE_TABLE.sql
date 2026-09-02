@@ -339,86 +339,95 @@ CREATE TABLE notices
         )
 );
 
-CREATE TABLE player_card
-(
-    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
-
-    -- 카드 식별
-    card_code   VARCHAR(60)                                                             NOT NULL COMMENT 'GRADE_ROLE_TEAM_PLAYER_YEAR',
-    name        VARCHAR(50)                                                             NOT NULL,
-
-    team_id     BIGINT                                                                  NOT NULL,
-
-    role        ENUM ('HITTER','PITCHER')                                               NOT NULL,
-    grade       ENUM ('LEGEND','EPIC','PLATINUM','MVP','NATIONAL', 'ALLSTAR', 'GOLDEN') NOT NULL,
-
-    -- 시즌 (LEGEND는 NULL 허용)
-    season_year SMALLINT                                                                NULL COMMENT 'LEGEND는 NULL',
-
-    overall     SMALLINT                                                                NOT NULL,
-    back_number SMALLINT,
-    birth_date  DATE,
-    bat_throw   VARCHAR(10),
-
-    positions   JSON                                                                    NOT NULL,
-    traits      JSON,
-
-    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
-        ON UPDATE CURRENT_TIMESTAMP,
-
-    -- 제약
-    UNIQUE KEY uk_card_code (card_code),
-
-    INDEX idx_team_id (team_id),
-    INDEX idx_grade (grade),
-    INDEX idx_role (role),
-    INDEX idx_season_year (season_year),
-    INDEX idx_grade_year (grade, season_year),
-
-    CONSTRAINT fk_card_team
-        FOREIGN KEY (team_id)
-            REFERENCES teams (id),
-
-    CONSTRAINT chk_grade_year
-        CHECK (
-            (grade = 'LEGEND' AND season_year IS NULL)
-                OR
-            (grade <> 'LEGEND' AND season_year IS NOT NULL)
-            )
-);
-
-CREATE TABLE player_card_hitter_attributes
-(
-    card_id  BIGINT PRIMARY KEY,
-
-    accuracy SMALLINT NOT NULL COMMENT '정확',
-    power    SMALLINT NOT NULL COMMENT '파워',
-    contact  SMALLINT NOT NULL COMMENT '선구',
-    speed    SMALLINT NOT NULL COMMENT '주력',
-    defense  SMALLINT NOT NULL COMMENT '수비',
-
-    CONSTRAINT fk_card_hitter_attr
-        FOREIGN KEY (card_id)
-            REFERENCES player_card (id)
-            ON DELETE CASCADE
-);
-
-CREATE TABLE player_card_pitcher_attributes
-(
-    card_id  BIGINT PRIMARY KEY,
-
-    control  SMALLINT NOT NULL COMMENT '제구',
-    velocity SMALLINT NOT NULL COMMENT '구위',
-    stamina  SMALLINT NOT NULL COMMENT '체력',
-    fastball SMALLINT NOT NULL COMMENT '직구',
-    breaking SMALLINT NOT NULL COMMENT '변화',
-
-    CONSTRAINT fk_card_pitcher_attr
-        FOREIGN KEY (card_id)
-            REFERENCES player_card (id)
-            ON DELETE CASCADE
-);
+-- =====================================================================
+-- /* v1 기준 플레이어카드 */  2026-09-02 비활성화
+--
+-- 데이터가 한 건도 없어 DROP 대상으로 확정했다.
+-- 실제 DROP 문 : sql/cleanup/drop_player_card_v1_v2.sql
+-- 대응 Java   : domain/player/** (전량 주석 처리)
+--
+-- ※ player_legend* 는 v1 실데이터가 있어 DROP 보류 — 그대로 둔다.
+-- =====================================================================
+-- CREATE TABLE player_card
+-- (
+--     id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+--
+--     -- 카드 식별
+--     card_code   VARCHAR(60)                                                             NOT NULL COMMENT 'GRADE_ROLE_TEAM_PLAYER_YEAR',
+--     name        VARCHAR(50)                                                             NOT NULL,
+--
+--     team_id     BIGINT                                                                  NOT NULL,
+--
+--     role        ENUM ('HITTER','PITCHER')                                               NOT NULL,
+--     grade       ENUM ('LEGEND','EPIC','PLATINUM','MVP','NATIONAL', 'ALLSTAR', 'GOLDEN') NOT NULL,
+--
+--     -- 시즌 (LEGEND는 NULL 허용)
+--     season_year SMALLINT                                                                NULL COMMENT 'LEGEND는 NULL',
+--
+--     overall     SMALLINT                                                                NOT NULL,
+--     back_number SMALLINT,
+--     birth_date  DATE,
+--     bat_throw   VARCHAR(10),
+--
+--     positions   JSON                                                                    NOT NULL,
+--     traits      JSON,
+--
+--     created_at  DATETIME DEFAULT CURRENT_TIMESTAMP,
+--     updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP
+--         ON UPDATE CURRENT_TIMESTAMP,
+--
+--     -- 제약
+--     UNIQUE KEY uk_card_code (card_code),
+--
+--     INDEX idx_team_id (team_id),
+--     INDEX idx_grade (grade),
+--     INDEX idx_role (role),
+--     INDEX idx_season_year (season_year),
+--     INDEX idx_grade_year (grade, season_year),
+--
+--     CONSTRAINT fk_card_team
+--         FOREIGN KEY (team_id)
+--             REFERENCES teams (id),
+--
+--     CONSTRAINT chk_grade_year
+--         CHECK (
+--             (grade = 'LEGEND' AND season_year IS NULL)
+--                 OR
+--             (grade <> 'LEGEND' AND season_year IS NOT NULL)
+--             )
+-- );
+--
+-- CREATE TABLE player_card_hitter_attributes
+-- (
+--     card_id  BIGINT PRIMARY KEY,
+--
+--     accuracy SMALLINT NOT NULL COMMENT '정확',
+--     power    SMALLINT NOT NULL COMMENT '파워',
+--     contact  SMALLINT NOT NULL COMMENT '선구',
+--     speed    SMALLINT NOT NULL COMMENT '주력',
+--     defense  SMALLINT NOT NULL COMMENT '수비',
+--
+--     CONSTRAINT fk_card_hitter_attr
+--         FOREIGN KEY (card_id)
+--             REFERENCES player_card (id)
+--             ON DELETE CASCADE
+-- );
+--
+-- CREATE TABLE player_card_pitcher_attributes
+-- (
+--     card_id  BIGINT PRIMARY KEY,
+--
+--     control  SMALLINT NOT NULL COMMENT '제구',
+--     velocity SMALLINT NOT NULL COMMENT '구위',
+--     stamina  SMALLINT NOT NULL COMMENT '체력',
+--     fastball SMALLINT NOT NULL COMMENT '직구',
+--     breaking SMALLINT NOT NULL COMMENT '변화',
+--
+--     CONSTRAINT fk_card_pitcher_attr
+--         FOREIGN KEY (card_id)
+--             REFERENCES player_card (id)
+--             ON DELETE CASCADE
+-- );
 
 CREATE TABLE quiz_answers
 (
