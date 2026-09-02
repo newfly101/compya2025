@@ -79,6 +79,28 @@
       content="컴투스 프로야구 공식 공지·이벤트·공략을 한 곳에서 확인하세요."
     />
     <meta property="og:url" content="https://compyafun.com" />
+
+    <!--
+      공유 썸네일. 크롤러는 JS 를 실행하지 않으므로 여기 정적으로 둔다.
+      경로는 절대 URL 이어야 하고, 그래서 이미지도 번들이 아니라 public/ 에 둔다
+      (src/assets 로 두면 빌드마다 해시가 붙어 고정 주소를 쓸 수 없다).
+    -->
+    <meta property="og:image" content="https://compyafun.com/compyafun2026.jpg" />
+    <meta property="og:image:secure_url" content="https://compyafun.com/compyafun2026.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1080" />
+    <meta property="og:image:height" content="300" />
+    <meta property="og:image:alt" content="컴프야펀 - 컴투스 프로야구 정보 허브" />
+
+    <!-- 트위터/X 는 og 를 그대로 읽지 않아 따로 준다 -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="컴프야펀 | 컴투스 프로야구 정보 허브" />
+    <meta
+      name="twitter:description"
+      content="컴투스 프로야구 공식 공지·이벤트·공략을 한 곳에서 확인하세요."
+    />
+    <meta name="twitter:image" content="https://compyafun.com/compyafun2026.jpg" />
+
     <meta name="naver-site-verification" content="4363833a93bf2e4134d3cdfe67e1699f071863fe" />
   </head>
   <body>
