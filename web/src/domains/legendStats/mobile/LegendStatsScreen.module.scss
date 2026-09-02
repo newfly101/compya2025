@@ -1,0 +1,396 @@
+// 핸드오프 legend-table.reference.html 스타일 이식.
+// 색은 변수로만 쓴다 (공통 토큰 우선, 대체 불가한 것만 --color-ls-*).
+// 상단 바는 글로벌 MobileLayout TopBar 를 쓴다.
+
+.screen {
+  min-height: 100%;
+  background: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 필터 ─────────────────────────────────────────────── */
+
+.filters {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding-bottom: 8px;
+  background: linear-gradient(var(--color-bg-deepest) 82%, transparent);
+}
+
+.chipRow {
+  display: flex;
+  gap: 7px;
+  padding: 6px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 13px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-brand-dark);
+    background: var(--color-brand-alpha-15);
+    color: var(--color-ls-chip-on-text);
+  }
+}
+
+.chipDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.segment {
+  display: flex;
+  gap: 8px;
+  padding: 2px 16px 0;
+
+  button {
+    flex: 1;
+    padding: 10px 0;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 10px;
+    background: var(--color-bg-card);
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      border-color: var(--color-brand-dark);
+      background: var(--color-brand-alpha-15);
+      color: var(--color-ls-chip-on-text);
+    }
+  }
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 10px 16px 6px;
+  color: var(--color-text-muted);
+  font-size: 11.5px;
+
+  b {
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+}
+
+/* ── 표 ───────────────────────────────────────────────── */
+
+.tableBox {
+  overflow-x: auto;
+  border-top: 1px solid var(--color-border-strong);
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+
+  th,
+  td {
+    height: var(--ls-row-h);
+    padding: 0 4px;
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    height: var(--ls-head-h);
+    border-bottom: 1px solid var(--color-border-strong);
+    background: var(--color-ls-head-bg);
+    color: var(--color-text-secondary);
+    font-size: 11.5px;
+    font-weight: 500;
+    user-select: none;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+  }
+}
+
+.sortable {
+  cursor: pointer;
+}
+
+.arrow {
+  margin-left: 1px;
+  color: var(--color-brand);
+  font-size: 9px;
+}
+
+// 가로 스크롤 시 이름이 사라지면 안 된다. 아래 고정 폭·left 는 서로 맞물려 있다.
+.sticky {
+  position: sticky;
+  z-index: 10;
+  background: var(--color-bg-deepest);
+}
+
+thead .sticky {
+  z-index: 25;
+  background: var(--color-ls-head-bg);
+}
+
+.cRank {
+  left: 0;
+  width: 26px;
+}
+
+.cScore {
+  left: 26px;
+  width: 48px;
+}
+
+.cName {
+  left: 74px;
+  width: 82px;
+  padding-left: 6px;
+  text-align: left;
+}
+
+.cPos {
+  width: 58px;
+}
+
+.cOvr {
+  width: 46px;
+}
+
+.cStat {
+  width: 34px;
+}
+
+/* ── 셀 ───────────────────────────────────────────────── */
+
+.row {
+  cursor: pointer;
+
+  &:hover td:not(.sticky) {
+    background: rgba(255, 255, 255, 0.025);
+  }
+
+  &:hover td.sticky {
+    background: var(--color-ls-row-hover);
+  }
+
+  &.open td {
+    background: var(--color-bg-elevated) !important;
+    border-bottom-color: transparent;
+  }
+
+  // 평점 미정 — 숨기지 않고 이름만 구분
+  &.provisional .cName {
+    color: var(--color-ls-prov);
+  }
+}
+
+td.cRank {
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+td.cScore {
+  color: var(--color-text-primary);
+  font-size: 13px;
+  font-weight: 700;
+
+  &.na {
+    color: var(--color-text-muted);
+    font-weight: 500;
+  }
+}
+
+td.cName {
+  font-weight: 500;
+}
+
+.nameInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nameDot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+td.cPos {
+  color: var(--color-text-secondary);
+  font-size: 11.5px;
+  letter-spacing: -0.02em;
+}
+
+td.cOvr {
+  background: var(--color-ls-ovr-bg);
+  color: var(--color-ls-ovr-text);
+  font-weight: 600;
+}
+
+td.cStat {
+  color: var(--color-text-primary);
+
+  &.hi {
+    color: var(--color-ls-good);
+    font-weight: 600;
+  }
+
+  &.lo {
+    color: var(--color-ls-dim);
+  }
+}
+
+/* ── 행 상세 ──────────────────────────────────────────── */
+
+.detailRow td {
+  padding: 0;
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-bg-elevated);
+}
+
+.detail {
+  padding: 10px 14px 14px;
+  text-align: left;
+  white-space: normal;
+}
+
+.detailHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  margin-bottom: 10px;
+  color: var(--color-text-secondary);
+  font-size: 11.5px;
+
+  strong {
+    color: var(--color-text-primary);
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.detailSub {
+  margin: 11px 0 5px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.pitches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.pitch {
+  padding: 3px 7px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 6px;
+  color: var(--color-text-secondary);
+  font-size: 11.5px;
+
+  b {
+    margin-left: 3px;
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  // 수치 없이 등급만 아는 구종
+  &.gradeOnly b {
+    color: var(--color-ls-warn);
+  }
+}
+
+.materials {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+// 재료 요청 전/실패 시
+.detailNote {
+  padding: 10px 0;
+  color: var(--color-text-muted);
+  font-size: 11.5px;
+}
+
+.material {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  background: var(--color-bg-card);
+  font-size: 12px;
+}
+
+.materialTeam {
+  padding: 1px 4px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 4px;
+  color: var(--color-text-muted);
+  font-size: 9.5px;
+}
+
+/* ── 상태 ─────────────────────────────────────────────── */
+
+.empty {
+  padding: 44px 16px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+.foot {
+  padding: 16px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  line-height: 1.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .segment button {
+    transition: none;
+  }
+}

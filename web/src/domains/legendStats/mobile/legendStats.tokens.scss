@@ -1,0 +1,28 @@
+// legendStats 도메인 로컬 토큰 — Screen 에서 side-effect import 로 1회 주입.
+// 공통 토큰(--color-bg-* / --color-text-* / --color-brand)으로 대체 불가한 값만 둔다.
+// 글로벌 _colors.scss / semantic/_color.scss 에는 추가하지 않는다.
+
+:root {
+  // 375px 에서 10행 이상 보이도록 잡은 값
+  --ls-row-h: 38px;
+  --ls-head-h: 32px;
+
+  // 스탯 강조 2색
+  --color-ls-good: #5eead4; // 76 이상
+  --color-ls-dim: #7b6f86; // 66 이하
+  --color-ls-warn: #fbbf24; // 구종 등급(수치 미확인)
+
+  // 고정 열 배경 — 가로 스크롤 시 비쳐 보이면 안 되므로 불투명
+  --color-ls-head-bg: #15121c;
+  --color-ls-row-hover: #161320;
+
+  // OVR 열 (파생값)
+  --color-ls-ovr-text: #c4b5fd;
+  --color-ls-ovr-bg: rgba(139, 92, 246, 0.07);
+
+  // 평점 미정 행 이름
+  --color-ls-prov: #d8c9ff;
+
+  // 선택된 칩
+  --color-ls-chip-on-text: #dcd3ff;
+}

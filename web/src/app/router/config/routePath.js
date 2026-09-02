@@ -32,6 +32,8 @@ export const ROUTE_PATHS = {
     const qs = params.toString();
     return qs ? `/legend-materials?${qs}` : "/legend-materials";
   },
+  // 레전드 재료 v2 — 확정되면 legend_materials(v1)를 대체한다
+  legend_stats: "/legend-stats",
   history_mode: "/mode/history",
   community: "/community",
   // 정책 페이지 — 구글 애드센스 심사 대비 신설 (2026-08-31)
