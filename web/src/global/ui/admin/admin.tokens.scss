@@ -4,14 +4,21 @@
 // 부품(web/src/global/ui/admin/**) 또는 각 AdminXxxScreen.jsx 에서
 // side-effect import 로 1회 주입한다 (legendStats.tokens.scss 와 동일 패턴).
 //
-// 공통 토큰(--color-bg-* / --color-text-* / --color-brand* / --color-border*)으로
-// 대체 가능한 값은 여기 두지 않는다. 전역 _colors.scss / semantic/_color.scss 에는
-// 추가하지 않는다 — 값은 다르지만 역할이 같은 것은 기존 토큰을 그대로 쓴다.
+// 공통 토큰(--color-bg-* / --color-text-* / --color-brand* / --color-border* /
+// --color-danger* / --color-warning*)으로 대체 가능한 값은 여기 두지 않고
+// var(--global) 참조로만 남긴다 — 레전드/히스토리 재료가 같은 원칙을 쓴다.
+// 전역 _colors.scss / semantic/_color.scss 원본 값 자체는 건드리지 않는다.
 //
 // 근거: docs/domain/admin/design/_redesign-spec.md § 스타일 토큰 대조
 // ============================================================
 
 :root {
+  // ── 표 행/헤더 높이 — 레전드(38/32) 톤 계승 ─────────────────
+  // 어드민 표는 주요 셀에 2줄(제목+코드 등) 스택을 쓰는 칸이 있어
+  // 레전드 값(38)보다 2px 여유를 둔다. 헤더는 항상 1줄이라 그대로 32.
+  --admin-row-h: 40px;
+  --admin-head-h: 32px;
+
   // ── 토글 스위치 on 색상 ───────────────────────────────────
   // 프로토타입 고유 초록(#22c55e). 기존 --color-success(#03c75a)는
   // 네이버 로그인 브랜드 그린으로 의미가 이미 고정돼 있어 재사용하지 않는다.
@@ -25,14 +32,16 @@
   // ── 태그/배지 5종 (배경 + 텍스트) ─────────────────────────
   // 퀴즈 "홈 노출중" / 이벤트 "공식" / 쿠폰 만료 강조 / 공지 "사이트·공식" /
   // 유저 상태(활성·비활성·탈퇴·정지) 등 5개 탭이 공용으로 쓴다.
-  --color-admin-tag-purple-bg: #2a1f4a;
-  --color-admin-tag-purple-text: #c4b5fd;
-  --color-admin-tag-green-bg: #14321f;
-  --color-admin-tag-green-text: #4ade80;
-  --color-admin-tag-amber-bg: #3a2f1a;
-  --color-admin-tag-amber-text: #fcd34d;
-  --color-admin-tag-rose-bg: #3a1f2a;
-  --color-admin-tag-rose-text: #fda4af;
-  --color-admin-tag-neutral-bg: #1e1631;
-  --color-admin-tag-neutral-text: #a99cc7;
+  // purple/amber/rose/neutral 은 레전드가 쓰는 것과 동일한 전역 토큰으로
+  // 대체했다 — 원래 있던 hex 는 각각의 전역 alpha/dim 톤과 근사치였다.
+  --color-admin-tag-purple-bg: var(--color-brand-alpha-15);
+  --color-admin-tag-purple-text: var(--color-brand);
+  --color-admin-tag-green-bg: #14321f; // 브랜드 그린과 무관한 "활성" 초록 — success 재사용 안 함(위와 동일 사유)
+  --color-admin-tag-green-text: var(--color-admin-on-tint); // 토글 on-tint 와 동일 색상이라 중복 정의 대신 참조
+  --color-admin-tag-amber-bg: var(--color-warning-dim);
+  --color-admin-tag-amber-text: var(--color-warning);
+  --color-admin-tag-rose-bg: var(--color-danger-dim);
+  --color-admin-tag-rose-text: var(--color-danger);
+  --color-admin-tag-neutral-bg: var(--color-bg-elevated);
+  --color-admin-tag-neutral-text: var(--color-text-secondary);
 }

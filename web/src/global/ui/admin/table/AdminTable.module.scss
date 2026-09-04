@@ -6,21 +6,27 @@
 
 .table {
   width: 100%;
+  // 폭을 지정한 칸은 그 값을 그대로 지키고, 폭 미지정 칸(보통 주요 정보 칸)이
+  // 남는 폭을 흡수한다 — 히스토리 재료 표와 동일 원리. auto 로 두면 긴 텍스트가
+  // 지정 폭을 밀어내 가로 스크롤이 생긴다.
+  table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
   @include text-body;
 }
 
-// 42px — 레전드/히스토리 재료(38px) 톤에 맞춘 밀도. 토글·버튼 tap-target(20~36px)은 이 안에서 충분히 여유 있다.
 .cell {
-  height: 42px;
-  padding: 0 $space-3;
+  height: var(--admin-row-h);
+  padding: 0 $space-1;
+  overflow: hidden;
   border-bottom: 1px solid var(--color-border);
   text-align: center;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .alignLeft {
+  padding-left: $space-2;
   text-align: left;
 }
 
@@ -29,10 +35,11 @@ thead th {
   position: sticky;
   top: 0;
   z-index: $z-above;
+  height: var(--admin-head-h);
   background: var(--color-bg-elevated);
   color: var(--color-text-secondary);
   @include text-caption;
-  font-weight: 600;
+  font-weight: 500;
   user-select: none;
 }
 
