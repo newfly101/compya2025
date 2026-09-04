@@ -157,7 +157,7 @@ export default function AdminCouponScreen() {
     {
       key: "expireAt",
       label: "만료",
-      width: 96,
+      width: 74,
       render: (c) => (
         <div className={styles.expireCell}>
           <span>{c.expireAt?.slice(0, 10) ?? "-"}</span>
@@ -180,7 +180,7 @@ export default function AdminCouponScreen() {
     {
       key: "actions",
       label: "관리",
-      width: 96,
+      width: 88,
       render: (c) => (
         <div className={styles.actions}>
           <button

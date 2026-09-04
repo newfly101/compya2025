@@ -186,7 +186,7 @@ export default function AdminQuizScreen() {
     {
       key: "actions",
       label: "관리",
-      width: 96,
+      width: 88,
       render: (q) => (
         <div className={styles.actions}>
           <button

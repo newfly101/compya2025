@@ -8,7 +8,8 @@
   gap: $space-2;
 }
 
-/* 표 주요 셀 — 썸네일 + 태그 + 제목 */
+/* 표 주요 셀 — 썸네일 + (태그+제목) 위 / 기간 아래 2줄. 가로 스크롤을 없애려고
+   기간을 별도 칸에서 이 칸 보조 줄로 접었다 — 레전드/히스토리 재료 표와 동일 원리. */
 .mainCell {
   display: flex;
   align-items: center;
@@ -39,33 +40,43 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  min-width: 0;
   overflow: hidden;
 }
 
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  min-width: 0;
+}
+
 .title {
+  min-width: 0;
+  flex: 1 1 auto;
   color: var(--color-text-primary);
   font-weight: 600;
   @include text-ellipsis;
 }
 
-/* 기간 셀 */
+/* 기간 — 주 정보(태그+제목) 아래 보조 줄 */
 .period {
-  color: var(--color-text-secondary);
+  color: var(--color-text-muted);
   @include text-caption;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
 }
 
-/* 표 안 관리 버튼 */
+/* 표 안 관리 버튼 — 88px 칸 안에 두 버튼이 들어가야 해서 $control-height-sm/space-3 보다 좁게 잡는다 */
 .actions {
   display: flex;
-  gap: $space-2;
+  gap: $space-1;
   justify-content: center;
 }
 
 .editBtn {
-  height: $control-height-sm;
-  padding: 0 $space-3;
+  height: 28px;
+  padding: 0 $space-2;
   border: 1px solid var(--color-brand);
   border-radius: $radius-md;
   background: transparent;
@@ -77,8 +88,8 @@
 }
 
 .deleteBtn {
-  height: $control-height-sm;
-  padding: 0 $space-3;
+  height: 28px;
+  padding: 0 $space-2;
   border: 1px solid var(--color-danger);
   border-radius: $radius-md;
   background: transparent;

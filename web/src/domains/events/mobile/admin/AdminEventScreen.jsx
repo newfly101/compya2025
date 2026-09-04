@@ -226,19 +226,16 @@ export default function AdminEventScreen() {
             <div className={styles.thumbEmpty} />
           )}
           <div className={styles.mainCellText}>
-            <AdminTag variant={e.eventType === "OFFICIAL" ? "purple" : "neutral"}>
-              {EVENT_TYPE_LABELS[e.eventType] ?? e.eventType}
-            </AdminTag>
-            <span className={styles.title}>{e.title}</span>
+            <div className={styles.titleRow}>
+              <AdminTag variant={e.eventType === "OFFICIAL" ? "purple" : "neutral"}>
+                {EVENT_TYPE_LABELS[e.eventType] ?? e.eventType}
+              </AdminTag>
+              <span className={styles.title}>{e.title}</span>
+            </div>
+            <span className={styles.period}>{formatPeriod(e.startAt, e.expireAt)}</span>
           </div>
         </div>
       ),
-    },
-    {
-      key: "period",
-      label: "기간",
-      width: 96,
-      render: (e) => <span className={styles.period}>{formatPeriod(e.startAt, e.expireAt)}</span>,
     },
     {
       key: "visible",
@@ -255,7 +252,7 @@ export default function AdminEventScreen() {
     {
       key: "actions",
       label: "관리",
-      width: 96,
+      width: 88,
       render: (e) => (
         <div className={styles.actions}>
           <button

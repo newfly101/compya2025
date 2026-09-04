@@ -31,8 +31,10 @@
 }
 
 .email {
+  display: block;
   color: var(--color-text-muted);
   @include text-caption;
+  @include text-ellipsis;
 }
 
 /* 메타 셀 — 가입일 위 · 최근 로그인 아래, 우측 정렬 */

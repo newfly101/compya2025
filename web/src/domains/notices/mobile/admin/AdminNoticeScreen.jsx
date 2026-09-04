@@ -124,8 +124,8 @@ export default function AdminNoticeScreen() {
     },
     {
       key: "actions",
-      label: "수정",
-      width: 96,
+      label: "관리",
+      width: 88,
       render: (n) => (
         <div className={styles.actions}>
           <button
