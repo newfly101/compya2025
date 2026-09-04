@@ -1,7 +1,8 @@
 .tableBox {
   overflow-x: auto;
-  border: 1px solid var(--color-border);
-  border-radius: $radius-lg;
+  // 레전드·히스토리 재료 표와 동일 — 필터 영역과의 경계만 위쪽에 굵은 선으로 준다.
+  // 상자 전체를 두르는 border+radius 는 v2 스크린샷에도 없어 제거한다.
+  border-top: 1px solid var(--color-border-strong);
 }
 
 .table {
@@ -13,6 +14,8 @@
   border-collapse: separate;
   border-spacing: 0;
   @include text-body;
+  // 레전드·히스토리 재료 표는 mixin 대신 12.5px 를 직접 쓴다 — 톤을 맞추기 위해 덮어쓴다.
+  font-size: 12.5px;
 }
 
 .cell {
@@ -36,9 +39,13 @@ thead th {
   top: 0;
   z-index: $z-above;
   height: var(--admin-head-h);
-  background: var(--color-bg-elevated);
+  // 헤더/본문 경계를 본문 행 구분선(--color-border)보다 굵게 — 레전드·히스토리와 동일
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-admin-table-head-bg);
   color: var(--color-text-secondary);
   @include text-caption;
+  // 레전드·히스토리 재료 표는 11.5px — text-caption(11px) 을 표에서만 덮어쓴다
+  font-size: 11.5px;
   font-weight: 500;
   user-select: none;
 }
@@ -52,7 +59,7 @@ thead th {
 
 thead .sticky {
   z-index: $z-dropdown;
-  background: var(--color-bg-elevated);
+  background: var(--color-admin-table-head-bg);
 }
 
 .sortable {
@@ -64,7 +71,8 @@ thead .sticky {
 }
 
 .arrow {
-  margin-left: $space-1;
+  // 레전드·히스토리 재료 표와 동일 — $space-1(4px) 은 화살표가 라벨과 너무 떨어져 보인다
+  margin-left: 1px;
   color: var(--color-brand);
   font-size: 9px;
 }
@@ -81,7 +89,7 @@ thead .sticky {
   }
 
   &:hover td.sticky {
-    background: var(--color-bg-elevated);
+    background: var(--color-admin-table-row-hover);
   }
 
   &.clickable {

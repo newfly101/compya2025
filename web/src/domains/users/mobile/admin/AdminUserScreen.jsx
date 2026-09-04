@@ -20,7 +20,6 @@ import {
   USER_ROLE_LABELS,
   USER_STATUSES,
   USER_STATUS_LABELS,
-  maskEmail,
 } from "@/domains/users/mobile/admin/userAdmin.constants.js";
 import styles from "./AdminUserScreen.module.scss";
 
@@ -193,7 +192,7 @@ export default function AdminUserScreen() {
               </AdminTag>
             )}
           </div>
-          <span className={styles.email}>{maskEmail(u.email, u.nickname)}</span>
+          <span className={styles.email}>{u.email || "이메일 미등록"}</span>
         </div>
       ),
     },
