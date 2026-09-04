@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ADMIN_NOTICE_ACTIONS } from "@/domains/notices/store/admin/endpoints.js";
 import {
   fetchAdminGetNoticeList,
+  fetchAdminGetNotice,
   fetchAdminInsertNotice,
   fetchAdminUpdateNotice,
   fetchAdminUpdateVisible,
@@ -15,6 +16,18 @@ export const requestAdminGetNoticeList = createAsyncThunk(
     try {
       const list = await fetchAdminGetNoticeList();
       return [...list].reverse();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// 글쓰기 화면을 새로고침/직접 URL 진입한 경우 목록 store 가 비어있을 수 있어 단건 조회로 보강한다.
+export const requestAdminGetNotice = createAsyncThunk(
+  ADMIN_NOTICE_ACTIONS.GET_ONE,
+  async (id, { rejectWithValue }) => {
+    try {
+      return await fetchAdminGetNotice(id);
     } catch (error) {
       return rejectWithValue(error.message);
     }

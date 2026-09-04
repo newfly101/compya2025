@@ -1,5 +1,6 @@
 export const ADMIN_NOTICE_ACTIONS = {
   GET_LIST:        "GET/admin/notices/list",
+  GET_ONE:         "GET/admin/notices/one",
   INSERT:          "POST/admin/notices/insert",
   UPDATE:          "PATCH/admin/notices/update",
   UPDATE_VISIBLE:  "PATCH/admin/notices/visible",
@@ -9,6 +10,7 @@ export const ADMIN_NOTICE_ACTIONS = {
 
 export const ADMIN_NOTICES = {
   GET_LIST:       "/admin/notices",
+  GET_ONE:        (id) => `/admin/notices/${id}`,
   INSERT:         "/admin/notices",
   UPDATE:         (id) => `/admin/notices/${id}`,
   UPDATE_VISIBLE: (id) => `/admin/notices/${id}/visible`,

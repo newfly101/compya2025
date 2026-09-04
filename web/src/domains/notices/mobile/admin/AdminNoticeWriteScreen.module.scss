@@ -1,0 +1,188 @@
+// 셸 밖 전체 페이지(핸드오프 § 6 예외) — 다른 어드민 화면과 동일하게 480px 컨테이너를 갖는다.
+.page {
+  @include page-layout;
+  padding-bottom: 64px; // 하단 sticky bar 높이만큼 여유
+}
+
+.boardRow {
+  padding: $space-3 $space-4 0;
+}
+
+.titleInput {
+  margin: $space-3 $space-4 0;
+  padding: $space-2 0;
+  border: none;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-primary);
+  font-size: $font-size-22;
+  font-weight: $font-weight-bold;
+
+  &:focus { outline: none; border-color: var(--color-brand); }
+  &::placeholder { color: var(--color-text-placeholder); }
+}
+
+.coverRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: $space-3 $space-4;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.coverThumb {
+  flex: none;
+  width: 72px;
+  height: 54px;
+  border-radius: $radius-md;
+  border: 1px dashed var(--color-border-strong);
+  background: var(--color-bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  span {
+    font-size: $font-size-9;
+    color: var(--color-text-muted);
+    text-align: center;
+    white-space: pre-line;
+    line-height: 1.3;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.coverInfo {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  flex: 1;
+  min-width: 0;
+}
+
+.coverLabel {
+  @include text-caption;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+}
+
+.coverDesc {
+  font-size: $font-size-10;
+  color: var(--color-text-muted);
+}
+
+.coverActions {
+  display: flex;
+  gap: $space-2;
+  margin-top: $space-1;
+}
+
+.coverBtn,
+.coverBtnGhost {
+  @include reset-button;
+  font-size: $font-size-10;
+  border-radius: $radius-md;
+  padding: 4px $space-2;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.coverBtn {
+  color: var(--color-brand);
+  border: 1px solid var(--color-brand-tint);
+  position: relative;
+}
+
+.coverBtnGhost {
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+  background: transparent;
+}
+
+.hiddenFileInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.editorBox {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+}
+
+.externalLabel {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  padding: $space-4;
+  @include text-caption;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.externalInput {
+  height: $control-height-md;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-size: $font-size-13;
+
+  &:focus { outline: none; border-color: var(--color-brand); }
+}
+
+.submitError {
+  margin: 0 $space-4;
+  color: var(--color-danger);
+  @include text-caption;
+}
+
+.bottomBar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-3 $space-4;
+  margin-top: auto;
+  background: var(--color-bg-deep);
+  border-top: 1px solid var(--color-border);
+}
+
+.bottomToggles {
+  display: flex;
+  gap: $space-4;
+}
+
+.toggleItem {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  @include text-caption;
+  color: var(--color-text-secondary);
+}
+
+.charCount {
+  font-size: $font-size-10;
+  color: var(--color-text-muted);
+}
+
+.saveBtn {
+  @include reset-button;
+  background: var(--color-brand);
+  color: #fff;
+  @include text-caption;
+  font-weight: 700;
+  border-radius: $radius-md;
+  padding: $space-1 $space-3;
+  cursor: pointer;
+}

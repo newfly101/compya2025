@@ -3,6 +3,7 @@ import { applyAsyncHandlers } from "@/app/store/utils/applyAsyncHandlers.js";
 import { requestGetNoticeList } from "@/domains/notices/store/public/thunks.js";
 import {
   requestAdminGetNoticeList,
+  requestAdminGetNotice,
   requestAdminInsertNotice,
   requestAdminUpdateNotice,
   requestAdminUpdateNoticeVisible,
@@ -31,6 +32,14 @@ const noticeSlice = createSlice({
     /* ── 어드민 조회 (전체 목록) ─────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminGetNoticeList, (state, action) => {
       state.siteNotices = action.payload;
+    });
+
+    /* ── 어드민 단건 조회(글쓰기 화면 새로고침 대비) ───────────── */
+    applyAsyncHandlers(builder, requestAdminGetNotice, (state, action) => {
+      const notice = action.payload;
+      const idx = state.siteNotices.findIndex(n => n.id === notice.id);
+      if (idx !== -1) state.siteNotices[idx] = { ...state.siteNotices[idx], ...notice };
+      else state.siteNotices.unshift(notice);
     });
 
     /* ── 신규 등록 ────────────────────────────────────────────── */
