@@ -1,0 +1,25 @@
+// 프로토타입 § 5 — flex 1, padding 9px, radius 8, 선택 시 퍼플 강조.
+.segment {
+  display: flex;
+  gap: $space-2;
+}
+
+.option {
+  @include reset-button;
+  flex: 1;
+  padding: $space-2 0;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  background: var(--color-bg-deep);
+  color: var(--color-text-secondary);
+  text-align: center;
+  @include text-body;
+  font-weight: 500;
+  cursor: pointer;
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-brand);
+    background: var(--color-admin-tag-purple-bg);
+    color: var(--color-admin-tag-purple-text);
+  }
+}

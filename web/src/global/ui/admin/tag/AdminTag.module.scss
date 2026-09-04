@@ -1,0 +1,38 @@
+// 프로토타입 § 3 — 10px/700 padding 1px 6px radius 4.
+.tag {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding: 1px $space-1;
+  border-radius: $radius-xs;
+  font-size: $font-size-9;
+  font-weight: $font-weight-bold;
+  letter-spacing: $letter-spacing-wide;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.purple {
+  background: var(--color-admin-tag-purple-bg);
+  color: var(--color-admin-tag-purple-text);
+}
+
+.green {
+  background: var(--color-admin-tag-green-bg);
+  color: var(--color-admin-tag-green-text);
+}
+
+.amber {
+  background: var(--color-admin-tag-amber-bg);
+  color: var(--color-admin-tag-amber-text);
+}
+
+.rose {
+  background: var(--color-admin-tag-rose-bg);
+  color: var(--color-admin-tag-rose-text);
+}
+
+.neutral {
+  background: var(--color-admin-tag-neutral-bg);
+  color: var(--color-admin-tag-neutral-text);
+}

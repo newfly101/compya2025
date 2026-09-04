@@ -1,0 +1,69 @@
+// ============================================================
+// mixins/_admin-field.scss
+// 어드민 모달 폼 요소 스타일 프리미티브 (인풋 · textarea · 날짜범위 라벨)
+// AdminModal 본문(§ 5 스펙) 톤에 맞춘 스타일만 제공 — 마크업/상태는 호출부가 가진다.
+// 도메인 전용 값 없음. 6개 탭 admin 모달 폼이 공용으로 @include 한다.
+// ============================================================
+
+@use '../variables/spacing' as *;
+@use '../variables/radius' as *;
+@use 'typography' as *;
+
+// ── 필드 라벨 (11px/600, 보조색) ──────────────────────────────
+@mixin admin-field-label {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  @include text-caption;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+// ── 텍스트/숫자/날짜 인풋 (h40) ────────────────────────────────
+@mixin admin-input {
+  height: 40px;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-deep);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  @include text-body;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: var(--color-text-placeholder);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-brand);
+  }
+}
+
+// ── textarea (rows 4 기본) ──────────────────────────────────
+@mixin admin-textarea {
+  @include admin-input;
+  height: auto;
+  min-height: 96px;
+  padding: $space-3;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+// ── 날짜 범위 행 (date 인풋 2개 + ~) ───────────────────────────
+@mixin admin-date-range-row {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  input[type='date'] {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@mixin admin-date-range-sep {
+  flex: 0 0 auto;
+  color: var(--color-text-muted);
+}

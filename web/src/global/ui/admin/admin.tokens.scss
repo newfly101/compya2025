@@ -1,0 +1,38 @@
+// ============================================================
+// admin.tokens.scss
+// 어드민 6개 탭(홈·퀴즈·이벤트·쿠폰·공지·유저관리) 공용 로컬 토큰.
+// 부품(web/src/global/ui/admin/**) 또는 각 AdminXxxScreen.jsx 에서
+// side-effect import 로 1회 주입한다 (legendStats.tokens.scss 와 동일 패턴).
+//
+// 공통 토큰(--color-bg-* / --color-text-* / --color-brand* / --color-border*)으로
+// 대체 가능한 값은 여기 두지 않는다. 전역 _colors.scss / semantic/_color.scss 에는
+// 추가하지 않는다 — 값은 다르지만 역할이 같은 것은 기존 토큰을 그대로 쓴다.
+//
+// 근거: docs/domain/admin/design/_redesign-spec.md § 스타일 토큰 대조
+// ============================================================
+
+:root {
+  // ── 토글 스위치 on 색상 ───────────────────────────────────
+  // 프로토타입 고유 초록(#22c55e). 기존 --color-success(#03c75a)는
+  // 네이버 로그인 브랜드 그린으로 의미가 이미 고정돼 있어 재사용하지 않는다.
+  // [확인필요] 최종 색상 확정 전 임시 결정 — 사용자 컨펌 필요.
+  --color-admin-on: #22c55e;
+  --color-admin-on-tint: #4ade80;
+  // off 트랙(#3b3352)은 기존 --color-bg-elevated(#332947)로 근사 대체 — 신규 토큰 없음.
+
+  // 액센트 강조 보더(#3b2a66)는 기존 --color-brand-tint(#3c1e50)로 근사 대체 — 신규 토큰 없음.
+
+  // ── 태그/배지 5종 (배경 + 텍스트) ─────────────────────────
+  // 퀴즈 "홈 노출중" / 이벤트 "공식" / 쿠폰 만료 강조 / 공지 "사이트·공식" /
+  // 유저 상태(활성·비활성·탈퇴·정지) 등 5개 탭이 공용으로 쓴다.
+  --color-admin-tag-purple-bg: #2a1f4a;
+  --color-admin-tag-purple-text: #c4b5fd;
+  --color-admin-tag-green-bg: #14321f;
+  --color-admin-tag-green-text: #4ade80;
+  --color-admin-tag-amber-bg: #3a2f1a;
+  --color-admin-tag-amber-text: #fcd34d;
+  --color-admin-tag-rose-bg: #3a1f2a;
+  --color-admin-tag-rose-text: #fda4af;
+  --color-admin-tag-neutral-bg: #1e1631;
+  --color-admin-tag-neutral-text: #a99cc7;
+}

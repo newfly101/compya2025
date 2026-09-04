@@ -1,0 +1,36 @@
+// 프로토타입 § 3 — 36×20 pill, on #22c55e / off 기존 --color-bg-elevated 근사.
+.toggle {
+  @include reset-button;
+  position: relative;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 20px;
+  border-radius: $radius-full;
+  background: var(--color-bg-elevated);
+  transition: background-color 0.15s ease;
+  cursor: pointer;
+
+  &[data-on="true"] {
+    background: var(--color-admin-on);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: $radius-full;
+  background: #fff;
+  transition: left 0.15s ease;
+
+  [data-on="true"] & {
+    left: 18px;
+  }
+}
