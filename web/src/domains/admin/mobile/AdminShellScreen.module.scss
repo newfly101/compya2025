@@ -1,0 +1,54 @@
+.page {
+  @include page-layout;
+}
+
+// 가로 스크롤 탭 바 — 스크롤바 숨김(핸드오프 § Global Shell)
+.tabBar {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0 $space-2;
+  border-bottom: 1px solid var(--color-border);
+  flex: 0 0 auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.tabItem {
+  @include reset-button;
+  flex: none;
+  padding: $space-3 14px 10px;
+  @include text-body-bold;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--color-text-secondary);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+
+  &.active {
+    font-weight: 700;
+    color: var(--color-brand-dark);
+    border-bottom-color: var(--color-brand-dark);
+  }
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.logoutBtn {
+  @include reset-button;
+  padding: 3px $space-2;
+  border: 1px solid var(--color-brand-tint);
+  border-radius: $radius-md;
+  color: var(--color-brand-dark);
+  @include text-caption;
+  font-weight: 600;
+  cursor: pointer;
+}

@@ -37,10 +37,12 @@ export const ROUTE_PATHS = {
   contact: "/contact",
   about: "/about",
   mypage: "/mypage",
-  // admin flat 구조
-  admin_coupon: "/admin/coupon",
-  admin_event: "/admin/event",
-  admin_notice: "/admin/notice",
-  admin_user: "/admin/user",
-  admin_quiz: "/admin/quiz",
+  // admin — 단일 셸 + 상단 탭. 기존 경로 문자열은 그대로 두고(북마크 호환) :tab 파라미터로 매칭한다.
+  admin: "/admin",
+  admin_tab_pattern: "/admin/:tab",
+  admin_tab: (tab) => `/admin/${tab}`,
+  // 공지 글쓰기 — 유일하게 셸 탭이 아니라 전체 페이지로 전환되는 예외(모달 대신 Tiptap 에디터).
+  admin_notice_write: "/admin/notice/write",
+  admin_notice_write_edit_pattern: "/admin/notice/write/:id",
+  admin_notice_write_edit: (id) => `/admin/notice/write/${id}`,
 }

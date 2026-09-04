@@ -30,10 +30,15 @@ export const ROUTE_META = {
   ABOUT: {path: ROUTE_PATHS.about, title: "컴프야펀 | 사이트 소개"},
   MYPAGE: {path: ROUTE_PATHS.mypage, title: "컴프야펀 | 마이페이지"},
   AUTH_CALL_BACK: {path: ROUTE_PATHS.authentication},
-  // admin
-  ADMIN_COUPON: { path: ROUTE_PATHS.admin_coupon, title: "컴프야펀 | 어드민 | 쿠폰 관리", variant: "page" },
-  ADMIN_EVENT: { path: ROUTE_PATHS.admin_event, title: "컴프야펀 | 어드민 | 이벤트 관리", variant: "page" },
-  ADMIN_NOTICE: { path: ROUTE_PATHS.admin_notice, title: "컴프야펀 | 어드민 | 공지 관리", variant: "page" },
-  ADMIN_USER: { path: ROUTE_PATHS.admin_user, title: "컴프야펀 | 어드민 | 유저 관리", variant: "page" },
-  ADMIN_QUIZ: { path: ROUTE_PATHS.admin_quiz, title: "컴프야펀 | 어드민 | 퀴즈 관리", variant: "page" },
+  // admin — 단일 셸(AdminShellScreen). title 이 함수라 useDocumentMeta 는 건너뛰고,
+  // AdminShellScreen 이 활성 탭에 맞춰 document.title 을 직접 갱신한다(공지 상세와 동일 패턴).
+  ADMIN: {
+    path: ROUTE_PATHS.admin,
+    title: (tabLabel) => (tabLabel ? `컴프야펀 | 어드민 | ${tabLabel}` : "컴프야펀 | 어드민"),
+  },
+  // 공지 글쓰기 — 셸 밖 전체 페이지(탭 구조 예외).
+  ADMIN_NOTICE_WRITE: {
+    path: ROUTE_PATHS.admin_notice_write_edit_pattern,
+    title: "컴프야펀 | 어드민 | 공지 글쓰기",
+  },
 };

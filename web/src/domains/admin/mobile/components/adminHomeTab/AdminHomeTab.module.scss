@@ -1,0 +1,122 @@
+.homeTab {
+  display: flex;
+  flex-direction: column;
+  gap: $space-6;
+  padding: $space-4;
+}
+
+.titleBlock {
+  display: flex;
+  align-items: flex-start;
+  gap: $space-3;
+}
+
+.titleBar {
+  flex: 0 0 auto;
+  width: 3px;
+  height: 18px;
+  margin-top: 4px;
+  border-radius: $radius-xs;
+  background: var(--color-brand-dark);
+}
+
+.title {
+  @include text-section-title;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  margin-top: $space-1;
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-3;
+}
+
+.card {
+  @include reset-button;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-1;
+  padding: $space-5 $space-2 $space-4;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-2xl;
+  background: var(--color-bg-card);
+  cursor: pointer;
+  @include pressable;
+
+  &:hover {
+    border-color: var(--color-brand-violet);
+    background: var(--color-bg-elevated);
+  }
+}
+
+.cardCount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-2xl;
+  background: var(--color-admin-tag-neutral-bg);
+  color: var(--color-admin-tag-purple-text);
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.cardLabel {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.cardDesc {
+  @include text-caption;
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.summaryCard {
+  padding: $space-4 $space-5;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-2xl;
+  background: var(--color-bg-card);
+}
+
+.summaryTitle {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+  margin-bottom: $space-3;
+}
+
+.summaryList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.summaryRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $space-3;
+
+  dt {
+    flex: 0 0 auto;
+    @include text-caption;
+    color: var(--color-text-muted);
+  }
+
+  dd {
+    margin: 0;
+    @include text-body-bold;
+    color: var(--color-text-secondary);
+    text-align: right;
+    @include text-ellipsis;
+  }
+}

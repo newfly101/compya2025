@@ -31,16 +31,14 @@ export const MENU_GROUPS = [
   },
 ]
 
-// admin role 한정 노출 — Drawer 가 isAdmin 일 때 MENU_GROUPS 뒤에 append
+// admin role 한정 노출 — Drawer 가 isAdmin 일 때 MENU_GROUPS 뒤에 append.
+// 어드민이 단일 셸 + 상단 탭 구조로 바뀌면서 드로어 항목도 「Admin」 하나로 합친다
+// (근거: test-docs/레전드 재료 앱 디자인/design_handoff_admin/README.md § Overview).
 export const ADMIN_MENU_GROUPS = [
   {
     label: '어드민 사이트 관리',
     items: [
-      { icon: '🎫', label: '쿠폰 관리',     to: '/admin/coupon' },
-      { icon: '🎪', label: '이벤트 관리',   to: '/admin/event' },
-      { icon: '📢', label: '공지 관리',     to: '/admin/notice' },
-      { icon: '👥', label: '유저 관리',     to: '/admin/user' },
-      { icon: '❓', label: '퀴즈 관리',     to: '/admin/quiz' },
+      { icon: '🛠️', label: 'Admin', to: '/admin' },
     ]
   },
 ]
