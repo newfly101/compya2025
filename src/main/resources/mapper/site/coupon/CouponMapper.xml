@@ -106,4 +106,37 @@
             updated_at = NOW()
         WHERE id = #{id}
     </update>
+
+    <!-- 일괄 작업 -->
+    <select id="selectExistingCouponIds" resultType="java.lang.Long">
+        SELECT id
+        FROM site_coupons
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <!-- 일괄 삭제: 단건 삭제와 동일하게 soft delete(is_visible = false) 처리 -->
+    <update id="deleteCouponsByIds">
+        UPDATE site_coupons
+        SET
+            is_visible = false,
+            updated_at = NOW()
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updateCouponsVisibleByIds">
+        UPDATE site_coupons
+        SET
+            is_visible = #{visible},
+            updated_at = NOW()
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 </mapper>

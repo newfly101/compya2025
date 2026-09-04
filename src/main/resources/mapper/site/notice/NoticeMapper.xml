@@ -205,4 +205,32 @@
         WHERE id = #{id}
     </delete>
 
+    <!-- 일괄 작업 -->
+    <select id="selectExistingNoticeIds" resultType="java.lang.Long">
+        SELECT id
+        FROM site_notices
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteNoticesByIds">
+        DELETE FROM site_notices
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="updateNoticesVisibleByIds">
+        UPDATE site_notices
+        SET is_visible = #{isVisible},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
 </mapper>

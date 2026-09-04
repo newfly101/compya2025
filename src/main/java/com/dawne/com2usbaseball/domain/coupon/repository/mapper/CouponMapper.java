@@ -23,4 +23,11 @@ public interface CouponMapper {
 
     int deleteCouponById(@Param("id") Long id);
 
+    // 일괄 작업
+    List<Long> selectExistingCouponIds(@Param("ids") List<Long> ids);
+    int deleteCouponsByIds(@Param("ids") List<Long> ids);
+    int updateCouponsVisibleByIds(
+            @Param("ids") List<Long> ids,
+            @Param("visible") boolean visible);
+
 }

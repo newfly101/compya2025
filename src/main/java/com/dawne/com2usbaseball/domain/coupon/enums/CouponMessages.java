@@ -13,5 +13,9 @@ public enum CouponMessages {
     COUPON_VISIBLE_UPDATED,
 
     // 삭제 로직 추가 시 사용
-    COUPON_DELETED
+    COUPON_DELETED,
+
+    // 일괄 작업
+    COUPON_BULK_DELETED,
+    COUPON_BULK_VISIBLE_UPDATED
 }

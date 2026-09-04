@@ -54,4 +54,17 @@ public class EventRepository {
     public boolean deleteEvent(Long id) {
         return mapper.deleteEventById(id) > 0;
     }
+
+    // 일괄 작업
+    public List<Long> selectExistingIds(List<Long> ids) {
+        return mapper.selectExistingEventIds(ids);
+    }
+
+    public void deleteEventsByIds(List<Long> ids) {
+        mapper.deleteEventsByIds(ids);
+    }
+
+    public void updateEventsVisibleByIds(List<Long> ids, boolean visible) {
+        mapper.updateEventsVisibleByIds(ids, visible);
+    }
 }

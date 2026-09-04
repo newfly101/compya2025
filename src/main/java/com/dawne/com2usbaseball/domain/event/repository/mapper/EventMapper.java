@@ -29,4 +29,11 @@ public interface EventMapper {
             @Param("visible") boolean visible);                 // 이벤트 노출 값 수정
     int deleteEventById(@Param("id") Long id);                  // 이벤트 삭제 (hard delete)
 
+    // 일괄 작업
+    List<Long> selectExistingEventIds(@Param("ids") List<Long> ids);
+    int deleteEventsByIds(@Param("ids") List<Long> ids);
+    int updateEventsVisibleByIds(
+            @Param("ids") List<Long> ids,
+            @Param("visible") boolean visible);
+
 }

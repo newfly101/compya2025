@@ -10,4 +10,8 @@ public enum EventMessages {
     EVENT_UPDATED_FAILED,
     EVENT_VISIBLE_UPDATED,
     EVENT_DELETED,
+
+    // 일괄 작업
+    EVENT_BULK_DELETED,
+    EVENT_BULK_VISIBLE_UPDATED,
 }

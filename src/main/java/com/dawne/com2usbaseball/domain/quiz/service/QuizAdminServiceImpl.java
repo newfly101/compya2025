@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.quiz.service;
 
+import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
 import com.dawne.com2usbaseball.domain.quiz.dto.mapstruct.QuizMapStruct;
 import com.dawne.com2usbaseball.domain.quiz.dto.request.QuizRequest;
 import com.dawne.com2usbaseball.domain.quiz.dto.response.QuizResponse;
@@ -87,5 +88,33 @@ public class QuizAdminServiceImpl implements QuizAdminService {
         if (!repository.delete(id)) {
             throw new BaseException(QuizMessages.QUIZ_DELETED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // 일괄 삭제 — 존재하는 id만 삭제, 존재하지 않는 id는 실패 목록으로 반환(전체 롤백 X)
+    @Override
+    @Caching(evict = {
+            @CacheEvict(value = "quiz", key = "'admin'"),
+            @CacheEvict(value = "quiz", key = "'latest'")
+    })
+    public BulkOperationResponse bulkDeleteQuizzes(List<Long> ids) {
+        List<Long> requestedIds = normalizeIds(ids);
+        if (requestedIds.isEmpty()) {
+            return BulkOperationResponse.empty();
+        }
+
+        List<Long> existingIds = repository.selectExistingIds(requestedIds);
+        List<Long> failedIds = requestedIds.stream().filter(id -> !existingIds.contains(id)).toList();
+
+        if (!existingIds.isEmpty()) {
+            repository.deleteQuizzesByIds(existingIds);
+        }
+        return BulkOperationResponse.of(existingIds, failedIds);
+    }
+
+    private List<Long> normalizeIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return ids.stream().filter(java.util.Objects::nonNull).distinct().toList();
     }
 }

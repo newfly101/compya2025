@@ -1,5 +1,8 @@
 package com.dawne.com2usbaseball.domain.event.controller;
 
+import com.dawne.com2usbaseball.common.support.dto.BulkIdsRequest;
+import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
+import com.dawne.com2usbaseball.common.support.dto.BulkVisibleRequest;
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.common.support.dto.OperationResponse;
 import com.dawne.com2usbaseball.domain.event.controller.docs.AdminEventSwaggerDocs;
@@ -66,5 +69,20 @@ public class AdminEventController implements AdminEventSwaggerDocs {
     public GlobalResponse<Void> deleteEvent(@PathVariable Long id) {
         eventAdminService.deleteEvent(id);
         return GlobalResponse.success(EventMessages.EVENT_DELETED, null);
+    }
+
+    @Override
+    @DeleteMapping("/bulk")
+    public GlobalResponse<BulkOperationResponse> bulkDeleteEvents(@RequestBody BulkIdsRequest request) {
+        BulkOperationResponse result = eventAdminService.bulkDeleteEvents(request.ids());
+        return GlobalResponse.success(EventMessages.EVENT_BULK_DELETED, result);
+    }
+
+    @Override
+    @PatchMapping("/bulk/visible")
+    public GlobalResponse<BulkOperationResponse> bulkUpdateEventsVisible(@RequestBody BulkVisibleRequest request) {
+        boolean visible = request.visible() != null && request.visible();
+        BulkOperationResponse result = eventAdminService.bulkUpdateEventsVisible(request.ids(), visible);
+        return GlobalResponse.success(EventMessages.EVENT_BULK_VISIBLE_UPDATED, result);
     }
 }

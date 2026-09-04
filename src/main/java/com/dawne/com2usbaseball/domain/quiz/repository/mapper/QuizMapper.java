@@ -15,4 +15,8 @@ public interface QuizMapper {
     int insertQuiz(QuizEntity entity);
     int updateQuiz(QuizEntity entity);
     int deleteQuiz(@Param("id") Long id);
+
+    // 일괄 작업
+    List<Long> selectExistingQuizIds(@Param("ids") List<Long> ids);
+    int deleteQuizzesByIds(@Param("ids") List<Long> ids);
 }

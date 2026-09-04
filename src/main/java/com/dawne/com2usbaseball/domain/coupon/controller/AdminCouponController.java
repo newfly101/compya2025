@@ -1,5 +1,8 @@
 package com.dawne.com2usbaseball.domain.coupon.controller;
 
+import com.dawne.com2usbaseball.common.support.dto.BulkIdsRequest;
+import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
+import com.dawne.com2usbaseball.common.support.dto.BulkVisibleRequest;
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.coupon.controller.docs.AdminCouponSwaggerDocs;
 import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponRequest;
@@ -60,5 +63,20 @@ public class AdminCouponController implements AdminCouponSwaggerDocs {
     public GlobalResponse<Void> deleteCoupon(@PathVariable Long id) {
         adminCouponService.deleteCoupon(id);
         return GlobalResponse.success(CouponMessages.COUPON_DELETED, null);
+    }
+
+    @Override
+    @DeleteMapping("/bulk")
+    public GlobalResponse<BulkOperationResponse> bulkDeleteCoupons(@RequestBody BulkIdsRequest request) {
+        BulkOperationResponse result = adminCouponService.bulkDeleteCoupons(request.ids());
+        return GlobalResponse.success(CouponMessages.COUPON_BULK_DELETED, result);
+    }
+
+    @Override
+    @PatchMapping("/bulk/visible")
+    public GlobalResponse<BulkOperationResponse> bulkUpdateCouponsVisible(@RequestBody BulkVisibleRequest request) {
+        boolean visible = request.visible() != null && request.visible();
+        BulkOperationResponse result = adminCouponService.bulkUpdateCouponsVisible(request.ids(), visible);
+        return GlobalResponse.success(CouponMessages.COUPON_BULK_VISIBLE_UPDATED, result);
     }
 }

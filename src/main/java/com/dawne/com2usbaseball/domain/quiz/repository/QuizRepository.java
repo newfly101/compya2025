@@ -37,4 +37,13 @@ public class QuizRepository {
     public boolean delete(Long id) {
         return mapper.deleteQuiz(id) > 0;
     }
+
+    // 일괄 작업
+    public List<Long> selectExistingIds(List<Long> ids) {
+        return mapper.selectExistingQuizIds(ids);
+    }
+
+    public void deleteQuizzesByIds(List<Long> ids) {
+        mapper.deleteQuizzesByIds(ids);
+    }
 }

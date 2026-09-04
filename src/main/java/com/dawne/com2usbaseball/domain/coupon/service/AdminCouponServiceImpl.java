@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.domain.coupon.service;
 
 import com.dawne.com2usbaseball.common.support.cache.CacheEvictAfterCommit;
+import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
 import com.dawne.com2usbaseball.domain.coupon.dto.mapstruct.CouponMapStruct;
 import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponRequest;
 import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
@@ -82,5 +83,50 @@ public class AdminCouponServiceImpl implements AdminCouponService {
         repository.findById(id)
                 .orElseThrow(() -> new BaseException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
         repository.deleteCoupon(id);
+    }
+
+    // 일괄 삭제 — 존재하는 id만 처리(soft delete), 존재하지 않는 id는 실패 목록으로 반환(전체 롤백 X)
+    @Override
+    @Transactional
+    @CacheEvictAfterCommit(cacheName = "coupons", keys = {"admin", "public"})
+    public BulkOperationResponse bulkDeleteCoupons(List<Long> ids) {
+        List<Long> requestedIds = normalizeIds(ids);
+        if (requestedIds.isEmpty()) {
+            return BulkOperationResponse.empty();
+        }
+
+        List<Long> existingIds = repository.selectExistingIds(requestedIds);
+        List<Long> failedIds = requestedIds.stream().filter(id -> !existingIds.contains(id)).toList();
+
+        if (!existingIds.isEmpty()) {
+            repository.deleteCouponsByIds(existingIds);
+        }
+        return BulkOperationResponse.of(existingIds, failedIds);
+    }
+
+    // 일괄 노출 여부 변경 — 위와 동일한 부분 실패 처리 방식
+    @Override
+    @Transactional
+    @CacheEvictAfterCommit(cacheName = "coupons", keys = {"admin", "public"})
+    public BulkOperationResponse bulkUpdateCouponsVisible(List<Long> ids, boolean visible) {
+        List<Long> requestedIds = normalizeIds(ids);
+        if (requestedIds.isEmpty()) {
+            return BulkOperationResponse.empty();
+        }
+
+        List<Long> existingIds = repository.selectExistingIds(requestedIds);
+        List<Long> failedIds = requestedIds.stream().filter(id -> !existingIds.contains(id)).toList();
+
+        if (!existingIds.isEmpty()) {
+            repository.updateCouponsVisibleByIds(existingIds, visible);
+        }
+        return BulkOperationResponse.of(existingIds, failedIds);
+    }
+
+    private List<Long> normalizeIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return ids.stream().filter(java.util.Objects::nonNull).distinct().toList();
     }
 }

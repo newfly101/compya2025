@@ -1,5 +1,8 @@
 package com.dawne.com2usbaseball.domain.notice.controller;
 
+import com.dawne.com2usbaseball.common.support.dto.BulkIdsRequest;
+import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
+import com.dawne.com2usbaseball.common.support.dto.BulkVisibleRequest;
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.notice.controller.docs.AdminNoticeSwaggerDocs;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticePinnedRequest;
@@ -83,6 +86,20 @@ public class AdminNoticeController implements AdminNoticeSwaggerDocs {
     public GlobalResponse<Void> deleteNotice(@PathVariable Long noticeId) {
         adminNoticeService.deleteNotice(noticeId);
         return GlobalResponse.success(NoticeMessages.NOTICE_DELETED, null);
+    }
+
+    @Override
+    @DeleteMapping("/bulk")
+    public GlobalResponse<BulkOperationResponse> bulkDeleteNotices(@RequestBody BulkIdsRequest request) {
+        BulkOperationResponse result = adminNoticeService.bulkDeleteNotices(request.ids());
+        return GlobalResponse.success(NoticeMessages.NOTICE_BULK_DELETED, result);
+    }
+
+    @Override
+    @PatchMapping("/bulk/visible")
+    public GlobalResponse<BulkOperationResponse> bulkUpdateNoticesVisible(@RequestBody BulkVisibleRequest request) {
+        BulkOperationResponse result = adminNoticeService.bulkUpdateNoticesVisible(request.ids(), request.visible());
+        return GlobalResponse.success(NoticeMessages.NOTICE_BULK_VISIBLE_UPDATED, result);
     }
 
 }

@@ -31,4 +31,11 @@ public interface NoticeMapper {
     int updateNoticeVisible(@Param("id") Long noticeId, @Param("isVisible") Boolean isVisible);
     int updateNoticePinned(@Param("id") Long noticeId, @Param("isPinned") Boolean isPinned);
     int deleteNotice(@Param("id") Long noticeId);
+
+    // 일괄 작업
+    List<Long> selectExistingNoticeIds(@Param("ids") List<Long> ids);
+    int deleteNoticesByIds(@Param("ids") List<Long> ids);
+    int updateNoticesVisibleByIds(
+            @Param("ids") List<Long> ids,
+            @Param("isVisible") Boolean isVisible);
 }

@@ -37,4 +37,17 @@ public class CouponAdminRepository {
     public boolean deleteCoupon(Long id) {
         return mapper.deleteCouponById(id) > 0;
     }
+
+    // 일괄 작업
+    public List<Long> selectExistingIds(List<Long> ids) {
+        return mapper.selectExistingCouponIds(ids);
+    }
+
+    public void deleteCouponsByIds(List<Long> ids) {
+        mapper.deleteCouponsByIds(ids);
+    }
+
+    public void updateCouponsVisibleByIds(List<Long> ids, boolean visible) {
+        mapper.updateCouponsVisibleByIds(ids, visible);
+    }
 }

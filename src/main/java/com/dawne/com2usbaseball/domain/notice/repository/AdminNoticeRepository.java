@@ -57,4 +57,17 @@ public class AdminNoticeRepository {
     public boolean deleteNotice(Long noticeId) {
         return noticeMapper.deleteNotice(noticeId) > 0;
     }
+
+    // 일괄 작업
+    public List<Long> selectExistingIds(List<Long> ids) {
+        return noticeMapper.selectExistingNoticeIds(ids);
+    }
+
+    public void deleteNoticesByIds(List<Long> ids) {
+        noticeMapper.deleteNoticesByIds(ids);
+    }
+
+    public void updateNoticesVisibleByIds(List<Long> ids, Boolean isVisible) {
+        noticeMapper.updateNoticesVisibleByIds(ids, isVisible);
+    }
 }

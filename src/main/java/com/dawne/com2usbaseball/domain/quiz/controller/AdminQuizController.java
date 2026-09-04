@@ -1,5 +1,7 @@
 package com.dawne.com2usbaseball.domain.quiz.controller;
 
+import com.dawne.com2usbaseball.common.support.dto.BulkIdsRequest;
+import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.quiz.controller.docs.AdminQuizSwaggerDocs;
 import com.dawne.com2usbaseball.domain.quiz.dto.request.QuizRequest;
@@ -45,5 +47,12 @@ public class AdminQuizController implements AdminQuizSwaggerDocs {
     public GlobalResponse<Void> delete(@PathVariable Long id) {
         quizAdminService.deleteQuiz(id);
         return GlobalResponse.success(QuizMessages.QUIZ_DELETED, null);
+    }
+
+    @Override
+    @DeleteMapping("/bulk")
+    public GlobalResponse<BulkOperationResponse> bulkDelete(@RequestBody BulkIdsRequest request) {
+        BulkOperationResponse result = quizAdminService.bulkDeleteQuizzes(request.ids());
+        return GlobalResponse.success(QuizMessages.QUIZ_BULK_DELETED, result);
     }
 }

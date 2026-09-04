@@ -16,6 +16,10 @@ public enum NoticeMessages {
     NOTICE_DELETED,
     NOTICE_DELETED_FAILED,
 
+    // 일괄 작업
+    NOTICE_BULK_DELETED,
+    NOTICE_BULK_VISIBLE_UPDATED,
+
     //  source 유효성 검사용
     NOTICE_INVALID_SOURCE_PAYLOAD
 }

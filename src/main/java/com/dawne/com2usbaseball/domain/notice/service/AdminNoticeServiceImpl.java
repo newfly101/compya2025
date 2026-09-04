@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.notice.service;
 
+import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
 import com.dawne.com2usbaseball.domain.notice.dto.mapstruct.NoticeMapStruct;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeAdminListRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeRequest;
@@ -151,6 +152,60 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
         if (!adminNoticeRepository.deleteNotice(noticeId)) {
             throw new BaseException(NoticeMessages.NOTICE_DELETED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    // 일괄 삭제 — 존재하는 id만 삭제, 존재하지 않는 id는 실패 목록으로 반환(전체 롤백 X)
+    // 상세 캐시는 다건이라 개별 key evict 대신 noticeDetail 전체를 비운다(allEntries)
+    @Override
+    @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "notice", key = "'admin'"),
+            @CacheEvict(value = "notice", key = "'public'"),
+            @CacheEvict(value = "noticeDetail", allEntries = true)
+    })
+    public BulkOperationResponse bulkDeleteNotices(List<Long> ids) {
+        List<Long> requestedIds = normalizeIds(ids);
+        if (requestedIds.isEmpty()) {
+            return BulkOperationResponse.empty();
+        }
+
+        List<Long> existingIds = adminNoticeRepository.selectExistingIds(requestedIds);
+        List<Long> failedIds = requestedIds.stream().filter(id -> !existingIds.contains(id)).toList();
+
+        if (!existingIds.isEmpty()) {
+            adminNoticeRepository.deleteNoticesByIds(existingIds);
+        }
+        return BulkOperationResponse.of(existingIds, failedIds);
+    }
+
+    // 일괄 노출 여부 변경 — 위와 동일한 부분 실패 처리 방식
+    @Override
+    @Transactional
+    @Caching(evict = {
+            @CacheEvict(value = "notice", key = "'admin'"),
+            @CacheEvict(value = "notice", key = "'public'"),
+            @CacheEvict(value = "noticeDetail", allEntries = true)
+    })
+    public BulkOperationResponse bulkUpdateNoticesVisible(List<Long> ids, Boolean isVisible) {
+        List<Long> requestedIds = normalizeIds(ids);
+        if (requestedIds.isEmpty()) {
+            return BulkOperationResponse.empty();
+        }
+
+        List<Long> existingIds = adminNoticeRepository.selectExistingIds(requestedIds);
+        List<Long> failedIds = requestedIds.stream().filter(id -> !existingIds.contains(id)).toList();
+
+        if (!existingIds.isEmpty()) {
+            adminNoticeRepository.updateNoticesVisibleByIds(existingIds, isVisible);
+        }
+        return BulkOperationResponse.of(existingIds, failedIds);
+    }
+
+    private List<Long> normalizeIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+        return ids.stream().filter(java.util.Objects::nonNull).distinct().toList();
     }
 
     // DB CHECK 제약 미러링

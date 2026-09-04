@@ -1,5 +1,8 @@
 package com.dawne.com2usbaseball.domain.notice.controller.docs;
 
+import com.dawne.com2usbaseball.common.support.dto.BulkIdsRequest;
+import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
+import com.dawne.com2usbaseball.common.support.dto.BulkVisibleRequest;
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeAdminListRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticePinnedRequest;
@@ -252,5 +255,43 @@ public interface AdminNoticeSwaggerDocs {
     GlobalResponse<Void> deleteNotice(
             @Parameter(description = "공지사항 ID", example = "1")
             @PathVariable Long noticeId
+    );
+
+    @Operation(
+            summary = "공지사항 일괄 삭제",
+            description = "관리자가 여러 공지사항을 한 번에 삭제한다. 존재하지 않는 id는 failedIds로 반환되며 전체 요청은 실패하지 않는다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "공지사항 일괄 삭제 처리 완료")
+    })
+    GlobalResponse<BulkOperationResponse> bulkDeleteNotices(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "삭제할 공지사항 id 목록",
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = BulkIdsRequest.class),
+                            examples = @ExampleObject(value = "{ \"ids\": [1, 2, 3] }")
+                    )
+            )
+            @RequestBody BulkIdsRequest request
+    );
+
+    @Operation(
+            summary = "공지사항 일괄 노출 여부 변경",
+            description = "관리자가 여러 공지사항의 노출 여부를 한 번에 변경한다. 존재하지 않는 id는 failedIds로 반환되며 전체 요청은 실패하지 않는다."
+    )
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "공지사항 일괄 노출 여부 변경 처리 완료")
+    })
+    GlobalResponse<BulkOperationResponse> bulkUpdateNoticesVisible(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "노출 여부를 변경할 공지사항 id 목록과 변경값",
+                    required = true,
+                    content = @Content(
+                            schema = @Schema(implementation = BulkVisibleRequest.class),
+                            examples = @ExampleObject(value = "{ \"ids\": [1, 2, 3], \"visible\": false }")
+                    )
+            )
+            @RequestBody BulkVisibleRequest request
     );
 }

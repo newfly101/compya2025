@@ -1,5 +1,7 @@
 package com.dawne.com2usbaseball.domain.quiz.controller.docs;
 
+import com.dawne.com2usbaseball.common.support.dto.BulkIdsRequest;
+import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.quiz.dto.request.QuizRequest;
 import com.dawne.com2usbaseball.domain.quiz.dto.response.QuizResponse;
@@ -131,5 +133,24 @@ public interface AdminQuizSwaggerDocs {
     GlobalResponse<Void> delete(
         @Parameter(description = "퀴즈 ID", example = "1")
         @PathVariable Long id
+    );
+
+    @Operation(
+        summary = "퀴즈 일괄 삭제",
+        description = "관리자가 여러 퀴즈를 한 번에 삭제합니다. 존재하지 않는 id는 failedIds로 반환되며 전체 요청은 실패하지 않습니다."
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "퀴즈 일괄 삭제 처리 완료")
+    })
+    GlobalResponse<BulkOperationResponse> bulkDelete(
+        @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "삭제할 퀴즈 id 목록",
+            required = true,
+            content = @Content(
+                schema = @Schema(implementation = BulkIdsRequest.class),
+                examples = @ExampleObject(value = "{ \"ids\": [1, 2, 3] }")
+            )
+        )
+        @RequestBody BulkIdsRequest request
     );
 }
