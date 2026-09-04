@@ -4,6 +4,7 @@ import {
   fetchAdminQuizCreate,
   fetchAdminQuizUpdate,
   fetchAdminQuizDelete,
+  fetchAdminQuizBulkDelete,
 } from "@/domains/quiz/store/admin/api.js";
 import { ADMIN_QUIZ_ACTIONS } from "@/domains/quiz/store/admin/endpoints.js";
 import { baseQuizAnswerDTO } from "@/domains/quiz/store/dto.js";
@@ -52,6 +53,20 @@ export const requestAdminQuizDelete = createAsyncThunk(
     try {
       await fetchAdminQuizDelete(id);
       return id;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// v2 일괄 삭제 — 서버가 { successIds, failedIds } 를 준다. 요청 id 전체를 성공으로
+// 믿지 않고 실제 successIds 만 돌려줘서 slice 가 그것만 목록에서 제거하게 한다.
+export const requestAdminQuizBulkDelete = createAsyncThunk(
+  ADMIN_QUIZ_ACTIONS.BULK_DELETE,
+  async (ids, { rejectWithValue }) => {
+    try {
+      const result = await fetchAdminQuizBulkDelete(ids);
+      return result;
     } catch (error) {
       return rejectWithValue(error.message);
     }

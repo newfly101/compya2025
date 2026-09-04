@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AdminToolbar from "@/global/ui/admin/toolbar/AdminToolbar.jsx";
 import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
+import AdminPagination from "@/global/ui/admin/pagination/AdminPagination.jsx";
+import useAdminPagination from "@/global/ui/admin/pagination/useAdminPagination.js";
 import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
 import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
@@ -18,6 +20,7 @@ import {
   USER_ROLE_LABELS,
   USER_STATUSES,
   USER_STATUS_LABELS,
+  maskEmail,
 } from "@/domains/users/mobile/admin/userAdmin.constants.js";
 import styles from "./AdminUserScreen.module.scss";
 
@@ -31,29 +34,10 @@ const STATUS_TAG_VARIANT = {
   SUSPENDED: "rose",
 };
 
-// 프로토타입 § 4 정렬 순환: 가입일↓ → 가입일↑ → 최근 로그인↓ → 최근 로그인↑.
-const SORT_MODES = [
-  { label: "가입일 최신순", field: "createdAt", dir: -1 },
-  { label: "가입일 오래된순", field: "createdAt", dir: 1 },
-  { label: "최근 로그인 최신순", field: "lastLoginAt", dir: -1 },
-  { label: "최근 로그인 오래된순", field: "lastLoginAt", dir: 1 },
-];
-
-const CHIP_MATCH = {
-  all: () => true,
-  ACTIVE: (u) => u.userStatus === "ACTIVE",
-  BLOCKED: (u) => u.userStatus === "BLOCKED",
-  WITHDRAWN: (u) => u.userStatus === "WITHDRAWN",
-  SUSPENDED: (u) => u.userStatus === "SUSPENDED",
-};
-
-const CHIP_OPTIONS = [
-  { value: "all", label: "전체" },
-  { value: "ACTIVE", label: "활성" },
-  { value: "BLOCKED", label: "비활성" },
-  { value: "WITHDRAWN", label: "탈퇴" },
-  { value: "SUSPENDED", label: "영구정지" },
-];
+// v2 핸드오프(480-유저) — 유저 탭은 노출/구분 칩이 없다(noVis:true). 대신 닉네임·가입일·
+// 최근 로그인 세 열의 헤더를 눌러 정렬한다(AdminTable sortable). 정보 행의 라벨 텍스트는
+// 읽기 전용 — 클릭 버튼이 아니다(onToggleSort 를 넘기지 않음, 헤더 클릭만 정렬을 바꾼다).
+const SORT_FIELD_LABELS = { nickname: "닉네임", createdAt: "가입일", lastLoginAt: "최근 로그인" };
 
 // 어드민 셸(AdminShellScreen)의 유저관리 탭 패널로 렌더된다 — 자체 TopBar 를 세팅하지 않는다.
 // 셸이 상단바(제목/로그아웃)를 한 번만 소유하고, 탭 전환은 뒤로가기가 아니라 탭 클릭으로 처리된다.
@@ -63,8 +47,8 @@ export default function AdminUserScreen() {
   const currentUserId = useSelector((s) => s.auth.user?.id);
 
   const [search, setSearch] = useState("");
-  const [chip, setChip] = useState("all");
-  const [sortIndex, setSortIndex] = useState(0);
+  const [sortKey, setSortKey] = useState("createdAt");
+  const [sortDir, setSortDir] = useState(-1);
 
   /* 상세/변경 모달 */
   const [selectedId, setSelectedId] = useState(null);
@@ -86,17 +70,32 @@ export default function AdminUserScreen() {
     );
   });
 
-  const chipOptions = CHIP_OPTIONS.map((opt) => ({
-    ...opt,
-    count: searched.filter(CHIP_MATCH[opt.value]).length,
-  }));
-
-  const sortMode = SORT_MODES[sortIndex];
-  const filtered = [...searched.filter(CHIP_MATCH[chip])].sort((a, b) => {
-    const va = a[sortMode.field] ?? "";
-    const vb = b[sortMode.field] ?? "";
-    return sortMode.dir * va.localeCompare(vb);
+  const filtered = [...searched].sort((a, b) => {
+    const va = a[sortKey] ?? "";
+    const vb = b[sortKey] ?? "";
+    return sortDir * va.localeCompare(vb);
   });
+
+  // 번호식 페이지네이션(8명/페이지, 클라이언트 슬라이스) — 검색/정렬이 바뀌면 1페이지로.
+  const { page, pageCount, pageItems, setPage, resetPage } = useAdminPagination(filtered, 8);
+  useEffect(() => {
+    resetPage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, sortKey, sortDir]);
+
+  const handleSort = (key) => {
+    if (sortKey === key) {
+      setSortDir((d) => -d);
+    } else {
+      setSortKey(key);
+      setSortDir(key === "nickname" ? 1 : -1);
+    }
+  };
+
+  const sortLabelText =
+    sortKey === "nickname"
+      ? `${SORT_FIELD_LABELS.nickname} ${sortDir === 1 ? "가나다순" : "역순"}`
+      : `${SORT_FIELD_LABELS[sortKey]} ${sortDir === -1 ? "최신순" : "오래된순"}`;
 
   const activeUser = selectedId != null ? (users ?? []).find((u) => u.id === selectedId) ?? null : null;
   const isSelf = currentUserId != null && selectedId === currentUserId;
@@ -168,11 +167,21 @@ export default function AdminUserScreen() {
     return base + forced + withdrawNotice;
   };
 
+  // v2 핸드오프(480-유저) 열 구성 — # · 닉네임(+태그)/이메일 · 가입일 · 최근 로그인 · 관리.
+  // 448px 카드 폭 배분: idx 22 + joinedAt 68 + lastLogin 100 + actions 60 = 250(고정),
+  // 나머지 198 은 nickname 칸(가변)이 흡수 → 합계 448.
   const columns = [
     {
-      key: "user",
-      label: "닉네임 / 이메일",
+      key: "idx",
+      label: "#",
+      width: 22,
+      render: (_u, index) => <span className={styles.idx}>{page * 8 + index + 1}</span>,
+    },
+    {
+      key: "nickname",
+      label: "닉네임",
       align: "left",
+      sortable: true,
       render: (u) => (
         <div className={styles.mainCell}>
           <div className={styles.nameRow}>
@@ -184,25 +193,28 @@ export default function AdminUserScreen() {
               </AdminTag>
             )}
           </div>
-          <span className={styles.email}>{u.email || "이메일 미등록"}</span>
+          <span className={styles.email}>{maskEmail(u.email, u.nickname)}</span>
         </div>
       ),
     },
     {
-      key: "meta",
-      label: "가입일 / 최근 로그인",
-      width: 92,
-      render: (u) => (
-        <div className={styles.metaCell}>
-          <span className={styles.metaTop}>{u.createdAt?.slice(0, 10) ?? "-"}</span>
-          <span className={styles.metaBottom}>{u.lastLoginAt?.slice(0, 10) ?? "-"}</span>
-        </div>
-      ),
+      key: "createdAt",
+      label: "가입일",
+      width: 68,
+      sortable: true,
+      render: (u) => <span className={styles.joinedAt}>{u.createdAt?.slice(0, 10) ?? "-"}</span>,
+    },
+    {
+      key: "lastLoginAt",
+      label: "최근 로그인",
+      width: 100,
+      sortable: true,
+      render: (u) => <span className={styles.lastLogin}>{u.lastLoginAt ?? "-"}</span>,
     },
     {
       key: "actions",
       label: "관리",
-      width: 64,
+      width: 60,
       render: (u) =>
         u.id === currentUserId ? (
           <span className={styles.selfTag}>본인</span>
@@ -227,11 +239,9 @@ export default function AdminUserScreen() {
         search={search}
         onSearchChange={setSearch}
         searchPlaceholder="이메일 또는 닉네임 검색"
-        filters={[{ key: "status", options: chipOptions, value: chip, onChange: setChip }]}
         totalCount={filtered.length}
         totalLabel="명"
-        sortLabel={sortMode.label}
-        onToggleSort={() => setSortIndex((i) => (i + 1) % SORT_MODES.length)}
+        sortLabel={sortLabelText}
       />
 
       {loading && <AdminStateBox status="loading" />}
@@ -246,7 +256,18 @@ export default function AdminUserScreen() {
         <AdminStateBox status="empty" message="유저가 없습니다." />
       )}
       {!loading && !error && filtered.length > 0 && (
-        <AdminTable columns={columns} rows={filtered} rowKey={(u) => u.id} onRowClick={openDetail} />
+        <>
+          <AdminTable
+            columns={columns}
+            rows={pageItems}
+            rowKey={(u) => u.id}
+            onRowClick={openDetail}
+            sortKey={sortKey}
+            sortDir={sortDir}
+            onSort={handleSort}
+          />
+          <AdminPagination page={page} pageCount={pageCount} onChange={setPage} />
+        </>
       )}
 
       <AdminModal

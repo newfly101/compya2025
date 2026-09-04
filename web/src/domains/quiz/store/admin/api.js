@@ -21,3 +21,9 @@ export const fetchAdminQuizDelete = async (id) => {
   const { data } = await API.delete(ADMIN_QUIZ.DELETE(id));
   return data.data;
 };
+
+// v2 일괄 삭제 — 응답 data: { successIds, failedIds }. 200 이어도 일부만 지워졌을 수 있다.
+export const fetchAdminQuizBulkDelete = async (ids) => {
+  const { data } = await API.delete(ADMIN_QUIZ.BULK_DELETE, { data: { ids } });
+  return data.data;
+};

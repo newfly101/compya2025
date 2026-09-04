@@ -5,6 +5,7 @@ import {
   requestAdminUpdateCoupon, requestAdminUpdateCouponVisible,
   requestGetAdminCouponList,
   requestAdminDeleteCoupon,
+  requestAdminBulkDeleteCoupons, requestAdminBulkUpdateCouponsVisible,
 } from "@/domains/coupons/store/admin/thunks.js";
 import { requestGetUserCouponList } from "@/domains/coupons/store/public/thunks.js";
 
@@ -66,6 +67,23 @@ const couponSlice = createSlice({
      * =============================== */
     applyAsyncHandlers(builder, requestAdminDeleteCoupon, (state, action) => {
       state.coupons = state.coupons.filter(c => Number(c.id) !== Number(action.payload));
+    });
+    /* ===============================
+     * 쿠폰 일괄 삭제 (v2 — 서버 API 연결 전)
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminBulkDeleteCoupons, (state, action) => {
+      const ids = new Set(action.payload.map(Number));
+      state.coupons = state.coupons.filter(c => !ids.has(Number(c.id)));
+    });
+    /* ===============================
+     * 쿠폰 일괄 노출 변경 (v2 — 서버 API 연결 전)
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminBulkUpdateCouponsVisible, (state, action) => {
+      const { ids, visible } = action.payload;
+      const idSet = new Set(ids.map(Number));
+      state.coupons = state.coupons.map(c =>
+        idSet.has(Number(c.id)) ? { ...c, visible } : c
+      );
     });
   },
 });

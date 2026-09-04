@@ -4,6 +4,7 @@ import {
   fetchAdminInsertExEvent,
   fetchAdminUpdateExEvent, fetchAdminUpdateExVisible,
   fetchAdminAllEventList, fetchAdminDeleteEvent,
+  fetchAdminBulkDeleteEvents, fetchAdminBulkUpdateEventsVisible,
 } from "@/domains/events/store/admin/api.js";
 import { ADMIN_EVENT_ACTIONS } from "@/domains/events/store/admin/endpoints.js";
 import { baseEventDTO } from "@/domains/events/store/dto.js";
@@ -91,6 +92,33 @@ export const requestAdminDeleteEvent = createAsyncThunk(
     try {
       await fetchAdminDeleteEvent(id);
       return id;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  });
+
+// v2 일괄 삭제 — BE 응답 { successIds, failedIds } 를 그대로 반환한다. 응답 형태가 예상과
+// 다를 때(둘 다 비어있는 등) 방어적으로 failedIds 기준 나머지를 successIds 로 보정한다.
+export const requestAdminBulkDeleteEvents = createAsyncThunk(
+  ADMIN_EVENT_ACTIONS.BULK_DELETE, async (ids, { rejectWithValue }) => {
+    try {
+      const result = await fetchAdminBulkDeleteEvents(ids);
+      const failedIds = result?.failedIds ?? [];
+      const successIds = result?.successIds ?? ids.filter((id) => !failedIds.includes(id));
+      return { successIds, failedIds };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  });
+
+// v2 일괄 노출 변경(주로 숨김) — BE 응답 { successIds, failedIds }.
+export const requestAdminBulkUpdateEventsVisible = createAsyncThunk(
+  ADMIN_EVENT_ACTIONS.BULK_UPDATE_VISIBLE, async ({ ids, visible }, { rejectWithValue }) => {
+    try {
+      const result = await fetchAdminBulkUpdateEventsVisible(ids, visible);
+      const failedIds = result?.failedIds ?? [];
+      const successIds = result?.successIds ?? ids.filter((id) => !failedIds.includes(id));
+      return { successIds, failedIds, visible };
     } catch (error) {
       return rejectWithValue(error.message);
     }

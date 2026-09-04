@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AdminToolbar from "@/global/ui/admin/toolbar/AdminToolbar.jsx";
 import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
+import AdminPagination from "@/global/ui/admin/pagination/AdminPagination.jsx";
+import useAdminPagination from "@/global/ui/admin/pagination/useAdminPagination.js";
 import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
 import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
@@ -13,7 +15,7 @@ import {
   requestAdminQuizAll,
   requestAdminQuizCreate,
   requestAdminQuizUpdate,
-  requestAdminQuizDelete,
+  requestAdminQuizBulkDelete,
   requestAdminUploadQuizImage,
 } from "@/domains/quiz/store/admin/thunks.js";
 import styles from "./AdminQuizScreen.module.scss";
@@ -67,7 +69,8 @@ export default function AdminQuizScreen() {
   const [sortAsc, setSortAsc] = useState(false); // 기본: 회차 내림차순
   const [form, setForm] = useState(EMPTY_FORM);
   const [imageMode, setImageMode] = useState("url");
-  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [selectedIds, setSelectedIds] = useState(() => new Set());
+  const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
 
@@ -82,6 +85,49 @@ export default function AdminQuizScreen() {
   const filtered = [...searched].sort((a, b) =>
     sortAsc ? (a.round ?? 0) - (b.round ?? 0) : (b.round ?? 0) - (a.round ?? 0),
   );
+
+  // 번호식 페이지네이션(8개/페이지, 클라이언트 슬라이스) — 검색/정렬이 바뀌면 1페이지로.
+  const { page, pageCount, pageItems, setPage, resetPage } = useAdminPagination(filtered, 8);
+  useEffect(() => {
+    resetPage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, sortAsc]);
+
+  // 현재 페이지에 없는 행의 선택은 자동으로 떨어져 나간다(다음 페이지 이동 시 실수 방지).
+  const pageIds = useMemo(() => new Set(pageItems.map((q) => q.id)), [pageItems]);
+  const selectedOnPageCount = pageItems.filter((q) => selectedIds.has(q.id)).length;
+  const allSelectedOnPage = pageItems.length > 0 && selectedOnPageCount === pageItems.length;
+
+  const toggleRow = (quiz) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(quiz.id)) next.delete(quiz.id);
+      else next.add(quiz.id);
+      return next;
+    });
+  };
+
+  const toggleAllOnPage = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      pageIds.forEach((id) => (allSelectedOnPage ? next.delete(id) : next.add(id)));
+      return next;
+    });
+  };
+
+  // 행 삭제 버튼 없음 — 삭제는 체크박스 일괄로만. 서버가 200 이어도 일부만 지울 수 있어
+  // (data.failedIds) 실제 지워진 successIds 만 slice 에서 반영한다 — 실패한 항목은
+  // 선택 해제된 채 목록에 그대로 남아 "지워지지 않았음"을 알려준다(별도 팝업 없음, 쿠폰 화면과 동일 방식).
+  const handleBulkDelete = () => {
+    if (selectedIds.size === 0) return;
+    setBulkDeleteConfirmOpen(true);
+  };
+
+  const confirmBulkDelete = () => {
+    dispatch(requestAdminQuizBulkDelete([...selectedIds]));
+    setSelectedIds(new Set());
+    setBulkDeleteConfirmOpen(false);
+  };
 
   const handleOpenCreate = () => {
     setForm(EMPTY_FORM);
@@ -100,13 +146,6 @@ export default function AdminQuizScreen() {
   const closeModal = () => {
     closeCreate();
     closeEdit();
-  };
-
-  const handleDelete = (quiz) => setDeleteTarget(quiz);
-
-  const confirmDelete = () => {
-    if (deleteTarget) dispatch(requestAdminQuizDelete(deleteTarget.id));
-    setDeleteTarget(null);
   };
 
   const handleImageFileSelect = async (file) => {
@@ -142,20 +181,26 @@ export default function AdminQuizScreen() {
 
   const columns = [
     {
-      key: "index",
-      label: "번호",
-      width: 40,
-      render: (_q, index) => index + 1,
+      key: "idx",
+      label: "#",
+      width: 28,
+      render: (_q, index) => <span className={styles.idx}>{page * 8 + index + 1}</span>,
     },
     {
       key: "round",
       label: "회차",
-      render: (q) => <span className={styles.round}>{q.round}회</span>,
+      align: "left",
+      render: (q) => (
+        <div className={styles.mainCell}>
+          <span className={styles.round}>{q.round}회차</span>
+          <span className={styles.fileName}>{fileNameOf(q.imageUrl) ?? "이미지 없음"}</span>
+        </div>
+      ),
     },
     {
       key: "imageUrl",
       label: "이미지",
-      width: 76,
+      width: 60,
       render: (q) =>
         q.imageUrl ? (
           <img className={styles.thumbnail} src={q.imageUrl} alt={`${q.round}회 정답 이미지`} />
@@ -166,7 +211,7 @@ export default function AdminQuizScreen() {
     {
       key: "actions",
       label: "관리",
-      width: 88,
+      width: 56,
       render: (q) => (
         <div className={styles.actions}>
           <button
@@ -178,16 +223,6 @@ export default function AdminQuizScreen() {
             }}
           >
             수정
-          </button>
-          <button
-            type="button"
-            className={styles.deleteBtn}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete(q);
-            }}
-          >
-            삭제
           </button>
         </div>
       ),
@@ -205,7 +240,9 @@ export default function AdminQuizScreen() {
         sortLabel={sortAsc ? "회차 오름차순" : "회차 내림차순"}
         onToggleSort={() => setSortAsc((prev) => !prev)}
         onCreate={handleOpenCreate}
-        createLabel="퀴즈 등록"
+        createLabel="등록"
+        selectedCount={selectedOnPageCount}
+        onBulkDelete={handleBulkDelete}
       />
 
       {loading && <AdminStateBox status="loading" />}
@@ -220,7 +257,19 @@ export default function AdminQuizScreen() {
         <AdminStateBox status="empty" message="등록된 퀴즈가 없습니다." />
       )}
       {!loading && !error && filtered.length > 0 && (
-        <AdminTable columns={columns} rows={filtered} rowKey={(q) => q.id} />
+        <>
+          <AdminTable
+            columns={columns}
+            rows={pageItems}
+            rowKey={(q) => q.id}
+            selectable
+            selectedKeys={selectedIds}
+            allSelected={allSelectedOnPage}
+            onToggleRow={toggleRow}
+            onToggleAll={toggleAllOnPage}
+          />
+          <AdminPagination page={page} pageCount={pageCount} onChange={setPage} />
+        </>
       )}
 
       <AdminModal open={isOpen} title={editTarget ? "퀴즈 수정" : "퀴즈 등록"} onClose={closeModal}>
@@ -275,13 +324,13 @@ export default function AdminQuizScreen() {
       </AdminModal>
 
       <AdminConfirmDialog
-        open={!!deleteTarget}
-        title="퀴즈 삭제"
-        message={`${deleteTarget?.round ?? ""}회 퀴즈를 삭제하시겠습니까?`}
+        open={bulkDeleteConfirmOpen}
+        title="퀴즈 일괄 삭제"
+        message={`선택한 퀴즈 ${selectedIds.size}개를 삭제하시겠습니까?`}
         dangerous
         confirmLabel="삭제"
-        onConfirm={confirmDelete}
-        onCancel={() => setDeleteTarget(null)}
+        onConfirm={confirmBulkDelete}
+        onCancel={() => setBulkDeleteConfirmOpen(false)}
       />
     </div>
   );

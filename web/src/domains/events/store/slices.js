@@ -5,6 +5,7 @@ import {
   requestAdminInsertNewExEvent,
   requestAdminUpdateExEvent, requestAdminUpdateExEventVisible,
   requestAdminGetAllEventList, requestAdminDeleteEvent,
+  requestAdminBulkDeleteEvents, requestAdminBulkUpdateEventsVisible,
 } from "@/domains/events/store/admin/thunks.js";
 import { requestGetExternalEventList } from "@/domains/events/store/public/thunks.js";
 
@@ -78,6 +79,23 @@ const eventsSlice = createSlice({
      * =============================== */
     applyAsyncHandlers(builder, requestAdminDeleteEvent, (state, action) => {
       state.events = state.events.filter(e => Number(e.id) !== Number(action.payload));
+    });
+    /* ===============================
+     * 이벤트 일괄 삭제 (v2) — successIds 만 제거, failedIds 는 화면에 남는다
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminBulkDeleteEvents, (state, action) => {
+      const ids = new Set(action.payload.successIds.map(Number));
+      state.events = state.events.filter(e => !ids.has(Number(e.id)));
+    });
+    /* ===============================
+     * 이벤트 일괄 노출 변경 (v2) — successIds 만 반영
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminBulkUpdateEventsVisible, (state, action) => {
+      const { successIds, visible } = action.payload;
+      const idSet = new Set(successIds.map(Number));
+      state.events = state.events.map(e =>
+        idSet.has(Number(e.id)) ? { ...e, visible } : e
+      );
     });
   },
 });

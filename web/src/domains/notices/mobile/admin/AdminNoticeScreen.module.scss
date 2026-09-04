@@ -7,7 +7,7 @@
   gap: $space-2;
 }
 
-/* 표 주요 셀 — 태그 + 제목 / 고정 토글 */
+/* 표 주요 셀 — 태그 + 제목 / 상단 고정 캡션 */
 .mainCell {
   display: flex;
   flex-direction: column;
@@ -29,48 +29,39 @@
   @include text-ellipsis;
 }
 
-/* 상단 고정 즉시토글 — 리스트에서 클릭 시 바로 저장(optimistic) */
-.pinnedToggle {
-  @include reset-button;
-  align-self: flex-start;
+/* 상단 고정 캡션 — v2: 목록에서는 읽기 전용 표시만(토글은 글쓰기·수정 페이지에서만) */
+.pinnedCaption {
   color: var(--color-text-muted);
   @include text-caption;
-  cursor: pointer;
-
-  &.pinnedOn {
-    color: var(--color-brand);
-    font-weight: 600;
-  }
 }
 
-/* 표 안 관리 버튼 — 88px 칸 안에 두 버튼이 들어가야 해서 $control-height-sm/space-3 보다
-   좁게 잡는다 (쿠폰 어드민 표와 동일 기준). */
+/* 등록일 셀 — 우측 정렬 */
+.dateCell {
+  color: var(--color-text-secondary);
+  @include text-caption;
+}
+
+/* 행 번호(#) — 우측 정렬, 보조색 */
+.idx {
+  color: var(--color-text-muted);
+  @include text-caption;
+  text-align: right;
+}
+
+/* 표 안 관리 버튼 — v2: 수정 1개만(삭제는 체크박스 일괄 삭제로 이동) */
 .actions {
   display: flex;
-  gap: $space-1;
   justify-content: center;
 }
 
 .editBtn {
-  height: 28px;
-  padding: 0 $space-2;
-  border: 1px solid var(--color-brand);
-  border-radius: $radius-md;
+  width: 100%;
+  height: 26px;
+  padding: 0 $space-1;
+  border: 1px solid var(--color-admin-accent-line);
+  border-radius: $radius-full;
   background: transparent;
-  color: var(--color-brand);
-  @include text-caption;
-  font-weight: 500;
-  cursor: pointer;
-  @include pressable;
-}
-
-.deleteBtn {
-  height: 28px;
-  padding: 0 $space-2;
-  border: 1px solid var(--color-danger);
-  border-radius: $radius-md;
-  background: transparent;
-  color: var(--color-danger);
+  color: var(--color-admin-accent-active-text);
   @include text-caption;
   font-weight: 500;
   cursor: pointer;

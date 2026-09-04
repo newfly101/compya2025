@@ -5,6 +5,7 @@ import {
   requestAdminQuizCreate,
   requestAdminQuizUpdate,
   requestAdminQuizDelete,
+  requestAdminQuizBulkDelete,
 } from "@/domains/quiz/store/admin/thunks.js";
 import { requestLatestQuizAnswer } from "@/domains/quiz/store/public/thunks.js";
 
@@ -42,6 +43,14 @@ const quizSlice = createSlice({
 
     applyAsyncHandlers(builder, requestAdminQuizDelete, (state, action) => {
       state.quizAnswers = state.quizAnswers.filter((q) => Number(q.id) !== Number(action.payload));
+    });
+
+    /* ===============================
+     * 퀴즈 일괄 삭제 (v2) — 200 이어도 일부만 지워졌을 수 있어 successIds 만 반영한다.
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminQuizBulkDelete, (state, action) => {
+      const successIds = new Set((action.payload?.successIds ?? []).map(Number));
+      state.quizAnswers = state.quizAnswers.filter((q) => !successIds.has(Number(q.id)));
     });
   },
 });

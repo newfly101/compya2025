@@ -8,6 +8,8 @@ import {
   fetchAdminUpdateVisible,
   fetchAdminUpdatePinned,
   fetchAdminDeleteNotice,
+  fetchAdminBulkDeleteNotices,
+  fetchAdminBulkUpdateNoticesVisible,
 } from "@/domains/notices/store/admin/api.js";
 
 export const requestAdminGetNoticeList = createAsyncThunk(
@@ -94,4 +96,30 @@ export const requestAdminDeleteNotice = createAsyncThunk(
       return rejectWithValue(error.message);
     }
   }
+);
+
+// v2 일괄 삭제 — 쿠폰 어드민과 동일 패턴(낙관적 갱신, 요청한 ids 를 그대로 반환).
+// 서버가 부분 실패(failedIds)를 응답해도 현재는 별도 토스트 없이 요청 id 전량을 반영한다
+// (쿠폰 화면과 동일한 한계 — 프로젝트에 토스트 시스템이 없다).
+export const requestAdminBulkDeleteNotices = createAsyncThunk(
+  ADMIN_NOTICE_ACTIONS.BULK_DELETE, async (ids, { rejectWithValue }) => {
+    try {
+      await fetchAdminBulkDeleteNotices(ids);
+      return ids;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+// v2 일괄 노출 변경(주로 숨김) — 쿠폰 어드민과 동일 패턴.
+export const requestAdminBulkUpdateNoticesVisible = createAsyncThunk(
+  ADMIN_NOTICE_ACTIONS.BULK_UPDATE_VISIBLE, async ({ ids, visible }, { rejectWithValue }) => {
+    try {
+      await fetchAdminBulkUpdateNoticesVisible(ids, visible);
+      return { ids, visible };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
 );

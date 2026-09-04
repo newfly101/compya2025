@@ -8,8 +8,32 @@
   gap: $space-2;
 }
 
-/* 표 주요 셀 — 썸네일 + (태그+제목) 위 / 기간 아래 2줄. 가로 스크롤을 없애려고
-   기간을 별도 칸에서 이 칸 보조 줄로 접었다 — 레전드/히스토리 재료 표와 동일 원리. */
+/* 일괄 작업 부분 실패 배너 — BE 가 200 이어도 failedIds 를 함께 내려줄 수 있어 안내한다. */
+.bulkNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+  padding: $space-2 $space-3;
+  border: 1px solid var(--color-warning);
+  border-radius: $radius-md;
+  background: var(--color-warning-dim);
+  color: var(--color-warning);
+  @include text-caption;
+  font-weight: 500;
+
+  button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    @include pressable;
+  }
+}
+
+/* 표 주요 셀 — 썸네일 + (상태태그 + 제목) 한 줄. 기간은 별도 칸으로 분리(v2). */
 .mainCell {
   display: flex;
   align-items: center;
@@ -36,14 +60,6 @@
   background: var(--color-bg-elevated);
 }
 
-.mainCellText {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  overflow: hidden;
-}
-
 .titleRow {
   display: flex;
   align-items: center;
@@ -59,93 +75,40 @@
   @include text-ellipsis;
 }
 
-/* 기간 — 주 정보(태그+제목) 아래 보조 줄 */
-.period {
+/* 행 번호(#) — 우측 정렬, 보조색 */
+.idx {
   color: var(--color-text-muted);
+  @include text-caption;
+  text-align: right;
+}
+
+/* 기간 칸 — 단일 줄, 보조색 */
+.periodCell {
+  display: block;
+  color: var(--color-text-secondary);
   @include text-caption;
   font-weight: 500;
   white-space: nowrap;
 }
 
-/* 표 안 관리 버튼 — 88px 칸 안에 두 버튼이 들어가야 해서 $control-height-sm/space-3 보다 좁게 잡는다 */
+/* 표 안 관리 버튼 — v2: 수정 1개만(삭제는 체크박스 일괄 삭제로 이동) */
 .actions {
   display: flex;
-  gap: $space-1;
   justify-content: center;
 }
 
 .editBtn {
-  height: 28px;
-  padding: 0 $space-2;
-  border: 1px solid var(--color-brand);
-  border-radius: $radius-md;
+  width: 100%;
+  height: 26px;
+  padding: 0 $space-1;
+  border: 1px solid var(--color-admin-accent-line);
+  border-radius: $radius-full;
   background: transparent;
-  color: var(--color-brand);
+  color: var(--color-admin-accent-active-text);
   @include text-caption;
   font-weight: 500;
   cursor: pointer;
   @include pressable;
-}
-
-.deleteBtn {
-  height: 28px;
-  padding: 0 $space-2;
-  border: 1px solid var(--color-danger);
-  border-radius: $radius-md;
-  background: transparent;
-  color: var(--color-danger);
-  @include text-caption;
-  font-weight: 500;
-  cursor: pointer;
-  @include pressable;
-}
-
-/* 행 확장 상세 (상세 링크) */
-.detail {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
-  padding: $space-3;
-}
-
-.detailField {
-  display: flex;
-  gap: $space-2;
-  @include text-caption;
-}
-
-.detailLabel {
-  color: var(--color-text-muted);
-  flex-shrink: 0;
-}
-
-.detailValue {
-  color: var(--color-text-primary);
-  word-break: break-all;
-}
-
-/* "더 보기" 페이지네이션 */
-.loadMoreRow {
-  display: flex;
-  justify-content: center;
-  padding: $space-2 0;
-}
-
-.loadMoreBtn {
-  height: $control-height-md;
-  padding: 0 $space-6;
-  border: 1px solid var(--color-border);
-  border-radius: $radius-lg;
-  background: var(--color-bg-card);
-  color: var(--color-text-secondary);
-  @include text-body;
-  cursor: pointer;
-  @include pressable;
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: default;
-  }
 }
 
 /* 등록/수정 폼 (AdminModal children) */

@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import AdminToolbar from "@/global/ui/admin/toolbar/AdminToolbar.jsx";
 import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
+import AdminPagination from "@/global/ui/admin/pagination/AdminPagination.jsx";
+import useAdminPagination from "@/global/ui/admin/pagination/useAdminPagination.js";
 import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
 import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
@@ -14,7 +16,8 @@ import {
   requestAdminInsertNewCoupon,
   requestAdminUpdateCoupon,
   requestAdminUpdateCouponVisible,
-  requestAdminDeleteCoupon,
+  requestAdminBulkDeleteCoupons,
+  requestAdminBulkUpdateCouponsVisible,
 } from "@/domains/coupons/store/admin/thunks.js";
 import styles from "./AdminCouponScreen.module.scss";
 
@@ -28,7 +31,8 @@ const EMPTY_FORM = {
   visible: true,
 };
 
-// 프로토타입 § 4 쿠폰 칩: 전체 · 사용가능 · 만료 · 숨김.
+// v2 필터 두 줄 — "사용"(만료일 기준: 전체·사용가능·만료) · "노출"(visible 기준: 전체·노출·숨김).
+// 두 축은 서로 독립이라 각각 따로 필터링한다(예: 만료됐지만 아직 노출 중인 쿠폰도 존재 가능).
 // 만료 판정은 서버 count API 가 없어 클라이언트에서 expireAt 비교로 처리한다.
 const todayStr = () => new Date().toISOString().slice(0, 10);
 
@@ -37,17 +41,27 @@ const isExpired = (coupon) => {
   return !!d && d < todayStr();
 };
 
-const CHIP_MATCH = {
+const USAGE_MATCH = {
   all: () => true,
-  usable: (c) => c.visible && !isExpired(c),
+  usable: (c) => !isExpired(c),
   expired: (c) => isExpired(c),
-  hidden: (c) => !c.visible,
 };
 
-const CHIP_OPTIONS = [
+const USAGE_OPTIONS = [
   { value: "all", label: "전체" },
   { value: "usable", label: "사용가능" },
   { value: "expired", label: "만료" },
+];
+
+const VIS_MATCH = {
+  all: () => true,
+  visible: (c) => !!c.visible,
+  hidden: (c) => !c.visible,
+};
+
+const VIS_OPTIONS = [
+  { value: "all", label: "전체" },
+  { value: "visible", label: "노출" },
   { value: "hidden", label: "숨김" },
 ];
 
@@ -68,10 +82,13 @@ export default function AdminCouponScreen() {
   const { coupons, loading, error } = useSelector((s) => s.coupon);
 
   const [search, setSearch] = useState("");
-  const [chip, setChip] = useState("all");
+  // v2 기본값 — 사용:사용가능 / 노출:전체 (스크린샷 기준 초기 진입 상태)
+  const [usage, setUsage] = useState("usable");
+  const [vis, setVis] = useState("all");
   const [sortAsc, setSortAsc] = useState(true); // 기본: 만료 임박순
   const [form, setForm] = useState(EMPTY_FORM);
-  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [selectedIds, setSelectedIds] = useState(() => new Set());
+  const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
 
   const { editTarget, isOpen, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
 
@@ -85,16 +102,72 @@ export default function AdminCouponScreen() {
       c.couponCode?.toLowerCase().includes(search.toLowerCase()),
   );
 
-  const chipOptions = CHIP_OPTIONS.map((opt) => ({
+  const usageOptions = USAGE_OPTIONS.map((opt) => ({
     ...opt,
-    count: searched.filter(CHIP_MATCH[opt.value]).length,
+    count: searched.filter((c) => USAGE_MATCH[opt.value](c) && VIS_MATCH[vis](c)).length,
   }));
 
-  const filtered = [...searched.filter(CHIP_MATCH[chip])].sort((a, b) => {
-    const da = a.expireAt?.slice(0, 10) ?? "";
-    const db = b.expireAt?.slice(0, 10) ?? "";
-    return sortAsc ? da.localeCompare(db) : db.localeCompare(da);
-  });
+  const visOptions = VIS_OPTIONS.map((opt) => ({
+    ...opt,
+    count: searched.filter((c) => VIS_MATCH[opt.value](c) && USAGE_MATCH[usage](c)).length,
+  }));
+
+  const filtered = searched
+    .filter((c) => USAGE_MATCH[usage](c) && VIS_MATCH[vis](c))
+    .sort((a, b) => {
+      const da = a.expireAt?.slice(0, 10) ?? "";
+      const db = b.expireAt?.slice(0, 10) ?? "";
+      return sortAsc ? da.localeCompare(db) : db.localeCompare(da);
+    });
+
+  // 번호식 페이지네이션(8개/페이지, 클라이언트 슬라이스) — 검색/필터/정렬이 바뀌면 1페이지로.
+  const { page, pageCount, pageItems, setPage, resetPage } = useAdminPagination(filtered, 8);
+  useEffect(() => {
+    resetPage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, usage, vis, sortAsc]);
+
+  // 현재 페이지에 없는 행의 선택은 자동으로 떨어져 나간다(다음 페이지 이동 시 실수 방지).
+  const pageIds = useMemo(() => new Set(pageItems.map((c) => c.id)), [pageItems]);
+  const selectedOnPageCount = pageItems.filter((c) => selectedIds.has(c.id)).length;
+  const allSelectedOnPage = pageItems.length > 0 && selectedOnPageCount === pageItems.length;
+
+  const toggleRow = (coupon) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(coupon.id)) next.delete(coupon.id);
+      else next.add(coupon.id);
+      return next;
+    });
+  };
+
+  const toggleAllOnPage = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      pageIds.forEach((id) => (allSelectedOnPage ? next.delete(id) : next.add(id)));
+      return next;
+    });
+  };
+
+  // 일괄 삭제·숨김 — 서버 일괄 API(DELETE /admin/coupons/bulk, PATCH /admin/coupons/bulk/visible)는
+  // 다음 단계에서 연결된다. 호출 자리(thunk 디스패치)만 지금 배선해 둔다.
+  // 삭제는 되돌릴 수 없어 확인 다이얼로그를 거친다 — 숨김은 언제든 다시 켤 수 있어 바로 실행.
+  const handleBulkDelete = () => {
+    if (selectedIds.size === 0) return;
+    setBulkDeleteConfirmOpen(true);
+  };
+
+  const confirmBulkDelete = () => {
+    dispatch(requestAdminBulkDeleteCoupons([...selectedIds]));
+    setSelectedIds(new Set());
+    setBulkDeleteConfirmOpen(false);
+  };
+
+  const handleBulkHide = () => {
+    if (selectedIds.size === 0) return;
+    dispatch(requestAdminBulkUpdateCouponsVisible({ ids: [...selectedIds], visible: false }));
+    setSelectedIds(new Set());
+  };
 
   const handleOpenCreate = () => {
     setForm(EMPTY_FORM);
@@ -109,13 +182,6 @@ export default function AdminCouponScreen() {
   const closeModal = () => {
     closeCreate();
     closeEdit();
-  };
-
-  const handleDelete = (coupon) => setDeleteTarget(coupon);
-
-  const confirmDelete = () => {
-    if (deleteTarget) dispatch(requestAdminDeleteCoupon(deleteTarget.id));
-    setDeleteTarget(null);
   };
 
   const handleToggleVisible = (coupon, nextVisible) => {
@@ -142,7 +208,14 @@ export default function AdminCouponScreen() {
     setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
+  // v2: 행 번호(#) 칸 추가, 관리 칸은 수정 버튼만(삭제는 체크박스 일괄 삭제로 이동).
   const columns = [
+    {
+      key: "idx",
+      label: "#",
+      width: 22,
+      render: (_c, index) => <span className={styles.idx}>{page * 8 + index + 1}</span>,
+    },
     {
       key: "title",
       label: "쿠폰",
@@ -157,7 +230,7 @@ export default function AdminCouponScreen() {
     {
       key: "expireAt",
       label: "만료",
-      width: 74,
+      width: 70,
       render: (c) => (
         <div className={styles.expireCell}>
           <span>{c.expireAt?.slice(0, 10) ?? "-"}</span>
@@ -180,7 +253,7 @@ export default function AdminCouponScreen() {
     {
       key: "actions",
       label: "관리",
-      width: 88,
+      width: 56,
       render: (c) => (
         <div className={styles.actions}>
           <button
@@ -192,16 +265,6 @@ export default function AdminCouponScreen() {
             }}
           >
             수정
-          </button>
-          <button
-            type="button"
-            className={styles.deleteBtn}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete(c);
-            }}
-          >
-            삭제
           </button>
         </div>
       ),
@@ -215,19 +278,18 @@ export default function AdminCouponScreen() {
         onSearchChange={setSearch}
         searchPlaceholder="제목 또는 코드 검색"
         filters={[
-          {
-            key: "chip",
-            options: chipOptions,
-            value: chip,
-            onChange: setChip,
-          },
+          { key: "usage", label: "사용", options: usageOptions, value: usage, onChange: setUsage },
+          { key: "vis", label: "노출", options: visOptions, value: vis, onChange: setVis },
         ]}
         totalCount={filtered.length}
         totalLabel="개"
         sortLabel={sortAsc ? "만료 임박순" : "만료 먼 순"}
         onToggleSort={() => setSortAsc((prev) => !prev)}
         onCreate={handleOpenCreate}
-        createLabel="쿠폰 등록"
+        createLabel="등록"
+        selectedCount={selectedOnPageCount}
+        onBulkDelete={handleBulkDelete}
+        onBulkHide={handleBulkHide}
       />
 
       {loading && <AdminStateBox status="loading" />}
@@ -242,7 +304,19 @@ export default function AdminCouponScreen() {
         <AdminStateBox status="empty" message="쿠폰이 없습니다." />
       )}
       {!loading && !error && filtered.length > 0 && (
-        <AdminTable columns={columns} rows={filtered} rowKey={(c) => c.id} />
+        <>
+          <AdminTable
+            columns={columns}
+            rows={pageItems}
+            rowKey={(c) => c.id}
+            selectable
+            selectedKeys={selectedIds}
+            allSelected={allSelectedOnPage}
+            onToggleRow={toggleRow}
+            onToggleAll={toggleAllOnPage}
+          />
+          <AdminPagination page={page} pageCount={pageCount} onChange={setPage} />
+        </>
       )}
 
       <AdminModal open={isOpen} title={editTarget ? "쿠폰 수정" : "쿠폰 등록"} onClose={closeModal}>
@@ -290,13 +364,13 @@ export default function AdminCouponScreen() {
       </AdminModal>
 
       <AdminConfirmDialog
-        open={!!deleteTarget}
-        title="쿠폰 삭제"
-        message={`"${deleteTarget?.title ?? ""}" 쿠폰을 삭제하시겠습니까?`}
+        open={bulkDeleteConfirmOpen}
+        title="쿠폰 일괄 삭제"
+        message={`선택한 쿠폰 ${selectedIds.size}개를 삭제하시겠습니까?`}
         dangerous
         confirmLabel="삭제"
-        onConfirm={confirmDelete}
-        onCancel={() => setDeleteTarget(null)}
+        onConfirm={confirmBulkDelete}
+        onCancel={() => setBulkDeleteConfirmOpen(false)}
       />
     </div>
   );

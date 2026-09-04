@@ -3,6 +3,7 @@ import {
   fetchAdminCouponList,
   fetchAdminInsertCoupon,
   fetchAdminUpdateCoupon, fetchAdminUpdateVisible, fetchAdminDeleteCoupon,
+  fetchAdminBulkDeleteCoupons, fetchAdminBulkUpdateVisible,
 } from "@/domains/coupons/store/admin/api.js";
 import { ADMIN_COUPON_ACTIONS } from "@/domains/coupons/store/admin/endpoints.js";
 
@@ -71,6 +72,30 @@ export const requestAdminDeleteCoupon = createAsyncThunk(
     try {
       await fetchAdminDeleteCoupon(id);
       return id;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+// v2 일괄 삭제 — 서버 API 연결 전(호출 자리만 배선). ids: number[]
+export const requestAdminBulkDeleteCoupons = createAsyncThunk(
+  ADMIN_COUPON_ACTIONS.BULK_DELETE, async (ids, { rejectWithValue }) => {
+    try {
+      await fetchAdminBulkDeleteCoupons(ids);
+      return ids;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+// v2 일괄 노출 변경(주로 숨김) — 서버 API 연결 전(호출 자리만 배선). { ids, visible }
+export const requestAdminBulkUpdateCouponsVisible = createAsyncThunk(
+  ADMIN_COUPON_ACTIONS.BULK_UPDATE_VISIBLE, async ({ ids, visible }, { rejectWithValue }) => {
+    try {
+      await fetchAdminBulkUpdateVisible(ids, visible);
+      return { ids, visible };
     } catch (error) {
       return rejectWithValue(error.message);
     }

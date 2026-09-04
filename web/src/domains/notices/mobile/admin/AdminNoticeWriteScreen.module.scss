@@ -18,7 +18,7 @@
   font-size: $font-size-22;
   font-weight: $font-weight-bold;
 
-  &:focus { outline: none; border-color: var(--color-brand); }
+  &:focus { outline: none; border-color: var(--color-admin-accent); }
   &::placeholder { color: var(--color-text-placeholder); }
 }
 
@@ -93,8 +93,8 @@
 }
 
 .coverBtn {
-  color: var(--color-brand);
-  border: 1px solid var(--color-brand-tint);
+  color: var(--color-admin-accent-active-text);
+  border: 1px solid var(--color-admin-accent-line);
   position: relative;
 }
 
@@ -137,7 +137,7 @@
   color: var(--color-text-primary);
   font-size: $font-size-13;
 
-  &:focus { outline: none; border-color: var(--color-brand); }
+  &:focus { outline: none; border-color: var(--color-admin-accent); }
 }
 
 .submitError {
@@ -176,9 +176,10 @@
   color: var(--color-text-muted);
 }
 
+// v2 원본 — 목록의 "+ 등록" 버튼과 같은 강조 퍼플 솔리드 톤으로 맞춘다.
 .saveBtn {
   @include reset-button;
-  background: var(--color-brand);
+  background: var(--color-admin-accent);
   color: #fff;
   @include text-caption;
   font-weight: 700;

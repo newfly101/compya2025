@@ -9,6 +9,8 @@ import {
   requestAdminUpdateNoticeVisible,
   requestAdminUpdateNoticePinned,
   requestAdminDeleteNotice,
+  requestAdminBulkDeleteNotices,
+  requestAdminBulkUpdateNoticesVisible,
 } from "@/domains/notices/store/admin/thunks.js";
 
 const initialState = {
@@ -73,6 +75,21 @@ const noticeSlice = createSlice({
     /* ── 삭제 ─────────────────────────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminDeleteNotice, (state, action) => {
       state.siteNotices = state.siteNotices.filter(n => Number(n.id) !== Number(action.payload));
+    });
+
+    /* ── 일괄 삭제 (v2) ───────────────────────────────────────── */
+    applyAsyncHandlers(builder, requestAdminBulkDeleteNotices, (state, action) => {
+      const ids = new Set(action.payload.map(Number));
+      state.siteNotices = state.siteNotices.filter(n => !ids.has(Number(n.id)));
+    });
+
+    /* ── 일괄 노출 변경 (v2) ──────────────────────────────────── */
+    applyAsyncHandlers(builder, requestAdminBulkUpdateNoticesVisible, (state, action) => {
+      const { ids, visible } = action.payload;
+      const idSet = new Set(ids.map(Number));
+      state.siteNotices = state.siteNotices.map(n =>
+        idSet.has(Number(n.id)) ? { ...n, isVisible: visible } : n
+      );
     });
   },
 });

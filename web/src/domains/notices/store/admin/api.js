@@ -10,3 +10,13 @@ export const fetchAdminUpdateNotice    = async (id, notice)  => { const { data }
 export const fetchAdminUpdateVisible   = async (id, visible) => { const { data } = await API.patch(ADMIN_NOTICES.UPDATE_VISIBLE(id), { isVisible: visible }); return data.data; };
 export const fetchAdminUpdatePinned    = async (id, pinned)  => { const { data } = await API.patch(ADMIN_NOTICES.UPDATE_PINNED(id), { isPinned: pinned }); return data.data; };
 export const fetchAdminDeleteNotice    = async (id)           => { const { data } = await API.delete(ADMIN_NOTICES.DELETE(id));                 return data.data; };
+
+// v2 일괄 삭제·숨김 — 응답 data 는 { successIds, failedIds } (200 이어도 일부 실패 가능, 쿠폰과 동일 계약).
+export const fetchAdminBulkDeleteNotices = async (ids) => {
+  const { data } = await API.delete(ADMIN_NOTICES.BULK_DELETE, { data: { ids } });
+  return data.data;
+};
+export const fetchAdminBulkUpdateNoticesVisible = async (ids, visible) => {
+  const { data } = await API.patch(ADMIN_NOTICES.BULK_UPDATE_VISIBLE, { ids, visible });
+  return data.data;
+};

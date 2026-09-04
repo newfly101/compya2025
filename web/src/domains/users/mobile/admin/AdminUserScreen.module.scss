@@ -37,23 +37,29 @@
   @include text-ellipsis;
 }
 
-/* 메타 셀 — 가입일 위 · 최근 로그인 아래, 우측 정렬 */
-.metaCell {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
+/* 행 번호(#) — 우측 정렬, 보조색 */
+.idx {
+  display: block;
+  color: var(--color-text-muted);
+  @include text-caption;
+  text-align: right;
 }
 
-.metaTop {
+/* 가입일 열 — 우측 정렬 */
+.joinedAt {
+  display: block;
   color: var(--color-text-secondary);
   @include text-caption;
   font-weight: 600;
+  text-align: right;
 }
 
-.metaBottom {
+/* 최근 로그인 열 — 우측 정렬 */
+.lastLogin {
+  display: block;
   color: var(--color-text-muted);
   @include text-caption;
+  text-align: right;
 }
 
 /* 표 안 관리 열 */

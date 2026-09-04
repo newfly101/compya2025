@@ -6,6 +6,9 @@ export const EVENTS = {
   SET_UPDATE_VISIBLE:  (id) => `/admin/events/${id}/visible`,
   DELETE_EVENT: (id) => `/admin/events/${id}`,
   UPLOAD_EVENT_IMAGE: `/upload/events`,
+  // v2 일괄 삭제·숨김 — BE 계약: DELETE .../bulk { ids: [] } / PATCH .../bulk/visible { ids: [], visible }.
+  BULK_DELETE_EVENTS: "/admin/events/bulk",
+  BULK_UPDATE_EVENTS_VISIBLE: "/admin/events/bulk/visible",
 }
 
 export const ADMIN_EVENT_ACTIONS = {
@@ -16,4 +19,6 @@ export const ADMIN_EVENT_ACTIONS = {
   UPDATE_VISIBLE: "PATCH/admin/events/updateVisible",
   DELETE: "DELETE/admin/events/delete",
   UPLOAD_IMAGES: "PUT/upload/eventImageFiles",
+  BULK_DELETE: "DELETE/admin/events/bulk",
+  BULK_UPDATE_VISIBLE: "PATCH/admin/events/bulk/visible",
 }

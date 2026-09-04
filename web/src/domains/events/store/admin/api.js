@@ -39,3 +39,14 @@ export const fetchAdminDeleteEvent = async (id) => {
   const { data } = await API.delete(`${EVENTS.DELETE_EVENT(id)}`);
   return data.data;
 };
+
+// v2 일괄 삭제·숨김 — 응답 data: { successIds: number[], failedIds: number[] }. 200 이어도
+// failedIds 가 있을 수 있다(부분 실패) — 호출부가 반드시 확인해야 한다.
+export const fetchAdminBulkDeleteEvents = async (ids) => {
+  const { data } = await API.delete(`${EVENTS.BULK_DELETE_EVENTS}`, { data: { ids } });
+  return data.data;
+};
+export const fetchAdminBulkUpdateEventsVisible = async (ids, visible) => {
+  const { data } = await API.patch(`${EVENTS.BULK_UPDATE_EVENTS_VISIBLE}`, { ids, visible });
+  return data.data;
+};
