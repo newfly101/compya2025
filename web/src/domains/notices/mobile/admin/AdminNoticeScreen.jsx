@@ -2,11 +2,19 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSetTopBar } from "@/app/provider/TopBarProvider";
+import AdminToolbar from "@/global/ui/admin/toolbar/AdminToolbar.jsx";
+import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
+import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
+import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
+import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
+import useTableModal from "@/global/ui/admin/hooks/useTableModal.js";
 import {
   requestAdminGetNoticeList,
   requestAdminInsertNotice,
   requestAdminUpdateNotice,
   requestAdminUpdateNoticeVisible,
+  requestAdminUpdateNoticePinned,
+  requestAdminDeleteNotice,
 } from "@/domains/notices/store/admin/thunks.js";
 import styles from "./AdminNoticeScreen.module.scss";
 
@@ -17,6 +25,23 @@ const SOURCE_LABELS = {
   EXTERNAL: "공식 공지 링크",
 };
 
+const SOURCE_FILTER_OPTIONS = [
+  { value: "all", label: "전체" },
+  ...SOURCES.map((s) => ({ value: s, label: SOURCE_LABELS[s] })),
+];
+
+const VISIBLE_FILTER_OPTIONS = [
+  { value: "all", label: "전체" },
+  { value: "visible", label: "노출" },
+  { value: "hidden", label: "숨김" },
+];
+
+const PINNED_FILTER_OPTIONS = [
+  { value: "all", label: "전체" },
+  { value: "pinned", label: "고정" },
+  { value: "normal", label: "일반" },
+];
+
 const EMPTY_FORM = {
   title: "",
   content: "",
@@ -25,6 +50,15 @@ const EMPTY_FORM = {
   isVisible: true,
   isPinned: false,
 };
+
+const formOf = (notice) => ({
+  title: notice.title ?? "",
+  content: notice.content ?? "",
+  externalUrl: notice.externalUrl ?? "",
+  source: notice.source ?? "INTERNAL",
+  isVisible: notice.isVisible ?? true,
+  isPinned: notice.isPinned ?? false,
+});
 
 export default function AdminNoticeScreen() {
   const navigate = useNavigate();
@@ -37,9 +71,10 @@ export default function AdminNoticeScreen() {
   const [sourceFilter, setSourceFilter] = useState("all");
   const [visibleFilter, setVisibleFilter] = useState("all");
   const [pinnedFilter, setPinnedFilter] = useState("all");
-  const [sheetOpen, setSheetOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+
+  const { editTarget, isOpen, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
 
   useEffect(() => {
     dispatch(requestAdminGetNoticeList());
@@ -59,23 +94,26 @@ export default function AdminNoticeScreen() {
     return matchSearch && matchSource && matchVisible && matchPinned;
   });
 
-  const openCreate = () => {
-    setEditTarget(null);
+  const handleOpenCreate = () => {
     setForm(EMPTY_FORM);
-    setSheetOpen(true);
+    openCreate();
   };
 
-  const openEdit = (notice) => {
-    setEditTarget(notice);
-    setForm({
-      title: notice.title ?? "",
-      content: notice.content ?? "",
-      externalUrl: notice.externalUrl ?? "",
-      source: notice.source ?? "INTERNAL",
-      isVisible: notice.isVisible ?? true,
-      isPinned: notice.isPinned ?? false,
-    });
-    setSheetOpen(true);
+  const handleOpenEdit = (notice) => {
+    setForm(formOf(notice));
+    openEdit(notice);
+  };
+
+  const closeModal = () => {
+    closeCreate();
+    closeEdit();
+  };
+
+  const handleDelete = (notice) => setDeleteTarget(notice);
+
+  const confirmDelete = () => {
+    if (deleteTarget) dispatch(requestAdminDeleteNotice(deleteTarget.id));
+    setDeleteTarget(null);
   };
 
   const handleSubmit = (e) => {
@@ -90,7 +128,7 @@ export default function AdminNoticeScreen() {
     } else {
       dispatch(requestAdminInsertNotice(payload));
     }
-    setSheetOpen(false);
+    closeModal();
   };
 
   const handleFormChange = (e) => {
@@ -102,159 +140,196 @@ export default function AdminNoticeScreen() {
     dispatch(requestAdminUpdateNoticeVisible({ id: n.id, visible: !n.isVisible }));
   };
 
-  /* 상태 분기 */
-  const renderContent = () => {
-    if (loading) {
-      return (
-        <div className={styles.stateBox}>
-          <p className={styles.stateText}>불러오는 중...</p>
-        </div>
-      );
-    }
-    if (error) {
-      return (
-        <div className={styles.stateBox}>
-          <p className={styles.stateError}>{error}</p>
-          <button className={styles.retryBtn} onClick={() => dispatch(requestAdminGetNoticeList())}>
-            다시 시도
+  const handleTogglePinned = (n) => {
+    dispatch(requestAdminUpdateNoticePinned({ id: n.id, pinned: !n.isPinned }));
+  };
+
+  const columns = [
+    { key: "title", label: "제목", align: "left" },
+    {
+      key: "source",
+      label: "구분",
+      render: (n) => SOURCE_LABELS[n.source] ?? n.source,
+    },
+    {
+      key: "isVisible",
+      label: "노출",
+      render: (n) => (
+        <span
+          className={`${styles.chip} ${n.isVisible ? styles.chipOn : styles.chipOff}`}
+          role="button"
+          tabIndex={0}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleToggleVisible(n);
+          }}
+        >
+          {n.isVisible ? "노출" : "숨김"}
+        </span>
+      ),
+    },
+    {
+      key: "isPinned",
+      label: "고정",
+      render: (n) => (
+        <span
+          className={`${styles.chip} ${n.isPinned ? styles.chipOn : styles.chipOff}`}
+          role="button"
+          tabIndex={0}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleTogglePinned(n);
+          }}
+        >
+          {n.isPinned ? "고정" : "일반"}
+        </span>
+      ),
+    },
+    {
+      key: "publishedAt",
+      label: "게시일",
+      render: (n) => n.publishedAt?.slice(0, 10) ?? "-",
+    },
+    {
+      key: "actions",
+      label: "관리",
+      render: (n) => (
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={styles.editBtn}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpenEdit(n);
+            }}
+          >
+            수정
+          </button>
+          <button
+            type="button"
+            className={styles.deleteBtn}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(n);
+            }}
+          >
+            삭제
           </button>
         </div>
-      );
-    }
-    if (filtered.length === 0) {
-      return (
-        <div className={styles.stateBox}>
-          <p className={styles.stateText}>공지가 없습니다.</p>
-        </div>
-      );
-    }
-    return (
-      <ul className={styles.list}>
-        {filtered.map((n) => (
-          <li key={n.id} className={styles.card}>
-            <div className={styles.cardHeader}>
-              <div className={styles.cardMeta}>
-                <span className={styles.sourceChip}>{SOURCE_LABELS[n.source] ?? n.source}</span>
-                {n.isPinned && <span className={styles.pinnedChip}>고정</span>}
-              </div>
-              <span className={`${styles.chip} ${n.isVisible ? styles.chipOn : styles.chipOff}`}
-                    onClick={() => handleToggleVisible(n)}
-                    role="button"
-                    tabIndex={0}
-              >
-                {n.isVisible ? "노출" : "숨김"}
-              </span>
-            </div>
-            <p className={styles.cardTitle}>{n.title}</p>
-            <p className={styles.cardDate}>{n.publishedAt?.slice(0, 10) ?? "-"}</p>
-            <div className={styles.cardActions}>
-              <button className={styles.editBtn} onClick={() => openEdit(n)}>수정</button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    );
-  };
+      ),
+    },
+  ];
 
   return (
     <div className={styles.page}>
-      {/* 검색 + 필터 */}
-      <div className={styles.toolbar}>
-        <input
-          className={styles.searchInput}
-          type="text"
-          placeholder="공지 제목 검색"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+      <AdminToolbar
+        search={search}
+        onSearchChange={setSearch}
+        searchPlaceholder="공지 제목 검색"
+        filters={[
+          {
+            key: "source",
+            label: "구분",
+            options: SOURCE_FILTER_OPTIONS,
+            value: sourceFilter,
+            onChange: setSourceFilter,
+          },
+          {
+            key: "visible",
+            label: "노출",
+            options: VISIBLE_FILTER_OPTIONS,
+            value: visibleFilter,
+            onChange: setVisibleFilter,
+          },
+          {
+            key: "pinned",
+            label: "고정",
+            options: PINNED_FILTER_OPTIONS,
+            value: pinnedFilter,
+            onChange: setPinnedFilter,
+          },
+        ]}
+        onCreate={handleOpenCreate}
+        createLabel="공지 등록"
+      />
+
+      {loading && <AdminStateBox status="loading" />}
+      {!loading && error && (
+        <AdminStateBox
+          status="error"
+          message={error}
+          onRetry={() => dispatch(requestAdminGetNoticeList())}
         />
-        <div className={styles.filterChips}>
-          <button
-            className={`${styles.chip} ${sourceFilter === "all" ? styles.chipActive : ""}`}
-            onClick={() => setSourceFilter("all")}
-          >전체</button>
-          {SOURCES.map((s) => (
-            <button
-              key={s}
-              className={`${styles.chip} ${sourceFilter === s ? styles.chipActive : ""}`}
-              onClick={() => setSourceFilter(s)}
-            >{SOURCE_LABELS[s]}</button>
-          ))}
-          <button
-            className={`${styles.chip} ${visibleFilter === "visible" ? styles.chipActive : ""}`}
-            onClick={() => setVisibleFilter(visibleFilter === "visible" ? "all" : "visible")}
-          >노출만</button>
-          <button
-            className={`${styles.chip} ${pinnedFilter === "pinned" ? styles.chipActive : ""}`}
-            onClick={() => setPinnedFilter(pinnedFilter === "pinned" ? "all" : "pinned")}
-          >고정만</button>
-        </div>
-      </div>
-
-      {/* 등록 버튼 */}
-      <div className={styles.addRow}>
-        <button className={styles.addBtn} onClick={openCreate}>+ 공지 등록</button>
-      </div>
-
-      {renderContent()}
-
-      {/* Bottom Sheet */}
-      {sheetOpen && (
-        <div className={styles.overlay} onClick={() => setSheetOpen(false)}>
-          <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-            <h3 className={styles.sheetTitle}>{editTarget ? "공지 수정" : "공지 등록"}</h3>
-            <form onSubmit={handleSubmit} className={styles.form}>
-              <label className={styles.label}>
-                제목
-                <input className={styles.input} name="title" value={form.title} onChange={handleFormChange} required />
-              </label>
-              <label className={styles.label}>
-                소스 구분
-                <select className={styles.input} name="source" value={form.source} onChange={handleFormChange}>
-                  {SOURCES.map((s) => <option key={s} value={s}>{SOURCE_LABELS[s]}</option>)}
-                </select>
-              </label>
-              {form.source === "EXTERNAL" ? (
-                <label className={styles.label}>
-                  외부 링크
-                  <input
-                    className={styles.input}
-                    name="externalUrl"
-                    type="url"
-                    placeholder="https://..."
-                    value={form.externalUrl}
-                    onChange={handleFormChange}
-                    required
-                  />
-                </label>
-              ) : (
-                <label className={styles.label}>
-                  내용
-                  <textarea
-                    className={`${styles.input} ${styles.textarea}`}
-                    name="content"
-                    value={form.content}
-                    onChange={handleFormChange}
-                    rows={4}
-                    required
-                  />
-                </label>
-              )}
-              <label className={styles.checkLabel}>
-                <input type="checkbox" name="isVisible" checked={form.isVisible} onChange={handleFormChange} />
-                노출 여부
-              </label>
-              <label className={styles.checkLabel}>
-                <input type="checkbox" name="isPinned" checked={form.isPinned} onChange={handleFormChange} />
-                고정 여부
-              </label>
-              <div className={styles.formActions}>
-                <button type="button" className={styles.cancelBtn} onClick={() => setSheetOpen(false)}>취소</button>
-                <button type="submit" className={styles.submitBtn}>{editTarget ? "수정" : "등록"}</button>
-              </div>
-            </form>
-          </div>
-        </div>
       )}
+      {!loading && !error && filtered.length === 0 && (
+        <AdminStateBox status="empty" message="공지가 없습니다." />
+      )}
+      {!loading && !error && filtered.length > 0 && (
+        <AdminTable columns={columns} rows={filtered} rowKey={(n) => n.id} />
+      )}
+
+      <AdminModal open={isOpen} title={editTarget ? "공지 수정" : "공지 등록"} onClose={closeModal}>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <label className={styles.label}>
+            제목
+            <input className={styles.input} name="title" value={form.title} onChange={handleFormChange} required />
+          </label>
+          <label className={styles.label}>
+            소스 구분
+            <select className={styles.input} name="source" value={form.source} onChange={handleFormChange}>
+              {SOURCES.map((s) => <option key={s} value={s}>{SOURCE_LABELS[s]}</option>)}
+            </select>
+          </label>
+          {form.source === "EXTERNAL" ? (
+            <label className={styles.label}>
+              외부 링크
+              <input
+                className={styles.input}
+                name="externalUrl"
+                type="url"
+                placeholder="https://..."
+                value={form.externalUrl}
+                onChange={handleFormChange}
+                required
+              />
+            </label>
+          ) : (
+            <label className={styles.label}>
+              내용
+              <textarea
+                className={`${styles.input} ${styles.textarea}`}
+                name="content"
+                value={form.content}
+                onChange={handleFormChange}
+                rows={4}
+                required
+              />
+            </label>
+          )}
+          <label className={styles.checkLabel}>
+            <input type="checkbox" name="isVisible" checked={form.isVisible} onChange={handleFormChange} />
+            노출 여부
+          </label>
+          <label className={styles.checkLabel}>
+            <input type="checkbox" name="isPinned" checked={form.isPinned} onChange={handleFormChange} />
+            고정 여부
+          </label>
+          <div className={styles.formActions}>
+            <button type="button" className={styles.cancelBtn} onClick={closeModal}>취소</button>
+            <button type="submit" className={styles.submitBtn}>{editTarget ? "수정" : "등록"}</button>
+          </div>
+        </form>
+      </AdminModal>
+
+      <AdminConfirmDialog
+        open={!!deleteTarget}
+        title="공지 삭제"
+        message={`"${deleteTarget?.title ?? ""}" 공지를 삭제하시겠습니까?`}
+        dangerous
+        confirmLabel="삭제"
+        onConfirm={confirmDelete}
+        onCancel={() => setDeleteTarget(null)}
+      />
     </div>
   );
 }

@@ -6,6 +6,8 @@ import {
   requestAdminInsertNotice,
   requestAdminUpdateNotice,
   requestAdminUpdateNoticeVisible,
+  requestAdminUpdateNoticePinned,
+  requestAdminDeleteNotice,
 } from "@/domains/notices/store/admin/thunks.js";
 
 const initialState = {
@@ -49,6 +51,19 @@ const noticeSlice = createSlice({
       state.siteNotices = state.siteNotices.map(n =>
         Number(n.id) === Number(id) ? { ...n, isVisible } : n
       );
+    });
+
+    /* ── pinned(고정) 변경 ────────────────────────────────────── */
+    applyAsyncHandlers(builder, requestAdminUpdateNoticePinned, (state, action) => {
+      const { id, isPinned } = action.payload;
+      state.siteNotices = state.siteNotices.map(n =>
+        Number(n.id) === Number(id) ? { ...n, isPinned } : n
+      );
+    });
+
+    /* ── 삭제 ─────────────────────────────────────────────────── */
+    applyAsyncHandlers(builder, requestAdminDeleteNotice, (state, action) => {
+      state.siteNotices = state.siteNotices.filter(n => Number(n.id) !== Number(action.payload));
     });
   },
 });

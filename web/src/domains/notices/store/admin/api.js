@@ -7,3 +7,5 @@ export const fetchAdminGetNoticeList   = async ()            => { const { data }
 export const fetchAdminInsertNotice    = async (notice)      => { const { data } = await API.post(ADMIN_NOTICES.INSERT, notice);                return data.data; };
 export const fetchAdminUpdateNotice    = async (id, notice)  => { const { data } = await API.put(ADMIN_NOTICES.UPDATE(id), notice);             return data.data; };
 export const fetchAdminUpdateVisible   = async (id, visible) => { const { data } = await API.patch(ADMIN_NOTICES.UPDATE_VISIBLE(id), { isVisible: visible }); return data.data; };
+export const fetchAdminUpdatePinned    = async (id, pinned)  => { const { data } = await API.patch(ADMIN_NOTICES.UPDATE_PINNED(id), { isPinned: pinned }); return data.data; };
+export const fetchAdminDeleteNotice    = async (id)           => { const { data } = await API.delete(ADMIN_NOTICES.DELETE(id));                 return data.data; };

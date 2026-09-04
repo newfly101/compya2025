@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useSetTopBar } from "@/app/provider/TopBarProvider";
+import AdminToolbar from "@/global/ui/admin/toolbar/AdminToolbar.jsx";
+import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
+import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
+import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
+import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
 import {
   requestAdminGetUserList,
   requestAdminPatchUserRole,
   requestAdminPatchUserStatus,
 } from "@/domains/users/store/admin/thunks.js";
-import UserRow from "@/domains/users/mobile/components/userRow/UserRow.jsx";
 import {
   USER_ROLES,
   USER_ROLE_LABELS,
@@ -15,6 +19,9 @@ import {
   USER_STATUS_LABELS,
 } from "@/domains/users/mobile/admin/userAdmin.constants.js";
 import styles from "./AdminUserScreen.module.scss";
+
+const ROLE_OPTIONS = USER_ROLES.map((r) => ({ value: r, label: USER_ROLE_LABELS[r] }));
+const STATUS_OPTIONS = USER_STATUSES.map((s) => ({ value: s, label: USER_STATUS_LABELS[s] }));
 
 export default function AdminUserScreen() {
   const navigate = useNavigate();
@@ -24,19 +31,17 @@ export default function AdminUserScreen() {
 
   useSetTopBar({ variant: "page", title: "유저 관리", onBack: () => navigate(-1) });
 
-  const [search, setSearch]             = useState("");
-  const [roleFilter, setRoleFilter]     = useState("all");
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
 
-  /* 상세 Bottom Sheet */
-  const [sheetOpen, setSheetOpen]       = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [roleDraft, setRoleDraft]       = useState("");
-  const [statusDraft, setStatusDraft]   = useState("");
+  /* 상세/변경 모달 */
+  const [selectedId, setSelectedId] = useState(null);
+  const [roleDraft, setRoleDraft] = useState("");
+  const [statusDraft, setStatusDraft] = useState("");
   const [pendingChange, setPendingChange] = useState(null); // { field, value }
-  const [withdrawAgree, setWithdrawAgree] = useState(false);
-  const [saving, setSaving]             = useState(false);
-  const [saveError, setSaveError]       = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
 
   useEffect(() => {
     dispatch(requestAdminGetUserList());
@@ -44,40 +49,38 @@ export default function AdminUserScreen() {
 
   const filtered = (users ?? []).filter((u) => {
     const matchSearch = u.nickname?.toLowerCase().includes(search.toLowerCase());
-    const matchRole   = roleFilter === "all" || u.userRole === roleFilter;
+    const matchRole = roleFilter === "all" || u.userRole === roleFilter;
     const matchStatus = statusFilter === "all" || u.userStatus === statusFilter;
     return matchSearch && matchRole && matchStatus;
   });
 
-  const isSelf = currentUserId != null && selectedUser?.id === currentUserId;
+  const activeUser = selectedId != null ? (users ?? []).find((u) => u.id === selectedId) ?? null : null;
+  const isSelf = currentUserId != null && selectedId === currentUserId;
   const isWithdrawPending = pendingChange?.field === "userStatus" && pendingChange.value === "WITHDRAWN";
-  const confirmDisabled = saving || (isWithdrawPending && !withdrawAgree);
 
   const openDetail = (user) => {
-    setSelectedUser(user);
+    setSelectedId(user.id);
     setRoleDraft(user.userRole);
     setStatusDraft(user.userStatus);
     setPendingChange(null);
-    setWithdrawAgree(false);
     setSaveError(null);
-    setSheetOpen(true);
   };
 
-  const closeSheet = () => {
+  const closeModal = () => {
     if (saving) return;
-    setSheetOpen(false);
-    setSelectedUser(null);
+    setSelectedId(null);
     setPendingChange(null);
+    setSaveError(null);
   };
 
   const requestRoleChange = () => {
-    if (isSelf || !selectedUser || roleDraft === selectedUser.userRole) return;
+    if (isSelf || !activeUser || roleDraft === activeUser.userRole) return;
     setSaveError(null);
     setPendingChange({ field: "userRole", value: roleDraft });
   };
 
   const requestStatusChange = () => {
-    if (isSelf || !selectedUser || statusDraft === selectedUser.userStatus) return;
+    if (isSelf || !activeUser || statusDraft === activeUser.userStatus) return;
     setSaveError(null);
     setPendingChange({ field: "userStatus", value: statusDraft });
   };
@@ -85,149 +88,142 @@ export default function AdminUserScreen() {
   const cancelPendingChange = () => {
     if (saving) return;
     setPendingChange(null);
-    setWithdrawAgree(false);
     setSaveError(null);
-    if (selectedUser) {
-      setRoleDraft(selectedUser.userRole);
-      setStatusDraft(selectedUser.userStatus);
-    }
   };
 
   const confirmPendingChange = async () => {
-    if (!pendingChange || !selectedUser) return;
+    if (!pendingChange || !activeUser || saving) return;
     setSaving(true);
     setSaveError(null);
     try {
       if (pendingChange.field === "userRole") {
         await dispatch(
-          requestAdminPatchUserRole({ id: selectedUser.id, userRole: pendingChange.value })
+          requestAdminPatchUserRole({ id: activeUser.id, userRole: pendingChange.value })
         ).unwrap();
-        setSelectedUser((prev) => ({ ...prev, userRole: pendingChange.value }));
       } else {
         await dispatch(
-          requestAdminPatchUserStatus({ id: selectedUser.id, userStatus: pendingChange.value })
+          requestAdminPatchUserStatus({ id: activeUser.id, userStatus: pendingChange.value })
         ).unwrap();
-        setSelectedUser((prev) => ({ ...prev, userStatus: pendingChange.value }));
       }
       setPendingChange(null);
-      setWithdrawAgree(false);
     } catch (e) {
-      setSaveError(typeof e === "string" ? e : "변경에 실패했습니다.");
+      setSaveError(typeof e === "string" ? e : "변경에 실패했습니다. 본인 계정이거나 권한이 없을 수 있습니다.");
     } finally {
       setSaving(false);
     }
   };
 
-  /* 상태 분기 */
-  const renderContent = () => {
-    if (loading) {
-      return (
-        <div className={styles.stateBox}>
-          <p className={styles.stateText}>불러오는 중...</p>
-        </div>
-      );
-    }
-    if (error) {
-      return (
-        <div className={styles.stateBox}>
-          <p className={styles.stateError}>{error}</p>
-          <button className={styles.retryBtn} onClick={() => dispatch(requestAdminGetUserList())}>
-            다시 시도
-          </button>
-        </div>
-      );
-    }
-    if (filtered.length === 0) {
-      return (
-        <div className={styles.stateBox}>
-          <p className={styles.stateText}>유저가 없습니다.</p>
-        </div>
-      );
-    }
-    return (
-      <ul className={styles.list}>
-        {filtered.map((u) => (
-          <UserRow key={u.id} user={u} onClick={() => openDetail(u)} />
-        ))}
-      </ul>
-    );
+  const confirmMessage = () => {
+    if (!pendingChange) return "";
+    const base =
+      pendingChange.field === "userRole"
+        ? `역할을 "${USER_ROLE_LABELS[pendingChange.value]}"(으)로 변경합니다.`
+        : `상태를 "${USER_STATUS_LABELS[pendingChange.value]}"(으)로 변경합니다.`;
+    const forced = " 변경 즉시 해당 유저는 강제 로그아웃됩니다.";
+    const withdrawNotice = isWithdrawPending ? " 탈퇴 처리는 되돌리기 어렵습니다. 신중히 확인해 주세요." : "";
+    return base + forced + withdrawNotice;
   };
+
+  const columns = [
+    { key: "nickname", label: "닉네임", align: "left", render: (u) => u.nickname ?? "-" },
+    {
+      key: "userRole",
+      label: "역할",
+      render: (u) => USER_ROLE_LABELS[u.userRole] ?? u.userRole ?? "-",
+    },
+    {
+      key: "userStatus",
+      label: "상태",
+      render: (u) => USER_STATUS_LABELS[u.userStatus] ?? u.userStatus ?? "-",
+    },
+    {
+      key: "lastLoginAt",
+      label: "최근접속",
+      render: (u) => u.lastLoginAt?.slice(0, 10) ?? "-",
+    },
+    {
+      key: "actions",
+      label: "관리",
+      render: (u) =>
+        u.id === currentUserId ? (
+          <span className={styles.selfTag}>본인</span>
+        ) : (
+          <button
+            type="button"
+            className={styles.changeBtn}
+            onClick={(e) => {
+              e.stopPropagation();
+              openDetail(u);
+            }}
+          >
+            변경
+          </button>
+        ),
+    },
+  ];
 
   return (
     <div className={styles.page}>
-      {/* 검색 + 필터 */}
-      <div className={styles.toolbar}>
-        <input
-          className={styles.searchInput}
-          type="text"
-          placeholder="닉네임 검색"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <div className={styles.filterRow}>
-          <select
-            className={styles.filterSelect}
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
-          >
-            <option value="all">역할 전체</option>
-            {USER_ROLES.map((r) => (
-              <option key={r} value={r}>{USER_ROLE_LABELS[r]}</option>
-            ))}
-          </select>
-          <select
-            className={styles.filterSelect}
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-          >
-            <option value="all">상태 전체</option>
-            {USER_STATUSES.map((s) => (
-              <option key={s} value={s}>{USER_STATUS_LABELS[s]}</option>
-            ))}
-          </select>
-        </div>
-      </div>
+      <AdminToolbar
+        search={search}
+        onSearchChange={setSearch}
+        searchPlaceholder="닉네임 검색"
+        filters={[
+          { key: "role", label: "역할", options: [{ value: "all", label: "전체" }, ...ROLE_OPTIONS], value: roleFilter, onChange: setRoleFilter },
+          { key: "status", label: "상태", options: [{ value: "all", label: "전체" }, ...STATUS_OPTIONS], value: statusFilter, onChange: setStatusFilter },
+        ]}
+      />
 
-      {/* 유저 수 표시 */}
       <p className={styles.countText}>총 {filtered.length}명</p>
 
-      {renderContent()}
+      {loading && <AdminStateBox status="loading" />}
+      {!loading && error && (
+        <AdminStateBox
+          status="error"
+          message={error}
+          onRetry={() => dispatch(requestAdminGetUserList())}
+        />
+      )}
+      {!loading && !error && filtered.length === 0 && (
+        <AdminStateBox status="empty" message="유저가 없습니다." />
+      )}
+      {!loading && !error && filtered.length > 0 && (
+        <AdminTable columns={columns} rows={filtered} rowKey={(u) => u.id} />
+      )}
 
-      {/* 유저 상세 Bottom Sheet */}
-      {sheetOpen && selectedUser && (
-        <div className={styles.overlay} onClick={closeSheet}>
-          <div className={styles.sheet} onClick={(e) => e.stopPropagation()}>
-            <h3 className={styles.sheetTitle}>유저 상세</h3>
-
-            <div className={styles.detailFields}>
-              <div className={styles.detailRow}>
-                <span className={styles.detailLabel}>닉네임</span>
-                <span className={styles.detailValue}>{selectedUser.nickname ?? "-"}</span>
-              </div>
-              <div className={styles.detailRow}>
-                <span className={styles.detailLabel}>이메일</span>
-                <span className={styles.detailValue}>{selectedUser.email || "이메일 미등록"}</span>
-              </div>
-              <div className={styles.detailRow}>
-                <span className={styles.detailLabel}>가입일</span>
-                <span className={styles.detailValue}>{selectedUser.createdAt ?? "-"}</span>
-              </div>
-              <div className={styles.detailRow}>
-                <span className={styles.detailLabel}>마지막 로그인</span>
-                <span className={styles.detailValue}>{selectedUser.lastLoginAt ?? "-"}</span>
-              </div>
+      <AdminModal
+        open={activeUser != null}
+        title={`역할·상태 변경 — ${activeUser?.nickname ?? ""}`}
+        onClose={closeModal}
+        footer={
+          <button type="button" className={styles.closeBtn} onClick={closeModal} disabled={saving}>
+            닫기
+          </button>
+        }
+      >
+        {activeUser && (
+          <div className={styles.detailFields}>
+            <div className={styles.detailRow}>
+              <span className={styles.detailLabel}>이메일</span>
+              <span className={styles.detailValue}>{activeUser.email || "이메일 미등록"}</span>
+            </div>
+            <div className={styles.detailRow}>
+              <span className={styles.detailLabel}>가입일</span>
+              <span className={styles.detailValue}>{activeUser.createdAt ?? "-"}</span>
+            </div>
+            <div className={styles.detailRow}>
+              <span className={styles.detailLabel}>마지막 로그인</span>
+              <span className={styles.detailValue}>{activeUser.lastLoginAt ?? "-"}</span>
             </div>
 
             {isSelf && (
-              <p className={styles.selfNotice}>
-                본인 계정의 역할·상태는 이 화면에서 변경할 수 없습니다.
-              </p>
+              <p className={styles.selfNotice}>본인 계정의 역할·상태는 이 화면에서 변경할 수 없습니다.</p>
             )}
 
             <div className={styles.editRow}>
               <span className={styles.detailLabel}>역할</span>
               <select
-                className={styles.filterSelect}
+                className={styles.select}
                 value={roleDraft}
                 disabled={isSelf || saving}
                 onChange={(e) => setRoleDraft(e.target.value)}
@@ -239,7 +235,7 @@ export default function AdminUserScreen() {
               <button
                 type="button"
                 className={styles.applyBtn}
-                disabled={isSelf || saving || roleDraft === selectedUser.userRole}
+                disabled={isSelf || saving || roleDraft === activeUser.userRole}
                 onClick={requestRoleChange}
               >
                 역할 변경
@@ -249,7 +245,7 @@ export default function AdminUserScreen() {
             <div className={styles.editRow}>
               <span className={styles.detailLabel}>상태</span>
               <select
-                className={styles.filterSelect}
+                className={styles.select}
                 value={statusDraft}
                 disabled={isSelf || saving}
                 onChange={(e) => setStatusDraft(e.target.value)}
@@ -261,59 +257,29 @@ export default function AdminUserScreen() {
               <button
                 type="button"
                 className={styles.applyBtn}
-                disabled={isSelf || saving || statusDraft === selectedUser.userStatus}
+                disabled={isSelf || saving || statusDraft === activeUser.userStatus}
                 onClick={requestStatusChange}
               >
                 상태 변경
               </button>
             </div>
 
-            {pendingChange && (
-              <div className={styles.confirmBox}>
-                <p className={isWithdrawPending ? styles.confirmWarnStrong : styles.confirmWarn}>
-                  {pendingChange.field === "userRole"
-                    ? `역할을 "${USER_ROLE_LABELS[pendingChange.value]}"(으)로 변경합니다.`
-                    : `상태를 "${USER_STATUS_LABELS[pendingChange.value]}"(으)로 변경합니다.`}
-                  {isWithdrawPending && " 탈퇴 처리는 되돌리기 어렵습니다. 신중히 확인해 주세요."}
-                </p>
-                {isWithdrawPending && (
-                  <label className={styles.agreeLabel}>
-                    <input
-                      type="checkbox"
-                      checked={withdrawAgree}
-                      onChange={(e) => setWithdrawAgree(e.target.checked)}
-                    />
-                    탈퇴 처리에 동의합니다.
-                  </label>
-                )}
-                {saveError && <p className={styles.stateError}>{saveError}</p>}
-                <div className={styles.confirmActions}>
-                  <button
-                    type="button"
-                    className={styles.closeBtn}
-                    onClick={cancelPendingChange}
-                    disabled={saving}
-                  >
-                    취소
-                  </button>
-                  <button
-                    type="button"
-                    className={styles.confirmBtn}
-                    onClick={confirmPendingChange}
-                    disabled={confirmDisabled}
-                  >
-                    {saving ? "처리 중..." : "확인"}
-                  </button>
-                </div>
-              </div>
-            )}
-
-            <button className={styles.closeBtn} onClick={closeSheet} disabled={saving}>
-              닫기
-            </button>
+            {saveError && <p className={styles.errorText}>{saveError}</p>}
           </div>
-        </div>
-      )}
+        )}
+      </AdminModal>
+
+      <AdminConfirmDialog
+        open={pendingChange != null}
+        title={pendingChange?.field === "userRole" ? "역할 변경" : "상태 변경"}
+        message={confirmMessage()}
+        dangerous
+        requireAgree={isWithdrawPending}
+        agreeLabel="탈퇴 처리에 동의합니다."
+        confirmLabel={saving ? "처리 중..." : "확인"}
+        onConfirm={confirmPendingChange}
+        onCancel={cancelPendingChange}
+      />
     </div>
   );
 }

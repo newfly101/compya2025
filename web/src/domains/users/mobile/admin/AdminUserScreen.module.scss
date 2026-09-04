@@ -6,136 +6,36 @@
   gap: $space-2;
 }
 
-.toolbar {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
-}
-
-.searchInput {
-  width: 100%;
-  height: $control-height-md;
-  padding: 0 $space-4;
-  border: 1px solid var(--color-border);
-  border-radius: $radius-lg;
-  background: var(--color-bg-card);
-  color: var(--color-text-primary);
-  font-size: $font-size-12;
-  box-sizing: border-box;
-
-  &::placeholder { color: var(--color-text-placeholder); }
-}
-
-.filterRow {
-  display: flex;
-  gap: $space-2;
-}
-
-.filterSelect {
-  flex: 1;
-  height: $control-height-sm;
-  padding: 0 $space-3;
-  border: 1px solid var(--color-border);
-  border-radius: $radius-md;
-  background: var(--color-bg-card);
-  color: var(--color-text-secondary);
-  font-size: $font-size-11;
-  cursor: pointer;
-  appearance: auto;
-}
-
 .countText {
   @include text-caption;
   color: var(--color-text-muted);
   margin: 0;
 }
 
-.stateBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $space-2;
-  padding: $space-12 0;
+/* 표 안 관리 열 */
+.changeBtn {
+  height: $control-height-sm;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-brand);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-brand);
+  @include text-caption;
+  font-weight: 500;
+  cursor: pointer;
+  @include pressable;
 }
 
-.stateText {
-  @include text-body;
+.selfTag {
+  @include text-caption;
   color: var(--color-text-muted);
 }
 
-.stateError {
-  @include text-body;
-  color: var(--color-danger);
-  text-align: center;
-}
-
-.retryBtn {
-  height: $control-height-md;
-  padding: 0 $space-4;
-  border: 1px solid var(--color-danger);
-  border-radius: $radius-lg;
-  background: transparent;
-  color: var(--color-danger);
-  @include text-body;
-  cursor: pointer;
-}
-
-.list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
-}
-
-/* Bottom Sheet — TBD placeholder */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: var(--color-overlay);
-  z-index: $z-modal-bg;
-  display: flex;
-  align-items: flex-end;
-}
-
-.sheet {
-  width: 100%;
-  background: var(--color-bg-modal);
-  border-radius: $radius-2xl $radius-2xl 0 0;
-  padding: $space-5 $space-4 $space-8;
-  display: flex;
-  flex-direction: column;
-  gap: $space-4;
-}
-
-.sheetTitle {
-  @include text-section-title;
-  color: var(--color-text-primary);
-  margin: 0;
-}
-
-.closeBtn {
-  height: $control-height-md;
-  border: 1px solid var(--color-border);
-  border-radius: $radius-md;
-  background: var(--color-bg-card);
-  color: var(--color-text-secondary);
-  @include text-body;
-  cursor: pointer;
-  @include pressable;
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-}
-
-/* 유저 상세 — 조회 필드 */
+/* 모달 — 조회 필드 */
 .detailFields {
   display: flex;
   flex-direction: column;
-  gap: $space-2;
+  gap: $space-3;
 }
 
 .detailRow {
@@ -169,11 +69,24 @@
   margin: 0;
 }
 
-/* 유저 상세 — 역할/상태 변경 */
+/* 모달 — 역할/상태 변경 */
 .editRow {
   display: flex;
   align-items: center;
   gap: $space-2;
+}
+
+.select {
+  flex: 1;
+  height: $control-height-md;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-size: $font-size-12;
+  cursor: pointer;
+  appearance: auto;
 }
 
 .applyBtn {
@@ -194,53 +107,19 @@
   }
 }
 
-.confirmBox {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
-  padding: $space-3;
-  border: 1px solid var(--color-border);
-  border-radius: $radius-lg;
-  background: var(--color-bg-elevated);
-}
-
-.confirmWarn {
-  @include text-body;
-  color: var(--color-text-primary);
-  margin: 0;
-}
-
-.confirmWarnStrong {
-  @include text-body;
+.errorText {
+  @include text-caption;
   color: var(--color-danger);
   margin: 0;
-  font-weight: 700;
 }
 
-.agreeLabel {
-  display: flex;
-  align-items: center;
-  gap: $space-2;
-  @include text-caption;
-  color: var(--color-text-secondary);
-}
-
-.confirmActions {
-  display: flex;
-  gap: $space-2;
-
-  .closeBtn,
-  .confirmBtn {
-    flex: 1;
-  }
-}
-
-.confirmBtn {
+.closeBtn {
   height: $control-height-md;
-  border: 1px solid var(--color-danger);
+  padding: 0 $space-4;
+  border: 1px solid var(--color-border);
   border-radius: $radius-md;
-  background: var(--color-danger);
-  color: var(--color-bg-card);
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
   @include text-body;
   cursor: pointer;
   @include pressable;

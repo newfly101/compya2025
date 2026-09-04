@@ -5,6 +5,8 @@ import {
   fetchAdminInsertNotice,
   fetchAdminUpdateNotice,
   fetchAdminUpdateVisible,
+  fetchAdminUpdatePinned,
+  fetchAdminDeleteNotice,
 } from "@/domains/notices/store/admin/api.js";
 
 export const requestAdminGetNoticeList = createAsyncThunk(
@@ -50,6 +52,31 @@ export const requestAdminUpdateNoticeVisible = createAsyncThunk(
       // visible 토글 응답의 data 는 Void(null) — 응답에서 id 를 꺼내지 않고 요청 param 을 그대로 사용.
       await fetchAdminUpdateVisible(id, visible);
       return { id, isVisible: visible };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const requestAdminUpdateNoticePinned = createAsyncThunk(
+  ADMIN_NOTICE_ACTIONS.UPDATE_PINNED,
+  async ({ id, pinned }, { rejectWithValue }) => {
+    try {
+      // pinned 토글 응답도 Void(null) — visible 토글과 동일 패턴.
+      await fetchAdminUpdatePinned(id, pinned);
+      return { id, isPinned: pinned };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+export const requestAdminDeleteNotice = createAsyncThunk(
+  ADMIN_NOTICE_ACTIONS.DELETE,
+  async (id, { rejectWithValue }) => {
+    try {
+      await fetchAdminDeleteNotice(id);
+      return id;
     } catch (error) {
       return rejectWithValue(error.message);
     }
