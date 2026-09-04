@@ -52,20 +52,6 @@ const fileNameOf = (url) => {
   }
 };
 
-// 프로토타입 § 4 퀴즈 칩은 노출 기준(전체/노출/비노출)이지만 fun_quiz 에 visible 컬럼이 없어 쓸 수 없다.
-// 대신 관리자가 이미지 미등록 회차를 찾기 쉽도록 이미지 유무를 기준으로 삼는다.
-const CHIP_MATCH = {
-  all: () => true,
-  withImage: (q) => !!q.imageUrl,
-  withoutImage: (q) => !q.imageUrl,
-};
-
-const CHIP_OPTIONS = [
-  { value: "all", label: "전체" },
-  { value: "withImage", label: "이미지 있음" },
-  { value: "withoutImage", label: "이미지 없음" },
-];
-
 const IMAGE_MODE_OPTIONS = [
   { value: "url", label: "URL 입력" },
   { value: "file", label: "파일 업로드" },
@@ -78,7 +64,6 @@ export default function AdminQuizScreen() {
   const { quizAnswers, loading, error } = useSelector((s) => s.quiz);
 
   const [search, setSearch] = useState("");
-  const [chip, setChip] = useState("all");
   const [sortAsc, setSortAsc] = useState(false); // 기본: 회차 내림차순
   const [form, setForm] = useState(EMPTY_FORM);
   const [imageMode, setImageMode] = useState("url");
@@ -94,12 +79,7 @@ export default function AdminQuizScreen() {
 
   const searched = quizAnswers.filter((q) => String(q.round ?? "").includes(search.trim()));
 
-  const chipOptions = CHIP_OPTIONS.map((opt) => ({
-    ...opt,
-    count: searched.filter(CHIP_MATCH[opt.value]).length,
-  }));
-
-  const filtered = [...searched.filter(CHIP_MATCH[chip])].sort((a, b) =>
+  const filtered = [...searched].sort((a, b) =>
     sortAsc ? (a.round ?? 0) - (b.round ?? 0) : (b.round ?? 0) - (a.round ?? 0),
   );
 
@@ -162,15 +142,15 @@ export default function AdminQuizScreen() {
 
   const columns = [
     {
+      key: "index",
+      label: "번호",
+      width: 40,
+      render: (_q, index) => index + 1,
+    },
+    {
       key: "round",
       label: "회차",
-      align: "left",
-      render: (q) => (
-        <div className={styles.mainCell}>
-          <span className={styles.round}>{q.round}회</span>
-          <span className={styles.fileName}>{fileNameOf(q.imageUrl) ?? "이미지 없음"}</span>
-        </div>
-      ),
+      render: (q) => <span className={styles.round}>{q.round}회</span>,
     },
     {
       key: "imageUrl",
@@ -220,14 +200,6 @@ export default function AdminQuizScreen() {
         search={search}
         onSearchChange={setSearch}
         searchPlaceholder="회차 검색"
-        filters={[
-          {
-            key: "chip",
-            options: chipOptions,
-            value: chip,
-            onChange: setChip,
-          },
-        ]}
         totalCount={filtered.length}
         totalLabel="개"
         sortLabel={sortAsc ? "회차 오름차순" : "회차 내림차순"}

@@ -215,6 +215,12 @@ export default function AdminEventScreen() {
 
   const columns = [
     {
+      key: "index",
+      label: "번호",
+      width: 30,
+      render: (_e, index) => index + 1,
+    },
+    {
       key: "title",
       label: "이벤트",
       align: "left",

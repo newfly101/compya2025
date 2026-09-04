@@ -8,38 +8,23 @@
   gap: $space-2;
 }
 
-/* 표 주요 셀 — 회차 + 서브(파일명 또는 "이미지 없음") */
-.mainCell {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  text-align: left;
-  overflow: hidden;
-}
-
 .round {
   color: var(--color-text-primary);
   font-weight: 600;
 }
 
-.fileName {
-  color: var(--color-text-muted);
-  @include text-caption;
-  @include text-ellipsis;
-}
-
-/* 이미지 셀 — 64×40 썸네일 / 없으면 점선 박스 */
+/* 이미지 셀 — 48×30 썸네일(레전드 표 행 높이에 맞춰 축소) / 없으면 점선 박스 */
 .thumbnail {
-  width: 64px;
-  height: 40px;
+  width: 48px;
+  height: 30px;
   object-fit: cover;
   border-radius: $radius-sm;
   border: 1px solid var(--color-border);
 }
 
 .thumbnailEmpty {
-  width: 64px;
-  height: 40px;
+  width: 48px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,10 +117,10 @@
 .submitBtn {
   flex: 1;
   height: $control-height-md;
-  border: none;
+  border: 1px solid var(--color-brand-dark);
   border-radius: $radius-md;
-  background: var(--color-brand);
-  color: #fff;
+  background: var(--color-brand-alpha-15);
+  color: var(--color-brand);
   @include text-body-bold;
   cursor: pointer;
   @include pressable;
