@@ -1,11 +1,11 @@
-// 32×18 pill (기존 36×20 대비 축소) — on 색은 admin.tokens.scss 참조,
+// 34×20 pill (v2 원본 치수) — on 색은 admin.tokens.scss 참조,
 // off 트랙은 기존 --color-bg-elevated 그대로 — 톤 대비만으로 on/off 구분.
 .toggle {
   @include reset-button;
   position: relative;
   flex: 0 0 auto;
-  width: 32px;
-  height: 18px;
+  width: 34px;
+  height: 20px;
   border-radius: $radius-full;
   background: var(--color-bg-elevated);
   transition: background-color 0.15s ease;
@@ -25,8 +25,8 @@
   position: absolute;
   top: 2px;
   left: 2px;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: $radius-full;
   background: #fff;
   transition: left 0.15s ease;

@@ -69,6 +69,11 @@ thead .sticky {
   font-size: 9px;
 }
 
+.checkboxCell {
+  padding: 0 $space-1;
+  text-align: center;
+}
+
 .row {
   // 클릭 가능 여부와 무관하게 살짝 밝아진다 — 프로토타입 리스트 hover 톤
   &:hover td:not(.sticky) {
@@ -86,6 +91,11 @@ thead .sticky {
   &.open td {
     background: var(--color-bg-elevated);
     border-bottom-color: transparent;
+  }
+
+  // 체크박스로 선택된 행 — v2 원본 rgba(139,92,246,.08)
+  &.selectedRow td {
+    background: var(--color-admin-row-selected-bg);
   }
 }
 

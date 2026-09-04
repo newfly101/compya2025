@@ -18,8 +18,8 @@
   cursor: pointer;
 
   &[aria-pressed="true"] {
-    border-color: var(--color-brand);
-    background: var(--color-admin-tag-purple-bg);
-    color: var(--color-admin-tag-purple-text);
+    border-color: var(--color-admin-accent-line);
+    background: var(--color-admin-accent-soft);
+    color: var(--color-admin-accent-active-text);
   }
 }

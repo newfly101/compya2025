@@ -88,9 +88,9 @@
   cursor: pointer;
 
   &[aria-pressed="true"] {
-    border-color: var(--color-brand-dark);
-    background-color: var(--color-brand-alpha-15);
-    color: var(--color-brand);
+    border-color: var(--color-admin-accent-line);
+    background-color: var(--color-admin-accent-soft);
+    color: var(--color-admin-accent-active-text);
   }
 }
 
@@ -114,6 +114,9 @@
 }
 
 .total {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
   color: var(--color-text-secondary);
   @include text-caption;
 
@@ -121,6 +124,46 @@
     color: var(--color-text-primary);
     font-weight: 700;
   }
+}
+
+// 일괄 선택 상태 — 총계 옆에 붙는다(v2: "{N}개 선택" + 선택 삭제 + 숨김)
+.selection {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.selectionCount {
+  color: var(--color-admin-accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bulkDeleteBtn {
+  @include reset-button;
+  height: 22px;
+  padding: 0 $space-2;
+  border: 1px solid var(--color-danger);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-danger);
+  font-size: $font-size-10;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bulkHideBtn {
+  @include reset-button;
+  height: 22px;
+  padding: 0 $space-2;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: $font-size-10;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .infoRight {
@@ -144,15 +187,15 @@
   }
 }
 
-// 채운 버튼 대신 활성 칩과 동일한 톤(테두리 + 옅은 배경) — 주요 동작이라
-// 칩/토글바 버튼(control-height-sm)보다 살짝 크게, 텍스트는 굵게 둬 구분한다.
+// v2 원본 — 채운 솔리드 퍼플 버튼(흰 텍스트). 칩/토글바 버튼(control-height-sm)보다
+// 살짝 크게, 유일한 주요 CTA라 유일하게 배경을 채운다.
 .addBtn {
   height: $control-height-sm;
   padding: 0 $space-4;
-  border: 1px solid var(--color-brand-dark);
+  border: 1px solid var(--color-admin-accent);
   border-radius: $radius-lg;
-  background: var(--color-brand-alpha-15);
-  color: var(--color-brand);
+  background: var(--color-admin-accent);
+  color: #fff;
   @include text-body-bold;
   cursor: pointer;
   @include pressable;

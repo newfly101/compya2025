@@ -1,0 +1,36 @@
+// v2 원본 — 30×30 pill, gap 6px, 활성 시 accent 톤(soft bg + line 보더 + active 텍스트).
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-4 0 $space-6;
+}
+
+.pageBtn {
+  @include reset-button;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 $space-2;
+  border-radius: $radius-lg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border-strong);
+  background: var(--color-bg-card);
+  color: var(--color-text-muted);
+  @include text-caption;
+  font-weight: 500;
+  cursor: pointer;
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-admin-accent-line);
+    background: var(--color-admin-accent-soft);
+    color: var(--color-admin-accent-active-text);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
