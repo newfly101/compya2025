@@ -1,18 +1,52 @@
+// 셸(AdminShellScreen)의 탭 콘텐츠 영역 안에 들어간다 — 자체 480px 컨테이너/100dvh 를
+// 다시 만들지 않는다(page-layout 믹스인 미사용, 이중 컨테이너 방지). 바깥 480px·position:relative
+// (모달 기준 박스)는 셸의 루트가 이미 갖고 있다.
 .page {
-  @include page-layout;
   padding: $space-4;
   display: flex;
   flex-direction: column;
   gap: $space-2;
 }
 
-/* 표 안 정답 이미지 썸네일 */
+/* 표 주요 셀 — 회차 + 서브(파일명 또는 "이미지 없음") */
+.mainCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.round {
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.fileName {
+  color: var(--color-text-muted);
+  @include text-caption;
+  @include text-ellipsis;
+}
+
+/* 이미지 셀 — 64×40 썸네일 / 없으면 점선 박스 */
 .thumbnail {
-  width: 32px;
-  height: 32px;
+  width: 64px;
+  height: 40px;
   object-fit: cover;
   border-radius: $radius-sm;
   border: 1px solid var(--color-border);
+}
+
+.thumbnailEmpty {
+  width: 64px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--color-border);
+  border-radius: $radius-sm;
+  color: var(--color-text-muted);
+  @include text-caption;
 }
 
 /* 표 안 관리 버튼 */
@@ -56,60 +90,16 @@
 }
 
 .label {
-  display: flex;
-  flex-direction: column;
-  gap: $space-1;
-  @include text-caption;
-  color: var(--color-text-secondary);
-  font-weight: 500;
+  @include admin-field-label;
 }
 
 .input {
-  height: $control-height-md;
-  padding: 0 $space-3;
-  border: 1px solid var(--color-border);
-  border-radius: $radius-md;
-  font-size: $font-size-12;
-  background: var(--color-bg-card);
-  color: var(--color-text-primary);
-  box-sizing: border-box;
-
-  &:focus { outline: none; border-color: var(--color-brand); }
-}
-
-.uploadRow {
-  display: flex;
-  align-items: center;
-  gap: $space-3;
-}
-
-.uploadBtn {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: $control-height-md;
-  padding: 0 $space-4;
-  border: 1px solid var(--color-brand);
-  border-radius: $radius-md;
-  background: transparent;
-  color: var(--color-brand);
-  @include text-caption;
-  font-weight: 500;
-  cursor: pointer;
-  @include pressable;
-}
-
-.uploadInput {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  cursor: pointer;
+  @include admin-input;
 }
 
 .uploadPreview {
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 40px;
   object-fit: cover;
   border-radius: $radius-md;
   border: 1px solid var(--color-border);

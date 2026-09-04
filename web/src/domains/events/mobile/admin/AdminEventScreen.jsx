@@ -1,35 +1,38 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useSetTopBar } from "@/app/provider/TopBarProvider";
 import AdminToolbar from "@/global/ui/admin/toolbar/AdminToolbar.jsx";
 import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
 import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
 import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
+import AdminToggleSwitch from "@/global/ui/admin/toggle/AdminToggleSwitch.jsx";
+import AdminTag from "@/global/ui/admin/tag/AdminTag.jsx";
+import AdminSegmented from "@/global/ui/admin/fields/AdminSegmented.jsx";
+import AdminDateRange from "@/global/ui/admin/fields/AdminDateRange.jsx";
+import AdminFilePicker from "@/global/ui/admin/fields/AdminFilePicker.jsx";
 import useTableModal from "@/global/ui/admin/hooks/useTableModal.js";
+import "@/global/ui/admin/admin.tokens.scss";
 import {
   requestAdminGetAllEventList,
   requestAdminInsertNewExEvent,
   requestAdminUpdateExEvent,
+  requestAdminUpdateExEventVisible,
   requestAdminDeleteEvent,
   requestAdminUploadEventImage,
   EVENTS_ADMIN_PAGE_SIZE,
 } from "@/domains/events/store/admin/thunks.js";
 import styles from "./AdminEventScreen.module.scss";
 
-// DB site_events.event_type enum('OFFICIAL','INTERNAL') — 실데이터 기준. 다른 값 추가 금지.
-const EVENT_TYPES = [
-  { value: "OFFICIAL", label: "공식 이벤트" },
-  { value: "INTERNAL", label: "자체 이벤트" },
-];
-const EVENT_TYPE_LABELS = Object.fromEntries(EVENT_TYPES.map((t) => [t.value, t.label]));
+// DB site_events.event_type enum('OFFICIAL','INTERNAL'). 프로토타입(핸드오프)은 "출처는 공식
+// 고정(자체 이벤트 없음)" 이라 등록 폼에 출처 필드를 두지 않지만, 실제 데이터에 INTERNAL 레코드가
+// 1건 존재해(sql/V2/site/INSERT_SITE_EVENTS_DATA.sql id=15) 값 자체를 지우면 그 레코드가 깨진다.
+// 절충: 신규 등록은 항상 OFFICIAL 로 고정하고, 기존 레코드를 수정할 때는 원래 eventType 을 그대로
+// 보존한다(폼에 변경 UI 자체를 두지 않음). 리스트 태그는 실제 값 기준으로 공식/자체를 구분 표시한다.
+const EVENT_TYPE_LABELS = { OFFICIAL: "공식", INTERNAL: "자체" };
 
-const TYPE_FILTER_OPTIONS = [{ value: "all", label: "전체" }, ...EVENT_TYPES];
-const VISIBLE_FILTER_OPTIONS = [
-  { value: "all", label: "전체" },
-  { value: "visible", label: "노출" },
-  { value: "hidden", label: "숨김" },
+const IMAGE_SOURCE_OPTIONS = [
+  { value: "url", label: "URL 입력" },
+  { value: "upload", label: "파일 업로드" },
 ];
 
 const EMPTY_FORM = {
@@ -62,17 +65,58 @@ const extractUploadedUrl = (result) => {
   return null;
 };
 
+const todayStr = () => new Date().toISOString().slice(0, 10);
+
+// 프로토타입 § 4 이벤트 칩: 전체 · 진행중 · 종료 · 숨김.
+// "종료" 카운트 API 가 없어 클라이언트에서 expireAt 비교로 판정한다(쿠폰 만료 판정과 동일 패턴).
+const isEnded = (event) => {
+  const d = event.expireAt?.slice(0, 10);
+  return !!d && d < todayStr();
+};
+
+const CHIP_MATCH = {
+  all: () => true,
+  ongoing: (e) => e.visible && !isEnded(e),
+  ended: (e) => isEnded(e),
+  hidden: (e) => !e.visible,
+};
+
+const CHIP_OPTIONS = [
+  { value: "all", label: "전체" },
+  { value: "ongoing", label: "진행중" },
+  { value: "ended", label: "종료" },
+  { value: "hidden", label: "숨김" },
+];
+
+const formatPeriod = (startAt, expireAt) => {
+  const md = (d) => {
+    const s = d?.slice(0, 10);
+    if (!s) return "-";
+    const [, m, day] = s.split("-");
+    return `${m}.${day}`;
+  };
+  return `${md(startAt)} ~ ${md(expireAt)}`;
+};
+
+const fileNameOf = (url) => {
+  if (!url) return "";
+  try {
+    return decodeURIComponent(url.split("/").pop() ?? "");
+  } catch {
+    return url;
+  }
+};
+
+// 어드민 셸(AdminShellScreen)의 이벤트 탭 패널로 렌더된다 — 자체 TopBar 를 세팅하지 않는다.
+// 셸이 상단바(제목/로그아웃)를 한 번만 소유하고, 탭 전환은 뒤로가기가 아니라 탭 클릭으로 처리된다.
 export default function AdminEventScreen() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { events, loading, error, page, hasMore } = useSelector((s) => s.events);
 
-  useSetTopBar({ variant: "page", title: "이벤트 관리", onBack: () => navigate(-1) });
-
   const [search, setSearch] = useState("");
-  const [typeFilter, setTypeFilter] = useState("all");
-  const [visibleFilter, setVisibleFilter] = useState("all");
+  const [chip, setChip] = useState("all");
   const [form, setForm] = useState(EMPTY_FORM);
+  const [imageSource, setImageSource] = useState("url");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [loadingMore, setLoadingMore] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -98,24 +142,25 @@ export default function AdminEventScreen() {
     }
   };
 
-  const filtered = events.filter((e) => {
-    const matchSearch = e.title?.toLowerCase().includes(search.toLowerCase());
-    const matchType = typeFilter === "all" || e.eventType === typeFilter;
-    const matchVisible =
-      visibleFilter === "all" ||
-      (visibleFilter === "visible" && e.visible) ||
-      (visibleFilter === "hidden" && !e.visible);
-    return matchSearch && matchType && matchVisible;
-  });
+  const searched = events.filter((e) => e.title?.toLowerCase().includes(search.toLowerCase()));
+
+  const chipOptions = CHIP_OPTIONS.map((opt) => ({
+    ...opt,
+    count: searched.filter(CHIP_MATCH[opt.value]).length,
+  }));
+
+  const filtered = searched.filter(CHIP_MATCH[chip]);
 
   const handleOpenCreate = () => {
     setForm(EMPTY_FORM);
+    setImageSource("url");
     setUploadError(null);
     openCreate();
   };
 
   const handleOpenEdit = (event) => {
     setForm(formOf(event));
+    setImageSource("url");
     setUploadError(null);
     openEdit(event);
   };
@@ -132,11 +177,13 @@ export default function AdminEventScreen() {
     setDeleteTarget(null);
   };
 
-  const handleImageFileChange = async (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = ""; // 같은 파일 재선택 가능하게 초기화
-    if (!file) return;
+  // 리스트에서 즉시 저장(optimistic) — 전체 수정 API 가 아니라 전용 부분 변경
+  // 엔드포인트(PATCH /admin/events/{id}/visible → requestAdminUpdateExEventVisible)를 쓴다.
+  const handleToggleVisible = (event, nextVisible) => {
+    dispatch(requestAdminUpdateExEventVisible({ id: event.id, visible: nextVisible }));
+  };
 
+  const handleImageFileChange = async (file) => {
     setUploading(true);
     setUploadError(null);
     try {
@@ -167,25 +214,48 @@ export default function AdminEventScreen() {
   };
 
   const columns = [
-    { key: "title", label: "제목", align: "left" },
     {
-      key: "eventType",
-      label: "타입",
-      render: (e) => EVENT_TYPE_LABELS[e.eventType] ?? e.eventType,
+      key: "title",
+      label: "이벤트",
+      align: "left",
+      render: (e) => (
+        <div className={styles.mainCell}>
+          {e.imageUrl ? (
+            <img className={styles.thumb} src={e.imageUrl} alt="" />
+          ) : (
+            <div className={styles.thumbEmpty} />
+          )}
+          <div className={styles.mainCellText}>
+            <AdminTag variant={e.eventType === "OFFICIAL" ? "purple" : "neutral"}>
+              {EVENT_TYPE_LABELS[e.eventType] ?? e.eventType}
+            </AdminTag>
+            <span className={styles.title}>{e.title}</span>
+          </div>
+        </div>
+      ),
     },
     {
       key: "period",
       label: "기간",
-      render: (e) => `${e.startAt?.slice(0, 10) ?? "-"} ~ ${e.expireAt?.slice(0, 10) ?? "-"}`,
+      width: 96,
+      render: (e) => <span className={styles.period}>{formatPeriod(e.startAt, e.expireAt)}</span>,
     },
     {
       key: "visible",
-      label: "노출여부",
-      render: (e) => (e.visible ? "노출" : "숨김"),
+      label: "노출",
+      width: 44,
+      render: (e) => (
+        <AdminToggleSwitch
+          checked={e.visible}
+          onChange={(next) => handleToggleVisible(e, next)}
+          label={`${e.title} 노출 여부`}
+        />
+      ),
     },
     {
       key: "actions",
       label: "관리",
+      width: 96,
       render: (e) => (
         <div className={styles.actions}>
           <button
@@ -236,9 +306,8 @@ export default function AdminEventScreen() {
           expandedKey={expandedId}
           renderDetail={(e) => (
             <div className={styles.detail}>
-              {e.imageUrl && <img className={styles.detailImage} src={e.imageUrl} alt={e.title} />}
               <div className={styles.detailField}>
-                <span className={styles.detailLabel}>외부 링크</span>
+                <span className={styles.detailLabel}>상세 링크</span>
                 <span className={styles.detailValue}>{e.externalLink || "-"}</span>
               </div>
             </div>
@@ -261,10 +330,9 @@ export default function AdminEventScreen() {
         search={search}
         onSearchChange={setSearch}
         searchPlaceholder="이벤트 제목 검색"
-        filters={[
-          { key: "eventType", options: TYPE_FILTER_OPTIONS, value: typeFilter, onChange: setTypeFilter },
-          { key: "visible", options: VISIBLE_FILTER_OPTIONS, value: visibleFilter, onChange: setVisibleFilter },
-        ]}
+        filters={[{ key: "chip", options: chipOptions, value: chip, onChange: setChip }]}
+        totalCount={filtered.length}
+        totalLabel="개"
         onCreate={handleOpenCreate}
         createLabel="이벤트 등록"
       />
@@ -274,59 +342,60 @@ export default function AdminEventScreen() {
       <AdminModal open={isOpen} title={editTarget ? "이벤트 수정" : "이벤트 등록"} onClose={closeModal}>
         <form onSubmit={handleSubmit} className={styles.form}>
           <label className={styles.label}>
-            제목
+            이벤트명
             <input className={styles.input} name="title" value={form.title} onChange={handleFormChange} required />
           </label>
-          <label className={styles.label}>
-            이벤트 타입
-            <select className={styles.input} name="eventType" value={form.eventType} onChange={handleFormChange}>
-              {EVENT_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>{t.label}</option>
-              ))}
-            </select>
-          </label>
-          <label className={styles.label}>
-            시작일
-            <input className={styles.input} type="date" name="startAt" value={form.startAt} onChange={handleFormChange} required />
-          </label>
-          <label className={styles.label}>
-            종료일
-            <input className={styles.input} type="date" name="expireAt" value={form.expireAt} onChange={handleFormChange} required />
-          </label>
-          <label className={styles.label}>
-            이벤트 이미지
-            <div className={styles.uploadRow}>
-              <label className={styles.uploadBtn}>
-                {uploading ? "업로드 중..." : "이미지 선택"}
-                <input
-                  className={styles.uploadInput}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageFileChange}
-                  disabled={uploading}
-                />
-              </label>
-              {form.imageUrl && (
-                <img className={styles.uploadPreview} src={form.imageUrl} alt="이벤트 이미지 미리보기" />
-              )}
-            </div>
+
+          <div className={styles.label}>
+            이미지
+            <AdminSegmented options={IMAGE_SOURCE_OPTIONS} value={imageSource} onChange={setImageSource} name="imageSource" />
+            {imageSource === "url" ? (
+              <input
+                className={styles.input}
+                name="imageUrl"
+                value={form.imageUrl}
+                onChange={handleFormChange}
+                placeholder="https://..."
+                required
+              />
+            ) : (
+              <AdminFilePicker
+                fileName={fileNameOf(form.imageUrl)}
+                onFileSelect={handleImageFileChange}
+                disabled={uploading}
+              />
+            )}
             {uploadError && <p className={styles.uploadError}>{uploadError}</p>}
-            <input
-              className={styles.input}
-              name="imageUrl"
-              value={form.imageUrl}
-              onChange={handleFormChange}
-              placeholder="업로드하거나 이미지 URL 을 직접 입력하세요"
-            />
-          </label>
+            {imageSource === "upload" && form.imageUrl && (
+              <img className={styles.uploadPreview} src={form.imageUrl} alt="이벤트 이미지 미리보기" />
+            )}
+          </div>
+
           <label className={styles.label}>
-            외부 링크
+            상세 링크
             <input className={styles.input} name="externalLink" value={form.externalLink} onChange={handleFormChange} placeholder="https://..." />
           </label>
-          <label className={styles.checkLabel}>
-            <input type="checkbox" name="visible" checked={form.visible} onChange={handleFormChange} />
-            노출 여부
-          </label>
+
+          <div className={styles.label}>
+            기간
+            <AdminDateRange
+              start={form.startAt}
+              end={form.expireAt}
+              onStartChange={(v) => setForm((prev) => ({ ...prev, startAt: v }))}
+              onEndChange={(v) => setForm((prev) => ({ ...prev, expireAt: v }))}
+              name="period"
+            />
+          </div>
+
+          <div className={styles.toggleRow}>
+            <span>노출 여부</span>
+            <AdminToggleSwitch
+              checked={form.visible}
+              onChange={(next) => setForm((prev) => ({ ...prev, visible: next }))}
+              label="노출 여부"
+            />
+          </div>
+
           <div className={styles.formActions}>
             <button type="button" className={styles.cancelBtn} onClick={closeModal}>취소</button>
             <button type="submit" className={styles.submitBtn}>{editTarget ? "수정" : "등록"}</button>

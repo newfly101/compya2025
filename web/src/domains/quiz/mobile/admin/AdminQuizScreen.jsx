@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useSetTopBar } from "@/app/provider/TopBarProvider";
 import AdminToolbar from "@/global/ui/admin/toolbar/AdminToolbar.jsx";
 import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
 import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
 import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
+import AdminSegmented from "@/global/ui/admin/fields/AdminSegmented.jsx";
+import AdminFilePicker from "@/global/ui/admin/fields/AdminFilePicker.jsx";
 import useTableModal from "@/global/ui/admin/hooks/useTableModal.js";
+import "@/global/ui/admin/admin.tokens.scss";
 import {
   requestAdminQuizAll,
   requestAdminQuizCreate,
@@ -18,6 +19,7 @@ import {
 import styles from "./AdminQuizScreen.module.scss";
 
 // title 은 서버가 round 로 자동 합성한다(DB 저장값 아님) — 폼에 입력칸을 두지 않는다.
+// 회차 자동 부여 기능은 서버(QuizRequest)에 없다 — 항상 직접 입력만 받는다.
 const EMPTY_FORM = {
   round: "",
   imageUrl: "",
@@ -38,15 +40,48 @@ const formOf = (quiz) => ({
   imageUrl: quiz.imageUrl ?? "",
 });
 
+// 표시용 — 이미지 URL 마지막 경로 세그먼트를 파일명처럼 보여준다.
+const fileNameOf = (url) => {
+  if (!url) return null;
+  try {
+    const clean = url.split("?")[0];
+    const seg = clean.substring(clean.lastIndexOf("/") + 1);
+    return decodeURIComponent(seg) || null;
+  } catch {
+    return null;
+  }
+};
+
+// 프로토타입 § 4 퀴즈 칩은 노출 기준(전체/노출/비노출)이지만 fun_quiz 에 visible 컬럼이 없어 쓸 수 없다.
+// 대신 관리자가 이미지 미등록 회차를 찾기 쉽도록 이미지 유무를 기준으로 삼는다.
+const CHIP_MATCH = {
+  all: () => true,
+  withImage: (q) => !!q.imageUrl,
+  withoutImage: (q) => !q.imageUrl,
+};
+
+const CHIP_OPTIONS = [
+  { value: "all", label: "전체" },
+  { value: "withImage", label: "이미지 있음" },
+  { value: "withoutImage", label: "이미지 없음" },
+];
+
+const IMAGE_MODE_OPTIONS = [
+  { value: "url", label: "URL 입력" },
+  { value: "file", label: "파일 업로드" },
+];
+
+// 셸(AdminShellScreen)의 퀴즈 탭 패널로 렌더된다 — 자체 TopBar 를 세팅하지 않는다.
+// 셸이 상단바(제목/로그아웃)를 한 번만 소유하고, 탭 전환은 뒤로가기가 아니라 탭 클릭으로 처리된다.
 export default function AdminQuizScreen() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { quizAnswers, loading, error } = useSelector((s) => s.quiz);
 
-  useSetTopBar({ variant: "page", title: "퀴즈 관리", onBack: () => navigate(-1) });
-
   const [search, setSearch] = useState("");
+  const [chip, setChip] = useState("all");
+  const [sortAsc, setSortAsc] = useState(false); // 기본: 회차 내림차순
   const [form, setForm] = useState(EMPTY_FORM);
+  const [imageMode, setImageMode] = useState("url");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
@@ -57,16 +92,27 @@ export default function AdminQuizScreen() {
     dispatch(requestAdminQuizAll());
   }, [dispatch]);
 
-  const filtered = quizAnswers.filter((q) => String(q.round ?? "").includes(search.trim()));
+  const searched = quizAnswers.filter((q) => String(q.round ?? "").includes(search.trim()));
+
+  const chipOptions = CHIP_OPTIONS.map((opt) => ({
+    ...opt,
+    count: searched.filter(CHIP_MATCH[opt.value]).length,
+  }));
+
+  const filtered = [...searched.filter(CHIP_MATCH[chip])].sort((a, b) =>
+    sortAsc ? (a.round ?? 0) - (b.round ?? 0) : (b.round ?? 0) - (a.round ?? 0),
+  );
 
   const handleOpenCreate = () => {
     setForm(EMPTY_FORM);
+    setImageMode("url");
     setUploadError(null);
     openCreate();
   };
 
   const handleOpenEdit = (quiz) => {
     setForm(formOf(quiz));
+    setImageMode("url");
     setUploadError(null);
     openEdit(quiz);
   };
@@ -83,11 +129,7 @@ export default function AdminQuizScreen() {
     setDeleteTarget(null);
   };
 
-  const handleImageFileChange = async (e) => {
-    const file = e.target.files?.[0];
-    e.target.value = ""; // 같은 파일 재선택 가능하게 초기화
-    if (!file) return;
-
+  const handleImageFileSelect = async (file) => {
     setUploading(true);
     setUploadError(null);
     try {
@@ -119,24 +161,27 @@ export default function AdminQuizScreen() {
   };
 
   const columns = [
-    { key: "round", label: "회차", width: 56 },
-    { key: "title", label: "제목", align: "left", width: 180 },
+    {
+      key: "round",
+      label: "회차",
+      align: "left",
+      render: (q) => (
+        <div className={styles.mainCell}>
+          <span className={styles.round}>{q.round}회</span>
+          <span className={styles.fileName}>{fileNameOf(q.imageUrl) ?? "이미지 없음"}</span>
+        </div>
+      ),
+    },
     {
       key: "imageUrl",
-      label: "정답 이미지",
-      width: 90,
+      label: "이미지",
+      width: 76,
       render: (q) =>
         q.imageUrl ? (
           <img className={styles.thumbnail} src={q.imageUrl} alt={`${q.round}회 정답 이미지`} />
         ) : (
-          "-"
+          <div className={styles.thumbnailEmpty}>없음</div>
         ),
-    },
-    {
-      key: "updatedAt",
-      label: "수정일",
-      width: 100,
-      render: (q) => q.updatedAt?.slice(0, 16) ?? q.createdAt?.slice(0, 16) ?? "-",
     },
     {
       key: "actions",
@@ -175,6 +220,18 @@ export default function AdminQuizScreen() {
         search={search}
         onSearchChange={setSearch}
         searchPlaceholder="회차 검색"
+        filters={[
+          {
+            key: "chip",
+            options: chipOptions,
+            value: chip,
+            onChange: setChip,
+          },
+        ]}
+        totalCount={filtered.length}
+        totalLabel="개"
+        sortLabel={sortAsc ? "회차 오름차순" : "회차 내림차순"}
+        onToggleSort={() => setSortAsc((prev) => !prev)}
         onCreate={handleOpenCreate}
         createLabel="퀴즈 등록"
       />
@@ -207,32 +264,37 @@ export default function AdminQuizScreen() {
               required
             />
           </label>
-          <label className={styles.label}>
-            정답 이미지
-            <div className={styles.uploadRow}>
-              <label className={styles.uploadBtn}>
-                {uploading ? "업로드 중..." : "이미지 선택"}
-                <input
-                  className={styles.uploadInput}
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageFileChange}
-                  disabled={uploading}
-                />
-              </label>
-              {form.imageUrl && (
-                <img className={styles.uploadPreview} src={form.imageUrl} alt="정답 이미지 미리보기" />
-              )}
-            </div>
-            {uploadError && <p className={styles.uploadError}>{uploadError}</p>}
-            <input
-              className={styles.input}
-              name="imageUrl"
-              value={form.imageUrl}
-              onChange={handleFormChange}
-              placeholder="업로드하거나 이미지 URL 을 직접 입력하세요"
+
+          <div className={styles.label}>
+            퀴즈 이미지
+            <AdminSegmented
+              name="imageMode"
+              options={IMAGE_MODE_OPTIONS}
+              value={imageMode}
+              onChange={setImageMode}
             />
-          </label>
+            {imageMode === "url" ? (
+              <input
+                className={styles.input}
+                name="imageUrl"
+                value={form.imageUrl}
+                onChange={handleFormChange}
+                placeholder="이미지 URL 을 입력하세요"
+              />
+            ) : (
+              <AdminFilePicker
+                fileName={fileNameOf(form.imageUrl)}
+                onFileSelect={handleImageFileSelect}
+                disabled={uploading}
+                placeholder={uploading ? "업로드 중..." : "선택된 파일 없음"}
+              />
+            )}
+            {form.imageUrl && (
+              <img className={styles.uploadPreview} src={form.imageUrl} alt="정답 이미지 미리보기" />
+            )}
+            {uploadError && <p className={styles.uploadError}>{uploadError}</p>}
+          </div>
+
           <div className={styles.formActions}>
             <button type="button" className={styles.cancelBtn} onClick={closeModal}>취소</button>
             <button type="submit" className={styles.submitBtn}>{editTarget ? "수정" : "등록"}</button>
