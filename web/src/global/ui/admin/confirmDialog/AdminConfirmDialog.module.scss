@@ -30,19 +30,22 @@
   cursor: pointer;
 }
 
+// 채운 버튼 대신 테두리 + 옅은 배경 — 삭제(dangerous)도 색으로만 구분하고 채우지 않는다.
 .confirmBtn {
   flex: 1;
   height: $control-height-md;
-  border: none;
+  border: 1px solid var(--color-brand-dark);
   border-radius: $radius-md;
-  background: var(--color-brand);
-  color: #fff;
+  background: var(--color-brand-alpha-15);
+  color: var(--color-brand);
   @include text-body-bold;
   cursor: pointer;
   @include pressable;
 
   &.dangerous {
-    background: var(--color-danger);
+    border-color: var(--color-danger);
+    background: var(--color-danger-dim);
+    color: var(--color-danger);
   }
 
   &:disabled {
