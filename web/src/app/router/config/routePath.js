@@ -45,4 +45,6 @@ export const ROUTE_PATHS = {
   admin_notice_write: "/admin/notice/write",
   admin_notice_write_edit_pattern: "/admin/notice/write/:id",
   admin_notice_write_edit: (id) => `/admin/notice/write/${id}`,
+  // 마일리지 저격 경로 — 구단×연도 표는 쿼리스트링(?team=&year=)으로 처리
+  mileage: "/mileage",
 }

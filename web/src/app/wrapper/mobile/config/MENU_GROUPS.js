@@ -15,6 +15,8 @@ export const MENU_GROUPS = [
         tag: { variant: 'new' } },
       { icon: '🎯', label: '히스토리 재료',   to: '/history-mode/legend',
         tag: { variant: 'new' } },
+      { icon: '🧭', label: '마일리지 저격',   to: '/mileage',
+        tag: { variant: 'beta' } },
       { icon: '🎮', label: '스킬 시뮬레이터', to: '/skill', comingSoon: true,
         tag: { variant: 'neutral', label: '공사중' } },
       { icon: '⚾', label: '선수 백과사전',   to: '/players', loginRequired: true },

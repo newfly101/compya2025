@@ -21,6 +21,7 @@ const AboutPage = lazy(() => import("@/domains/policy/mobile/AboutScreen.jsx"));
 // 커뮤니티 — 2026-08-31 읽기 전용 재오픈 (글쓰기/댓글/좋아요는 서버 인증 정비 후). noindex 처리는
 // infra/seo/routeSeo.js 의 NOINDEX_PATHS 참조.
 const CommunityPage = lazy(() => import("@/domains/community/mobile/CommunityScreen.jsx"));
+const MileagePage = lazy(() => import("@/domains/mileage/mobile/MileageScreen.jsx"));
 
 export const PublicRoutes = [
   { index: true, element: <HomePage />, handle: ROUTE_META.HOME },
@@ -44,4 +45,5 @@ export const PublicRoutes = [
   { path: ROUTE_META.CONTACT.path, element: <ContactPage />, handle: ROUTE_META.CONTACT },
   { path: ROUTE_META.ABOUT.path, element: <AboutPage />, handle: ROUTE_META.ABOUT },
   { path: ROUTE_META.COMMUNITY.path, element: <CommunityPage />, handle: ROUTE_META.COMMUNITY },
+  { path: ROUTE_META.MILEAGE.path, element: <MileagePage />, handle: ROUTE_META.MILEAGE },
 ];

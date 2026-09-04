@@ -1,0 +1,571 @@
+// 핸드오프 mileage-sniper.html 스타일 이식 — design-spec-v2(새 시안) 반영.
+// 색은 변수로만 쓴다 (공통 토큰 우선, 대체 불가한 것만 --color-mileage-*).
+// 상단 바는 글로벌 MobileLayout TopBar 를 쓴다 — 자체 <header> 없음.
+// 다크 전용 — 이 프로젝트는 애초에 라이트/다크 분기 자체가 없다(전역 토큰이 단일 팔레트).
+
+.screen {
+  min-height: 100%;
+  padding: $space-5 $space-4 $space-8;
+  background: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+  font-size: 14px;
+  line-height: 1.45;
+  font-variant-numeric: tabular-nums;
+}
+
+.lead {
+  margin: 0 0 $space-5;
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+  max-width: 60ch;
+}
+
+/* ── 도움말 아코디언 ──────────────────────────────────────── */
+
+.note {
+  margin: 0 0 $space-5;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  background: var(--color-bg-card);
+
+  summary {
+    display: flex;
+    align-items: center;
+    gap: $space-2;
+    padding: 13px 16px;
+    list-style: none;
+    color: var(--color-text-muted);
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &::before {
+      content: "";
+      flex: none;
+      width: 6px;
+      height: 6px;
+      margin-left: 2px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: rotate(-45deg);
+      transition: transform 0.15s ease;
+    }
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+  }
+
+  &[open] summary::before {
+    transform: rotate(45deg);
+  }
+}
+
+.noteBody {
+  padding: 12px 14px 14px;
+  border-top: 1px solid var(--color-border-strong);
+  color: var(--color-text-muted);
+  font-size: 12px;
+  line-height: 1.65;
+
+  b {
+    color: var(--color-text-primary);
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 2;
+  }
+
+  p {
+    margin: 0 0 11px;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+}
+
+/* ── 설정 (목표/지금) ─────────────────────────────────────── */
+
+.setup {
+  padding: $space-4;
+  margin-bottom: $space-5;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  background: var(--color-bg-card);
+}
+
+.setupRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: $space-2;
+
+  & + & {
+    margin-top: $space-3;
+    padding-top: $space-3;
+    border-top: 1px dashed var(--color-border-strong);
+  }
+}
+
+.fld {
+  display: flex;
+  flex: 1 1 110px;
+  flex-direction: column;
+  min-width: 100px;
+  gap: 5px;
+
+  span {
+    color: var(--color-text-muted);
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  select {
+    width: 100%;
+    padding: 9px 28px 9px 11px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 10px;
+    appearance: none;
+    background:
+      linear-gradient(45deg, transparent 50%, var(--color-text-muted) 50%),
+      linear-gradient(135deg, var(--color-text-muted) 50%, transparent 50%),
+      var(--color-bg-deepest);
+    background-position:
+      calc(100% - 15px) 50%,
+      calc(100% - 10px) 50%;
+    background-repeat: no-repeat;
+    background-size: 5px 5px, 5px 5px;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brand-dark);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.tag {
+  padding: 1px 5px;
+  margin-left: 5px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 5px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 600;
+}
+
+.mini {
+  flex: 0 0 auto;
+  padding: 9px 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  background: var(--color-bg-card);
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand-dark);
+    outline-offset: 2px;
+  }
+}
+
+/* ── 전광판 ───────────────────────────────────────────────── */
+/* 새 시안은 카드를 단일 톤(#191621 ≈ --color-bg-card)으로 통일한다 —
+   기존 3단 톤(deepest/deep/card) 스코어보드 스큐어모피즘은 폐기. */
+
+.board {
+  overflow: hidden;
+  margin-bottom: $space-4;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  background: var(--color-bg-card);
+}
+
+.boardTop {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-bg-deep);
+
+  b {
+    color: var(--color-text-primary);
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  i {
+    flex: 1;
+    color: var(--color-text-muted);
+    font-size: 11.5px;
+    font-style: normal;
+  }
+}
+
+.boardSub {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chipClose {
+  flex: none;
+  padding: 4px 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-bg-card);
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
+
+/* 히어로 — 다음 한 수 */
+
+.hero {
+  position: relative;
+  padding: 26px 20px 22px;
+  text-align: center;
+
+  .glyph {
+    color: var(--color-mileage-accent-text);
+    font-size: 44px;
+    line-height: 1;
+    text-shadow: 0 0 22px var(--color-mileage-glow);
+  }
+
+  .verb {
+    margin: 12px 0 4px;
+    color: var(--color-text-primary);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .why {
+    max-width: 34ch;
+    margin: 0 auto;
+    color: var(--color-text-muted);
+    font-size: 12.5px;
+  }
+}
+
+.heroDone {
+  .glyph {
+    color: var(--color-mileage-current);
+    text-shadow: 0 0 22px var(--color-mileage-glow-done);
+  }
+
+  .verb {
+    color: var(--color-mileage-current);
+  }
+}
+
+/* 뽑기 결과 고르는 순서 */
+
+.picks {
+  padding: 12px 14px 15px;
+  border-top: 1px solid var(--color-border-strong);
+
+  h3 {
+    margin: 0 0 9px;
+    color: var(--color-text-muted);
+    font-size: 11.5px;
+    font-weight: 500;
+
+    b {
+      color: var(--color-text-primary);
+      font-weight: 600;
+    }
+  }
+}
+
+.pkrow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.pk {
+  padding: 6px 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-bg-card);
+  color: var(--color-text-muted);
+  font-size: 12.5px;
+  white-space: nowrap;
+
+  i {
+    margin-right: 5px;
+    font-size: 10.5px;
+    font-style: normal;
+    opacity: 0.6;
+  }
+}
+
+// 1등 추천(목표 불일치) — 액센트 보라 틴트
+.best {
+  border-color: var(--color-brand-dark);
+  background: var(--color-mileage-accent-bg);
+  color: var(--color-mileage-chip-on-text);
+  font-weight: 600;
+}
+
+// 목표와 일치하는 칸 — 호박색
+.win {
+  border-color: var(--color-mileage-goal);
+  background: var(--color-mileage-goal);
+  color: var(--color-mileage-goal-text);
+  font-weight: 600;
+}
+
+/* ── 버튼 ─────────────────────────────────────────────────── */
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.actions button {
+  padding: 11px 0;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 10px;
+  background: var(--color-bg-card);
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s ease;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand-dark);
+    outline-offset: 2px;
+  }
+}
+
+.primary {
+  border-color: var(--color-brand-dark) !important;
+  background: var(--color-mileage-accent-bg) !important;
+  color: var(--color-mileage-chip-on-text) !important;
+  font-weight: 600;
+
+  &:hover {
+    background: var(--color-mileage-accent-bg-hover) !important;
+  }
+}
+
+/* ── 구단 × 연도 표 ───────────────────────────────────────── */
+/* 표는 시맨틱 <table> 유지(시안의 flex div 는 목업 툴 한계) — 아래 세 함정 대응은
+   design-spec-v2 §9 에서도 그대로 유효하다고 확인됨:
+   writing-mode:vertical-rl + text-orientation:upright,
+   letter-spacing 음수 금지(0 고정), 행 높이 11~22px clamp(계산은 hooks 쪽 담당). */
+
+.gridScroll {
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.ycol {
+  width: 30px;
+}
+
+.table th,
+.table td {
+  padding: 0;
+  text-align: center;
+}
+
+// 구단명은 세로쓰기. 높이를 고정하지 않고 가장 긴 이름에 맞춰 늘어나게 둔다.
+// 글자가 위아래로 쌓이므로 letter-spacing 을 음수로 주면 세로쓰기에서 잘린다 — 0 으로 둘 것.
+.table thead th {
+  height: auto;
+  padding: 8px 0 7px;
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-bg-deep);
+  color: var(--color-text-muted);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0;
+  vertical-align: bottom;
+
+  &:first-child {
+    padding: 0;
+    writing-mode: horizontal-tb;
+  }
+}
+
+.yearHead {
+  height: var(--rh);
+  border-right: 1px solid var(--color-border-strong);
+  background: var(--color-bg-deep);
+  color: var(--color-text-muted);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.td {
+  position: relative;
+  height: var(--rh);
+  overflow: hidden;
+  border-right: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 10px;
+  line-height: 1;
+  cursor: default;
+}
+
+// 클릭 가능한 칸(void 아님) — 셀 자체는 11~22px 로 작게 유지하되(clamp 규칙 유지),
+// 히트 영역만 ::after 로 살짝 넓혀 모바일 탭 정확도를 보완한다(시각 레이아웃엔 영향 없음).
+.tappable {
+  cursor: pointer;
+  touch-action: manipulation;
+
+  &::after {
+    position: absolute;
+    inset: -3px;
+    z-index: 1;
+    content: "";
+  }
+}
+
+.void {
+  background: repeating-linear-gradient(
+    135deg,
+    transparent 0 3px,
+    var(--color-border) 3px 6px
+  );
+}
+
+.team,
+.year {
+  color: var(--color-mileage-accent-text);
+}
+
+.goal {
+  background: var(--color-mileage-goal);
+  color: var(--color-mileage-goal-text);
+  font-weight: 700;
+}
+
+.here {
+  box-shadow: inset 0 0 0 2px var(--color-mileage-current);
+}
+
+// 표 위 토글 컨트롤 — 히트맵 on/off · 격자 글리프 화살표/글자
+.tableControls {
+  display: flex;
+  gap: $space-2;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-bg-deep);
+}
+
+.toggleBtn {
+  padding: 5px 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-bg-card);
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand-dark);
+    outline-offset: 2px;
+  }
+}
+
+.toggleOn {
+  border-color: var(--color-brand-dark);
+  background: var(--color-mileage-accent-bg);
+  color: var(--color-mileage-chip-on-text);
+  font-weight: 600;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 11px;
+  padding: 8px 14px;
+  border-top: 1px solid var(--color-border-strong);
+  background: var(--color-bg-deep);
+  color: var(--color-text-muted);
+  font-size: 10.5px;
+  line-height: 1.5;
+
+  i {
+    margin-right: 3px;
+    color: var(--color-mileage-accent-text);
+    font-style: normal;
+  }
+}
+
+.legendGoal {
+  color: var(--color-mileage-goal) !important;
+}
+
+.legendHere {
+  color: var(--color-mileage-current) !important;
+}
+
+// 표 아래 안내문 — design-spec-v2 §7 신규 카피
+.caption {
+  margin: 10px 0 0;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  line-height: 1.6;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

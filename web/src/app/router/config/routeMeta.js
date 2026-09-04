@@ -41,4 +41,5 @@ export const ROUTE_META = {
     path: ROUTE_PATHS.admin_notice_write_edit_pattern,
     title: "컴프야펀 | 어드민 | 공지 글쓰기",
   },
+  MILEAGE: { path: ROUTE_PATHS.mileage, title: "컴프야펀 | 마일리지 저격 경로" },
 };
