@@ -1,0 +1,152 @@
+.page {
+  @include page-layout;
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+/* 표 안 정답 이미지 썸네일 */
+.thumbnail {
+  width: 32px;
+  height: 32px;
+  object-fit: cover;
+  border-radius: $radius-sm;
+  border: 1px solid var(--color-border);
+}
+
+/* 표 안 관리 버튼 */
+.actions {
+  display: flex;
+  gap: $space-2;
+  justify-content: center;
+}
+
+.editBtn {
+  height: $control-height-sm;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-brand);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-brand);
+  @include text-caption;
+  font-weight: 500;
+  cursor: pointer;
+  @include pressable;
+}
+
+.deleteBtn {
+  height: $control-height-sm;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-danger);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-danger);
+  @include text-caption;
+  font-weight: 500;
+  cursor: pointer;
+  @include pressable;
+}
+
+/* 등록/수정 폼 (AdminModal children) */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  @include text-caption;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.input {
+  height: $control-height-md;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  font-size: $font-size-12;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  box-sizing: border-box;
+
+  &:focus { outline: none; border-color: var(--color-brand); }
+}
+
+.uploadRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.uploadBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: $control-height-md;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-brand);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-brand);
+  @include text-caption;
+  font-weight: 500;
+  cursor: pointer;
+  @include pressable;
+}
+
+.uploadInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.uploadPreview {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: $radius-md;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.uploadError {
+  @include text-caption;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.formActions {
+  display: flex;
+  gap: $space-2;
+  margin-top: $space-2;
+}
+
+.cancelBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  @include text-body;
+  cursor: pointer;
+}
+
+.submitBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: none;
+  border-radius: $radius-md;
+  background: var(--color-brand);
+  color: #fff;
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+}

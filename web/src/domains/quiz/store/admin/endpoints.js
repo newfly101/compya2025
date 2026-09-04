@@ -10,5 +10,5 @@ export const ADMIN_QUIZ_ACTIONS = {
   GET_ALL: "GET/admin/quiz",
   CREATE:  "POST/admin/quiz",
   UPDATE:  "PATCH/admin/quiz/update",
-  DELETE:  "DELETE/admin/quiz",
+  DELETE:  "DELETE/admin/quiz/delete",
 };

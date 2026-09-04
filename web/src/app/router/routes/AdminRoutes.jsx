@@ -7,6 +7,7 @@ const AdminCouponPage = lazy(() => import("@/domains/coupons/mobile/admin/AdminC
 const AdminEventPage = lazy(() => import("@/domains/events/mobile/admin/AdminEventScreen.jsx"));
 const AdminNoticePage = lazy(() => import("@/domains/notices/mobile/admin/AdminNoticeScreen.jsx"));
 const AdminUserPage = lazy(() => import("@/domains/users/mobile/admin/AdminUserScreen.jsx"));
+const AdminQuizPage = lazy(() => import("@/domains/quiz/mobile/admin/AdminQuizScreen.jsx"));
 
 export const AdminRoutes = [
   {
@@ -19,6 +20,7 @@ export const AdminRoutes = [
           { path: "event", element: <AdminEventPage />, handle: ROUTE_META.ADMIN_EVENT },
           { path: "notice", element: <AdminNoticePage />, handle: ROUTE_META.ADMIN_NOTICE },
           { path: "user", element: <AdminUserPage />, handle: ROUTE_META.ADMIN_USER },
+          { path: "quiz", element: <AdminQuizPage />, handle: ROUTE_META.ADMIN_QUIZ },
         ],
       },
     ],

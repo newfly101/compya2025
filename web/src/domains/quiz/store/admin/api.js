@@ -16,3 +16,8 @@ export const fetchAdminQuizUpdate = async (id, body) => {
   const { data } = await API.patch(ADMIN_QUIZ.UPDATE(id), body);
   return data.data;
 };
+
+export const fetchAdminQuizDelete = async (id) => {
+  const { data } = await API.delete(ADMIN_QUIZ.DELETE(id));
+  return data.data;
+};

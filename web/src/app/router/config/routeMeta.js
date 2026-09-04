@@ -35,4 +35,5 @@ export const ROUTE_META = {
   ADMIN_EVENT: { path: ROUTE_PATHS.admin_event, title: "컴프야펀 | 어드민 | 이벤트 관리", variant: "page" },
   ADMIN_NOTICE: { path: ROUTE_PATHS.admin_notice, title: "컴프야펀 | 어드민 | 공지 관리", variant: "page" },
   ADMIN_USER: { path: ROUTE_PATHS.admin_user, title: "컴프야펀 | 어드민 | 유저 관리", variant: "page" },
+  ADMIN_QUIZ: { path: ROUTE_PATHS.admin_quiz, title: "컴프야펀 | 어드민 | 퀴즈 관리", variant: "page" },
 };

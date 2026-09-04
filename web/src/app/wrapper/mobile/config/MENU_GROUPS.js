@@ -40,6 +40,7 @@ export const ADMIN_MENU_GROUPS = [
       { icon: '🎪', label: '이벤트 관리',   to: '/admin/event' },
       { icon: '📢', label: '공지 관리',     to: '/admin/notice' },
       { icon: '👥', label: '유저 관리',     to: '/admin/user' },
+      { icon: '❓', label: '퀴즈 관리',     to: '/admin/quiz' },
     ]
   },
 ]

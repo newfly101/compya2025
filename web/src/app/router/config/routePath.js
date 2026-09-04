@@ -42,4 +42,5 @@ export const ROUTE_PATHS = {
   admin_event: "/admin/event",
   admin_notice: "/admin/notice",
   admin_user: "/admin/user",
+  admin_quiz: "/admin/quiz",
 }
