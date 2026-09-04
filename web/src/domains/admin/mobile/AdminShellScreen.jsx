@@ -11,6 +11,7 @@ import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar.js";
 import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { ADMIN_TABS } from "@/domains/admin/mobile/ADMIN_TABS.js";
+import { useAdminCounts } from "@/domains/admin/mobile/hooks/useAdminCounts.js";
 import AdminHomeTab from "@/domains/admin/mobile/components/adminHomeTab/AdminHomeTab.jsx";
 import AdminCouponScreen from "@/domains/coupons/mobile/admin/AdminCouponScreen.jsx";
 import AdminQuizScreen from "@/domains/quiz/mobile/admin/AdminQuizScreen.jsx";
@@ -26,6 +27,8 @@ export default function AdminShellScreen() {
   const navigate = useNavigate();
   const { tab: tabParam } = useParams();
   const { logout } = useAuthentication();
+  // 홈이든 다른 탭이든 셸이 살아있는 동안 한 번만 5개 목록을 불러와 탭 배지 건수로 쓴다.
+  const { counts, domains } = useAdminCounts();
 
   // 모르는 탭 키(오타/구주소)는 조용히 홈으로 흡수 — 빈 화면 대신 항상 뭔가는 보여준다.
   const activeTab = TAB_KEYS.includes(tabParam) ? tabParam : "home";
@@ -52,21 +55,29 @@ export default function AdminShellScreen() {
   return (
     <div className={styles.page}>
       <nav className={styles.tabBar} aria-label="어드민 탭">
-        {ADMIN_TABS.map((t) => (
-          <button
-            key={t.key}
-            type="button"
-            className={`${styles.tabItem} ${activeTab === t.key ? styles.active : ""}`}
-            aria-current={activeTab === t.key ? "page" : undefined}
-            onClick={() => handleTabClick(t.key)}
-          >
-            {t.label}
-          </button>
-        ))}
+        {ADMIN_TABS.map((t) => {
+          // 홈 탭은 배지가 없다. 건수를 아직 못 구했으면(null) 숫자 대신 배지를 아예 숨긴다 —
+          // 탭 바는 자리가 좁아 "–" 같은 placeholder 를 넣으면 오히려 지저분해진다.
+          const count = t.key === "home" ? null : counts[t.key];
+          return (
+            <button
+              key={t.key}
+              type="button"
+              className={`${styles.tabItem} ${activeTab === t.key ? styles.active : ""}`}
+              aria-current={activeTab === t.key ? "page" : undefined}
+              onClick={() => handleTabClick(t.key)}
+            >
+              {t.label}
+              {count != null && <span className={styles.tabBadge}>{count}</span>}
+            </button>
+          );
+        })}
       </nav>
 
       <div className={styles.content}>
-        {activeTab === "home" && <AdminHomeTab onNavigateTab={handleTabClick} />}
+        {activeTab === "home" && (
+          <AdminHomeTab onNavigateTab={handleTabClick} counts={counts} domains={domains} />
+        )}
         {activeTab === "quiz" && <AdminQuizScreen />}
         {activeTab === "event" && <AdminEventScreen />}
         {activeTab === "coupon" && <AdminCouponScreen />}

@@ -30,8 +30,19 @@
 
   &.active {
     font-weight: 700;
-    color: var(--color-brand-dark);
-    border-bottom-color: var(--color-brand-dark);
+    color: var(--color-admin-accent-active-text);
+    border-bottom-color: var(--color-admin-accent-line);
+  }
+}
+
+// 탭 이름 옆 건수 배지 — 홈 탭엔 없고, 건수를 못 구한 동안(null)엔 렌더 자체를 생략한다.
+.tabBadge {
+  @include font-size-rem(10);
+  margin-left: $space-1;
+  color: var(--color-text-muted);
+
+  .active & {
+    color: var(--color-admin-accent);
   }
 }
 

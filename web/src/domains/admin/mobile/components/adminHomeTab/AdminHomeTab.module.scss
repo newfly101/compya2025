@@ -7,35 +7,27 @@
 
 .titleBlock {
   display: flex;
-  align-items: flex-start;
+  align-items: baseline;
+  justify-content: space-between;
   gap: $space-3;
 }
 
-.titleBar {
-  flex: 0 0 auto;
-  width: 3px;
-  height: 18px;
-  margin-top: 4px;
-  border-radius: $radius-xs;
-  background: var(--color-brand-dark);
-}
-
 .title {
-  @include text-section-title;
-  font-weight: 800;
-  color: var(--color-text-primary);
+  @include text-caption;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .subtitle {
-  margin-top: $space-1;
   @include text-caption;
   color: var(--color-text-muted);
 }
 
+// 480px 에서 카드 5개가 한 줄에 들어간다 — 가로 스크롤 없이 repeat(5, 1fr) 로 균등 분배.
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: $space-3;
+  grid-template-columns: repeat(5, 1fr);
+  gap: $space-2;
 }
 
 .card {
@@ -43,12 +35,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $space-1;
-  padding: $space-5 $space-2 $space-4;
+  gap: 6px;
+  padding: $space-3 $space-1 $space-3;
   border: 1px solid var(--color-border-strong);
-  border-radius: $radius-2xl;
+  border-radius: $radius-xl;
   background: var(--color-bg-card);
   cursor: pointer;
+  text-align: center;
   @include pressable;
 
   &:hover {
@@ -58,33 +51,22 @@
 }
 
 .cardCount {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: $radius-2xl;
-  background: var(--color-admin-tag-neutral-bg);
-  color: var(--color-admin-tag-purple-text);
-  font-size: 18px;
-  font-weight: 800;
+  @include font-size-rem(18);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--color-admin-accent);
 }
 
 .cardLabel {
-  @include text-body-bold;
-  color: var(--color-text-primary);
-}
-
-.cardDesc {
   @include text-caption;
-  color: var(--color-text-muted);
-  text-align: center;
+  font-weight: 500;
+  color: var(--color-text-primary);
 }
 
 .summaryCard {
   padding: $space-4 $space-5;
   border: 1px solid var(--color-border-strong);
-  border-radius: $radius-2xl;
+  border-radius: $radius-xl;
   background: var(--color-bg-card);
 }
 
