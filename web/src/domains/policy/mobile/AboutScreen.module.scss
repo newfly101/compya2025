@@ -41,8 +41,13 @@
 }
 
 .featureItem {
-  @include flex-col($space-1);
   @include card-base;
+}
+
+.featureLink {
+  @include flex-col($space-1);
+  text-decoration: none;
+  color: inherit;
 }
 
 .featureLabel {
