@@ -1,0 +1,52 @@
+.message {
+  margin: 0;
+  color: var(--color-text-secondary);
+  @include text-body;
+  line-height: 1.6;
+}
+
+.dangerMessage {
+  color: var(--color-danger);
+}
+
+.agreeLabel {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  margin-top: $space-3;
+  color: var(--color-text-secondary);
+  @include text-caption;
+  cursor: pointer;
+}
+
+.cancelBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  @include text-body;
+  cursor: pointer;
+}
+
+.confirmBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: none;
+  border-radius: $radius-md;
+  background: var(--color-brand);
+  color: #fff;
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+
+  &.dangerous {
+    background: var(--color-danger);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

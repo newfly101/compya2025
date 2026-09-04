@@ -1,0 +1,63 @@
+// ⭐ containing block 근거: 이 오버레이는 `position: absolute` 다.
+// 호출하는 화면 루트가 `page-layout` 믹스인(= position: relative)을 쓰는 한
+// 뷰포트가 아니라 그 화면 본문 영역 안에서만 덮인다. `@include overlay(...)` 도
+// 동일하게 absolute 기반이라 그대로 재사용한다.
+.overlay {
+  @include overlay($z-modal-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-4;
+  background: var(--color-overlay);
+}
+
+.modal {
+  width: 100%;
+  max-width: 420px;
+  max-height: calc(100% - #{$space-8});
+  display: flex;
+  flex-direction: column;
+  border-radius: $radius-lg;
+  background: var(--color-bg-modal);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-4;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.title {
+  @include text-section-title;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.closeBtn {
+  @include reset-button;
+  @include tap-target($control-height-sm);
+  color: var(--color-text-muted);
+  font-size: 20px;
+  line-height: 1;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
+
+.body {
+  padding: $space-4;
+  overflow-y: auto;
+}
+
+.footer {
+  display: flex;
+  gap: $space-2;
+  padding: $space-4;
+  border-top: 1px solid var(--color-border);
+  flex-shrink: 0;
+}

@@ -1,0 +1,31 @@
+.box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-12 0;
+}
+
+.text {
+  color: var(--color-text-muted);
+  @include text-body;
+  text-align: center;
+}
+
+.error {
+  color: var(--color-danger);
+  @include text-body;
+  text-align: center;
+}
+
+.retryBtn {
+  height: $control-height-md;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-danger);
+  border-radius: $radius-lg;
+  background: transparent;
+  color: var(--color-danger);
+  @include text-body;
+  cursor: pointer;
+  @include pressable;
+}
