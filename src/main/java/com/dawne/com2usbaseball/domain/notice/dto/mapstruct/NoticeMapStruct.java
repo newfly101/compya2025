@@ -14,13 +14,11 @@ import java.util.List;
 public interface NoticeMapStruct {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "slug", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     NoticeEntity toEntity(NoticeRequest request);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "slug", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "publishedAt", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

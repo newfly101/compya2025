@@ -13,7 +13,6 @@ public interface NoticeMapper {
     // Public
     List<NoticeEntity> getNoticeList();
     NoticeEntity getNoticeDetail(@Param("id") Long noticeId);
-    NoticeEntity getNoticeDetailBySlug(@Param("slug") String slug);
 
     // Admin
     List<NoticeEntity> getAdminNoticeList();
@@ -32,10 +31,6 @@ public interface NoticeMapper {
     int updateNoticeVisible(@Param("id") Long noticeId, @Param("isVisible") Boolean isVisible);
     int updateNoticePinned(@Param("id") Long noticeId, @Param("isPinned") Boolean isPinned);
     int deleteNotice(@Param("id") Long noticeId);
-
-    // slug
-    int existsSlug(@Param("slug") String slug, @Param("excludeId") Long excludeId);
-    int updateNoticeSlug(@Param("id") Long noticeId, @Param("slug") String slug);
 
     // 일괄 작업
     List<Long> selectExistingNoticeIds(@Param("ids") List<Long> ids);

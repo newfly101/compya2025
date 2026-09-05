@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { applyAsyncHandlers } from "@/app/store/utils/applyAsyncHandlers.js";
-import { requestGetNoticeList, requestGetNoticeBySlug } from "@/domains/notices/store/public/thunks.js";
+import { requestGetNoticeList } from "@/domains/notices/store/public/thunks.js";
 import {
   requestAdminGetNoticeList,
   requestAdminGetNotice,
@@ -16,8 +16,6 @@ import {
 const initialState = {
   siteNotices:     [],
   officialNotices: [],
-  // slug 로 직접 진입했는데 목록에 없을 때(캐시 미스) 단건 조회 결과
-  noticeBySlug: null,
   loading: false,
   error:   null,
 };
@@ -31,11 +29,6 @@ const noticeSlice = createSlice({
     applyAsyncHandlers(builder, requestGetNoticeList, (state, action) => {
       state.siteNotices     = action.payload.siteNotices;
       state.officialNotices = action.payload.officialNotices;
-    });
-
-    /* ── slug 단건 조회(목록 캐시 미스 시) ───────────────────── */
-    applyAsyncHandlers(builder, requestGetNoticeBySlug, (state, action) => {
-      state.noticeBySlug = action.payload;
     });
 
     /* ── 어드민 조회 (전체 목록) ─────────────────────────────── */

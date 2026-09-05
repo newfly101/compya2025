@@ -5,8 +5,3 @@ export const fetchGetNotices = async () => {
   const { data } = await API.get(NOTICES.GET_NOTICES);
   return data;
 };
-
-export const fetchGetNoticeBySlug = async (slug) => {
-  const { data } = await API.get(NOTICES.GET_NOTICE_BY_SLUG(slug));
-  return data;
-};

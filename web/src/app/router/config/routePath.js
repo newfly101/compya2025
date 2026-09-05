@@ -1,12 +1,14 @@
+import { noticeTitleToSlug } from "@/domains/notices/mobile/noticeSlug.js";
+
 export const ROUTE_PATHS = {
   home: "/",
   authentication: "/auth/callback",
   coupons: "/coupons",
   events: "/events",
   notices: "/notices",
-  // 마이그레이션 전에는 slug 가 전부 null 이라 id 가 그대로 들어온다 — 파라미터 하나로 둘 다 받는다.
+  // slug 는 서버 필드가 아니라 제목으로 매번 만든다(단방향) — 조회는 항상 id 로 한다.
   notice_details_pattern: "/notice/:slug",
-  notice_details: (notice) => `/notice/${notice?.slug ?? notice?.id}`,
+  notice_details: (notice) => `/notice/${noticeTitleToSlug(notice?.title, notice?.id)}`,
   // 확률 공시 — 코드 식별자는 odds, 노출 주소는 probability
   // (국내 게임사가 확률형 아이템 정보 공개 페이지에 쓰는 표기를 따름)
   odds: "/probability",

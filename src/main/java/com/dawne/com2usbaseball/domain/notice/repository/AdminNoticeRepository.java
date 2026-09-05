@@ -70,13 +70,4 @@ public class AdminNoticeRepository {
     public void updateNoticesVisibleByIds(List<Long> ids, Boolean isVisible) {
         noticeMapper.updateNoticesVisibleByIds(ids, isVisible);
     }
-
-    // slug
-    public boolean existsSlug(String slug, Long excludeId) {
-        return noticeMapper.existsSlug(slug, excludeId) > 0;
-    }
-
-    public void updateNoticeSlug(Long noticeId, String slug) {
-        noticeMapper.updateNoticeSlug(noticeId, slug);
-    }
 }

@@ -13,7 +13,6 @@ public record NoticeResponse(
         String content,
         String externalUrl,
         String imageUrl,
-        String slug,
         Boolean isVisible,
         Boolean isPinned,
         @JsonFormat(pattern = "yyyy-MM-dd HH:mm")

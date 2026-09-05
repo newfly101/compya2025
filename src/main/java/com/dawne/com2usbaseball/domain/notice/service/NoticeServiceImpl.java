@@ -32,11 +32,4 @@ public class NoticeServiceImpl implements NoticeService{
         NoticeEntity notice = noticeRepository.getNoticeDetail(noticeId);
         return noticeMapStruct.toResponse(notice);
     }
-
-    @Override
-    @Cacheable(value = "noticeDetail", key = "#slug + '_slug_public'")
-    public NoticeResponse getNoticeDetailBySlug(String slug) {
-        NoticeEntity notice = noticeRepository.getNoticeDetailBySlug(slug);
-        return noticeMapStruct.toResponse(notice);
-    }
 }
