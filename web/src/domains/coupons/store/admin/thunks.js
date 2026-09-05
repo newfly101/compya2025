@@ -4,6 +4,7 @@ import {
   fetchAdminInsertCoupon,
   fetchAdminUpdateCoupon, fetchAdminUpdateVisible, fetchAdminDeleteCoupon,
   fetchAdminBulkDeleteCoupons, fetchAdminBulkUpdateVisible,
+  fetchAdminRefreshCoupons,
 } from "@/domains/coupons/store/admin/api.js";
 import { ADMIN_COUPON_ACTIONS } from "@/domains/coupons/store/admin/endpoints.js";
 
@@ -96,6 +97,19 @@ export const requestAdminBulkUpdateCouponsVisible = createAsyncThunk(
     try {
       await fetchAdminBulkUpdateVisible(ids, visible);
       return { ids, visible };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+// 캐시 동기화 — 운영자가 DB 에 직접 넣은 row 를 재시작 없이 즉시 반영한다.
+export const requestAdminRefreshCoupons = createAsyncThunk(
+  ADMIN_COUPON_ACTIONS.REFRESH, async (_, { rejectWithValue }) => {
+    try {
+      const list = await fetchAdminRefreshCoupons();
+
+      return [...list].sort((a, b) => b.id - a.id);
     } catch (error) {
       return rejectWithValue(error.message);
     }

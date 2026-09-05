@@ -187,6 +187,24 @@
   }
 }
 
+// 캐시 동기화 — "+ 등록"(채움) 옆 보조 액션. 다른 탭에는 onRefresh 를 안 넘기므로 옵션 렌더.
+.refreshBtn {
+  height: $control-height-sm;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  background: transparent;
+  color: var(--color-text-secondary);
+  @include text-body;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
 // v2 원본 — 채운 솔리드 퍼플 버튼(흰 텍스트). 칩/토글바 버튼(control-height-sm)보다
 // 살짝 크게, 유일한 주요 CTA라 유일하게 배경을 채운다.
 .addBtn {

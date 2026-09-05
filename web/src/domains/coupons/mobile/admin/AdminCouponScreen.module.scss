@@ -87,6 +87,10 @@
   font-family: ui-monospace, Menlo, monospace;
 }
 
+.textarea {
+  @include admin-textarea;
+}
+
 .toggleRow {
   display: flex;
   align-items: center;

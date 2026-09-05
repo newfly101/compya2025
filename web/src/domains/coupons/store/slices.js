@@ -6,6 +6,7 @@ import {
   requestGetAdminCouponList,
   requestAdminDeleteCoupon,
   requestAdminBulkDeleteCoupons, requestAdminBulkUpdateCouponsVisible,
+  requestAdminRefreshCoupons,
 } from "@/domains/coupons/store/admin/thunks.js";
 import { requestGetUserCouponList } from "@/domains/coupons/store/public/thunks.js";
 
@@ -28,6 +29,12 @@ const couponSlice = createSlice({
     });
 
     applyAsyncHandlers(builder, requestGetAdminCouponList, (state, action) => {
+      state.coupons = action.payload;
+    });
+    /* ===============================
+     * 쿠폰 캐시 동기화 — 목록 조회와 동일하게 전체 교체
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminRefreshCoupons, (state, action) => {
       state.coupons = action.payload;
     });
     /* ===============================
@@ -88,5 +95,4 @@ const couponSlice = createSlice({
   },
 });
 
-export const {} = couponSlice.actions;
 export default couponSlice.reducer;

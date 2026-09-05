@@ -37,3 +37,9 @@ export const fetchAdminBulkUpdateVisible = async (ids, visible) => {
   const { data } = await API.patch(`${ADMIN_COUPONS.BULK_UPDATE_COUPON_VISIBLE}`, { ids, visible });
   return data.data;
 };
+
+// 캐시 동기화 — 서버 캐시를 비운 뒤 DB 최신 상태로 다시 읽어온 전체 목록을 응답한다.
+export const fetchAdminRefreshCoupons = async () => {
+  const { data } = await API.post(`${ADMIN_COUPONS.REFRESH_COUPONS}`);
+  return data.data;
+};

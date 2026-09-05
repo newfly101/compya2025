@@ -22,9 +22,11 @@ const AdminToolbar = ({
   onBulkHide,
   bulkDeleteLabel = "선택 삭제",
   bulkHideLabel = "숨김",
+  onRefresh,
+  refreshing = false,
 }) => {
   const hasSelection = selectedCount > 0 && (onBulkDelete || onBulkHide);
-  const showInfoRow = totalCount != null || sortLabel || onCreate;
+  const showInfoRow = totalCount != null || sortLabel || onCreate || onRefresh;
 
   return (
     <div className={styles.toolbar}>
@@ -105,6 +107,16 @@ const AdminToolbar = ({
                 disabled={!onToggleSort}
               >
                 {sortLabel}
+              </button>
+            )}
+            {onRefresh && (
+              <button
+                type="button"
+                className={styles.refreshBtn}
+                onClick={onRefresh}
+                disabled={refreshing}
+              >
+                {refreshing ? "동기화 중…" : "동기화"}
               </button>
             )}
             {onCreate && (

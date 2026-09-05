@@ -18,15 +18,15 @@ import {
   requestAdminUpdateCouponVisible,
   requestAdminBulkDeleteCoupons,
   requestAdminBulkUpdateCouponsVisible,
+  requestAdminRefreshCoupons,
 } from "@/domains/coupons/store/admin/thunks.js";
 import styles from "./AdminCouponScreen.module.scss";
 
+// 서버 CouponRequest 와 정확히 일치하는 5개 필드만 다룬다(discountType 등 유령 필드 없음).
 const EMPTY_FORM = {
-  title: "",
   couponCode: "",
-  discountType: "FIXED",
-  discountValue: "",
-  minOrderAmount: "",
+  title: "",
+  detail: "",
   expireAt: "",
   visible: true,
 };
@@ -66,11 +66,9 @@ const VIS_OPTIONS = [
 ];
 
 const formOf = (coupon) => ({
-  title: coupon.title ?? "",
   couponCode: coupon.couponCode ?? "",
-  discountType: coupon.discountType ?? "FIXED",
-  discountValue: coupon.discountValue ?? "",
-  minOrderAmount: coupon.minOrderAmount ?? "",
+  title: coupon.title ?? "",
+  detail: coupon.detail ?? "",
   expireAt: coupon.expireAt?.slice(0, 10) ?? "",
   visible: coupon.visible ?? true,
 });
@@ -169,6 +167,11 @@ export default function AdminCouponScreen() {
     setSelectedIds(new Set());
   };
 
+  // 캐시 동기화 — 운영자가 DB 에 직접 넣은 row 를 재시작 없이 즉시 반영한다.
+  const handleRefresh = () => {
+    dispatch(requestAdminRefreshCoupons());
+  };
+
   const handleOpenCreate = () => {
     setForm(EMPTY_FORM);
     openCreate();
@@ -190,10 +193,11 @@ export default function AdminCouponScreen() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // type="date" 는 yyyy-MM-dd 만 주지만 서버는 yyyy-MM-dd HH:mm 을 기대한다.
+    // 만료일은 "그날 끝까지" 유효하도록 23:59 를 붙여 보낸다.
     const payload = {
       ...form,
-      discountValue: Number(form.discountValue),
-      minOrderAmount: form.minOrderAmount ? Number(form.minOrderAmount) : 0,
+      expireAt: form.expireAt ? `${form.expireAt} 23:59` : form.expireAt,
     };
     if (editTarget) {
       dispatch(requestAdminUpdateCoupon({ id: editTarget.id, ...payload }));
@@ -290,6 +294,8 @@ export default function AdminCouponScreen() {
         selectedCount={selectedOnPageCount}
         onBulkDelete={handleBulkDelete}
         onBulkHide={handleBulkHide}
+        onRefresh={handleRefresh}
+        refreshing={loading}
       />
 
       {loading && <AdminStateBox status="loading" />}
@@ -322,27 +328,16 @@ export default function AdminCouponScreen() {
       <AdminModal open={isOpen} title={editTarget ? "쿠폰 수정" : "쿠폰 등록"} onClose={closeModal}>
         <form onSubmit={handleSubmit} className={styles.form}>
           <label className={styles.label}>
-            쿠폰 제목
-            <input className={styles.input} name="title" value={form.title} onChange={handleFormChange} required />
-          </label>
-          <label className={styles.label}>
             쿠폰 코드
             <input className={styles.inputCode} name="couponCode" value={form.couponCode} onChange={handleFormChange} required />
           </label>
           <label className={styles.label}>
-            할인타입
-            <select className={styles.input} name="discountType" value={form.discountType} onChange={handleFormChange}>
-              <option value="FIXED">정액</option>
-              <option value="PERCENT">정률</option>
-            </select>
+            쿠폰 제목
+            <input className={styles.input} name="title" value={form.title} onChange={handleFormChange} required />
           </label>
           <label className={styles.label}>
-            할인값
-            <input className={styles.input} type="number" name="discountValue" value={form.discountValue} onChange={handleFormChange} required />
-          </label>
-          <label className={styles.label}>
-            최소주문금액
-            <input className={styles.input} type="number" name="minOrderAmount" value={form.minOrderAmount} onChange={handleFormChange} />
+            쿠폰 설명
+            <textarea className={styles.textarea} name="detail" value={form.detail} onChange={handleFormChange} rows={4} />
           </label>
           <label className={styles.label}>
             만료일
