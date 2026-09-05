@@ -9,6 +9,7 @@ import java.util.List;
 public interface AdminCouponService {
 
     List<CouponResponse> getCouponLists();
+    List<CouponResponse> refreshCoupons();
     CouponResponse createCoupon(CouponRequest request);
     CouponResponse updateCoupon(CouponRequest request, Long id);
     void updateCouponVisible(Long id, boolean visible);

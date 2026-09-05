@@ -10,6 +10,7 @@ import com.dawne.com2usbaseball.domain.coupon.enums.CouponMessages;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.coupon.repository.CouponAdminRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,17 @@ public class AdminCouponServiceImpl implements AdminCouponService {
     @Override
     @Cacheable(value = "coupons", key = "'admin'")
     public List<CouponResponse> getCouponLists() {
+        List<CouponEntity> coupons = repository.selectCoupons();
+
+        return couponMapStruct.toResponseList(coupons);
+    }
+
+    // 운영자가 DB 에 직접 반영한 변경사항을 즉시 앱에 반영하기 위해 캐시를 비우고 최신 목록을 다시 조회
+    // 자기호출(getCouponLists) 시 AOP 프록시를 우회해 캐시가 안 타므로 repository 를 직접 호출한다
+    @Override
+    @Transactional(readOnly = true)
+    @CacheEvict(value = "coupons", allEntries = true)
+    public List<CouponResponse> refreshCoupons() {
         List<CouponEntity> coupons = repository.selectCoupons();
 
         return couponMapStruct.toResponseList(coupons);

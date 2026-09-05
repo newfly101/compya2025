@@ -4,6 +4,7 @@ public enum CouponMessages {
     // 쿠폰 조회 성공
     COUPON_SUCCESS,
     COUPON_NOT_FOUND,
+    COUPON_REFRESHED,
 
     COUPON_CREATED,
     COUPON_CREATED_FAILED,

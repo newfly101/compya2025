@@ -30,6 +30,13 @@ public interface AdminCouponSwaggerDocs {
     GlobalResponse<List<CouponResponse>> getCouponLists();
 
     @Operation(
+            summary = "쿠폰 캐시 동기화",
+            description = "운영자가 DB에 직접 반영한 변경사항을 즉시 앱에 반영하기 위해 쿠폰 캐시를 비우고 최신 목록을 다시 조회한다."
+    )
+    @ApiResponse(responseCode = "200", description = "쿠폰 캐시 동기화 성공")
+    GlobalResponse<List<CouponResponse>> refreshCoupons();
+
+    @Operation(
             summary = "쿠폰 등록",
             description = "관리자가 신규 쿠폰을 등록한다."
     )

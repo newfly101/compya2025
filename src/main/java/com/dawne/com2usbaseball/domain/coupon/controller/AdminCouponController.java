@@ -33,6 +33,13 @@ public class AdminCouponController implements AdminCouponSwaggerDocs {
     }
 
     @Override
+    @PostMapping("/refresh")
+    public GlobalResponse<List<CouponResponse>> refreshCoupons() {
+        List<CouponResponse> couponList = adminCouponService.refreshCoupons();
+        return GlobalResponse.success(CouponMessages.COUPON_REFRESHED, couponList);
+    }
+
+    @Override
     @PostMapping
     public GlobalResponse<CouponResponse> insertNewCoupons(@RequestBody CouponRequest request) {
         CouponResponse createdCoupon = adminCouponService.createCoupon(request);
