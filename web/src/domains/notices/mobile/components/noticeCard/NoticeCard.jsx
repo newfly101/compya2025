@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
-import LabelBadge from "@/global/ui/badge/LabelBadge.jsx";
+import { formatNoticeDate } from "@/domains/notices/mobile/noticeDate.js";
 import styles from "./NoticeCard.module.scss";
 
 const NoticeCard = ({ notice, isFeatured = false }) => {
   const to = ROUTE_PATHS.notice_details(notice.id);
+  const dateText = formatNoticeDate(notice);
 
   if (isFeatured) {
     return (
@@ -15,12 +16,12 @@ const NoticeCard = ({ notice, isFeatured = false }) => {
             : <div className={styles.thumbEmpty} />
           }
         </div>
-        <div className={styles.featuredMeta}>
-          {notice.category && <LabelBadge variant="update" label={notice.category} />}
-          <span className={styles.metaDate}>{notice.publishedAt?.slice(0, 10)}</span>
+        {/* 제목과 chevron 을 같은 행에 두어 세로 중심을 맞춘다 (일반 카드의 cardBottom 구조 참고) */}
+        <div className={styles.featuredTitleRow}>
+          <p className={styles.featuredTitle}>{notice.title}</p>
           <span className={styles.chevron}>›</span>
         </div>
-        <p className={styles.featuredTitle}>{notice.title}</p>
+        {dateText && <span className={styles.metaDate}>{dateText}</span>}
         {notice.summary && (
           <p className={styles.featuredSummary}>{notice.summary.split("\n")[0]}</p>
         )}
@@ -44,7 +45,7 @@ const NoticeCard = ({ notice, isFeatured = false }) => {
         )}
       </div>
       <div className={styles.cardBottom}>
-        <span className={styles.date}>{notice.publishedAt?.slice(0, 10)}</span>
+        {dateText && <span className={styles.date}>{dateText}</span>}
         <span className={styles.chevron}>›</span>
       </div>
     </Link>

@@ -92,11 +92,3 @@
   padding-bottom: $space-8;
   background-color: var(--color-bg-deepest);
 }
-
-.bodyText {
-  @include text-body;
-  @include hangul-safe;
-  color: var(--color-text-secondary);
-  line-height: 1.6;
-  white-space: pre-line;    // \n → 줄바꿈 렌더링
-}

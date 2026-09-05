@@ -10,6 +10,7 @@ import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
 import AdminToggleSwitch from "@/global/ui/admin/toggle/AdminToggleSwitch.jsx";
 import AdminTag from "@/global/ui/admin/tag/AdminTag.jsx";
+import { formatNoticeDate } from "@/domains/notices/mobile/noticeDate.js";
 import "@/global/ui/admin/admin.tokens.scss";
 import {
   requestAdminGetNoticeList,
@@ -45,7 +46,7 @@ const VIS_OPTIONS = [
   { value: "hidden", label: "숨김" },
 ];
 
-const dateOf = (n) => (n.publishedAt ?? n.createdAt ?? "").slice(0, 10);
+const dateOf = (n) => formatNoticeDate(n) ?? "";
 
 // 어드민 셸(AdminShellScreen)의 공지 탭 패널로 렌더된다 — 자체 TopBar 를 세팅하지 않는다.
 // 등록·수정은 모달이 아니라 별도 글쓰기 페이지(AdminNoticeWriteScreen)로 전환한다

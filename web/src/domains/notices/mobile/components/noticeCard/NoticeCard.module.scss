@@ -27,22 +27,23 @@
   background: linear-gradient(135deg, var(--color-brand-tint), var(--color-bg-deep));
 }
 
-.featuredMeta {
+// 제목과 chevron 을 한 행에 묶어 세로 중심을 맞춘다 (flex-row 의 align-items: center 활용)
+.featuredTitleRow {
   @include flex-row($space-2);
-  align-items: center;
   padding: $space-2 $space-4 0;
-  min-height: 1.375rem;   // 22px — meta row tap-area 최소
 }
 
 .metaDate {
   @include text-micro;
   color: var(--color-text-muted);
+  padding: $space-1 $space-4 0;
 }
 
 .chevron {
   @include text-section-title;
   color: var(--color-text-muted);
   margin-left: auto;
+  flex-shrink: 0;
 }
 
 .featuredTitle {
@@ -50,7 +51,8 @@
   @include hangul-safe;
   @include line-clamp(2);
   color: var(--color-text-primary);
-  padding: $space-1 $space-4 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .featuredSummary {

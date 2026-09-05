@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import { useNoticeDetail } from "@/domains/notices/mobile/hooks/useNoticeDetail.js";
-import LabelBadge from "@/global/ui/badge/LabelBadge.jsx";
+import { formatNoticeDate } from "@/domains/notices/mobile/noticeDate.js";
+import RichContent from "@/global/ui/richContent/RichContent.jsx";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { pushEvent } from "@/infra/analytics/ga.js";
 import styles from "./NoticeDetailScreen.module.scss";
@@ -25,6 +26,8 @@ const NoticeDetailScreen = () => {
 
   if (!notice) return <div className={styles.screen} />;
 
+  const dateText = formatNoticeDate(notice);
+
   return (
     <div className={styles.screen}>
 
@@ -36,12 +39,13 @@ const NoticeDetailScreen = () => {
         }
       </div>
 
-      {/* ── 메타 헤더 (배지 + 날짜 + 제목) ──────────────── */}
+      {/* ── 메타 헤더 (날짜 + 제목) ── category 는 서버 응답에 없는 필드라 배지 제거 */}
       <div className={styles.metaHeader}>
-        <div className={styles.metaRow}>
-          {notice.category && <LabelBadge variant="update" label={notice.category} />}
-          <span className={styles.metaDate}>{notice.publishedAt?.slice(0, 10)}</span>
-        </div>
+        {dateText && (
+          <div className={styles.metaRow}>
+            <span className={styles.metaDate}>{dateText}</span>
+          </div>
+        )}
         <h1 className={styles.title}>{notice.title}</h1>
       </div>
 
@@ -56,7 +60,7 @@ const NoticeDetailScreen = () => {
       {/* ── 본문 ──────────────────────────────────────────── */}
       {notice.content && (
         <div className={styles.body}>
-          <p className={styles.bodyText}>{notice.content}</p>
+          <RichContent html={notice.content} />
         </div>
       )}
 

@@ -7,6 +7,7 @@ import AdminSegmented from "@/global/ui/admin/fields/AdminSegmented.jsx";
 import AdminToggleSwitch from "@/global/ui/admin/toggle/AdminToggleSwitch.jsx";
 import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
 import RichEditor from "@/global/ui/richEditor/RichEditor.jsx";
+import { stripHtml } from "@/global/utils/html/htmlUtils.js";
 // 목록(AdminNoticeScreen)과 같은 v2 강조 퍼플 토큰(--color-admin-accent 등)을 쓰기 위한 side-effect
 // import — 이 화면은 셸 밖 독립 라우트라 AdminShellScreen 의 :root 주입을 상속받지 못한다.
 import "@/global/ui/admin/admin.tokens.scss";
@@ -48,7 +49,6 @@ const formOf = (notice) => ({
   isPinned: notice.isPinned ?? false,
 });
 
-const stripHtml = (html) => (html ?? "").replace(/<[^>]*>/g, "").trim();
 const firstImageOf = (html) => html?.match(/<img[^>]+src="([^"]+)"/)?.[1] ?? "";
 
 // 업로드 응답 형태가 raw string / { url, fileName } / 래핑된 { data: {...} } 중 무엇이 오든

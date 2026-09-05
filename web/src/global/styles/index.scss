@@ -30,3 +30,4 @@
 @forward "mixins/background";   // bg-*
 @forward "mixins/typography";   // text-*
 @forward "mixins/admin-field";  // admin-input, admin-textarea, admin-field-label, admin-date-range-row (어드민 모달 폼 전용)
+@forward "mixins/prose";        // prose — Tiptap HTML 렌더 규칙(RichEditor 편집영역 ↔ RichContent 뷰어 공유)

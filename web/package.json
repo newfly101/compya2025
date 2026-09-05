@@ -21,6 +21,7 @@
     "@tiptap/starter-kit": "^2.27.3",
     "axios": "^1.13.2",
     "crypto-js": "^4.2.0",
+    "dompurify": "^3.4.14",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-redux": "^9.2.0",

@@ -1,10 +1,12 @@
 import PinnedBadge from "@/global/ui/badge/PinnedBadge.jsx";
+import { formatNoticeDate } from "@/domains/notices/mobile/noticeDate.js";
 import styles from "./OfficialNoticeCard.module.scss";
 
 const OfficialNoticeCard = ({ notice }) => {
   const handleClick = () => {
     if (notice.externalLink) window.open(notice.externalLink, "_blank");
   };
+  const dateText = formatNoticeDate(notice);
 
   return (
     <article className={styles.card} onClick={handleClick}>
@@ -14,7 +16,7 @@ const OfficialNoticeCard = ({ notice }) => {
       </div>
       <p className={styles.title}>{notice.title}</p>
       {notice.summary && <p className={styles.summary}>{notice.summary}</p>}
-      <span className={styles.date}>{notice.publishedAt?.slice(0, 10)}</span>
+      {dateText && <span className={styles.date}>{dateText}</span>}
     </article>
   );
 };
