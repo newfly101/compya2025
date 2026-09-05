@@ -4,7 +4,7 @@ import { formatNoticeDate } from "@/domains/notices/mobile/noticeDate.js";
 import styles from "./NoticeCard.module.scss";
 
 const NoticeCard = ({ notice, isFeatured = false }) => {
-  const to = ROUTE_PATHS.notice_details(notice.id);
+  const to = ROUTE_PATHS.notice_details(notice);
   const dateText = formatNoticeDate(notice);
 
   if (isFeatured) {

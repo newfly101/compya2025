@@ -11,7 +11,7 @@ const NoticeSection = () => {
     <ul className={styles.noticeList}>
       {notices.map((notice) => (
         <li key={notice.id}>
-          <Link to={ROUTE_PATHS.notice_details(notice.id)} className={styles.item}>
+          <Link to={ROUTE_PATHS.notice_details(notice)} className={styles.item}>
             <span className={styles.dot} />
             <div className={styles.content}>
               <span className={styles.title}>{notice.title}</span>
