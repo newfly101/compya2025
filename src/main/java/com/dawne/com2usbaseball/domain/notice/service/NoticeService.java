@@ -8,4 +8,6 @@ public interface NoticeService {
     List<NoticeResponse> getNoticeList();
 
     NoticeResponse getNoticeDetail(Long noticeId);
+
+    NoticeResponse getNoticeDetailBySlug(String slug);
 }

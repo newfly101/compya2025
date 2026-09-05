@@ -28,4 +28,12 @@ public class NoticeRepository {
         return notice;
     }
 
+    public NoticeEntity getNoticeDetailBySlug(String slug) {
+        NoticeEntity notice = noticeMapper.getNoticeDetailBySlug(slug);
+        if (notice == null) {
+            throw new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+        return notice;
+    }
+
 }

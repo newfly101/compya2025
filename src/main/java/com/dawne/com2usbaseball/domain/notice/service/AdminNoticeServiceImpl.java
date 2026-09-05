@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.notice.service;
 
+import com.dawne.com2usbaseball.common.support.SlugUtils;
 import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
 import com.dawne.com2usbaseball.domain.notice.dto.mapstruct.NoticeMapStruct;
 import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeAdminListRequest;
@@ -20,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -64,8 +67,24 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
             notice.setContent(sanitizeHtml(notice.getContent()));
         }
 
+        // 어드민 글쓰기 화면에 발행일 입력이 없어 null 로 들어오면 등록 시각으로 채운다
+        if (notice.getPublishedAt() == null) {
+            notice.setPublishedAt(LocalDateTime.now());
+        }
+
+        // 제목에서 slug 생성. 제목이 기호뿐이라 결과가 비면 등록 후 확정되는 id 로 대체한다
+        String baseSlug = SlugUtils.slugify(notice.getTitle());
+        if (!baseSlug.isEmpty()) {
+            notice.setSlug(ensureUniqueSlug(baseSlug, null));
+        }
+
         if (!adminNoticeRepository.insertNotice(notice)) {
             throw new BaseException(NoticeMessages.NOTICE_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        if (baseSlug.isEmpty()) {
+            String fallbackSlug = ensureUniqueSlug("notice-" + notice.getId(), notice.getId());
+            adminNoticeRepository.updateNoticeSlug(notice.getId(), fallbackSlug);
         }
 
         NoticeEntity saved = adminNoticeRepository.findById(notice.getId())
@@ -79,8 +98,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     @Caching(evict = {
             @CacheEvict(value = "notice", key = "'admin'"),
             @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
+            // slug 캐시 키는 옛 슬러그를 알아야 지울 수 있어 개별 key 대신 전체 비우기로 대체한다
+            @CacheEvict(value = "noticeDetail", allEntries = true)
     })
     public NoticeResponse updateNotice(NoticeRequest request, Long noticeId) {
         validateSourcePayload(request);
@@ -88,7 +107,15 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
         NoticeEntity notice = adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
 
+        String previousTitle = notice.getTitle();
         noticeMapStruct.updateEntity(request, notice);
+
+        // 제목이 바뀌면 slug 도 재생성한다 (옛 주소는 깨짐 — 정책상 허용, 리다이렉트 없음)
+        if (!Objects.equals(previousTitle, notice.getTitle())) {
+            String baseSlug = SlugUtils.slugify(notice.getTitle());
+            String candidate = baseSlug.isEmpty() ? "notice-" + noticeId : baseSlug;
+            notice.setSlug(ensureUniqueSlug(candidate, noticeId));
+        }
 
         // 수정 시에도 새니타이징
         if (notice.getContent() != null) {
@@ -107,8 +134,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     @Caching(evict = {
             @CacheEvict(value = "notice", key = "'admin'"),
             @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
+            @CacheEvict(value = "noticeDetail", allEntries = true)
     })
     public void updateNoticeVisible(Long noticeId, Boolean isVisible) {
         // 존재 여부 먼저 확인
@@ -125,8 +151,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     @Caching(evict = {
             @CacheEvict(value = "notice", key = "'admin'"),
             @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
+            @CacheEvict(value = "noticeDetail", allEntries = true)
     })
     public void updateNoticePinned(Long noticeId, Boolean isPinned) {
         adminNoticeRepository.findById(noticeId)
@@ -142,8 +167,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     @Caching(evict = {
             @CacheEvict(value = "notice", key = "'admin'"),
             @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
+            @CacheEvict(value = "noticeDetail", allEntries = true)
     })
     public void deleteNotice(Long noticeId) {
         adminNoticeRepository.findById(noticeId)
@@ -237,5 +261,16 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     private String sanitizeHtml(String html) {
         if (html == null) return null;
         return Jsoup.clean(html, Safelist.relaxed());
+    }
+
+    // slug 중복 처리 — 이미 있으면 -2, -3 ... 을 붙여 유일하게 만든다
+    // excludeId 는 수정 시 자기 자신은 중복으로 치지 않기 위함 (신규 등록은 null)
+    private String ensureUniqueSlug(String base, Long excludeId) {
+        String candidate = base;
+        int suffix = 2;
+        while (adminNoticeRepository.existsSlug(candidate, excludeId)) {
+            candidate = base + "-" + suffix++;
+        }
+        return candidate;
     }
 }

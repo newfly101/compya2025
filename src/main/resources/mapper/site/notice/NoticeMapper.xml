@@ -18,6 +18,7 @@
                content,
                external_url  AS externalUrl,
                image_url     AS imageUrl,
+               slug,
                is_visible    AS isVisible,
                is_pinned     AS isPinned,
                published_at  AS publishedAt,
@@ -40,6 +41,7 @@
                content,
                external_url  AS externalUrl,
                image_url     AS imageUrl,
+               slug,
                is_visible    AS isVisible,
                is_pinned     AS isPinned,
                published_at  AS publishedAt,
@@ -47,6 +49,27 @@
                updated_at    AS updatedAt
         FROM site_notices
         WHERE id = #{id}
+          AND is_visible = TRUE
+    </select>
+
+    <select id="getNoticeDetailBySlug"
+            parameterType="string"
+            resultType="com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity">
+        SELECT id,
+               source,
+               title,
+               summary,
+               content,
+               external_url  AS externalUrl,
+               image_url     AS imageUrl,
+               slug,
+               is_visible    AS isVisible,
+               is_pinned     AS isPinned,
+               published_at  AS publishedAt,
+               created_at    AS createdAt,
+               updated_at    AS updatedAt
+        FROM site_notices
+        WHERE slug = #{slug}
           AND is_visible = TRUE
     </select>
 
@@ -63,6 +86,7 @@
                content,
                external_url  AS externalUrl,
                image_url     AS imageUrl,
+               slug,
                is_visible    AS isVisible,
                is_pinned     AS isPinned,
                published_at  AS publishedAt,
@@ -83,6 +107,7 @@
                content,
                external_url  AS externalUrl,
                image_url     AS imageUrl,
+               slug,
                is_visible    AS isVisible,
                is_pinned     AS isPinned,
                published_at  AS publishedAt,
@@ -115,6 +140,7 @@
                content,
                external_url  AS externalUrl,
                image_url     AS imageUrl,
+               slug,
                is_visible    AS isVisible,
                is_pinned     AS isPinned,
                published_at  AS publishedAt,
@@ -134,6 +160,7 @@
                content,
                external_url  AS externalUrl,
                image_url     AS imageUrl,
+               slug,
                is_visible    AS isVisible,
                is_pinned     AS isPinned,
                published_at  AS publishedAt,
@@ -154,6 +181,7 @@
             content,
             external_url,
             image_url,
+            slug,
             is_visible,
             is_pinned,
             published_at
@@ -164,6 +192,7 @@
                      #{content},
                      #{externalUrl},
                      #{imageUrl},
+                     #{slug},
                      #{isVisible},
                      #{isPinned},
                      #{publishedAt}
@@ -179,12 +208,30 @@
             content      = #{content},
             external_url = #{externalUrl},
             image_url    = #{imageUrl},
+            slug         = #{slug},
             is_visible   = #{isVisible},
             is_pinned    = #{isPinned},
             published_at = #{publishedAt},
             updated_at   = CURRENT_TIMESTAMP
         WHERE id = #{id}
     </update>
+
+    <update id="updateNoticeSlug">
+        UPDATE site_notices
+        SET slug       = #{slug},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE id = #{id}
+    </update>
+
+    <!-- slug 중복 체크. excludeId 는 수정 시 자기 자신을 제외하기 위함 (신규 등록은 null) -->
+    <select id="existsSlug" resultType="int">
+        SELECT COUNT(*)
+        FROM site_notices
+        WHERE slug = #{slug}
+        <if test="excludeId != null">
+            AND id != #{excludeId}
+        </if>
+    </select>
 
     <update id="updateNoticeVisible">
         UPDATE site_notices

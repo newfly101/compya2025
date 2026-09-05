@@ -18,6 +18,7 @@ public class NoticeEntity {
     private String content;
     private String externalUrl;
     private String imageUrl;
+    private String slug;
     private Boolean isVisible;
     private Boolean isPinned;
     private LocalDateTime publishedAt;
