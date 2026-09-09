@@ -35,6 +35,8 @@ const STATIC_ROUTES = [
   // 레전드 재료 평점표 · 히스토리 재료 탐색기 — API(BE) 데이터로 렌더되는 페이지.
   "/legend-stats",
   "/history-mode/legend",
+  // 스킬 백과사전 — 스킬명 92개와 설명문이 실려 색인 가치가 있다.
+  "/skills",
   "/privacy",
   "/terms",
   "/contact",
@@ -67,6 +69,8 @@ const DATA_ROUTES = {
   "/history-mode/legend": "table tbody tr",
   // OddsIndexScreen 은 정적 데이터(src/data/odds)지만 렌더 자체는 동일하게 확인한다.
   "/probability": 'a[href^="/probability/"]',
+  // 스킬 바는 펼침 토글이라 aria-expanded 를 갖는다 — 이 화면에서 유일한 속성이다.
+  "/skills": "[aria-expanded]",
 };
 
 function routeToOutputFile(route) {
