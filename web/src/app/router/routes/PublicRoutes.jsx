@@ -1,9 +1,6 @@
 import React, { lazy } from "react";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
-import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import AuthCallback from "@/domains/authentication/callback/AuthCallBack.jsx";
-import PlayersLegacyRedirect from "@/app/router/routes/PlayersLegacyRedirect.jsx";
-import { Navigate } from "react-router-dom";
 const HomePage = lazy(() => import("@/domains/home/components/HomeScreen.jsx"));
 const CouponPage = lazy(() => import("@/domains/coupons/mobile/CouponScreen.jsx"));
 const EventPage = lazy(() => import("@/domains/events/mobile/EventScreen.jsx"));
@@ -22,7 +19,7 @@ const AboutPage = lazy(() => import("@/domains/policy/mobile/AboutScreen.jsx"));
 // infra/seo/routeSeo.js 의 NOINDEX_PATHS 참조.
 const CommunityPage = lazy(() => import("@/domains/community/mobile/CommunityScreen.jsx"));
 const MileagePage = lazy(() => import("@/domains/mileage/mobile/MileageScreen.jsx"));
-// 스킬 백과사전 — 메뉴 노출 시점은 따로 정한다. 지금은 주소로만 들어온다.
+// 스킬 백과사전 — 주소는 나중에 /dictionary/player-skills 로 바뀔 수 있어 ROUTE_META 로만 참조한다.
 const PlayerSkillPage = lazy(() => import("@/domains/playerSkills/mobile/PlayerSkillScreen.jsx"));
 
 export const PublicRoutes = [
@@ -35,13 +32,8 @@ export const PublicRoutes = [
   { path: ROUTE_META.ODDS.path, element: <OddsIndexPage />, handle: ROUTE_META.ODDS },
   { path: ROUTE_META.ODDS_SECTION.path, element: <OddsSectionPage />, handle: ROUTE_META.ODDS_SECTION },
   { path: ROUTE_META.PLAYERS.path, element: <PlayerEncyclopediaPage />, handle: ROUTE_META.PLAYERS },
-  { path: ROUTE_PATHS.players_legacy_team_pattern, element: <PlayersLegacyRedirect /> },
-  { path: ROUTE_PATHS.players_legacy_year_pattern, element: <PlayersLegacyRedirect /> },
-  // v1 폐기. 북마크·검색 유입이 404 를 만나지 않도록 리다이렉트만 남긴다
-  { path: ROUTE_PATHS.legend_materials_legacy, element: <Navigate to={ROUTE_PATHS.legend_stats} replace /> },
   { path: ROUTE_META.LEGEND_STATS.path, element: <LegendStatsPage />, handle: ROUTE_META.LEGEND_STATS },
   { path: ROUTE_META.HISTORY_LEGEND.path, element: <HistoryLegendPage />, handle: ROUTE_META.HISTORY_LEGEND },
-  { path: ROUTE_PATHS.history_mode_legacy, element: <Navigate to={ROUTE_PATHS.history_legend} replace /> },
   { path: ROUTE_META.PRIVACY.path, element: <PrivacyPolicyPage />, handle: ROUTE_META.PRIVACY },
   { path: ROUTE_META.TERMS.path, element: <TermsPage />, handle: ROUTE_META.TERMS },
   { path: ROUTE_META.CONTACT.path, element: <ContactPage />, handle: ROUTE_META.CONTACT },

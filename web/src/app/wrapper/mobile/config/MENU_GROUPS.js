@@ -1,3 +1,5 @@
+import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
+
 export const MENU_GROUPS = [
   {
     label: '메인',
@@ -21,6 +23,8 @@ export const MENU_GROUPS = [
         tag: { variant: 'neutral', label: '공사중' } },
       { icon: '⚾', label: '선수 백과사전',   to: '/players', loginRequired: true },
       { icon: '📊', label: '확률 공시',      to: '/probability', loginRequired: true },
+      { icon: '📖', label: '스킬 백과사전',   to: ROUTE_PATHS.player_skills,
+        tag: { variant: 'beta' } },
     ]
   },
   {
