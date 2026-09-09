@@ -71,8 +71,11 @@ export default function AdminQuizScreen() {
   const [imageMode, setImageMode] = useState("url");
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
+  const [bulkNotice, setBulkNotice] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState(null);
+  const [submitError, setSubmitError] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   const { editTarget, isOpen, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
 
@@ -123,16 +126,26 @@ export default function AdminQuizScreen() {
     setBulkDeleteConfirmOpen(true);
   };
 
-  const confirmBulkDelete = () => {
-    dispatch(requestAdminQuizBulkDelete([...selectedIds]));
-    setSelectedIds(new Set());
+  // .unwrap() 없이 dispatch 만 하면 실패해도 선택만 조용히 풀리고 아무 표시가 없다 — 결과를
+  // bulkNotice 로 보여준다(이벤트 화면과 동일 패턴). 서버가 { successIds, failedIds } 를 준다.
+  const confirmBulkDelete = async () => {
+    const ids = [...selectedIds];
     setBulkDeleteConfirmOpen(false);
+    setSelectedIds(new Set());
+    try {
+      const result = await dispatch(requestAdminQuizBulkDelete(ids)).unwrap();
+      const failedIds = result?.failedIds ?? [];
+      setBulkNotice(failedIds.length ? `${failedIds.length}개는 삭제하지 못했습니다.` : null);
+    } catch (err) {
+      setBulkNotice(typeof err === "string" ? err : "일괄 삭제에 실패했습니다.");
+    }
   };
 
   const handleOpenCreate = () => {
     setForm(EMPTY_FORM);
     setImageMode("url");
     setUploadError(null);
+    setSubmitError(null);
     openCreate();
   };
 
@@ -140,6 +153,7 @@ export default function AdminQuizScreen() {
     setForm(formOf(quiz));
     setImageMode("url");
     setUploadError(null);
+    setSubmitError(null);
     openEdit(quiz);
   };
 
@@ -163,15 +177,26 @@ export default function AdminQuizScreen() {
     }
   };
 
-  const handleSubmit = (e) => {
+  // .unwrap() 없이 dispatch 만 하면 서버가 400/500 을 줘도 모달이 그냥 닫혀 저장 성공처럼
+  // 보인다 — 성공했을 때만 모달을 닫고, 실패하면 입력값을 유지한 채 에러를 보여준다.
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (saving) return;
     const payload = { ...form, round: Number(form.round) };
-    if (editTarget) {
-      dispatch(requestAdminQuizUpdate({ id: editTarget.id, ...payload }));
-    } else {
-      dispatch(requestAdminQuizCreate(payload));
+    setSubmitError(null);
+    setSaving(true);
+    try {
+      if (editTarget) {
+        await dispatch(requestAdminQuizUpdate({ id: editTarget.id, ...payload })).unwrap();
+      } else {
+        await dispatch(requestAdminQuizCreate(payload)).unwrap();
+      }
+      closeModal();
+    } catch (err) {
+      setSubmitError(typeof err === "string" ? err : err?.message ?? "저장에 실패했습니다.");
+    } finally {
+      setSaving(false);
     }
-    closeModal();
   };
 
   const handleFormChange = (e) => {
@@ -245,6 +270,15 @@ export default function AdminQuizScreen() {
         onBulkDelete={handleBulkDelete}
       />
 
+      {bulkNotice && (
+        <div className={styles.bulkNotice}>
+          <span>{bulkNotice}</span>
+          <button type="button" onClick={() => setBulkNotice(null)} aria-label="닫기">
+            ×
+          </button>
+        </div>
+      )}
+
       {loading && <AdminStateBox status="loading" />}
       {!loading && error && (
         <AdminStateBox
@@ -316,9 +350,13 @@ export default function AdminQuizScreen() {
             {uploadError && <p className={styles.uploadError}>{uploadError}</p>}
           </div>
 
+          {submitError && <p className={styles.submitError}>{submitError}</p>}
+
           <div className={styles.formActions}>
             <button type="button" className={styles.cancelBtn} onClick={closeModal}>취소</button>
-            <button type="submit" className={styles.submitBtn}>{editTarget ? "수정" : "등록"}</button>
+            <button type="submit" className={styles.submitBtn} disabled={saving}>
+              {saving ? "저장 중..." : editTarget ? "수정" : "등록"}
+            </button>
           </div>
         </form>
       </AdminModal>

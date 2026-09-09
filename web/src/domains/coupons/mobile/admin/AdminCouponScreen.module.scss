@@ -8,6 +8,37 @@
   gap: $space-2;
 }
 
+/* 일괄 삭제/숨김 부분 실패 안내 배너(이벤트 화면과 동일 패턴) */
+.bulkNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+  padding: $space-2 $space-3;
+  border: 1px solid var(--color-warning);
+  border-radius: $radius-md;
+  background: var(--color-warning-dim);
+  color: var(--color-warning);
+  @include text-caption;
+  font-weight: 500;
+
+  button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 14px;
+    line-height: 1;
+    cursor: pointer;
+    @include pressable;
+  }
+}
+
+.submitError {
+  @include text-caption;
+  color: var(--color-danger);
+  margin: 0;
+}
+
 /* 표 주요 셀 — 제목 + 코드(monospace) */
 .mainCell {
   display: flex;

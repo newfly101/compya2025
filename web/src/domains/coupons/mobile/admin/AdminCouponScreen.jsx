@@ -87,6 +87,9 @@ export default function AdminCouponScreen() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
+  const [bulkNotice, setBulkNotice] = useState(null);
+  const [submitError, setSubmitError] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   const { editTarget, isOpen, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
 
@@ -155,16 +158,28 @@ export default function AdminCouponScreen() {
     setBulkDeleteConfirmOpen(true);
   };
 
-  const confirmBulkDelete = () => {
-    dispatch(requestAdminBulkDeleteCoupons([...selectedIds]));
-    setSelectedIds(new Set());
+  // .unwrap() 없이 dispatch 만 하면 실패해도 선택만 조용히 풀리고 아무 표시가 없다 — 결과를
+  // bulkNotice 로 보여준다(이벤트 화면과 동일 패턴).
+  const confirmBulkDelete = async () => {
+    const ids = [...selectedIds];
     setBulkDeleteConfirmOpen(false);
+    setSelectedIds(new Set());
+    try {
+      await dispatch(requestAdminBulkDeleteCoupons(ids)).unwrap();
+    } catch (err) {
+      setBulkNotice(typeof err === "string" ? err : "일괄 삭제에 실패했습니다.");
+    }
   };
 
-  const handleBulkHide = () => {
+  const handleBulkHide = async () => {
     if (selectedIds.size === 0) return;
-    dispatch(requestAdminBulkUpdateCouponsVisible({ ids: [...selectedIds], visible: false }));
+    const ids = [...selectedIds];
     setSelectedIds(new Set());
+    try {
+      await dispatch(requestAdminBulkUpdateCouponsVisible({ ids, visible: false })).unwrap();
+    } catch (err) {
+      setBulkNotice(typeof err === "string" ? err : "일괄 숨김 처리에 실패했습니다.");
+    }
   };
 
   // 캐시 동기화 — 운영자가 DB 에 직접 넣은 row 를 재시작 없이 즉시 반영한다.
@@ -174,11 +189,13 @@ export default function AdminCouponScreen() {
 
   const handleOpenCreate = () => {
     setForm(EMPTY_FORM);
+    setSubmitError(null);
     openCreate();
   };
 
   const handleOpenEdit = (coupon) => {
     setForm(formOf(coupon));
+    setSubmitError(null);
     openEdit(coupon);
   };
 
@@ -191,20 +208,31 @@ export default function AdminCouponScreen() {
     dispatch(requestAdminUpdateCouponVisible({ id: coupon.id, visible: nextVisible }));
   };
 
-  const handleSubmit = (e) => {
+  // .unwrap() 없이 dispatch 만 하면 서버가 400/500 을 줘도 모달이 그냥 닫혀 저장 성공처럼
+  // 보인다 — 성공했을 때만 모달을 닫고, 실패하면 입력값을 유지한 채 에러를 보여준다.
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (saving) return;
     // type="date" 는 yyyy-MM-dd 만 주지만 서버는 yyyy-MM-dd HH:mm 을 기대한다.
     // 만료일은 "그날 끝까지" 유효하도록 23:59 를 붙여 보낸다.
     const payload = {
       ...form,
       expireAt: form.expireAt ? `${form.expireAt} 23:59` : form.expireAt,
     };
-    if (editTarget) {
-      dispatch(requestAdminUpdateCoupon({ id: editTarget.id, ...payload }));
-    } else {
-      dispatch(requestAdminInsertNewCoupon(payload));
+    setSubmitError(null);
+    setSaving(true);
+    try {
+      if (editTarget) {
+        await dispatch(requestAdminUpdateCoupon({ id: editTarget.id, ...payload })).unwrap();
+      } else {
+        await dispatch(requestAdminInsertNewCoupon(payload)).unwrap();
+      }
+      closeModal();
+    } catch (err) {
+      setSubmitError(typeof err === "string" ? err : err?.message ?? "저장에 실패했습니다.");
+    } finally {
+      setSaving(false);
     }
-    closeModal();
   };
 
   const handleFormChange = (e) => {
@@ -298,6 +326,15 @@ export default function AdminCouponScreen() {
         refreshing={loading}
       />
 
+      {bulkNotice && (
+        <div className={styles.bulkNotice}>
+          <span>{bulkNotice}</span>
+          <button type="button" onClick={() => setBulkNotice(null)} aria-label="닫기">
+            ×
+          </button>
+        </div>
+      )}
+
       {loading && <AdminStateBox status="loading" />}
       {!loading && error && (
         <AdminStateBox
@@ -351,9 +388,13 @@ export default function AdminCouponScreen() {
               label="노출 여부"
             />
           </div>
+          {submitError && <p className={styles.submitError}>{submitError}</p>}
+
           <div className={styles.formActions}>
             <button type="button" className={styles.cancelBtn} onClick={closeModal}>취소</button>
-            <button type="submit" className={styles.submitBtn}>{editTarget ? "수정" : "등록"}</button>
+            <button type="submit" className={styles.submitBtn} disabled={saving}>
+              {saving ? "저장 중..." : editTarget ? "수정" : "등록"}
+            </button>
           </div>
         </form>
       </AdminModal>

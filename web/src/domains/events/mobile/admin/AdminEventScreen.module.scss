@@ -141,6 +141,12 @@
   margin: 0;
 }
 
+.submitError {
+  @include text-caption;
+  color: var(--color-danger);
+  margin: 0;
+}
+
 .toggleRow {
   display: flex;
   align-items: center;

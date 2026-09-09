@@ -28,6 +28,20 @@ API.interceptors.request.use(
 const REFRESH_PATH = "/auth/refresh";
 const LOGOUT_PATH = "/auth/logout";
 
+// 인증 실패를 성공(resolve)으로 위장하면 안 된다 — 도메인 api 함수는
+// `data.data` 형태로 payload 를 꺼내는데, 응답이 null 이면 원인 불명의
+// TypeError 로 터진다. 대신 reject 하되, 호출부(thunk)가 이미 공통으로
+// try/catch → rejectWithValue(error.message) 패턴을 쓰고 있으므로
+// 여기서 message 만 한글로 채워주면 화면은 그 문구를 그대로 보여줄 수 있다.
+// isAuthError 플래그는 필요 시 호출부가 인증 실패를 구분해 분기할 수 있게 남겨둔다.
+const AUTH_ERROR_MESSAGE = "로그인이 필요합니다. 다시 로그인해 주세요.";
+
+const createAuthError = (original) => {
+  original.isAuthError = true;
+  original.message = AUTH_ERROR_MESSAGE;
+  return original;
+};
+
 let refreshing = null;
 
 API.interceptors.response.use(
@@ -42,7 +56,7 @@ API.interceptors.response.use(
       url.includes(REFRESH_PATH) || url.includes(LOGOUT_PATH);
 
     if (status !== 401 || original?._retried || isAuthEndpoint) {
-      if (status === 401) return Promise.resolve({ data: null });
+      if (status === 401) return Promise.reject(createAuthError(error));
       return Promise.reject(error);
     }
 
@@ -57,9 +71,10 @@ API.interceptors.response.use(
       }
       await refreshing;
       return API(original);
-    } catch (e) {
-      // refresh 실패 → 미인증 상태로 처리
-      return Promise.resolve({ data: null });
+    } catch {
+      // refresh 실패 → 미인증 상태. 원 요청의 401 에러를 그대로 reject 해
+      // 호출부(thunk)가 "로그인이 필요합니다" 류 메시지를 낼 수 있게 한다.
+      return Promise.reject(createAuthError(error));
     }
   }
 );

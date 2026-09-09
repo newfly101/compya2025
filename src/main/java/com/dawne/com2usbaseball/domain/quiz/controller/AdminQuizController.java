@@ -9,12 +9,14 @@ import com.dawne.com2usbaseball.domain.quiz.dto.response.QuizResponse;
 import com.dawne.com2usbaseball.domain.quiz.enums.QuizMessages;
 import com.dawne.com2usbaseball.domain.quiz.service.QuizAdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/quiz")
 public class AdminQuizController implements AdminQuizSwaggerDocs {
 

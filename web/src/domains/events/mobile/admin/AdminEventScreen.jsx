@@ -141,6 +141,8 @@ export default function AdminEventScreen() {
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
   const [bulkNotice, setBulkNotice] = useState(null);
+  const [submitError, setSubmitError] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   const { editTarget, isOpen, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
 
@@ -235,6 +237,7 @@ export default function AdminEventScreen() {
     setForm(EMPTY_FORM);
     setImageSource("url");
     setUploadError(null);
+    setSubmitError(null);
     openCreate();
   };
 
@@ -242,6 +245,7 @@ export default function AdminEventScreen() {
     setForm(formOf(event));
     setImageSource("url");
     setUploadError(null);
+    setSubmitError(null);
     openEdit(event);
   };
 
@@ -271,14 +275,25 @@ export default function AdminEventScreen() {
     }
   };
 
-  const handleSubmit = (e) => {
+  // .unwrap() 없이 dispatch 만 하면 서버가 400/500 을 줘도 모달이 그냥 닫혀 저장 성공처럼
+  // 보인다 — 성공했을 때만 모달을 닫고, 실패하면 입력값을 유지한 채 에러를 보여준다.
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editTarget) {
-      dispatch(requestAdminUpdateExEvent({ id: editTarget.id, ...form }));
-    } else {
-      dispatch(requestAdminInsertNewExEvent(form));
+    if (saving) return;
+    setSubmitError(null);
+    setSaving(true);
+    try {
+      if (editTarget) {
+        await dispatch(requestAdminUpdateExEvent({ id: editTarget.id, ...form })).unwrap();
+      } else {
+        await dispatch(requestAdminInsertNewExEvent(form)).unwrap();
+      }
+      closeModal();
+    } catch (err) {
+      setSubmitError(typeof err === "string" ? err : err?.message ?? "저장에 실패했습니다.");
+    } finally {
+      setSaving(false);
     }
-    closeModal();
   };
 
   const handleFormChange = (e) => {
@@ -468,9 +483,13 @@ export default function AdminEventScreen() {
             />
           </div>
 
+          {submitError && <p className={styles.submitError}>{submitError}</p>}
+
           <div className={styles.formActions}>
             <button type="button" className={styles.cancelBtn} onClick={closeModal}>취소</button>
-            <button type="submit" className={styles.submitBtn}>{editTarget ? "수정" : "등록"}</button>
+            <button type="submit" className={styles.submitBtn} disabled={saving}>
+              {saving ? "저장 중..." : editTarget ? "수정" : "등록"}
+            </button>
           </div>
         </form>
       </AdminModal>
