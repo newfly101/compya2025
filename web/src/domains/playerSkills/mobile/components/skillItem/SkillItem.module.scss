@@ -90,11 +90,12 @@
   display: flex;
   flex-direction: column;
   gap: $space-3;
-  margin: -4px $space-1 0;
+  // 열린 바의 outline(2px + offset 2px)이 아래로 4px 뻗는다. 그만큼 띄워
+  // 패널이 바를 덮지 않게 한다 — 원본 시안은 -4px 로 겹쳤으나 버튼을 가렸다.
+  margin: 4px $space-1 0;
   padding: 14px 10px 12px;
   border: 1px solid var(--color-border-strong);
-  border-top: 0;
-  border-radius: 0 0 $radius-2xl $radius-2xl;
+  border-radius: $radius-2xl;
   background: var(--color-bg-deep);
 }
 
