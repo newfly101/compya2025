@@ -312,7 +312,7 @@ VALUES
     ('ffd0aa09-325f-4b99-84a3-2bbb98df5a23', '348246cf-ed6d-45fb-90e9-9bf78d3865e1', 'COACH', 1, 'OB', 1995, NULL),
     ('3a226ece-cc0b-47f2-8061-3bf5f7d52222', '348246cf-ed6d-45fb-90e9-9bf78d3865e1', 'COACH', 2, 'HYU', 2004, NULL),
     -- 김재현S
-    ('1319af33-fdbe-4f2d-a4d9-d1d6f2628f13', '65cd48da-d150-48ac-8924-6b1fd54661ae', 'PLAYER', 1, 'DOO', 2007, '리오스'),
+    ('1319af33-fdbe-4f2d-a4d9-d1d6f2628f13', '65cd48da-d150-48ac-8924-6b1fd54661ae', 'PLAYER', 1, 'DOO', 2007, '리오스B'),
     ('3006c47b-ad1b-4cf5-8d20-f735b3f01eb6', '65cd48da-d150-48ac-8924-6b1fd54661ae', 'PLAYER', 2, 'SAM', 2010, '오승환'),
     ('74f2714c-d96d-4427-a017-2c5eb116d018', '65cd48da-d150-48ac-8924-6b1fd54661ae', 'PLAYER', 3, 'LG', 1994, '류지현'),
     ('d8bd8a9b-97bf-461c-921a-ec0844848f85', '65cd48da-d150-48ac-8924-6b1fd54661ae', 'PLAYER', 4, 'LG', 1998, '조인성'),
@@ -420,7 +420,7 @@ VALUES
     ('fcdb5085-4f2b-44ef-b11e-f8d636c801bb', '371f902f-69cc-48bd-ab1a-ae011af321fb', 'COACH', 1, 'LOT', 1991, NULL),
     ('7934b4d1-9da4-4cc8-9225-f4c9dee0c596', '371f902f-69cc-48bd-ab1a-ae011af321fb', 'COACH', 2, 'LOT', 1996, NULL),
     -- 니퍼트
-    ('2b9c7382-4aa9-4881-ad32-7378793622bf', '23883924-0e31-4194-980c-7c735adda3d6', 'PLAYER', 1, 'DOO', 2005, '리오스'),
+    ('2b9c7382-4aa9-4881-ad32-7378793622bf', '23883924-0e31-4194-980c-7c735adda3d6', 'PLAYER', 1, 'DOO', 2005, '리오스B'),
     ('945e5f4b-30a1-4fca-9e04-5286eefef578', '23883924-0e31-4194-980c-7c735adda3d6', 'PLAYER', 2, 'DOO', 2018, '양의지'),
     ('5e5a91fb-24a4-4a6c-9e00-f88918a47787', '23883924-0e31-4194-980c-7c735adda3d6', 'PLAYER', 3, 'DOO', 2019, '린드블럼'),
     ('6218e3ce-7bf3-4a1a-a75f-a7ea16d82a22', '23883924-0e31-4194-980c-7c735adda3d6', 'PLAYER', 4, 'SAM', 2013, '박한이'),
