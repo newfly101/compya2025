@@ -453,8 +453,12 @@ export default function AdminEventScreen() {
               />
             )}
             {uploadError && <p className={styles.uploadError}>{uploadError}</p>}
-            {imageSource === "upload" && form.imageUrl && (
-              <img className={styles.uploadPreview} src={form.imageUrl} alt="이벤트 이미지 미리보기" />
+            {/* URL/업로드 모드 공통 — 이용자 화면 이벤트 카드(가로 배너) 비율로 실제 노출 형태를 미리 보여준다 */}
+            {form.imageUrl && (
+              <>
+                <img className={styles.uploadPreview} src={form.imageUrl} alt="이벤트 이미지 미리보기" />
+                <p className={styles.uploadPreviewCaption}>실제 화면에서는 이 비율의 배너로 노출돼요.</p>
+              </>
             )}
           </div>
 
