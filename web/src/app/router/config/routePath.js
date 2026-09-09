@@ -23,14 +23,8 @@ export const ROUTE_PATHS = {
     const qs = params.toString();
     return qs ? `/players?${qs}` : "/players";
   },
-  players_legacy_team_pattern: "/players/:teamId",
-  players_legacy_year_pattern: "/players/:teamId/:year",
-  // 구 주소 — v1 폐기 후 legend_stats 로 리다이렉트만 한다
-  legend_materials_legacy: "/legend-materials",
   // 레전드 재료
   legend_stats: "/legend-stats",
-  // 구 주소 — v1 폐기 후 history_legend 로 리다이렉트만 한다
-  history_mode_legacy: "/mode/history",
   // 히스토리 재료 탐색기 — 평점표에서 ?legend={레전드명} 으로 진입한다
   history_legend: "/history-mode/legend",
   community: "/community",
@@ -50,4 +44,6 @@ export const ROUTE_PATHS = {
   admin_notice_write_edit: (id) => `/admin/notice/write/${id}`,
   // 마일리지 저격 경로 — 구단×연도 표는 쿼리스트링(?team=&year=)으로 처리
   mileage: "/mileage",
+  // 스킬 백과사전 — 주소는 /dictionary/player-skills 로 바뀔 예정. 화면에서는 항상 ROUTE_PATHS 로만 참조.
+  player_skills: "/skills",
 }

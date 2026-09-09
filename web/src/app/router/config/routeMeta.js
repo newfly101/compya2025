@@ -42,4 +42,5 @@ export const ROUTE_META = {
     title: "컴프야펀 | 어드민 | 공지 글쓰기",
   },
   MILEAGE: { path: ROUTE_PATHS.mileage, title: "컴프야펀 | 마일리지 저격 경로" },
+  PLAYER_SKILLS: { path: ROUTE_PATHS.player_skills, title: "컴프야펀 | 스킬 백과사전" },
 };

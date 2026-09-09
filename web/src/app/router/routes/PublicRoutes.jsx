@@ -22,6 +22,8 @@ const AboutPage = lazy(() => import("@/domains/policy/mobile/AboutScreen.jsx"));
 // infra/seo/routeSeo.js 의 NOINDEX_PATHS 참조.
 const CommunityPage = lazy(() => import("@/domains/community/mobile/CommunityScreen.jsx"));
 const MileagePage = lazy(() => import("@/domains/mileage/mobile/MileageScreen.jsx"));
+// 스킬 백과사전 — 메뉴 노출 시점은 따로 정한다. 지금은 주소로만 들어온다.
+const PlayerSkillPage = lazy(() => import("@/domains/playerSkills/mobile/PlayerSkillScreen.jsx"));
 
 export const PublicRoutes = [
   { index: true, element: <HomePage />, handle: ROUTE_META.HOME },
@@ -46,4 +48,5 @@ export const PublicRoutes = [
   { path: ROUTE_META.ABOUT.path, element: <AboutPage />, handle: ROUTE_META.ABOUT },
   { path: ROUTE_META.COMMUNITY.path, element: <CommunityPage />, handle: ROUTE_META.COMMUNITY },
   { path: ROUTE_META.MILEAGE.path, element: <MileagePage />, handle: ROUTE_META.MILEAGE },
+  { path: ROUTE_META.PLAYER_SKILLS.path, element: <PlayerSkillPage />, handle: ROUTE_META.PLAYER_SKILLS },
 ];

@@ -1,0 +1,235 @@
+// 핸드오프 design_handoff_skill_encyclopedia/README.md "스킬 바" / "펼침 패널" 이식.
+// 배경·보더·브랜드 보라는 전역 --color-* 토큰, 티어 그라데이션·설명박스·증감색은
+// playerSkills.tokens.scss(--color-ps-*) 를 쓴다.
+
+.item {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── 닫힘 바 ──────────────────────────────────────────── */
+
+.bar {
+  display: flex;
+  align-items: center;
+  height: 50px;
+  padding: 0 $space-2;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  background: var(--color-bg-card);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  font-family: inherit;
+  cursor: pointer;
+  outline: none;
+
+  &.open {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+.legend {
+  background: linear-gradient(180deg, var(--color-ps-legend-grad-start), var(--color-ps-legend-grad-end));
+  border-color: var(--color-ps-legend-border);
+}
+
+.platinum {
+  background: linear-gradient(180deg, var(--color-ps-platinum-grad-start), var(--color-ps-platinum-grad-end));
+  border-color: var(--color-ps-platinum-border);
+}
+
+.hero {
+  background: linear-gradient(180deg, var(--color-ps-hero-grad-start), var(--color-ps-hero-grad-end));
+  border-color: var(--color-ps-hero-border);
+}
+
+.normal {
+  background: linear-gradient(180deg, var(--color-ps-normal-grad-start), var(--color-ps-normal-grad-end));
+  border-color: var(--color-ps-normal-border);
+}
+
+.gradeBox {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 6px;
+  border: 1px solid var(--color-ps-grade-box-border);
+  border-radius: $radius-md;
+  background: var(--color-ps-grade-box-bg);
+  color: #fff;
+  font-weight: 900;
+  font-size: 14px;
+}
+
+.name {
+  flex: 1;
+  overflow: hidden;
+  color: #fff;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: -0.2px;
+  text-align: center;
+  text-overflow: ellipsis;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  white-space: nowrap;
+}
+
+.chevron {
+  flex: 0 0 34px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  text-align: right;
+}
+
+/* ── 펼침 패널 ────────────────────────────────────────── */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  margin: -4px $space-1 0;
+  padding: 14px 10px 12px;
+  border: 1px solid var(--color-border-strong);
+  border-top: 0;
+  border-radius: 0 0 $radius-2xl $radius-2xl;
+  background: var(--color-bg-deep);
+}
+
+.desc {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: $radius-lg;
+  background: var(--color-ps-desc-bg);
+  color: var(--color-ps-desc-text);
+  font-size: 14px;
+  line-height: 1.65;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.segPlain {
+  font-weight: 600;
+}
+
+.segStrong {
+  font-weight: 800;
+}
+
+.upLight {
+  color: var(--color-ps-up-light);
+}
+
+.downLight {
+  color: var(--color-ps-down-light);
+}
+
+.pillRow {
+  display: flex;
+  gap: $space-1;
+}
+
+.pill {
+  flex: 1;
+  padding: 6px 0;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 12px;
+  cursor: pointer;
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-brand-dark);
+    background: var(--color-brand-alpha-15);
+  }
+
+  // 노말·히어로의 S/S+ — 값 없음. 클릭 무시
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+  }
+}
+
+/* ── 등급별 수치표 ────────────────────────────────────── */
+
+.table {
+  display: grid;
+  grid-template-columns: minmax(64px, auto) repeat(7, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  font-size: 12px;
+}
+
+.headCell {
+  padding: 7px 0;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  font-weight: 700;
+  text-align: center;
+
+  &[aria-pressed="true"] {
+    background: var(--color-brand);
+    color: #fff;
+    font-weight: 800;
+  }
+}
+
+.labelCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 7px 8px;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.labelText {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.subLabel {
+  color: var(--color-text-secondary);
+}
+
+.valueCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 2px;
+  padding: 7px 0;
+  border-top: 1px solid var(--color-border);
+  font-weight: 800;
+  line-height: 1.3;
+  text-align: center;
+
+  &[aria-pressed="true"] {
+    background: var(--color-brand-alpha-15);
+  }
+}
+
+.valueEmpty {
+  color: var(--color-ps-value-empty);
+}
+
+.upDark {
+  color: var(--color-ps-up-dark);
+}
+
+.downDark {
+  color: var(--color-ps-down-dark);
+}

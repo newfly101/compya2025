@@ -1,0 +1,280 @@
+// 핸드오프 design_handoff_skill_encyclopedia/README.md 이식 (헤더 제외 — 글로벌 TopBar 사용).
+// 배경·보더·브랜드 보라는 전역 --color-* 토큰을 쓰고, 티어 점 색만 playerSkills.tokens.scss 를 쓴다.
+
+.screen {
+  min-height: 100%;
+  background: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+}
+
+.filters {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: $space-2;
+  background: var(--color-bg-deepest);
+}
+
+/* ── 검색 ─────────────────────────────────────────────── */
+
+.searchRow {
+  position: relative;
+  padding: $space-2 $layout-h-pad 0;
+
+  input {
+    width: 100%;
+    height: 42px;
+    padding: 0 34px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: $radius-xl;
+    background: var(--color-bg-card);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: 14px;
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+  }
+
+  input[type="search"] {
+    appearance: none;
+
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-decoration,
+    &::-webkit-search-results-button {
+      appearance: none;
+      display: none;
+    }
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  top: 50%;
+  left: 28px;
+  color: var(--color-text-muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.clearButton {
+  position: absolute;
+  top: 50%;
+  right: 28px;
+  padding: 2px 6px;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+/* ── 티어 칩 (가로 스크롤 허용) ───────────────────────── */
+
+.tierRow {
+  @include scroll-row(7px, $layout-h-pad);
+}
+
+.tierChip {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-full;
+  background: var(--color-bg-card);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-brand-dark);
+    background: var(--color-brand-alpha-15);
+  }
+}
+
+.dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.dotLegend {
+  background: var(--color-ps-legend-dot);
+}
+
+.dotPlatinum {
+  background: var(--color-ps-platinum-dot);
+}
+
+.dotHero {
+  background: var(--color-ps-hero-dot);
+}
+
+.dotNormal {
+  background: var(--color-ps-normal-dot);
+}
+
+/* ── 타자/투수 세그먼트 ───────────────────────────────── */
+
+.typeSegment {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-2;
+  padding: 0 $layout-h-pad;
+
+  button {
+    height: 42px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: $radius-xl;
+    background: var(--color-bg-card);
+    color: #fff;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      border-color: var(--color-brand-dark);
+      background: var(--color-brand-alpha-15);
+    }
+  }
+}
+
+/* ── 등급 칩 행 ───────────────────────────────────────── */
+
+.gradeRow {
+  display: flex;
+  gap: 6px;
+  padding: 0 $layout-h-pad;
+}
+
+.gradeChip {
+  flex: 1;
+  padding: 6px 0;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-full;
+  background: var(--color-bg-card);
+  color: #fff;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 13px;
+  cursor: pointer;
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-brand-dark);
+    background: var(--color-brand-alpha-15);
+  }
+
+  // 현재 목록 중 값을 가진 스킬이 하나도 없는 등급 — 펼침 패널의 등급 pill과 동일 규칙
+  &:disabled {
+    opacity: 0.3;
+    cursor: default;
+    pointer-events: none;
+  }
+}
+
+/* ── 메타 행 ──────────────────────────────────────────── */
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 $layout-h-pad;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+
+  b {
+    color: #fff;
+  }
+}
+
+.helpChip {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border: 1px solid var(--color-brand-dark);
+  border-radius: $radius-md;
+  background: var(--color-brand-alpha-15);
+  color: var(--color-brand);
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.helpMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: var(--color-bg-deepest);
+  font-weight: 900;
+  font-size: 9px;
+}
+
+.metaSort {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+/* ── 리스트 ───────────────────────────────────────────── */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding: $space-1 $space-3 40px;
+}
+
+.empty {
+  padding: 44px $layout-h-pad;
+  color: var(--color-text-muted);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ── 상태 박스 (로딩 / 에러) — 검색결과 없음(.empty)과 구분 ─────────── */
+
+.stateBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-12 0;
+}
+
+.stateText {
+  @include text-body;
+  color: var(--color-text-muted);
+}
+
+.stateError {
+  @include text-body;
+  color: var(--color-danger);
+  text-align: center;
+}
+
+.retryBtn {
+  height: $control-height-md;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-danger);
+  border-radius: $radius-lg;
+  background: transparent;
+  color: var(--color-danger);
+  @include text-body;
+  cursor: pointer;
+}

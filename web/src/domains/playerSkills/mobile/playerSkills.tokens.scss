@@ -1,0 +1,45 @@
+// playerSkills 도메인 로컬 토큰 — Screen 에서 side-effect import 로 1회 주입.
+// 배경·보더·브랜드 보라 등 전역과 겹치는 값은 여기 두지 않고 기존 --color-bg-* / --color-border-*
+// / --color-brand* 전역 변수를 그대로 쓴다. 이 화면에만 있는 색만 둔다.
+
+:root {
+  // 티어별 스킬 바 배경 그라데이션 · 테두리 · 칩 점 (인게임 색 재현 — 전역에 대응 값 없음)
+  --color-ps-legend-grad-start: #7d62f6;
+  --color-ps-legend-grad-end: #6d52ea;
+  --color-ps-legend-border: #a894ff;
+  --color-ps-legend-dot: #a678ff;
+
+  --color-ps-platinum-grad-start: #dbae31;
+  --color-ps-platinum-grad-end: #cb9d25;
+  --color-ps-platinum-border: #eccb63;
+  --color-ps-platinum-dot: #dcae32;
+
+  --color-ps-hero-grad-start: #3aa85c;
+  --color-ps-hero-grad-end: #329750;
+  --color-ps-hero-border: #74c88d;
+  --color-ps-hero-dot: #4db56d;
+
+  --color-ps-normal-grad-start: #8f99ab;
+  --color-ps-normal-grad-end: #828c9e;
+  --color-ps-normal-border: #aeb8c8;
+  --color-ps-normal-dot: #a6b0c0;
+
+  // 좌측 등급 박스 — 티어 배경 위에 얹는 반투명 오버레이
+  --color-ps-grade-box-bg: rgba(0, 0, 0, 0.3);
+  --color-ps-grade-box-border: rgba(255, 255, 255, 0.4);
+
+  // 설명 박스 — 밝은 배경 (다크 테마 화면 안의 유일한 라이트 서피스)
+  --color-ps-desc-bg: #f3f3f6;
+  --color-ps-desc-text: #1c1c24;
+
+  // 증가/감소 — 밝은 배경(설명 박스)용
+  --color-ps-up-light: #e0262e;
+  --color-ps-down-light: #1f5fe0;
+
+  // 증가/감소 — 어두운 배경(수치표)용
+  --color-ps-up-dark: #ff5c6a;
+  --color-ps-down-dark: #4f9dff;
+
+  // 값 없음("–") — 전역 text-muted(38% 화이트)보다 더 죽인 톤
+  --color-ps-value-empty: #44445a;
+}

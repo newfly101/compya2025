@@ -11,6 +11,7 @@ import { operationListener } from "@/app/store/operation/operationListener.js";
 import adminUsersReducer, { myPageReducer } from "@/domains/users/store/slices.js";
 import legendStatReducer from "@/domains/legendStats/store/slices.js";
 import historyLegendReducer from "@/domains/historyLegend/store/slices.js";
+import playerSkillsReducer from "@/domains/playerSkills/store/slices.js";
 
 export const store = configureStore({
   reducer: {
@@ -26,6 +27,7 @@ export const store = configureStore({
     myPage: myPageReducer,
     legendStat: legendStatReducer,
     historyLegend: historyLegendReducer,
+    playerSkills: playerSkillsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(operationListener.middleware),
