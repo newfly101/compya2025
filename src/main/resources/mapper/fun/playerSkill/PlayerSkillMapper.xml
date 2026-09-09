@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.fun.playerSkill.repository.mapper.PlayerSkillMapper">
+
+    <!--
+      티어는 (skill_id, tier) 유니크라 tier 값 자체를 id 로 써도 같은 스킬 안에서 겹치지 않는다.
+      values 는 valueOrder 를 <id> 로 잡는 래퍼 엔티티로 받는다 — 단순 타입(Integer) 컬렉션은
+      <id> 없이 매핑된 값 전체로 중복을 제거하므로, "8,8" 처럼 값이 같은 행이 하나로 뭉개진다.
+      LEFT JOIN 이라 값이 없는 티어는 values 가 빈 리스트가 된다.
+    -->
+    <resultMap id="PlayerSkillResultMap"
+               type="com.dawne.com2usbaseball.domain.fun.playerSkill.entity.PlayerSkillEntity">
+        <id property="id" column="id"/>
+        <result property="playerRole" column="player_role"/>
+        <result property="skillName" column="skill_name"/>
+        <result property="skillGrade" column="skill_grade"/>
+        <result property="maxTier" column="max_tier"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="descriptionTemplate" column="description_template"/>
+        <result property="valueCount" column="value_count"/>
+        <result property="valueGroups" column="value_groups"/>
+
+        <collection property="tiers"
+                    ofType="com.dawne.com2usbaseball.domain.fun.playerSkill.entity.PlayerSkillTierEntity">
+            <id property="tier" column="tier"/>
+            <result property="rawValue" column="raw_value"/>
+            <result property="estimated" column="estimated"/>
+
+            <collection property="values"
+                        ofType="com.dawne.com2usbaseball.domain.fun.playerSkill.entity.PlayerSkillTierValueEntity">
+                <id property="valueOrder" column="value_order"/>
+                <result property="skillValue" column="skill_value"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <!--
+      스킬 46건 + 티어 + 수치를 한 번에 끌어온다. role 별로 캐시에 통째로 올리므로
+      스킬마다 티어를 다시 조회하는 N+1 구조를 두지 않는다.
+      tier 정렬은 ENUM 선언 순(E,D,C,B,A,S,S+)이 그대로 약->강이라 FIELD() 가 필요 없다.
+    -->
+    <select id="findByRole" resultMap="PlayerSkillResultMap">
+        SELECT s.id,
+               s.player_role,
+               s.skill_name,
+               s.skill_grade,
+               s.max_tier,
+               s.sort_order,
+               s.description_template,
+               s.value_count,
+               s.value_groups,
+               t.tier,
+               t.raw_value,
+               t.estimated,
+               v.value_order,
+               v.skill_value
+        FROM data_player_skill s
+                 JOIN data_player_skill_tier t ON t.skill_id = s.id
+                 LEFT JOIN data_player_skill_tier_value v ON v.skill_tier_id = t.id
+        WHERE s.player_role = #{role}
+        ORDER BY s.sort_order DESC,
+                 t.tier,
+                 v.value_order
+    </select>
+
+</mapper>
