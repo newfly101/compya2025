@@ -27,8 +27,9 @@ export const requestAdminQuizCreate = createAsyncThunk(
   ADMIN_QUIZ_ACTIONS.CREATE,
   async (newQuiz, { rejectWithValue }) => {
     try {
-      const { id, ...options } = await fetchAdminQuizCreate(baseQuizAnswerDTO(newQuiz));
-      return { ...newQuiz, id, options };
+      // options 는 응답 엔티티 필드가 아니라 "화면에 띄울 알림" 이어야 한다.
+      const { id } = await fetchAdminQuizCreate(baseQuizAnswerDTO(newQuiz));
+      return { ...newQuiz, id, options: { success: true, message: "퀴즈를 등록했습니다." } };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -39,8 +40,8 @@ export const requestAdminQuizUpdate = createAsyncThunk(
   ADMIN_QUIZ_ACTIONS.UPDATE,
   async ({ id, ...quiz }, { rejectWithValue }) => {
     try {
-      const { id: updatedId, ...options } = await fetchAdminQuizUpdate(id, baseQuizAnswerDTO(quiz));
-      return { ...quiz, id: updatedId, options };
+      const { id: updatedId } = await fetchAdminQuizUpdate(id, baseQuizAnswerDTO(quiz));
+      return { ...quiz, id: updatedId, options: { success: true, message: "퀴즈를 수정했습니다." } };
     } catch (error) {
       return rejectWithValue(error.message);
     }

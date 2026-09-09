@@ -23,12 +23,13 @@ export const requestGetAdminCouponList = createAsyncThunk(
 export const requestAdminInsertNewCoupon = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.CREATE, async (newCoupon, { rejectWithValue }) => {
     try {
-      const { id:couponId, ...options } = await fetchAdminInsertCoupon(newCoupon);
+      // options 는 응답 엔티티 필드가 아니라 "화면에 띄울 알림" 이어야 한다.
+      const { id: couponId } = await fetchAdminInsertCoupon(newCoupon);
 
       return {
         ...newCoupon,
         id: Number(couponId),
-        options
+        options: { success: true, message: "쿠폰을 등록했습니다." },
       };
     } catch (error) {
       return rejectWithValue(error.message);
@@ -39,12 +40,12 @@ export const requestAdminInsertNewCoupon = createAsyncThunk(
 export const requestAdminUpdateCoupon = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.UPDATE, async ({ id, ...coupon }, { rejectWithValue }) => {
     try {
-      const {id:couponId, ...options } = await fetchAdminUpdateCoupon(id, coupon);
+      const { id: couponId } = await fetchAdminUpdateCoupon(id, coupon);
 
       return {
         ...coupon,
         id: Number(couponId),
-        options,
+        options: { success: true, message: "쿠폰을 수정했습니다." },
       }
     } catch (error) {
       return rejectWithValue(error.message);

@@ -25,12 +25,13 @@ export const requestAdminGetExEventList = createAsyncThunk(
 export const requestAdminInsertNewExEvent = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.CREATE, async (newEvent, { rejectWithValue }) => {
     try {
-      const { id:eventId, ...options } = await fetchAdminInsertExEvent(baseEventDTO(newEvent));
+      // options 는 응답 엔티티 필드가 아니라 "화면에 띄울 알림" 이어야 한다.
+      const { id: eventId } = await fetchAdminInsertExEvent(baseEventDTO(newEvent));
 
       return {
         ...newEvent,
         id: eventId,
-        options
+        options: { success: true, message: "이벤트를 등록했습니다." },
       };
     } catch (error) {
       return rejectWithValue(error.message);
@@ -40,12 +41,12 @@ export const requestAdminInsertNewExEvent = createAsyncThunk(
 export const requestAdminUpdateExEvent = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.UPDATE, async ({ id, ...event }, { rejectWithValue }) => {
     try {
-      const { id:eventId, ...options } = await fetchAdminUpdateExEvent(id, baseEventDTO(event));
+      const { id: eventId } = await fetchAdminUpdateExEvent(id, baseEventDTO(event));
 
       return {
         ...event,
         id: eventId,
-        options
+        options: { success: true, message: "이벤트를 수정했습니다." },
       };
     } catch (error) {
       return rejectWithValue(error.message);
