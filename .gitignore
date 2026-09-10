@@ -65,7 +65,3 @@ __pycache__/
 # 외부 확률표 원본 (766MB, 488시트) — 저장소에 넣지 않는다. scripts/fetch-odds-linked 로 재취득
 test-docs/
 
-# 카드 실루엣 원본 (1024x1536 PNG, 30MB). 배포용 webp 는 web/public/cards/ 에 커밋한다.
-# 원본은 test-docs 와 같이 git 에 두지 않는다 — 다시 뽑을 일이 생기면
-# web/scripts/build-card-images.mjs 가 이 폴더를 읽는다.
-web/assets/cards-src/
