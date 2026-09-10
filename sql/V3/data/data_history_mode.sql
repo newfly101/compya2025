@@ -78,7 +78,7 @@ CREATE TABLE data_history_roster
     id            CHAR(36)         NOT NULL COMMENT '식별자 (UUID v4)',
     round_id      CHAR(36)         NOT NULL COMMENT 'data_history_round.id',
 
-    roster_group  ENUM ('STARTING_BATTER','BENCH_BATTER',
+    roster_group  ENUM ('STARTING_HITTER','BENCH_HITTER',
                         'STARTING_PITCHER','RELIEF_PITCHER','CLOSER')
                                    NOT NULL COMMENT '선발타자9/후보타자5/선발투수5/중간계투5/마무리1',
     order_no      TINYINT UNSIGNED NOT NULL COMMENT '구분 내 표시 순서',
@@ -100,8 +100,8 @@ CREATE TABLE data_history_roster
         REFERENCES data_history_round (id) ON DELETE CASCADE,
 
     CONSTRAINT chk_dhro_order CHECK (
-        (roster_group = 'STARTING_BATTER' AND order_no BETWEEN 1 AND 9)
-            OR (roster_group = 'BENCH_BATTER' AND order_no BETWEEN 1 AND 5)
+        (roster_group = 'STARTING_HITTER' AND order_no BETWEEN 1 AND 9)
+            OR (roster_group = 'BENCH_HITTER' AND order_no BETWEEN 1 AND 5)
             OR (roster_group = 'STARTING_PITCHER' AND order_no BETWEEN 1 AND 5)
             OR (roster_group = 'RELIEF_PITCHER' AND order_no BETWEEN 1 AND 5)
             OR (roster_group = 'CLOSER' AND order_no = 1)
@@ -124,15 +124,15 @@ CREATE TABLE data_history_roster
 -- 라운드별 25인 구성 검증 (0행이어야 정상)
 -- 그룹이 통째로 비면 GROUP BY 결과에서 빠져 버리므로, 라운드를 기준으로 두고 조건 집계한다.
 -- SELECT d.day_no, d.round_no, COUNT(r.id) AS total,
---        SUM(r.roster_group = 'STARTING_BATTER')  AS starting_batter,
---        SUM(r.roster_group = 'BENCH_BATTER')     AS bench_batter,
+--        SUM(r.roster_group = 'STARTING_HITTER')  AS starting_hitter,
+--        SUM(r.roster_group = 'BENCH_HITTER')     AS bench_hitter,
 --        SUM(r.roster_group = 'STARTING_PITCHER') AS starting_pitcher,
 --        SUM(r.roster_group = 'RELIEF_PITCHER')   AS relief_pitcher,
 --        SUM(r.roster_group = 'CLOSER')           AS closer
 -- FROM data_history_round d
 --          LEFT JOIN data_history_roster r ON r.round_id = d.id
 -- GROUP BY d.id, d.day_no, d.round_no
--- HAVING total <> 25 OR starting_batter <> 9 OR bench_batter <> 5
+-- HAVING total <> 25 OR starting_hitter <> 9 OR bench_hitter <> 5
 --     OR starting_pitcher <> 5 OR relief_pitcher <> 5 OR closer <> 1;
 
 -- 한 카드가 두 레전드의 재료로 잡히는지 (0행이어야 정상)

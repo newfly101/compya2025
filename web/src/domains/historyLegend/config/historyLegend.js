@@ -14,8 +14,8 @@ const POS_ORDER = [...BAT_POS, ...PIT_POS];
 
 // roster_group 코드 → 화면 라벨. 서버 ENUM 선언 순서 = 게임 화면 노출 순서다
 export const ROSTER_GROUP_LABEL = {
-  STARTING_BATTER: "선발타자",
-  BENCH_BATTER: "후보타자",
+  STARTING_HITTER: "선발타자",
+  BENCH_HITTER: "후보타자",
   STARTING_PITCHER: "선발투수",
   RELIEF_PITCHER: "중간계투",
   CLOSER: "마무리",
