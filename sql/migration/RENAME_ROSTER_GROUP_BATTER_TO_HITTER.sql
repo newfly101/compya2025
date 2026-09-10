@@ -26,7 +26,9 @@ SET NAMES utf8mb4;
 USE compyafun;
 
 -- 0) 지금 상태 확인 (실행 전 눈으로 볼 것)
---    STARTING_BATTER 986 / BENCH_BATTER 546 근처가 나온다
+--    70라운드 × 25인 = 1,750행이다. 로컬 실측 기준:
+--      STARTING_BATTER 630 / BENCH_BATTER 350 / STARTING_PITCHER 350
+--      RELIEF_PITCHER  350 / CLOSER 70
 SELECT roster_group, COUNT(*) AS cnt
 FROM data_history_roster
 GROUP BY roster_group
