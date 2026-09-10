@@ -1,16 +1,29 @@
 // 최초 진입 가이드 / 도움말 화면. 색은 전역 토큰만 사용(브랜드 보라 = var(--color-brand)).
+// 들어가기 전 관문이라 화면을 통째로 덮는다.
+// 이렇게 해야 (1) 아래 전역 푸터가 CTA 에 가려지지 않고
+// (2) 안쪽이 스크롤 컨테이너가 되어 CTA 의 sticky 가 실제로 동작한다.
+// 상단바(fixed)는 그대로 두고 그 아래부터 덮는다.
 .wrap {
   @include flex-col;
-  min-height: 100%;
+  position: fixed;
+  top: $layout-topbar-height;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: $layout-wrapper-max;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   background-color: var(--color-bg-deepest);
+  z-index: $z-sticky;
 }
 
 .scroll {
   @include flex-col($space-6);
-  flex: 1;
+  flex: 1 0 auto;
   padding: $space-6 $space-5;
-  // CTA(52px) + 여백만큼 하단 확보 — 마지막 항목이 버튼에 가리지 않게
-  padding-bottom: calc(#{$control-height-lg} + #{$space-8} + #{$space-4});
+  // CTA 가 sticky 라 흐름 안에서 자리를 차지한다 — 따로 하단 여백을 더 둘 필요가 없다.
+  padding-bottom: $space-4;
 }
 
 .eyebrow {
@@ -124,13 +137,12 @@
   flex-shrink: 0;
 }
 
+// sticky 다 — fixed 로 두면 화면 맨 아래에 눌러앉아 전역 푸터를 덮는다.
+// sticky 면 가이드를 읽는 동안에는 아래 붙어 있다가, 끝에 닿으면 자리를 내주고
+// 그 아래 푸터가 드러난다.
 .ctaWrap {
-  position: fixed;
-  left: 0;
-  right: 0;
+  position: sticky;
   bottom: 0;
-  margin: 0 auto;
-  max-width: $layout-wrapper-max;
   padding: $space-3 $space-4;
   padding-bottom: calc(#{$space-4} + env(safe-area-inset-bottom));
   background: linear-gradient(180deg, transparent, var(--color-bg-deepest) 40%);
