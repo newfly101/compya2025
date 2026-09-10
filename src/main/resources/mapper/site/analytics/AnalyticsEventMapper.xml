@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.analytics.repository.mapper.AnalyticsEventMapper">
+
+    <!--
+      한 요청(최대 20건, AnalyticsEventGuard.MAX_EVENTS_PER_REQUEST)을 한 번의 INSERT 로 적재.
+      event_type 은 자바 enum 이름(PAGE_VIEW 등)과 DB ENUM 값이 동일해 MyBatis 기본
+      EnumTypeHandler 가 그대로 매핑한다 — 별도 typeHandler 지정 불필요.
+    -->
+    <insert id="insertAll" parameterType="java.util.List">
+        INSERT INTO site_user_event
+        (event_type, anon_id, user_id, page_path, content_type, content_id,
+         target_url, search_keyword, referrer, country, user_agent, created_at)
+        VALUES
+        <foreach collection="events" item="e" separator=",">
+            (#{e.eventType}, #{e.anonId}, #{e.userId}, #{e.pagePath}, #{e.contentType}, #{e.contentId},
+             #{e.targetUrl}, #{e.searchKeyword}, #{e.referrer}, #{e.country}, #{e.userAgent}, #{e.createdAt})
+        </foreach>
+    </insert>
+
+</mapper>
