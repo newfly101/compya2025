@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.fun.mileage.repository.mapper.MileageMapper">
+
+    <resultMap id="MileageSniperTargetResultMap"
+               type="com.dawne.com2usbaseball.domain.fun.mileage.entity.MileageSniperTargetEntity">
+        <result property="cardId" column="id"/>
+        <result property="teamCode" column="team_code"/>
+        <result property="seasonYear" column="season_year"/>
+        <result property="positionCode" column="position_code"/>
+        <result property="playerName" column="player_name"/>
+        <result property="legendName" column="legend_name"/>
+    </resultMap>
+
+    <!--
+      구단×연도×포지션에 선수가 한 명뿐인 조합을 저격하면 그 선수 카드가 확정적으로 나온다.
+      그중 레전드 재료인 카드만 추려 119건.
+
+      서브쿼리에서 COUNT(DISTINCT player_name) = 1 을 쓴다. COUNT(*) 로 바꾸면 안 된다 —
+      지금은 card_type 이 전부 NORMAL 이라 결과가 같지만, 2단계에서 올스타/MVP 등
+      카드 종류가 늘어나면 같은 선수가 여러 행이 되어 COUNT(*) 는 "그 조합의 유일한 선수" 판정을
+      틀리게 만든다. 반드시 DISTINCT 로 사람 수를 세야 한다.
+
+      서브쿼리 GROUP BY 의 컬럼 순서(team_code, season_year, position_code)는
+      uk_dpc_card(team_code, season_year, position_code, player_name, card_type) 의
+      앞 3개와 일치시켜 이 인덱스를 그대로 타게 한 것이다 — 순서를 바꾸지 않는다.
+
+      화면에서 수정되지 않는 정적 데이터라 캐시(@Cacheable)로 서버 기동 후 한 번만 계산한다.
+    -->
+    <select id="findSniperTargets" resultMap="MileageSniperTargetResultMap">
+        SELECT c.id,
+               c.team_code,
+               c.season_year,
+               c.position_code,
+               c.player_name,
+               l.legend_name
+        FROM data_player_card c
+                 JOIN data_player_legend_material m ON m.player_card_id = c.id
+                 JOIN data_player_legend l ON l.id = m.legend_id
+                 JOIN (SELECT team_code, season_year, position_code
+                       FROM data_player_card
+                       WHERE card_type = 'NORMAL'
+                       GROUP BY team_code, season_year, position_code
+                       HAVING COUNT(DISTINCT player_name) = 1) solo
+                      ON solo.team_code = c.team_code
+                          AND solo.season_year = c.season_year
+                          AND solo.position_code = c.position_code
+        WHERE c.card_type = 'NORMAL'
+        ORDER BY c.team_code, c.season_year, c.position_code
+    </select>
+
+</mapper>
