@@ -24,9 +24,15 @@
       카드 종류가 늘어나면 같은 선수가 여러 행이 되어 COUNT(*) 는 "그 조합의 유일한 선수" 판정을
       틀리게 만든다. 반드시 DISTINCT 로 사람 수를 세야 한다.
 
-      서브쿼리 GROUP BY 의 컬럼 순서(team_code, season_year, position_code)는
+      "그 칸에 사람이 한 명뿐인가" 를 상관 서브쿼리로 카드마다 따로 묻는다.
+      파생 테이블(JOIN (SELECT ... GROUP BY ...))로 짰다가 21초가 나왔다 —
+      MariaDB 가 그것을 LATERAL DERIVED 로 잡아 바깥 행마다 11,151행을 다시 훑었다.
+      상관 서브쿼리는 uk_dpc_card 앞 3개 컬럼으로 좁힌 뒤 세므로 12ms 다.
+      되돌리지 말 것.
+
+      WHERE 절 컬럼 순서(team_code, season_year, position_code)는
       uk_dpc_card(team_code, season_year, position_code, player_name, card_type) 의
-      앞 3개와 일치시켜 이 인덱스를 그대로 타게 한 것이다 — 순서를 바꾸지 않는다.
+      앞 3개와 일치시켜 이 인덱스를 그대로 타게 한 것이다.
 
       화면에서 수정되지 않는 정적 데이터라 캐시(@Cacheable)로 서버 기동 후 한 번만 계산한다.
     -->
@@ -37,18 +43,16 @@
                c.position_code,
                c.player_name,
                l.legend_name
-        FROM data_player_card c
-                 JOIN data_player_legend_material m ON m.player_card_id = c.id
+        FROM data_player_legend_material m
+                 JOIN data_player_card c ON c.id = m.player_card_id
                  JOIN data_player_legend l ON l.id = m.legend_id
-                 JOIN (SELECT team_code, season_year, position_code
-                       FROM data_player_card
-                       WHERE card_type = 'NORMAL'
-                       GROUP BY team_code, season_year, position_code
-                       HAVING COUNT(DISTINCT player_name) = 1) solo
-                      ON solo.team_code = c.team_code
-                          AND solo.season_year = c.season_year
-                          AND solo.position_code = c.position_code
         WHERE c.card_type = 'NORMAL'
+          AND (SELECT COUNT(DISTINCT x.player_name)
+               FROM data_player_card x
+               WHERE x.team_code = c.team_code
+                 AND x.season_year = c.season_year
+                 AND x.position_code = c.position_code
+                 AND x.card_type = 'NORMAL') = 1
         ORDER BY c.team_code, c.season_year, c.position_code
     </select>
 
