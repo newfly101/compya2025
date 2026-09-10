@@ -13,7 +13,9 @@ const PlayerCard = ({ player, maxGrade, wide, isOpen, onToggleL, onClose }) => {
   const isPitcher = player.t === "P";
   const isCoach = player.t === "C"; // 이번 범위는 코치 데이터가 로더에서 제외되어 실질적으로 도달하지 않음
   const gradeColor = maxGrade ? "var(--color-pe-gold)" : "var(--color-pe-normal)";
-  const image = isCoach ? null : `/cards/${isPitcher ? "pitcher" : "batter"}_${maxGrade ? "platinum" : "normal"}.png`;
+  // webp 로 내보낸다 — 원본 PNG 1024×1536 을 화면 크기(228×342)로 줄여 30MB 를 217KB 로 줄였다.
+  // 만드는 쪽은 scripts/build-card-images.mjs.
+  const image = isCoach ? null : `/cards/${isPitcher ? "pitcher" : "batter"}_${maxGrade ? "platinum" : "normal"}.webp`;
   const hasLegend = !!player.L;
   const legendName = player.LN || player.n;
 

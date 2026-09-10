@@ -1,232 +1,327 @@
-import { useMemo, useState, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
-import {
-  getYears,
-  getRosterPlayers,
-  getRosterCoaches,
-  getTopGrade,
-  expandToCardTiles,
-  getTeamTiles,
-  SLUG_TO_TEAM,
-  ALL_TEAM_SLUG,
-} from "@/data/players";
+// domains/players/mobile/PlayerEncyclopediaScreen.jsx
+// 1단계(UI 만) — store/thunk 없이 임시 데이터(config/playersLoader.js)로 화면을 완성한다.
+// 필터 파이프라인 순서는 design_handoff README 를 그대로 따른다:
+// 범위(검색/팀필터/구단연도) → 모달 필터 AND → 재료만 → 탭 카운트 → 정렬.
+import { useCallback, useMemo, useState } from "react";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
-import { TEAM_LOGO, getTeamFallbackColor } from "./teamVisuals";
-import TeamSelectModal from "./components/teamSelectModal/TeamSelectModal";
-import YearSearchDropbox from "./components/yearSearchDropbox/YearSearchDropbox";
+import {
+  PLAYERS,
+  TEAMS,
+  TABS,
+  ACTIVE_KINDS,
+  getYearsForTeam,
+  getPosOrder,
+} from "@/domains/players/config/playersLoader";
+import GuideView from "./components/guideView/GuideView";
+import PlayerCard from "./components/playerCard/PlayerCard";
+import FilterSheet from "./components/filterSheet/FilterSheet";
 import "./players.tokens.scss";
 import styles from "./PlayerEncyclopediaScreen.module.scss";
 
-// 기본 구단 — 두산 (선수수 1위 자동 선택 방식은 폐기)
-const DEFAULT_TEAM_SLUG = "doosan";
-
-const matchesKeyword = (p, q) => p.name.includes(q) || p.label.includes(q);
-
-// 카드 종류(cardTypes) → 색상 클래스 매핑. 9종 확실히 구분.
-const CARD_TYPE_CHIP_CLASS = {
-  레전드: "typeLegend",
-  에픽: "typeEpic",
-  MVP: "typeMvp",
-  골든글러브: "typeGoldenGlove",
-  올스타: "typeAllstar",
-  국가대표: "typeNational",
-  시그니처: "typeSignature",
-  "연대 시그니처": "typeEraSignature",
-  일반: "typeNormal",
-};
-
-// 셀의 연도 목록에서 "최신 연도" 우선 기본값. 레전드만 있으면 레전드.
-const pickDefaultYearKey = (years) => {
-  const latest = years.find((y) => y.year !== null);
-  return latest ? String(latest.year) : "legend";
-};
-
-const getTeamDisplayName = (slug) => (slug === ALL_TEAM_SLUG ? "전체" : (SLUG_TO_TEAM[slug] ?? null));
+const toggle = (arr, value) => (arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value]);
 
 const PlayerEncyclopediaScreen = () => {
   useDomainTopBar("선수 백과사전");
 
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [tab, setTab] = useState("player"); // "player" | "coach"
-  const [keyword, setKeyword] = useState("");
-  const [teamModalOpen, setTeamModalOpen] = useState(false);
+  const [entered, setEntered] = useState(false);
+  const [help, setHelp] = useState(false);
 
-  // 구단 선택 모달용 22타일(구단 21 + 전체) — 모듈 로드 시 1회 인덱싱된 값 재사용
-  const teamTiles = useMemo(() => getTeamTiles(), []);
+  const [team, setTeam] = useState(TEAMS[0] ?? "");
+  const [year, setYear] = useState(() => getYearsForTeam(TEAMS[0] ?? "")[0] ?? "");
+  const [tab, setTab] = useState("all");
+  const [query, setQuery] = useState("");
+  const [maxGrade, setMaxGrade] = useState(false);
+  const [onlyL, setOnlyL] = useState(false);
+  const [openL, setOpenL] = useState(null);
 
-  const teamParam = searchParams.get("team");
-  const isValidTeamParam = teamParam === ALL_TEAM_SLUG || (!!teamParam && !!SLUG_TO_TEAM[teamParam]);
-  const activeTeamSlug = isValidTeamParam ? teamParam : DEFAULT_TEAM_SLUG;
-  const teamName = getTeamDisplayName(activeTeamSlug);
-  const isAllTeams = activeTeamSlug === ALL_TEAM_SLUG;
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [fTeam, setFTeam] = useState([]);
+  const [fPos, setFPos] = useState([]);
+  const [fKind, setFKind] = useState([]);
 
-  const years = useMemo(() => (activeTeamSlug ? getYears(activeTeamSlug) : []), [activeTeamSlug]);
-  const validYearKeys = useMemo(
-    () => new Set(years.map((y) => (y.year === null ? "legend" : String(y.year)))),
-    [years]
-  );
+  const years = useMemo(() => getYearsForTeam(team), [team]);
 
-  const yearParam = searchParams.get("year");
-  const activeYearKey = yearParam && validYearKeys.has(yearParam) ? yearParam : pickDefaultYearKey(years);
+  const trimmedQuery = query.trim();
+  const hasQuery = trimmedQuery.length > 0;
+  const teamFiltered = fTeam.length > 0;
+  const selectorDisabled = hasQuery || teamFiltered; // README: 검색 중이거나 팀 필터가 있으면 구단·연도 select disabled
+  const wide = hasQuery || teamFiltered; // 여러 구단이 섞여 보이는 상태 — 카드에 구단명을 함께 표기
 
-  const handleTeamSelect = useCallback(
-    (slug) => {
-      const next = new URLSearchParams(searchParams);
-      next.set("team", slug);
-      next.delete("year"); // 새 구단 진입 시 최신 연도로 재계산
-      setSearchParams(next);
-      setTeamModalOpen(false);
-    },
-    [searchParams, setSearchParams]
-  );
+  // 1) 범위 → 2) 모달 필터 AND → 3) 재료만
+  const scopedRows = useMemo(() => {
+    let base;
+    if (hasQuery) {
+      base = PLAYERS.filter((r) => r.n.includes(trimmedQuery));
+    } else if (teamFiltered) {
+      base = PLAYERS;
+    } else {
+      base = PLAYERS.filter((r) => r.tm === team && r.y === year);
+    }
+    if (teamFiltered) base = base.filter((r) => fTeam.includes(r.tm));
+    if (fPos.length) base = base.filter((r) => fPos.includes(r.pos));
+    if (fKind.length) base = base.filter((r) => r.kinds.some((k) => fKind.includes(k)));
+    if (onlyL) base = base.filter((r) => r.L);
+    return base;
+  }, [hasQuery, trimmedQuery, teamFiltered, fTeam, fPos, fKind, onlyL, team, year]);
 
-  const handleYearSelect = useCallback(
-    (yearKey) => {
-      const next = new URLSearchParams(searchParams);
-      next.set("team", activeTeamSlug);
-      next.set("year", yearKey);
-      setSearchParams(next);
-    },
-    [searchParams, setSearchParams, activeTeamSlug]
-  );
+  // 4) 탭 카운트 — 0장이면 disabled, 현재 탭이 0장이 되면 "전체"로 자동 보정
+  const tabCounts = useMemo(() => {
+    const cnt = { all: scopedRows.length, B: 0, P: 0, C: 0 };
+    scopedRows.forEach((r) => {
+      cnt[r.t] += 1;
+    });
+    return cnt;
+  }, [scopedRows]);
 
-  const rosterPlayers = useMemo(() => {
-    if (!teamName || !activeTeamSlug) return [];
-    const yearParamValue = activeYearKey === "legend" ? null : Number(activeYearKey);
-    return getRosterPlayers(activeTeamSlug, yearParamValue);
-  }, [activeTeamSlug, activeYearKey, teamName]);
+  const effectiveTab = tab !== "all" && tabCounts[tab] === 0 ? "all" : tab;
+  const tabRows = effectiveTab === "all" ? scopedRows : scopedRows.filter((r) => r.t === effectiveTab);
 
-  const rosterCoaches = useMemo(() => {
-    if (!teamName || !activeTeamSlug) return [];
-    const yearParamValue = activeYearKey === "legend" ? null : Number(activeYearKey);
-    return getRosterCoaches(activeTeamSlug, yearParamValue);
-  }, [activeTeamSlug, activeYearKey, teamName]);
+  // 5) 정렬 — 검색 중 / 그 외 규칙이 다르다
+  const sortedPlayers = useMemo(() => {
+    const arr = [...tabRows];
+    if (hasQuery) {
+      arr.sort(
+        (a, b) => a.n.localeCompare(b.n, "ko") || Number(a.y) - Number(b.y) || a.tm.localeCompare(b.tm, "ko")
+      );
+    } else {
+      arr.sort((a, b) => {
+        const legendDiff = (a.L ? 0 : 1) - (b.L ? 0 : 1);
+        if (legendDiff !== 0) return legendDiff;
+        const typeOrder = (t) => (t === "B" ? 0 : t === "P" ? 1 : 2);
+        const typeDiff = typeOrder(a.t) - typeOrder(b.t);
+        if (typeDiff !== 0) return typeDiff;
+        const posDiff = getPosOrder(a.pos) - getPosOrder(b.pos);
+        if (posDiff !== 0) return posDiff;
+        return a.n.localeCompare(b.n, "ko");
+      });
+    }
+    return arr;
+  }, [tabRows, hasQuery]);
 
-  // 선수 탭이 비어있으면 코치 탭으로 폴백 — effect 없이 파생값으로 계산
-  const effectiveTab = rosterPlayers.length === 0 && rosterCoaches.length > 0 ? "coach" : tab;
-  const activeRoster = effectiveTab === "coach" ? rosterCoaches : rosterPlayers;
+  const filterCount = (fTeam.length ? 1 : 0) + (fPos.length ? 1 : 0) + (fKind.length ? 1 : 0) + (onlyL ? 1 : 0);
+  const filterActive = filterCount > 0;
+  const teamAllLabel = teamFiltered && !hasQuery ? `${fTeam.length}개 구단` : "전체";
+  const baseColor = maxGrade ? "var(--color-pe-gold)" : "var(--color-pe-normal)";
+  const baseLabel = maxGrade ? "플래티넘" : "노말";
 
-  const trimmedKeyword = keyword.trim();
-  const filteredRoster = useMemo(() => {
-    if (!trimmedKeyword) return activeRoster;
-    return activeRoster.filter((p) => matchesKeyword(p, trimmedKeyword));
-  }, [activeRoster, trimmedKeyword]);
+  const handleEnter = useCallback(() => {
+    setEntered(true);
+    setHelp(false);
+  }, []);
 
-  // 카드별 타일로 펼침 — 레코드 1개가 cardTypes 개수만큼 개별 타일이 된다.
-  const tiles = useMemo(() => expandToCardTiles(filteredRoster), [filteredRoster]);
+  const handleOpenHelp = useCallback(() => {
+    setHelp(true);
+    setFilterOpen(false);
+    setOpenL(null);
+  }, []);
 
-  if (teamTiles.length === 0) {
-    return (
-      <div className={styles.screen}>
-        <p className={styles.emptyText}>등록된 구단이 없습니다.</p>
-      </div>
-    );
+  const handleTeamChange = useCallback((nextTeam) => {
+    const nextYears = getYearsForTeam(nextTeam);
+    setTeam(nextTeam);
+    setYear((prevYear) => (nextYears.includes(prevYear) ? prevYear : (nextYears[0] ?? "")));
+  }, []);
+
+  const handleToggleL = useCallback((id) => {
+    setOpenL((prev) => (prev === id ? null : id));
+  }, []);
+
+  const handleCloseOpenCard = useCallback(() => {
+    setOpenL((prev) => (prev ? null : prev));
+  }, []);
+
+  const handleResetAll = useCallback(() => {
+    setQuery("");
+    setFTeam([]);
+    setFPos([]);
+    setFKind([]);
+    setOnlyL(false);
+    setTab("all");
+  }, []);
+
+  const handleToggleKind = useCallback((kind) => {
+    if (!ACTIVE_KINDS.has(kind)) return; // DB엔 일반·시그니처만 있어 나머지는 선택 불가
+    setFKind((prev) => toggle(prev, kind));
+  }, []);
+
+  if (!entered || help) {
+    return <GuideView primaryLabel={entered ? "확인" : "이용하기"} onSubmit={entered ? () => setHelp(false) : handleEnter} />;
   }
-
-  const emptyMessage = trimmedKeyword
-    ? "검색 결과가 없습니다."
-    : effectiveTab === "coach"
-      ? "등록된 코치가 없습니다."
-      : "등록된 선수가 없습니다.";
-
-  const triggerLogo = !isAllTeams ? TEAM_LOGO[activeTeamSlug] : null;
 
   return (
     <div className={styles.screen}>
-      <div className={styles.selectorRow}>
-        <button
-          type="button"
-          className={styles.teamTrigger}
-          onClick={() => setTeamModalOpen(true)}
-        >
-          {triggerLogo ? (
-            <img className={styles.triggerLogo} src={triggerLogo} alt="" />
-          ) : (
-            <span
-              className={styles.triggerLogoFallback}
-              style={{
-                backgroundColor: isAllTeams ? "var(--color-brand)" : getTeamFallbackColor(activeTeamSlug),
-              }}
-              aria-hidden="true"
-            >
-              {(teamName ?? "?").slice(0, 1)}
-            </span>
-          )}
-          <span className={styles.triggerLabel}>{teamName ?? "구단 선택"}</span>
-          <span className={styles.triggerCaret} aria-hidden="true">
-            ▾
-          </span>
-        </button>
-
-        <YearSearchDropbox years={years} activeYearKey={activeYearKey} onSelect={handleYearSelect} />
-      </div>
-
-      <TeamSelectModal
-        open={teamModalOpen}
-        tiles={teamTiles}
-        activeSlug={activeTeamSlug}
-        onSelect={handleTeamSelect}
-        onClose={() => setTeamModalOpen(false)}
-      />
-
-      <div className={styles.tabRow}>
-        <button
-          type="button"
-          className={`${styles.tab} ${effectiveTab === "player" ? styles.tabActive : ""}`}
-          onClick={() => setTab("player")}
-          disabled={rosterPlayers.length === 0}
-        >
-          선수 {rosterPlayers.length}
-        </button>
-        <button
-          type="button"
-          className={`${styles.tab} ${effectiveTab === "coach" ? styles.tabActive : ""}`}
-          onClick={() => setTab("coach")}
-          disabled={rosterCoaches.length === 0}
-        >
-          코치 {rosterCoaches.length}
-        </button>
-      </div>
-
-      <div className={styles.searchWrap}>
-        <div className={styles.searchInputBox}>
+      <div className={styles.searchFilterRow}>
+        <div className={styles.searchBox}>
           <span className={styles.searchIcon} aria-hidden="true">
             🔍
           </span>
           <input
             className={styles.searchInput}
-            placeholder="이름 검색"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="이름 검색 (전체 카드)"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
           />
+          {hasQuery && (
+            <button type="button" className={styles.clearBtn} aria-label="검색 지우기" onClick={() => setQuery("")}>
+              ✕
+            </button>
+          )}
         </div>
+        <button
+          type="button"
+          className={`${styles.filterBtn} ${filterActive ? styles.filterBtnActive : ""}`}
+          onClick={() => setFilterOpen(true)}
+        >
+          필터
+          {filterActive && <span className={styles.filterBadge}>{filterCount}</span>}
+        </button>
       </div>
 
-      {rosterPlayers.length === 0 && rosterCoaches.length === 0 ? (
-        <p className={styles.emptyText}>등록된 선수가 없습니다.</p>
-      ) : tiles.length === 0 ? (
-        <p className={styles.emptyText}>{emptyMessage}</p>
-      ) : (
-        <div className={styles.grid}>
-          {tiles.map(({ tileId, player, cardType }) => {
-            const topGrade = getTopGrade(player);
-            const typeClass = styles[CARD_TYPE_CHIP_CLASS[cardType]] ?? styles.typeNormal;
+      <div className={styles.selectRow} style={{ opacity: selectorDisabled ? 0.45 : 1 }}>
+        <select
+          className={styles.select}
+          value={selectorDisabled ? "__all" : team}
+          disabled={selectorDisabled}
+          onChange={(e) => handleTeamChange(e.target.value)}
+        >
+          {selectorDisabled && <option value="__all">{teamAllLabel}</option>}
+          {TEAMS.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+        <select
+          className={styles.select}
+          value={selectorDisabled ? "__all" : year}
+          disabled={selectorDisabled}
+          onChange={(e) => setYear(e.target.value)}
+        >
+          {selectorDisabled && <option value="__all">전체</option>}
+          {years.map((y) => (
+            <option key={y} value={y}>
+              {y}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div className={styles.tabToggleRow}>
+        <div className={styles.tabs}>
+          {TABS.map(([id, label]) => {
+            const count = tabCounts[id];
             return (
-              <div key={tileId} className={styles.card}>
-                <span className={styles.cardLabel}>{player.label}</span>
-                {player.label !== player.name && (
-                  <span className={styles.cardName}>{player.name}</span>
-                )}
-                {isAllTeams && <span className={styles.cardTeam}>{player.team}</span>}
-                <div className={styles.cardMetaRow}>
-                  <span className={`${styles.chip} ${typeClass}`}>{cardType}</span>
-                  <span className={styles.topGradeText}>{topGrade}</span>
-                </div>
-              </div>
+              <button
+                key={id}
+                type="button"
+                className={`${styles.tab} ${effectiveTab === id ? styles.tabActive : ""}`}
+                disabled={count === 0}
+                onClick={() => setTab(id)}
+              >
+                <span>{label}</span>
+                <span className={styles.tabCount}>{count}</span>
+              </button>
             );
           })}
         </div>
+        <div className={styles.viewToggle}>
+          <button type="button" className={styles.viewGrid} aria-label="카드형">
+            <span />
+            <span />
+            <span />
+            <span />
+          </button>
+          <button type="button" className={styles.viewList} aria-label="리스트형 (준비 중)" disabled>
+            <span />
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.toggleRow}>
+        <button
+          type="button"
+          className={`${styles.toggleBtn} ${onlyL ? styles.toggleBtnMaterial : ""}`}
+          onClick={() => setOnlyL((v) => !v)}
+        >
+          <span className={styles.checkbox}>{onlyL && "✓"}</span>
+          재료만 보기
+        </button>
+        <button
+          type="button"
+          className={`${styles.toggleBtn} ${maxGrade ? styles.toggleBtnGold : ""}`}
+          onClick={() => setMaxGrade((v) => !v)}
+        >
+          <span className={styles.checkbox}>{maxGrade && "✓"}</span>
+          최고 등급 보기
+        </button>
+      </div>
+
+      <div className={styles.legendRow}>
+        <span className={styles.legendItem}>
+          <span className={styles.lMarkSmall}>L</span>레전드 재료
+        </span>
+        <span className={styles.legendItem}>
+          <span className={styles.gradeDot} style={{ backgroundColor: baseColor }} />
+          {baseLabel}
+        </span>
+        <div className={styles.legendRight}>
+          <button type="button" className={styles.helpPill} onClick={handleOpenHelp}>
+            <span className={styles.helpMark}>?</span>도움말
+          </button>
+          <span>
+            <b>{sortedPlayers.length}</b>장
+          </span>
+        </div>
+      </div>
+
+      {sortedPlayers.length === 0 ? (
+        <div className={styles.emptyWrap}>
+          <p>조건에 맞는 카드가 없습니다.</p>
+          <button type="button" className={styles.resetAllBtn} onClick={handleResetAll}>
+            검색·필터 초기화
+          </button>
+        </div>
+      ) : (
+        <div className={styles.grid}>
+          {sortedPlayers.map((p) => (
+            <PlayerCard
+              key={p.id}
+              player={p}
+              maxGrade={maxGrade}
+              wide={wide}
+              isOpen={openL === p.id}
+              onToggleL={handleToggleL}
+              onClose={handleCloseOpenCard}
+            />
+          ))}
+        </div>
       )}
+
+      <FilterSheet
+        open={filterOpen}
+        teams={TEAMS}
+        fTeam={fTeam}
+        fPos={fPos}
+        fKind={fKind}
+        onlyL={onlyL}
+        onToggleTeam={(t) => setFTeam((prev) => toggle(prev, t))}
+        onTogglePos={(p) => setFPos((prev) => toggle(prev, p))}
+        onToggleKind={handleToggleKind}
+        onTeamAll={() => setFTeam([])}
+        onPosAll={() => setFPos([])}
+        onKindAll={() => setFKind([])}
+        onToggleOnlyL={() => setOnlyL((v) => !v)}
+        onReset={() => {
+          setFTeam([]);
+          setFPos([]);
+          setFKind([]);
+          setOnlyL(false);
+        }}
+        onClose={() => setFilterOpen(false)}
+        shownCount={sortedPlayers.length}
+      />
     </div>
   );
 };

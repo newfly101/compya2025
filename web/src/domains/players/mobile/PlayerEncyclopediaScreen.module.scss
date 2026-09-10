@@ -1,3 +1,4 @@
+// design_handoff 는 좌우 12px 고정(반응형 16→12 아님) — h-pad 믹스인 대신 $layout-h-pad-sm 을 직접 쓴다.
 .screen {
   @include flex-col;
   width: 100%;
@@ -5,79 +6,149 @@
   background-color: var(--color-bg-deepest);
 }
 
-// ── 셀렉터 행 — 구단 트리거 버튼(모달 오픈) + 연도 검색 드롭다운 ──
-.selectorRow {
-  @include flex-row($space-2, center, flex-start);
-  @include h-pad;
-  padding-top: $space-3;
-  padding-bottom: $space-2;
+// ── 검색 + 필터 ──────────────────────────────────────────────
+.searchFilterRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: $space-2;
+  padding: $space-3 $layout-h-pad-sm 0;
 }
 
-.teamTrigger {
-  @include reset-button;
-  @include pressable;
-  @include flex-row($space-2, center, flex-start);
-  flex-shrink: 0;
-  height: $control-height-sm;
+.searchBox {
+  height: $control-height-md;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
   padding: 0 $space-3;
   background-color: var(--color-bg-overlay);
   border: 1px solid var(--color-border-strong);
-  border-radius: $radius-sm;
-  max-width: 45%;
+  border-radius: $radius-lg;
 }
 
-.triggerLogo {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  object-fit: cover;
-  flex-shrink: 0;
-}
-
-.triggerLogoFallback {
-  @include flex-row(0, center, center);
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  color: var(--color-text-primary);
-  @include text-badge;
-  flex-shrink: 0;
-}
-
-.triggerLabel {
-  @include text-body-bold;
-  @include hangul-safe;
-  @include line-clamp(1);
-  color: var(--color-text-primary);
-  min-width: 0;
-}
-
-.triggerCaret {
-  @include text-caption;
+.searchIcon {
   color: var(--color-text-muted);
   flex-shrink: 0;
 }
 
-// ── 선수/코치 탭 ─────────────────────────────────────────────
-.tabRow {
-  @include flex-row($space-2);
-  @include h-pad;
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text-primary);
+  @include text-body;
+  font-size: 14px;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+}
+
+.clearBtn {
+  @include reset-button;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filterBtn {
+  @include reset-button;
+  height: $control-height-md;
+  min-width: 72px;
+  padding: 0 $space-4;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  @include text-body-bold;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+}
+
+.filterBtnActive {
+  border-color: var(--color-brand);
+  background-color: var(--color-brand);
+  color: #fff;
+}
+
+.filterBadge {
+  min-width: 14px;
+  height: 14px;
+  padding: 0 $space-1;
+  border-radius: 7px;
+  background-color: #fff;
+  color: var(--color-brand);
+  font-size: 9px;
+  font-weight: 900;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── 구단 / 연도 ─────────────────────────────────────────────
+.selectRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-2;
+  padding: $space-2 $layout-h-pad-sm 0;
+  transition: opacity 0.15s ease;
+}
+
+.select {
+  width: 100%;
+  height: $control-height-md;
+  padding: 0 $space-4 0 $space-3;
+  background-color: var(--color-bg-overlay);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  color: var(--color-text-primary);
+  @include text-body-bold;
+  font-size: 14px;
+  appearance: none;
+  // 우측 ▾ — 이미지 없이 그라디언트 대신 배경 SVG 로 그리면 색 하드코딩이 늘어나 배경 텍스트로 대체
+}
+
+// ── 탭 + 보기 전환 ───────────────────────────────────────────
+.tabToggleRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: $space-2;
+  padding: $space-2 $layout-h-pad-sm 0;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-1;
 }
 
 .tab {
   @include reset-button;
-  @include pressable;
-  @include text-body-bold;
-  flex: 1;
-  height: $control-height-sm;
-  border-radius: $radius-sm;
-  background-color: var(--color-bg-overlay);
+  height: $control-height-md;
+  border-radius: $radius-lg;
   border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  text-align: center;
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  line-height: 1.1;
 
   &:disabled {
-    opacity: 0.4;
+    color: var(--color-text-placeholder);
     cursor: not-allowed;
   }
 }
@@ -85,174 +156,207 @@
 .tabActive {
   background-color: var(--color-brand-tint);
   border-color: var(--color-brand);
-  color: var(--color-brand);
+  color: var(--color-text-primary);
 }
 
-// ── 검색 ─────────────────────────────────────────────────────
-.searchWrap {
-  @include h-pad;
-  padding-top: $space-3;
-  padding-bottom: $space-2;
+.tabCount {
+  font-size: 10px;
+  opacity: 0.7;
 }
 
-.searchInputBox {
-  position: relative;
-  height: $control-height-sm;
+.viewToggle {
+  height: $control-height-md;
+  display: flex;
+  padding: 3px;
+  gap: 2px;
   background-color: var(--color-bg-overlay);
   border: 1px solid var(--color-border-strong);
-  border-radius: $radius-sm;
-  display: flex;
-  align-items: center;
-  padding: 0 $space-3;
+  border-radius: $radius-lg;
 }
 
-.searchIcon {
-  @include text-body;
-  color: var(--color-text-muted);
-  margin-right: $space-1;
-  flex-shrink: 0;
-}
+.viewGrid {
+  @include reset-button;
+  width: 36px;
+  border-radius: $radius-md;
+  background-color: var(--color-brand);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: $space-2 9px;
+  cursor: default;
 
-.searchInput {
-  flex: 1;
-  background: none;
-  border: none;
-  outline: none;
-  color: var(--color-text-primary);
-  @include text-body;
-  padding: 0;
-
-  &::placeholder {
-    color: var(--color-text-muted);
+  span {
+    background-color: #fff;
+    border-radius: 1px;
   }
 }
 
-// ── 카드 타일 그리드 — 셀당 최대 106장까지 렌더될 수 있어 가볍게 유지 ──
+.viewList {
+  @include reset-button;
+  width: 36px;
+  border-radius: $radius-md;
+  background: none;
+  opacity: 0.35;
+  display: grid;
+  grid-auto-rows: 2px;
+  gap: $space-1;
+  padding: 11px $space-2;
+  align-content: center;
+  cursor: not-allowed;
+
+  span {
+    background-color: var(--color-text-muted);
+  }
+}
+
+// ── 재료만 / 최고 등급 ───────────────────────────────────────
+.toggleRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-2;
+  padding: $space-2 $layout-h-pad-sm $space-3;
+}
+
+.toggleBtn {
+  @include reset-button;
+  height: $control-height-sm;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  @include text-body-bold;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+}
+
+.toggleBtnMaterial {
+  background-color: var(--color-brand-tint);
+  border-color: var(--color-brand);
+  color: var(--color-text-primary);
+}
+
+.toggleBtnGold {
+  background-color: var(--color-pe-gold-tint-bg);
+  border-color: var(--color-pe-gold);
+  color: var(--color-pe-gold);
+}
+
+.checkbox {
+  width: 14px;
+  height: 14px;
+  border-radius: $radius-xs;
+  border: 1.5px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  line-height: 1;
+}
+
+// ── 레전드 재료 / 등급 범례 행 ───────────────────────────────
+.legendRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: 0 $layout-h-pad-sm $space-2;
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+}
+
+.lMarkSmall {
+  width: 14px;
+  height: 14px;
+  border-radius: $radius-xs;
+  background-color: var(--color-brand);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gradeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-xs;
+}
+
+.legendRight {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  b {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+}
+
+.helpPill {
+  @include reset-button;
+  height: 24px;
+  padding: 0 $space-2 0 $space-1;
+  border-radius: $radius-full;
+  border: 1px solid var(--color-brand);
+  background-color: var(--color-brand-tint);
+  color: var(--color-text-primary);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  white-space: nowrap;
+}
+
+.helpMark {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--color-brand);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── 카드 그리드 — 고정 5열 (11,672장까지 다뤄 useMemo/memo 로 재계산 최소화) ──
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: $space-2;
-  @include h-pad;
-  padding-top: $space-1;
-  padding-bottom: $space-5;
+  padding: 0 $layout-h-pad-sm $space-6;
 }
 
-.card {
-  @include card-base(
-    $bg: var(--color-bg-card),
-    $border: 1px solid var(--color-border),
-    $radius: $radius-sm,
-    $pad: $space-2
-  );
-  @include flex-col($space-1, flex-start);
-  min-width: 0;
-}
-
-.cardLabel {
-  @include text-caption;
-  @include hangul-safe;
-  @include line-clamp(2);
-  font-weight: 700;
-  color: var(--color-text-primary);
-  width: 100%;
-  word-break: keep-all;
-  overflow-wrap: anywhere;
-}
-
-.cardName {
-  @include text-micro;
+// ── 빈 상태 ──────────────────────────────────────────────────
+.emptyWrap {
+  @include flex-col($space-3, center, center);
+  padding: $space-12 $space-6;
   color: var(--color-text-muted);
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-// 구단 전체 선택 시에만 표시 — 어느 팀 소속인지 구분
-.cardTeam {
-  @include text-micro;
-  color: var(--color-text-secondary);
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.cardMetaRow {
-  @include flex-row($space-1, center);
-  flex-wrap: wrap;
-  width: 100%;
-}
-
-// ── 카드 종류(cardTypes) 칩 — 9종. 색으로만 구분, 수치 없음 ──────
-.chip {
-  @include chip-base($size: sm);
-}
-
-.typeLegend {
-  background-color: var(--color-cardtype-legend-bg);
-  border-color: var(--color-cardtype-legend-border);
-  color: var(--color-cardtype-legend-text);
-}
-
-.typeEpic {
-  background-color: var(--color-cardtype-epic-bg);
-  border-color: var(--color-cardtype-epic-border);
-  color: var(--color-cardtype-epic-text);
-}
-
-.typeMvp {
-  background-color: var(--color-cardtype-mvp-bg);
-  border-color: var(--color-cardtype-mvp-border);
-  color: var(--color-cardtype-mvp-text);
-}
-
-.typeGoldenGlove {
-  background-color: var(--color-cardtype-goldenglove-bg);
-  border-color: var(--color-cardtype-goldenglove-border);
-  color: var(--color-cardtype-goldenglove-text);
-}
-
-.typeAllstar {
-  background-color: var(--color-cardtype-allstar-bg);
-  border-color: var(--color-cardtype-allstar-border);
-  color: var(--color-cardtype-allstar-text);
-}
-
-.typeNational {
-  background-color: var(--color-cardtype-national-bg);
-  border-color: var(--color-cardtype-national-border);
-  color: var(--color-cardtype-national-text);
-}
-
-.typeSignature {
-  background-color: var(--color-cardtype-signature-bg);
-  border-color: var(--color-cardtype-signature-border);
-  color: var(--color-cardtype-signature-text);
-}
-
-.typeEraSignature {
-  background-color: var(--color-cardtype-erasignature-bg);
-  border-color: var(--color-cardtype-erasignature-border);
-  color: var(--color-cardtype-erasignature-text);
-}
-
-.typeNormal {
-  background-color: var(--color-cardtype-normal-bg);
-  border-color: var(--color-cardtype-normal-border);
-  color: var(--color-cardtype-normal-text);
-}
-
-.topGradeText {
-  @include text-micro;
-  color: var(--color-text-muted);
-}
-
-// ── empty / error ──────────────────────────────────────────────
-.emptyText {
   @include text-body;
-  @include h-pad;
-  padding-top: $space-8;
-  color: var(--color-text-muted);
   text-align: center;
+}
+
+.resetAllBtn {
+  @include reset-button;
+  @include pressable;
+  height: $control-height-sm;
+  padding: 0 $space-4;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  @include text-body-bold;
 }

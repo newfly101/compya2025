@@ -1,46 +1,16 @@
-// ============================================================
-// players 도메인 로컬 토큰
-// 글로벌 _colors.scss / semantic/_color.scss 에는 추가하지 않음
-// PlayerEncyclopediaScreen.jsx 에서 side-effect import 로 1회 주입
-//
-// 카드 종류(cardTypes) 9종 색상 팔레트 — 유저가 한눈에 종류를 식별하도록
-// 톤을 확실히 분리한다 (레전드=골드 / 골든글러브=오렌지 로 겹치지 않게).
-// ============================================================
+// players 도메인 로컬 토큰 — PlayerEncyclopediaScreen.jsx 에서 side-effect import 로 1회 주입.
+// 배경·보더·텍스트·브랜드 보라는 전역 --color-bg-* / --color-border-* / --color-brand* 를
+// 그대로 쓴다(design_handoff 의 자체 팔레트를 그대로 옮기지 않는다). 전역에 없는 등급색만 로컬로 둔다.
 
 :root {
-  --color-cardtype-legend-bg: rgba(232, 213, 65, 0.16);
-  --color-cardtype-legend-border: #e8d541;
-  --color-cardtype-legend-text: #e8d541;
+  // 카드 등급색 — 최고 등급(플래티넘) 골드. 전역 토큰에 대응 값이 없다.
+  --color-pe-gold: #f2b705;
+  --color-pe-gold-tint-bg: #3a2a08; // 최고 등급 보기 토글 on 배경
 
-  --color-cardtype-epic-bg: rgba(108, 92, 231, 0.14);
-  --color-cardtype-epic-border: #6c5ce7;
-  --color-cardtype-epic-text: #a29bfe;
+  // 카드 등급색 — 기본(노말). 전역 text-muted 는 alpha 라서 border/dot 용 solid 값이 필요하다.
+  --color-pe-normal: #9ca3af;
 
-  --color-cardtype-mvp-bg: rgba(232, 65, 65, 0.16);
-  --color-cardtype-mvp-border: #e84141;
-  --color-cardtype-mvp-text: #ff7a7a;
-
-  --color-cardtype-goldenglove-bg: rgba(240, 160, 32, 0.16);
-  --color-cardtype-goldenglove-border: #f0a020;
-  --color-cardtype-goldenglove-text: #f0a020;
-
-  --color-cardtype-allstar-bg: rgba(64, 160, 255, 0.16);
-  --color-cardtype-allstar-border: #40a0ff;
-  --color-cardtype-allstar-text: #6cb6ff;
-
-  --color-cardtype-national-bg: rgba(72, 199, 142, 0.16);
-  --color-cardtype-national-border: #48c78e;
-  --color-cardtype-national-text: #48c78e;
-
-  --color-cardtype-signature-bg: rgba(168, 106, 240, 0.15);
-  --color-cardtype-signature-border: #a86af0;
-  --color-cardtype-signature-text: #c9a5f8;
-
-  --color-cardtype-erasignature-bg: rgba(236, 128, 200, 0.16);
-  --color-cardtype-erasignature-border: #ec80c8;
-  --color-cardtype-erasignature-text: #ec80c8;
-
-  --color-cardtype-normal-bg: rgba(255, 255, 255, 0.05);
-  --color-cardtype-normal-border: rgba(255, 255, 255, 0.12);
-  --color-cardtype-normal-text: rgba(255, 255, 255, 0.60);
+  // 카드 등급색 — 스페셜(코치 기본값). 이번 범위는 코치 탭이 항상 disabled 라 미사용,
+  // 추후 코치 데이터 연동 시를 대비해 정의만 유지한다.
+  --color-pe-special: #22c55e;
 }
