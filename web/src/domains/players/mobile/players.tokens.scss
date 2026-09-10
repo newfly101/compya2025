@@ -13,4 +13,7 @@
   // 카드 등급색 — 스페셜(코치 기본값). 이번 범위는 코치 탭이 항상 disabled 라 미사용,
   // 추후 코치 데이터 연동 시를 대비해 정의만 유지한다.
   --color-pe-special: #22c55e;
+
+  // 로딩 스켈레톤 카드 배경 — design_handoff README 지정값. 전역 토큰에 대응 값이 없다.
+  --color-pe-skeleton: #171622;
 }

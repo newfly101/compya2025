@@ -1,14 +1,14 @@
 // domains/players/mobile/PlayerEncyclopediaScreen.jsx
-// 1단계(UI 만) — store/thunk 없이 임시 데이터(config/playersLoader.js)로 화면을 완성한다.
+// 4단계 — store 연동. 「이용하기」로 entered 가 true 가 될 때만 API 를 부른다(진입 즉시 호출 금지).
 // 필터 파이프라인 순서는 design_handoff README 를 그대로 따른다:
 // 범위(검색/팀필터/구단연도) → 모달 필터 AND → 재료만 → 탭 카운트 → 정렬.
 import { useCallback, useMemo, useState } from "react";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
+import { usePlayerCards } from "./hooks/usePlayerCards";
 import {
-  PLAYERS,
-  TEAMS,
   TABS,
   ACTIVE_KINDS,
+  getTeams,
   getYearsForTeam,
   getPosOrder,
 } from "@/domains/players/config/playersLoader";
@@ -26,8 +26,12 @@ const PlayerEncyclopediaScreen = () => {
   const [entered, setEntered] = useState(false);
   const [help, setHelp] = useState(false);
 
-  const [team, setTeam] = useState(TEAMS[0] ?? "");
-  const [year, setYear] = useState(() => getYearsForTeam(TEAMS[0] ?? "")[0] ?? "");
+  const { items: PLAYERS, error, loaded, retry } = usePlayerCards(entered);
+
+  const TEAMS = useMemo(() => getTeams(PLAYERS), [PLAYERS]);
+
+  const [team, setTeam] = useState("");
+  const [year, setYear] = useState("");
   const [tab, setTab] = useState("all");
   const [query, setQuery] = useState("");
   const [maxGrade, setMaxGrade] = useState(false);
@@ -39,7 +43,10 @@ const PlayerEncyclopediaScreen = () => {
   const [fPos, setFPos] = useState([]);
   const [fKind, setFKind] = useState([]);
 
-  const years = useMemo(() => getYearsForTeam(team), [team]);
+  // 데이터 로드 전엔 team/year 가 비어 있다 — 로드되면 TEAMS[0]/그 구단의 첫 연도로 자연히 채워진다.
+  const effectiveTeam = team || TEAMS[0] || "";
+  const years = useMemo(() => getYearsForTeam(PLAYERS, effectiveTeam), [PLAYERS, effectiveTeam]);
+  const effectiveYear = years.includes(year) ? year : (years[0] ?? "");
 
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;
@@ -55,14 +62,14 @@ const PlayerEncyclopediaScreen = () => {
     } else if (teamFiltered) {
       base = PLAYERS;
     } else {
-      base = PLAYERS.filter((r) => r.tm === team && r.y === year);
+      base = PLAYERS.filter((r) => r.tm === effectiveTeam && r.y === effectiveYear);
     }
     if (teamFiltered) base = base.filter((r) => fTeam.includes(r.tm));
     if (fPos.length) base = base.filter((r) => fPos.includes(r.pos));
     if (fKind.length) base = base.filter((r) => r.kinds.some((k) => fKind.includes(k)));
     if (onlyL) base = base.filter((r) => r.L);
     return base;
-  }, [hasQuery, trimmedQuery, teamFiltered, fTeam, fPos, fKind, onlyL, team, year]);
+  }, [PLAYERS, hasQuery, trimmedQuery, teamFiltered, fTeam, fPos, fKind, onlyL, effectiveTeam, effectiveYear]);
 
   // 4) 탭 카운트 — 0장이면 disabled, 현재 탭이 0장이 되면 "전체"로 자동 보정
   const tabCounts = useMemo(() => {
@@ -115,10 +122,9 @@ const PlayerEncyclopediaScreen = () => {
     setOpenL(null);
   }, []);
 
+  // 새 구단의 연도 목록에 지금 연도가 없으면 effectiveYear 가 알아서 그 구단의 첫 연도로 바뀐다.
   const handleTeamChange = useCallback((nextTeam) => {
-    const nextYears = getYearsForTeam(nextTeam);
     setTeam(nextTeam);
-    setYear((prevYear) => (nextYears.includes(prevYear) ? prevYear : (nextYears[0] ?? "")));
   }, []);
 
   const handleToggleL = useCallback((id) => {
@@ -179,7 +185,7 @@ const PlayerEncyclopediaScreen = () => {
       <div className={styles.selectRow} style={{ opacity: selectorDisabled ? 0.45 : 1 }}>
         <select
           className={styles.select}
-          value={selectorDisabled ? "__all" : team}
+          value={selectorDisabled ? "__all" : effectiveTeam}
           disabled={selectorDisabled}
           onChange={(e) => handleTeamChange(e.target.value)}
         >
@@ -192,7 +198,7 @@ const PlayerEncyclopediaScreen = () => {
         </select>
         <select
           className={styles.select}
-          value={selectorDisabled ? "__all" : year}
+          value={selectorDisabled ? "__all" : effectiveYear}
           disabled={selectorDisabled}
           onChange={(e) => setYear(e.target.value)}
         >
@@ -276,7 +282,20 @@ const PlayerEncyclopediaScreen = () => {
         </div>
       </div>
 
-      {sortedPlayers.length === 0 ? (
+      {error ? (
+        <div className={styles.emptyWrap}>
+          <p>카드를 불러오지 못했습니다. {error}</p>
+          <button type="button" className={styles.resetAllBtn} onClick={retry}>
+            다시 시도
+          </button>
+        </div>
+      ) : !loaded ? (
+        <div className={styles.skeletonGrid} aria-label="카드 불러오는 중">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className={styles.skeletonCard} />
+          ))}
+        </div>
+      ) : sortedPlayers.length === 0 ? (
         <div className={styles.emptyWrap}>
           <p>조건에 맞는 카드가 없습니다.</p>
           <button type="button" className={styles.resetAllBtn} onClick={handleResetAll}>

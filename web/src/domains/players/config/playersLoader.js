@@ -1,11 +1,6 @@
 // domains/players/config/playersLoader.js
-// 임시 — 4단계에서 API 로 교체하고 이 파일(과 players.temp.json)은 삭제한다.
-//
-// players.temp.json (컴프야펀 노말카드 포지션 조사 원본, 13,954행) 을 모듈 로드 시 1회 가공한다.
-// role === "coach" 는 코치 테이블이 아직 없어 이번 범위에서 걸러낸다 → 11,672행 남음.
-// (부수효과: 코치 전용 구단인 "국가대표" 도 자연히 제외되어 20개 구단만 남는다)
-
-import raw from "./players.temp.json";
+// 4단계 — JSON 로딩은 걷어내고 순수 상수 + store 데이터를 받아 파생시키는 함수만 남긴다.
+// 화면은 store.players.items 를 이 함수들에 넘겨 구단/연도 목록을 계산한다.
 
 // 구단 표시 순서 고정 (design_handoff README 표기 순서)
 export const TEAM_ORDER = [
@@ -32,21 +27,23 @@ export const TABS = [
 
 export const getPosOrder = (pos) => POS_ORDER[pos] ?? 9;
 
-// 코치 제외 + kinds 배열 파생(", " 구분 문자열 → 배열)
-export const PLAYERS = raw
-  .filter((r) => r.role !== "coach")
-  .map((r) => ({ ...r, kinds: (r.k || "").split(",").map((s) => s.trim()) }));
-
-// 실제 데이터에 존재하는 구단만, 고정 순서로
-export const TEAMS = TEAM_ORDER.filter((t) => PLAYERS.some((r) => r.tm === t));
+/**
+ * store 데이터에 실제 존재하는 구단만, 고정 순서로.
+ * @param {Array} items - store.players.items
+ * @returns {string[]}
+ */
+export function getTeams(items) {
+  return TEAM_ORDER.filter((t) => items.some((r) => r.tm === t));
+}
 
 /**
  * 구단의 연도 목록 — 내림차순. "레전드" 그룹은 맨 앞(연도 아님, 문자 그대로 유지).
+ * @param {Array} items - store.players.items
  * @param {string} team
  * @returns {string[]}
  */
-export function getYearsForTeam(team) {
-  const years = [...new Set(PLAYERS.filter((r) => r.tm === team).map((r) => r.y))];
+export function getYearsForTeam(items, team) {
+  const years = [...new Set(items.filter((r) => r.tm === team).map((r) => r.y))];
   const legend = years.filter((y) => !/^\d{4}$/.test(y));
   const normal = years.filter((y) => /^\d{4}$/.test(y)).sort((a, b) => Number(b) - Number(a));
   return [...legend, ...normal];

@@ -340,6 +340,26 @@
   padding: 0 $layout-h-pad-sm $space-6;
 }
 
+// ── 로딩 스켈레톤 — design_handoff README: 5×2 카드, radius 4 ────
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: $space-2;
+  padding: 0 $layout-h-pad-sm $space-6;
+}
+
+.skeletonCard {
+  aspect-ratio: 2 / 3;
+  border-radius: 4px;
+  background-color: var(--color-pe-skeleton);
+  animation: pe-skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pe-skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
 // ── 빈 상태 ──────────────────────────────────────────────────
 .emptyWrap {
   @include flex-col($space-3, center, center);
