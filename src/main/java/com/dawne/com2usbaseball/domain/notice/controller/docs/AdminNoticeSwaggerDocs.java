@@ -38,6 +38,18 @@ public interface AdminNoticeSwaggerDocs {
     GlobalResponse<List<NoticeResponse>> getAdminNoticeList(NoticeAdminListRequest request);
 
     @Operation(
+            summary = "공지사항 캐시 동기화",
+            description = "공지 관련 캐시를 전부 비우고 DB 에서 다시 읽은 최신 목록을 반환합니다. 서버 간 캐시 불일치(다른 서버/직접 DB 반영)를 재기동 없이 해소할 때 사용합니다."
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "공지사항 캐시 동기화 성공"
+            )
+    })
+    GlobalResponse<List<NoticeResponse>> refreshNotices();
+
+    @Operation(
             summary = "관리자 공지사항 상세 조회",
             description = "관리자가 특정 공지사항의 상세 정보를 조회합니다."
     )

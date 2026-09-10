@@ -20,3 +20,9 @@ export const fetchAdminBulkUpdateNoticesVisible = async (ids, visible) => {
   const { data } = await API.patch(ADMIN_NOTICES.BULK_UPDATE_VISIBLE, { ids, visible });
   return data.data;
 };
+
+// 캐시 동기화 — 서버 캐시를 비운 뒤 DB 최신 상태로 다시 읽어온 전체 목록을 응답한다(쿠폰과 동일 계약).
+export const fetchAdminRefreshNotices = async () => {
+  const { data } = await API.post(ADMIN_NOTICES.REFRESH);
+  return data.data;
+};

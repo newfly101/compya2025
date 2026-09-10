@@ -1,0 +1,65 @@
+.overlay {
+  @include modal-backdrop($bg: rgba(0, 0, 0, 0.9)); // 이미지 감상 목적 — 일반 모달보다 짙은 배경
+  padding: $space-6 $space-4;
+}
+
+// 세로/정사각 이미지 — 레이아웃에 관여하지 않고 overlay 의 flex 중앙정렬을 그대로 쓴다.
+.fitBox {
+  display: contents;
+}
+
+.image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: $radius-lg;
+  transition: opacity 0.12s ease;
+}
+
+// 가로가 더 긴(배너형) 이미지 — 90도 눕혀 화면 높이를 꽉 채우는 표준 CSS 회전-맞춤 기법.
+// 박스를 "뷰포트 높이 × 뷰포트 폭" 크기로 만들어 중앙에 놓고 90도 돌리면,
+// 회전된 박스의 화면상 크기가 정확히 뷰포트 폭×높이가 된다. 그 안의 이미지는
+// object-fit: contain 으로 원본 비율을 유지한 채 박스에 맞춰지므로 잘리지 않는다.
+.rotateBox {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 100vh;
+  height: 100vw;
+  transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.rotatedImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.12s ease;
+}
+
+.closeBtn {
+  @include reset-button;
+  @include tap-target;
+  position: fixed;
+  top: $space-4;
+  right: $space-4;
+  z-index: $z-modal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-full;
+  background-color: var(--color-overlay);
+  color: var(--color-text-primary);
+  font-size: $font-size-17;
+}
+
+// 눕힌 상태에서 글자가 옆으로 누워 읽기 불편할 수 있어 짧게 안내한다 — 화면 기준으로 똑바로.
+.rotateHint {
+  position: fixed;
+  bottom: $space-5;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: $z-modal;
+  @include text-micro;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}

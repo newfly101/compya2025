@@ -17,6 +17,7 @@ import {
   requestAdminUpdateNoticeVisible,
   requestAdminBulkDeleteNotices,
   requestAdminBulkUpdateNoticesVisible,
+  requestAdminRefreshNotices,
 } from "@/domains/notices/store/admin/thunks.js";
 import styles from "./AdminNoticeScreen.module.scss";
 
@@ -141,6 +142,11 @@ export default function AdminNoticeScreen() {
     dispatch(requestAdminUpdateNoticeVisible({ id: n.id, visible: next }));
   };
 
+  // 캐시 동기화 — 운영자가 DB 에 직접 넣은 공지를 재시작 없이 즉시 반영한다(쿠폰과 동일).
+  const handleRefresh = () => {
+    dispatch(requestAdminRefreshNotices());
+  };
+
   // v2: 행 번호(#) 칸 추가, 노출 칸은 헤더 라벨 없이 토글만, 관리 칸은 수정 버튼만.
   const columns = [
     {
@@ -223,6 +229,8 @@ export default function AdminNoticeScreen() {
         selectedCount={selectedOnPageCount}
         onBulkDelete={handleBulkDelete}
         onBulkHide={handleBulkHide}
+        onRefresh={handleRefresh}
+        refreshing={loading}
       />
 
       {loading && <AdminStateBox status="loading" />}

@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useNoticeDetail } from "@/domains/notices/mobile/hooks/useNoticeDetail.js";
 import { formatNoticeDate } from "@/domains/notices/mobile/noticeDate.js";
 import RichContent from "@/global/ui/richContent/RichContent.jsx";
+import ImageLightbox from "@/domains/notices/mobile/components/imageLightbox/ImageLightbox.jsx";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { usePageSeo } from "@/infra/seo/usePageSeo.js";
@@ -15,6 +16,7 @@ const NoticeDetailScreen = () => {
   const { slug } = useParams();
   const location = useLocation();
   const { notice, error, notFound, retry } = useNoticeDetail(slug);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   // 데이터 로드 전(undefined)에는 usePageSeo 가 라우트 기본값을 그대로 둔다.
   const fullTitle = notice?.title ? ROUTE_META.NOTICE_DETAILS.title(notice.title) : undefined;
@@ -75,10 +77,26 @@ const NoticeDetailScreen = () => {
       {/* ── 히어로 이미지 ─────────────────────────────────── */}
       <div className={styles.hero}>
         {notice.imageUrl
-          ? <img src={notice.imageUrl} alt={notice.title} className={styles.heroImg} />
+          ? (
+            <button
+              type="button"
+              className={styles.heroBtn}
+              onClick={() => setLightboxOpen(true)}
+              aria-label="공지 이미지 크게 보기"
+            >
+              <img src={notice.imageUrl} alt={notice.title} className={styles.heroImg} />
+            </button>
+          )
           : <div className={styles.heroEmpty} />
         }
       </div>
+
+      <ImageLightbox
+        open={lightboxOpen}
+        imageUrl={notice.imageUrl}
+        alt={notice.title}
+        onClose={() => setLightboxOpen(false)}
+      />
 
       {/* ── 메타 헤더 (날짜 + 제목) ── category 는 서버 응답에 없는 필드라 배지 제거 */}
       <div className={styles.metaHeader}>

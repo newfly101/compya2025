@@ -7,8 +7,9 @@
 }
 
 .featuredThumb {
+  position: relative;
   width: 100%;
-  height: 10rem;          // 160px — featured 썸네일 표준 높이
+  height: 10rem;          // 160px — 중요 공지(pinned) 표준 높이
   background-color: var(--color-brand-tint);
   overflow: hidden;
   flex-shrink: 0;
@@ -25,6 +26,17 @@
   width: 100%;
   height: 100%;
   background: linear-gradient(135deg, var(--color-brand-tint), var(--color-bg-deep));
+}
+
+// 사이트 공지 목록 카드는 중요 공지(기본 10rem)보다 살짝 작게 — 같은 배너형이어도 섹션 위계가 보이게 한다.
+.listBanner .featuredThumb {
+  height: 7.5rem; // 120px
+}
+
+.pinnedBadge {
+  position: absolute;
+  top: $space-2;
+  left: $space-2;
 }
 
 // 제목과 chevron 을 한 행에 묶어 세로 중심을 맞춘다 (flex-row 의 align-items: center 활용)
@@ -73,14 +85,8 @@
   @include pressable;
 }
 
-.cardRow {
-  @include flex-row($space-3);
-  align-items: flex-start;
-}
-
 .cardContent {
   @include flex-col($space-1);
-  flex: 1;
   min-width: 0;
 }
 
@@ -94,14 +100,6 @@
   @include text-body;
   @include text-ellipsis;
   color: var(--color-text-muted);
-}
-
-.smallThumb {
-  // defaults: 64×64 / radius-sm — bg/radius 만 override
-  @include thumb-box(
-    $bg: var(--color-brand-tint),
-    $radius: $radius-md
-  );
 }
 
 .cardBottom {

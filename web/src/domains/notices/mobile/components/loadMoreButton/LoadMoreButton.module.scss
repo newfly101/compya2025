@@ -1,0 +1,13 @@
+.moreBtn {
+  @include reset-button;
+  @include pressable;
+  width: 100%;
+  height: $control-height-md;
+  margin-top: $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-muted);
+  @include text-body-bold;
+  text-align: center;
+}

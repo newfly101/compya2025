@@ -5,7 +5,7 @@ const NoticeListVertical = ({ notices = [] }) => {
   return (
     <div className={styles.noticeList}>
       {notices.map(notice => (
-        <NoticeCard key={notice.id} notice={notice} />
+        <NoticeCard key={notice.id} notice={notice} variant="list" />
       ))}
     </div>
   );

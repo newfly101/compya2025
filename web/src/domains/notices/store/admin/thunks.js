@@ -10,6 +10,7 @@ import {
   fetchAdminDeleteNotice,
   fetchAdminBulkDeleteNotices,
   fetchAdminBulkUpdateNoticesVisible,
+  fetchAdminRefreshNotices,
 } from "@/domains/notices/store/admin/api.js";
 
 export const requestAdminGetNoticeList = createAsyncThunk(
@@ -118,6 +119,18 @@ export const requestAdminBulkUpdateNoticesVisible = createAsyncThunk(
     try {
       await fetchAdminBulkUpdateNoticesVisible(ids, visible);
       return { ids, visible };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
+);
+
+// 캐시 동기화 — 운영자가 DB 에 직접 넣은 row 를 재시작 없이 즉시 반영한다(쿠폰과 동일 패턴).
+export const requestAdminRefreshNotices = createAsyncThunk(
+  ADMIN_NOTICE_ACTIONS.REFRESH, async (_, { rejectWithValue }) => {
+    try {
+      const list = await fetchAdminRefreshNotices();
+      return [...list].reverse();
     } catch (error) {
       return rejectWithValue(error.message);
     }

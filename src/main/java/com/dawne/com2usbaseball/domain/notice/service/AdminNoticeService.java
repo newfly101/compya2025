@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface AdminNoticeService {
     List<NoticeResponse> getAdminNoticeList(NoticeAdminListRequest request);
+    List<NoticeResponse> refreshNotices();
     NoticeResponse getAdminNoticeDetail(Long noticeId);
     NoticeResponse createNotice(NoticeRequest request);
     NoticeResponse updateNotice(NoticeRequest request, Long noticeId);

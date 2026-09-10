@@ -35,6 +35,13 @@ public class AdminNoticeController implements AdminNoticeSwaggerDocs {
     }
 
     @Override
+    @PostMapping("/refresh")
+    public GlobalResponse<List<NoticeResponse>> refreshNotices() {
+        List<NoticeResponse> noticeList = adminNoticeService.refreshNotices();
+        return GlobalResponse.success(NoticeMessages.NOTICE_REFRESHED, noticeList);
+    }
+
+    @Override
     @GetMapping("/{noticeId}")
     public GlobalResponse<NoticeResponse> getAdminNoticeDetail(@PathVariable Long noticeId) {
         NoticeResponse noticeDetail = adminNoticeService.getAdminNoticeDetail(noticeId);

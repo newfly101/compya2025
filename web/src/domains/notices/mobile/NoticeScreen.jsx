@@ -2,6 +2,7 @@ import SectionBlock from "@/global/ui/mobile/section/SectionBlock.jsx";
 import NoticeCard from "@/domains/notices/mobile/components/noticeCard/NoticeCard.jsx";
 import NoticeListVertical from "@/domains/notices/mobile/containers/public/NoticeListVertical.jsx";
 import OfficialNoticeListVertical from "@/domains/notices/mobile/containers/public/OfficialNoticeListVertical.jsx";
+import LoadMoreButton from "@/domains/notices/mobile/components/loadMoreButton/LoadMoreButton.jsx";
 import { useNoticeList } from "@/domains/notices/mobile/hooks/useNoticeList.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
@@ -12,6 +13,7 @@ const NoticeScreen = () => {
   useDomainTopBar("공지사항");
   const {
     featuredNotice, listedNotices, listedOfficials,
+    remainingNotices, remainingOfficials, showMoreNotices, showMoreOfficials,
     loading, error, loaded, retry,
   } = useNoticeList();
 
@@ -24,23 +26,32 @@ const NoticeScreen = () => {
     return listComp;
   };
 
+  // 정상 상태(로딩/오류/빈목록이 아님)일 때만 「더보기」를 보여준다.
+  const showLoadMore = !loading && !error;
+
   return (
     <div className={styles.screen}>
       {featuredNotice && (
         <SectionBlock title="중요 공지">
-          <NoticeCard notice={featuredNotice} isFeatured />
+          <NoticeCard notice={featuredNotice} variant="pinned" />
         </SectionBlock>
       )}
 
       {/* community 도메인 정리 보류 — 2026-05-09 (기획 IA 작업 후 재개. docs/prd/domains/community.md TODO 참조). community 라우트 비활성 동안 link target 임시 제거 */}
       <SectionBlock title="사이트 공지">
         {renderList(listedNotices, <NoticeListVertical notices={listedNotices} />, "등록된 사이트 공지가 없습니다")}
+        {showLoadMore && listedNotices.length > 0 && (
+          <LoadMoreButton remaining={remainingNotices} onClick={showMoreNotices} />
+        )}
       </SectionBlock>
 
       <div className={styles.sep} />
 
       <SectionBlock title="공식 공지">
         {renderList(listedOfficials, <OfficialNoticeListVertical notices={listedOfficials} />, "등록된 공식 공지가 없습니다")}
+        {showLoadMore && listedOfficials.length > 0 && (
+          <LoadMoreButton remaining={remainingOfficials} onClick={showMoreOfficials} />
+        )}
       </SectionBlock>
     </div>
   );

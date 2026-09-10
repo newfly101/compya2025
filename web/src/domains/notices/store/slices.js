@@ -11,6 +11,7 @@ import {
   requestAdminDeleteNotice,
   requestAdminBulkDeleteNotices,
   requestAdminBulkUpdateNoticesVisible,
+  requestAdminRefreshNotices,
 } from "@/domains/notices/store/admin/thunks.js";
 
 const initialState = {
@@ -35,6 +36,11 @@ const noticeSlice = createSlice({
 
     /* ── 어드민 조회 (전체 목록) ─────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminGetNoticeList, (state, action) => {
+      state.siteNotices = action.payload;
+    });
+
+    /* ── 캐시 동기화 — 목록 조회와 동일하게 전체 교체 ──────────── */
+    applyAsyncHandlers(builder, requestAdminRefreshNotices, (state, action) => {
       state.siteNotices = action.payload;
     });
 
