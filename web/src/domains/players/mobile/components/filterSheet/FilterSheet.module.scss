@@ -1,0 +1,205 @@
+// 카드 필터 바텀시트. radius 16 은 토큰에 없어 가장 큰 $radius-2xl(12)로 맞춘다.
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal-bg;
+  background-color: var(--color-overlay);
+}
+
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: 0 auto;
+  max-width: $layout-wrapper-max;
+  max-height: 88vh;
+  z-index: $z-sheet;
+  background-color: var(--color-bg-modal);
+  border-top: 1px solid var(--color-border-strong);
+  border-radius: $radius-2xl $radius-2xl 0 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  @include flex-row(0, center, space-between);
+  height: $layout-topbar-height;
+  padding: 0 $space-1 0 $space-4;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.headerTitle {
+  @include text-body-bold;
+  font-size: 16px;
+  color: var(--color-text-primary);
+}
+
+.closeBtn {
+  @include reset-button;
+  @include tap-target;
+  color: var(--color-text-secondary);
+  font-size: 18px;
+}
+
+.body {
+  overflow-y: auto;
+  padding: $space-1 $space-4 $space-4;
+  @include flex-col($space-5);
+}
+
+.section {
+  min-width: 0;
+}
+
+.sectionHead {
+  @include flex-row(0, center, space-between);
+  height: $control-height-md;
+}
+
+.sectionTitle {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.sectionHint {
+  @include text-caption;
+  color: var(--color-text-muted);
+  font-weight: $font-weight-regular;
+  margin-left: $space-1;
+}
+
+.allBtn {
+  @include reset-button;
+  height: 30px;
+  padding: 0 $space-2;
+  border-radius: $radius-md;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  @include text-caption;
+  font-weight: $font-weight-bold;
+  white-space: nowrap;
+}
+
+.subLabel {
+  @include text-caption;
+  color: var(--color-text-muted);
+  margin: 0 0 $space-1;
+}
+
+.grid5 {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: $space-1;
+}
+
+.grid4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-1;
+}
+
+.chip {
+  @include reset-button;
+  height: $control-height-sm;
+  border-radius: $radius-md;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  @include text-caption;
+  font-weight: $font-weight-bold;
+  @include text-ellipsis;
+  padding: 0 $space-1;
+  text-align: center;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.chipMono {
+  font-style: italic; // Barlow Condensed 대체 — 이탤릭으로 숫자·포지션 코드 구분
+}
+
+.chipActive {
+  background-color: var(--color-brand-tint);
+  border-color: var(--color-brand);
+  color: var(--color-text-primary);
+}
+
+.bottomRow {
+  @include flex-row($space-2);
+}
+
+.onlyLBtn {
+  @include reset-button;
+  flex: 1;
+  height: $control-height-sm;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  @include text-body-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+}
+
+.onlyLBtnActive {
+  background-color: var(--color-brand-tint);
+  border-color: var(--color-brand);
+  color: var(--color-text-primary);
+}
+
+.checkbox {
+  width: 14px;
+  height: 14px;
+  border-radius: $radius-xs;
+  border: 1.5px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  line-height: 1;
+}
+
+.resetBtn {
+  @include reset-button;
+  flex: 1;
+  height: $control-height-sm;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-danger);
+  background-color: var(--color-danger-dim);
+  color: var(--color-danger);
+  @include text-body-bold;
+}
+
+.footer {
+  @include flex-row($space-3, center, space-between);
+  padding: $space-3 $space-4;
+  padding-bottom: calc(#{$space-3} + env(safe-area-inset-bottom));
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-bg-modal);
+  flex-shrink: 0;
+}
+
+.statusText {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.confirmBtn {
+  @include reset-button;
+  height: $control-height-md;
+  min-width: 140px;
+  padding: 0 $space-5;
+  border-radius: $radius-lg;
+  background-color: var(--color-brand);
+  color: #fff;
+  @include text-body-bold;
+}

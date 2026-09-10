@@ -1,0 +1,139 @@
+// 카드 배경(#0a0912 계열)은 전역 --color-bg-deepest 로 대체 — 거의 동일한 톤이라 신규 토큰 불필요.
+// Barlow Condensed 폰트가 사이트에 없어 기본 폰트 + italic/bold 로 대체(연도·포지션 표기).
+.card {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  border-radius: $radius-sm;
+  border: 1px solid transparent;
+  background-color: var(--color-bg-overlay);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 4px 10px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.shade {
+  position: absolute;
+  inset: 0;
+  border-radius: $radius-sm - 1;
+  background: linear-gradient(
+    180deg,
+    transparent 45%,
+    var(--color-bg-deepest) 78%,
+    var(--color-bg-deepest) 100%
+  );
+}
+
+.coachLabel {
+  position: absolute;
+  inset: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: italic;
+  font-weight: $font-weight-bold;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+}
+
+.name {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 16px;
+  text-align: center;
+  @include text-body-bold;
+  color: #fff;
+  letter-spacing: -0.4px;
+  padding: 0 $space-1;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+  @include text-ellipsis;
+}
+
+.band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 16px;
+  border-radius: 0 0 $radius-sm - 1 $radius-sm - 1;
+  background-color: var(--color-bg-deepest);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 $space-1;
+  font-style: italic;
+  font-weight: $font-weight-bold;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.bandYear {
+  color: var(--color-text-muted);
+}
+
+.bandPos {
+  @include text-ellipsis;
+}
+
+.lMarkButton {
+  @include reset-button;
+  position: absolute;
+  left: 0;
+  bottom: 29px;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lMark {
+  width: 15px;
+  height: 15px;
+  border-radius: $radius-xs;
+  background-color: var(--color-brand);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 900;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+}
+
+.legendPopover {
+  position: absolute;
+  left: 14px;
+  right: 2px;
+  bottom: 54px;
+  z-index: 10;
+  background: linear-gradient(180deg, var(--color-brand), var(--color-brand-dark));
+  border: 1px solid var(--color-brand);
+  border-radius: $radius-sm - 1;
+  padding: 3px 4px;
+  text-align: center;
+  line-height: 1.2;
+  overflow: hidden;
+}
+
+.legendPopoverLabel {
+  display: block;
+  font-size: 7px;
+  color: #fff;
+  opacity: 0.85;
+  white-space: nowrap;
+}
+
+.legendPopoverName {
+  display: block;
+  font-size: 9px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.4px;
+  @include text-ellipsis;
+}

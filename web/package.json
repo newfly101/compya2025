@@ -9,7 +9,8 @@
     "build:fast": "vite build",
     "build:prerender": "npm run build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:cards": "node scripts/build-card-images.mjs"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.11.0",
@@ -43,6 +44,7 @@
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
     "puppeteer": "^25.9.0",
+    "sharp": "^0.35.4",
     "vite": "^7.2.4"
   }
 }
