@@ -25,7 +25,7 @@ export const ACTIVE_KINDS = new Set(["일반", "시그니처"]);
 // 상단 탭 4종 (전체/타자/투수/코치) — 코치는 데이터가 없어 항상 0장으로 disabled 된다
 export const TABS = [
   ["all", "전체"],
-  ["B", "타자"],
+  ["H", "타자"],
   ["P", "투수"],
   ["C", "코치"],
 ];

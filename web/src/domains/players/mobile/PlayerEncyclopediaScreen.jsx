@@ -66,7 +66,7 @@ const PlayerEncyclopediaScreen = () => {
 
   // 4) 탭 카운트 — 0장이면 disabled, 현재 탭이 0장이 되면 "전체"로 자동 보정
   const tabCounts = useMemo(() => {
-    const cnt = { all: scopedRows.length, B: 0, P: 0, C: 0 };
+    const cnt = { all: scopedRows.length, H: 0, P: 0, C: 0 };
     scopedRows.forEach((r) => {
       cnt[r.t] += 1;
     });
@@ -87,7 +87,7 @@ const PlayerEncyclopediaScreen = () => {
       arr.sort((a, b) => {
         const legendDiff = (a.L ? 0 : 1) - (b.L ? 0 : 1);
         if (legendDiff !== 0) return legendDiff;
-        const typeOrder = (t) => (t === "B" ? 0 : t === "P" ? 1 : 2);
+        const typeOrder = (t) => (t === "H" ? 0 : t === "P" ? 1 : 2);
         const typeDiff = typeOrder(a.t) - typeOrder(b.t);
         if (typeDiff !== 0) return typeDiff;
         const posDiff = getPosOrder(a.pos) - getPosOrder(b.pos);

@@ -20,7 +20,7 @@ const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 const PlayerSkillScreen = () => {
   useDomainTopBar("스킬 백과사전");
 
-  const [type, setType] = useState("batter");
+  const [type, setType] = useState("hitter");
   const [cat, setCat] = useState("전체");
   const [q, setQ] = useState("");
   const [grade, setGrade] = useState("S");
@@ -117,7 +117,7 @@ const PlayerSkillScreen = () => {
         </div>
 
         <div className={styles.typeSegment}>
-          <button type="button" aria-pressed={type === "batter"} onClick={() => selectType("batter")}>
+          <button type="button" aria-pressed={type === "hitter"} onClick={() => selectType("hitter")}>
             타자
           </button>
           <button type="button" aria-pressed={type === "pitcher"} onClick={() => selectType("pitcher")}>

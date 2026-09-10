@@ -8,7 +8,7 @@
 // (대조는 skills.json 을 거꾸로 "서버 응답"으로 흉내 내 어댑터에 통과시키는 일회성
 // node 스크립트로 92건 전부 확인했다 — 스크립트는 커밋하지 않음)
 
-const ROLE_TO_TYPE = { HITTER: "batter", PITCHER: "pitcher" };
+const ROLE_TO_TYPE = { HITTER: "hitter", PITCHER: "pitcher" };
 const ROLE_TO_ID_PREFIX = { HITTER: "b", PITCHER: "p" };
 const GRADE_TO_LABEL = { NORMAL: "노말", HERO: "히어로", PLATINUM: "플래티넘", LEGEND: "레전드" };
 
