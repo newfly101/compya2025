@@ -3,7 +3,7 @@ import StatusBadge from "@/global/ui/badge/StatusBadge.jsx";
 import { trackEventClick } from "@/infra/analytics/events/eventEvents.js";
 
 const EventCard = ({ event, showDetail = false, isExpired = false }) => {
-  const handleClick = () => trackEventClick(event.id, event.title, event.eventType);
+  const handleClick = () => trackEventClick(event.id, event.title, event.eventType, event.externalLink);
 
   const cardClassName = `${styles.eventCard} ${isExpired ? styles.expired : ""}`;
 
@@ -50,6 +50,7 @@ const EventCard = ({ event, showDetail = false, isExpired = false }) => {
         rel="noopener noreferrer"
         className={cardClassName}
         onClick={handleClick}
+        data-analytics-tracked="content-click"
       >
         {content}
       </a>

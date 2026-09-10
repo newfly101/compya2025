@@ -8,8 +8,9 @@ const CouponCard = ({ coupon, showDetail = false, isExpired = false }) => {
 
   const handleGoCoupon = () => {
     if (isExpired) return;
-    trackCouponGo(coupon.couponCode);
-    window.open(`${COUPON_BASE_URL}/${coupon.couponCode}`, "_blank");
+    const targetUrl = `${COUPON_BASE_URL}/${coupon.couponCode}`;
+    trackCouponGo(coupon.couponCode, targetUrl);
+    window.open(targetUrl, "_blank");
   };
 
   return (

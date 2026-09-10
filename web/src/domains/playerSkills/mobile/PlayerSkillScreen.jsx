@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
+import { useSearchTracking } from "@/infra/analytics/hooks/useSearchTracking.js";
 import { usePlayerSkills } from "./hooks/usePlayerSkills.js";
 import {
   GRADES,
@@ -25,6 +26,8 @@ const PlayerSkillScreen = () => {
   const [q, setQ] = useState("");
   const [grade, setGrade] = useState("S");
   const [open, setOpen] = useState(null);
+
+  useSearchTracking(q);
 
   const { all, loading, error, loaded, retry } = usePlayerSkills(type);
   const list = useMemo(() => filterAndSortSkills(all, { type, cat, q }), [all, type, cat, q]);

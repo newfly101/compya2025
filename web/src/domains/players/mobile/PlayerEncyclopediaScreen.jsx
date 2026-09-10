@@ -4,6 +4,7 @@
 // 범위(검색/팀필터/구단연도) → 모달 필터 AND → 재료만 → 탭 카운트 → 정렬.
 import { useCallback, useMemo, useState } from "react";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
+import { useSearchTracking } from "@/infra/analytics/hooks/useSearchTracking.js";
 import { usePlayerCards } from "./hooks/usePlayerCards";
 import {
   TABS,
@@ -47,6 +48,8 @@ const PlayerEncyclopediaScreen = () => {
   const effectiveTeam = team || TEAMS[0] || "";
   const years = useMemo(() => getYearsForTeam(PLAYERS, effectiveTeam), [PLAYERS, effectiveTeam]);
   const effectiveYear = years.includes(year) ? year : (years[0] ?? "");
+
+  useSearchTracking(query);
 
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;
