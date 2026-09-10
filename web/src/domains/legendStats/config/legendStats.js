@@ -209,7 +209,12 @@ export const toMaterialModel = (detail, teamNameByCode = {}) => {
   for (const m of detail?.materials ?? []) {
     const team = teamNameByCode[m.teamCode] ?? m.teamCode;
     if (m.materialType === "COACH") coaches.push({ team, year: m.seasonYear });
-    else mats.push({ team, name: `${m.playerName}'${String(m.seasonYear).slice(-2)}` });
+    else
+      mats.push({
+        team,
+        name: `${m.playerName}'${String(m.seasonYear).slice(-2)}`,
+        cardId: m.playerCardId,
+      });
   }
   return { mats, coaches };
 };
@@ -225,11 +230,8 @@ export const RATING_SOURCE = {
   url: "https://naver.me/5YoRLA75",
 };
 
-/**
- * 재료 카드에 붙는 배지 안내.
- * 마일리지는 아직 데이터가 없어 배지가 실제로 붙지 않는다 — 설명만 먼저 둔다.
- */
+/** 재료 카드에 붙는 배지 안내. */
 export const BADGE_GUIDE = [
   { mark: "히", tone: "history", label: "히스토리 모드에서 저격 가능", note: null },
-  { mark: "마", tone: "mileage", label: "마일리지로 저격 가능", note: "업데이트 예정" },
+  { mark: "마", tone: "mileage", label: "마일리지로 저격 가능", note: null },
 ];

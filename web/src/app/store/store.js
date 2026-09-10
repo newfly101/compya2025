@@ -12,6 +12,7 @@ import adminUsersReducer, { myPageReducer } from "@/domains/users/store/slices.j
 import legendStatReducer from "@/domains/legendStats/store/slices.js";
 import historyLegendReducer from "@/domains/historyLegend/store/slices.js";
 import playerSkillsReducer from "@/domains/playerSkills/store/slices.js";
+import mileageReducer from "@/domains/mileage/store/slices.js";
 
 export const store = configureStore({
   reducer: {
@@ -28,6 +29,7 @@ export const store = configureStore({
     legendStat: legendStatReducer,
     historyLegend: historyLegendReducer,
     playerSkills: playerSkillsReducer,
+    mileage: mileageReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(operationListener.middleware),

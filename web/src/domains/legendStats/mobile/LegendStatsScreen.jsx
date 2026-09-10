@@ -21,6 +21,7 @@ import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { useLegendStats } from "./hooks/useLegendStats";
 import { useHistoryBadge } from "./hooks/useHistoryBadge";
+import { useMileageBadge } from "./hooks/useMileageBadge";
 import "./legendStats.tokens.scss";
 import styles from "./LegendStatsScreen.module.scss";
 
@@ -37,6 +38,7 @@ const LegendStatsScreen = () => {
     materialsLoading,
   } = useLegendStats();
   const historyCards = useHistoryBadge();
+  const mileageBadge = useMileageBadge();
 
   const [team, setTeam] = useState(ALL);
   const [type, setType] = useState(ALL);
@@ -203,23 +205,42 @@ const LegendStatsScreen = () => {
         <div className={styles.detailSub}>재료 선수</div>
         {mats.length > 0 ? (
           <div className={styles.materials}>
-            {mats.map((m) => (
-              <div key={`${m.team}-${m.name}`} className={styles.material}>
-                <span className={styles.materialTeam}>{m.team}</span>
-                <span className={styles.materialName}>{m.name}</span>
-                {/* 이 카드를 히스토리 모드에서 얻을 수 있다. 행 펼침과 겹치지 않게 클릭을 끊는다 */}
-                {historyCards.has(m.name) && (
-                  <Link
-                    to={`${ROUTE_PATHS.history_legend}?legend=${encodeURIComponent(legend.name)}`}
-                    className={styles.historyBadge}
-                    title={`${m.name} 은 히스토리 모드에서 얻을 수 있습니다`}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    히
-                  </Link>
-                )}
-              </div>
-            ))}
+            {mats.map((m) => {
+              const mileageTarget = mileageBadge.get(m.cardId);
+              const inHistory = historyCards.has(m.name);
+              return (
+                <div key={`${m.team}-${m.name}`} className={styles.material}>
+                  <span className={styles.materialTeam}>{m.team}</span>
+                  <span className={styles.materialName}>{m.name}</span>
+                  {(mileageTarget || inHistory) && (
+                    <span className={styles.badgeGroup}>
+                      {/* 이 카드를 마일리지로 확정 저격할 수 있다. 행 펼침과 겹치지 않게 클릭을 끊는다 */}
+                      {mileageTarget && (
+                        <Link
+                          to={`${ROUTE_PATHS.mileage}?team=${encodeURIComponent(mileageTarget.teamCode)}&year=${mileageTarget.seasonYear}`}
+                          className={`${styles.historyBadge} ${styles.mileage}`}
+                          title={`${m.name} 은 마일리지로 저격할 수 있습니다`}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          마
+                        </Link>
+                      )}
+                      {/* 이 카드를 히스토리 모드에서 얻을 수 있다 */}
+                      {inHistory && (
+                        <Link
+                          to={`${ROUTE_PATHS.history_legend}?legend=${encodeURIComponent(legend.name)}`}
+                          className={styles.historyBadge}
+                          title={`${m.name} 은 히스토리 모드에서 얻을 수 있습니다`}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          히
+                        </Link>
+                      )}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className={styles.detailNote}>

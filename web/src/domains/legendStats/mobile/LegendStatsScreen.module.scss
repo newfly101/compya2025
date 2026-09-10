@@ -383,7 +383,21 @@ td.cName {
   }
 }
 
-// 아직 데이터가 없어 표에는 안 붙고 안내에만 나온다
+// 마·히가 한 카드에 같이 붙을 때 나란히 두는 감싸개.
+// margin-left:auto 를 배지 각각이 아니라 여기 하나로 모아야 auto 여백이 둘로
+// 쪼개지지 않는다(안 그러면 두 배지 사이가 벌어진다).
+.badgeGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+
+  .historyBadge {
+    margin-left: 0;
+  }
+}
+
+// 히스토리(파랑)와 구분되는 마일리지 배지 색
 .mileage {
   border-color: var(--color-ls-mileage-border);
   background: var(--color-ls-mileage-bg);
