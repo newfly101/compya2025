@@ -18,7 +18,8 @@ const CARDS = path.join(webRoot, "public", "cards");
 const SRC = path.join(webRoot, "assets", "cards-src");
 
 // 파일명 한글 → 영문. '투수_노말_re' 처럼 뒤에 붙은 꼬리표는 무시한다.
-const ROLE = { 타자: "batter", 투수: "pitcher" };
+// DB(data_player_card.player_role)가 HITTER/PITCHER 라 그쪽 표기를 따른다.
+const ROLE = { 타자: "hitter", 투수: "pitcher" };
 const GRADE = {
   노말: "normal", 레어: "rare", 스페셜: "special", 히어로: "hero",
   플래티넘: "platinum", 시그니처: "signature", 레전드: "legend",
