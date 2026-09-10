@@ -6,8 +6,8 @@
 //       렌더 완료된 DOM(head 포함)을 그대로 파일로 저장.
 // 하이드레이션 방식은 바꾸지 않는다 (createRoot 그대로, hydrateRoot 전환 X).
 //
-// ⚠️ /notices, /coupons, /events, /players, /legend-stats, /history-mode/legend 는 BE API
-// (또는 /players 처럼 정적 데이터 계산)로 본문을 채운다. API_BASE_URL(src/config/env.js) 이
+// ⚠️ /notices, /coupons, /events, /legend-stats, /history-mode/legend 는 BE API 로 본문을 채운다.
+// (/players 는 안내 화면을 거쳐야 데이터를 부르므로 데이터 확인 대상이 아니다) API_BASE_URL(src/config/env.js) 이
 // 운영 빌드에서 절대경로 https://api.compyafun.com/api 라서 vite.config.js 의 프록시는
 // 관여하지 않는다 — 실제 관문은 BE CorsConfig.java 의
 // allowedOrigins("http://localhost:3000", "https://compyafun.com") 다. 그래서 아래 preview
@@ -63,8 +63,8 @@ const DATA_ROUTES = {
   "/coupons": "article",
   // EventCard 는 externalLink 유무에 따라 <a>/<div> 로 갈리므로 태그 대신 클래스 부분일치.
   "/events": '[class*="eventCard"]',
-  // PlayerEncyclopediaScreen 타일의 카드 라벨 — 구단 선택 즉시(기본 두산) 채워진다.
-  "/players": '[class*="cardLabel"]',
+  // "/players" 는 여기 없다 — 안내 화면에서 「이용하기」를 눌러야 카드를 부르는 구조라
+  // 스냅샷 시점에는 카드가 없는 게 정상이다. 대신 안내 화면 자체가 그려졌는지만 본다.
   "/legend-stats": "table tbody tr",
   "/history-mode/legend": "table tbody tr",
   // OddsIndexScreen 은 정적 데이터(src/data/odds)지만 렌더 자체는 동일하게 확인한다.
