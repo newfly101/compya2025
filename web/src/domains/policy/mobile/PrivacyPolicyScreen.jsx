@@ -7,6 +7,9 @@ import styles from "./PrivacyPolicyScreen.module.scss";
 const OPERATOR_NAME = "김재홍";
 const OPERATOR_EMAIL = "newfly101@naver.com";
 const EFFECTIVE_DATE = "2026년 1월 1일";
+// 방문자 구분 쿠키(cpf_anon_id) 항목을 더한 개정본.
+// 제9조가 "개정 최소 7일 전 공지"를 약속하므로 시행일을 그만큼 뒤로 둔다.
+const AMENDED_DATE = "2026년 9월 17일";
 const RETENTION_PERIOD = "1개월";
 
 // 개인정보처리방침 각 조 — 반복 구조라 데이터 배열로 관리한다.
@@ -120,6 +123,11 @@ const SECTIONS = [
           <li>인증 쿠키 (ACCESS_TOKEN, HttpOnly) — 로그인 상태 유지</li>
           <li>분석 쿠키 (Google Analytics 4) — 방문 통계 분석</li>
           <li>광고 쿠키 (Google AdSense) — 맞춤형 광고 게재</li>
+          <li>
+            방문자 구분 쿠키 (cpf_anon_id) — 사이트 내 이용 통계 분석.
+            무작위로 만든 값이며 이름·연락처 등 개인을 알아볼 수 있는 정보를
+            담지 않습니다. 보관 기간은 1년입니다
+          </li>
         </ul>
         <p className={styles.p}>
           쿠키는 웹사이트가 이용자의 브라우저에 저장하는 소량의 정보로,
@@ -206,6 +214,10 @@ const PrivacyPolicyScreen = () => {
           조치가 취해지고 있는지 알려드립니다.
         </p>
         <p className={styles.p}>본 방침은 {EFFECTIVE_DATE}부터 시행됩니다.</p>
+        <p className={styles.p}>
+          이용 통계 분석을 위한 방문자 구분 쿠키 항목이 추가된 개정본은{" "}
+          {AMENDED_DATE}부터 시행됩니다. (제5조)
+        </p>
       </div>
 
       {SECTIONS.map((section) => (
