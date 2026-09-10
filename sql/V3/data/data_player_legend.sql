@@ -61,7 +61,7 @@ CREATE TABLE data_player_legend_material
     -- PLAYER 전용
     player_name          VARCHAR(50) NULL COMMENT 'PLAYER 필수 / COACH NULL. 연도 접미사 제외, 동명이인 접미사(B/S/C)는 유지',
     player_position_code VARCHAR(10) NULL COMMENT '포지션 코드 (fun_player_card_positions.position_code 동일 도메인). 미조사',
-    player_card_id       CHAR(36)    NULL COMMENT 'fun_player_card.id, 추후 FK 연결 예정',
+    player_card_id       CHAR(36)    NULL COMMENT 'data_player_card.id. PLAYER 행만 채워진다 (sql/migration/ADD_MATERIAL_CARD_ID.sql)',
 
     created_at           DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
     updated_at           DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
@@ -84,7 +84,7 @@ CREATE TABLE data_player_legend_material
                                  AND player_card_id IS NULL)
         )
 
-    -- 선수 카드 마스터 적재 완료 후 추가
-    -- CONSTRAINT fk_dplm_player_card FOREIGN KEY (player_card_id) REFERENCES fun_player_card (id)
+    -- player_card_id FK 는 sql/migration/ADD_MATERIAL_CARD_ID.sql 에서 건다
+    -- (data_player_card 적재 후여야 하므로 여기서는 걸 수 없다)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT '레전드 재료 - 선수 카드 6장 + 코치 세트 2묶음';
