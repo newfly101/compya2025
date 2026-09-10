@@ -1,0 +1,409 @@
+// 「저격 선수 리스트」 탭 — legendStats/LegendStatsScreen.module.scss 의 .table 패턴을
+// 따르되(design-spec §5), 가로 스크롤·sticky 열은 없다(320px 폭에 6열이 다 들어간다).
+// 색은 전역/도메인 토큰만 쓴다 — 핸드오프 하드코딩 hex 는 쓰지 않는다(design-spec §2).
+// 부모 MileageScreen.module.scss 의 .screen 이 이미 좌우 패딩을 주므로 여기서는
+// 추가 수평 마진을 두지 않는다.
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+/* ── 검색 행 ─────────────────────────────────────────── */
+
+.searchRow {
+  display: flex;
+  gap: $space-2;
+}
+
+.modeToggle {
+  display: flex;
+  flex: none;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  background: var(--color-bg-deep);
+
+  button {
+    padding: 0 $space-3;
+    border: 0;
+    border-radius: $radius-md;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      background: var(--color-mileage-accent-bg);
+      color: var(--color-mileage-chip-on-text);
+    }
+  }
+}
+
+.searchInput {
+  position: relative;
+  flex: 1;
+
+  input {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px 0 32px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: $radius-lg;
+    background: var(--color-bg-deep);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: 14px;
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+  }
+}
+
+.searchIcon {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border: 2px solid var(--color-text-muted);
+  border-radius: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* ── 포지션 칩 ───────────────────────────────────────── */
+
+.posGrid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 5px;
+}
+
+.posRows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.posRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.chip {
+  padding: 5px 9px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-full;
+  background: var(--color-bg-card);
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-brand-dark);
+    background: var(--color-mileage-accent-bg);
+    color: var(--color-mileage-chip-on-text);
+  }
+
+  // 해당 포지션 데이터 0건 — 항상 렌더하되 비활성만(design-spec §6, data 전체 기준 판정은 훅 쪽)
+  &:disabled {
+    border-color: var(--color-border);
+    background: transparent;
+    color: var(--color-mileage-list-disabled);
+    cursor: not-allowed;
+  }
+}
+
+/* ── 카운터 행 ───────────────────────────────────────── */
+
+.counter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 2px;
+}
+
+.counterLeft {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+
+  b {
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+}
+
+.helpButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px 4px 6px;
+  border: 1px solid var(--color-brand-dark);
+  border-radius: $radius-full;
+  background: var(--color-mileage-accent-bg);
+  color: var(--color-mileage-chip-on-text);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.helpMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-brand-dark);
+  color: var(--color-bg-deepest);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.sortLabel {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* ── 표 ─────────────────────────────────────────────── */
+/* legendStats/LegendStatsScreen.module.scss 의 .table 패턴에 맞춘다(design-spec §5).
+   행/헤더 높이(38px/32px)는 legendStats.tokens.scss 의 --ls-row-h/--ls-head-h 와
+   같은 값이지만, 도메인 로컬 토큰을 서로 참조하지 않는 경계 원칙상 값만 가져와 쓴다. */
+
+.tableBox {
+  overflow-x: auto;
+  border-top: 1px solid var(--color-border-strong);
+  scrollbar-width: thin;
+}
+
+.table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+
+  th,
+  td {
+    height: 38px;
+    padding: 0 4px;
+    border-bottom: 1px solid var(--color-border);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    height: 32px;
+    border-bottom: 1px solid var(--color-border-strong);
+    background: var(--color-mileage-list-head-bg);
+    color: var(--color-text-secondary);
+    font-size: 11.5px;
+    font-weight: 500;
+    user-select: none;
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+  }
+}
+
+.sortable {
+  cursor: pointer;
+}
+
+.arrow {
+  margin-left: 1px;
+  color: var(--color-brand);
+  font-size: 9px;
+}
+
+.crank {
+  width: 24px;
+  color: var(--color-text-muted);
+  font-size: 11px;
+}
+
+.clegend {
+  overflow: hidden;
+  width: 26%;
+  color: var(--color-text-muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+th.cname,
+td.cname {
+  padding-left: 8px;
+  text-align: left;
+}
+
+.cname {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+.cteam {
+  width: 50px;
+  color: var(--color-text-secondary);
+  font-size: 12.5px;
+}
+
+.cyear {
+  width: 52px;
+  color: var(--color-mileage-accent-text);
+  font-weight: 700;
+}
+
+.cpos {
+  width: 50px;
+  color: var(--color-text-secondary);
+  font-size: 12.5px;
+}
+
+.nameInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.nameDot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.row {
+  // 행 구분선은 th,td 의 border-bottom 이 담당한다(legendStats 패턴).
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-mileage-list-row-hover);
+  }
+
+  &.selected {
+    background: var(--color-mileage-list-row-hover);
+  }
+}
+
+.stateCell {
+  padding: 40px 0;
+  color: var(--color-text-muted);
+  font-size: 14px;
+}
+
+.retryBtn {
+  display: block;
+  margin: 10px auto 0;
+  padding: 6px 14px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  font-family: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+/* ── 도움말 모달 ─────────────────────────────────────── */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.helpCard {
+  width: 100%;
+  max-width: 340px;
+  padding: 22px 20px 18px;
+  border: 1px solid var(--color-brand-dark);
+  border-radius: 14px;
+  background: var(--color-bg-card);
+  text-align: center;
+}
+
+.helpTitle {
+  margin: 0 0 6px;
+  color: var(--color-text-primary);
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.helpSubtitle {
+  margin: 0 0 14px;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
+.helpList {
+  margin: 0 0 16px;
+  text-align: left;
+}
+
+.helpRow {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+
+  dt {
+    color: var(--color-mileage-accent-text);
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  dd {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}
+
+.helpClose {
+  width: 100%;
+  height: 42px;
+  border: 1px solid var(--color-brand-dark);
+  border-radius: $radius-lg;
+  background: var(--color-mileage-list-row-hover);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}

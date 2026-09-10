@@ -20,6 +20,88 @@
   max-width: 60ch;
 }
 
+/* ── 탭 바(저격 시뮬레이션 / 저격 선수 리스트) ───────────────── */
+
+.tabBar {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 $space-4;
+  border-bottom: 1px solid var(--color-border-strong);
+}
+
+.tab {
+  padding: $space-3 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--color-text-muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &[aria-selected="true"] {
+    margin-bottom: -1px;
+    border-bottom-color: var(--color-brand-dark);
+    color: var(--color-text-primary);
+    font-weight: 700;
+  }
+
+  &:hover {
+    color: var(--color-mileage-chip-on-text);
+  }
+}
+
+.tabCount {
+  color: var(--color-mileage-accent-text);
+  font-weight: 500;
+}
+
+/* ── 「리스트에서 선택」 배너 — 리스트 탭에서 넘어왔을 때만(핸드오프 §2) ────── */
+
+.selectBanner {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: 10px 14px;
+  margin-bottom: $space-4;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-xl;
+  background: var(--color-mileage-list-row-hover);
+  font-size: 13px;
+}
+
+.selectBannerLabel {
+  flex: none;
+  color: var(--color-mileage-accent-text);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.selectBannerBody {
+  flex: 1;
+  overflow: hidden;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  span {
+    color: var(--color-text-muted);
+    font-weight: 400;
+  }
+}
+
+.selectBannerClose {
+  flex: none;
+  padding: 2px 4px;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: 16px;
+  cursor: pointer;
+}
+
 /* ── 도움말 아코디언 ──────────────────────────────────────── */
 
 .note {

@@ -31,4 +31,12 @@
   // 다음 한 수(glyph)의 은은한 발광 — box-shadow/text-shadow 전용, 배경색과 분리해 둔다.
   --color-mileage-glow: rgba(196, 181, 253, 0.4);
   --color-mileage-glow-done: rgba(94, 234, 212, 0.4);
+
+  // ── 저격 선수 리스트 탭 전용(target-list-design-spec.md §2) ──
+  // 표 헤더 배경 — legendStats 의 --color-ls-head-bg 와 같은 값으로 맞춰 통일성 확보
+  --color-mileage-list-head-bg: #15121c;
+  // 행 hover/선택 — legendStats/admin 의 값(#161320)과 다른 톤이라 로컬로 새로 둔다
+  --color-mileage-list-row-hover: #1b1633;
+  // 비활성 포지션 칩 텍스트 — 전역에 이 정도로 어두운 비활성 톤이 없어 신규
+  --color-mileage-list-disabled: #4e4862;
 }

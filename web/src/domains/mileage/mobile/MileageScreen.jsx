@@ -2,14 +2,18 @@
 // 마일리지 저격 경로 — 핸드오프 mileage-sniper.html 이식 (design_handoff_mileage/README.md 참조).
 // beta: UI 까지만. 서버 API·DB 연결은 다음 라운드.
 //
-// 상태(로딩/에러/빈/정상) 분기가 아니라 "메인/표" 두 화면 분기형 단일 페이지라
-// 컨벤션 §3 원칙대로 하위 부품으로 쪼개지 않는다.
+// 상태(로딩/에러/빈/정상) 분기가 아니라 "메인/표" 두 화면 분기형 단일 페이지였는데,
+// 「저격 선수 리스트」 탭이 추가되며 tab(calc|list) 분기가 하나 더 생겼다(target-list-design-spec.md).
+// 기존 시뮬레이션(calc) 탭 JSX 는 이동 없이 그대로 두고 감싸기만 한다.
 
-import { useRef } from "react";
-import { T, TEAMS, Y, YEARS, teamName, yearName } from "@/domains/mileage/config/mileage.js";
+import { useMemo, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
+import { T, TEAMS, Y, YEARS, defaultGoal, teamName, yearName } from "@/domains/mileage/config/mileage.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { useMileage } from "./hooks/useMileage";
 import { useMileageRowHeight } from "./hooks/useMileageRowHeight";
+import { useMileageTargetList } from "./hooks/useMileageTargetList";
+import TargetListTab from "./components/targetListTab/TargetListTab.jsx";
 import "./mileage.tokens.scss";
 import styles from "./MileageScreen.module.scss";
 
@@ -33,12 +37,121 @@ const cellClass = (cell, styleSet) => {
 const MileageScreen = () => {
   useDomainTopBar("마일리지 저격 경로");
 
+  // 탭(calc|list)은 이 화면(Screen)이 소유한다 — useMileage() 는 기존 계약대로
+  // 시뮬레이션 탭 내부 상태만 다룬다(Redux 미사용 원칙도 그대로 유지).
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get("tab") === "list" ? "list" : "calc"; // 하위호환: 기본값 calc(§1.2 결정)
+  const idParam = searchParams.get("id");
+
+  const targetList = useMileageTargetList();
+
+  const switchTab = (next) => {
+    setSearchParams((prev) => {
+      const p = new URLSearchParams(prev);
+      p.set("tab", next);
+      return p;
+    });
+  };
+
+  // 리스트 행 클릭 → 시뮬레이션 탭으로 전환 + 목표 자동 입력(핸드오프 "행 클릭→시뮬레이션 연동")
+  const selectTargetFromList = (row) => {
+    setSearchParams((prev) => {
+      const p = new URLSearchParams(prev);
+      p.set("tab", "calc");
+      p.set("id", row.id);
+      p.set("team", row.team);
+      p.set("year", String(row.year));
+      p.set("pos", row.pos);
+      return p;
+    });
+  };
+
+  const banner = useMemo(() => {
+    if (!idParam) return null;
+    const found = targetList.data.find((d) => d.id === idParam);
+    const team = searchParams.get("team");
+    const year = searchParams.get("year");
+    if (!team || !year) return null;
+    return { name: found?.name ?? "선수 정보 없음", team, year, pos: searchParams.get("pos") };
+  }, [idParam, targetList.data, searchParams]);
+
   const m = useMileage();
   const { view, hero, grid, examples, heatmap } = m;
+
+  // 배너 × — 목표를 기본값으로 되돌린다. 이 화면의 "목표" 셀렉트엔 "미정" 항목이 없어(항상
+  // 구체적 구단/연도가 있어야 함) 핸드오프의 "미정으로 리셋"을 기본 목표(두산 2008)로 갈음한다.
+  const dismissBanner = () => {
+    setSearchParams((prev) => {
+      const p = new URLSearchParams(prev);
+      p.delete("id");
+      p.delete("team");
+      p.delete("year");
+      p.delete("pos");
+      p.set("tab", "calc");
+      return p;
+    });
+    const def = defaultGoal();
+    m.changeGoalTeam(def.goalT);
+    m.changeGoalYear(def.goalY);
+    m.setPosition("1B");
+  };
 
   const theadRef = useRef(null);
   const rowH = useMileageRowHeight(view === "table", theadRef);
 
+  const tabBar = (
+    <div className={styles.tabBar} role="tablist" aria-label="마일리지 저격">
+      <button
+        type="button"
+        className={styles.tab}
+        role="tab"
+        aria-selected={tab === "calc"}
+        onClick={() => switchTab("calc")}
+      >
+        저격 시뮬레이션
+      </button>
+      <button
+        type="button"
+        className={styles.tab}
+        role="tab"
+        aria-selected={tab === "list"}
+        onClick={() => switchTab("list")}
+      >
+        저격 선수 리스트 <span className={styles.tabCount}>{targetList.total}</span>
+      </button>
+    </div>
+  );
+
+  if (tab === "list") {
+    return (
+      <div className={styles.screen}>
+        {tabBar}
+        <TargetListTab
+          rows={targetList.rows}
+          total={targetList.total}
+          loading={targetList.loading}
+          loaded={targetList.loaded}
+          error={targetList.error}
+          retry={targetList.retry}
+          query={targetList.query}
+          setQuery={targetList.setQuery}
+          mode={targetList.mode}
+          changeMode={targetList.changeMode}
+          pos={targetList.pos}
+          selectPos={targetList.selectPos}
+          availablePositions={targetList.availablePositions}
+          sortKey={targetList.sortKey}
+          dir={targetList.dir}
+          toggleSort={targetList.toggleSort}
+          reverseDir={targetList.reverseDir}
+          highlightId={idParam}
+          onSelectRow={selectTargetFromList}
+        />
+      </div>
+    );
+  }
+
+  // 표 화면은 전체화면형 서브뷰라 탭 바를 숨긴다(design-spec §1 권고 — 이미 자체 닫기(✕) 버튼이 있다)
   if (view === "table") {
     return (
       <div className={styles.screen}>
@@ -138,6 +251,26 @@ const MileageScreen = () => {
 
   return (
     <div className={styles.screen}>
+      {tabBar}
+
+      {/* 리스트 탭에서 넘어온 경우에만 노출(핸드오프 §2) */}
+      {banner && (
+        <div className={styles.selectBanner}>
+          <span className={styles.selectBannerLabel}>리스트에서 선택</span>
+          <span className={styles.selectBannerBody}>
+            {banner.name} <span>{`${banner.team} ${banner.year}${banner.pos ? ` · ${banner.pos}` : ""}`}</span>
+          </span>
+          <button
+            type="button"
+            className={styles.selectBannerClose}
+            aria-label="선택 해제"
+            onClick={dismissBanner}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       <p className={styles.lead}>
         저격할 재료의 구단 × 연도를 입력하면, 어떤 걸 먼저 작업해야 할지 알려드립니다.
       </p>

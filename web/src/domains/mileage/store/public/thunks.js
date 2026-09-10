@@ -13,4 +13,7 @@ export const requestGetSniperTargets = createAsyncThunk(
       return rejectWithValue(error.message);
     }
   },
+  // 레전드 평점표(useMileageBadge)와 저격 선수 리스트 탭(useMileageTargetList)이 같은
+  // 틱에 동시 마운트돼도 요청이 1번만 나가게 한다(store-sharing-design.md §5).
+  { condition: (_, { getState }) => !getState().mileage.sniperTargets.loaded },
 );
