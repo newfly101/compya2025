@@ -14,17 +14,15 @@ export const MENU_GROUPS = [
     label: '컨텐츠',
     items: [
       { icon: '🧩', label: '레전드 재료',     to: '/legend-stats',
-        tag: { variant: 'new' } },
-      { icon: '🎯', label: '히스토리 재료',   to: '/history-mode/legend',
-        tag: { variant: 'new' } },
+        tag: { variant: 'hot' } },
+      { icon: '🎯', label: '히스토리 재료',   to: '/history-mode/legend' },
       { icon: '🧭', label: '마일리지 저격',   to: '/mileage',
+        tag: { variant: 'new' } },
+      { icon: '⚾', label: '선수 백과사전',   to: '/players', loginRequired: true,
         tag: { variant: 'beta' } },
-      { icon: '🎮', label: '스킬 시뮬레이터', to: '/skill', comingSoon: true,
-        tag: { variant: 'neutral', label: '공사중' } },
-      { icon: '⚾', label: '선수 백과사전',   to: '/players', loginRequired: true },
+      { icon: '📖', label: '스킬 백과사전',   to: ROUTE_PATHS.player_skills },
       { icon: '📊', label: '확률 공시',      to: '/probability', loginRequired: true },
-      { icon: '📖', label: '스킬 백과사전',   to: ROUTE_PATHS.player_skills,
-        tag: { variant: 'beta' } },
+      { icon: '🎮', label: '스킬 시뮬레이터', to: '/skill', comingSoon: true },
     ]
   },
   {

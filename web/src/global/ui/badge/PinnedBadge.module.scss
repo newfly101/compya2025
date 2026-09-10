@@ -18,6 +18,8 @@ $pinned-yellow-bg:    rgba(254, 204, 26, 0.18);
 $pinned-yellow-border:#fecc1a;
 $pinned-red-bg:       rgba(248, 113, 113, 0.18);
 $pinned-red-border:   #f87171;
+$pinned-hot-bg:       rgba(239, 68, 68, 0.28);
+$pinned-hot-border:   #ef4444;
 
 // ── Base ──────────────────────────────────────────────────────
 .badge {
@@ -50,3 +52,6 @@ $pinned-red-border:   #f87171;
 
 // 선수 백과사전 BETA 뱃지용 — 기존 $pinned-yellow-* 토큰 재사용 (신규 색상 추가 없음)
 .beta      { background-color: $pinned-yellow-bg;  border-color: $pinned-yellow-border;  color: $pinned-yellow-border; }
+
+// 레전드 재료 HOT 뱃지용 — new(red-400) 보다 진한 red-500, alpha 상향으로 강조
+.hot       { background-color: $pinned-hot-bg;     border-color: $pinned-hot-border;     color: $pinned-hot-border; }
