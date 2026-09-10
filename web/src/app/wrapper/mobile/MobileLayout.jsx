@@ -5,6 +5,7 @@ import { TopBarProvider } from "@/app/provider/TopBarProvider";
 import TopBar from "@/app/wrapper/mobile/parts/TopBar";
 import Drawer from "@/app/wrapper/mobile/parts/Drawer.jsx";
 import Footer from "@/app/wrapper/mobile/parts/Footer.jsx";
+import ErrorBoundary from "@/app/wrapper/mobile/parts/ErrorBoundary.jsx";
 
 const MobileLayout = () => {
   const { pathname, search } = useLocation();
@@ -70,9 +71,13 @@ const MobileLayout = () => {
           className={styles.pageContent}
           data-scroll-root
         >
-          <Suspense fallback={<div className={styles.loading}>로딩중...</div>}>
-            <Outlet />
-          </Suspense>
+          {/* key=pathname — 에러 발생 후 서랍 메뉴로 다른 라우트로 이동하면
+              새로고침 없이도 바운더리 상태가 초기화되게 한다 */}
+          <ErrorBoundary key={pathname}>
+            <Suspense fallback={<div className={styles.loading}>로딩중...</div>}>
+              <Outlet />
+            </Suspense>
+          </ErrorBoundary>
 
           {/* 전역 Footer — pageContent(스크롤 컨테이너) 안쪽 맨 아래 배치.
               appWrapper 바깥(고정 영역)에 두면 flex:1 인 pageContent 가 그만큼
