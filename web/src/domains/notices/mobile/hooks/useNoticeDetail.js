@@ -12,12 +12,19 @@ export const useNoticeDetail = (param) => {
   const dispatch    = useDispatch();
   const navigate    = useNavigate();
   const siteNotices = useSelector(state => state.notices.siteNotices);
+  const loading     = useSelector(state => state.notices.loading);
+  const error       = useSelector(state => state.notices.error);
+  const loaded      = useSelector(state => state.notices.loaded);
 
   const numeric = isNumeric(param);
 
+  // 목록을 아직 한 번도 못 불러왔으면(loaded=false) 요청한다 — 실패 후 재시도도 loaded 가
+  // 안 올라가므로 이 조건으로 커버된다.
   useEffect(() => {
-    if (siteNotices.length === 0) dispatch(requestGetNoticeList());
-  }, [dispatch, siteNotices.length]);
+    if (!loaded) dispatch(requestGetNoticeList());
+  }, [dispatch, loaded]);
+
+  const retry = () => dispatch(requestGetNoticeList());
 
   // id 조회든 slug 조회든 서버 필드가 아니라 목록을 훑어서 찾는다(제목→slug 는 단방향).
   const found = useMemo(() => {
@@ -32,5 +39,8 @@ export const useNoticeDetail = (param) => {
     }
   }, [numeric, found, navigate]);
 
-  return { notice: found };
+  // 목록은 불러왔는데(loaded) 이 글만 없는 경우 = 삭제되었거나 잘못된 주소.
+  const notFound = loaded && !loading && !error && !found;
+
+  return { notice: found, loading, error, loaded, notFound, retry };
 };

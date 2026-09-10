@@ -19,6 +19,8 @@ import {
 } from "@/domains/legendStats/config/legendStats.js";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
+import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { useLegendStats } from "./hooks/useLegendStats";
 import { useHistoryBadge } from "./hooks/useHistoryBadge";
 import { useMileageBadge } from "./hooks/useMileageBadge";
@@ -36,6 +38,7 @@ const LegendStatsScreen = () => {
     loadMaterials,
     materialsOf,
     materialsLoading,
+    retry,
   } = useLegendStats();
   const historyCards = useHistoryBadge();
   const mileageBadge = useMileageBadge();
@@ -378,54 +381,64 @@ const LegendStatsScreen = () => {
         </div>
       </div>
 
-      <div className={styles.tableBox}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              {cols.map((col) => (
-                <th
-                  key={col.key}
-                  className={`${styles[col.cls]} ${col.sticky ? styles.sticky : ""} ${
-                    col.sortable ? styles.sortable : ""
-                  }`}
-                  onClick={col.sortable ? () => toggleSort(col.key) : undefined}
-                >
-                  {col.label}
-                  {col.sortable && sort === col.key && (
-                    <span className={styles.arrow}>{dir < 0 ? "▼" : "▲"}</span>
-                  )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((legend, index) => {
-              const open = openId === legend.id;
-              return [
-                <tr
-                  key={legend.id}
-                  className={`${styles.row} ${open ? styles.open : ""} ${
-                    legend.score == null ? styles.provisional : ""
-                  }`}
-                  onClick={() => toggleRow(legend.id)}
-                >
-                  {cols.map((col) => renderCell(legend, col, index))}
-                </tr>,
-                open && (
-                  <tr key={`${legend.id}-detail`} className={styles.detailRow}>
-                    <td colSpan={cols.length}>{renderDetail(legend)}</td>
-                  </tr>
-                ),
-              ];
-            })}
-          </tbody>
-        </table>
-      </div>
+      {/* 목록 자체가 실패/로딩 중일 때만 표를 대신한다 — 재료(마·히) 배지처럼
+          부가 데이터가 늦는 건 상관없다. 필터 UI는 위에서 항상 그대로 남는다 */}
+      {!loaded && loading && (
+        <div className={styles.tableBox}>
+          <Skeleton count={8} height={36} />
+        </div>
+      )}
 
-      {!loaded && loading && <div className={styles.empty}>불러오는 중…</div>}
-      {error && <div className={styles.empty}>{error}</div>}
+      {!loaded && !loading && error && <StateBox status="error" onRetry={retry} />}
+
+      {loaded && (
+        <div className={styles.tableBox}>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                {cols.map((col) => (
+                  <th
+                    key={col.key}
+                    className={`${styles[col.cls]} ${col.sticky ? styles.sticky : ""} ${
+                      col.sortable ? styles.sortable : ""
+                    }`}
+                    onClick={col.sortable ? () => toggleSort(col.key) : undefined}
+                  >
+                    {col.label}
+                    {col.sortable && sort === col.key && (
+                      <span className={styles.arrow}>{dir < 0 ? "▼" : "▲"}</span>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((legend, index) => {
+                const open = openId === legend.id;
+                return [
+                  <tr
+                    key={legend.id}
+                    className={`${styles.row} ${open ? styles.open : ""} ${
+                      legend.score == null ? styles.provisional : ""
+                    }`}
+                    onClick={() => toggleRow(legend.id)}
+                  >
+                    {cols.map((col) => renderCell(legend, col, index))}
+                  </tr>,
+                  open && (
+                    <tr key={`${legend.id}-detail`} className={styles.detailRow}>
+                      <td colSpan={cols.length}>{renderDetail(legend)}</td>
+                    </tr>
+                  ),
+                ];
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
       {loaded && rows.length === 0 && (
-        <div className={styles.empty}>조건에 맞는 레전드가 없습니다. 필터를 하나 풀어보세요.</div>
+        <StateBox status="empty" message="조건에 맞는 레전드가 없습니다. 필터를 하나 풀어보세요." compact />
       )}
 
       {helpOpen && (

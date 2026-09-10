@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { requestGetHistoryRounds } from "@/domains/historyLegend/store/public/thunks.js";
 import { useLegendStats } from "@/domains/legendStats/mobile/hooks/useLegendStats";
 import { buildLegendRows, collectMaterials } from "@/domains/historyLegend/config/historyLegend.js";
@@ -20,11 +20,18 @@ export const useHistoryLegend = () => {
     legends: masters,
     loading: metaLoading,
     error: metaError,
+    retry: retryMeta,
   } = useLegendStats();
 
   useEffect(() => {
     if (!loaded) dispatch(requestGetHistoryRounds());
   }, [dispatch, loaded]);
+
+  // 라운드(본 데이터)는 항상 다시 받고, 레전드 메타가 실패해 있었다면 같이 재시도한다
+  const retry = useCallback(() => {
+    dispatch(requestGetHistoryRounds());
+    if (metaError) retryMeta();
+  }, [dispatch, metaError, retryMeta]);
 
   const meta = useMemo(() => {
     const out = {};
@@ -45,5 +52,6 @@ export const useHistoryLegend = () => {
     loading: loading || metaLoading,
     loaded,
     error: error ?? metaError,
+    retry,
   };
 };

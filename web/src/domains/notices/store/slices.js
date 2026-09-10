@@ -16,6 +16,7 @@ import {
 const initialState = {
   siteNotices:     [],
   officialNotices: [],
+  loaded:  false, // 공개 목록 조회가 한 번이라도 성공했는지 — "0건"과 "아직 로딩 전"을 구분하는 데 쓴다
   loading: false,
   error:   null,
 };
@@ -29,6 +30,7 @@ const noticeSlice = createSlice({
     applyAsyncHandlers(builder, requestGetNoticeList, (state, action) => {
       state.siteNotices     = action.payload.siteNotices;
       state.officialNotices = action.payload.officialNotices;
+      state.loaded = true;
     });
 
     /* ── 어드민 조회 (전체 목록) ─────────────────────────────── */

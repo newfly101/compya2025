@@ -57,5 +57,10 @@ export const useLegendStats = () => {
     [byId, teamNameByCode],
   );
 
-  return { legends, loading, loaded, error, loadMaterials, materialsOf, materialsLoading };
+  // 목록 조회(requestGetLegendStats) 재시도 — 표를 채우는 본 데이터만 다시 받는다
+  const retry = useCallback(() => {
+    dispatch(requestGetLegendStats());
+  }, [dispatch]);
+
+  return { legends, loading, loaded, error, loadMaterials, materialsOf, materialsLoading, retry };
 };

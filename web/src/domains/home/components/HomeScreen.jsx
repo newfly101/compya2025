@@ -39,10 +39,14 @@ const HomeScreen = () => {
   const { activeCoupon } = useCouponList();
   const { activeEvents } = useEventList();
   const latestQuiz = useSelector((state) => state.quiz?.latest) ?? null;
+  const quizLoading = useSelector((state) => state.quiz?.loading) ?? false;
+  const quizError = useSelector((state) => state.quiz?.error) ?? null;
 
   useEffect(() => {
     dispatch(requestLatestQuizAnswer());
   }, [dispatch]);
+
+  const retryQuiz = () => dispatch(requestLatestQuizAnswer());
 
   const quizSectionTitle =
     latestQuiz?.title ??
@@ -59,7 +63,7 @@ const HomeScreen = () => {
       {/* ── 퀴즈 ── */}
       <SectionBlock
         title={quizSectionTitle}
-        children={<QuizSection quiz={latestQuiz} />}
+        children={<QuizSection quiz={latestQuiz} loading={quizLoading} error={quizError} retry={retryQuiz} />}
       />
 
       {/* ── 최신 쿠폰 ── @@@작업 완료@@@*/}

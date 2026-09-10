@@ -6,6 +6,15 @@
   background-color: var(--color-bg-deepest);
 }
 
+// ── 글 없음 상태 ──────────────────────────────────────────────
+.backLink {
+  align-self: center;
+  margin-top: $space-2;
+  @include text-body;
+  color: var(--color-brand);
+  text-decoration: underline;
+}
+
 // ── 히어로 이미지 ──────────────────────────────────────────────
 .hero {
   width: 100%;

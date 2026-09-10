@@ -21,6 +21,8 @@ import {
   weekOptions,
 } from "@/domains/historyLegend/config/historyLegend.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
+import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { useHistoryLegend } from "./hooks/useHistoryLegend";
 import "./historyLegend.tokens.scss";
 import styles from "./HistoryLegendScreen.module.scss";
@@ -50,7 +52,7 @@ const COLS = {
 const HistoryLegendScreen = () => {
   useDomainTopBar("히스토리 재료");
 
-  const { rounds, legends, materials, meta, loading, loaded, error } = useHistoryLegend();
+  const { rounds, legends, materials, meta, loading, loaded, error, retry } = useHistoryLegend();
   const [searchParams] = useSearchParams();
 
   const [view, setView] = useState(VIEW.LEGEND);
@@ -431,64 +433,73 @@ const HistoryLegendScreen = () => {
         </div>
       </div>
 
-      <div className={styles.tableBox}>
-        <table className={styles.table} style={{ minWidth: tableMinWidth }}>
-          <thead>
-            <tr>
-              {cols.map((col) => (
-                <th
-                  key={col.key}
-                  className={`${cellClass(col)} ${SORTABLE.has(col.key) ? styles.sortable : ""}`}
-                  style={cellStyle(col)}
-                  onClick={SORTABLE.has(col.key) ? () => toggleSort(col.key) : undefined}
-                >
-                  {col.label}
-                  {SORTABLE.has(col.key) && sort === col.key && (
-                    <span className={styles.arrowMark}>{dir < 0 ? "▼" : "▲"}</span>
-                  )}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((item) => {
-              const id = rowIdOf(item);
-              const open = openId === id;
-              // 홀짝은 행 순서가 아니라 일차 기준이라 정렬을 바꿔도 유지된다
-              const parity =
-                view === VIEW.ROUND ? (item.day % 2 ? styles.dayOdd : styles.dayEven) : "";
-              return [
-                <tr
-                  key={id}
-                  data-row-id={id}
-                  className={`${styles.row} ${parity} ${open ? styles.open : ""}`}
-                  onClick={() => toggleRow(id)}
-                >
-                  {cols.map((col) => (
-                    <td key={col.key} className={cellClass(col)} style={cellStyle(col)}>
-                      {view === VIEW.ROUND
-                        ? renderRoundCell(item, col)
-                        : renderLegendCell(item, col)}
-                    </td>
-                  ))}
-                </tr>,
-                open && (
-                  <tr key={`${id}-detail`} className={styles.detailRow}>
-                    <td colSpan={cols.length}>
-                      {view === VIEW.ROUND ? renderRoundDetail(item) : renderLegendDetail(item)}
-                    </td>
-                  </tr>
-                ),
-              ];
-            })}
-          </tbody>
-        </table>
-      </div>
+      {/* 목록 자체가 실패/로딩 중일 때만 표를 대신한다. 필터 UI는 위에서 항상 그대로 남는다 */}
+      {!loaded && loading && (
+        <div className={styles.tableBox}>
+          <Skeleton count={8} height={36} />
+        </div>
+      )}
 
-      {!loaded && loading && <div className={styles.empty}>불러오는 중…</div>}
-      {error && <div className={styles.empty}>{error}</div>}
+      {!loaded && !loading && error && <StateBox status="error" onRetry={retry} />}
+
+      {loaded && (
+        <div className={styles.tableBox}>
+          <table className={styles.table} style={{ minWidth: tableMinWidth }}>
+            <thead>
+              <tr>
+                {cols.map((col) => (
+                  <th
+                    key={col.key}
+                    className={`${cellClass(col)} ${SORTABLE.has(col.key) ? styles.sortable : ""}`}
+                    style={cellStyle(col)}
+                    onClick={SORTABLE.has(col.key) ? () => toggleSort(col.key) : undefined}
+                  >
+                    {col.label}
+                    {SORTABLE.has(col.key) && sort === col.key && (
+                      <span className={styles.arrowMark}>{dir < 0 ? "▼" : "▲"}</span>
+                    )}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((item) => {
+                const id = rowIdOf(item);
+                const open = openId === id;
+                // 홀짝은 행 순서가 아니라 일차 기준이라 정렬을 바꿔도 유지된다
+                const parity =
+                  view === VIEW.ROUND ? (item.day % 2 ? styles.dayOdd : styles.dayEven) : "";
+                return [
+                  <tr
+                    key={id}
+                    data-row-id={id}
+                    className={`${styles.row} ${parity} ${open ? styles.open : ""}`}
+                    onClick={() => toggleRow(id)}
+                  >
+                    {cols.map((col) => (
+                      <td key={col.key} className={cellClass(col)} style={cellStyle(col)}>
+                        {view === VIEW.ROUND
+                          ? renderRoundCell(item, col)
+                          : renderLegendCell(item, col)}
+                      </td>
+                    ))}
+                  </tr>,
+                  open && (
+                    <tr key={`${id}-detail`} className={styles.detailRow}>
+                      <td colSpan={cols.length}>
+                        {view === VIEW.ROUND ? renderRoundDetail(item) : renderLegendDetail(item)}
+                      </td>
+                    </tr>
+                  ),
+                ];
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
       {loaded && rows.length === 0 && (
-        <div className={styles.empty}>조건에 맞는 결과가 없습니다. 필터를 하나 풀어보세요.</div>
+        <StateBox status="empty" message="조건에 맞는 결과가 없습니다. 필터를 하나 풀어보세요." compact />
       )}
 
       <div className={styles.foot}>

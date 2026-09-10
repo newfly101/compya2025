@@ -36,6 +36,24 @@ const LOGOUT_PATH = "/auth/logout";
 // isAuthError 플래그는 필요 시 호출부가 인증 실패를 구분해 분기할 수 있게 남겨둔다.
 const AUTH_ERROR_MESSAGE = "로그인이 필요합니다. 다시 로그인해 주세요.";
 
+// 401 외의 실패도 여기서 한글로 바꿔 둔다.
+// 안 그러면 axios 기본 문구("Request failed with status code 500")가 화면에 그대로 뜬다.
+// 실제로 공지 상세에서 그 영문이 사용자에게 노출됐다.
+const toUserMessage = (error) => {
+  if (error.code === "ECONNABORTED" || /timeout/i.test(error.message ?? "")) {
+    return "응답이 너무 오래 걸립니다. 잠시 후 다시 시도해 주세요.";
+  }
+  // 응답 자체가 없으면 서버까지 못 갔다는 뜻 — 네트워크나 CORS.
+  if (!error.response) {
+    return "연결에 실패했습니다. 네트워크 상태를 확인해 주세요.";
+  }
+  const status = error.response.status;
+  if (status === 403) return "접근 권한이 없습니다.";
+  if (status === 404) return "요청한 정보를 찾을 수 없습니다.";
+  if (status >= 500) return "서버에 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.";
+  return "데이터를 받지 못했습니다. 잠시 후 다시 시도해 주세요.";
+};
+
 const createAuthError = (original) => {
   original.isAuthError = true;
   original.message = AUTH_ERROR_MESSAGE;
@@ -57,6 +75,7 @@ API.interceptors.response.use(
 
     if (status !== 401 || original?._retried || isAuthEndpoint) {
       if (status === 401) return Promise.reject(createAuthError(error));
+      error.message = toUserMessage(error);
       return Promise.reject(error);
     }
 
