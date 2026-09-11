@@ -263,13 +263,19 @@ export default function MyPageScreen() {
               로그인하면 계정이 복구됩니다. 1개월이 지나면 계정 정보는 완전히
               삭제되며 되돌릴 수 없습니다.
             </p>
+            {/* 문구를 span 으로 감싼다 — 감싸지 않으면 익명 flex 항목이 되어
+                전역 리셋의 input { width: 100% } 가 체크박스를 늘려 문구가
+                오른쪽으로 밀리고 줄바꿈도 어긋난다. */}
             <label className={styles.agreeLabel}>
               <input
                 type="checkbox"
+                className={styles.agreeCheckbox}
                 checked={agreeChecked}
                 onChange={(e) => setAgreeChecked(e.target.checked)}
               />
-              안내 사항을 확인했으며 탈퇴에 동의합니다.
+              <span className={styles.agreeText}>
+                안내 사항을 확인했으며 탈퇴에 동의합니다.
+              </span>
             </label>
             {withdrawError && <p className={styles.fieldError}>{withdrawError}</p>}
             <div className={styles.modalActions}>

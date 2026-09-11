@@ -7,6 +7,7 @@
 @use '../variables/font' as *;
 @use '../semantic/color';  // :root CSS 변수 주입
 @use '../variables/breakpoints' as *;
+@use '../functions/rem' as *;
 
 *,
 *::before,
@@ -56,7 +57,10 @@ button {
   padding: 0;
 }
 
-input,
+// 글자 입력칸(text/email/search/number 등)과 textarea 만 대상 — 체크박스·
+// 라디오는 아래 별도 규칙에서 다룬다. 함께 묶으면 width: 100% 가 체크박스에도
+// 걸려 가로 flex 안에서 남는 폭을 다 먹어버린다 (마이페이지 탈퇴 모달에서 발견).
+input:not([type="checkbox"]):not([type="radio"]),
 textarea {
   border: none;
   outline: none;
@@ -65,6 +69,18 @@ textarea {
   font-size: inherit;
   color: inherit;
   width: 100%;
+}
+
+// 체크박스·라디오는 네이티브 위젯 생김새(체크 표시 포함)를 그대로 두고
+// 크기·정렬만 정리한다. border/outline/background 를 건드리지 않는 이유 —
+// 그걸 없애면 브라우저가 그리는 체크 표시가 같이 사라질 수 있다.
+input[type="checkbox"],
+input[type="radio"] {
+  width: rem(16);
+  height: rem(16);
+  flex-shrink: 0;
+  accent-color: var(--color-brand);
+  cursor: pointer;
 }
 
 img,

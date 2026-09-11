@@ -255,16 +255,34 @@
 
 .modalDesc {
   @include text-body;
+  @include hangul-safe;
   color: var(--color-text-secondary);
   line-height: $line-height-relaxed;
   margin: 0;
 }
 
+// 체크박스와 문구를 한 줄처럼 붙여 보이게 한다. align-items 를 flex-start 로
+// 둬 문구가 두 줄이 되어도 체크박스가 첫 줄에 맞춰 정렬된다.
 .agreeLabel {
-  @include flex-row($space-2);
+  @include flex-row($space-2, $align: flex-start);
   @include text-caption;
   color: var(--color-text-secondary);
   cursor: pointer;
+}
+
+// 체크박스 크기·정렬은 이제 전역 리셋(base/_base.scss)에서 처리한다.
+// 여기서는 문구 첫 줄 x-height 와 광학적으로 맞추는 미세 조정만 남긴다.
+.agreeCheckbox {
+  margin-top: rem(1);
+}
+
+// flex-basis: 0 + flex-grow: 1 로 남는 폭을 전부 차지해 왼쪽 정렬로
+// 자연스럽게 줄바꿈되게 한다 (anonymous flex item 이던 이전 문제 해결).
+.agreeText {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: left;
+  @include hangul-safe;
 }
 
 .modalActions {
@@ -273,25 +291,28 @@
   margin-top: $space-2;
 }
 
+// 되돌리는(기본) 행동을 더 눈에 띄게 둔다 — 채움 + 굵게.
 .modalCancelBtn {
   flex: 1;
   height: $control-height-md;
   border: 1px solid var(--color-border);
   border-radius: $radius-md;
   background: var(--color-bg-card);
-  color: var(--color-text-secondary);
-  @include text-body;
+  color: var(--color-text-primary);
+  @include text-body-bold;
   cursor: pointer;
 }
 
+// 파괴적인 행동은 색으로만 경고하고 무게(채움/굵기)는 낮춘다 —
+// 채워진 굵은 빨간 버튼이 더 크게 보이면 오히려 잘못 누르기 쉽다.
 .modalConfirmBtn {
   flex: 1;
   height: $control-height-md;
-  border: none;
+  border: 1px solid var(--color-danger);
   border-radius: $radius-md;
-  background: var(--color-danger);
-  color: #fff;
-  @include text-body-bold;
+  background: transparent;
+  color: var(--color-danger);
+  @include text-body;
   cursor: pointer;
   @include pressable;
 
