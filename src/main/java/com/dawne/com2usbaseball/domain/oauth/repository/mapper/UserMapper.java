@@ -23,6 +23,8 @@ public interface UserMapper {
 
     int updateNickname(@Param("id") Long id, @Param("nickname") String nickname);
 
+    int updateProfileImage(@Param("id") Long id, @Param("profileImage") String profileImage);
+
     Optional<UserEntity> selectUserById(@Param("id") Long id);
 
     // Admin

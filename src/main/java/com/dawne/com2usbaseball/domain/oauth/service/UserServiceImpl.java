@@ -1,6 +1,8 @@
 package com.dawne.com2usbaseball.domain.oauth.service;
 
+import com.dawne.com2usbaseball.common.support.dto.PatchableString;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
+import com.dawne.com2usbaseball.domain.admin.service.UploadService;
 import com.dawne.com2usbaseball.domain.oauth.dto.mapstruct.UserMapStruct;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.NaverOAuthUserResponse;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.UserMeResponse;
@@ -14,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.LocalDateTime;
 
@@ -28,6 +32,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserMapStruct userMapStruct;
+    private final UploadService uploadService;
 
     @Override
     @Transactional
@@ -68,17 +73,61 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserMeResponse updateNickname(Long userId, String nickname) {
-        String trimmed = nickname == null ? "" : nickname.trim();
-        if (trimmed.isEmpty() || trimmed.length() > NICKNAME_MAX_LENGTH) {
-            throw new BaseException(AuthMessages.AUTH_INVALID_NICKNAME, HttpStatus.BAD_REQUEST);
+    public UserMeResponse updateMe(Long userId, String nickname, PatchableString profileImage) {
+        UserEntity user = findActiveUserById(userId);
+
+        // nickname == null → 키 자체를 안 보낸 것과 같은 취급 → 건드리지 않는다 (기존 "닉네임만 보내는" 요청 호환)
+        if (nickname != null) {
+            String trimmed = nickname.trim();
+            if (trimmed.isEmpty() || trimmed.length() > NICKNAME_MAX_LENGTH) {
+                throw new BaseException(AuthMessages.AUTH_INVALID_NICKNAME, HttpStatus.BAD_REQUEST);
+            }
+            repository.updateNickname(userId, trimmed);
+            user.setNickname(trimmed);
         }
 
-        UserEntity user = findActiveUserById(userId);
-        repository.updateNickname(userId, trimmed);
-        user.setNickname(trimmed);
+        // profileImage == null → 키를 아예 안 보냄 → 건드리지 않는다
+        // profileImage.value() 가 null/빈 문자열 → 명시적으로 비움(기본 이미지로 되돌림)
+        if (profileImage != null) {
+            String oldValue = user.getProfileImage();
+            String newValue = normalizeProfileImage(profileImage.value());
+
+            repository.updateProfileImage(userId, newValue);
+            user.setProfileImage(newValue);
+
+            // [판단] 옛 파일은 트랜잭션이 실제로 커밋된 뒤에만 지운다 — 롤백되면 DB엔 옛 주소가 남는데
+            // 파일이 먼저 지워지면 사용자 화면에서 이미지가 깨진다. 커밋 후 지우면 그런 불일치가 없다.
+            if (oldValue != null && !oldValue.equals(newValue) && uploadService.isProfileImageUrl(oldValue)) {
+                registerDeleteAfterCommit(oldValue);
+            }
+        }
 
         return userMapStruct.toHealthResponse(user);
+    }
+
+    // 사용자가 임의 URL 을 넣지 못하게 — 반드시 /api/upload/profile 로 우리 버킷에 올린 주소만 허용
+    private String normalizeProfileImage(String raw) {
+        if (raw == null || raw.isBlank()) {
+            return null;
+        }
+        String trimmed = raw.trim();
+        if (!uploadService.isProfileImageUrl(trimmed)) {
+            throw new BaseException(AuthMessages.AUTH_INVALID_PROFILE_IMAGE, HttpStatus.BAD_REQUEST);
+        }
+        return trimmed;
+    }
+
+    private void registerDeleteAfterCommit(String url) {
+        if (!TransactionSynchronizationManager.isSynchronizationActive()) {
+            uploadService.deleteByUrl(url);
+            return;
+        }
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override
+            public void afterCommit() {
+                uploadService.deleteByUrl(url);
+            }
+        });
     }
 
     @Override
@@ -87,6 +136,8 @@ public class UserServiceImpl implements UserService {
         // 이미 WITHDRAWN/BLOCKED/SUSPENDED 인 계정은 여기서 AUTH_USER_BLOCKED 로 걸러짐 (중복 탈퇴 방지)
         findActiveUserById(userId);
 
+        // [판단] 탈퇴는 1개월 보관 후 파기(재로그인 시 복구)라, profile_image 는 여기서 지우지 않는다.
+        // 즉시 지우면 보관 기간 내 재로그인해도 이미지가 이미 없다 — 실제 파기는 별도 배치의 몫(이번 범위 아님)
         repository.updateUserStatus(userId, UserStatus.WITHDRAWN);
         refreshTokenRepository.deleteByUserId(userId);
     }

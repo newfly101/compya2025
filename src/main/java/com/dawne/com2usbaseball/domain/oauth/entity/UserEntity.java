@@ -27,6 +27,7 @@ public class UserEntity {
 
     // 서비스 정보
     private String nickname;
+    private String profileImage; // 사용자가 직접 올린 프로필 이미지 (네이버 제공 이미지인 oauthProfileImage 와 구분)
     private String email;
     private UserRole userRole;
     private UserStatus userStatus;

@@ -1,6 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { USERS_ME_ACTIONS } from "@/domains/users/store/public/endpoints.js";
-import { fetchMyInfo, patchMyNickname, deleteMyAccount } from "@/domains/users/store/public/api.js";
+import {
+  fetchMyInfo,
+  patchMyNickname,
+  patchMyProfileImage,
+  deleteMyAccount,
+} from "@/domains/users/store/public/api.js";
 
 export const requestGetMyInfo = createAsyncThunk(
   USERS_ME_ACTIONS.GET,
@@ -19,6 +24,18 @@ export const requestUpdateMyNickname = createAsyncThunk(
   async (nickname, { rejectWithValue }) => {
     try {
       return await patchMyNickname(nickname);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// profileImage: string — 업로드된 이미지 주소. 빈 문자열이면 기본 이미지로 되돌린다.
+export const requestUpdateMyProfileImage = createAsyncThunk(
+  USERS_ME_ACTIONS.PATCH_PROFILE_IMAGE,
+  async (profileImage, { rejectWithValue }) => {
+    try {
+      return await patchMyProfileImage(profileImage);
     } catch (error) {
       return rejectWithValue(error.message);
     }

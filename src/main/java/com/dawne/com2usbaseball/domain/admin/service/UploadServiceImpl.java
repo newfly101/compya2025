@@ -6,11 +6,13 @@ import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.admin.dto.response.UploadResponse;
 import com.dawne.com2usbaseball.domain.admin.enums.UploadMessages;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
@@ -21,6 +23,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UploadServiceImpl implements UploadService {
@@ -28,6 +31,10 @@ public class UploadServiceImpl implements UploadService {
     private final S3Client s3Client;
     private final S3Properties props;
     private final UploadProperties uploadProperties;
+
+    // 이벤트 이미지와 프로필 이미지는 저장 경로를 구분한다 — 나중에 정리(만료/일괄삭제) 할 때 섞이면 안 된다
+    private static final String EVENT_KEY_PREFIX = "uploads/images/";
+    private static final String PROFILE_KEY_PREFIX = "uploads/profile-images/";
 
     // 이미지 업로드 허용 확장자 화이트리스트
     private static final Set<String> ALLOWED_EXTENSIONS = Set.of("jpg", "jpeg", "png", "gif", "webp");
@@ -46,6 +53,45 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     public UploadResponse uploadImage(MultipartFile file) throws IOException {
+        return upload(file, EVENT_KEY_PREFIX);
+    }
+
+    @Override
+    public UploadResponse uploadProfileImage(MultipartFile file, Long userId) throws IOException {
+        // 유저별 폴더로 나눠서 나중에 특정 유저 파일만 추적/정리하기 쉽게 한다
+        return upload(file, PROFILE_KEY_PREFIX + userId + "/");
+    }
+
+    @Override
+    public boolean isProfileImageUrl(String url) {
+        if (url == null || url.isBlank()) {
+            return false;
+        }
+        return url.startsWith(resolveUrl(PROFILE_KEY_PREFIX));
+    }
+
+    @Override
+    public void deleteByUrl(String url) {
+        String baseUrl = resolveUrl("");
+        if (url == null || !url.startsWith(baseUrl)) {
+            return; // 우리 버킷 URL 이 아니면 손대지 않는다 (방어적)
+        }
+
+        String key = url.substring(baseUrl.length());
+        try {
+            s3Client.deleteObject(
+                    DeleteObjectRequest.builder()
+                            .bucket(props.getS3().getBucket())
+                            .key(key)
+                            .build()
+            );
+        } catch (Exception e) {
+            // 옛 파일 정리 실패로 사용자 흐름(이미지 교체 자체)을 막을 이유는 없다 — 로그만 남긴다
+            log.warn("옛 이미지 삭제 실패: {}", url, e);
+        }
+    }
+
+    private UploadResponse upload(MultipartFile file, String keyPrefix) throws IOException {
         validateNotEmpty(file);
         validateSize(file);
 
@@ -57,7 +103,7 @@ public class UploadServiceImpl implements UploadService {
         validateActualContent(content, extension);
 
         String fileName = UUID.randomUUID() + "." + extension;
-        String key = "uploads/images/" + fileName;
+        String key = keyPrefix + fileName;
 
         PutObjectRequest request =
                 PutObjectRequest.builder()
@@ -72,11 +118,13 @@ public class UploadServiceImpl implements UploadService {
             throw new BaseException(UploadMessages.UPLOAD_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+        return new UploadResponse(resolveUrl(key), fileName);
+    }
+
+    private String resolveUrl(String key) {
         String baseUrl = props.getS3().getUrl();
         if (!baseUrl.startsWith("http")) baseUrl = "https://" + baseUrl;
-        String url = baseUrl + "/" + key;
-
-        return new UploadResponse(url, fileName);
+        return baseUrl + "/" + key;
     }
 
     private void validateNotEmpty(MultipartFile file) {

@@ -9,6 +9,7 @@ import {
 import {
   requestGetMyInfo,
   requestUpdateMyNickname,
+  requestUpdateMyProfileImage,
   requestDeleteMyAccount,
 } from "@/domains/users/store/public/thunks.js";
 
@@ -70,6 +71,10 @@ const myPageSlice = createSlice({
     });
     /* ── 닉네임 수정 ────────────────────────────────────────── */
     applyAsyncHandlers(builder, requestUpdateMyNickname, (state, action) => {
+      state.profile = action.payload;
+    });
+    /* ── 프로필 이미지 수정(기본 이미지 복원 포함) ─────────────── */
+    applyAsyncHandlers(builder, requestUpdateMyProfileImage, (state, action) => {
       state.profile = action.payload;
     });
     /* ── 회원 탈퇴 ──────────────────────────────────────────── */

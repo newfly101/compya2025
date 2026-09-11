@@ -60,6 +60,9 @@ public class SecurityConfig {
                                 "/swagger-custom.css"
                         ).permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        // /api/upload/** 는 기본이 ADMIN 전용이라, 로그인 사용자도 써야 하는 프로필 업로드는
+                        // 더 구체적인 규칙을 먼저 매칭시켜 예외로 둔다 (순서가 중요 — 먼저 매칭되는 규칙이 적용된다)
+                        .requestMatchers("/api/upload/profile").authenticated()
                         .requestMatchers("/api/upload/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").permitAll()
                         .anyRequest().denyAll()

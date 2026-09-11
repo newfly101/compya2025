@@ -17,6 +17,7 @@
             oauth_profile_image  AS oauthProfileImage,
             oauth_age_range      AS oauthAgeRange,
             service_nickname     AS nickname,
+            profile_image        AS profileImage,
             user_role            AS userRole,
             user_status          AS userStatus,
             created_at           AS createdAt,
@@ -74,6 +75,14 @@
         WHERE id = #{id}
     </update>
 
+    <!-- 프로필 이미지(profile_image) 수정/삭제 — null 이면 비움(기본 이미지로 되돌림) -->
+    <update id="updateProfileImage">
+        UPDATE site_users
+        SET profile_image = #{profileImage, jdbcType=VARCHAR},
+            updated_at    = NOW()
+        WHERE id = #{id}
+    </update>
+
     <!-- ID 조회 -->
     <select id="selectUserById"
             resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity">
@@ -87,6 +96,7 @@
             oauth_profile_image  AS oauthProfileImage,
             oauth_age_range      AS oauthAgeRange,
             service_nickname     AS nickname,
+            profile_image        AS profileImage,
             email                AS email,
             user_role            AS userRole,
             user_status          AS userStatus,

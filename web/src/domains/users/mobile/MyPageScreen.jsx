@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
+import { Avatar } from "@/global/ui/avatar";
 import {
   requestGetMyInfo,
   requestUpdateMyNickname,
   requestDeleteMyAccount,
 } from "@/domains/users/store/public/thunks.js";
+import { useProfileImageUpload } from "@/domains/users/mobile/hooks/useProfileImageUpload.js";
 import { clearUser } from "@/domains/authentication/store/slices.js";
 import styles from "./MyPageScreen.module.scss";
 
@@ -18,6 +20,14 @@ export default function MyPageScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { profile, loading, error } = useSelector((s) => s.myPage);
+  const fileInputRef = useRef(null);
+  const {
+    previewUrl: imagePreviewUrl,
+    busy: imageBusy,
+    error: imageError,
+    selectFile: selectProfileImageFile,
+    resetToDefault: resetProfileImageToDefault,
+  } = useProfileImageUpload();
 
   const [isEditing, setIsEditing] = useState(false);
   const [nicknameInput, setNicknameInput] = useState("");
@@ -137,13 +147,54 @@ export default function MyPageScreen() {
   return (
     <div className={styles.page}>
       <section className={styles.card}>
-        {profile.profileImage && (
-          <img
-            className={styles.avatar}
-            src={profile.profileImage}
-            alt="프로필 이미지"
+        <div className={styles.avatarSection}>
+          <button
+            type="button"
+            className={styles.avatarBtn}
+            onClick={() => fileInputRef.current?.click()}
+            disabled={imageBusy}
+            aria-label="프로필 이미지 변경"
+          >
+            <Avatar
+              src={imagePreviewUrl || profile.profileImage || profile.oauthProfileImage}
+              nickname={profile.nickname}
+              size={72}
+              alt="프로필 이미지"
+            />
+            {imageBusy && <span className={styles.avatarSpinner}>업로드 중...</span>}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className={styles.hiddenFileInput}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              // 같은 파일을 다시 골라도 onChange 가 뜨도록 값을 비운다.
+              e.target.value = "";
+              if (file) selectProfileImageFile(file);
+            }}
           />
-        )}
+          <div className={styles.avatarActions}>
+            <button
+              type="button"
+              className={styles.avatarChangeBtn}
+              onClick={() => fileInputRef.current?.click()}
+              disabled={imageBusy}
+            >
+              이미지 변경
+            </button>
+            <button
+              type="button"
+              className={styles.avatarResetBtn}
+              onClick={resetProfileImageToDefault}
+              disabled={imageBusy}
+            >
+              기본 이미지로
+            </button>
+          </div>
+          {imageError && <p className={styles.fieldError}>{imageError}</p>}
+        </div>
 
         <div className={styles.field}>
           <span className={styles.fieldLabel}>닉네임</span>

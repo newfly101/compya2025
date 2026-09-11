@@ -1,7 +1,7 @@
 package com.dawne.com2usbaseball.domain.oauth.controller.docs;
 
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
-import com.dawne.com2usbaseball.domain.oauth.dto.request.UserNicknameUpdateRequest;
+import com.dawne.com2usbaseball.domain.oauth.dto.request.UserMeUpdateRequest;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.UserMeResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,7 +34,8 @@ public interface UserSwaggerDocs {
                                         "id": 1,
                                         "nickname": "dawne",
                                         "email": "dawne@naver.com",
-                                        "profileImage": "https://example.com/image.jpg",
+                                        "profileImage": null,
+                                        "oauthProfileImage": "https://example.com/naver-image.jpg",
                                         "lastLoginAt": "2026-04-04 13:00"
                                       }
                                     }
@@ -47,9 +48,13 @@ public interface UserSwaggerDocs {
     GlobalResponse<UserMeResponse> getMe(HttpServletRequest request);
 
     @Operation(
-            summary = "내 정보 수정 (닉네임)",
-            description = "서비스 닉네임(service_nickname)만 수정합니다. 네이버 제공 정보(oauthNickname 등)는 수정 대상이 아닙니다. " +
-                    "닉네임은 중복을 허용하며, 최대 20자, 공백만 있는 값/빈 값은 거부됩니다. 앞뒤 공백은 trim 됩니다."
+            summary = "내 정보 수정 (닉네임 / 프로필 이미지)",
+            description = "서비스 닉네임(service_nickname)과 사용자가 올린 프로필 이미지(profile_image)를 부분 수정합니다. " +
+                    "각 필드는 JSON 에 키를 아예 보내지 않으면 그대로 두고, 값을 보내면 수정합니다. " +
+                    "닉네임은 중복을 허용하며 최대 20자, 공백만 있는 값/빈 값은 거부됩니다(앞뒤 공백은 trim). " +
+                    "profileImage 는 null 또는 빈 문자열을 보내면 비워집니다(기본 이미지로 되돌림). " +
+                    "값을 채워서 보낼 때는 반드시 POST /api/upload/profile 로 올린 주소여야 하며, 아니면 400 이 납니다. " +
+                    "네이버 제공 이미지(oauthNickname/oauthProfileImage 등)는 이 API 의 수정 대상이 아닙니다."
     )
     @ApiResponse(
             responseCode = "200",
@@ -66,7 +71,8 @@ public interface UserSwaggerDocs {
                                         "id": 1,
                                         "nickname": "새닉네임",
                                         "email": "dawne@naver.com",
-                                        "profileImage": "https://example.com/image.jpg",
+                                        "profileImage": "https://bucket.s3.ap-northeast-2.amazonaws.com/uploads/profile-images/1/uuid.jpg",
+                                        "oauthProfileImage": "https://example.com/naver-image.jpg",
                                         "lastLoginAt": "2026-04-04 13:00"
                                       }
                                     }
@@ -74,10 +80,10 @@ public interface UserSwaggerDocs {
                     )
             )
     )
-    @ApiResponse(responseCode = "400", description = "닉네임 형식 오류 (빈 값/공백만/20자 초과)", content = @Content)
+    @ApiResponse(responseCode = "400", description = "닉네임 형식 오류 / 프로필 이미지 주소가 우리 업로드 경로가 아님", content = @Content)
     @ApiResponse(responseCode = "401", description = "인증되지 않은 사용자", content = @Content)
     @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자", content = @Content)
-    GlobalResponse<UserMeResponse> updateMe(HttpServletRequest request, @Valid UserNicknameUpdateRequest body);
+    GlobalResponse<UserMeResponse> updateMe(HttpServletRequest request, @Valid UserMeUpdateRequest body);
 
     @Operation(
             summary = "회원 탈퇴",

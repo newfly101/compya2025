@@ -2,7 +2,7 @@ package com.dawne.com2usbaseball.domain.oauth.controller;
 
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.oauth.controller.docs.UserSwaggerDocs;
-import com.dawne.com2usbaseball.domain.oauth.dto.request.UserNicknameUpdateRequest;
+import com.dawne.com2usbaseball.domain.oauth.dto.request.UserMeUpdateRequest;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.UserMeResponse;
 import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
@@ -40,11 +40,11 @@ public class UserController implements UserSwaggerDocs {
     @PatchMapping("/me")
     public GlobalResponse<UserMeResponse> updateMe(
             HttpServletRequest request,
-            @Valid @RequestBody UserNicknameUpdateRequest body
+            @Valid @RequestBody UserMeUpdateRequest body
     ) {
         Long userId = requireUserId(request);
 
-        UserMeResponse data = userService.updateNickname(userId, body.nickname());
+        UserMeResponse data = userService.updateMe(userId, body.nickname(), body.profileImage());
 
         return GlobalResponse.success(AuthMessages.AUTH_NICKNAME_UPDATED, data);
     }

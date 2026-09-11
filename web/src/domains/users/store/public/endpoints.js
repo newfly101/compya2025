@@ -5,7 +5,8 @@ export const USERS_ME = {
 };
 
 export const USERS_ME_ACTIONS = {
-  GET:    "GET/users/me",
-  PATCH:  "PATCH/users/me",
-  DELETE: "DELETE/users/me",
+  GET:                  "GET/users/me",
+  PATCH:                "PATCH/users/me",
+  PATCH_PROFILE_IMAGE:  "PATCH/users/me/profileImage",
+  DELETE:               "DELETE/users/me",
 };

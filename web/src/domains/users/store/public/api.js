@@ -13,6 +13,12 @@ export const patchMyNickname = async (nickname) => {
   return data.data;
 };
 
+// profileImage: 업로드된 이미지 주소. 빈 문자열을 보내면 서버가 기본 이미지로 되돌린다.
+export const patchMyProfileImage = async (profileImage) => {
+  const { data } = await API.patch(USERS_ME.PATCH, { profileImage });
+  return data.data;
+};
+
 // 성공 시 data 는 null. BE 가 refresh token 삭제 + 쿠키 만료까지 처리하므로
 // FE 는 별도 로그아웃 API 를 호출할 필요가 없다.
 export const deleteMyAccount = async () => {

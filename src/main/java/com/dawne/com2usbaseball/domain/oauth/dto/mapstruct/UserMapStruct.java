@@ -13,7 +13,8 @@ public interface UserMapStruct {
      */
     @Mapping(target = "nickname", source = "nickname")
     @Mapping(target = "email", source = "oauthEmail")
-    @Mapping(target = "profileImage", source = "oauthProfileImage")
+    @Mapping(target = "profileImage", source = "profileImage")
+    @Mapping(target = "oauthProfileImage", source = "oauthProfileImage")
     @Mapping(target = "lastLoginAt", source = "lastLoginAt")
     UserMeResponse toHealthResponse(UserEntity entity);
 

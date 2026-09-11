@@ -37,6 +37,11 @@ public class UserRepository {
         return mapper.updateNickname(userId, nickname) > 0;
     }
 
+    // profileImage == null 이면 컬럼을 비운다(기본 이미지로 되돌림)
+    public boolean updateProfileImage(Long userId, String profileImage) {
+        return mapper.updateProfileImage(userId, profileImage) > 0;
+    }
+
     public List<UserEntity> findAdminUserList(String nickname, UserRole userRole, UserStatus userStatus, int limit, int offset) {
         return mapper.selectAdminUserList(nickname, userRole, userStatus, limit, offset);
     }
