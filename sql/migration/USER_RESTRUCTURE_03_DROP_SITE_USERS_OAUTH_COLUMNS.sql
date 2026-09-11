@@ -20,8 +20,10 @@
 SET NAMES utf8mb4;
 USE compyafun;
 
--- 0) 실행 전 마지막 확인 — 두 테이블 값이 여전히 일치하는지, 새 테이블에 코드가
---    이미 의존하고 있다는 전제이므로 site_users 쪽 oauth_* 는 이제 아무도 안 읽어야 정상
+-- 0) 실행 전 마지막 확인 --------------------------------------------------
+--    ⚠️ 먼저 USER_RESTRUCTURE_03A_PRECHECK.sql 을 돌려 5개 조회가 전부
+--       기대값인지 확인할 것. 아래 개수 비교만으로는 부족하다 —
+--       짝이 서로 어긋나 있어도 전체 개수는 똑같이 나온다.
 SELECT (SELECT COUNT(*) FROM site_users)               AS site_users_전체,
        (SELECT COUNT(*) FROM site_user_oauth_accounts) AS oauth_accounts_전체;
 -- 두 숫자가 다르면 여기서 멈출 것. 02번 파일부터 다시 확인.
