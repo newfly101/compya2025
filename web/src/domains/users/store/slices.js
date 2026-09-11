@@ -35,16 +35,16 @@ const adminUsersSlice = createSlice({
     });
     /* ── 유저 역할 변경 ─────────────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminPatchUserRole, (state, action) => {
-      const { id, userRole } = action.payload;
+      const { publicId, userRole } = action.payload;
       state.users = state.users.map((u) =>
-        u.id === id ? { ...u, userRole } : u
+        u.publicId === publicId ? { ...u, userRole } : u
       );
     });
     /* ── 유저 상태 변경 ─────────────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminPatchUserStatus, (state, action) => {
-      const { id, userStatus } = action.payload;
+      const { publicId, userStatus } = action.payload;
       state.users = state.users.map((u) =>
-        u.id === id ? { ...u, userStatus } : u
+        u.publicId === publicId ? { ...u, userStatus } : u
       );
     });
   },

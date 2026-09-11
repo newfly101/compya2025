@@ -31,7 +31,7 @@ public interface UserSwaggerDocs {
                                       "success": true,
                                       "code": "AUTH_SUCCESS",
                                       "data": {
-                                        "id": 1,
+                                        "publicId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                                         "nickname": "dawne",
                                         "email": "dawne@naver.com",
                                         "profileImage": null,
@@ -68,7 +68,7 @@ public interface UserSwaggerDocs {
                                       "success": true,
                                       "code": "AUTH_NICKNAME_UPDATED",
                                       "data": {
-                                        "id": 1,
+                                        "publicId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
                                         "nickname": "새닉네임",
                                         "email": "dawne@naver.com",
                                         "profileImage": "https://bucket.s3.ap-northeast-2.amazonaws.com/uploads/profile-images/1/uuid.jpg",

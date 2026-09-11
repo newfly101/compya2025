@@ -27,6 +27,9 @@ public interface UserMapper {
 
     Optional<UserEntity> selectUserById(@Param("id") Long id);
 
+    // 밖으로 노출되는 식별자(public_id) 기준 조회 — admin API 의 유일한 public_id → id 변환 지점에서 사용
+    Optional<UserEntity> selectUserByPublicId(@Param("publicId") String publicId);
+
     // Admin
     List<UserEntity> selectAdminUserList(
             @Param("nickname") String nickname,

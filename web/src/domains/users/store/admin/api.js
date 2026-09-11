@@ -6,15 +6,15 @@ export const fetchAdminUserList   = async (params) => {
   const { data } = await API.get(ADMIN_USERS.GET_LIST, { params });
   return data.data;
 };
-export const fetchAdminUserDetail = async (id) => {
-  const { data } = await API.get(ADMIN_USERS.GET_DETAIL(id));
+export const fetchAdminUserDetail = async (publicId) => {
+  const { data } = await API.get(ADMIN_USERS.GET_DETAIL(publicId));
   return data.data;
 };
-export const fetchAdminPatchRole  = async (id, userRole) => {
-  const { data } = await API.patch(ADMIN_USERS.PATCH_ROLE(id), { userRole });
+export const fetchAdminPatchRole  = async (publicId, userRole) => {
+  const { data } = await API.patch(ADMIN_USERS.PATCH_ROLE(publicId), { userRole });
   return data.data;
 };
-export const fetchAdminPatchStatus = async (id, userStatus) => {
-  const { data } = await API.patch(ADMIN_USERS.PATCH_STATUS(id), { userStatus });
+export const fetchAdminPatchStatus = async (publicId, userStatus) => {
+  const { data } = await API.patch(ADMIN_USERS.PATCH_STATUS(publicId), { userStatus });
   return data.data;
 };

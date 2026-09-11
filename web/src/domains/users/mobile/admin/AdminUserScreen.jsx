@@ -43,13 +43,14 @@ const SORT_FIELD_LABELS = { nickname: "닉네임", createdAt: "가입일", lastL
 export default function AdminUserScreen() {
   const dispatch = useDispatch();
   const { users, loading, error } = useSelector((s) => s.adminUsers);
-  const currentUserId = useSelector((s) => s.auth.user?.id);
+  // 서버가 숫자 id 대신 publicId(문자열)를 내려준다 — 다른 사람의 순번을 추측할 수 없게 하기 위함.
+  const currentUserPublicId = useSelector((s) => s.auth.user?.publicId);
 
   const [search, setSearch] = useState("");
   const [sortKey, setSortKey] = useState("createdAt");
   const [sortDir, setSortDir] = useState(-1);
 
-  /* 상세/변경 모달 */
+  /* 상세/변경 모달 — publicId(문자열) 기준 */
   const [selectedId, setSelectedId] = useState(null);
   const [roleDraft, setRoleDraft] = useState("");
   const [statusDraft, setStatusDraft] = useState("");
@@ -96,12 +97,14 @@ export default function AdminUserScreen() {
       ? `${SORT_FIELD_LABELS.nickname} ${sortDir === 1 ? "가나다순" : "역순"}`
       : `${SORT_FIELD_LABELS[sortKey]} ${sortDir === -1 ? "최신순" : "오래된순"}`;
 
-  const activeUser = selectedId != null ? (users ?? []).find((u) => u.id === selectedId) ?? null : null;
-  const isSelf = currentUserId != null && selectedId === currentUserId;
+  // publicId 는 문자열 — 빈 문자열(falsy)까지 걸러지지 않도록 null/undefined 만 명시 비교한다.
+  const activeUser =
+    selectedId != null ? (users ?? []).find((u) => u.publicId === selectedId) ?? null : null;
+  const isSelf = currentUserPublicId != null && selectedId === currentUserPublicId;
   const isWithdrawPending = pendingChange?.field === "userStatus" && pendingChange.value === "WITHDRAWN";
 
   const openDetail = (user) => {
-    setSelectedId(user.id);
+    setSelectedId(user.publicId);
     setRoleDraft(user.userRole);
     setStatusDraft(user.userStatus);
     setPendingChange(null);
@@ -140,11 +143,11 @@ export default function AdminUserScreen() {
     try {
       if (pendingChange.field === "userRole") {
         await dispatch(
-          requestAdminPatchUserRole({ id: activeUser.id, userRole: pendingChange.value })
+          requestAdminPatchUserRole({ publicId: activeUser.publicId, userRole: pendingChange.value })
         ).unwrap();
       } else {
         await dispatch(
-          requestAdminPatchUserStatus({ id: activeUser.id, userStatus: pendingChange.value })
+          requestAdminPatchUserStatus({ publicId: activeUser.publicId, userStatus: pendingChange.value })
         ).unwrap();
       }
       setPendingChange(null);
@@ -215,7 +218,7 @@ export default function AdminUserScreen() {
       label: "관리",
       width: 60,
       render: (u) =>
-        u.id === currentUserId ? (
+        u.publicId === currentUserPublicId ? (
           <span className={styles.selfTag}>본인</span>
         ) : (
           <button
@@ -259,7 +262,7 @@ export default function AdminUserScreen() {
           <AdminTable
             columns={columns}
             rows={pageItems}
-            rowKey={(u) => u.id}
+            rowKey={(u) => u.publicId}
             onRowClick={openDetail}
             sortKey={sortKey}
             sortDir={sortDir}

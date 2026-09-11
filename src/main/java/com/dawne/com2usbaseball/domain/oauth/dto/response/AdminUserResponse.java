@@ -7,7 +7,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
 public record AdminUserResponse(
-        Long id,
+        String publicId,
         String nickname,
         String email,
         UserRole userRole,
@@ -18,10 +18,10 @@ public record AdminUserResponse(
         LocalDateTime createdAt
 ) {
     public static AdminUserResponse from(
-            Long id, String nickname, String email,
+            String publicId, String nickname, String email,
             UserRole userRole, UserStatus userStatus,
             LocalDateTime lastLoginAt, LocalDateTime createdAt
     ) {
-        return new AdminUserResponse(id, nickname, email, userRole, userStatus, lastLoginAt, createdAt);
+        return new AdminUserResponse(publicId, nickname, email, userRole, userStatus, lastLoginAt, createdAt);
     }
 }

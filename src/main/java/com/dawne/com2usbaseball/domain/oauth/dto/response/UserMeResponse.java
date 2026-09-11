@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDateTime;
 
 public record UserMeResponse(
-        Long id,
+        String publicId,           // 밖으로 노출되는 식별자. 어드민 화면 등에서 "이 줄이 나 자신인가" 판정에 쓰인다
         String nickname,
         String email,
         String profileImage,       // 사용자가 직접 올린 프로필 이미지. 없으면 null

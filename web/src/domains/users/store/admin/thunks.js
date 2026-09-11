@@ -21,9 +21,9 @@ export const requestAdminGetUserList = createAsyncThunk(
 
 export const requestAdminGetUserDetail = createAsyncThunk(
   ADMIN_USER_ACTIONS.GET_DETAIL,
-  async (id, { rejectWithValue }) => {
+  async (publicId, { rejectWithValue }) => {
     try {
-      return await fetchAdminUserDetail(id);
+      return await fetchAdminUserDetail(publicId);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -32,10 +32,10 @@ export const requestAdminGetUserDetail = createAsyncThunk(
 
 export const requestAdminPatchUserRole = createAsyncThunk(
   ADMIN_USER_ACTIONS.PATCH_ROLE,
-  async ({ id, userRole }, { rejectWithValue }) => {
+  async ({ publicId, userRole }, { rejectWithValue }) => {
     try {
-      await fetchAdminPatchRole(id, userRole);
-      return { id, userRole };
+      await fetchAdminPatchRole(publicId, userRole);
+      return { publicId, userRole };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -44,10 +44,10 @@ export const requestAdminPatchUserRole = createAsyncThunk(
 
 export const requestAdminPatchUserStatus = createAsyncThunk(
   ADMIN_USER_ACTIONS.PATCH_STATUS,
-  async ({ id, userStatus }, { rejectWithValue }) => {
+  async ({ publicId, userStatus }, { rejectWithValue }) => {
     try {
-      await fetchAdminPatchStatus(id, userStatus);
-      return { id, userStatus };
+      await fetchAdminPatchStatus(publicId, userStatus);
+      return { publicId, userStatus };
     } catch (error) {
       return rejectWithValue(error.message);
     }

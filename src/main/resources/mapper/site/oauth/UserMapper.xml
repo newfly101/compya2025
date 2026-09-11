@@ -4,40 +4,42 @@
 
 <mapper namespace="com.dawne.com2usbaseball.domain.oauth.repository.mapper.UserMapper">
 
-    <!-- provider + providerId 조회 -->
+    <!-- site_users 컬럼만 조회. oauth_email/oauth_profile_image 는 site_user_oauth_accounts 를 JOIN 해서 읽는다
+         (site_users.oauth_* 원본 컬럼은 더 이상 참조하지 않는다 — 3단계 DROP 준비) -->
+    <sql id="userColumns">
+        su.id,
+        su.public_id         AS publicId,
+        su.service_nickname  AS nickname,
+        su.profile_image     AS profileImage,
+        su.email             AS email,
+        su.user_role         AS userRole,
+        su.user_status       AS userStatus,
+        su.withdrawn_at      AS withdrawnAt,
+        su.created_at        AS createdAt,
+        su.updated_at        AS updatedAt,
+        su.last_login_at     AS lastLoginAt,
+        oa.oauth_email         AS oauthEmail,
+        oa.oauth_profile_image AS oauthProfileImage
+    </sql>
+
+    <!-- provider + providerId 로 로그인 수단 원본(site_user_oauth_accounts) 을 먼저 찾고 사람(site_users) 을 조인 -->
     <select id="selectUserByProvider"
             resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity">
 
         SELECT
-            id,
-            oauth_provider       AS provider,
-            oauth_provider_id    AS providerId,
-            oauth_nickname       AS oauthNickname,
-            oauth_email          AS oauthEmail,
-            oauth_profile_image  AS oauthProfileImage,
-            oauth_age_range      AS oauthAgeRange,
-            service_nickname     AS nickname,
-            profile_image        AS profileImage,
-            user_role            AS userRole,
-            user_status          AS userStatus,
-            created_at           AS createdAt,
-            updated_at           AS updatedAt,
-            last_login_at        AS lastLoginAt
-        FROM site_users
-        WHERE oauth_provider = #{provider}
-          AND oauth_provider_id = #{providerId}
+        <include refid="userColumns"/>
+        FROM site_user_oauth_accounts oa
+        JOIN site_users su ON su.id = oa.user_id
+        WHERE oa.oauth_provider = #{provider}
+          AND oa.oauth_provider_id = #{providerId}
         LIMIT 1
     </select>
 
-    <!-- 신규 유저 생성 -->
+    <!-- 신규 유저 생성 — site_users 쪽만. OAuth 원본은 UserOAuthAccountMapper.insertOAuthAccount 로 같은
+         트랜잭션 안에서 별도 INSERT (UserServiceImpl 가입 흐름 참고) -->
     <insert id="insertUser" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO site_users (
-            oauth_provider,
-            oauth_provider_id,
-            oauth_nickname,
-            oauth_email,
-            oauth_profile_image,
-            oauth_age_range,
+            public_id,
             service_nickname,
             email,
             user_role,
@@ -45,12 +47,7 @@
             created_at,
             last_login_at
         ) VALUES (
-                     #{provider},
-                     #{providerId},
-                     #{oauthNickname},
-                     #{oauthEmail},
-                     #{oauthProfileImage},
-                     #{oauthAgeRange},
+                     #{publicId},
                      #{nickname},
                      #{email},
                      'USER',
@@ -83,28 +80,26 @@
         WHERE id = #{id}
     </update>
 
-    <!-- ID 조회 -->
+    <!-- 내부 ID 조회 -->
     <select id="selectUserById"
             resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity">
 
         SELECT
-            id,
-            oauth_provider       AS provider,
-            oauth_provider_id    AS providerId,
-            oauth_nickname       AS oauthNickname,
-            oauth_email          AS oauthEmail,
-            oauth_profile_image  AS oauthProfileImage,
-            oauth_age_range      AS oauthAgeRange,
-            service_nickname     AS nickname,
-            profile_image        AS profileImage,
-            email                AS email,
-            user_role            AS userRole,
-            user_status          AS userStatus,
-            created_at           AS createdAt,
-            updated_at           AS updatedAt,
-            last_login_at        AS lastLoginAt
-        FROM site_users
-        WHERE id = #{id}
+        <include refid="userColumns"/>
+        FROM site_users su
+        LEFT JOIN site_user_oauth_accounts oa ON oa.user_id = su.id
+        WHERE su.id = #{id}
+    </select>
+
+    <!-- public_id 조회 — admin API 의 유일한 public_id → id 변환 지점 -->
+    <select id="selectUserByPublicId"
+            resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity">
+
+        SELECT
+        <include refid="userColumns"/>
+        FROM site_users su
+        LEFT JOIN site_user_oauth_accounts oa ON oa.user_id = su.id
+        WHERE su.public_id = #{publicId}
     </select>
 
     <!-- Admin 유저 목록 조회 (동적 필터) — 서비스 자체 email 컬럼 사용, oauthEmail·providerId 외부 노출 X -->
@@ -112,6 +107,7 @@
             resultType="com.dawne.com2usbaseball.domain.oauth.entity.UserEntity">
         SELECT
             id,
+            public_id         AS publicId,
             service_nickname  AS nickname,
             email             AS email,
             user_role         AS userRole,
@@ -142,11 +138,17 @@
         WHERE id = #{id}
     </update>
 
-    <!-- Admin 유저 상태 변경 -->
+    <!-- 유저 상태 변경 (self-service 탈퇴 / admin 상태 변경 공용).
+         WITHDRAWN 으로 바뀔 때만 withdrawn_at 을 지금 시각으로 찍고, 그 외 상태로 바뀌면 비운다 —
+         updated_at 을 탈퇴 시각 대용으로 쓰던 버그(권한만 바꿔도 시계가 리셋됨)를 없앤다 -->
     <update id="updateUserStatus">
         UPDATE site_users
-        SET user_status = #{userStatus},
-            updated_at  = NOW()
+        SET user_status  = #{userStatus},
+            withdrawn_at = <choose>
+                <when test="userStatus.name() == 'WITHDRAWN'">NOW()</when>
+                <otherwise>NULL</otherwise>
+            </choose>,
+            updated_at   = NOW()
         WHERE id = #{id}
     </update>
 

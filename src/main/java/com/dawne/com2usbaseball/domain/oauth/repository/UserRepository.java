@@ -29,6 +29,11 @@ public class UserRepository {
         return mapper.selectUserById(userId);
     }
 
+    // public_id → id 변환 지점 (admin API 전용)
+    public Optional<UserEntity> findByPublicId(String publicId) {
+        return mapper.selectUserByPublicId(publicId);
+    }
+
     public void updateUserLastLogin(Long userId) {
         mapper.updateUserLogin(userId);
     }

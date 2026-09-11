@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.oauth.repository.mapper.UserOAuthAccountMapper">
+
+    <!-- 로그인 수단(OAuth) 원본 저장. 가입 흐름에서 site_users insert 와 같은 트랜잭션으로 묶여 실행된다 -->
+    <insert id="insertOAuthAccount" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO site_user_oauth_accounts (
+            user_id,
+            oauth_provider,
+            oauth_provider_id,
+            oauth_nickname,
+            oauth_email,
+            oauth_profile_image,
+            oauth_age_range,
+            created_at
+        ) VALUES (
+                     #{userId},
+                     #{provider},
+                     #{providerId},
+                     #{nickname},
+                     #{email},
+                     #{profileImage},
+                     #{ageRange},
+                     NOW()
+                 )
+    </insert>
+
+</mapper>

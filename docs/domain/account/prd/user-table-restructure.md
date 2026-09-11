@@ -182,12 +182,13 @@
 
 ## 9. 이관 SQL 파일 (작성 완료 — ⚠️ 아직 실행 안 함)
 
-`sql/migration/` 에 3개 파일로 나눴다. **되돌릴 수 있는 것과 없는 것을 한 파일에 섞지 않았다.**
+`sql/migration/` 에 4개 파일로 나눴다. **되돌릴 수 있는 것과 없는 것을 한 파일에 섞지 않았다.**
 
 | 순서 | 파일 | 내용 | 되돌리기 |
 |---|---|---|---|
 | 1 | `USER_RESTRUCTURE_01_ADD_PUBLIC_ID_AND_WITHDRAWN_AT.sql` | `public_id`·`withdrawn_at` 추가 + 500행 채움(v4) + `UNIQUE`/`NOT NULL` + `WITHDRAWN` 행 백필. `profile_image` 는 `IF NOT EXISTS` 로 유무 무관하게 안전 | 가능 |
 | 2 | `USER_RESTRUCTURE_02_CREATE_OAUTH_ACCOUNTS_TABLE.sql` | `site_user_oauth_accounts` 신설 + 기존 `oauth_*` 6개 값을 **복사**(원본은 그대로) + 500행 일치 검증 | 가능 — 새 테이블 DROP |
+| 2.5 | `USER_RESTRUCTURE_02B_RELAX_SITE_USERS_OAUTH_NOT_NULL.sql` | `site_users.oauth_provider` / `oauth_provider_id` 를 `NOT NULL` → `NULL` 허용으로. **코드 배포 전 필수** — 새 코드는 가입 시 이 두 컬럼을 더 이상 채우지 않는데, 아직 `NOT NULL` 이라 안 돌리면 배포 직후 첫 신규 가입이 그 자리에서 실패한다 | 가능 — 기존 500행에 값이 남아있는 동안만 |
 | 3 | `USER_RESTRUCTURE_03_DROP_SITE_USERS_OAUTH_COLUMNS.sql` | 🔴 `site_users` 에서 `oauth_*` 6개 컬럼 DROP | **불가능** — 실행 전 전체 덤프 필수 |
 
 1·2번은 서로 다른 컬럼/테이블만 만져 순서를 바꿔도 결과는 같지만, 위 순서를 권한다.
@@ -196,5 +197,7 @@
 를 고정해 `CONCAT` 으로 조립했다. 신규 가입자의 `public_id` 는 이 SQL 이 아니라 **애플리케이션이
 `UUID.randomUUID()` 로 생성**한다 — SQL 방식은 이번 500행 백필 전용이다.
 **코드 배포 ↔ SQL 순서** — 1·2번은 컬럼/테이블을 더하기만 해 구버전 코드 중에도 안전, 배포보다 먼저 돌려도 된다.
+2.5번(`02B`)도 제약만 완화할 뿐 기존 값은 그대로 둬 구버전 코드에 영향이 없지만, **새 코드 배포보다는 반드시 먼저** 돌려야 한다 — 안 그러면 배포 직후 첫 신규 가입 INSERT 가 `NOT NULL` 위반으로 즉시 실패한다.
+`uk_oauth (oauth_provider, oauth_provider_id)` 유니크 제약은 그대로 둔다 — InnoDB 는 `NULL` 을 서로 다른 값으로 취급해 여러 행이 동시에 `(NULL, NULL)` 이어도 충돌하지 않고, 어차피 3번에서 컬럼째 사라진다.
 3번은 **`site_user_oauth_accounts` 를 읽고 쓰는 코드가 이미 배포되고 며칠 관찰까지 끝난 뒤에만** 돌린다 —
 먼저 돌리면 구버전 코드가 여전히 읽던 `oauth_*` 컬럼이 사라져 로그인이 그 자리에서 깨진다.

@@ -29,31 +29,31 @@ public class AdminUserController {
         return GlobalResponse.success(AdminUserMessages.ADMIN_USER_LIST_SUCCESS, users);
     }
 
-    @GetMapping("/{userId}")
-    public GlobalResponse<AdminUserResponse> getAdminUserDetail(@PathVariable Long userId) {
-        AdminUserResponse user = adminUserService.getAdminUserDetail(userId);
+    @GetMapping("/{publicId}")
+    public GlobalResponse<AdminUserResponse> getAdminUserDetail(@PathVariable String publicId) {
+        AdminUserResponse user = adminUserService.getAdminUserDetail(publicId);
         return GlobalResponse.success(AdminUserMessages.ADMIN_USER_DETAIL_SUCCESS, user);
     }
 
-    @PatchMapping("/{userId}/role")
+    @PatchMapping("/{publicId}/role")
     public GlobalResponse<Void> updateUserRole(
             HttpServletRequest request,
-            @PathVariable Long userId,
+            @PathVariable String publicId,
             @Valid @RequestBody AdminUserRoleRequest roleRequest
     ) {
         Long requesterId = (Long) request.getAttribute("userId");
-        adminUserService.updateUserRole(requesterId, userId, roleRequest);
+        adminUserService.updateUserRole(requesterId, publicId, roleRequest);
         return GlobalResponse.success(AdminUserMessages.ADMIN_USER_ROLE_UPDATED, null);
     }
 
-    @PatchMapping("/{userId}/status")
+    @PatchMapping("/{publicId}/status")
     public GlobalResponse<Void> updateUserStatus(
             HttpServletRequest request,
-            @PathVariable Long userId,
+            @PathVariable String publicId,
             @Valid @RequestBody AdminUserStatusRequest statusRequest
     ) {
         Long requesterId = (Long) request.getAttribute("userId");
-        adminUserService.updateUserStatus(requesterId, userId, statusRequest);
+        adminUserService.updateUserStatus(requesterId, publicId, statusRequest);
         return GlobalResponse.success(AdminUserMessages.ADMIN_USER_STATUS_UPDATED, null);
     }
 }

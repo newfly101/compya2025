@@ -7,10 +7,12 @@ import com.dawne.com2usbaseball.domain.oauth.dto.mapstruct.UserMapStruct;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.NaverOAuthUserResponse;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.UserMeResponse;
 import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
+import com.dawne.com2usbaseball.domain.oauth.entity.UserOAuthAccountEntity;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
 import com.dawne.com2usbaseball.domain.oauth.enums.UserRole;
 import com.dawne.com2usbaseball.domain.oauth.enums.UserStatus;
 import com.dawne.com2usbaseball.domain.oauth.repository.RefreshTokenRepository;
+import com.dawne.com2usbaseball.domain.oauth.repository.UserOAuthAccountRepository;
 import com.dawne.com2usbaseball.domain.oauth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +22,7 @@ import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,7 @@ public class UserServiceImpl implements UserService {
     private static final int WITHDRAW_RETENTION_MONTHS = 1;
 
     private final UserRepository repository;
+    private final UserOAuthAccountRepository oauthAccountRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserMapStruct userMapStruct;
     private final UploadService uploadService;
@@ -40,15 +44,28 @@ public class UserServiceImpl implements UserService {
         UserEntity user = repository
                 .findByProviderAndProviderId("NAVER", info.id())
                 .map(this::reactivateIfEligible)
-                .orElseGet(() -> {
-                    UserEntity newUser = userMapStruct.toEntity(info);
-                    newUser.setUserRole(UserRole.USER);
-                    newUser.setUserStatus(UserStatus.ACTIVE);
-                    return repository.save(newUser);
-                });
+                .orElseGet(() -> createUserWithOAuthAccount(info));
 
         repository.updateUserLastLogin(user.getId());
         return user;
+    }
+
+    // 가입 = site_users insert + site_user_oauth_accounts insert. findOrCreateNaverUser 의
+    // @Transactional 안에서 실행되므로 둘 중 하나가 실패하면 함께 롤백된다 — 반쪽짜리 계정이 남지 않는다.
+    private UserEntity createUserWithOAuthAccount(NaverOAuthUserResponse info) {
+        UserEntity newUser = userMapStruct.toEntity(info);
+        newUser.setPublicId(UUID.randomUUID().toString()); // MariaDB UUID() 는 v1(시각·MAC 포함)이라 쓰지 않는다
+        newUser.setUserRole(UserRole.USER);
+        newUser.setUserStatus(UserStatus.ACTIVE);
+        UserEntity saved = repository.save(newUser);
+
+        UserOAuthAccountEntity oauthAccount = userMapStruct.toOAuthAccountEntity(info, saved.getId());
+        oauthAccountRepository.save(oauthAccount);
+
+        // 방금 만든 값 — 재조회 없이 바로 응답에 쓸 수 있게 채워둔다 (JOIN 전용 읽기 필드)
+        saved.setOauthEmail(oauthAccount.getEmail());
+        saved.setOauthProfileImage(oauthAccount.getProfileImage());
+        return saved;
     }
 
     @Override
@@ -146,15 +163,15 @@ public class UserServiceImpl implements UserService {
      * 탈퇴(WITHDRAWN) 계정이 보관 기간(1개월) 내 재로그인하면 ACTIVE 로 재활성화.
      * BLOCKED / SUSPENDED 는 대상이 아니며 그대로 반환 — 상위 validateUserStatus 에서 차단됨.
      *
-     * [판단] site_users 에 탈퇴 시각 전용 컬럼(withdrawn_at)이 없어, 탈퇴 처리 시 함께 갱신되는
-     * updated_at 을 탈퇴 기준 시각으로 사용한다.
+     * withdrawn_at 전용 컬럼 기준으로 판단한다. 예전에는 updated_at 을 탈퇴 시각 대용으로 썼는데,
+     * 관리자가 권한만 바꿔도 updated_at 이 갱신돼 보관 기간 시계가 조용히 리셋되는 버그가 있었다.
      */
     private UserEntity reactivateIfEligible(UserEntity user) {
         if (user.getUserStatus() != UserStatus.WITHDRAWN) {
             return user;
         }
 
-        LocalDateTime withdrawnAt = user.getUpdatedAt();
+        LocalDateTime withdrawnAt = user.getWithdrawnAt();
         boolean withinRetentionPeriod = withdrawnAt != null
                 && withdrawnAt.isAfter(LocalDateTime.now().minusMonths(WITHDRAW_RETENTION_MONTHS));
 
@@ -165,6 +182,7 @@ public class UserServiceImpl implements UserService {
 
         repository.updateUserStatus(user.getId(), UserStatus.ACTIVE);
         user.setUserStatus(UserStatus.ACTIVE);
+        user.setWithdrawnAt(null);
         return user;
     }
 }

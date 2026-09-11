@@ -11,9 +11,9 @@ public interface AdminUserService {
 
     List<AdminUserResponse> getAdminUserList(AdminUserListRequest request);
 
-    AdminUserResponse getAdminUserDetail(Long userId);
+    AdminUserResponse getAdminUserDetail(String publicId);
 
-    void updateUserRole(Long requesterId, Long userId, AdminUserRoleRequest request);
+    void updateUserRole(Long requesterId, String publicId, AdminUserRoleRequest request);
 
-    void updateUserStatus(Long requesterId, Long userId, AdminUserStatusRequest request);
+    void updateUserStatus(Long requesterId, String publicId, AdminUserStatusRequest request);
 }
