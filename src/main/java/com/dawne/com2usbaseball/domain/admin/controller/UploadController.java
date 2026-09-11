@@ -5,7 +5,9 @@ import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.admin.dto.response.UploadResponse;
 import com.dawne.com2usbaseball.domain.admin.enums.UploadMessages;
 import com.dawne.com2usbaseball.domain.admin.service.UploadService;
+import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
+import com.dawne.com2usbaseball.domain.oauth.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class UploadController {
 
     private final UploadService uploadService;
+    private final UserService userService;
 
     @PostMapping("/events")
     public GlobalResponse<UploadResponse> uploadImage(@RequestParam MultipartFile file) throws Exception {
@@ -38,7 +41,9 @@ public class UploadController {
             @RequestParam MultipartFile file
     ) throws Exception {
         Long userId = requireUserId(request);
-        UploadResponse response = uploadService.uploadProfileImage(file, userId);
+        // 파일명에 쓸 publicId 는 요청 파라미터가 아니라 인증된 본인 계정에서만 가져온다 — 남의 프로필 덮어쓰기 차단
+        UserEntity user = userService.findActiveUserById(userId);
+        UploadResponse response = uploadService.uploadProfileImage(file, user.getPublicId());
         return GlobalResponse.success(UploadMessages.UPLOAD_SUCCESS, response);
     }
 

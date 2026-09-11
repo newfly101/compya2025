@@ -16,6 +16,7 @@ import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +49,14 @@ public class UploadServiceImpl implements UploadService {
             "webp", "image/webp"
     );
 
+    // 프로필 이미지는 원본 파일명을 신뢰하지 않는다 — 항상 이 확장자로 고정 저장한다.
+    // FE 는 이미 업로드 전 캔버스로 정사각 JPEG 압축해서 보낸다(resizeProfileImage.js) — 서버도 JPEG 만 받는다.
+    private static final String PROFILE_EXTENSION = "jpg";
+
+    // 같은 키(파일명)로 덮어쓰므로 주소만으로는 캐시 무효화가 안 된다 — S3 객체 자체도 캐시 수명을 짧게 잡아
+    // (쿼리스트링을 무시하는 CDN/프록시가 있더라도) 최악의 경우에도 오래 묵은 이미지가 보이지 않게 한다.
+    private static final String PROFILE_CACHE_CONTROL = "public, max-age=60, must-revalidate";
+
     // 파일명에서 안전하게 확장자만 추출 (경로 조작 문자 차단)
     private static final Pattern SAFE_EXTENSION_PATTERN = Pattern.compile("^.+\\.([A-Za-z0-9]+)$");
 
@@ -57,9 +66,38 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public UploadResponse uploadProfileImage(MultipartFile file, Long userId) throws IOException {
-        // 유저별 폴더로 나눠서 나중에 특정 유저 파일만 추적/정리하기 쉽게 한다
-        return upload(file, PROFILE_KEY_PREFIX + userId + "/");
+    public UploadResponse uploadProfileImage(MultipartFile file, String publicId) throws IOException {
+        validateNotEmpty(file);
+        validateSize(file);
+        // 원본 파일명은 보지 않는다 — 확장자를 고정하고 실제 바이트가 JPEG 인지만 검증한다.
+        // PNG 등 다른 포맷을 올리면 매직 넘버가 안 맞아 UPLOAD_FILE_CORRUPTED 로 거부된다(변환하지 않음).
+        validateDeclaredContentType(file.getContentType(), PROFILE_EXTENSION);
+        byte[] content = file.getBytes();
+        validateActualContent(content, PROFILE_EXTENSION);
+
+        // {publicId}.jpg 고정 키 — 있으면 PutObject 가 그대로 덮어쓴다(별도 삭제 불필요)
+        String key = PROFILE_KEY_PREFIX + publicId + "." + PROFILE_EXTENSION;
+
+        PutObjectRequest request =
+                PutObjectRequest.builder()
+                        .bucket(props.getS3().getBucket())
+                        .key(key)
+                        .contentType(EXTENSION_CONTENT_TYPE.get(PROFILE_EXTENSION))
+                        .cacheControl(PROFILE_CACHE_CONTROL)
+                        .build();
+
+        try {
+            s3Client.putObject(request, RequestBody.fromBytes(content));
+        } catch (Exception e) {
+            // PutObject 는 원자적이라 실패해도 기존 객체는 그대로 남는다 — 사용자는 이전 이미지를 계속 본다(깨지지 않음)
+            throw new BaseException(UploadMessages.UPLOAD_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        // 주소가 고정이라 덮어써도 브라우저/CDN 캐시가 옛 이미지를 붙잡고 있을 수 있다 —
+        // 업로드 시각을 쿼리스트링으로 붙여 매번 새 주소를 내려준다(1차 방어). S3 Cache-Control(2차 방어)과 이중으로 막는다.
+        String url = resolveUrl(key) + "?v=" + Instant.now().toEpochMilli();
+
+        return new UploadResponse(url, publicId + "." + PROFILE_EXTENSION);
     }
 
     @Override

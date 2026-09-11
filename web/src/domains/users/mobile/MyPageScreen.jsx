@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
-import { Avatar } from "@/global/ui/avatar";
+import { Avatar, pickProfileImageSrc } from "@/global/ui/avatar";
 import {
   requestGetMyInfo,
   requestUpdateMyNickname,
@@ -156,7 +156,7 @@ export default function MyPageScreen() {
             aria-label="프로필 이미지 변경"
           >
             <Avatar
-              src={imagePreviewUrl || profile.profileImage || profile.oauthProfileImage}
+              src={imagePreviewUrl || pickProfileImageSrc(profile)}
               nickname={profile.nickname}
               size={72}
               alt="프로필 이미지"

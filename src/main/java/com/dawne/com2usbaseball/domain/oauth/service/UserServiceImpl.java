@@ -114,12 +114,27 @@ public class UserServiceImpl implements UserService {
 
             // [판단] 옛 파일은 트랜잭션이 실제로 커밋된 뒤에만 지운다 — 롤백되면 DB엔 옛 주소가 남는데
             // 파일이 먼저 지워지면 사용자 화면에서 이미지가 깨진다. 커밋 후 지우면 그런 불일치가 없다.
-            if (oldValue != null && !oldValue.equals(newValue) && uploadService.isProfileImageUrl(oldValue)) {
+            //
+            // [판단] 프로필 이미지는 {publicId}.jpg 고정 파일명이라 재업로드해도 실제 S3 키는 그대로고
+            // 캐시 무효화용 쿼리스트링(?v=...)만 바뀐다. 쿼리스트링만 다른 걸 "바뀐 파일"로 보고 지우면
+            // 방금 덮어쓴 새 이미지 자체가 삭제된다 — 실제 키가 다를 때만 지운다.
+            if (oldValue != null && uploadService.isProfileImageUrl(oldValue)
+                    && (newValue == null || !sameStoredFile(oldValue, newValue))) {
                 registerDeleteAfterCommit(oldValue);
             }
         }
 
         return userMapStruct.toHealthResponse(user);
+    }
+
+    // 캐시 무효화 쿼리스트링을 뗀 실제 S3 키가 같은지 비교
+    private boolean sameStoredFile(String oldUrl, String newUrl) {
+        return stripQuery(oldUrl).equals(stripQuery(newUrl));
+    }
+
+    private String stripQuery(String url) {
+        int idx = url.indexOf('?');
+        return idx < 0 ? url : url.substring(0, idx);
     }
 
     // 사용자가 임의 URL 을 넣지 못하게 — 반드시 /api/upload/profile 로 우리 버킷에 올린 주소만 허용

@@ -8,12 +8,14 @@ import { useAuthentication } from "@/domains/authentication/hooks/useAuthenticat
 import { RenewalNoticeModal } from "@/global/ui/renewalNoticeModal";
 import { LoginRequiredModal } from "@/global/ui/loginRequiredModal";
 import PinnedBadge from "@/global/ui/badge/PinnedBadge.jsx";
+import { Avatar, pickProfileImageSrc } from "@/global/ui/avatar";
+import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 
 
 const Drawer = () => {
   const { isDrawerOpen, closeDrawer } = useTopBar();
   const location = useLocation();
-  const { user, isAuthenticated, isAdmin, login, logout } = useAuthentication();
+  const { user, isAuthenticated, isAdmin, login } = useAuthentication();
   const [renewalOpen, setRenewalOpen] = useState(false);
   const [loginRequiredOpen, setLoginRequiredOpen] = useState(false);
 
@@ -49,20 +51,21 @@ const Drawer = () => {
       {/* 패널 */}
       <aside className={`${styles.drawer} ${isDrawerOpen ? styles.drawerOpen : ""}`}>
 
-        {/* 유저 프로필
-            로그인 상태일 때 로그아웃 버튼 노출 — TopBar 는 variant 가 page/section 일 때
-            우측 액션이 다른 기능으로 바뀌어 로그아웃 진입점이 사라지므로, 그 공백을 Drawer 에서 메운다. */}
+        {/* 유저 프로필 — 로그인 상태일 때는 박스 자체가 마이페이지 진입점이다.
+            로그아웃은 TopBar 쪽 진입점을 그대로 쓴다(여기서는 만들지 않는다). */}
         {user ?
-          <div className={styles.profile}>
-            <div className={styles.avatar}>
-              <img src={user?.profileImage} alt="" />
-            </div>
+          <Link
+            to={ROUTE_PATHS.mypage}
+            className={`${styles.profile} ${styles.profileLink}`}
+            onClick={closeDrawer}
+          >
+            <Avatar src={pickProfileImageSrc(user)} nickname={user?.nickname} size={44} alt="" />
             <div className={styles.userInfo}>
               <span className={styles.userName}>{user?.nickname}</span>
               <span className={styles.userStatus}>{user?.email}</span>
             </div>
-            <button className={styles.logoutBtn} onClick={logout}>로그아웃</button>
-          </div>
+            <span className={styles.profileChevron}>›</span>
+          </Link>
           :
           <div className={styles.profile}>
             <div className={styles.guestInfo}>

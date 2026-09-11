@@ -74,20 +74,15 @@ $color-naver-font: $color-white-100;
   @include card-base($radius: $radius-xl, $pad: $space-3);
 }
 
-.avatar {
-  @include flex-center;
-  position: relative;
-  width: $control-height-md;   // 44px
-  aspect-ratio: 1/1;
-  border-radius: $radius-full;
-  background-color: var(--color-brand-dark);
-  @include text-topBar;
+// 로그인 상태 전용 — 박스 자체가 마이페이지로 가는 링크라 눌림 피드백과 chevron 을 더한다.
+.profileLink {
+  @include pressable;
+}
+
+.profileChevron {
+  @include text-section-title;
+  color: var(--color-text-muted);
   flex-shrink: 0;
-  overflow: hidden;
-  & > img {
-    width: 100%;
-    height: 100%;
-  }
 }
 
 .userInfo {
@@ -105,20 +100,6 @@ $color-naver-font: $color-white-100;
   @include text-micro;
   color: var(--color-text-muted);
   @include text-ellipsis;
-}
-
-// ── 로그아웃 버튼 ─────────────────────────────────────────────
-// TopBar.module.scss 의 .logoutBtn 과 문구·톤 정합
-.logoutBtn {
-  height: rem(28);                           // mobile-frame § 4.3 — 토큰 외 size, rem 강제
-  padding: 0 $space-3;
-  border-radius: $radius-sm;
-  background-color: var(--color-bg-card);
-  color: var(--color-text-primary);
-  @include text-micro;
-  white-space: nowrap;
-  flex-shrink: 0;
-  @include pressable;
 }
 
 // ── 네비게이션 ────────────────────────────────────────────────
