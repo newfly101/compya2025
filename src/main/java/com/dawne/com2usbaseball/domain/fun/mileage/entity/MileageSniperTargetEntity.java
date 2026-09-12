@@ -17,6 +17,9 @@ public class MileageSniperTargetEntity {
     private String teamCode;
     private Integer seasonYear;
     private String positionCode;
+    private String subPositionCode;   // 겸업 부포지션. 없으면 null
+    private Integer mainUnique;       // 주포지션 칸이 혼자라 유일한가(1/0)
+    private Integer subUnique;        // 부포지션 칸이 혼자라 유일한가(1/0, 부포지션 없으면 0)
     private String playerName;
     private String legendName;
 }

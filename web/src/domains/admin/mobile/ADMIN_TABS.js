@@ -1,6 +1,8 @@
 // ADMIN_TABS.js — 어드민 셸 탭 정의. 상단 탭 바 · 홈 카드 그리드가 함께 참조한다.
-// 순서 고정: 홈 · 퀴즈 · 이벤트 · 쿠폰 · 공지 · 유저
+// 순서 고정: 홈 · 퀴즈 · 이벤트 · 쿠폰 · 공지 · 유저 · 동기화
 // v2 갱신 근거: scratchpad/adminv2/480-홈.html (탭 바 · 홈 카드 라벨이 "유저관리"가 아닌 "유저").
+// 동기화 탭은 콘텐츠 도메인이 아니라 "서버 캐시를 재시작 없이 비우는" 운영 기능이라
+// 맨 뒤에 둔다 — 자주 쓰는 콘텐츠 탭들 뒤에 있어야 실수로 먼저 누르지 않는다.
 export const ADMIN_TABS = [
   { key: "home", label: "홈" },
   { key: "quiz", label: "퀴즈", description: "회차 · 이미지" },
@@ -8,6 +10,7 @@ export const ADMIN_TABS = [
   { key: "coupon", label: "쿠폰", description: "코드 · 만료일" },
   { key: "notice", label: "공지", description: "글쓰기 · 고정" },
   { key: "user", label: "유저", description: "상태 · 조회" },
+  { key: "sync", label: "동기화", description: "캐시 재적용" },
 ];
 
 // 홈 탭의 「빠른 이동」 카드 그리드 — 홈 자신은 제외한 5개.

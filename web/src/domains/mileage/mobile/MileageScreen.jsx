@@ -10,6 +10,7 @@ import { useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { T, TEAMS, Y, YEARS, defaultGoal, teamName, yearName } from "@/domains/mileage/config/mileage.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
+import { formatPosition } from "@/domains/players/config/position.js";
 import { useMileage } from "./hooks/useMileage";
 import { useMileageRowHeight } from "./hooks/useMileageRowHeight";
 import { useMileageTargetList } from "./hooks/useMileageTargetList";
@@ -54,14 +55,35 @@ const MileageScreen = () => {
   };
 
   // 리스트 행 클릭 → 시뮬레이션 탭으로 전환 + 목표 자동 입력(핸드오프 "행 클릭→시뮬레이션 연동")
+  //
+  // ⚠️ BE 가 "어느 칸이 유일한지" mainUnique/subUnique 로 내려준다(운영 실측: 주만 104 ·
+  // 부만 7 · 둘 다 0건). 부만 유일이면 그 칸(subPos) 하나로 좁히고, 그 외(주만 유일 /
+  // 이론상 둘 다 유일 / 플래그 이상)는 전부 주포지션 하나로 — "둘 다"는 실측 0건이라
+  // 사용자가 고르게 하는 화면은 만들지 않는다(판단 근거: 코디네이터 확정 응답).
+  // 구버전 서버라 두 필드가 아예 없으면(null) "모른다" 상태이므로, 예전처럼 주·부 둘 다
+  // 넘겨 formatPosition()이 "1B/DH"로 정직하게 같이 보여주는 폴백을 유지한다(안 깨짐 우선).
+  const resolveSniperTarget = (row) => {
+    const known = row.mainUnique !== null || row.subUnique !== null;
+    if (!known) return { pos: row.pos, subPos: row.subPos, subOnly: false };
+    if (row.subUnique && !row.mainUnique) return { pos: row.subPos, subPos: null, subOnly: true };
+    return { pos: row.pos, subPos: null, subOnly: false };
+  };
+
   const selectTargetFromList = (row) => {
+    const target = resolveSniperTarget(row);
     setSearchParams((prev) => {
       const p = new URLSearchParams(prev);
       p.set("tab", "calc");
       p.set("id", row.id);
       p.set("team", row.team);
       p.set("year", String(row.year));
-      p.set("pos", row.pos);
+      p.set("pos", target.pos);
+      if (target.subPos) p.set("subPos", target.subPos);
+      else p.delete("subPos");
+      // 부포지션 칸으로 저격하는 경우 배너에 "왜 이 포지션인지" 한 줄을 남겨야 한다 —
+      // 우즈(1B/DH)를 눌렀는데 목표가 대뜸 DH 로 뜨면 "1B 아닌가?" 헷갈릴 수 있어서다.
+      if (target.subOnly) p.set("subTarget", "1");
+      else p.delete("subTarget");
       return p;
     });
   };
@@ -72,7 +94,14 @@ const MileageScreen = () => {
     const team = searchParams.get("team");
     const year = searchParams.get("year");
     if (!team || !year) return null;
-    return { name: found?.name ?? "선수 정보 없음", team, year, pos: searchParams.get("pos") };
+    return {
+      name: found?.name ?? "선수 정보 없음",
+      team,
+      year,
+      pos: searchParams.get("pos"),
+      subPos: searchParams.get("subPos") || null,
+      subTarget: searchParams.get("subTarget") === "1",
+    };
   }, [idParam, targetList.data, searchParams]);
 
   const m = useMileage();
@@ -87,6 +116,8 @@ const MileageScreen = () => {
       p.delete("team");
       p.delete("year");
       p.delete("pos");
+      p.delete("subPos");
+      p.delete("subTarget");
       p.set("tab", "calc");
       return p;
     });
@@ -258,7 +289,11 @@ const MileageScreen = () => {
         <div className={styles.selectBanner}>
           <span className={styles.selectBannerLabel}>리스트에서 선택</span>
           <span className={styles.selectBannerBody}>
-            {banner.name} <span>{`${banner.team} ${banner.year}${banner.pos ? ` · ${banner.pos}` : ""}`}</span>
+            {banner.name}{" "}
+            <span>
+              {`${banner.team} ${banner.year}${banner.pos ? ` · ${formatPosition(banner.pos, banner.subPos)}` : ""}`}
+              {banner.subTarget && ` · 부포지션 저격`}
+            </span>
           </span>
           <button
             type="button"

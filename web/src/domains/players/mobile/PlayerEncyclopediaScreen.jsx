@@ -68,7 +68,9 @@ const PlayerEncyclopediaScreen = () => {
       base = PLAYERS.filter((r) => r.tm === effectiveTeam && r.y === effectiveYear);
     }
     if (teamFiltered) base = base.filter((r) => fTeam.includes(r.tm));
-    if (fPos.length) base = base.filter((r) => fPos.includes(r.pos));
+    // 부포지션도 필터 대상 — DH 를 고르면 주포지션이 DH 인 카드뿐 아니라 겸업으로 DH 를
+    // 가진 카드도 나와야 한다(요청 원문). 카드는 부포지션이 없는 게 대부분이라 단락 평가로 충분히 빠르다.
+    if (fPos.length) base = base.filter((r) => fPos.includes(r.pos) || (r.subPos && fPos.includes(r.subPos)));
     if (fKind.length) base = base.filter((r) => r.kinds.some((k) => fKind.includes(k)));
     if (onlyL) base = base.filter((r) => r.L);
     return base;

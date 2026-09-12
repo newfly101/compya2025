@@ -283,9 +283,12 @@ td.cname {
 }
 
 .cpos {
-  width: 50px;
+  overflow: hidden;
+  width: 56px;
   color: var(--color-text-secondary);
   font-size: 12.5px;
+  text-overflow: ellipsis;
+  // 겸업 표기("1B/DH")가 주포지션 단독 표기보다 길어 칸 폭이 밀릴 수 있어 말줄임 처리한다.
 }
 
 .nameInner {

@@ -8,6 +8,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * n=playerName, tm=teamCode, y=seasonYear, t=HITTER/PITCHER 첫 글자("H"/"P"),
  * pos=positionCode, sg=has_signature(0/1).
  *
+ * sp=subPositionCode(겸업 부포지션). 642건만 값이 있고 나머지 11,026건은 없다 —
+ * L/LN 과 같은 이유로 클래스 레벨 NON_NULL 에 맡겨 없는 카드는 키째 응답에서 빠진다.
+ * 화면은 sp 가 있으면 "pos/sp"(예: 1B/DH)로, 없으면 pos 만 표기한다.
+ *
  * L/LN 은 레전드 재료인 카드에만 채운다 — 나머지 11,224건에 L:0 을 넣으면 용량만 는다.
  * 클래스 레벨 NON_NULL 로 null 이면 아예 빠지게 한다. n/tm/y/t/pos/sg 는 DB NOT NULL 이라
  * 이 설정의 영향을 받지 않는다.
@@ -22,6 +26,7 @@ public record PlayerCardResponse(
         Integer y,
         String t,
         String pos,
+        String sp,
         Integer sg,
         Integer L,
         String LN

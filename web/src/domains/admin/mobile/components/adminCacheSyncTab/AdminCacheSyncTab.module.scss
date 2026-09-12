@@ -1,0 +1,166 @@
+// 셸(AdminShellScreen)의 동기화 탭 패널로 들어간다 — 자체 480px 컨테이너를 다시 만들지
+// 않는다(page-layout 믹스인 미사용). 바깥 컨테이너·position:relative 는 셸의 루트가 갖는다.
+.tab {
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+.headRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.title {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+// 전체 동기화 — 유일한 채운 CTA. 무거운 작업이라 확인창을 거친 뒤에만 실행된다.
+.syncAllBtn {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: $control-height-sm;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-admin-accent);
+  border-radius: $radius-lg;
+  background: var(--color-admin-accent);
+  color: #fff;
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.allError {
+  @include text-caption;
+  color: var(--color-danger);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  padding: $space-4;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-xl;
+  background: var(--color-bg-card);
+}
+
+.rowMain {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.rowLabelLine {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.label {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.heavyBadge {
+  flex: 0 0 auto;
+  padding: 2px $space-2;
+  border-radius: $radius-full;
+  background: var(--color-admin-tag-amber-bg);
+  color: var(--color-admin-tag-amber-text);
+  @include text-caption;
+  white-space: nowrap;
+}
+
+.description {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.lastSynced {
+  @include text-caption;
+  color: var(--color-text-secondary);
+}
+
+.rowError {
+  @include text-caption;
+  color: var(--color-danger);
+}
+
+.rowDone {
+  @include text-caption;
+  color: var(--color-admin-tag-green-text);
+}
+
+.syncBtn {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: $control-height-sm;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  background: transparent;
+  color: var(--color-text-secondary);
+  @include text-body;
+  white-space: nowrap;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+// 로컬 스피너 — 새 라이브러리 없이 CSS 회전만으로 "지금 처리 중"을 보여준다.
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: $radius-full;
+  opacity: 0.8;
+  animation: admin-cache-sync-spin 0.7s linear infinite;
+}
+
+@keyframes admin-cache-sync-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

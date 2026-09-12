@@ -11,13 +11,22 @@
         <result property="teamCode" column="team_code"/>
         <result property="seasonYear" column="season_year"/>
         <result property="positionCode" column="position_code"/>
+        <result property="subPositionCode" column="sub_position_code"/>
+        <result property="mainUnique" column="main_unique"/>
+        <result property="subUnique" column="sub_unique"/>
         <result property="playerName" column="player_name"/>
         <result property="legendName" column="legend_name"/>
     </resultMap>
 
     <!--
       구단×연도×포지션에 선수가 한 명뿐인 조합을 저격하면 그 선수 카드가 확정적으로 나온다.
-      그중 레전드 재료인 카드만 추려 119건.
+      그중 레전드 재료인 카드만 추려 119건 -> 부포지션 반영 후 111건(빠짐 15 · 추가 7).
+
+      부포지션 반영 — "칸" 은 주포지션과 부포지션의 합집합으로 생긴다.
+      한 선수가 그 포지션을 주로 갖든 부로 갖든 그 칸의 한 자리를 차지한 것으로 센다.
+      재료 카드는 주포지션 칸(position_code)과, 겸업이면 부포지션 칸(sub_position_code)
+      두 곳 중 어느 한 칸이라도 혼자면 저격 대상이다(OR) — 두 칸 다 혼자여도 행은 하나다.
+      아무도 주포지션으로 갖지 않지만 누군가 부포지션으로만 갖는 칸도 이렇게 잡힌다.
 
       서브쿼리에서 COUNT(DISTINCT player_name) = 1 을 쓴다. COUNT(*) 로 바꾸면 안 된다 —
       지금은 card_type 이 전부 NORMAL 이라 결과가 같지만, 2단계에서 올스타/MVP 등
@@ -27,32 +36,48 @@
       "그 칸에 사람이 한 명뿐인가" 를 상관 서브쿼리로 카드마다 따로 묻는다.
       파생 테이블(JOIN (SELECT ... GROUP BY ...))로 짰다가 21초가 나왔다 —
       MariaDB 가 그것을 LATERAL DERIVED 로 잡아 바깥 행마다 11,151행을 다시 훑었다.
-      상관 서브쿼리는 uk_dpc_card 앞 3개 컬럼으로 좁힌 뒤 세므로 12ms 다.
-      되돌리지 말 것.
-
-      WHERE 절 컬럼 순서(team_code, season_year, position_code)는
-      uk_dpc_card(team_code, season_year, position_code, player_name, card_type) 의
-      앞 3개와 일치시켜 이 인덱스를 그대로 타게 한 것이다.
+      상관 서브쿼리는 uk_dpc_card 앞 2개 컬럼(team_code, season_year)으로 먼저 좁힌 뒤
+      좁혀진 소수 행(팀당 시즌 로스터 수준)만 sub_position_code 까지 걸러 세므로 여전히 빠르다.
+      되돌리지 말 것 — sub_position_code 는 uk_dpc_card 에 없어 인덱스만으로 끝나지 않지만
+      (team_code, season_year) 로 좁힌 뒤라 스캔 대상이 얼마 되지 않는다.
+      배포 후 반드시 EXPLAIN 으로 LATERAL DERIVED 재발 여부를 확인할 것.
 
       화면에서 수정되지 않는 정적 데이터라 캐시(@Cacheable)로 서버 기동 후 한 번만 계산한다.
+
+      main_unique / sub_unique — "어느 칸 때문에 유일해졌는가"를 화면(시뮬레이션 목표)에 그대로 넘기기 위해
+      WHERE 에서 쓰던 두 판정을 SELECT 컬럼으로도 뽑는다. WHERE 에서 다시 계산하면 상관 서브쿼리가
+      행마다 4번(주 2번 + 부 2번) 돌아 비용이 배로 든다 — 그래서 SELECT 에서 한 번만 계산한 뒤
+      그 별칭을 HAVING 에서 재사용한다(GROUP BY 없는 조회에서도 HAVING 은 SELECT 별칭을 그대로 쓸 수 있다).
+      상관 서브쿼리 자체는 그대로라 실행계획은 이전과 동일해야 한다 — 바뀌면 EXPLAIN 으로 잡아낼 것.
     -->
     <select id="findSniperTargets" resultMap="MileageSniperTargetResultMap">
         SELECT c.id,
                c.team_code,
                c.season_year,
                c.position_code,
+               c.sub_position_code,
                c.player_name,
-               l.legend_name
+               l.legend_name,
+               CAST((SELECT COUNT(DISTINCT x.player_name)
+                     FROM data_player_card x
+                     WHERE x.team_code = c.team_code
+                       AND x.season_year = c.season_year
+                       AND x.card_type = 'NORMAL'
+                       AND (x.position_code = c.position_code OR x.sub_position_code = c.position_code)
+                    ) = 1 AS UNSIGNED) AS main_unique,
+               CAST(c.sub_position_code IS NOT NULL
+                    AND (SELECT COUNT(DISTINCT x.player_name)
+                         FROM data_player_card x
+                         WHERE x.team_code = c.team_code
+                           AND x.season_year = c.season_year
+                           AND x.card_type = 'NORMAL'
+                           AND (x.position_code = c.sub_position_code OR x.sub_position_code = c.sub_position_code)
+                        ) = 1 AS UNSIGNED) AS sub_unique
         FROM data_player_legend_material m
                  JOIN data_player_card c ON c.id = m.player_card_id
                  JOIN data_player_legend l ON l.id = m.legend_id
         WHERE c.card_type = 'NORMAL'
-          AND (SELECT COUNT(DISTINCT x.player_name)
-               FROM data_player_card x
-               WHERE x.team_code = c.team_code
-                 AND x.season_year = c.season_year
-                 AND x.position_code = c.position_code
-                 AND x.card_type = 'NORMAL') = 1
+        HAVING main_unique = 1 OR sub_unique = 1
         ORDER BY c.team_code, c.season_year, c.position_code
     </select>
 

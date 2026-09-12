@@ -13,6 +13,7 @@ import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { ADMIN_TABS } from "@/domains/admin/mobile/ADMIN_TABS.js";
 import { useAdminCounts } from "@/domains/admin/mobile/hooks/useAdminCounts.js";
 import AdminHomeTab from "@/domains/admin/mobile/components/adminHomeTab/AdminHomeTab.jsx";
+import AdminCacheSyncTab from "@/domains/admin/mobile/components/adminCacheSyncTab/AdminCacheSyncTab.jsx";
 import AdminCouponScreen from "@/domains/coupons/mobile/admin/AdminCouponScreen.jsx";
 import AdminQuizScreen from "@/domains/quiz/mobile/admin/AdminQuizScreen.jsx";
 import AdminEventScreen from "@/domains/events/mobile/admin/AdminEventScreen.jsx";
@@ -83,6 +84,7 @@ export default function AdminShellScreen() {
         {activeTab === "coupon" && <AdminCouponScreen />}
         {activeTab === "notice" && <AdminNoticeScreen />}
         {activeTab === "user" && <AdminUserScreen />}
+        {activeTab === "sync" && <AdminCacheSyncTab />}
       </div>
     </div>
   );

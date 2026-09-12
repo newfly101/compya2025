@@ -1,6 +1,7 @@
 // domains/players/mobile/components/playerCard/PlayerCard.jsx
 // 카드 1장. 최대 11,672장 중 일부가 반복 렌더되므로 memo 필수.
 import { memo } from "react";
+import { formatPosition } from "@/domains/players/config/position";
 import styles from "./PlayerCard.module.scss";
 
 const yearShort = (year, wide, team) => {
@@ -59,7 +60,7 @@ const PlayerCard = ({ player, maxGrade, wide, isOpen, onToggleL, onClose }) => {
       <div className={styles.band}>
         <span className={styles.bandYear}>{yearShort(player.y, wide, player.tm)}</span>
         <span className={styles.bandPos} style={{ color: gradeColor }}>
-          {isCoach ? "코치" : player.pos}
+          {isCoach ? "코치" : formatPosition(player.pos, player.subPos)}
         </span>
       </div>
     </div>

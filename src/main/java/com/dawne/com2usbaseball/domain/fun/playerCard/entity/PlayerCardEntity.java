@@ -18,6 +18,7 @@ public class PlayerCardEntity {
     private Integer seasonYear;
     private PlayerRole playerRole;
     private String positionCode;
+    private String subPositionCode;   // 겸업 부포지션. 642건만 채워짐, 나머지는 null
     private Boolean hasSignature;
     private String legendName;   // 재료가 아니면 null
 }

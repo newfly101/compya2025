@@ -22,9 +22,11 @@ const KIND_SIGNATURE = "시그니처";
  * - y: 화면이 select value 비교·연도.slice(2) 를 문자열 전제로 쓰므로 문자열로 바꾼다.
  * - kinds: 화면은 카드 종류를 배열로 필터링한다(FilterSheet). sg 는 0/1 뿐이라
  *   일반/시그니처 1개짜리 배열로 바꾸면 된다.
+ * - subPos: 겸업 부포지션(타자 642건, 투수 0건). 응답 키가 아직 미확정이라 `sp` 로
+ *   가정한다 — 이름이 바뀌면 아래 구조분해 한 줄만 고치면 된다(다른 곳은 subPos 필드만 본다).
  */
 export function toScreenPlayer(serverCard) {
-  const { n, tm, y, t, pos, sg, L, LN } = serverCard;
+  const { n, tm, y, t, pos, sg, L, LN, sp } = serverCard;
 
   return {
     id: `${tm}-${y}-${pos}-${n}`,
@@ -33,6 +35,7 @@ export function toScreenPlayer(serverCard) {
     y: String(y),
     t: t,
     pos,
+    subPos: sp ?? null,
     kinds: [sg ? KIND_SIGNATURE : KIND_NORMAL],
     L: L ?? 0,
     LN: LN ?? null,

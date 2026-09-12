@@ -23,11 +23,11 @@
   color: var(--color-text-muted);
 }
 
-// 480px 에서 카드 5개가 한 줄에 들어간다 — 가로 스크롤 없이 repeat(5, 1fr) 로 균등 분배.
+// 480px 에서 카드 6개(동기화 포함)가 한 줄에 들어간다 — 가로 스크롤 없이 repeat(6, 1fr) 로 균등 분배.
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: $space-2;
+  grid-template-columns: repeat(6, 1fr);
+  gap: $space-1;
 }
 
 .card {

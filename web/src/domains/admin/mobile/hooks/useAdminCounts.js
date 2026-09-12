@@ -1,10 +1,13 @@
-// useAdminCounts.js — 5개 관리 도메인(퀴즈·이벤트·쿠폰·공지·유저) 목록을 한 번만 불러와
-// 탭 바 배지 건수와 홈 탭 카드/요약을 함께 공급하는 단일 소스.
+// useAdminCounts.js — 6개 관리 도메인(퀴즈·이벤트·쿠폰·공지·유저·동기화 대상) 목록을
+// 한 번만 불러와 탭 바 배지 건수와 홈 탭 카드/요약을 함께 공급하는 단일 소스.
 //
 // AdminShellScreen 이 마운트될 때 이 훅을 호출해 fetch 를 트리거한다 — 어느 탭으로
 // 처음 진입하든(퀴즈 탭 새로고침 등) 배지 건수가 채워진다. AdminHomeTab 은 같은 훅을
 // 다시 호출해도 redux 상태만 읽을 뿐 dispatch 는 "리스트가 비어있고 로딩중이 아닐 때"만
 // 실행되므로, 탭을 옮겨 다녀도(같은 Shell 이 리마운트되어도) 중복 요청이 없다.
+//
+// 동기화 카드 숫자는 9를 하드코딩하지 않고 실제로 불러온 대상 개수를 쓴다 —
+// 서버가 대상을 늘리거나 줄여도 화면이 따라간다.
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { requestAdminQuizAll } from "@/domains/quiz/store/admin/thunks.js";
@@ -12,6 +15,7 @@ import { requestAdminGetAllEventList } from "@/domains/events/store/admin/thunks
 import { requestGetAdminCouponList } from "@/domains/coupons/store/admin/thunks.js";
 import { requestAdminGetNoticeList } from "@/domains/notices/store/admin/thunks.js";
 import { requestAdminGetUserList } from "@/domains/users/store/admin/thunks.js";
+import { requestCacheSyncTargets } from "@/domains/admin/store/admin/thunks.js";
 
 // 로딩 중이거나 실패한 도메인은 건수를 못 구한 것으로 보고 null 을 돌려준다.
 // 호출부는 null 이면 0/가짜 숫자 대신 "–" 를 보여주거나(홈 카드) 배지 자체를 숨긴다(탭 바).
@@ -27,6 +31,7 @@ export function useAdminCounts() {
   const coupon = useSelector((s) => s.coupon);
   const notices = useSelector((s) => s.notices);
   const adminUsers = useSelector((s) => s.adminUsers);
+  const cacheSync = useSelector((s) => s.cacheSync);
 
   // 이미 불러와진(비어있지 않은) 도메인은 다시 부르지 않는다.
   // 하나가 실패해도 나머지 dispatch 는 그대로 진행 — 전체가 죽지 않는다.
@@ -36,6 +41,7 @@ export function useAdminCounts() {
     if (coupon.coupons.length === 0 && !coupon.loading) dispatch(requestGetAdminCouponList());
     if (notices.siteNotices.length === 0 && !notices.loading) dispatch(requestAdminGetNoticeList());
     if (adminUsers.users.length === 0 && !adminUsers.loading) dispatch(requestAdminGetUserList());
+    if (cacheSync.targets.length === 0 && !cacheSync.loading) dispatch(requestCacheSyncTargets());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
@@ -45,7 +51,8 @@ export function useAdminCounts() {
     coupon: countOf(coupon, "coupons"),
     notice: countOf(notices, "siteNotices"),
     user: countOf(adminUsers, "users"),
+    sync: countOf(cacheSync, "targets"),
   };
 
-  return { counts, domains: { quiz, events, coupon, notices, adminUsers } };
+  return { counts, domains: { quiz, events, coupon, notices, adminUsers, cacheSync } };
 }

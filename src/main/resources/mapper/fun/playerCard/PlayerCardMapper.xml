@@ -12,6 +12,7 @@
         <result property="seasonYear" column="season_year"/>
         <result property="playerRole" column="player_role"/>
         <result property="positionCode" column="position_code"/>
+        <result property="subPositionCode" column="sub_position_code"/>
         <result property="hasSignature" column="has_signature"/>
         <result property="legendName" column="legend_name"/>
     </resultMap>
@@ -33,6 +34,7 @@
                c.season_year,
                c.player_role,
                c.position_code,
+               c.sub_position_code,
                c.has_signature,
                l.legend_name
         FROM data_player_card c

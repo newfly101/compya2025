@@ -14,6 +14,7 @@ import historyLegendReducer from "@/domains/historyLegend/store/slices.js";
 import playerSkillsReducer from "@/domains/playerSkills/store/slices.js";
 import mileageReducer from "@/domains/mileage/store/slices.js";
 import playersReducer from "@/domains/players/store/slices.js";
+import cacheSyncReducer from "@/domains/admin/store/slices.js";
 
 export const store = configureStore({
   reducer: {
@@ -32,6 +33,7 @@ export const store = configureStore({
     playerSkills: playerSkillsReducer,
     mileage: mileageReducer,
     players: playersReducer,
+    cacheSync: cacheSyncReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(operationListener.middleware),

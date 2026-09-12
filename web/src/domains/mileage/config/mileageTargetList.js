@@ -51,7 +51,15 @@ export const TEAM_DOT_COLOR = {
 const DEFAULT_DOT_COLOR = "#6b6580";
 export const teamDotColor = (team) => TEAM_DOT_COLOR[team] ?? DEFAULT_DOT_COLOR;
 
-/** API 응답(cardId/teamCode/seasonYear/positionCode/playerName/legendName) → 화면 모델 */
+/**
+ * API 응답(cardId/teamCode/seasonYear/positionCode/playerName/legendName) → 화면 모델.
+ * subPositionCode: 겸업 부포지션(없으면 null) — BE 쿼리가 주/부 어느 칸이든 유일하면
+ * 저격 대상으로 잡으므로(부포지션 반영), 표기·필터 모두 이 값을 함께 봐야 한다.
+ *
+ * mainUnique/subUnique: 「어느 칸이 유일해서 뽑혔는지」 BE 플래그(운영 실측 — 주만 104 ·
+ * 부만 7 · 둘 다 0건). 아직 안 내려주는 서버(구버전)도 있어 boolean 이 아니면 null 로 —
+ * 이 null 을 "모른다"로 구분해야 MileageScreen 이 구버전에서도 안전하게 폴백한다.
+ */
 export function toTargetListModel(raw) {
   return {
     id: raw.cardId,
@@ -59,6 +67,9 @@ export function toTargetListModel(raw) {
     team: TEAM_NAME_BY_CODE[raw.teamCode] ?? raw.teamCode,
     year: raw.seasonYear,
     pos: raw.positionCode,
+    subPos: raw.subPositionCode ?? null,
+    mainUnique: typeof raw.mainUnique === "boolean" ? raw.mainUnique : null,
+    subUnique: typeof raw.subUnique === "boolean" ? raw.subUnique : null,
     // INNER JOIN 이라 실데이터는 항상 non-null 이지만(§0), 방어적으로 null 처리는 남겨둔다.
     legend: raw.legendName ?? null,
   };
@@ -66,7 +77,7 @@ export function toTargetListModel(raw) {
 
 /** 필터: 포지션 칩은 검색 모드와 무관하게 항상 적용(핸드오프 "필터·검색·정렬" §1) */
 export function filterRows(data, { pos, query, mode }) {
-  let rows = pos ? data.filter((d) => d.pos === pos) : data;
+  let rows = pos ? data.filter((d) => d.pos === pos || d.subPos === pos) : data;
   const q = query.trim().toLowerCase();
   if (q) {
     rows = rows.filter((d) =>

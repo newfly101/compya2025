@@ -42,6 +42,7 @@ public class PlayerCardServiceImpl implements PlayerCardService {
                 e.getSeasonYear(),
                 e.getPlayerRole() == PlayerRole.PITCHER ? "P" : "H",
                 e.getPositionCode(),
+                e.getSubPositionCode(),
                 Boolean.TRUE.equals(e.getHasSignature()) ? 1 : 0,
                 isMaterial ? 1 : null,
                 isMaterial ? e.getLegendName() : null

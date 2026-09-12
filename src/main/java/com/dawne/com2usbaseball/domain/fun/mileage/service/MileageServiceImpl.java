@@ -35,7 +35,10 @@ public class MileageServiceImpl implements MileageService {
     private static MileageSniperTargetResponse toResponse(MileageSniperTargetEntity e) {
         return new MileageSniperTargetResponse(
                 e.getCardId(), e.getTeamCode(), e.getSeasonYear(),
-                e.getPositionCode(), e.getPlayerName(), e.getLegendName()
+                e.getPositionCode(), e.getSubPositionCode(),
+                Integer.valueOf(1).equals(e.getMainUnique()),
+                Integer.valueOf(1).equals(e.getSubUnique()),
+                e.getPlayerName(), e.getLegendName()
         );
     }
 }

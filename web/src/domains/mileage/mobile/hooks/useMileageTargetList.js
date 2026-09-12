@@ -24,7 +24,12 @@ export function useMileageTargetList() {
 
   const data = useMemo(() => items.map(toTargetListModel), [items]);
 
-  const availablePositions = useMemo(() => new Set(data.map((d) => d.pos)), [data]);
+  // 부포지션만으로 존재하는 칸도 칩을 활성화해야 한다(예: 아무도 주포지션 DH 가 없어도
+  // 겸업 부포지션 DH 카드가 있으면 DH 칩은 눌러져야 함).
+  const availablePositions = useMemo(
+    () => new Set(data.flatMap((d) => (d.subPos ? [d.pos, d.subPos] : [d.pos]))),
+    [data],
+  );
 
   const rows = useMemo(
     () => sortRows(filterRows(data, { pos, query, mode }), sortKey, dir),

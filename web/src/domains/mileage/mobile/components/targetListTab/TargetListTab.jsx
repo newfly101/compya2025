@@ -8,6 +8,7 @@
 
 import { useState } from "react";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
+import { formatPosition } from "@/domains/players/config/position.js";
 import { POS_ROWS, SORT_LABEL, teamDotColor } from "@/domains/mileage/config/mileageTargetList.js";
 import styles from "./TargetListTab.module.scss";
 
@@ -186,7 +187,7 @@ const TargetListTab = ({
                   </td>
                   <td className={styles.cteam}>{row.team}</td>
                   <td className={styles.cyear}>{row.year}</td>
-                  <td className={styles.cpos}>{row.pos}</td>
+                  <td className={styles.cpos}>{formatPosition(row.pos, row.subPos)}</td>
                 </tr>
               ))}
           </tbody>
