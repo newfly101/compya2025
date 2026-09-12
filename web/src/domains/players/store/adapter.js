@@ -5,8 +5,15 @@ import { TEAMS_RAW } from "@/domains/mileage/config/mileage.js";
 // 구단 코드 → 표시명. mileage 도메인의 원본 매핑을 재사용한다(중복 정의 금지).
 // 단, KT 는 mileage 표에서만 "KT"(대문자)로 쓰고, 선수 백과사전은 design_handoff
 // README 의 고정 표시 순서를 "kt"(소문자)로 못 박아 뒀다 — 이 도메인에서만 덮어쓴다.
-const TEAM_NAME_BY_CODE = Object.fromEntries(TEAMS_RAW.map((t) => [t.code, t.name]));
+export const TEAM_NAME_BY_CODE = Object.fromEntries(TEAMS_RAW.map((t) => [t.code, t.name]));
 TEAM_NAME_BY_CODE.KT = "kt";
+
+// 리스트형 스탯 API(/player-cards/{teamCode}/stats)는 코드로 요청해야 한다.
+// 화면 상태(select value)는 표시명을 들고 있어 역방향 조회가 필요하다 — 표시명이
+// 20개 구단 모두 서로 달라(위 kt 재정의 포함) 1:1 역변환이 안전하다.
+export const CODE_BY_TEAM_NAME = Object.fromEntries(
+  Object.entries(TEAM_NAME_BY_CODE).map(([code, name]) => [name, code]),
+);
 
 // 서버 H(타자)/P(투수) → 화면 B/P. 코치(C)는 서버가 주지 않는다.
 // 서버가 주는 H/P 를 그대로 쓴다 — 화면 탭 키도 H/P 다.

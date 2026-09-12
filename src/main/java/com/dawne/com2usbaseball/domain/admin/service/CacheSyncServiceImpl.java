@@ -70,6 +70,9 @@ public class CacheSyncServiceImpl implements CacheSyncService {
                         // 11,668건 — 다른 대상보다 다시 채우는 데 시간이 더 걸릴 수 있다는 힌트만 준다.
                         // DB 조회 자체는 인덱스 탄 단건 SELECT라 실제로는 수백ms대라 서버를 막지는 않는다.
                         true, playerCardService::getAll),
+                new TargetDef("playerCardStat", "선수 카드 스탯", "구단별 선수 카드 스탯 + 구종 (구단마다 캐시가 나뉜다)",
+                        // 캐시가 구단코드별로 나뉘어 있어, 전부 다시 채우려면 구단 수만큼 반복 조회한다.
+                        true, this::refillPlayerCardStat),
                 new TargetDef("playerSkill", "선수 스킬표", "타자/투수 스킬표",
                         false, this::refillPlayerSkill),
                 new TargetDef("legendStat", "레전드 능력치", "레전드 능력치 + 구종",
@@ -157,6 +160,12 @@ public class CacheSyncServiceImpl implements CacheSyncService {
         playerSkillService.getPitcherSkills();
     }
 
+    private void refillPlayerCardStat() {
+        for (String teamCode : playerCardService.getTeamCodes()) {
+            playerCardService.getStatsByTeam(teamCode);
+        }
+    }
+
     private void refillLegendStat() {
         funLegendStatService.getAll();
         funLegendStatService.getPitchTypes();
@@ -196,6 +205,7 @@ public class CacheSyncServiceImpl implements CacheSyncService {
             return switch (id) {
                 case "mileageSniperTarget" -> List.of("mileageSniperTarget");
                 case "playerCard" -> List.of("playerCard");
+                case "playerCardStat" -> List.of("playerCardStat");
                 case "playerSkill" -> List.of("playerSkill");
                 case "legendStat" -> List.of("legendStat", "legendPitchType");
                 case "historyRound" -> List.of("historyRound");

@@ -9,6 +9,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
@@ -34,6 +35,16 @@ public class PlayerCardController {
     public ResponseEntity<GlobalResponse<?>> getAll(WebRequest request) {
         return respond(request, playerCardService.getAll(),
                 PlayerCardMessages.PLAYER_CARD_LIST_SUCCESS);
+    }
+
+    /**
+     * 구단 하나(전체 연도)의 스탯 + 구종 전량. 사용자가 구단을 고를 때 한 번만 부르고,
+     * 연도·포지션 전환은 화면이 이미 받은 데이터에서 거른다(서버를 다시 부르지 않는다).
+     */
+    @GetMapping("/{teamCode}/stats")
+    public ResponseEntity<GlobalResponse<?>> getStatsByTeam(@PathVariable String teamCode, WebRequest request) {
+        return respond(request, playerCardService.getStatsByTeam(teamCode),
+                PlayerCardMessages.PLAYER_CARD_STAT_LIST_SUCCESS);
     }
 
     /**

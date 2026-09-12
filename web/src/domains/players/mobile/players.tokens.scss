@@ -16,4 +16,13 @@
 
   // 로딩 스켈레톤 카드 배경 — design_handoff README 지정값. 전역 토큰에 대응 값이 없다.
   --color-pe-skeleton: #171622;
+
+  // 리스트형 스탯 표 — 선수별 최고 능력치(70+) 강조. 민트는 전역에 대응 색이 없다.
+  --color-pe-mint: #4fe3c1;
+
+  // 구종 등급 5색 중 신규 3개만. A 는 --color-pe-gold, D 는 --color-pe-normal 과
+  // 값이 정확히 같아 재사용한다(config/statsTable.js) — 나머지는 대응 토큰이 없다.
+  --color-pe-grade-s: #ff7b8a;
+  --color-pe-grade-b: #a855f7;
+  --color-pe-grade-c: #3b82f6;
 }

@@ -4,6 +4,8 @@
   width: 100%;
   min-height: 100dvh;
   background-color: var(--color-bg-deepest);
+  // 리스트형 표는 안에서만 좌우 스크롤돼야 한다 — 계산이 어긋나도 페이지 자체는 안 밀리게 방어.
+  overflow-x: hidden;
 }
 
 // ── 검색 + 필터 ──────────────────────────────────────────────
@@ -178,15 +180,15 @@
   @include reset-button;
   width: 36px;
   border-radius: $radius-md;
-  background-color: var(--color-brand);
+  background: none;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
   padding: $space-2 9px;
-  cursor: default;
+  cursor: pointer;
 
   span {
-    background-color: #fff;
+    background-color: var(--color-text-muted);
     border-radius: 1px;
   }
 }
@@ -196,16 +198,29 @@
   width: 36px;
   border-radius: $radius-md;
   background: none;
-  opacity: 0.35;
   display: grid;
   grid-auto-rows: 2px;
   gap: $space-1;
   padding: 11px $space-2;
   align-content: center;
-  cursor: not-allowed;
+  cursor: pointer;
 
   span {
     background-color: var(--color-text-muted);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+// 카드형·리스트형 공통 — 현재 선택된 쪽만 보라 배경 + 흰 아이콘
+.viewActive {
+  background-color: var(--color-brand);
+
+  span {
+    background-color: #fff;
   }
 }
 
@@ -358,6 +373,40 @@
 @keyframes pe-skeleton-pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.55; }
+}
+
+// ── 리스트형(스탯 표) ────────────────────────────────────────
+.listWrap {
+  @include flex-col($space-2);
+  padding: 0 $layout-h-pad-sm $space-6;
+  min-width: 0; // 자식(표)이 부모 폭을 넘지 않게 — 페이지 가로 스크롤 방지
+}
+
+.segment {
+  align-self: flex-start;
+  display: flex;
+  padding: 3px;
+  gap: 2px;
+  background-color: var(--color-bg-overlay);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+}
+
+.segmentBtn {
+  @include reset-button;
+  height: 30px;
+  padding: 0 $space-4;
+  border-radius: $radius-md;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.segmentBtnActive {
+  background-color: var(--color-brand);
+  color: #fff;
 }
 
 // ── 빈 상태 ──────────────────────────────────────────────────

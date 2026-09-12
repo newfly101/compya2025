@@ -7,3 +7,9 @@ export const fetchGetPlayerCards = async () => {
   const { data } = await API.get(PLAYER_CARDS.GET_ALL);
   return data.data;
 };
+
+// 리스트형 표 전용 — 구단 하나 전체(전 연도·전 포지션)를 한 번에 받는다.
+export const fetchGetPlayerStats = async (teamCode) => {
+  const { data } = await API.get(PLAYER_CARDS.getStats(teamCode));
+  return data.data;
+};

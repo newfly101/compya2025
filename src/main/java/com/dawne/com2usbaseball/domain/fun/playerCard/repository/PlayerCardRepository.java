@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.domain.fun.playerCard.repository;
 
 import com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardEntity;
+import com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardStatEntity;
 import com.dawne.com2usbaseball.domain.fun.playerCard.repository.mapper.PlayerCardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -15,5 +16,13 @@ public class PlayerCardRepository {
 
     public List<PlayerCardEntity> findAll() {
         return playerCardMapper.findAll();
+    }
+
+    public List<PlayerCardStatEntity> findStatsByTeamCode(String teamCode) {
+        return playerCardMapper.findStatsByTeamCode(teamCode);
+    }
+
+    public List<String> findDistinctTeamCodes() {
+        return playerCardMapper.findDistinctTeamCodes();
     }
 }

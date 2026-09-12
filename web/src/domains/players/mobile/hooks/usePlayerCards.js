@@ -6,7 +6,7 @@ import { requestGetPlayerCards } from "@/domains/players/store/thunks.js";
 
 export const usePlayerCards = (entered) => {
   const dispatch = useDispatch();
-  const { items, loading, error, loaded } = useSelector((state) => state.players);
+  const { items, loading, error, loaded } = useSelector((state) => state.players.cards);
 
   // 의존성은 [dispatch, entered] 만 둔다 — loading/loaded 를 deps 에 넣으면
   // 실패 시 재요청이 반복되는 루프가 된다(playerSkills usePlayerSkills.js 와 같은 이유).

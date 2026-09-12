@@ -1,0 +1,94 @@
+// 배경 진행 순서(옅음→짙음)는 전역 bg 스케일을 그대로 쓴다 — handoff 값과 순서가 같다
+// (컨테이너 #13121c ≈ --color-bg-deep, 헤더 기본 #1a1826 ≈ --color-bg-overlay).
+// 정렬 중 열 강조·활성 텍스트는 이미 화면 다른 곳에서 쓰는 --color-brand-tint 를 재사용한다.
+.wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  background-color: var(--color-bg-deep);
+  overflow: hidden;
+}
+
+.leftPanel {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  border-right: 1px solid var(--color-border-strong);
+}
+
+.rightPanel {
+  overflow: hidden;
+}
+
+.table {
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12px;
+}
+
+.th {
+  height: 38px;
+  padding: 0 $space-1;
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  font-weight: 700;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-border-strong);
+  user-select: none;
+}
+
+.sortable {
+  cursor: pointer;
+}
+
+.thActive {
+  background-color: var(--color-brand-tint);
+  color: #fff;
+}
+
+.thRight {
+  text-align: center;
+  padding: 0 2px;
+}
+
+.arrow {
+  margin-left: 3px;
+  font-size: 9px;
+  color: var(--color-brand);
+}
+
+.td {
+  height: 40px;
+  padding: 0 $space-1;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-primary);
+  font-weight: 700;
+}
+
+.tdRight {
+  padding: 0 2px;
+  text-align: center;
+  font-weight: 900;
+  background-color: transparent;
+}
+
+.tdActive {
+  background-color: var(--color-brand-tint);
+}
+
+.lMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  margin-left: $space-1;
+  border-radius: $radius-xs;
+  background-color: var(--color-brand);
+  color: #fff;
+  font-size: 8px;
+  font-weight: 900;
+  line-height: 1;
+}

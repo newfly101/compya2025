@@ -44,4 +44,62 @@
         ORDER BY c.team_code, c.season_year, c.position_code, c.player_name
     </select>
 
+    <!--
+      구단 하나(전체 연도)의 스탯 + 구종. card_id(UUID) 는 뽑지 않는다 — findAll 과 같은 이유로,
+      (team_code, season_year, position_code, player_name) 4개가 이 조회 범위(NORMAL 카드만)에서
+      이미 유일해 MyBatis 그룹핑 키로 충분하다.
+
+      data_player_card_stat 은 NORMAL 카드 1건당 정확히 1행이라 INNER JOIN 으로 붙인다
+      (붙는 행이 없으면 그 카드는 스탯 미적재 상태이므로 애초에 응답에서 빠지는 게 맞다).
+      구종은 보유한 것만 LEFT JOIN 으로 붙고, data_pitch_type 은 정렬 순서(sort_no) 용도로만 조인한다.
+    -->
+    <resultMap id="PlayerCardStatResultMap"
+               type="com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardStatEntity">
+        <id property="teamCode" column="team_code"/>
+        <id property="seasonYear" column="season_year"/>
+        <id property="positionCode" column="position_code"/>
+        <id property="playerName" column="player_name"/>
+        <result property="playerRole" column="player_role"/>
+        <result property="stat1" column="stat1"/>
+        <result property="stat2" column="stat2"/>
+        <result property="stat3" column="stat3"/>
+        <result property="stat4" column="stat4"/>
+        <result property="stat5" column="stat5"/>
+
+        <collection property="pitches"
+                    ofType="com.dawne.com2usbaseball.domain.fun.playerCard.entity.PlayerCardPitchEntity">
+            <id property="pitchCode" column="pitch_code"/>
+            <result property="pitchGrade" column="pitch_grade"/>
+        </collection>
+    </resultMap>
+
+    <select id="findStatsByTeamCode" resultMap="PlayerCardStatResultMap">
+        SELECT c.team_code,
+               c.season_year,
+               c.position_code,
+               c.player_name,
+               c.player_role,
+               s.stat1,
+               s.stat2,
+               s.stat3,
+               s.stat4,
+               s.stat5,
+               p.pitch_code,
+               p.pitch_grade
+        FROM data_player_card c
+                 JOIN data_player_card_stat s ON s.card_id = c.id
+                 LEFT JOIN data_player_card_pitch p ON p.card_id = c.id
+                 LEFT JOIN data_pitch_type t ON t.pitch_code = p.pitch_code
+        WHERE c.card_type = 'NORMAL'
+          AND c.team_code = #{teamCode}
+        ORDER BY c.season_year, c.position_code, c.player_name, t.sort_no
+    </select>
+
+    <select id="findDistinctTeamCodes" resultType="java.lang.String">
+        SELECT DISTINCT team_code
+        FROM data_player_card
+        WHERE card_type = 'NORMAL'
+        ORDER BY team_code
+    </select>
+
 </mapper>
