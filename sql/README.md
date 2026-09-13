@@ -2,7 +2,8 @@
 
 2026-09-13 파일명 접두사 재편 — 실제 SQL 동작 기준 6체계로 통일. 하위 폴더는 전부 없앴다(평탄화).
 
-죽은 테이블(코드가 더 이상 쓰지 않는 테이블) 목록: `sql/test-README.md`
+죽은 테이블(코드가 더 이상 쓰지 않는 테이블) 목록: `docs/global-guide/develop/specs/db/sql-folder-map.md`
+커뮤니티 v1↔v2 데이터 현황: `sql/community_README.md`
 
 | 폴더 | 내용 |
 |---|---|
@@ -28,7 +29,7 @@
 
 ## 빈 DB 에 스키마 만드는 법
 
-**운영과 동일한 현재 스키마만 필요하면(테스트 DB 등) V2 전부를 실행할 필요 없다.** V2 의 원본 스키마(`teams`/`users`/`player_legend` 등)는 이미 `fun_teams`/`site_users`/`data_player_legend*` 로 대체된 죽은 테이블이 섞여 있다 (`sql/test-README.md` 참고). 다만 **V3 는 site_users 등 일부를 V2 가 만든 테이블 위에 이어 붙이므로 V2 중 살아있는 부분은 반드시 필요**하다.
+**운영과 동일한 현재 스키마만 필요하면(테스트 DB 등) V2 전부를 실행할 필요 없다.** V2 의 원본 스키마(`teams`/`users`/`player_legend` 등)는 이미 `fun_teams`/`site_users`/`data_player_legend*` 로 대체된 죽은 테이블이 섞여 있다 (`docs/global-guide/develop/specs/db/sql-folder-map.md` 참고). 다만 **V3 는 site_users 등 일부를 V2 가 만든 테이블 위에 이어 붙이므로 V2 중 살아있는 부분은 반드시 필요**하다.
 
 실행 순서 (번호 순):
 

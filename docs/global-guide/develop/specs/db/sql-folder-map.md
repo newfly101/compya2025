@@ -48,7 +48,7 @@ DDL/INSERT 분리, 접두사별 폴더 분류, legacy 격리 판단 근거를 �
 | `site_report` | 0 | `sql/V2/site/CREATE_TABLE_SITE.sql` | 있음(mapper) |
 | `site_tag` | 0 | 〃 | 있음(mapper) |
 | `site_user_event` | 2 | `sql/V3/site/site_user_event.sql` | 있음 |
-| `site_user_event_daily` | 0 | 〃 | 있음 |
+| `site_user_event_daily` | 0 | 〃 | **없음**(2026-09-13 재확인 — 아래 §8) |
 | `site_user_oauth_accounts` | 497 | **없음** — `sql/migration/USER_RESTRUCTURE_02_CREATE_OAUTH_ACCOUNTS_TABLE.sql` 안에만 | 있음 |
 | `site_users` | 497 | `sql/V2/site/CREATE_TABLE_SITE.sql` | 있음 |
 | `tags` | 6 | `sql/V1/CREATE_TABLE_V1.sql` | 0건 |
@@ -178,3 +178,16 @@ player_legend*와 같이 `_legacy/`로 옮길지, 아니면 커뮤니티처럼 �
 
 ### 7-4. `fun_teams` ↔ `teams` 중복
 행수 20/20 동일 — 이관 완료로 보이나 어느 쪽을 canonical로 할지 결정 안 됨(`table-classification.md` §5-4 선수카드 덩어리와 연동).
+
+---
+
+## 8. `sql/test-README.md` 폐기 흡수 (2026-09-13)
+
+`sql/test-README.md`(죽은 테이블 40개 전수 판정 문서)를 커뮤니티 문서(`sql/community_README.md`) 분리 작업 중 지웠다.
+커뮤니티 8종(`site_board`/`site_post`/`site_tag`/`site_post_tag`/`site_comment`/`site_comment_reaction`/`site_post_reaction`/`site_report`)과
+v1 4종(`boards`/`posts`/`tags`/`posts_tags`)은 그쪽으로 옮겼고, 그 외 정보는 이미 본 문서 §1~7 에 포함돼 있어 별도 절 없이 흡수 완료:
+
+- `player_legend` 계열 4종(§4), `teams`/`fun_teams` 중복(§7-4) — 이미 기록돼 있던 내용과 동일
+- **`site_user_event_daily` 코드 참조 재확인**: 옛 문서는 "있음"으로 기록했으나 2026-09-13 `grep -rn site_user_event_daily src/main --include=*.xml --include=*.java` 결과 0건 — 위 §1 표를 "없음"으로 정정했다. `site_user_event`(2행, 참조 있음)과 세트로 만들어졌으나 집계 기능 자체가 구현되지 않은 것으로 보인다
+
+옛 문서의 "살아있는 테이블 30개" 목록은 본 문서 §1 표가 더 상세한 상위 호환이라 별도로 옮기지 않았다.

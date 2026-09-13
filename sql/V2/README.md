@@ -11,7 +11,7 @@
 | `CREATE_03_TABLE_FUN.sql` | `fun_teams` `fun_quiz`(V3 가 최종 덮어씀, 아래 참고) (+주석 `fun_player_card*` 4종) | 독립 (FK 없음) |
 | `CREATE_04_TABLE_SITE.sql` | `site_coupons` `site_notices` `site_events` `site_users` `site_user_oauth_accounts` `site_board` `site_post` `site_comment` `site_tag` `site_post_tag` `site_post_reaction` `site_comment_reaction` `site_report` | 독립 (내부 FK만, `site_board`→`site_post`→`site_comment`/`site_tag` 순으로 파일 내부에 이미 정렬됨) |
 
-⚠️ `CREATE_01`/`CREATE_02` 는 **죽은 테이블**이다 (`teams`/`player_legend*` → `fun_teams`/`data_player_legend*` 로 대체됨, 상세는 `sql/test-README.md`). 이 두 파일은 `users`/`user_roles`/`events`/`coupons`/`notices`/`quiz_answers` 처럼 운영에서 이미 사라진 테이블도 갖고 있다 — v1 이관 흐름 재현용으로 그대로 뒀다. 빈 DB에 현재 운영 스키마만 만들 때는 생략 가능 — 자세한 건 `sql/README.md` 참고.
+⚠️ `CREATE_01`/`CREATE_02` 는 **죽은 테이블**이다 (`teams`/`player_legend*` → `fun_teams`/`data_player_legend*` 로 대체됨, 상세는 `docs/global-guide/develop/specs/db/sql-folder-map.md`). 이 두 파일은 `users`/`user_roles`/`events`/`coupons`/`notices`/`quiz_answers` 처럼 운영에서 이미 사라진 테이블도 갖고 있다 — v1 이관 흐름 재현용으로 그대로 뒀다. 빈 DB에 현재 운영 스키마만 만들 때는 생략 가능 — 자세한 건 `sql/README.md` 참고.
 
 ⚠️ `CREATE_03_TABLE_FUN.sql` 의 `fun_quiz` 는 `sql/V3/CREATE_05_fun.sql` 에서 `DROP TABLE IF EXISTS fun_quiz` 후 재생성된다(컬럼 구성이 다르다 — `is_visible` 없음) — 최종 스키마는 V3 쪽이 이긴다.
 
