@@ -4,11 +4,15 @@
 // mixin 의 overflow-x:auto(표 전체 가로 스크롤)는 그대로 쓰지 않고 hidden 으로 덮는다
 // — 가로 스크롤이 필요한 399px 이하 구간은 .leftPanel 이 개별로 처리한다.
 // 정렬 중 열 강조·활성 텍스트는 이미 화면 다른 곳에서 쓰는 --color-brand-tint 를 재사용한다.
+//
+// 왼쪽(auto)이 자기 내용 폭만큼만 차지하고, 남는 폭은 전부 오른쪽(1fr) 능력치 패널로
+// 간다 — 이 표는 능력치를 나란히 놓고 비교하는 게 목적이라, 화면이 넓어질수록(또는 이름이
+// 짧을수록) 이름이 아니라 숫자 열이 커져야 읽기 편하다.
 .wrap {
   @include data-table-box;
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(0, 1fr);
 }
 
 // 기본(400px~): 좌우 스크롤 없이 폭 계산으로 한 화면에 다 담는다. 구종 표는 능력치 10열을
@@ -27,6 +31,10 @@
 
 .rightPanel {
   overflow: hidden;
+  // grid item 기본 min-width 는 auto(=내용 최소폭) 라 1fr 트랙이 좁아져도 이 밑으로는
+  // 안 줄어든다("grid blowout") — 400px 처럼 빠듯한 화면에서 표가 화면 밖으로 밀려나
+  // 마지막 열이 통째로 잘려나가는 원인이었다. 0으로 되돌려야 트랙 폭 그대로 줄어든다.
+  min-width: 0;
 }
 
 // 표 뼈대(테두리색·머리행 배경/폰트·sticky 선언)는 legendStats 와 같은 data-table-skin 을 쓴다.
@@ -37,24 +45,26 @@
   @include data-table-skin(38px, 32px); // legendStats --ls-row-h/--ls-head-h 와 동일 값
 }
 
-// table-layout: fixed + width:100% 로 두면 px 를 지정한 열(#·구단·연도·포지션)을 뺀
-// 나머지를 이름 열이 자동으로 가져간다 — 화면 폭이 달라져도(360~480) 매번 재계산할 필요가 없다.
+// idx·구단·연도(·포지션·OVR)는 px 고정, 이름만 폭이 없다 — table-layout:fixed 에서 표의
+// width 를 auto 로 두면(100% 를 되돌림) 표 전체가 "고정 열 합 + 이름 열의 실제 내용 폭"
+// 딱 그만큼만 차지한다(shrink-to-fit). width:100% 그대로 두면 .wrap 의 auto 트랙 안에서
+// 오른쪽 1fr 트랙을 잡아먹어 왼쪽이 거의 전체 폭을 차지해버린다(아래 .rightTable 주석 참고).
 .leftTable {
   table-layout: fixed;
-  width: 100%;
+  width: auto;
 
   @media (max-width: 399px) {
     table-layout: auto;
-    width: auto;
   }
 }
 
-// mixin 이 `.table` 에 width:100% 를 준다 — 오른쪽 표는 .rightPanel(grid auto 트랙)의
-// 유일한 자식이라, 폭이 아직 안 정해진 auto 트랙 안에서 자식이 100% 를 요구하면 그 트랙이
-// 거의 전체 폭을 먹어버려 왼쪽 패널이 0px 로 찌그러진다(실측). 오른쪽 표는 폭 없이
-// 열 너비(rightColWidth) 합만큼만 차지해야 하므로 100%를 되돌린다.
+// 오른쪽은 반대로 남는 폭을 다 받아야 하는 쪽이다. th 폭을 px 로 고정하면 table-layout:fixed
+// 표는 그 합보다 컨테이너가 넓어도 컬럼을 늘리지 않고(오른쪽에 빈 칸만 남고), 반대로
+// 컨테이너가 좁아지면 표가 오히려 컨테이너 밖으로 밀려나 마지막 열이 통째로 잘린다(둘 다 실측
+// 확인). % 로 주면 표 자체의 실제 폭(=rightPanel 이 준 만큼)에 비례해 나뉘어 두 문제가 다
+// 없다 — rightColWidth 는 statsTable.js buildTable() 에서 1/열개수 로 계산해 내려준다.
 .rightTable {
-  width: auto;
+  width: 100%;
 }
 
 // 머리행 뼈대(높이·배경·글자색/크기·border-bottom)는 위 .table 의 data-table-skin 이
