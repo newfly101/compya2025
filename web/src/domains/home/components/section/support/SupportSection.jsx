@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
+import { useSelector } from "react-redux";
 import styles from "./SupportSection.module.scss";
 import qrImage from "@/assets/new/kakaopay-qr.png";
+import { API } from "@/infra/http/client.js";
 
 const modalRoot = document.getElementById("modal");
 
@@ -18,6 +20,14 @@ const SupportSection = () => {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const touch = isTouchDevice();
+  const user = useSelector((state) => state.auth.user);
+
+  // 로그인 유저의 후원 진출만 statistic_support_click 에 남긴다 (비로그인은 BE 가 무시).
+  // fire-and-forget — 실패해도 송금 흐름을 막지 않는다.
+  const logSupportClick = (target) => {
+    if (!user) return;
+    API.post("/statistics/support-click", { target }).catch(() => {});
+  };
 
   const close = () => {
     setOpen(false);
@@ -25,6 +35,7 @@ const SupportSection = () => {
   };
 
   const copyLink = async () => {
+    logSupportClick("kakaopay-copy");
     try {
       await navigator.clipboard.writeText(KAKAOPAY_URL);
       setCopied(true);
@@ -69,6 +80,7 @@ const SupportSection = () => {
                     href={KAKAOPAY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={() => logSupportClick("kakaopay")}
                   >
                     카카오페이로 송금하기
                   </a>
