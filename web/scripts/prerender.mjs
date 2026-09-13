@@ -6,8 +6,9 @@
 //       렌더 완료된 DOM(head 포함)을 그대로 파일로 저장.
 // 하이드레이션 방식은 바꾸지 않는다 (createRoot 그대로, hydrateRoot 전환 X).
 //
-// ⚠️ /notices, /coupons, /events, /legend-stats, /history-mode/legend 는 BE API 로 본문을 채운다.
-// (/players 는 안내 화면을 거쳐야 데이터를 부르므로 데이터 확인 대상이 아니다) API_BASE_URL(src/config/env.js) 이
+// ⚠️ /notices, /coupons, /events, /players, /legend-stats, /history-mode/legend 는 BE API 로 본문을 채운다.
+// (/players 는 2026-09-13 게이트 제거 이후 진입 즉시 선수 리스트를 부른다 — 데이터 확인 대상에 포함)
+// API_BASE_URL(src/config/env.js) 이
 // 운영 빌드에서 절대경로 https://api.compyafun.com/api 라서 vite.config.js 의 프록시는
 // 관여하지 않는다 — 실제 관문은 BE CorsConfig.java 의
 // allowedOrigins("http://localhost:3000", "https://compyafun.com") 다. 그래서 아래 preview
@@ -35,8 +36,20 @@ const STATIC_ROUTES = [
   // 레전드 재료 평점표 · 히스토리 재료 탐색기 — API(BE) 데이터로 렌더되는 페이지.
   "/legend-stats",
   "/history-mode/legend",
+  // 마일리지 저격 경로 — config/mileage.js 정적 계산 데이터로 렌더된다(BE API 미의존).
+  // 기본 진입 화면(쿼리 없음)은 목표 선택 hero 화면이라 DATA_ROUTES 셀렉터 대상은 아니다.
+  "/mileage",
   // 스킬 백과사전 — 스킬명 92개와 설명문이 실려 색인 가치가 있다.
   "/skills",
+  // 가이드 — 자체 작성 공략/활용 글(AdSense 심사 대응, 2026-09-13). 콘텐츠가 로컬 JS 데이터라
+  // API 왕복 없이 즉시 렌더되므로 DATA_ROUTES 셀렉터 없이 STATIC_ROUTES 취급으로 충분하다.
+  "/guides",
+  "/guides/legend-material-priority",
+  "/guides/legend-stats-guide",
+  "/guides/mileage-sniping",
+  "/guides/history-legend-guide",
+  "/guides/player-skills-guide",
+  "/guides/player-encyclopedia",
   "/privacy",
   "/terms",
   "/contact",
@@ -63,8 +76,10 @@ const DATA_ROUTES = {
   "/coupons": "article",
   // EventCard 는 externalLink 유무에 따라 <a>/<div> 로 갈리므로 태그 대신 클래스 부분일치.
   "/events": '[class*="eventCard"]',
-  // "/players" 는 여기 없다 — 안내 화면에서 「이용하기」를 눌러야 카드를 부르는 구조라
-  // 스냅샷 시점에는 카드가 없는 게 정상이다. 대신 안내 화면 자체가 그려졌는지만 본다.
+  // PlayerCard 는 항상 <div className={styles.card}> 로 렌더된다 — 로컬 클래스명이 "card" 하나뿐이라
+  // 부분일치로 충분하다. 기본 진입 시 구단 1개 + 연도 1개 로스터만 보여줘 자연히 첫 페이지 분량(수십 장)만
+  // 스냅샷된다 — 별도 상한 로직 불필요.
+  "/players": '[class*="card"]',
   "/legend-stats": "table tbody tr",
   "/history-mode/legend": "table tbody tr",
   // OddsIndexScreen 은 정적 데이터(src/data/odds)지만 렌더 자체는 동일하게 확인한다.

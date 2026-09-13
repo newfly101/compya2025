@@ -1,5 +1,6 @@
 // domains/players/mobile/PlayerEncyclopediaScreen.jsx
-// 4단계 — store 연동. 「이용하기」로 entered 가 true 가 될 때만 API 를 부른다(진입 즉시 호출 금지).
+// 진입 즉시 선수 리스트를 로드해 렌더한다(AdSense 심사 대응 — 게이트 제거, 2026-09-13).
+// GuideView(최초 안내문)는 화면을 가리는 관문이 아니라, 상단 「도움말」 버튼으로 여는 모달로 강등됐다.
 // 필터 파이프라인 순서는 design_handoff README 를 그대로 따른다:
 // 범위(검색/팀필터/구단연도) → 모달 필터 AND → 재료만 → 탭 카운트 → 정렬.
 import { useCallback, useMemo, useState } from "react";
@@ -24,7 +25,8 @@ import {
   buildTable,
 } from "@/domains/players/config/statsTable.js";
 import { PITCH_LABELS, PITCH_SHORT } from "@/domains/players/store/statsAdapter.js";
-import GuideView from "./components/guideView/GuideView";
+import GuideModal from "@/domains/guides/mobile/GuideModal.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import PlayerCard from "./components/playerCard/PlayerCard";
 import FilterSheet from "./components/filterSheet/FilterSheet";
 import StatsTable from "./components/statsTable/StatsTable";
@@ -53,11 +55,11 @@ const toggle = (arr, value) => (arr.includes(value) ? arr.filter((v) => v !== va
 const PlayerEncyclopediaScreen = () => {
   useDomainTopBar("선수 백과사전");
 
-  const [entered, setEntered] = useState(false);
   const [help, setHelp] = useState(false);
   const [tableHelp, setTableHelp] = useState(false);
 
-  const { items: PLAYERS, error, loaded, retry } = usePlayerCards(entered);
+  // 게이트 없이 진입 즉시 로드 — 비로그인·크롤러 모두 리스트를 바로 본다.
+  const { items: PLAYERS, error, loaded, retry } = usePlayerCards(true);
 
   const TEAMS = useMemo(() => getTeams(PLAYERS), [PLAYERS]);
 
@@ -254,11 +256,6 @@ const PlayerEncyclopediaScreen = () => {
     setSortDir(1);
   }
 
-  const handleEnter = useCallback(() => {
-    setEntered(true);
-    setHelp(false);
-  }, []);
-
   const handleOpenHelp = useCallback(() => {
     setHelp(true);
     setFilterOpen(false);
@@ -301,10 +298,6 @@ const PlayerEncyclopediaScreen = () => {
     if (!ACTIVE_KINDS.has(kind)) return; // DB엔 일반·시그니처만 있어 나머지는 선택 불가
     setFKind((prev) => toggle(prev, kind));
   }, []);
-
-  if (!entered || help) {
-    return <GuideView primaryLabel={entered ? "확인" : "이용하기"} onSubmit={entered ? () => setHelp(false) : handleEnter} />;
-  }
 
   return (
     <div className={styles.screen}>
@@ -577,6 +570,10 @@ const PlayerEncyclopediaScreen = () => {
         extra={tableHelpExtra}
         onClose={() => setTableHelp(false)}
       />
+
+      {/* 최초 안내문 — 더 이상 진입 관문이 아니라 상단 「도움말」 버튼으로 여는 가이드 모달.
+          가이드 원본은 /guides/player-encyclopedia 와 완전히 같은 콘텐츠(GuideModal 공용 렌더러). */}
+      <GuideModal open={help} guide={GUIDES_BY_SLUG["player-encyclopedia"]} onClose={() => setHelp(false)} />
     </div>
   );
 };

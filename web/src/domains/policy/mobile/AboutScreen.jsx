@@ -43,12 +43,9 @@ const FEATURES = [
     desc: "확률형 아이템 확률 정보를 검색 가능한 형태로 정리",
     to: ROUTE_PATHS.odds,
   },
-  {
-    label: "커뮤니티",
-    desc: "이용자들이 남긴 글을 볼 수 있는 게시판, 현재는 읽기 전용으로 운영 중",
-    to: ROUTE_PATHS.community,
-  },
 ];
+// 커뮤니티 항목 — AdSense 심사 대응으로 노출 진입점에서 제외(2026-09-13).
+// 라우트 자체는 유지, infra/seo/routeSeo.js NOINDEX_PATHS 로 색인만 차단.
 
 const AboutScreen = () => {
   useDomainTopBar("사이트 소개");

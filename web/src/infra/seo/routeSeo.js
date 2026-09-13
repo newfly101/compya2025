@@ -23,7 +23,12 @@ export const ROUTE_SEO = {
   "/probability/:sectionId": "컴투스 프로야구 확률 공시 상세 항목별 확률 정보를 확인하세요.",
   "/players": "컴투스 프로야구 소속 선수 정보를 구단·연도별로 찾아볼 수 있는 선수 백과사전입니다.",
   "/history-mode/legend": "히스토리 모드에서 레전드 재료를 어느 라운드에 얻는지 찾아보세요.",
+  "/mileage": "컴투스 프로야구 마일리지로 저격 가능한 카드를 구단·연도별 로스터에서 확인하고, 목표 마일리지까지 남은 수량을 계산해보세요.",
   "/skills": "컴투스 프로야구 타자·투수 고유능력 92개의 설명과 E~S+ 등급별 수치를 한눈에 확인하세요.",
+  "/guides": "컴프야펀이 직접 정리한 공략·활용 가이드를 모아봅니다.",
+  // 편별 설명은 GuideDetailScreen 이 usePageSeo 로 콘텐츠 파일의 seo.description 을 덮어쓴다.
+  // 이 값은 usePageSeo 적용 전(초기 렌더) fallback 이다.
+  "/guides/:slug": "컴프야펀이 직접 정리한 공략·활용 가이드 상세 내용입니다.",
   // 아래 4개는 다른 작업으로 라우트 신설 예정 — description 선반영
   "/privacy": "컴프야펀 개인정보처리방침 안내 페이지입니다.",
   "/terms": "컴프야펀 이용약관 안내 페이지입니다.",
@@ -37,7 +42,9 @@ export const ROUTE_SEO = {
 // 확률 공시 상세(섹션 61개): 게임사 공시 표를 그대로 옮긴 것이라 원본성이 없고, sitemap 의
 // 대다수를 차지해 "가치가 별로 없는 콘텐츠" 판정의 원인이 됐다(2026-09-04). 인덱스(/probability)
 // 는 기능 자체라 색인 대상으로 남기고, 섹션 상세만 제외한다.
-export const NOINDEX_PATHS = ["/community", "/probability/:sectionId"];
+// /auth/callback: OAuth 리다이렉트 중계용 화면이라 사용자에게 보여줄 고유 콘텐츠가 없다.
+// AdSense 반려 사유("콘텐츠 없는 화면") 대응 — 크롤러 색인에서 제외한다(2026-09-13).
+export const NOINDEX_PATHS = ["/community", "/probability/:sectionId", "/auth/callback"];
 
 // 쿼리스트링은 location.pathname 자체에 포함되지 않으므로 별도 정규화 불필요.
 // (예: /players?team=..&year=.. → location.pathname 은 이미 "/players")

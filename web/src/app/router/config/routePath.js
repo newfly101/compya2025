@@ -46,4 +46,8 @@ export const ROUTE_PATHS = {
   mileage: "/mileage",
   // 스킬 백과사전 — 주소는 /dictionary/player-skills 로 바뀔 예정. 화면에서는 항상 ROUTE_PATHS 로만 참조.
   player_skills: "/skills",
+  // 가이드 — 자체 작성 공략/활용 글. 상세는 slug(고정 문자열, content/index.js 의 GUIDES 참조)로 조회한다.
+  guides: "/guides",
+  guide_details_pattern: "/guides/:slug",
+  guide_details: (slug) => `/guides/${slug}`,
 }

@@ -47,6 +47,46 @@
         <priority>0.8</priority>
     </url>
     <url>
+        <loc>https://compyafun.com/mileage</loc>
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://compyafun.com/guides</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://compyafun.com/guides/legend-material-priority</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://compyafun.com/guides/legend-stats-guide</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://compyafun.com/guides/mileage-sniping</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://compyafun.com/guides/history-legend-guide</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://compyafun.com/guides/player-skills-guide</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
+        <loc>https://compyafun.com/guides/player-encyclopedia</loc>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
+    </url>
+    <url>
         <loc>https://compyafun.com/privacy</loc>
         <changefreq>yearly</changefreq>
         <priority>0.3</priority>

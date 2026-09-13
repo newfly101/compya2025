@@ -172,12 +172,13 @@ const GuideView = ({ primaryLabel, onSubmit }) => (
       </div>
 
       <div className={styles.footer}>
-        {/* 13,954장 · 2026.09.10 은 핸드오프 시점 스냅샷 문구다. 이 화면은 「이용하기」 클릭 전
-            (API 호출 전) 렌더되어 실측 장수를 알 수 없어 하드코딩을 유지한다 — README Data 절 그대로. */}
+        {/* 13,954장 · 2026.09.10 은 핸드오프 시점 스냅샷 문구다. 실측 갱신 전까지 하드코딩 유지
+            — README Data 절 그대로. 게이트 제거(2026-09-13) 이후엔 리스트가 이미 로드된 상태에서
+            열리는 도움말이라 "불러옵니다" 문구만 안내형으로 고쳤다. */}
         <p>
           선수·코치 13,954장 · 20개 구단 · 1982–2026
           <br />
-          버튼을 누르면 카드 데이터를 불러옵니다.
+          목록은 이미 화면에 표시되어 있습니다.
         </p>
         <div className={styles.noticeBadge}>
           <span className={styles.noticeDot} aria-hidden="true" />

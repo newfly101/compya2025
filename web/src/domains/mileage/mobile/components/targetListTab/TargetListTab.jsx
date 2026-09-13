@@ -10,6 +10,8 @@ import { useState } from "react";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { formatPosition } from "@/domains/players/config/position.js";
 import { POS_ROWS, SORT_LABEL, teamDotColor } from "@/domains/mileage/config/mileageTargetList.js";
+import GuideModal from "@/domains/guides/mobile/GuideModal.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import styles from "./TargetListTab.module.scss";
 
 const COLUMNS = [
@@ -194,51 +196,13 @@ const TargetListTab = ({
         </table>
       </div>
 
-      {helpOpen && (
-        <div className={styles.overlay} role="presentation" onClick={() => setHelpOpen(false)}>
-          <div
-            className={styles.helpCard}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="target-list-help-title"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 id="target-list-help-title" className={styles.helpTitle}>
-              저격 선수 리스트
-            </h2>
-            <p className={styles.helpSubtitle}>{`L마크 레전드 재료 노말 카드 ${total}종`}</p>
-            <dl className={styles.helpList}>
-              <div className={styles.helpRow}>
-                <dt>선수 클릭</dt>
-                <dd>
-                  저격 시뮬레이션으로 이동.
-                  <br />
-                  목표 구단 · 연도 · 포지션 자동 입력.
-                </dd>
-              </div>
-              <div className={styles.helpRow}>
-                <dt>포지션 칩</dt>
-                <dd>포지션별 필터 설정 (타자/투수)</dd>
-              </div>
-              <div className={styles.helpRow}>
-                <dt>검색</dt>
-                <dd>
-                  재료 = 선수명 · 구단 · 연도
-                  <br />
-                  레전드 = 저격 레전드 이름
-                </dd>
-              </div>
-              <div className={styles.helpRow}>
-                <dt>열 제목</dt>
-                <dd>오름 ▲ / 내림 ▼ 차순 정렬 가능.</dd>
-              </div>
-            </dl>
-            <button type="button" className={styles.helpClose} onClick={() => setHelpOpen(false)}>
-              닫기
-            </button>
-          </div>
-        </div>
-      )}
+      {/* 「저격 선수 리스트」 도움말 — /guides/mileage-sniping 로 승격됐다(2026-09-13).
+          total(재료 종수)은 가이드 원본 텍스트에는 없는 실시간 값이라 여기 카운터에만 남긴다. */}
+      <GuideModal
+        open={helpOpen}
+        guide={GUIDES_BY_SLUG["mileage-sniping"]}
+        onClose={() => setHelpOpen(false)}
+      />
     </div>
   );
 };

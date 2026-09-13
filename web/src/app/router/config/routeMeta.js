@@ -43,4 +43,10 @@ export const ROUTE_META = {
   },
   MILEAGE: { path: ROUTE_PATHS.mileage, title: "컴프야펀 | 마일리지 저격 경로" },
   PLAYER_SKILLS: { path: ROUTE_PATHS.player_skills, title: "컴프야펀 | 스킬 백과사전" },
+  GUIDES: { path: ROUTE_PATHS.guides, title: "컴프야펀 | 가이드" },
+  GUIDE_DETAILS: {
+    path: ROUTE_PATHS.guide_details_pattern,
+    title: (guideTitle) =>
+      guideTitle ? `컴프야펀 | 가이드 | ${guideTitle}` : "컴프야펀 | 가이드 상세",
+  },
 };

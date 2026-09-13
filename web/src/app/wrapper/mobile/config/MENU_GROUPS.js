@@ -18,22 +18,17 @@ export const MENU_GROUPS = [
       { icon: '🎯', label: '히스토리 재료',   to: '/history-mode/legend' },
       { icon: '🧭', label: '마일리지 저격',   to: '/mileage',
         tag: { variant: 'new' } },
-      { icon: '⚾', label: '선수 백과사전',   to: '/players', loginRequired: true,
+      { icon: '⚾', label: '선수 백과사전',   to: '/players',
         tag: { variant: 'beta' } },
       { icon: '📖', label: '스킬 백과사전',   to: ROUTE_PATHS.player_skills },
       { icon: '📊', label: '확률 공시',      to: '/probability', loginRequired: true },
+      { icon: '📚', label: '가이드',        to: ROUTE_PATHS.guides },
       { icon: '🎮', label: '스킬 시뮬레이터', to: '/skill', comingSoon: true,
         tag: { variant: 'neutral', label: '준비중' } },
     ]
   },
-  {
-    // 2026-08-31 읽기 전용 재오픈. 기존 주석의 /posts/hot, /posts/team 은 실제 라우트가 아니었고
-    // 실제 게시판(TIP/CLUB)과도 매핑되지 않아 살리지 않음 — /community 단일 진입점으로 대체.
-    label: '커뮤니티',
-    items: [
-      { icon: '💬', label: '커뮤니티', to: '/community' },
-    ]
-  },
+  // 커뮤니티 그룹 — AdSense 심사 대응으로 드로어 노출에서 제외(2026-09-13).
+  // 라우트 자체는 유지(직접 URL 접근 가능), infra/seo/routeSeo.js NOINDEX_PATHS 로 색인만 차단.
 ]
 
 // admin role 한정 노출 — Drawer 가 isAdmin 일 때 MENU_GROUPS 뒤에 append.

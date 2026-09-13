@@ -2,8 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ALL,
-  BADGE_GUIDE,
-  RATING_SOURCE,
   TYPE_FILTERS,
   columns,
   ovr,
@@ -24,6 +22,8 @@ import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { useLegendStats } from "./hooks/useLegendStats";
 import { useHistoryBadge } from "./hooks/useHistoryBadge";
 import { useMileageBadge } from "./hooks/useMileageBadge";
+import GuideModal from "@/domains/guides/mobile/GuideModal.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import "./legendStats.tokens.scss";
 import styles from "./LegendStatsScreen.module.scss";
 
@@ -441,64 +441,13 @@ const LegendStatsScreen = () => {
         <StateBox status="empty" message="조건에 맞는 레전드가 없습니다. 필터를 하나 풀어보세요." compact />
       )}
 
-      {helpOpen && (
-        <div className={styles.overlay} role="presentation" onClick={() => setHelpOpen(null)}>
-          <div
-            className={styles.helpCard}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="legend-help-title"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {helpOpen === "rating" ? (
-              <>
-                <h2 id="legend-help-title" className={styles.helpTitle}>
-                  평점은 어떤 값인가요?
-                </h2>
-                <p className={styles.helpBody}>
-                  게임 내 수치가 아니라 <b>{RATING_SOURCE.author}</b> 님이 분석해 산정한
-                  점수입니다. 원작자의 사용 허락을 받아 출처를 밝히고 싣습니다.
-                </p>
-                <p className={styles.helpBody}>
-                  OVR 과 스탯은 게임 표기 그대로이고, 평점만 분석값입니다.
-                </p>
-                <a
-                  className={styles.helpLink}
-                  href={RATING_SOURCE.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {`${RATING_SOURCE.site} 원문 보기 →`}
-                </a>
-              </>
-            ) : (
-              <>
-                <h2 id="legend-help-title" className={styles.helpTitle}>
-                  재료카드 도움말
-                </h2>
-                <ul className={styles.helpPoints}>
-                  <li>레전드 재료카드에 있는 뱃지는 저격 가능한 재료의 위치를 나타냅니다.</li>
-                  <li>뱃지를 클릭하면 컨텐츠 페이지로 이동합니다.</li>
-                </ul>
-                <ul className={styles.badgeList}>
-                  {BADGE_GUIDE.map((b) => (
-                    <li key={b.mark}>
-                      <span className={`${styles.historyBadge} ${styles[b.tone]}`}>{b.mark}</span>
-                      <span>
-                        {b.label}
-                        {b.note && <em className={styles.badgeNote}>{` (${b.note})`}</em>}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-            <button type="button" className={styles.helpClose} onClick={() => setHelpOpen(null)}>
-              닫기
-            </button>
-          </div>
-        </div>
-      )}
+      {/* 평점 출처(원작자 표기)·재료카드 배지 안내 — 둘 다 /guides/legend-stats-guide 로 승격됐다.
+          두 버튼이 같은 가이드 안의 서로 다른 섹션을 다루므로 하나의 모달로 합쳤다(2026-09-13). */}
+      <GuideModal
+        open={!!helpOpen}
+        guide={GUIDES_BY_SLUG["legend-stats-guide"]}
+        onClose={() => setHelpOpen(null)}
+      />
 
       <div className={styles.foot}>
         OVR은 스탯 평균으로 그때그때 계산합니다. 평점이 비어 있는 6명은 표 아래에 모아 두었습니다.

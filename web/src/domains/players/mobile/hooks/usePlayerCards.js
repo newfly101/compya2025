@@ -1,5 +1,5 @@
-// 「이용하기」를 눌러 entered 가 true 가 될 때만 최초 1회 요청한다.
-// 진입(가이드 화면) 즉시 호출 금지 — README 핸드오프 규칙. 도움말로 다시 열어도(entered 유지) 재요청 없음.
+// 화면 진입 즉시 최초 1회 요청한다 (AdSense 심사 대응 — 게이트 제거, 2026-09-13).
+// entered 인자는 항상 true 로 호출되지만, 호출부 시그니처 호환을 위해 그대로 둔다.
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { requestGetPlayerCards } from "@/domains/players/store/thunks.js";

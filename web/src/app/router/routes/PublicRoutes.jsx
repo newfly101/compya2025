@@ -21,6 +21,9 @@ const CommunityPage = lazy(() => import("@/domains/community/mobile/CommunityScr
 const MileagePage = lazy(() => import("@/domains/mileage/mobile/MileageScreen.jsx"));
 // 스킬 백과사전 — 주소는 나중에 /dictionary/player-skills 로 바뀔 수 있어 ROUTE_META 로만 참조한다.
 const PlayerSkillPage = lazy(() => import("@/domains/playerSkills/mobile/PlayerSkillScreen.jsx"));
+// 가이드 — 자체 작성 공략/활용 글(AdSense 심사 대응, 2026-09-13).
+const GuidesPage = lazy(() => import("@/domains/guides/mobile/GuidesScreen.jsx"));
+const GuideDetailsPage = lazy(() => import("@/domains/guides/mobile/GuideDetailScreen.jsx"));
 
 export const PublicRoutes = [
   { index: true, element: <HomePage />, handle: ROUTE_META.HOME },
@@ -41,4 +44,6 @@ export const PublicRoutes = [
   { path: ROUTE_META.COMMUNITY.path, element: <CommunityPage />, handle: ROUTE_META.COMMUNITY },
   { path: ROUTE_META.MILEAGE.path, element: <MileagePage />, handle: ROUTE_META.MILEAGE },
   { path: ROUTE_META.PLAYER_SKILLS.path, element: <PlayerSkillPage />, handle: ROUTE_META.PLAYER_SKILLS },
+  { path: ROUTE_META.GUIDES.path, element: <GuidesPage />, handle: ROUTE_META.GUIDES },
+  { path: ROUTE_META.GUIDE_DETAILS.path, element: <GuideDetailsPage />, handle: ROUTE_META.GUIDE_DETAILS },
 ];

@@ -1,0 +1,110 @@
+// domains/guides/mobile/GuideContent.module.scss
+// 공용 렌더러 스타일 — /guides/:slug 전체 화면과 GuideModal 내부에서 동일하게 쓰인다.
+.article {
+  @include flex-col($space-4);
+  width: 100%;
+}
+
+.title {
+  @include text-page-title;
+  @include hangul-safe;
+  color: var(--color-text-primary);
+}
+
+.intro {
+  @include text-body;
+  @include hangul-safe;
+  color: var(--color-text-secondary);
+  line-height: $line-height-relaxed;
+}
+
+.section {
+  @include flex-col($space-2);
+}
+
+.heading {
+  @include text-section-title;
+  @include hangul-safe;
+  color: var(--color-text-primary);
+}
+
+.paragraph {
+  @include text-body;
+  @include hangul-safe;
+  color: var(--color-text-secondary);
+  line-height: $line-height-relaxed;
+}
+
+.list,
+.orderedList {
+  @include flex-col($space-1);
+  @include text-body;
+  @include hangul-safe;
+  color: var(--color-text-secondary);
+  line-height: $line-height-relaxed;
+  padding-left: $space-4;
+}
+
+.list {
+  list-style: disc;
+}
+
+.orderedList {
+  list-style: decimal;
+}
+
+.note {
+  @include text-caption;
+  @include hangul-safe;
+  color: var(--color-text-muted);
+  background-color: var(--color-bg-overlay);
+  border-radius: $radius-lg;
+  padding: $space-2 $space-3;
+  line-height: $line-height-relaxed;
+}
+
+.link {
+  @include text-caption;
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-all;
+}
+
+.tableWrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+
+  th,
+  td {
+    padding: $space-2 $space-2;
+    text-align: left;
+    white-space: normal;
+    word-break: keep-all;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  th {
+    @include text-caption;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-secondary);
+    background-color: var(--color-bg-overlay);
+    white-space: nowrap;
+  }
+
+  td {
+    color: var(--color-text-secondary);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
