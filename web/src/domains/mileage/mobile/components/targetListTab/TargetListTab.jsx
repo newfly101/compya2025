@@ -6,12 +6,9 @@
 // "레전드 미정" 카운터는 만들지 않는다 — BE 쿼리가 INNER JOIN 이라 실데이터로는 항상
 // 0건이라 존재할 수 없는 상태의 UI를 만들지 않기로 했다(design-spec §0 HITL 결정).
 
-import { useState } from "react";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { formatPosition } from "@/domains/players/config/position.js";
 import { POS_ROWS, SORT_LABEL, teamDotColor } from "@/domains/mileage/config/mileageTargetList.js";
-import GuideModal from "@/global/ui/guideModal/GuideModal.jsx";
-import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import styles from "./TargetListTab.module.scss";
 
 const COLUMNS = [
@@ -49,8 +46,6 @@ const TargetListTab = ({
   highlightId,
   onSelectRow,
 }) => {
-  const [helpOpen, setHelpOpen] = useState(false);
-
   return (
     <div className={styles.tab}>
       <div className={styles.searchRow}>
@@ -108,12 +103,6 @@ const TargetListTab = ({
       <div className={styles.counter}>
         <span className={styles.counterLeft}>
           <b>{`${rows.length}명`}</b>
-          <button type="button" className={styles.helpButton} onClick={() => setHelpOpen(true)}>
-            <span className={styles.helpMark} aria-hidden="true">
-              ?
-            </span>
-            도움말
-          </button>
         </span>
         <button type="button" className={styles.sortLabel} onClick={reverseDir}>
           {`${SORT_LABEL[sortKey]} ${dir > 0 ? "▲" : "▼"}`}
@@ -195,14 +184,6 @@ const TargetListTab = ({
           </tbody>
         </table>
       </div>
-
-      {/* 「저격 선수 리스트」 도움말 — /guides/mileage-sniping 로 승격됐다(2026-09-13).
-          total(재료 종수)은 가이드 원본 텍스트에는 없는 실시간 값이라 여기 카운터에만 남긴다. */}
-      <GuideModal
-        open={helpOpen}
-        guide={GUIDES_BY_SLUG["mileage-sniping"]}
-        onClose={() => setHelpOpen(false)}
-      />
     </div>
   );
 };

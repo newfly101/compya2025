@@ -1,0 +1,60 @@
+// global/ui/guideAccordion/GuideAccordion.module.scss
+// mileage 의 "처음이신가요? 읽어보세요" 아코디언(domains/mileage/mobile/MileageScreen.module.scss
+// .note) 과 같은 시각 언어 — 화살표 회전 트릭, 카드형 박스. 기본 상태는 닫힘.
+.accordion {
+  margin: 0 0 $space-4;
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  background: var(--color-bg-card);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: $space-3 $space-4;
+  list-style: none;
+  color: var(--color-text-secondary);
+  @include text-body;
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+
+  &::-webkit-details-marker {
+    display: none;
+  }
+
+  &::after {
+    content: "";
+    flex: none;
+    width: 6px;
+    height: 6px;
+    margin-left: auto;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 0.15s ease;
+  }
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
+
+.accordion[open] .summary::after {
+  transform: rotate(45deg);
+}
+
+.icon {
+  flex: none;
+  font-size: 15px;
+}
+
+.label {
+  @include hangul-safe;
+}
+
+.body {
+  padding: 0 $space-4 $space-4;
+  border-top: 1px solid var(--color-border);
+}

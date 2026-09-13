@@ -7,6 +7,8 @@ import { useNoticeList } from "@/domains/notices/mobile/hooks/useNoticeList.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
+import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
 import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 import styles from "./NoticeScreen.module.scss";
@@ -34,6 +36,8 @@ const NoticeScreen = () => {
 
   return (
     <div className={styles.screen}>
+      <GuideAccordion guide={GUIDES_BY_SLUG["notice-guide"]} />
+
       {featuredNotice && (
         <SectionBlock title="중요 공지">
           <NoticeCard notice={featuredNotice} variant="pinned" />

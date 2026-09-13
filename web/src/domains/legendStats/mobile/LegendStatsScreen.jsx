@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ALL,
@@ -22,7 +22,7 @@ import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { useLegendStats } from "./hooks/useLegendStats";
 import { useHistoryBadge } from "./hooks/useHistoryBadge";
 import { useMileageBadge } from "./hooks/useMileageBadge";
-import GuideModal from "@/global/ui/guideModal/GuideModal.jsx";
+import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import "./legendStats.tokens.scss";
 import styles from "./LegendStatsScreen.module.scss";
@@ -50,15 +50,6 @@ const LegendStatsScreen = () => {
   const [dir, setDir] = useState(-1);
   const [openId, setOpenId] = useState(null);
   const [query, setQuery] = useState("");
-  // null | 'rating' | 'badge'
-  const [helpOpen, setHelpOpen] = useState(null);
-
-  useEffect(() => {
-    if (!helpOpen) return undefined;
-    const onKeyDown = (e) => e.key === "Escape" && setHelpOpen(null);
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [helpOpen]);
 
   const teams = useMemo(() => teamOptions(LEGENDS), [LEGENDS]);
   const positions = useMemo(() => posOptions(LEGENDS, type), [LEGENDS, type]);
@@ -270,6 +261,8 @@ const LegendStatsScreen = () => {
 
   return (
     <div className={styles.screen}>
+      <GuideAccordion guide={GUIDES_BY_SLUG["legend-stats-guide"]} />
+
       <div className={styles.filters}>
         <div className={styles.searchRow}>
 <svg
@@ -356,26 +349,6 @@ const LegendStatsScreen = () => {
               <b>{`${rows.length}명`}</b>
               {unrated > 0 && ` · 평점 미정 ${unrated}`}
             </span>
-            <button
-              type="button"
-              className={styles.badgeHelp}
-              onClick={() => setHelpOpen("rating")}
-            >
-              <span className={styles.badgeHelpMark} aria-hidden="true">
-                ?
-              </span>
-              평점 도움말
-            </button>
-            <button
-              type="button"
-              className={styles.badgeHelp}
-              onClick={() => setHelpOpen("badge")}
-            >
-              <span className={styles.badgeHelpMark} aria-hidden="true">
-                ?
-              </span>
-              재료카드 도움말
-            </button>
           </span>
           <span>{`${sortLabel(sort)} ${dir < 0 ? "높은순" : "낮은순"}`}</span>
         </div>
@@ -440,14 +413,6 @@ const LegendStatsScreen = () => {
       {loaded && rows.length === 0 && (
         <StateBox status="empty" message="조건에 맞는 레전드가 없습니다. 필터를 하나 풀어보세요." compact />
       )}
-
-      {/* 평점 출처(원작자 표기)·재료카드 배지 안내 — 둘 다 /guides/legend-stats-guide 로 승격됐다.
-          두 버튼이 같은 가이드 안의 서로 다른 섹션을 다루므로 하나의 모달로 합쳤다(2026-09-13). */}
-      <GuideModal
-        open={!!helpOpen}
-        guide={GUIDES_BY_SLUG["legend-stats-guide"]}
-        onClose={() => setHelpOpen(null)}
-      />
 
       <div className={styles.foot}>
         OVR은 스탯 평균으로 그때그때 계산합니다. 평점이 비어 있는 6명은 표 아래에 모아 두었습니다.

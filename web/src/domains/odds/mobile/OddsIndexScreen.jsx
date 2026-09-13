@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { DEFAULT_ODDS_DOC } from "@/data/odds";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
+import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import styles from "./OddsIndexScreen.module.scss";
 
 const OddsIndexScreen = () => {
@@ -12,6 +14,7 @@ const OddsIndexScreen = () => {
   if (!doc) {
     return (
       <div className={styles.screen}>
+        <GuideAccordion guide={GUIDES_BY_SLUG["probability-guide"]} />
         <p className={styles.emptyText}>공시 문서를 불러올 수 없습니다.</p>
       </div>
     );
@@ -22,6 +25,7 @@ const OddsIndexScreen = () => {
   if (sections.length === 0) {
     return (
       <div className={styles.screen}>
+        <GuideAccordion guide={GUIDES_BY_SLUG["probability-guide"]} />
         <p className={styles.emptyText}>등록된 확률 공시 항목이 없습니다.</p>
       </div>
     );
@@ -29,6 +33,8 @@ const OddsIndexScreen = () => {
 
   return (
     <div className={styles.screen}>
+      <GuideAccordion guide={GUIDES_BY_SLUG["probability-guide"]} />
+
       {intro && (
         <div className={styles.intro}>
           {intro.heading && (

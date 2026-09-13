@@ -4,6 +4,8 @@ import CouponListVertical from "@/domains/coupons/mobile/containers/public/Coupo
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import { useCouponList } from "@/domains/coupons/mobile/hooks/useCouponList.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
+import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
 import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 
@@ -23,6 +25,8 @@ const CouponScreen = () => {
 
   return (
       <>
+        <GuideAccordion guide={GUIDES_BY_SLUG["coupon-guide"]} />
+
         <SectionBlock title="최신 쿠폰">
           {renderSection(activeCoupon, false, "받을 수 있는 쿠폰이 없습니다", state)}
         </SectionBlock>

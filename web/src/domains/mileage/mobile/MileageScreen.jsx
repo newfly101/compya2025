@@ -15,6 +15,8 @@ import { useMileage } from "./hooks/useMileage";
 import { useMileageRowHeight } from "./hooks/useMileageRowHeight";
 import { useMileageTargetList } from "./hooks/useMileageTargetList";
 import TargetListTab from "./components/targetListTab/TargetListTab.jsx";
+import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import "./mileage.tokens.scss";
 import styles from "./MileageScreen.module.scss";
 
@@ -156,6 +158,7 @@ const MileageScreen = () => {
   if (tab === "list") {
     return (
       <div className={styles.screen}>
+        <GuideAccordion guide={GUIDES_BY_SLUG["mileage-sniping"]} />
         {tabBar}
         <TargetListTab
           rows={targetList.rows}
@@ -282,6 +285,7 @@ const MileageScreen = () => {
 
   return (
     <div className={styles.screen}>
+      <GuideAccordion guide={GUIDES_BY_SLUG["mileage-sniping"]} />
       {tabBar}
 
       {/* 리스트 탭에서 넘어온 경우에만 노출(핸드오프 §2) */}

@@ -25,7 +25,7 @@ import {
   buildTable,
 } from "@/domains/players/config/statsTable.js";
 import { PITCH_LABELS, PITCH_SHORT } from "@/domains/players/store/statsAdapter.js";
-import GuideModal from "@/global/ui/guideModal/GuideModal.jsx";
+import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import PlayerCard from "./components/playerCard/PlayerCard";
 import FilterSheet from "./components/filterSheet/FilterSheet";
@@ -55,7 +55,6 @@ const toggle = (arr, value) => (arr.includes(value) ? arr.filter((v) => v !== va
 const PlayerEncyclopediaScreen = () => {
   useDomainTopBar("선수 백과사전");
 
-  const [help, setHelp] = useState(false);
   const [tableHelp, setTableHelp] = useState(false);
 
   // 게이트 없이 진입 즉시 로드 — 비로그인·크롤러 모두 리스트를 바로 본다.
@@ -256,12 +255,6 @@ const PlayerEncyclopediaScreen = () => {
     setSortDir(1);
   }
 
-  const handleOpenHelp = useCallback(() => {
-    setHelp(true);
-    setFilterOpen(false);
-    setOpenL(null);
-  }, []);
-
   const handleOpenTableHelp = useCallback(() => {
     setTableHelp(true);
     setFilterOpen(false);
@@ -301,6 +294,8 @@ const PlayerEncyclopediaScreen = () => {
 
   return (
     <div className={styles.screen}>
+      <GuideAccordion guide={GUIDES_BY_SLUG["player-encyclopedia"]} />
+
       <div className={styles.searchFilterRow}>
         <div className={styles.searchBox}>
           <span className={styles.searchIcon} aria-hidden="true">
@@ -437,9 +432,6 @@ const PlayerEncyclopediaScreen = () => {
               {isPitch ? "구종 도움말" : "스탯 도움말"}
             </button>
           )}
-          <button type="button" className={styles.helpPill} onClick={handleOpenHelp}>
-            <span className={styles.helpMark}>?</span>도움말
-          </button>
           <span>
             <b>{sortedPlayers.length}</b>장
           </span>
@@ -570,10 +562,6 @@ const PlayerEncyclopediaScreen = () => {
         extra={tableHelpExtra}
         onClose={() => setTableHelp(false)}
       />
-
-      {/* 최초 안내문 — 더 이상 진입 관문이 아니라 상단 「도움말」 버튼으로 여는 가이드 모달.
-          가이드 원본은 /guides/player-encyclopedia 와 완전히 같은 콘텐츠(GuideModal 공용 렌더러). */}
-      <GuideModal open={help} guide={GUIDES_BY_SLUG["player-encyclopedia"]} onClose={() => setHelp(false)} />
     </div>
   );
 };

@@ -24,6 +24,8 @@ import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { useHistoryLegend } from "./hooks/useHistoryLegend";
+import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import "./historyLegend.tokens.scss";
 import styles from "./HistoryLegendScreen.module.scss";
 
@@ -372,6 +374,8 @@ const HistoryLegendScreen = () => {
 
   return (
     <div className={styles.screen}>
+      <GuideAccordion guide={GUIDES_BY_SLUG["history-legend-guide"]} />
+
       <div className={styles.filters}>
         <div className={styles.searchRow}>
 <svg

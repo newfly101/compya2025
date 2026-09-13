@@ -4,6 +4,8 @@ import EventListVertical from "@/domains/events/mobile/containers/public/EventLi
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import { useEventList } from "@/domains/events/mobile/hooks/useEventList.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
+import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
 import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 
@@ -23,6 +25,8 @@ const EventScreen = () => {
 
   return (
     <>
+      <GuideAccordion guide={GUIDES_BY_SLUG["event-guide"]} />
+
       <SectionBlock title="진행중 이벤트">
         {renderSection(activeEvents, false, "진행 중인 이벤트가 없습니다", state)}
       </SectionBlock>
