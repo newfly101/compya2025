@@ -1,6 +1,7 @@
 # scripts/ 정리 계획
 
-> 2026-09-13 실행 완료 — .py 9개 전량 삭제 (보관 방침 철회, 데이터 생성은 별도 프로젝트로 분리). scripts/ 에는 배포 스크립트 2개만 남음.
+> 2026-09-13 실행 완료 — .py 9개 전량 삭제 (보관 방침 철회, 데이터 생성은 별도 프로젝트로 분리).
+> 이어서 배포 스크립트 2개도 GitHub Actions 로 옮기고 삭제 — **scripts/ 폴더 자체가 없어졌다.**
 
 ## 판정표
 
@@ -10,8 +11,8 @@
 | compare_excel_db_player_names.py | 엑셀↔카드 시드 이름 대조(구단·연도·포지션 열쇠) | test-docs 엑셀(비커밋, 로컬엔 존재) + 커밋된 INSERT 시드 | 해당없음(리포트만 출력) | docs/domain/_roadmap/prd/player-name-stat-sheet-crosscheck.md | DELETE (별도 프로젝트 분리) |
 | convert_skill_seed.py | 구형 스킬 시드(숫자 id)→data_player_skill 계열(UUID) 변환 | 구형 시드 SQL(레포에 없음, CLI 인자로 받음) | sql/V3_insert/data_player_skill/data_player_skill_INSERT.sql | 해당 SQL 파일 헤더 주석 | DELETE (별도 프로젝트 분리) |
 | crosscheck_final_sheet.py | 노말 스탯 엑셀↔운영DB 덤프 이름·포지션 대조(개발 중 1회 점검) | 세션별 임시 scratchpad 절대경로(prod2.tsv, 재사용 불가 구조) | 없음(stdout 출력만) | 없음 | DELETE |
-| deploy-be.sh | 백엔드 빌드→원격 백업→jar 전송→서비스 재시작 | 없음(빌드 산출물) | 해당없음 | 운영 배포 시 수동 실행 | KEEP |
-| deploy-fe.sh | FE 빌드→S3 동기화→CloudFront 무효화 | 없음(빌드 산출물) | 해당없음 | 운영 배포 시 수동 실행 | KEEP |
+| deploy-be.sh | 백엔드 빌드→원격 백업→jar 전송→서비스 재시작 | 없음(빌드 산출물) | 해당없음 | 운영 배포 시 수동 실행 | 이관 (.github/workflows/deploy-be.yml) |
+| deploy-fe.sh | FE 빌드→S3 동기화→CloudFront 무효화 | 없음(빌드 산출물) | 해당없음 | 운영 배포 시 수동 실행 | 이관 (.github/workflows/deploy-fe.yml) |
 | gen_card_stat_sql.py | 노말 카드 스탯+구종등급 적재 SQL 생성 | test-docs 엑셀 + 세션별 임시 scratchpad(prod2.tsv) | sql/V3_insert/data_player_card/data_player_card_stat_INSERT.sql | 해당 SQL 파일 헤더 주석 | DELETE (별도 프로젝트 분리) |
 | gen_material_position_update.py | 재료 시드 포지션 UPDATE SQL 생성 | test-docs 엑셀 + 커밋된 legend INSERT 시드 | sql/V2_insert/updateMaterialPosition.sql | 해당 SQL 파일 헤더 주석 | DELETE (별도 프로젝트 분리) |
 | gen_player_card_seed.py | data_player_card 1단계(NORMAL) 시드 생성 | test-docs 엑셀(포지션 조사 최종본) | sql/V3_insert/data_player_card/data_player_card_INSERT.sql | 해당 SQL 파일 헤더 주석 | DELETE (별도 프로젝트 분리) |
@@ -20,8 +21,12 @@
 
 ## 실행 계획
 
-### KEEP (그대로)
-- deploy-be.sh, deploy-fe.sh — 운영 배포에 계속 쓰임. CI 연동은 없고 수동 실행 전제.
+### 배포 스크립트 — GitHub Actions 로 이관 후 삭제
+- deploy-be.sh → `.github/workflows/deploy-be.yml` (AWS SSM 경유, 준비사항은 `be-deploy-setup.md`)
+- deploy-fe.sh → `.github/workflows/deploy-fe.yml` (프리렌더 검증은 `web/scripts/verify-prerender.mjs` 로 단일화)
+
+⚠️ 워크플로우 트리거가 `master` 인데 master 는 2026-04-03 상태로 405 커밋 뒤처져 있다.
+**master 머지 전까지는 자동·수동 배포 모두 동작하지 않는다** — 머지 후 Actions 탭에서 한 번 실행해 확인할 것.
 
 ### DELETE (전량)
 데이터 1회 적재/대조용 스크립트 9개는 전부 삭제한다. 애초 산출물이 이미 `sql/` 에 커밋되어 있어 스크립트 자체는 재실행 대상이 아니었고, 데이터 생성 작업은 별도 프로젝트로 분리하기로 확정했다 — 이 저장소에는 `.py` 를 더 두지 않는다.

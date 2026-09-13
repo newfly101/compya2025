@@ -39,8 +39,13 @@ jobs:
         working-directory: web
         run: npm run build:prerender
 
-      - name: 빌드 산출물 확인
-        run: test -f web/dist/index.html
+      - name: prerender 스냅샷 검증
+        # ⚠️ AdSense 반려 사유 재발 방지 가드. build:prerender 가 중간에 실패해도
+        #   vite build 가 만든 루트 index.html(SPA 셸)은 남으므로, 이 검증 없이는
+        #   빈 셸이 그대로 S3 에 올라간다. 실패 시 S3 동기화 전에 여기서 막는다.
+        #   라우트 목록은 web/scripts/prerender.mjs 하나에서만 관리한다(중복 하드코딩 금지).
+        working-directory: web
+        run: node scripts/verify-prerender.mjs
 
       - name: AWS 자격증명
         uses: aws-actions/configure-aws-credentials@v4
@@ -59,7 +64,56 @@ jobs:
             --exclude "portfolio/*"
 
       - name: CloudFront 무효화
+        id: invalidate
         run: |
-          aws cloudfront create-invalidation \
+          INVALIDATION_ID=$(aws cloudfront create-invalidation \
             --distribution-id "${DIST_ID}" \
-            --paths "/*"
+            --paths "/*" \
+            --query 'Invalidation.Id' \
+            --output text)
+          echo "invalidation_id=${INVALIDATION_ID}" >> "$GITHUB_OUTPUT"
+          echo "무효화 ID: ${INVALIDATION_ID}"
+
+      # 로컬 scripts/deploy-fe.sh 는 무효화 직후 바로 검증해서 구 캐시 때문에 헛경고가
+      # 날 수 있는 구조다(주석 참고). CI 는 시간 여유가 있으니 전파 완료를 기다린 뒤
+      # 검증해서 확실하게 판정한다.
+      - name: CloudFront 무효화 전파 대기
+        timeout-minutes: 10
+        run: |
+          aws cloudfront wait invalidation-completed \
+            --distribution-id "${DIST_ID}" \
+            --id "${{ steps.invalidate.outputs.invalidation_id }}"
+
+      - name: 배포 후 라이브 검증
+        # 실패해도 배포 자체는 이미 나갔다 — 사용자가 결과가 기대와 다름을 즉시 알아야
+        # 하므로 job 을 실패 처리한다(아래 안내 메시지 참고).
+        run: |
+          ADS_CONTENT_TYPE=$(curl -sI "https://compyafun.com/ads.txt" 2>/dev/null | tr -d '\r' | grep -i '^content-type:' | head -1 || true)
+          HOME_HTML=$(curl -s "https://compyafun.com/" 2>/dev/null || true)
+
+          FAILED=0
+
+          if [[ "$ADS_CONTENT_TYPE" == *text/plain* ]]; then
+            echo "✓ ads.txt content-type: text/plain"
+          else
+            echo "✖ ads.txt content-type 이 text/plain 이 아니다: ${ADS_CONTENT_TYPE:-<응답 없음>}"
+            FAILED=1
+          fi
+
+          # "최신 쿠폰" 은 HomeScreen 이 렌더하는 실제 텍스트 — index.html 원본(SPA 셸)에는
+          # 없고 prerender 스냅샷에만 구워진다. 이게 안 보이면 루트가 빈 SPA 셸로 나간 것이다.
+          if [[ "$HOME_HTML" == *"최신 쿠폰"* ]]; then
+            echo "✓ 홈 HTML 에 prerender 실텍스트 확인 (\"최신 쿠폰\")"
+          else
+            echo "✖ 홈 HTML 에서 prerender 텍스트를 못 찾음 — 빈 SPA 셸로 나갔을 수 있다"
+            FAILED=1
+          fi
+
+          if [[ "$FAILED" -eq 1 ]]; then
+            echo ""
+            echo "▶ 배포는 완료됐으나 결과가 기대와 다르다. CloudFront 무효화는 이미 끝난 뒤라"
+            echo "  캐시 문제는 아니다. 아래를 직접 열어 확인할 것:"
+            echo "    https://compyafun.com/ads.txt"
+            echo "    https://compyafun.com/"
+            exit 1
+          fi

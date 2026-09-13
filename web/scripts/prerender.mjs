@@ -18,7 +18,7 @@
 
 import { preview } from "vite";
 import puppeteer from "puppeteer";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import path from "node:path";
 import fs from "node:fs";
 
@@ -26,7 +26,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const webRoot = path.resolve(__dirname, "..");
 const distDir = path.join(webRoot, "dist");
 
-const STATIC_ROUTES = [
+// verify-prerender.mjs 가 이 목록을 그대로 import 해서 쓴다 — 라우트 목록을 다른 곳에
+// 또 하드코딩하지 않기 위함(export 추가 외 로직 변경 없음).
+export const STATIC_ROUTES = [
   "/",
   "/coupons",
   "/events",
@@ -88,7 +90,8 @@ const DATA_ROUTES = {
   "/skills": "[aria-expanded]",
 };
 
-function routeToOutputFile(route) {
+// verify-prerender.mjs 가 그대로 import 해서 라우트 → 산출 파일 경로 매핑을 재사용한다.
+export function routeToOutputFile(route) {
   if (route === "/") return path.join(distDir, "index.html");
   const segments = route.split("/").filter(Boolean);
   return path.join(distDir, ...segments, "index.html");
@@ -237,7 +240,14 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error("[prerender] 치명적 오류", err);
-  process.exitCode = 1;
-});
+// verify-prerender.mjs 가 STATIC_ROUTES/routeToOutputFile 만 재사용하려고 이 파일을
+// import 할 때 puppeteer 전체 렌더 플로우가 부수효과로 다시 실행되면 안 된다 — 직접
+// 실행(`node scripts/prerender.mjs`)했을 때만 main() 을 돌린다. 기존 직접 실행 동작은
+// 그대로다.
+const isMainModule = import.meta.url === pathToFileURL(process.argv[1]).href;
+if (isMainModule) {
+  main().catch((err) => {
+    console.error("[prerender] 치명적 오류", err);
+    process.exitCode = 1;
+  });
+}
