@@ -12,10 +12,12 @@
 --   주/부를 합쳐 세면 저격 대상이 119건에서 111건이 된다(빠짐 15 · 추가 7).
 --
 -- 되돌리기
---   ALTER TABLE data_player_card DROP COLUMN sub_position_code;
---   컬럼째 지우면 원래대로 돌아간다. 다른 데이터는 건드리지 않는다.
+--   UPDATE data_player_card SET sub_position_code = NULL WHERE card_type = 'NORMAL';
+--   (컬럼 자체는 sql/V3/CREATE_03_data_player_card.sql 소관 — 2026-09-13 부로 스키마에
+--    바로 반영했다. 이 파일은 값만 채우는 데이터 UPDATE 다. 컬럼째 지우려면
+--    ALTER TABLE data_player_card DROP COLUMN sub_position_code; 를 직접 실행할 것)
 --
--- ⚠️ 컬럼 추가는 되돌릴 수 있지만, 운영 DB 다. 0) 조회로 현황을 먼저 볼 것.
+-- ⚠️ 운영 DB 다. 0) 조회로 현황을 먼저 볼 것.
 -- 이 스크립트는 scripts/gen_sub_position_sql.py 가 만든다. 손으로 고치지 마라.
 -- =====================================================================
 
@@ -31,16 +33,10 @@ FROM data_player_card
 WHERE card_type = 'NORMAL';
 
 
--- 1) 부포지션 칸을 만든다 ------------------------------------------------
---    ⚠️ 유니크(team_code, season_year, position_code, player_name, card_type)에는
---       넣지 않는다. 넣으면 같은 선수가 부포지션만 달라도 다른 카드로 취급된다.
-ALTER TABLE data_player_card
-    ADD COLUMN IF NOT EXISTS sub_position_code VARCHAR(10) NULL
-        COMMENT '부포지션. 겸업 선수만 채운다. 주포지션은 position_code'
-        AFTER position_code;
-
-
--- 2) 값을 채운다 (642건) ---------------------------------------------
+-- 1) 값을 채운다 (642건) ---------------------------------------------
+--    sub_position_code 컬럼은 sql/V3/CREATE_03_data_player_card.sql 에 이미 있다
+--    (2026-09-13부로 스키마에 반영 — 이 파일에서 컬럼을 만들지 않는다).
+--    구단·연도·이름·주포지션까지 짚는다. 이름만 보고 채우면 동명이인이 섞인다.
 --    구단·연도·이름·주포지션까지 짚는다. 이름만 보고 채우면 동명이인이 섞인다.
 UPDATE data_player_card SET sub_position_code = '3B' WHERE team_code = 'MBC' AND season_year = 1982 AND player_name = '김용달' AND position_code = '1B' AND card_type = 'NORMAL';
 UPDATE data_player_card SET sub_position_code = 'CF' WHERE team_code = 'OB' AND season_year = 1982 AND player_name = '김유동' AND position_code = 'DH' AND card_type = 'NORMAL';
@@ -686,7 +682,7 @@ UPDATE data_player_card SET sub_position_code = 'LF' WHERE team_code = 'HAN' AND
 UPDATE data_player_card SET sub_position_code = '2B' WHERE team_code = 'HAN' AND season_year = 2025 AND player_name = '하주석' AND position_code = 'SS' AND card_type = 'NORMAL';
 
 
--- 3) 실행 후 검증 --------------------------------------------------------
+-- 2) 실행 후 검증 --------------------------------------------------------
 --    채워진 행이 642건이어야 한다. 투수는 0이어야 한다.
 SELECT COUNT(*) AS 부포지션_채워짐,
        SUM(player_role = 'PITCHER') AS 투수인데_채워짐

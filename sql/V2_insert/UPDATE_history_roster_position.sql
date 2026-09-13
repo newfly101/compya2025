@@ -7,12 +7,12 @@
 --   2순위 (이름,연도)     — 구단 불명 라운드(KBO 용병/FA 등)이거나 1순위 0건일 때
 --   3순위 접미(B/S/C) 정규화 — 1·2순위 모두 0건일 때, 양쪽 이름의 끝 접미를 떼고 재시도
 -- id(UUID) 기준 UPDATE — 이름 WHERE 절은 같은 값을 가진 다른 행까지 건드릴 위험이 있어
--- 피했다 (updateMaterialPosition.sql 의 id-IN 관례를 그대로 따름).
+-- 피했다 (crud_updateMaterialPosition.sql 의 id-IN 관례를 그대로 따름).
 --
 -- 로스터 전체 1750행 중 확정 1744건
 -- (1순위 구단키 1612 / 2순위 구단폴백 123 / 3순위 접미정규화 9) 매칭.
 -- 모호 1건 / 미매칭 5건 — 이 UPDATE 대상에서 제외, 하단 주석 목록 참고.
--- 상세: sql/updateData/updateHistoryRosterPosition.report.md
+-- 상세: sql/V2_insert/crud_updateHistoryRosterPosition.report.md
 -- 재생성: python scripts/gen_history_roster_position.py
 
 SET NAMES utf8mb4;

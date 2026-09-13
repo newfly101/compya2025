@@ -26,7 +26,7 @@ data_history_round.round_label('83 삼미' 등)을 파싱해 역추적했다.
 
 roster 표기와 엑셀 표기가 접미(B/S/C) 유무로 서로 달랐던 건이다. 어느 쪽이 맞는
 표기인지는 사람이 판단할 사안이라 이번 작업에서 이름 보정 SQL 은 만들지 않았다
-(선례: sql/updateData/fixMaterialPlayerNameSuffix.sql, 참고용).
+(선례: sql/V2_insert/crud_fixMaterialPlayerNameSuffix.sql, 참고용).
 
 | id | roster 표기 | 엑셀 표기 | 연도 | 적용 포지션 | 사유 |
 |---|---|---|---|---|---|

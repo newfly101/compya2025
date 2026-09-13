@@ -124,13 +124,11 @@ CREATE TABLE fun_teams
 --             ON DELETE CASCADE
 -- );
 
-CREATE TABLE fun_quiz
-(
-    id         BIGINT       AUTO_INCREMENT PRIMARY KEY,
-    round      INT          NOT NULL COMMENT '퀴즈 회차 (예: 877)',
-    image_url  VARCHAR(500) NOT NULL COMMENT '정답 이미지 (S3)',
-    is_visible BOOLEAN      NOT NULL DEFAULT true,
-    created_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY uq_round (round)
-);
+-- ─────────────────────────────────────────────────────────────────────
+-- fun_quiz 는 여기 없다 — sql/V3/CREATE_05_fun.sql 이 최종 정의를 갖는다.
+--
+-- 원래 이 파일에도 같은 테이블이 있었는데, V3 쪽이 DROP & CREATE 로 다시
+-- 만드는 구조라 두 곳에 있으면 V2 → V3 순서로 실행할 때 방금 만든 것을
+-- 지우고 다시 만든다. 데이터가 든 상태에서 다시 돌리면 그게 날아간다.
+-- (2026-09-13 정리)
+-- ─────────────────────────────────────────────────────────────────────

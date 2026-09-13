@@ -1,3 +1,7 @@
+-- ⚠️ site_refresh_tokens / site_user_event / site_user_event_daily 는 여기 없다 — V3 쪽
+-- (sql/V3/CREATE_06*, CREATE_07*) 에 정의되어 있다. 이 파일에 중복 생성하지 말 것.
+-- (2026-09-13 운영 DB 실측 대조 완료 — 나머지 테이블은 덤프와 구조 일치 확인)
+
 CREATE TABLE site_coupons
 (
     id          BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -35,11 +39,12 @@ CREATE TABLE site_notices
             (source = 'EXTERNAL' AND content IS NULL AND external_url IS NOT NULL)
             ),
 
-    INDEX idx_site_notices_visible_pinned_created (is_visible, is_pinned, created_at DESC),
+    INDEX idx_site_notices_visible_pinned_created (is_visible, is_pinned, created_at), -- 운영 DB 실측: DESC 미적용
     INDEX idx_site_notices_source (source),
     INDEX idx_site_notices_published_at (published_at)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_general_ci -- 운영 DB 실측: 이 테이블만 general_ci (다른 site_* 는 unicode_ci)
     COMMENT ='사이트 공지사항 통합 관리';
 
 CREATE TABLE site_events
@@ -64,30 +69,58 @@ CREATE TABLE site_events
 ) COMMENT = '사이트 이벤트 정보';
 
 
+-- ⚠️ 2026-09-13 — 운영 DB 실측 덤프 기준으로 갱신했다 (유저 테이블 개편 3단계까지 전부 반영된 최종 형태).
+-- oauth_provider 등 6개 컬럼은 site_user_oauth_accounts 로 이관 후 DROP 됐다 — 더는 이 테이블에 없다.
+-- 이관 이력은 sql/V2/MIGRATE_user_restructure.sql (USER_RESTRUCTURE_01~03 병합) 참고.
 CREATE TABLE site_users
 (
     id                      BIGINT AUTO_INCREMENT PRIMARY KEY   COMMENT '사용자 고유 ID',
-
-    -- OAuth 정보
-    oauth_provider          VARCHAR(20)  NOT NULL               COMMENT 'OAuth 제공자 (NAVER)',
-    oauth_provider_id       VARCHAR(100) NOT NULL               COMMENT 'OAuth 제공자 고유 ID',
-    oauth_nickname          VARCHAR(20)                         COMMENT 'OAuth 제공자 닉네임',
-    oauth_email             VARCHAR(255)                        COMMENT 'OAuth 제공자 이메일',
-    oauth_profile_image     VARCHAR(500)                        COMMENT 'OAuth 제공자 프로필 이미지 URL',
-    oauth_age_range         VARCHAR(10)                         COMMENT 'OAuth 제공자 연령대 (예: 20~29)',
+    public_id               CHAR(36)     NOT NULL               COMMENT '밖으로 노출되는 사용자 식별자 (UUID v4). id(내부 PK)는 노출하지 않는다',
 
     -- 서비스 자체 정보
     service_nickname        VARCHAR(20)                         COMMENT '서비스 자체 닉네임 (미설정 시 NULL)',
+    profile_image           VARCHAR(500)                        COMMENT '사용자가 마이페이지에서 직접 올린 프로필 이미지 URL. oauth_profile_image(site_user_oauth_accounts)와 별개. NULL이면 미설정',
+    email                   VARCHAR(255)                        COMMENT '서비스 자체 이메일 (관리자 표시용, OAuth 이메일과 분리)',
+
     user_role               ENUM('ADMIN', 'USER')      NOT NULL DEFAULT 'USER'   COMMENT '사용자 권한',
     user_status             ENUM('ACTIVE', 'BLOCKED', 'WITHDRAWN', 'SUSPENDED')
         NOT NULL DEFAULT 'ACTIVE' COMMENT '계정 상태 (ACTIVE: 정상, BLOCKED: 차단, WITHDRAWN: 탈퇴, SUSPENDED: 정지)',
+    withdrawn_at            DATETIME                            COMMENT '탈퇴 시각. updated_at 대용 금지(관리자가 권한만 바꿔도 updated_at 이 갱신되는 버그를 없앤다)',
 
-    created_at              DATETIME DEFAULT CURRENT_TIMESTAMP                  COMMENT '최초 가입일',
-    updated_at              DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
-    last_login_at           DATETIME DEFAULT CURRENT_TIMESTAMP                  COMMENT '마지막 로그인 시각',
+    created_at              DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP         COMMENT '최초 가입일',
+    updated_at              DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP         COMMENT '수정일',
+    last_login_at           DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP         COMMENT '마지막 로그인 시각',
 
-    UNIQUE KEY uk_oauth (oauth_provider, oauth_provider_id)     COMMENT 'OAuth 제공자 + 고유 ID 복합 유니크'
+    UNIQUE KEY uk_site_users_public_id (public_id)              COMMENT '밖으로 노출되는 사용자 식별자 (UUID v4)',
+    INDEX idx_user_email (email)
 ) COMMENT = '서비스 사용자 테이블';
+
+
+-- ── 원본: USER_RESTRUCTURE_02_CREATE_OAUTH_ACCOUNTS_TABLE.sql (2026-09-13 CREATE_ 로 이관) ──
+-- 로그인 수단을 여러 개 붙일 수 있게 구조는 열어두되(user_id 는 UNIQUE 로 묶지 않는다),
+-- 지금은 사람당 로그인 수단이 1개뿐이라 결과적으로 한 사람 = 한 행이다.
+-- 연결/해제 화면·API 는 아직 없다 (설계 문서: docs/domain/account/prd/user-table-restructure.md § 8).
+CREATE TABLE site_user_oauth_accounts
+(
+    id                      BIGINT AUTO_INCREMENT PRIMARY KEY  COMMENT '로그인 수단 고유 ID',
+    user_id                 BIGINT       NOT NULL              COMMENT 'site_users.id 참조. 여러 행이 같은 user_id 를 가질 수 있다',
+
+    oauth_provider          VARCHAR(20)  NOT NULL              COMMENT 'OAuth 제공자 (NAVER)',
+    oauth_provider_id       VARCHAR(100) NOT NULL              COMMENT 'OAuth 제공자 고유 ID',
+    oauth_nickname          VARCHAR(20)                        COMMENT 'OAuth 제공자 닉네임 (원본 스냅샷)',
+    oauth_email             VARCHAR(255)                       COMMENT 'OAuth 제공자 이메일 (원본 스냅샷)',
+    oauth_profile_image     VARCHAR(500)                       COMMENT 'OAuth 제공자 프로필 이미지 URL (원본 스냅샷)',
+    oauth_age_range         VARCHAR(10)                        COMMENT 'OAuth 제공자 연령대. 계속 수집(결정 유지) — 쓰는 화면은 없음',
+
+    created_at              DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '연결(가입) 시각',
+    updated_at              DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정일',
+
+    UNIQUE KEY uk_oauth_provider (oauth_provider, oauth_provider_id) COMMENT '같은 네이버 계정이 두 사람에 붙지 못하게',
+    KEY idx_oauth_user_id (user_id),
+    CONSTRAINT fk_oauth_accounts_user
+        FOREIGN KEY (user_id) REFERENCES site_users (id)
+            ON DELETE CASCADE
+) COMMENT = '로그인 수단(OAuth) 원본 — 한 사람이 여러 개 가질 수 있다';
 
 
 -- ============================================================
@@ -166,14 +199,14 @@ CREATE TABLE site_post
 
     CONSTRAINT fk_post_board FOREIGN KEY (board_id) REFERENCES site_board (id),
 
-    -- 목록 조회 기본 (cursor: created_at + id / 고정글 우선)
-    INDEX idx_post_list    (board_id, is_deleted, is_visible, is_pinned, created_at DESC, id DESC),
+    -- 목록 조회 기본 (cursor: created_at + id / 고정글 우선). 운영 DB 실측: DESC 미적용(ASC로 생성됨)
+    INDEX idx_post_list    (board_id, is_deleted, is_visible, is_pinned, created_at, id),
     -- 인기순 정렬 (좋아요 기준)
-    INDEX idx_post_popular (board_id, is_deleted, is_visible, like_count DESC, id DESC),
+    INDEX idx_post_popular (board_id, is_deleted, is_visible, like_count, id),
     -- 내 글 조회 (마이페이지)
-    INDEX idx_post_author  (author_type, author_id, created_at DESC, id DESC),
+    INDEX idx_post_author  (author_type, author_id, created_at, id),
     -- 관리자 신고 대시보드: 신고 많은 글 우선
-    INDEX idx_post_report  (report_count DESC, id DESC)
+    INDEX idx_post_report  (report_count, id)
 );
 
 
@@ -329,8 +362,8 @@ CREATE TABLE site_report
     -- 중복 신고 방지: 같은 유저가 같은 대상에 중복 신고 불가
     UNIQUE KEY uq_report_user_target (target_type, target_id, reporter_id),
 
-    -- 관리자 대시보드: 미처리 신고 최신순
-    INDEX idx_report_admin  (status, target_type, created_at DESC),
+    -- 관리자 대시보드: 미처리 신고 최신순 (운영 DB 실측: DESC 미적용)
+    INDEX idx_report_admin  (status, target_type, created_at),
     -- 특정 게시글/댓글의 신고 내역 전체 조회
-    INDEX idx_report_target (target_type, target_id, created_at DESC)
+    INDEX idx_report_target (target_type, target_id, created_at)
 );
