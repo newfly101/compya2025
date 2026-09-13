@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.statistics.repository.mapper.StatisticSupportClickMapper">
+
+    <!-- 로그인 유저의 후원(카카오페이 송금) 버튼 클릭 1건 기록 -->
+    <insert id="insert" parameterType="com.dawne.com2usbaseball.domain.statistics.entity.StatisticSupportClickEntity">
+        INSERT INTO statistic_support_click (user_id, target, created_at)
+        VALUES (#{userId}, #{target}, #{createdAt})
+    </insert>
+
+</mapper>

@@ -13,6 +13,7 @@
 | `CREATE_05_fun.sql` (구 `compyafun-v3_fun.sql`) | `fun_quiz`(5, `DROP TABLE IF EXISTS` 후 재생성) | 독립. `sql/V2/CREATE_03_TABLE_FUN.sql` 의 동명 `fun_quiz` 를 이 파일이 최종적으로 덮어씀 |
 | `CREATE_06_site_refresh_tokens.sql` (구 `CREATE_TABLE_REFRESH_TOKENS.sql`) | `site_refresh_tokens`(324, FK→`site_users`) | ⚠️ **V2 의존** — `sql/V2/CREATE_04_TABLE_SITE.sql` 의 `site_users` 가 먼저 있어야 함 |
 | `CREATE_07_site_user_event.sql` | `site_user_event`(2) · `site_user_event_daily`(0) | 독립 (user_id 는 FK 미설정, 앱 레벨 정합성) |
+| `CREATE_08_site_statistic_support_click.sql` | `statistic_support_click`(0, 신규) | 독립 — `site_users` 만 있으면 됨. FK 미설정(CREATE_07 관례) |
 
 ## 데이터 값 채우기 (스키마 아님 — 다른 폴더)
 
