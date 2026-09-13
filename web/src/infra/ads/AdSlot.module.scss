@@ -1,0 +1,20 @@
+.ins {
+  width: 100%;
+  margin: $space-4 0;
+}
+
+// 로컬 개발 확인용 — 실제 광고 대신 자리만 보여준다
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 90px;
+  margin: $space-4 0;
+  border: 1px dashed var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-muted);
+  @include text-caption;
+  text-align: center;
+}

@@ -18,6 +18,8 @@ import { useCouponList } from "@/domains/coupons/mobile/hooks/useCouponList.js";
 import EventListHorizontal from "@/domains/events/mobile/containers/public/EventListHorizontal.jsx";
 import { useEventList } from "@/domains/events/mobile/hooks/useEventList.js";
 import { requestLatestQuizAnswer } from "@/domains/quiz/store/public/thunks.js";
+import AdSlot from "@/infra/ads/AdSlot.jsx";
+import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 
 const HOME_PREVIEW_LIMIT = 3;
 
@@ -73,6 +75,9 @@ const HomeScreen = () => {
       >
         <CouponListHorizontal coupons={activeCoupon} />
       </ SectionBlock>
+
+      {/* ── 광고 슬롯 (쿠폰 섹션과 공지 섹션 사이) — 쿠폰이 1건 이상 렌더된 경우에만 ── */}
+      {activeCoupon.length > 0 && <AdSlot slot={AD_SLOTS.HOME} />}
 
       {/* ── 공지사항 ── */}
       <SectionBlock

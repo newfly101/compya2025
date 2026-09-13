@@ -7,6 +7,8 @@ import { useNoticeList } from "@/domains/notices/mobile/hooks/useNoticeList.js";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
+import AdSlot from "@/infra/ads/AdSlot.jsx";
+import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 import styles from "./NoticeScreen.module.scss";
 
 const NoticeScreen = () => {
@@ -28,6 +30,7 @@ const NoticeScreen = () => {
 
   // 정상 상태(로딩/오류/빈목록이 아님)일 때만 「더보기」를 보여준다.
   const showLoadMore = !loading && !error;
+  const hasContent = !loading && !error && (listedNotices.length > 0 || listedOfficials.length > 0);
 
   return (
     <div className={styles.screen}>
@@ -53,6 +56,9 @@ const NoticeScreen = () => {
           <LoadMoreButton remaining={remainingOfficials} onClick={showMoreOfficials} />
         )}
       </SectionBlock>
+
+      {/* 목록 하단 광고 — 데이터가 1건 이상 렌더된 경우에만 */}
+      {hasContent && <AdSlot slot={AD_SLOTS.NOTICES_LIST} />}
     </div>
   );
 };

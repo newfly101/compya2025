@@ -12,6 +12,10 @@ import {
   isGradeAvailableInList,
 } from "@/domains/playerSkills/config/skillsUtils.js";
 import SkillItem from "./components/skillItem/SkillItem.jsx";
+import GuideModal from "@/domains/guides/mobile/GuideModal.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
+import AdSlot from "@/infra/ads/AdSlot.jsx";
+import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 import "./playerSkills.tokens.scss";
 import styles from "./PlayerSkillScreen.module.scss";
 
@@ -26,6 +30,7 @@ const PlayerSkillScreen = () => {
   const [q, setQ] = useState("");
   const [grade, setGrade] = useState("S");
   const [open, setOpen] = useState(null);
+  const [gradeHelpOpen, setGradeHelpOpen] = useState(false);
 
   useSearchTracking(q);
 
@@ -148,12 +153,16 @@ const PlayerSkillScreen = () => {
             {`${list.length}개 · 표시 등급 `}
             <b>{grade}</b>
           </span>
-          <span className={styles.helpChip}>
+          <button
+            type="button"
+            className={styles.helpChip}
+            onClick={() => setGradeHelpOpen(true)}
+          >
             <span className={styles.helpMark} aria-hidden="true">
               ?
             </span>
             등급 도움말
-          </span>
+          </button>
           <span className={styles.metaSort}>티어 높은순</span>
         </div>
       </div>
@@ -185,6 +194,17 @@ const PlayerSkillScreen = () => {
           ))}
         </div>
       )}
+
+      {/* 목록 하단 광고 — 데이터가 1건 이상 렌더된 경우에만 */}
+      {!loading && !error && list.length > 0 && <AdSlot slot={AD_SLOTS.SKILLS_LIST} />}
+
+      {/* 등급 도움말 — 기존엔 클릭이 연결 안 된 칩이었다. 이번에 /guides/player-skills-guide 와
+          같은 콘텐츠를 여는 모달로 실제 동작하게 연결했다(2026-09-13). */}
+      <GuideModal
+        open={gradeHelpOpen}
+        guide={GUIDES_BY_SLUG["player-skills-guide"]}
+        onClose={() => setGradeHelpOpen(false)}
+      />
     </div>
   );
 };

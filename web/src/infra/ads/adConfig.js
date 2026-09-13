@@ -1,0 +1,12 @@
+// AdSense 수동 슬롯 ID 모음.
+// 승인 전에는 실제 슬롯 ID가 없다 — 여기 값들은 자리표시자다.
+// TODO(AdSense 승인 후): 아래 슬롯 ID를 AdSense 콘솔에서 발급받은 실제 값으로 교체한다.
+export const AD_CLIENT_ID = "ca-pub-8723423525807131";
+
+export const AD_SLOTS = {
+  HOME: "TODO_HOME_SLOT_ID",
+  COUPONS_LIST: "TODO_COUPONS_LIST_SLOT_ID",
+  EVENTS_LIST: "TODO_EVENTS_LIST_SLOT_ID",
+  NOTICES_LIST: "TODO_NOTICES_LIST_SLOT_ID",
+  SKILLS_LIST: "TODO_SKILLS_LIST_SLOT_ID",
+};
