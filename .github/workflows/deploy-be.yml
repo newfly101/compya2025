@@ -1,14 +1,18 @@
 name: Deploy BE
 
+# ⚠️ 자동 배포 비활성 (2026-09-13) — 사전 준비(비공개 아티팩트 버킷 + Secrets +
+#   EC2 SSM 권한, docs/global-guide/develop/be-deploy-setup.md)가 끝나기 전까지
+#   BE 는 수동 배포로 운영한다. 준비가 끝나면 아래 push 트리거 주석을 해제한다.
+# on:
+#   push:
+#     branches: [master]
+#     paths:
+#       - 'src/**'
+#       - 'build.gradle'
+#       - 'settings.gradle'
+#       - 'gradle/**'
+#       - '.github/workflows/deploy-be.yml'
 on:
-  push:
-    branches: [master]
-    paths:
-      - 'src/**'
-      - 'build.gradle'
-      - 'settings.gradle'
-      - 'gradle/**'
-      - '.github/workflows/deploy-be.yml'
   workflow_dispatch:
 
 concurrency:
