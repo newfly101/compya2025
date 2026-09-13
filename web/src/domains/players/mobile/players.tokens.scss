@@ -25,4 +25,10 @@
   --color-pe-grade-s: #ff7b8a;
   --color-pe-grade-b: #a855f7;
   --color-pe-grade-c: #3b82f6;
+
+  // 리스트형 표 — legendStats 표(LegendStatsScreen.module.scss)와 모양만 맞춘다(구조는 다름).
+  // legendStats.tokens.scss --color-ls-head-bg 와 같은 값 — 표 머리행 배경 통일.
+  --color-pe-table-head-bg: #15121c;
+  // legendStats .row:hover 의 인라인 값과 같은 값 — 행 hover 통일.
+  --color-pe-table-row-hover: rgba(255, 255, 255, 0.025);
 }

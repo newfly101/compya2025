@@ -23,10 +23,12 @@ import {
   sortListRows,
   buildTable,
 } from "@/domains/players/config/statsTable.js";
+import { PITCH_LABELS, PITCH_SHORT } from "@/domains/players/store/statsAdapter.js";
 import GuideView from "./components/guideView/GuideView";
 import PlayerCard from "./components/playerCard/PlayerCard";
 import FilterSheet from "./components/filterSheet/FilterSheet";
 import StatsTable from "./components/statsTable/StatsTable";
+import TableHelpModal from "./components/tableHelpModal/TableHelpModal";
 import "./players.tokens.scss";
 import styles from "./PlayerEncyclopediaScreen.module.scss";
 
@@ -53,6 +55,7 @@ const PlayerEncyclopediaScreen = () => {
 
   const [entered, setEntered] = useState(false);
   const [help, setHelp] = useState(false);
+  const [tableHelp, setTableHelp] = useState(false);
 
   const { items: PLAYERS, error, loaded, retry } = usePlayerCards(entered);
 
@@ -185,7 +188,8 @@ const PlayerEncyclopediaScreen = () => {
         setSortDir((d) => -d);
       } else {
         setSortKey(key);
-        setSortDir(/^(stat|pitch):/.test(key) ? -1 : 1); // README: stat/pitch 키는 첫 클릭이 내림차순
+        // README: stat/pitch 키는 첫 클릭이 내림차순 — "OVR" 도 같은 지표 계열이라 동일하게 맞춘다.
+        setSortDir(/^(stat|pitch):/.test(key) || key === "ovr" ? -1 : 1);
       }
     },
     [sortKey],
@@ -196,14 +200,38 @@ const PlayerEncyclopediaScreen = () => {
       buildTable({
         rows: sortedListRows,
         isPitch,
-        showTeamYear: wide,
         statLabels,
         sortKey,
         sortDir,
         onSort: handleSort,
       }),
-    [sortedListRows, isPitch, wide, statLabels, sortKey, sortDir, handleSort],
+    [sortedListRows, isPitch, statLabels, sortKey, sortDir, handleSort],
   );
+
+  // 정렬 해제 배지 — "보이지 않는 값으로 정렬 중"인 상태(능력치·OVR 열)일 때
+  // 두 표(스탯/구종) 모두, 타자·투수 탭 모두에서 자리를 잡는다. 이름/구단/연도/포지션처럼
+  // 눈에 보이는 열 정렬은 굳이 배지로 알릴 필요가 없어 대상에서 뺐다.
+  const sortedByMetric = typeof sortKey === "string" && (sortKey.startsWith("stat:") || sortKey.startsWith("pitch:") || sortKey === "ovr");
+  const sortBadgeLabel = !sortedByMetric
+    ? ""
+    : sortKey === "ovr"
+      ? "OVR"
+      : sortKey.startsWith("pitch:")
+        ? PITCH_LABELS[Number(sortKey.slice(6))]
+        : (listIsPitcher ? STAT_LABELS_P : STAT_LABELS_B)[Number(sortKey.slice(5))];
+
+  // 표 도움말 모달 내용 — 지금 보는 표 종류에 맞춰 약어·사용법이 갈린다(README §4 + OVR 추가 설명).
+  const tableHelpTitle = isPitch ? "구종 등급 표 도움말" : listIsPitcher ? "투수 스탯 표 도움말" : "타자 스탯 표 도움말";
+  const tableHelpAbbr = isPitch
+    ? PITCH_SHORT.map((k, i) => ({ k, v: PITCH_LABELS[i] }))
+    : statLabels.short.map((k, i) => ({ k, v: statLabels.full[i] })).concat([{ k: "OVR", v: "스탯 5개 평균" }]);
+  const tableHelpExtra = isPitch
+    ? ['등급 S > A > B > C > D, "-"는 미보유 구종', "스탯 ↔ 구종 등급 전환 시 정렬 순서 유지"]
+    : [
+        "각 선수 최고 능력치(70+)는 민트색",
+        "OVR = 스탯 5개 평균 (소수 한 자리)",
+        ...(listIsPitcher ? ["스탯 ↔ 구종 등급 전환 시 정렬 순서 유지"] : []),
+      ];
 
   const handleSetView = useCallback(
     (next) => {
@@ -235,6 +263,16 @@ const PlayerEncyclopediaScreen = () => {
     setHelp(true);
     setFilterOpen(false);
     setOpenL(null);
+  }, []);
+
+  const handleOpenTableHelp = useCallback(() => {
+    setTableHelp(true);
+    setFilterOpen(false);
+    setOpenL(null);
+  }, []);
+
+  const handleClearSort = useCallback(() => {
+    setSortKey(null);
   }, []);
 
   // 새 구단의 연도 목록에 지금 연도가 없으면 effectiveYear 가 알아서 그 구단의 첫 연도로 바뀐다.
@@ -400,6 +438,12 @@ const PlayerEncyclopediaScreen = () => {
           {baseLabel}
         </span>
         <div className={styles.legendRight}>
+          {isList && statsLoaded && !statsError && sortedListRows.length > 0 && (
+            <button type="button" className={styles.tableHelpPill} onClick={handleOpenTableHelp}>
+              <span className={styles.tableHelpMark}>?</span>
+              {isPitch ? "구종 도움말" : "스탯 도움말"}
+            </button>
+          )}
           <button type="button" className={styles.helpPill} onClick={handleOpenHelp}>
             <span className={styles.helpMark}>?</span>도움말
           </button>
@@ -424,22 +468,36 @@ const PlayerEncyclopediaScreen = () => {
         </div>
       ) : isList ? (
         <div className={styles.listWrap}>
-          {listIsPitcher && (
-            <div className={styles.segment}>
-              <button
-                type="button"
-                className={`${styles.segmentBtn} ${effectiveSub === "stat" ? styles.segmentBtnActive : ""}`}
-                onClick={() => setSub("stat")}
-              >
-                스탯
-              </button>
-              <button
-                type="button"
-                className={`${styles.segmentBtn} ${effectiveSub === "pitch" ? styles.segmentBtnActive : ""}`}
-                onClick={() => setSub("pitch")}
-              >
-                구종 등급
-              </button>
+          {(listIsPitcher || sortedByMetric) && (
+            <div className={styles.listTopRow}>
+              {listIsPitcher && (
+                <div className={styles.segment}>
+                  <button
+                    type="button"
+                    className={`${styles.segmentBtn} ${effectiveSub === "stat" ? styles.segmentBtnActive : ""}`}
+                    onClick={() => setSub("stat")}
+                  >
+                    스탯
+                  </button>
+                  <button
+                    type="button"
+                    className={`${styles.segmentBtn} ${effectiveSub === "pitch" ? styles.segmentBtnActive : ""}`}
+                    onClick={() => setSub("pitch")}
+                  >
+                    구종 등급
+                  </button>
+                </div>
+              )}
+              {sortedByMetric && (
+                <div className={styles.sortBadge}>
+                  <span className={styles.sortBadgeText}>
+                    정렬: <b>{sortBadgeLabel} {sortDir === 1 ? "▲" : "▼"}</b>
+                  </span>
+                  <button type="button" className={styles.sortBadgeClear} onClick={handleClearSort}>
+                    해제
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
@@ -510,6 +568,14 @@ const PlayerEncyclopediaScreen = () => {
         }}
         onClose={() => setFilterOpen(false)}
         shownCount={sortedPlayers.length}
+      />
+
+      <TableHelpModal
+        open={tableHelp}
+        title={tableHelpTitle}
+        abbr={tableHelpAbbr}
+        extra={tableHelpExtra}
+        onClose={() => setTableHelp(false)}
       />
     </div>
   );

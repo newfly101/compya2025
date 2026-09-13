@@ -97,6 +97,45 @@
   border: 1.5px solid var(--color-pe-gold);
 }
 
+// 카드형·리스트형 전환 아이콘 — 보라 2×2 격자(카드형) + 회색 줄 3개(리스트형), CSS 도형만 사용.
+.viewIconWrap {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.viewIconGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5px;
+  width: 14px;
+  height: 14px;
+  padding: 3px;
+  border-radius: $radius-sm;
+  background-color: var(--color-brand);
+
+  i {
+    background-color: #fff;
+    border-radius: 0.5px;
+  }
+}
+
+.viewIconList {
+  display: grid;
+  grid-auto-rows: 1.5px;
+  gap: 2px;
+  align-content: center;
+  width: 14px;
+  height: 14px;
+  padding: 3px 2.5px;
+  border-radius: $radius-sm;
+  background-color: var(--color-border-strong);
+
+  i {
+    background-color: var(--color-text-secondary);
+  }
+}
+
 .featureTitle {
   @include text-body-bold;
   color: var(--color-text-primary);
@@ -108,6 +147,58 @@
   line-height: $line-height-relaxed;
   color: var(--color-text-secondary);
   margin: $space-1 0 0;
+}
+
+// 항목 하위 상세 박스(README "서브 박스") — 조건·정렬·표시 같은 세부 규칙 나열.
+.subBoxList {
+  @include flex-col($space-1);
+  margin-top: $space-2;
+}
+
+.subBox {
+  padding: $space-2 $space-2;
+  background-color: var(--color-bg-elevated);
+  border-radius: $radius-md;
+}
+
+.subBoxTitle {
+  @include text-caption;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-secondary);
+  margin: 0 0 2px;
+}
+
+.subBoxLines {
+  @include text-caption;
+  line-height: $line-height-relaxed;
+  color: var(--color-text-secondary);
+  margin: 0;
+  word-break: keep-all;
+}
+
+// "카드형 · 리스트형 전환" 항목 안의 하위 모드(카드형/리스트형) — 라벨 열 52px 고정.
+.modeRow {
+  display: grid;
+  grid-template-columns: 52px 1fr;
+  gap: $space-2;
+  margin-top: $space-3;
+  font-size: 12px;
+  line-height: 1.55;
+}
+
+.modeLabel {
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+.modeDesc {
+  color: var(--color-text-secondary);
+}
+
+// 모드(카드형/리스트형) 아래 서브 박스는 라벨 열(52px + gap)만큼 들여써 라벨과 줄을 맞춘다.
+.modeRow + .subBoxList {
+  margin-left: 60px;
 }
 
 .footer {

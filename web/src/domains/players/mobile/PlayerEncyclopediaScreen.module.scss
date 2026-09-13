@@ -318,6 +318,36 @@
   }
 }
 
+// 표 도움말 필 — 진입 전 「? 도움말」(helpPill, 보라)과 헷갈리지 않게 무채색으로 뺀다.
+.tableHelpPill {
+  @include reset-button;
+  height: 24px;
+  padding: 0 $space-2 0 $space-1;
+  border-radius: $radius-full;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  white-space: nowrap;
+}
+
+.tableHelpMark {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--color-border-strong);
+  color: var(--color-text-primary);
+  font-size: 10px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .helpPill {
   @include reset-button;
   height: 24px;
@@ -382,6 +412,15 @@
   min-width: 0; // 자식(표)이 부모 폭을 넘지 않게 — 페이지 가로 스크롤 방지
 }
 
+// 투수 리스트형 상단 행 — 좌: 스탯/구종 세그먼트, 우: 정렬 배지(정렬 중일 때만)
+.listTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+  min-width: 0;
+}
+
 .segment {
   align-self: flex-start;
   display: flex;
@@ -390,6 +429,7 @@
   background-color: var(--color-bg-overlay);
   border: 1px solid var(--color-border-strong);
   border-radius: $radius-lg;
+  flex-shrink: 0;
 }
 
 .segmentBtn {
@@ -407,6 +447,44 @@
 .segmentBtnActive {
   background-color: var(--color-brand);
   color: #fff;
+}
+
+// 능력치·합 열로 정렬 중일 때만 뜨는 배지 — "해제" 로 기본 정렬로 되돌린다.
+// 세그먼트(스탯/구종 등급)가 없는 타자 탭에서도 단독으로 뜰 수 있어 margin-left:auto 로 우측 고정.
+.sortBadge {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  height: 30px;
+  padding: 0 $space-2;
+  border-radius: $radius-md;
+  background-color: var(--color-brand-tint);
+  border: 1px solid var(--color-brand);
+  min-width: 0;
+  margin-left: auto;
+}
+
+.sortBadgeText {
+  @include text-ellipsis;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+
+  b {
+    color: var(--color-text-primary);
+  }
+}
+
+.sortBadgeClear {
+  @include reset-button;
+  flex-shrink: 0;
+  height: 20px;
+  padding: 0 $space-2;
+  border-radius: $radius-sm;
+  background-color: var(--color-brand);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 // ── 빈 상태 ──────────────────────────────────────────────────

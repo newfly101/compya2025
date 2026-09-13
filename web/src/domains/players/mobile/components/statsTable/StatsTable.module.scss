@@ -10,11 +10,18 @@
   overflow: hidden;
 }
 
+// 기본(400px~): 좌우 스크롤 없이 폭 계산으로 한 화면에 다 담는다. 구종 표는 능력치 10열을
+// 25px(등급 1글자 "S/A/-" 라 25px 도 안 좁다)로 줄여 400px 도 커버(실측: StatsTable.jsx 주석 참고).
+// 그 아래(399px 이하)는 왼쪽 고정 열만으로도 폭이 모자라 이 구간만 좌우 스크롤로 방어한다.
+// ⚠️ 428px→400px, 27px→25px 는 코디네이터 지시로 재검토한 값 — 사용자가 직접 본 수치는 아니다.
 .leftPanel {
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
+  overflow: hidden;
   border-right: 1px solid var(--color-border-strong);
+
+  @media (max-width: 399px) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 .rightPanel {
@@ -24,15 +31,29 @@
 .table {
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 12px;
+  font-size: 12.5px; // legendStats 표와 동일
 }
 
+// table-layout: fixed + width:100% 로 두면 px 를 지정한 열(#·구단·연도·포지션)을 뺀
+// 나머지를 이름 열이 자동으로 가져간다 — 화면 폭이 달라져도(360~480) 매번 재계산할 필요가 없다.
+.leftTable {
+  table-layout: fixed;
+  width: 100%;
+
+  @media (max-width: 399px) {
+    table-layout: auto;
+    width: auto;
+  }
+}
+
+// 머리행 배경·글꼴은 legendStats 표(LegendStatsScreen.module.scss thead th)와 모양만 맞춘다.
 .th {
-  height: 38px;
+  height: 32px;
   padding: 0 $space-1;
-  background-color: var(--color-bg-overlay);
+  background-color: var(--color-pe-table-head-bg);
   color: var(--color-text-secondary);
-  font-weight: 700;
+  font-size: 11.5px;
+  font-weight: 500;
   white-space: nowrap;
   border-bottom: 1px solid var(--color-border-strong);
   user-select: none;
@@ -59,12 +80,18 @@
 }
 
 .td {
-  height: 40px;
+  height: 38px; // legendStats 표와 동일(--ls-row-h)
   padding: 0 $space-1;
   white-space: nowrap;
   border-bottom: 1px solid var(--color-border);
   color: var(--color-text-primary);
   font-weight: 700;
+}
+
+// 이름 열은 스크롤 없이 계산한 폭이라 아주 긴 이름은 빠듯할 수 있다 — 잘리면 말줄임표로.
+.tdName {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tdRight {
@@ -76,6 +103,11 @@
 
 .tdActive {
   background-color: var(--color-brand-tint);
+}
+
+// 행 hover — legendStats .row:hover 값과 같은 톤(모양만 재사용, 구조는 좌우 분리 패널 그대로 유지)
+.row:hover .td:not(.tdActive) {
+  background-color: var(--color-pe-table-row-hover);
 }
 
 .lMark {

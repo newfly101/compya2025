@@ -1,0 +1,88 @@
+// 표 도움말 모달 — 바텀시트가 아니라 화면 가운데 뜨는 창(사용자 지시).
+// modal-backdrop 믹스인 + MyPageScreen.module.scss .modal 크기 관례를 그대로 따른다.
+.overlay {
+  @include modal-backdrop;
+}
+
+.modal {
+  width: 320px;
+  // 360px 화면에서도 좌우 여백이 남게 — $space-5(20px) 두 배를 뺀다.
+  max-width: calc(100% - #{$space-5} * 2);
+  max-height: 80vh;
+  background-color: var(--color-bg-modal);
+  border-radius: $radius-2xl;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // 라운드 유지 — 실제 스크롤은 .body 안에서만
+}
+
+.header {
+  @include flex-row(0, center, space-between);
+  height: $layout-topbar-height;
+  padding: 0 $space-1 0 $space-4;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.headerTitle {
+  @include text-body-bold;
+  font-size: 16px;
+  color: var(--color-text-primary);
+}
+
+.closeBtn {
+  @include reset-button;
+  @include tap-target;
+  color: var(--color-text-secondary);
+  font-size: 18px;
+}
+
+.body {
+  overflow-y: auto;
+  padding: $space-1 $space-4 $space-4;
+  @include flex-col($space-3);
+}
+
+.box {
+  padding: $space-3 $space-3;
+  background-color: var(--color-bg-overlay);
+  border-radius: $radius-lg;
+}
+
+.boxTitle {
+  @include text-caption;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-secondary);
+  margin-bottom: $space-2;
+}
+
+.abbrGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-1 $space-3;
+}
+
+.abbrRow {
+  display: flex;
+  align-items: baseline;
+  gap: $space-2;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+
+.abbrKey {
+  min-width: 28px;
+  font-style: italic; // Barlow Condensed 대체 — 표 헤더와 같은 강조
+  color: var(--color-text-primary);
+  font-size: 13px;
+}
+
+.usageLine {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--color-text-muted);
+
+  & + & {
+    margin-top: 2px;
+  }
+}
