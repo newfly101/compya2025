@@ -9,6 +9,7 @@
 import path from "node:path";
 import fs from "node:fs";
 import { fileURLToPath } from "node:url";
+import { noticeTitleToSlug, fetchVisibleInternalNotices } from "./notice-source.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const webRoot = path.resolve(__dirname, "..");
@@ -17,23 +18,6 @@ const baseSitemapPath = path.join(webRoot, "public", "sitemap.xml");
 const outSitemapPath = path.join(distDir, "sitemap.xml");
 
 const SITE_ORIGIN = "https://compyafun.com";
-const NOTICES_API = "https://api.compyafun.com/api/notices";
-
-// src/domains/notices/mobile/noticeSlug.js 의 noticeTitleToSlug 를 그대로 복제.
-// 이 스크립트가 vite 빌드 산출물(src alias)에 의존하지 않고 node 로 단독 실행돼야 하므로
-// import 대신 로직을 그대로 옮겨온다 — 원본이 바뀌면 이 쪽도 같이 맞춰야 한다.
-const noticeTitleToSlug = (title, id) => {
-  const cleaned = (title ?? "")
-    .trim()
-    .toLowerCase()
-    .replace(/[^0-9a-z가-힣]+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 180)
-    .replace(/-+$/g, "");
-
-  return cleaned || `notice-${id}`;
-};
 
 const escapeXml = (str) =>
   String(str)
@@ -97,25 +81,9 @@ async function main() {
   let visibleInternalNotices;
   try {
     // AbortSignal.timeout() 은 Node 24 + Windows 조합에서 process.exit 직후 타이머 핸들이
-    // 남아 있으면 libuv assertion 크래시를 낼 수 있어(관찰됨) 쓰지 않는다 — 직접 만든
-    // AbortController + clearTimeout 으로 타이머를 확실히 정리한다.
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
-    let res;
-    try {
-      res = await fetch(NOTICES_API, { signal: controller.signal });
-    } finally {
-      clearTimeout(timeoutId);
-    }
-    if (!res.ok) {
-      // 실패 응답 바디를 소비하지 않고 버리면 undici 커넥션이 열린 채 남아 Node 종료 시
-      // libuv assertion 크래시를 낸 사례가 관찰됨 — 던지기 전에 반드시 비운다.
-      await res.text().catch(() => {});
-      throw new Error(`HTTP ${res.status}`);
-    }
-    const json = await res.json();
-    const list = Array.isArray(json?.data) ? json.data : [];
-    visibleInternalNotices = list.filter((n) => n.isVisible && n.source === "INTERNAL");
+    // 남아 있으면 libuv assertion 크래시를 낼 수 있어(관찰됨) 쓰지 않는다 — notice-source.mjs
+    // 의 fetchVisibleInternalNotices 가 직접 만든 AbortController + clearTimeout 으로 정리한다.
+    visibleInternalNotices = await fetchVisibleInternalNotices();
   } catch (err) {
     console.warn(`[generate-sitemap] 경고 — 공지 API 조회 실패: ${err.message}`);
     writeBaseAsIs(baseXml, "API 실패");
