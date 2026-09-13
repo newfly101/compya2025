@@ -38,7 +38,10 @@ npm --prefix "$WEB_DIR" run build:prerender
 #   (이 목록은 web/scripts/prerender.mjs 의 STATIC_ROUTES 와 맞춰 유지한다.)
 PRERENDER_ROUTES=(
   "coupons" "events" "notices" "probability" "players"
-  "legend-stats" "history-mode/legend" "skills"
+  "legend-stats" "history-mode/legend" "skills" "mileage"
+  "guides" "guides/legend-material-priority" "guides/legend-stats-guide"
+  "guides/mileage-sniping" "guides/history-legend-guide"
+  "guides/player-skills-guide" "guides/player-encyclopedia"
   "privacy" "terms" "contact" "about"
 )
 MISSING_SNAPSHOTS=()
