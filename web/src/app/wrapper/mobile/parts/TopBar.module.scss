@@ -135,10 +135,3 @@ $color-naver-font: $color-white-100;
   @include text-page-title;
   color: var(--color-text-primary);
 }
-
-// ── section variant: rightAction 없을 때 자리 유지용 ─────────
-// grid 1fr auto 1fr 구조에서 title 중앙정렬 보장
-.rightPlaceholder {
-  width: $space-6;   // burger 너비와 동일하게 맞춤 (24px)
-  flex-shrink: 0;
-}

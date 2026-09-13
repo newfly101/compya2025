@@ -21,6 +21,13 @@ const authSlice = createSlice({
       state.user = null;
       state.userRole = null;
     },
+    // 로그인한 적 없는 방문자(세션 마커 없음) — /users/me 호출 자체를 건너뛰고
+    // 곧바로 "확인 완료, 비로그인" 상태로 표시한다.
+    setGuestInitialized(state) {
+      state.user = null;
+      state.userRole = null;
+      state.initialized = true;
+    },
 
   },
   extraReducers: (builder) => {
@@ -46,5 +53,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { setUser, clearUser } = authSlice.actions;
+export const { setUser, clearUser, setGuestInitialized } = authSlice.actions;
 export default authSlice.reducer;

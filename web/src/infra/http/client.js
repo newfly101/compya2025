@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config/env.js";
+import { hasAuthSessionMarker, clearAuthSessionMarker } from "@/infra/http/authSessionMarker.js";
 
 export const API = axios.create({
   baseURL: API_BASE_URL,
@@ -79,6 +80,13 @@ API.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // 로그인한 적 없는 방문자는 refresh 를 시도할 이유가 없다 — AuthProvider 가 이미
+    // 마커 없을 때 /users/me 호출을 건너뛰지만, 다른 API 가 우연히 401 을 낼 경우를 막는
+    // 이중 안전장치.
+    if (!hasAuthSessionMarker()) {
+      return Promise.reject(createAuthError(error));
+    }
+
     original._retried = true;
 
     try {
@@ -91,8 +99,10 @@ API.interceptors.response.use(
       await refreshing;
       return API(original);
     } catch {
-      // refresh 실패 → 미인증 상태. 원 요청의 401 에러를 그대로 reject 해
-      // 호출부(thunk)가 "로그인이 필요합니다" 류 메시지를 낼 수 있게 한다.
+      // refresh 실패 → 미인증 상태. 마커도 지워 다음 요청부터는 재시도하지 않는다.
+      // 원 요청의 401 에러를 그대로 reject 해 호출부(thunk)가 "로그인이 필요합니다" 류
+      // 메시지를 낼 수 있게 한다.
+      clearAuthSessionMarker();
       return Promise.reject(createAuthError(error));
     }
   }
