@@ -60,7 +60,9 @@ button {
 // 글자 입력칸(text/email/search/number 등)과 textarea 만 대상 — 체크박스·
 // 라디오는 아래 별도 규칙에서 다룬다. 함께 묶으면 width: 100% 가 체크박스에도
 // 걸려 가로 flex 안에서 남는 폭을 다 먹어버린다 (마이페이지 탈퇴 모달에서 발견).
-input:not([type="checkbox"]):not([type="radio"]),
+// :where() 필수 — 맨 :not() 은 특이도가 (0,2,1) 로 올라가 화면 모듈의
+// .searchRow input 같은 스타일을 덮어버린다 (검색창 border 증발 사고, 2026-09-13).
+input:where(:not([type="checkbox"]):not([type="radio"])),
 textarea {
   border: none;
   outline: none;
