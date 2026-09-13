@@ -1,4 +1,4 @@
-// domains/guides/mobile/GuideModal.jsx
+// global/ui/guideModal/GuideModal.jsx
 // 가이드 콘텐츠를 화면 가운데 모달로 띄우는 공용 껍데기 — 각 도메인 화면의 도움말 버튼이
 // 이 컴포넌트에 slug를 넘겨 연다. 내용은 항상 GuideContent(공용 렌더러)로만 그린다
 // (콘텐츠를 모달용으로 따로 베껴 쓰지 않는다 — /guides/:slug 와 동일 소스).
@@ -6,7 +6,7 @@
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import GuideContent from "./GuideContent.jsx";
+import GuideContent from "@/global/ui/guideContent/GuideContent.jsx";
 import styles from "./GuideModal.module.scss";
 
 const GuideModal = ({ open, guide, onClose }) => {

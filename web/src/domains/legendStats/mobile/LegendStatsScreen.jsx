@@ -22,7 +22,7 @@ import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { useLegendStats } from "./hooks/useLegendStats";
 import { useHistoryBadge } from "./hooks/useHistoryBadge";
 import { useMileageBadge } from "./hooks/useMileageBadge";
-import GuideModal from "@/domains/guides/mobile/GuideModal.jsx";
+import GuideModal from "@/global/ui/guideModal/GuideModal.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import "./legendStats.tokens.scss";
 import styles from "./LegendStatsScreen.module.scss";

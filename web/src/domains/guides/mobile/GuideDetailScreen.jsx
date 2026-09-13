@@ -8,7 +8,7 @@ import { usePageSeo } from "@/infra/seo/usePageSeo.js";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import { getGuideBySlug } from "@/domains/guides/content/index.js";
-import GuideContent from "./GuideContent.jsx";
+import GuideContent from "@/global/ui/guideContent/GuideContent.jsx";
 import styles from "./GuideDetailScreen.module.scss";
 
 const GuideDetailScreen = () => {

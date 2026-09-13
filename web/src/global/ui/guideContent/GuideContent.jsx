@@ -1,4 +1,4 @@
-// domains/guides/mobile/GuideContent.jsx
+// global/ui/guideContent/GuideContent.jsx
 // 가이드 콘텐츠 공용 렌더러 — /guides/:slug 전체 화면과 각 도메인 화면의 GuideModal이
 // 이 컴포넌트 하나를 그대로 재사용한다(글감은 domains/guides/content/*.js 한 곳에만 존재).
 // 순수 렌더 컴포넌트 — axios 호출·dispatch 없음, props로 받은 guide 객체만 그린다.

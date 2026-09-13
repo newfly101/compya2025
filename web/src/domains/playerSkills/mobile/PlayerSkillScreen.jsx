@@ -12,7 +12,7 @@ import {
   isGradeAvailableInList,
 } from "@/domains/playerSkills/config/skillsUtils.js";
 import SkillItem from "./components/skillItem/SkillItem.jsx";
-import GuideModal from "@/domains/guides/mobile/GuideModal.jsx";
+import GuideModal from "@/global/ui/guideModal/GuideModal.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
 import { AD_SLOTS } from "@/infra/ads/adConfig.js";

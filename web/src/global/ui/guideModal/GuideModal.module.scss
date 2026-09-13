@@ -1,4 +1,4 @@
-// domains/guides/mobile/GuideModal.module.scss
+// global/ui/guideModal/GuideModal.module.scss
 // players/TableHelpModal.module.scss 의 모달 크기 관례(가운데 뜨는 창, 320px 기준)를 그대로 따른다.
 .overlay {
   @include modal-backdrop;

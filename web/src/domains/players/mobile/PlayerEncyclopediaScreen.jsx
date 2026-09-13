@@ -25,7 +25,7 @@ import {
   buildTable,
 } from "@/domains/players/config/statsTable.js";
 import { PITCH_LABELS, PITCH_SHORT } from "@/domains/players/store/statsAdapter.js";
-import GuideModal from "@/domains/guides/mobile/GuideModal.jsx";
+import GuideModal from "@/global/ui/guideModal/GuideModal.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import PlayerCard from "./components/playerCard/PlayerCard";
 import FilterSheet from "./components/filterSheet/FilterSheet";

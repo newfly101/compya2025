@@ -10,7 +10,7 @@ import { useState } from "react";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { formatPosition } from "@/domains/players/config/position.js";
 import { POS_ROWS, SORT_LABEL, teamDotColor } from "@/domains/mileage/config/mileageTargetList.js";
-import GuideModal from "@/domains/guides/mobile/GuideModal.jsx";
+import GuideModal from "@/global/ui/guideModal/GuideModal.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import styles from "./TargetListTab.module.scss";
 
