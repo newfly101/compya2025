@@ -21,13 +21,18 @@ const FilterSheet = ({
   open,
   teams,
   fTeam,
+  yearDecades,
+  fYear,
   fPos,
   fKind,
   onlyL,
   onToggleTeam,
+  onToggleYear,
+  onToggleDecade,
   onTogglePos,
   onToggleKind,
   onTeamAll,
+  onYearAll,
   onPosAll,
   onKindAll,
   onToggleOnlyL,
@@ -37,9 +42,10 @@ const FilterSheet = ({
 }) => {
   if (!open || !modalRoot) return null;
 
-  const statusText = fTeam.length || fPos.length || fKind.length || onlyL
+  const statusText = fTeam.length || fYear.length || fPos.length || fKind.length || onlyL
     ? [
         fTeam.length && `팀 ${fTeam.length}`,
+        fYear.length && `연도 ${fYear.length}`,
         fPos.length && `포지션 ${fPos.length}`,
         fKind.length && `종류 ${fKind.length}`,
         onlyL && "재료만",
@@ -72,6 +78,47 @@ const FilterSheet = ({
               {teams.map((t) => (
                 <Chip key={t} label={t} active={fTeam.includes(t)} onClick={() => onToggleTeam(t)} />
               ))}
+            </div>
+          </section>
+
+          <section className={styles.section}>
+            <div className={styles.sectionHead}>
+              <span className={styles.sectionTitle}>
+                연도 <span className={styles.sectionHint}>{fYear.length ? `${fYear.length}개 선택` : "전체"}</span>
+              </span>
+              <button type="button" className={styles.allBtn} onClick={onYearAll}>
+                전체 선택
+              </button>
+            </div>
+            <div className={styles.yearRows}>
+              {yearDecades.map(({ decade, years }) => {
+                const allOn = years.every((y) => fYear.includes(y));
+                const someOn = !allOn && years.some((y) => fYear.includes(y));
+                return (
+                  <div key={decade} className={styles.yearRow}>
+                    <button
+                      type="button"
+                      className={`${styles.decadeBtn} ${allOn || someOn ? styles.decadeBtnActive : ""}`}
+                      onClick={() => onToggleDecade(years)}
+                    >
+                      {decade.slice(2)}년대
+                    </button>
+                    <div className={styles.yearGrid}>
+                      {years.map((y) => (
+                        <button
+                          key={y}
+                          type="button"
+                          className={`${styles.yearChip} ${fYear.includes(y) ? styles.yearChipActive : ""}`}
+                          style={{ gridColumn: (Number(y) % 10) + 1 }}
+                          onClick={() => onToggleYear(y)}
+                        >
+                          {y.slice(2)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </section>
 

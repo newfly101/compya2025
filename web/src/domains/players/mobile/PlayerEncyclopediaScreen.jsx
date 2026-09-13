@@ -13,6 +13,7 @@ import {
   ACTIVE_KINDS,
   getTeams,
   getYearsForTeam,
+  getYearDecades,
   getPosOrder,
 } from "@/domains/players/config/playersLoader";
 import {
@@ -109,6 +110,7 @@ const PlayerEncyclopediaScreen = () => {
 
   const [filterOpen, setFilterOpen] = useState(false);
   const [fTeam, setFTeam] = useState([]);
+  const [fYear, setFYear] = useState([]);
   const [fPos, setFPos] = useState([]);
   const [fKind, setFKind] = useState([]);
 
@@ -127,28 +129,48 @@ const PlayerEncyclopediaScreen = () => {
 
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;
-  const teamFiltered = fTeam.length > 0;
-  const selectorDisabled = hasQuery || teamFiltered; // README: 검색 중이거나 팀 필터가 있으면 구단·연도 select disabled
-  const wide = hasQuery || teamFiltered; // 여러 구단이 섞여 보이는 상태 — 카드에 구단명을 함께 표기
+  const teamFilterActive = fTeam.length > 0;
+  const yearFilterActive = fYear.length > 0;
+  // README: fTeam 또는 fYear 가 있으면 범위가 "전체"로 넓어진다 — 팀·연도 select 는 그 동안 잠긴다.
+  const modalScopeActive = teamFilterActive || yearFilterActive;
+  const selectorDisabled = hasQuery || modalScopeActive;
+  const wide = hasQuery || modalScopeActive; // 여러 구단이 섞여 보이는 상태 — 카드에 구단명을 함께 표기
+
+  const yearDecades = useMemo(() => getYearDecades(PLAYERS), [PLAYERS]);
 
   // 1) 범위 → 2) 모달 필터 AND → 3) 재료만
   const scopedRows = useMemo(() => {
     let base;
     if (hasQuery) {
       base = PLAYERS.filter((r) => r.n.includes(trimmedQuery));
-    } else if (teamFiltered) {
+    } else if (modalScopeActive) {
       base = PLAYERS;
     } else {
       base = PLAYERS.filter((r) => r.tm === effectiveTeam && r.y === effectiveYear);
     }
-    if (teamFiltered) base = base.filter((r) => fTeam.includes(r.tm));
+    if (teamFilterActive) base = base.filter((r) => fTeam.includes(r.tm));
+    if (yearFilterActive) base = base.filter((r) => fYear.includes(r.y));
     // 부포지션도 필터 대상 — DH 를 고르면 주포지션이 DH 인 카드뿐 아니라 겸업으로 DH 를
     // 가진 카드도 나와야 한다(요청 원문). 카드는 부포지션이 없는 게 대부분이라 단락 평가로 충분히 빠르다.
     if (fPos.length) base = base.filter((r) => fPos.includes(r.pos) || (r.subPos && fPos.includes(r.subPos)));
     if (fKind.length) base = base.filter((r) => r.kinds.some((k) => fKind.includes(k)));
     if (onlyL) base = base.filter((r) => r.L);
     return base;
-  }, [PLAYERS, hasQuery, trimmedQuery, teamFiltered, fTeam, fPos, fKind, onlyL, effectiveTeam, effectiveYear]);
+  }, [
+    PLAYERS,
+    hasQuery,
+    trimmedQuery,
+    modalScopeActive,
+    teamFilterActive,
+    yearFilterActive,
+    fTeam,
+    fYear,
+    fPos,
+    fKind,
+    onlyL,
+    effectiveTeam,
+    effectiveYear,
+  ]);
 
   // 4) 탭 카운트 — 0장이면 disabled, 현재 탭이 0장이 되면 "전체"로 자동 보정
   const tabCounts = useMemo(() => {
@@ -184,9 +206,11 @@ const PlayerEncyclopediaScreen = () => {
     return arr;
   }, [tabRows, hasQuery]);
 
-  const filterCount = (fTeam.length ? 1 : 0) + (fPos.length ? 1 : 0) + (fKind.length ? 1 : 0) + (onlyL ? 1 : 0);
+  const filterCount =
+    (fTeam.length ? 1 : 0) + (fYear.length ? 1 : 0) + (fPos.length ? 1 : 0) + (fKind.length ? 1 : 0) + (onlyL ? 1 : 0);
   const filterActive = filterCount > 0;
-  const teamAllLabel = teamFiltered && !hasQuery ? `${fTeam.length}개 구단` : "전체";
+  const teamAllLabel = teamFilterActive && !hasQuery ? `${fTeam.length}개 구단` : "전체";
+  const yearAllLabel = yearFilterActive && !hasQuery ? `${fYear.length}개 연도` : "전체";
   const baseColor = maxGrade ? "var(--color-pe-gold)" : "var(--color-pe-normal)";
   const baseLabel = maxGrade ? "플래티넘" : "노말";
 
@@ -198,17 +222,23 @@ const PlayerEncyclopediaScreen = () => {
   const isPitch = listIsPitcher && effectiveSub === "pitch";
 
   // 스탯 API 는 구단 하나를 통째로 준다 — 리스트형으로 전환했을 때만, 그 구단만 받는다.
+  // 필터 모달에서 구단을 골랐다면(fTeam) 그 조건이 상단 select box(effectiveTeam) 보다
+  // 우선한다 — select box 는 필터가 걸리면 비활성화되지만 마지막 값을 그대로 들고 있어,
+  // 그 값을 그냥 쓰면 "필터로 고른 구단과 다른 구단" 을 조회해 리스트가 비어버리는 문제가
+  // 있었다(버그 리포트: "필터 선택이 API 호출로 이어지지 않는다"). effectiveTeam 이 필터
+  // 조건 안에 이미 포함돼 있으면 그대로 두고(불필요한 재조회 방지), 아니면 필터의 첫 구단으로 맞춘다.
+  const statsTeam = teamFilterActive ? (fTeam.includes(effectiveTeam) ? effectiveTeam : fTeam[0]) : effectiveTeam;
   const {
     items: statItems,
     error: statsError,
     loaded: statsLoaded,
     retry: retryStats,
-  } = usePlayerStats(isList, effectiveTeam);
+  } = usePlayerStats(isList, statsTeam);
 
   const statsById = useMemo(() => new Map(statItems.map((s) => [s.id, s])), [statItems]);
 
-  // 스탯은 effectiveTeam 하나만 있어 다른 구단이 섞인 결과(검색·팀필터)는 그 구단 몫만 표로 보여준다.
-  const listCardRows = useMemo(() => tabRows.filter((r) => r.tm === effectiveTeam), [tabRows, effectiveTeam]);
+  // 스탯은 statsTeam 하나만 있어 다른 구단이 섞인 결과(검색·필터)는 그 구단 몫만 표로 보여준다.
+  const listCardRows = useMemo(() => tabRows.filter((r) => r.tm === statsTeam), [tabRows, statsTeam]);
   const joinedListRows = useMemo(() => joinListRows(listCardRows, statsById), [listCardRows, statsById]);
   const sortedListRows = useMemo(
     () => sortListRows(joinedListRows, sortKey, sortDir).slice(0, 400), // README: 최대 400행 렌더
@@ -284,7 +314,7 @@ const PlayerEncyclopediaScreen = () => {
 
   // 탭/구단이 바뀌면 이전 정렬은 의미가 없어진다(다른 선수 집합) — 기본 정렬로 되돌린다.
   // useEffect 대신 렌더 중 비교로 처리한다(React 권장: "prop 이 바뀌면 state 조정하기").
-  const listScopeKey = `${effectiveTab}:${effectiveTeam}`;
+  const listScopeKey = `${effectiveTab}:${statsTeam}`;
   const [prevListScopeKey, setPrevListScopeKey] = useState(listScopeKey);
   if (listScopeKey !== prevListScopeKey) {
     setPrevListScopeKey(listScopeKey);
@@ -318,10 +348,19 @@ const PlayerEncyclopediaScreen = () => {
   const handleResetAll = useCallback(() => {
     setQuery("");
     setFTeam([]);
+    setFYear([]);
     setFPos([]);
     setFKind([]);
     setOnlyL(false);
     setTab("all");
+  }, []);
+
+  // 연대 버튼 — 해당 연대 연도가 전부 선택돼 있으면 전부 해제, 아니면 전부 선택(합집합).
+  const handleToggleDecade = useCallback((years) => {
+    setFYear((prev) => {
+      const allOn = years.every((y) => prev.includes(y));
+      return allOn ? prev.filter((y) => !years.includes(y)) : [...new Set([...prev, ...years])];
+    });
   }, []);
 
   const handleToggleKind = useCallback((kind) => {
@@ -380,7 +419,7 @@ const PlayerEncyclopediaScreen = () => {
           disabled={selectorDisabled}
           onChange={(e) => setYear(e.target.value)}
         >
-          {selectorDisabled && <option value="__all">전체</option>}
+          {selectorDisabled && <option value="__all">{yearAllLabel}</option>}
           {years.map((y) => (
             <option key={y} value={y}>
               {y}
@@ -595,18 +634,24 @@ const PlayerEncyclopediaScreen = () => {
         open={filterOpen}
         teams={TEAMS}
         fTeam={fTeam}
+        yearDecades={yearDecades}
+        fYear={fYear}
         fPos={fPos}
         fKind={fKind}
         onlyL={onlyL}
         onToggleTeam={(t) => setFTeam((prev) => toggle(prev, t))}
+        onToggleYear={(y) => setFYear((prev) => toggle(prev, y))}
+        onToggleDecade={handleToggleDecade}
         onTogglePos={(p) => setFPos((prev) => toggle(prev, p))}
         onToggleKind={handleToggleKind}
         onTeamAll={() => setFTeam([])}
+        onYearAll={() => setFYear([])}
         onPosAll={() => setFPos([])}
         onKindAll={() => setFKind([])}
         onToggleOnlyL={() => setOnlyL((v) => !v)}
         onReset={() => {
           setFTeam([]);
+          setFYear([]);
           setFPos([]);
           setFKind([]);
           setOnlyL(false);

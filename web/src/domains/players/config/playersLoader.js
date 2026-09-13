@@ -48,3 +48,20 @@ export function getYearsForTeam(items, team) {
   const normal = years.filter((y) => /^\d{4}$/.test(y)).sort((a, b) => Number(b) - Number(a));
   return [...legend, ...normal];
 }
+
+/**
+ * 필터 모달 연도 섹션용 — 전체 데이터(모든 구단)에 존재하는 숫자 연도를 10년 단위로 묶는다.
+ * design_handoff README §3: "연대 버튼(80년대…) + 연도 칩(10열, 끝자리 열 고정)".
+ * @param {Array} items - store.players.items
+ * @returns {{ decade: string, years: string[] }[]} 연대 오름차순, 연도는 연대 내 오름차순
+ */
+export function getYearDecades(items) {
+  const years = [...new Set(items.map((r) => r.y))].filter((y) => /^\d{4}$/.test(y)).sort();
+  const byDecade = new Map();
+  years.forEach((y) => {
+    const decade = `${y.slice(0, 3)}0`;
+    if (!byDecade.has(decade)) byDecade.set(decade, []);
+    byDecade.get(decade).push(y);
+  });
+  return [...byDecade.keys()].sort().map((decade) => ({ decade, years: byDecade.get(decade) }));
+}
