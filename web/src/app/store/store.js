@@ -36,5 +36,11 @@ export const store = configureStore({
     cacheSync: cacheSyncReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().prepend(operationListener.middleware),
+    getDefaultMiddleware({
+      // 선수 백과 카드 1.1만 건이 players 슬라이스에 실리면서 dev 전용
+      // 직렬화/불변 검사가 32ms 를 넘겨 콘솔 경고를 띄운다 (프로덕션은 원래 비활성).
+      // 대용량 슬라이스만 검사에서 제외한다 — 나머지 슬라이스는 계속 검사받는다.
+      serializableCheck: { ignoredPaths: ["players"] },
+      immutableCheck: { ignoredPaths: ["players"] },
+    }).prepend(operationListener.middleware),
 });
