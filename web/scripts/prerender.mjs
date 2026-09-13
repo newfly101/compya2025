@@ -162,7 +162,13 @@ async function main() {
   const base = server.resolvedUrls.local[0].replace(/\/$/, "");
   console.log(`[prerender] preview 서버: ${base}`);
 
-  const browser = await puppeteer.launch({ headless: true });
+  // --no-sandbox: GitHub Actions 러너(Ubuntu 23.10+)는 unprivileged user
+  // namespace 를 막아 크롬 샌드박스가 "No usable sandbox" 로 크래시한다.
+  // 러너는 격리된 일회성 환경이라 샌드박스 비활성이 안전하다.
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
 
   const failed = [];
   const dataWarnings = [];
