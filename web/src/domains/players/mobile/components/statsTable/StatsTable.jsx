@@ -6,25 +6,30 @@ import styles from "./StatsTable.module.scss";
 const Arrow = ({ dir }) =>
   dir ? <span className={styles.arrow}>{dir === 1 ? "▲" : "▼"}</span> : null;
 
-const StatsTable = ({ leftCols, rightCols, rows, rightColWidth }) => (
+// hideHead: 광고로 끊어 이어붙이는 두 번째 이후 세그먼트에서 열 머리글을 반복 렌더하지
+// 않기 위한 옵션(선수 백과 표형 in-feed 광고, PlayerEncyclopediaScreen 참고). 기본값 false라
+// 기존 단일 호출부는 영향이 없다 — 다른 화면이 이 컴포넌트를 새로 쓰게 되어도 안전.
+const StatsTable = ({ leftCols, rightCols, rows, rightColWidth, hideHead = false }) => (
   <div className={styles.wrap}>
     <div className={styles.leftPanel}>
       <table className={`${styles.table} ${styles.leftTable}`}>
-        <thead>
-          <tr>
-            {leftCols.map((c) => (
-              <th
-                key={c.key}
-                onClick={c.onClick}
-                className={`${styles.th} ${c.active ? styles.thActive : ""} ${c.onClick ? styles.sortable : ""}`}
-                style={{ width: c.width, textAlign: c.align }}
-              >
-                {c.label}
-                <Arrow dir={c.dir} />
-              </th>
-            ))}
-          </tr>
-        </thead>
+        {!hideHead && (
+          <thead>
+            <tr>
+              {leftCols.map((c) => (
+                <th
+                  key={c.key}
+                  onClick={c.onClick}
+                  className={`${styles.th} ${c.active ? styles.thActive : ""} ${c.onClick ? styles.sortable : ""}`}
+                  style={{ width: c.width, textAlign: c.align }}
+                >
+                  {c.label}
+                  <Arrow dir={c.dir} />
+                </th>
+              ))}
+            </tr>
+          </thead>
+        )}
         <tbody>
           {rows.map((row) => (
             <tr key={row.id} className={styles.row}>
@@ -46,21 +51,23 @@ const StatsTable = ({ leftCols, rightCols, rows, rightColWidth }) => (
 
     <div className={styles.rightPanel}>
       <table className={`${styles.table} ${styles.rightTable}`} style={{ tableLayout: "fixed" }}>
-        <thead>
-          <tr>
-            {rightCols.map((c) => (
-              <th
-                key={c.key}
-                onClick={c.onClick}
-                className={`${styles.th} ${styles.thRight} ${c.active ? styles.thActive : ""}`}
-                style={{ width: rightColWidth }}
-              >
-                {c.label}
-                <Arrow dir={c.dir} />
-              </th>
-            ))}
-          </tr>
-        </thead>
+        {!hideHead && (
+          <thead>
+            <tr>
+              {rightCols.map((c) => (
+                <th
+                  key={c.key}
+                  onClick={c.onClick}
+                  className={`${styles.th} ${styles.thRight} ${c.active ? styles.thActive : ""}`}
+                  style={{ width: rightColWidth }}
+                >
+                  {c.label}
+                  <Arrow dir={c.dir} />
+                </th>
+              ))}
+            </tr>
+          </thead>
+        )}
         <tbody>
           {rows.map((row) => (
             <tr key={row.id} className={styles.row}>

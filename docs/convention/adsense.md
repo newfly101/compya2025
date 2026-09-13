@@ -55,11 +55,14 @@ import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 | 공지 | `NOTICES_LIST` | 목록 하단 | 짧은 목록 |
 | 스킬 백과 | `SKILLS_LIST` | 10번째 아이템 뒤 | in-feed |
 | 선수 백과 (카드형) | `PLAYERS_LIST` | 10장·40장 지점 세그먼트 사이, 최대 2개 | in-feed |
-| 선수 백과 (표형) | — | **미적용** — 단일 `<table>` 이라 행 삽입은 `StatsTable` 수정 필요 (후속 후보) | — |
+| 선수 백과 (표형) | `PLAYERS_TABLE` | 20행 뒤부터 20행 간격 세그먼트 사이, 최대 3개 | in-feed (표 세그먼트 분할) |
 | 레전드 재료 | `LEGEND_STATS_LIST` | 표 10행·40행 뒤 `colSpan` 행, 최대 2개 | in-feed (표) |
 | 가이드 상세 | `GUIDE_DETAIL` | 본문 끝, "다른 가이드" 링크 위 | 본문 끝 |
 
 표(table) 안에 넣을 때는 레전드 재료의 `colSpan` 행 패턴을 재사용한다 (기존 상세 펼침 행과 동일 구조).
+단, 좌우 두 `<table>` 을 나란히 붙인 이중 패널 표(선수 백과 표형 `StatsTable`)는 한 표 안에 colSpan
+행을 끼우면 좌우 행이 어긋나므로 예외로 컴포넌트 자체를 세그먼트로 쪼개 사이에 전체 폭 광고를
+끼운다(두 번째 세그먼트부터 `hideHead` 로 열 머리글 반복 렌더 생략).
 
 ---
 

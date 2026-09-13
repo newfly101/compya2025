@@ -69,6 +69,26 @@ const buildCardSegments = (players) => {
   return segments;
 };
 
+// 리스트형(표) — StatsTable 은 좌(식별 열)·우(능력치) 두 <table> 을 grid 로 나란히 붙인
+// 구조라 legendStats 처럼 한 표 안에 colSpan 광고 행을 끼울 수 없다(좌우 두 표의 행이
+// 동시에 어긋난다). 대신 카드 그리드와 같은 세그먼트 방식으로 StatsTable 자체를 쪼개
+// 사이에 전체 폭 광고를 끼운다 — StatsTable.jsx 는 손대지 않고 그대로 재사용, 두 번째
+// 세그먼트부터는 hideHead 로 열 머리글만 반복 렌더를 막는다.
+// 20번째 행 뒤부터 20행 간격, 화면당 최대 3개(세그먼트 4개)로 캡을 둔다 — 표가 최대 400행
+// 까지 갈 수 있어(README) 캡 없이 20행마다 넣으면 광고가 콘텐츠보다 많아질 수 있다.
+const STATS_TABLE_AD_BREAKPOINTS = [20, 40, 60];
+const buildStatsTableSegments = (rows) => {
+  const segments = [];
+  let start = 0;
+  for (const bp of STATS_TABLE_AD_BREAKPOINTS) {
+    if (rows.length <= bp) break;
+    segments.push(rows.slice(start, bp));
+    start = bp;
+  }
+  segments.push(rows.slice(start));
+  return segments;
+};
+
 const PlayerEncyclopediaScreen = () => {
   useDomainTopBar("선수 백과사전");
 
@@ -522,7 +542,22 @@ const PlayerEncyclopediaScreen = () => {
               </button>
             </div>
           ) : (
-            <StatsTable {...listTable} />
+            buildStatsTableSegments(listTable.rows).flatMap((segment, i) => [
+              // 세그먼트 사이(첫 세그먼트 뒤부터)에만 광고 — 카드 그리드와 같은 규칙
+              i > 0 && (
+                <div key={`stats-ad-${i}`} className={styles.feedAd}>
+                  <AdSlot slot={AD_SLOTS.PLAYERS_TABLE} />
+                </div>
+              ),
+              <StatsTable
+                key={`stats-seg-${i}`}
+                leftCols={listTable.leftCols}
+                rightCols={listTable.rightCols}
+                rightColWidth={listTable.rightColWidth}
+                rows={segment}
+                hideHead={i > 0}
+              />,
+            ])
           )}
         </div>
       ) : sortedPlayers.length === 0 ? (
