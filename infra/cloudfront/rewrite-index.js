@@ -27,6 +27,25 @@ function handler(event) {
     var request = event.request;
     var uri = request.uri;
 
+    // www → apex 301 통일. 사전 조건: 배포의 Alternate domain names 에
+    // www.compyafun.com 추가 + ACM 인증서가 www 를 커버해야 이 함수까지 온다
+    // (등록 전에는 CloudFront 가 403 으로 먼저 끊는다).
+    var host = request.headers.host && request.headers.host.value;
+    if (host === 'www.compyafun.com') {
+        var qs = '';
+        // 쿼리스트링 보존 (CloudFront Functions 는 객체 형태라 직접 조립)
+        for (var key in request.querystring) {
+            qs += (qs === '' ? '?' : '&') + key + '=' + request.querystring[key].value;
+        }
+        return {
+            statusCode: 301,
+            statusDescription: 'Moved Permanently',
+            headers: {
+                location: { value: 'https://compyafun.com' + uri + qs }
+            }
+        };
+    }
+
     if (uri.charAt(uri.length - 1) === '/') {
         request.uri = uri + 'index.html';
     } else if (uri.lastIndexOf('.') <= uri.lastIndexOf('/')) {
