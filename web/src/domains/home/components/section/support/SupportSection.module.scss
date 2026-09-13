@@ -1,0 +1,187 @@
+// ── HomeScreen - 응원 배너 (퀵메뉴 아래) ───────────────────
+// 카카오 브랜드 옐로우(#fee500) 강조 — 외부 브랜드라 토큰 미적용
+.banner {
+  margin: $space-4 $layout-h-pad;
+  padding: $space-4;
+  border: 1px solid rgba(254, 229, 0, 0.4);
+  border-radius: $radius-2xl;
+  background:
+    linear-gradient(135deg, rgba(254, 229, 0, 0.16), rgba(254, 229, 0, 0.04));
+  box-shadow: 0 0 0.75rem rgba(254, 229, 0, 0.12);
+  cursor: pointer;
+  text-align: left;
+  transition: box-shadow 0.2s ease, transform 0.15s ease;
+
+  @include flex-row($gap: $space-3);
+
+  &:hover {
+    box-shadow: 0 0 1.25rem rgba(254, 229, 0, 0.22);
+  }
+
+  &:active {
+    transform: scale(0.99);
+  }
+}
+
+.bannerIcon {
+  @include flex-center;
+  flex-shrink: 0;
+  width: 2.25rem;                 // 36px
+  aspect-ratio: 1 / 1;
+  border-radius: $radius-full;
+  background-color: rgba(254, 229, 0, 0.18);
+  @include font-size-rem(18);
+  animation: supportPulse 2.4s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+}
+
+.bannerBody {
+  @include flex-col;
+  flex: 1;
+  min-width: 0;
+}
+
+.bannerText {
+  @include font-size-rem(14, 1.4);
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+  @include text-ellipsis;
+}
+
+.bannerSub {
+  @include font-size-rem(12, 1.4);
+  color: var(--color-text-secondary);
+  margin-top: $space-1;
+  @include text-ellipsis;
+}
+
+.bannerCta {
+  @include font-size-rem(12);
+  font-weight: $font-weight-bold;
+  flex-shrink: 0;
+  padding: $space-2 $space-3;
+  border-radius: $radius-full;
+  background-color: #fee500;
+  color: #191600;
+  white-space: nowrap;
+}
+
+@keyframes supportPulse {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.12); }
+}
+
+// ── 응원 모달 ─────────────────────────────────────────────
+.overlay {
+  @include modal-backdrop;
+}
+
+.modal {
+  width: 20rem;                                // 320px
+  max-width: calc(100% - 2rem);                // 320 보호 (mobile-frame § 5.1 P11)
+  background-color: var(--color-bg-modal);
+  border-radius: $radius-2xl;
+  padding: $space-6 $space-5;
+  text-align: center;
+  box-shadow: 0 1.25rem 3.125rem rgba(0, 0, 0, 0.4);
+  animation: supportFadeUp 0.18s ease-out;
+}
+
+.title {
+  @include font-size-rem(17, 1.4);
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-primary);
+}
+
+.desc {
+  @include font-size-rem(13, 1.6);
+  color: var(--color-text-secondary);
+  margin-top: $space-2;
+}
+
+.qr {
+  width: 11.25rem;                             // 180px
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  display: block;
+  margin: $space-4 auto 0;
+  border-radius: $radius-lg;
+  background-color: #fff;
+}
+
+.qrHint {
+  @include font-size-rem(12, 1.5);
+  color: var(--color-text-muted);
+  margin-top: $space-3;
+}
+
+// 모바일에서는 QR 을 접어 둔다 (송금 링크가 1순위)
+.qrFold {
+  margin-top: $space-3;
+}
+
+.qrFoldSummary {
+  @include font-size-rem(12);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  list-style: none;
+
+  &::-webkit-details-marker { display: none; }
+}
+
+.payBtn {
+  display: block;
+  width: 100%;
+  margin-top: $space-5;
+  padding: $space-3 0;
+  border-radius: $radius-lg;
+  background-color: #fee500;                   // 카카오 브랜드 컬러 (외부 브랜드 — 토큰 미적용)
+  color: #191600;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+
+  &:hover { opacity: 0.85; }
+}
+
+.copyBtn {
+  width: 100%;
+  margin-top: $space-4;
+  padding: $space-3 0;
+  border-radius: $radius-lg;
+  border: none;
+  background-color: var(--color-brand-violet);
+  color: var(--color-text-primary);
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover { opacity: 0.85; }
+}
+
+.closeBtn {
+  width: 100%;
+  margin-top: $space-2;
+  padding: $space-3 0;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  background-color: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+
+  &:hover { opacity: 0.85; }
+}
+
+@keyframes supportFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

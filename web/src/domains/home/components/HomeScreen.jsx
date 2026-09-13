@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useSetTopBar } from "@/app/provider/TopBarProvider";
 import styles from "./HomeScreen.module.scss";
+import SupportSection from "@/domains/home/components/section/support/SupportSection.jsx";
 import HeroSection from "@/domains/home/components/section/hero/HeroSection.jsx";
 import QuickSection from "@/domains/home/components/section/quick/QuickSection.jsx";
 import QuizSection from "@/domains/home/components/section/quiz/QuizSection.jsx";
@@ -61,6 +62,7 @@ const HomeScreen = () => {
 
       <HeroSection />
       <QuickSection />
+      <SupportSection />
 
       {/* ── 퀴즈 ── */}
       <SectionBlock
