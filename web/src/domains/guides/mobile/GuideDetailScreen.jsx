@@ -9,6 +9,8 @@ import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import { getGuideBySlug } from "@/domains/guides/content/index.js";
 import GuideContent from "@/global/ui/guideContent/GuideContent.jsx";
+import AdSlot from "@/infra/ads/AdSlot.jsx";
+import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 import styles from "./GuideDetailScreen.module.scss";
 
 const GuideDetailScreen = () => {
@@ -37,6 +39,10 @@ const GuideDetailScreen = () => {
   return (
     <div className={styles.screen}>
       <GuideContent guide={guide} headingLevel="h1" />
+
+      {/* 본문 끝, 다음 글 내비 위 — 가이드는 항상 본문이 있으므로 guide 존재 여부만 조건 */}
+      <AdSlot slot={AD_SLOTS.GUIDE_DETAIL} />
+
       <Link to={ROUTE_PATHS.guides} className={styles.backLink}>
         다른 가이드 보러 가기
       </Link>

@@ -454,6 +454,14 @@ td.cStat {
   background: var(--color-bg-elevated);
 }
 
+/* ── in-feed 광고 행 ──────────────────────────────────────── */
+
+.adRow td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-bg-elevated);
+}
+
 .detail {
   padding: 10px 14px 14px;
   text-align: left;

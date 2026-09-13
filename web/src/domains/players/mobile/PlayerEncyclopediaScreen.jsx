@@ -27,6 +27,8 @@ import {
 import { PITCH_LABELS, PITCH_SHORT } from "@/domains/players/store/statsAdapter.js";
 import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
+import AdSlot from "@/infra/ads/AdSlot.jsx";
+import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 import PlayerCard from "./components/playerCard/PlayerCard";
 import FilterSheet from "./components/filterSheet/FilterSheet";
 import StatsTable from "./components/statsTable/StatsTable";
@@ -51,6 +53,21 @@ const saveView = (v) => {
 };
 
 const toggle = (arr, value) => (arr.includes(value) ? arr.filter((v) => v !== value) : [...arr, value]);
+
+// 카드 그리드(고정 5열)는 표와 달리 배열 렌더라 세그먼트로 쪼개 사이에 광고를 끼울 수 있다.
+// 10번째 뒤 1개, 이후 30개 간격 — 화면당 최대 2개(세그먼트 3개)로 캡을 둔다.
+const CARD_AD_BREAKPOINTS = [10, 40];
+const buildCardSegments = (players) => {
+  const segments = [];
+  let start = 0;
+  for (const bp of CARD_AD_BREAKPOINTS) {
+    if (players.length <= bp) break; // 리스트가 이 지점까지 못 미치면 광고 없이 종료
+    segments.push(players.slice(start, bp));
+    start = bp;
+  }
+  segments.push(players.slice(start));
+  return segments;
+};
 
 const PlayerEncyclopediaScreen = () => {
   useDomainTopBar("선수 백과사전");
@@ -516,19 +533,27 @@ const PlayerEncyclopediaScreen = () => {
           </button>
         </div>
       ) : (
-        <div className={styles.grid}>
-          {sortedPlayers.map((p) => (
-            <PlayerCard
-              key={p.id}
-              player={p}
-              maxGrade={maxGrade}
-              wide={wide}
-              isOpen={openL === p.id}
-              onToggleL={handleToggleL}
-              onClose={handleCloseOpenCard}
-            />
-          ))}
-        </div>
+        buildCardSegments(sortedPlayers).flatMap((segment, i) => [
+          // 세그먼트 사이(첫 세그먼트 뒤부터)에만 광고 — 접힌 상태나 화면 최상단엔 절대 두지 않는다
+          i > 0 && (
+            <div key={`ad-${i}`} className={styles.feedAd}>
+              <AdSlot slot={AD_SLOTS.PLAYERS_LIST} />
+            </div>
+          ),
+          <div key={`grid-${i}`} className={styles.grid}>
+            {segment.map((p) => (
+              <PlayerCard
+                key={p.id}
+                player={p}
+                maxGrade={maxGrade}
+                wide={wide}
+                isOpen={openL === p.id}
+                onToggleL={handleToggleL}
+                onClose={handleCloseOpenCard}
+              />
+            ))}
+          </div>,
+        ])
       )}
 
       <FilterSheet

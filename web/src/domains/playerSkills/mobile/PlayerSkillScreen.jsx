@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { useSearchTracking } from "@/infra/analytics/hooks/useSearchTracking.js";
 import { usePlayerSkills } from "./hooks/usePlayerSkills.js";
@@ -173,21 +173,21 @@ const PlayerSkillScreen = () => {
         <div className={styles.empty}>조건에 맞는 스킬이 없습니다. 검색어나 필터를 확인해보세요.</div>
       ) : (
         <div className={styles.list}>
-          {list.map((skill) => (
-            <SkillItem
-              key={skill.id}
-              skill={skill}
-              grade={grade}
-              open={open === skill.id}
-              onToggle={() => toggleItem(skill)}
-              onSelectGrade={setGrade}
-            />
+          {list.map((skill, index) => (
+            <Fragment key={skill.id}>
+              <SkillItem
+                skill={skill}
+                grade={grade}
+                open={open === skill.id}
+                onToggle={() => toggleItem(skill)}
+                onSelectGrade={setGrade}
+              />
+              {/* in-feed 광고 — 10번째 아이템 뒤 1개. 하단 고정 배치보다 노출이 잘 된다 */}
+              {index === 9 && <AdSlot slot={AD_SLOTS.SKILLS_LIST} />}
+            </Fragment>
           ))}
         </div>
       )}
-
-      {/* 목록 하단 광고 — 데이터가 1건 이상 렌더된 경우에만 */}
-      {!loading && !error && list.length > 0 && <AdSlot slot={AD_SLOTS.SKILLS_LIST} />}
     </div>
   );
 };

@@ -24,6 +24,8 @@ import { useHistoryBadge } from "./hooks/useHistoryBadge";
 import { useMileageBadge } from "./hooks/useMileageBadge";
 import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
+import AdSlot from "@/infra/ads/AdSlot.jsx";
+import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 import "./legendStats.tokens.scss";
 import styles from "./LegendStatsScreen.module.scss";
 
@@ -60,6 +62,13 @@ const LegendStatsScreen = () => {
   );
 
   const unrated = rows.filter((l) => l.score == null).length;
+
+  // 표는 단일 <table> 이라 in-feed 광고는 colSpan 행으로 끼운다(선수 백과 카드 그리드와 동일 규칙:
+  // 10번째 뒤 1개, 이후 30개 간격, 화면당 최대 2개).
+  const legendAdBreakpoints = useMemo(
+    () => [10, 40].filter((bp) => rows.length > bp),
+    [rows.length],
+  );
 
   const changeQuery = (value) => {
     setQuery(value);
@@ -388,6 +397,7 @@ const LegendStatsScreen = () => {
             <tbody>
               {rows.map((legend, index) => {
                 const open = openId === legend.id;
+                const showAd = legendAdBreakpoints.includes(index + 1);
                 return [
                   <tr
                     key={legend.id}
@@ -401,6 +411,14 @@ const LegendStatsScreen = () => {
                   open && (
                     <tr key={`${legend.id}-detail`} className={styles.detailRow}>
                       <td colSpan={cols.length}>{renderDetail(legend)}</td>
+                    </tr>
+                  ),
+                  // in-feed 광고 — 접힌 상세와 무관하게 행 순서 기준 10번째·40번째 뒤에만
+                  showAd && (
+                    <tr key={`${legend.id}-ad`} className={styles.adRow}>
+                      <td colSpan={cols.length}>
+                        <AdSlot slot={AD_SLOTS.LEGEND_STATS_LIST} />
+                      </td>
                     </tr>
                   ),
                 ];

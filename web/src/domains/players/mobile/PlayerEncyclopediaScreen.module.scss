@@ -385,6 +385,11 @@
   padding: 0 $layout-h-pad-sm $space-6;
 }
 
+// in-feed 광고 — 그리드 세그먼트 사이에 끼우는 전체 폭 자리(좌우 여백만 그리드와 맞춘다)
+.feedAd {
+  padding: 0 $layout-h-pad-sm;
+}
+
 // ── 로딩 스켈레톤 — design_handoff README: 5×2 카드, radius 4 ────
 .skeletonGrid {
   display: grid;
