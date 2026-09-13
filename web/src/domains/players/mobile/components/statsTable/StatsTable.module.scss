@@ -45,10 +45,11 @@
   @include data-table-skin(38px, 32px); // legendStats --ls-row-h/--ls-head-h 와 동일 값
 }
 
-// idx·구단·연도(·포지션·OVR)는 px 고정, 이름만 폭이 없다 — table-layout:fixed 에서 표의
-// width 를 auto 로 두면(100% 를 되돌림) 표 전체가 "고정 열 합 + 이름 열의 실제 내용 폭"
-// 딱 그만큼만 차지한다(shrink-to-fit). width:100% 그대로 두면 .wrap 의 auto 트랙 안에서
-// 오른쪽 1fr 트랙을 잡아먹어 왼쪽이 거의 전체 폭을 차지해버린다(아래 .rightTable 주석 참고).
+// idx·구단·연도·포지션·OVR·이름 전부 colgroup 으로 px 고정(이름은 statsTable.js
+// computeNameColWidth() 계산값, 세그먼트 분할 여부와 무관하게 항상 동일 — StatsTable.jsx
+// 주석 참고). table-layout:fixed 에서 표의 width 를 auto 로 두면(100% 를 되돌림) 표 전체가
+// "고정 열 합" 딱 그만큼만 차지한다(shrink-to-fit). width:100% 그대로 두면 .wrap 의 auto
+// 트랙 안에서 오른쪽 1fr 트랙을 잡아먹어 왼쪽이 거의 전체 폭을 차지해버린다(아래 .rightTable 주석 참고).
 .leftTable {
   table-layout: fixed;
   width: auto;

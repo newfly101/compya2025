@@ -15,7 +15,7 @@ import SkillItem from "./components/skillItem/SkillItem.jsx";
 import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
-import { AD_SLOTS } from "@/infra/ads/adConfig.js";
+import { AD_SLOTS, ADS_ENABLED } from "@/infra/ads/adConfig.js";
 import "./playerSkills.tokens.scss";
 import styles from "./PlayerSkillScreen.module.scss";
 
@@ -182,8 +182,9 @@ const PlayerSkillScreen = () => {
                 onToggle={() => toggleItem(skill)}
                 onSelectGrade={setGrade}
               />
-              {/* in-feed 광고 — 10번째 아이템 뒤 1개. 하단 고정 배치보다 노출이 잘 된다 */}
-              {index === 9 && <AdSlot slot={AD_SLOTS.SKILLS_LIST} />}
+              {/* in-feed 광고 — 10번째 아이템 뒤 1개. 하단 고정 배치보다 노출이 잘 된다.
+                  승인 전(ADS_ENABLED=false)엔 자리 자체를 만들지 않는다. */}
+              {ADS_ENABLED && index === 9 && <AdSlot slot={AD_SLOTS.SKILLS_LIST} />}
             </Fragment>
           ))}
         </div>

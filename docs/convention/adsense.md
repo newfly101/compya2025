@@ -13,8 +13,17 @@
 | 파일 | 역할 |
 |---|---|
 | `web/src/infra/ads/AdSlot.jsx` | `<ins class="adsbygoogle">` 래퍼. 스크립트 미로드 시(승인 전) 조용히 skip, DEV 에선 placeholder box 렌더 |
-| `web/src/infra/ads/adConfig.js` | `AD_CLIENT_ID` + `AD_SLOTS` 상수. 슬롯 ID 는 승인 전까지 `TODO_*_SLOT_ID` 자리표시자 |
+| `web/src/infra/ads/adConfig.js` | `ADS_ENABLED` 스위치 + `AD_CLIENT_ID` + `AD_SLOTS` 상수. 슬롯 ID 는 승인 전까지 `TODO_*_SLOT_ID` 자리표시자 |
 | `web/index.html:39-45` | adsbygoogle 로더 — **승인 전까지 주석 유지.** 소유권 meta(`google-adsense-account`)만 활성 |
+
+**`ADS_ENABLED` (승인 전/후 단일 스위치)**: in-feed 를 위해 표·그리드를 세그먼트로 쪼개는
+화면(§ 3 의 "in-feed" 방식들)은 `ADS_ENABLED`가 `false`일 때 **분할 자체를 하지 않는다** —
+광고 자리 없이 단일 표/단일 그리드로 통짜 렌더한다. `AdSlot` 자체는 승인 전에도 이미 조용히
+skip 하지만, 그것과 별개로 "분할된 여러 컴포넌트 인스턴스"가 만들어지는 순간 세그먼트마다
+헤더 반복 여부·컬럼 폭 계산이 달라져 광고가 안 보여도 UI 가 어긋나는 문제가 있었다(2026-09-13
+버그). 그래서 분할 여부 자체를 `ADS_ENABLED` 로 게이트한다. 섹션 사이·목록 하단·본문 끝처럼
+**단일 삽입**(분할 없이 그 자리에 `<AdSlot>` 하나만 추가하는 방식)은 이미 `AdSlot`이 승인 전
+null 렌더라 게이트가 필요 없다 — 홈/쿠폰/이벤트/공지/가이드상세가 여기 해당.
 
 사용 패턴:
 
@@ -81,16 +90,18 @@ import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 
 ## 5. 승인 전 / 승인 후 상태 머신
 
-| 단계 | index.html 스크립트 | adConfig 슬롯 ID | 실광고 |
-|---|---|---|---|
-| **현재 (심사 대기)** | 주석 | `TODO_*` | 없음 (DEV placeholder 만) |
-| 승인 통보 후 | **주석 해제** | AdSense 콘솔에서 발급받은 실제 ID 로 교체 | 게재 시작 |
+| 단계 | `ADS_ENABLED` | index.html 스크립트 | adConfig 슬롯 ID | 실광고 | in-feed 분할 |
+|---|---|---|---|---|---|
+| **현재 (심사 대기)** | `false` | 주석 | `TODO_*` | 없음 (DEV placeholder 만) | 없음(단일 표/그리드) |
+| 승인 통보 후 | `true` | **주석 해제** | AdSense 콘솔에서 발급받은 실제 ID 로 교체 | 게재 시작 | 세그먼트 분할 재개 |
 
 승인 후 작업 순서:
-1. AdSense 콘솔 → 광고 → 광고 단위 → 각 배치별 "디스플레이 광고" 단위 생성 (반응형)
-2. 발급된 슬롯 ID 를 `adConfig.js` 에 교체
-3. `web/index.html` 39-45행 주석 해제
-4. 배포 → 실기기에서 게재·레이아웃 확인
+1. `web/src/infra/ads/adConfig.js` 의 `ADS_ENABLED`를 `true`로
+2. AdSense 콘솔 → 광고 → 광고 단위 → 각 배치별 "디스플레이 광고" 단위 생성 (반응형)
+3. 발급된 슬롯 ID 를 `adConfig.js` 의 `AD_SLOTS`에 교체
+4. `web/index.html` 39-45행 주석 해제
+5. 배포 → 실기기에서 게재·레이아웃 확인(특히 in-feed 분할 화면 — 선수 백과 표형/카드형,
+   레전드 재료, 스킬 백과 — 세그먼트 경계에서 컬럼·그리드 정렬이 어긋나지 않는지)
 
 ⚠️ **승인 전에 스크립트를 켜지 않는다.** 심사 시점 사이트는 "광고 없는 완성 상태"가 안전하다.
 ⚠️ AdSense 콘솔의 자동광고 설정은 **끔** 유지 — 자동광고가 켜지면 § 2 룰이 무력화된다.

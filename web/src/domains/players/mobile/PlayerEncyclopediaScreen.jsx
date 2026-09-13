@@ -29,7 +29,7 @@ import { PITCH_LABELS, PITCH_SHORT } from "@/domains/players/store/statsAdapter.
 import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
-import { AD_SLOTS } from "@/infra/ads/adConfig.js";
+import { AD_SLOTS, ADS_ENABLED } from "@/infra/ads/adConfig.js";
 import PlayerCard from "./components/playerCard/PlayerCard";
 import FilterSheet from "./components/filterSheet/FilterSheet";
 import StatsTable from "./components/statsTable/StatsTable";
@@ -581,7 +581,9 @@ const PlayerEncyclopediaScreen = () => {
               </button>
             </div>
           ) : (
-            buildStatsTableSegments(listTable.rows).flatMap((segment, i) => [
+            // 승인 전(ADS_ENABLED=false)엔 세그먼트로 쪼개지 않는다 — 단일 세그먼트(표 전체)라
+            // AdSlot 도, hideHead 도 나오지 않아 컬럼 정렬이 어긋나는 원인 자체가 없어진다.
+            (ADS_ENABLED ? buildStatsTableSegments(listTable.rows) : [listTable.rows]).flatMap((segment, i) => [
               // 세그먼트 사이(첫 세그먼트 뒤부터)에만 광고 — 카드 그리드와 같은 규칙
               i > 0 && (
                 <div key={`stats-ad-${i}`} className={styles.feedAd}>
@@ -607,7 +609,8 @@ const PlayerEncyclopediaScreen = () => {
           </button>
         </div>
       ) : (
-        buildCardSegments(sortedPlayers).flatMap((segment, i) => [
+        // 승인 전(ADS_ENABLED=false)엔 세그먼트로 쪼개지 않는다 — 단일 그리드로 이어서 렌더.
+        (ADS_ENABLED ? buildCardSegments(sortedPlayers) : [sortedPlayers]).flatMap((segment, i) => [
           // 세그먼트 사이(첫 세그먼트 뒤부터)에만 광고 — 접힌 상태나 화면 최상단엔 절대 두지 않는다
           i > 0 && (
             <div key={`ad-${i}`} className={styles.feedAd}>

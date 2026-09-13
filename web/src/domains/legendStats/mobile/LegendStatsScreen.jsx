@@ -25,7 +25,7 @@ import { useMileageBadge } from "./hooks/useMileageBadge";
 import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
-import { AD_SLOTS } from "@/infra/ads/adConfig.js";
+import { AD_SLOTS, ADS_ENABLED } from "@/infra/ads/adConfig.js";
 import "./legendStats.tokens.scss";
 import styles from "./LegendStatsScreen.module.scss";
 
@@ -65,8 +65,9 @@ const LegendStatsScreen = () => {
 
   // 표는 단일 <table> 이라 in-feed 광고는 colSpan 행으로 끼운다(선수 백과 카드 그리드와 동일 규칙:
   // 10번째 뒤 1개, 이후 30개 간격, 화면당 최대 2개).
+  // 승인 전(ADS_ENABLED=false)엔 광고 행 자체를 만들지 않는다 — 표가 항상 이어진 하나로 보인다.
   const legendAdBreakpoints = useMemo(
-    () => [10, 40].filter((bp) => rows.length > bp),
+    () => (ADS_ENABLED ? [10, 40].filter((bp) => rows.length > bp) : []),
     [rows.length],
   );
 

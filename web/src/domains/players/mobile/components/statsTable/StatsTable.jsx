@@ -13,6 +13,15 @@ const StatsTable = ({ leftCols, rightCols, rows, rightColWidth, hideHead = false
   <div className={styles.wrap}>
     <div className={styles.leftPanel}>
       <table className={`${styles.table} ${styles.leftTable}`}>
+        {/* colgroup 은 hideHead 와 무관하게 항상 렌더 — 열 폭 정보를 thead th 에만 의존하면
+            hideHead(광고로 이어붙인 2번째 이후 세그먼트)에서 폭 기준이 사라져 세그먼트마다
+            컬럼이 제각각 계산된다(버그 리포트: 표 UI 불일치). colgroup 을 항상 두면 첫 세그먼트든
+            hideHead 세그먼트든 항상 같은 열 폭으로 그려진다. */}
+        <colgroup>
+          {leftCols.map((c) => (
+            <col key={c.key} style={{ width: c.width }} />
+          ))}
+        </colgroup>
         {!hideHead && (
           <thead>
             <tr>
@@ -51,6 +60,12 @@ const StatsTable = ({ leftCols, rightCols, rows, rightColWidth, hideHead = false
 
     <div className={styles.rightPanel}>
       <table className={`${styles.table} ${styles.rightTable}`} style={{ tableLayout: "fixed" }}>
+        {/* 왼쪽과 같은 이유로 colgroup 은 hideHead 와 무관하게 항상 렌더 */}
+        <colgroup>
+          {rightCols.map((c) => (
+            <col key={c.key} style={{ width: rightColWidth }} />
+          ))}
+        </colgroup>
         {!hideHead && (
           <thead>
             <tr>

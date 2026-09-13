@@ -90,12 +90,12 @@ export function sortListRows(rows, sortKey, sortDir) {
  * 담는다(400px 미만만 예외 — StatsTable.module.scss 커스텀 미디어쿼리). 구종 표는 항상
  * # · 구단 · 연도 · 이름(포지션 X), 스탯 표는 여기에 포지션 · OVR 까지 더한다.
  *
- * n(이름)은 여전히 폭을 안 준다 — 다만 이제 왼쪽 패널 자체가 grid 의 auto 트랙(내용 폭만큼만
- * 차지, StatsTable.module.scss .wrap)이라 "이름이 화면 전체 나머지를 몰아 받는" 예전 문제가
- * 없다. table-layout:fixed + 표 width:auto 조합에서, 폭 없는 열은 그 열의 실제 내용(지금
- * 화면에 보이는 이름들 중 가장 긴 것)만큼만 커진다 — 대부분 3자(≈46px)라 짧게, 운영 DB 최장
- * 5자 외국인 선수("에스테베즈" 등)가 섞인 구단·연도만 82px 안팎으로 커진다. 말줄임 없이 항상
- * 실제 폭에 맞춰 그려지므로 별도 상수로 고정하지 않는다(실측: StatsTable.jsx 주석).
+ * n(이름)은 고정 상수가 아니라 computeNameColWidth() 로 계산한 값을 쓴다 — 이 함수에 들어오는
+ * rows 전체(세그먼트로 쪼개기 전 sortedListRows 전량) 중 가장 긴 이름 기준으로 한 번만 정해져,
+ * in-feed 광고로 표가 여러 <StatsTable> 세그먼트로 나뉘어도(AdSense 승인 후) 모든 세그먼트가
+ * 같은 이름 열 폭을 쓴다. 대부분 3자(≈46px)라 짧게, 운영 DB 최장 5자 외국인 선수("에스테베즈"
+ * 등)가 섞인 구단·연도만 좀 더 넓어진다. 말줄임(.tdName 의 ellipsis)이 안전망으로 남아 있어
+ * 계산이 약간 넉넉해도 레이아웃이 깨지지 않는다.
  *
  * 폭 근거(실측, 480px 화면 puppeteer — th.scrollWidth 로 실제 겹침 여부 확인):
  * - 헤더 폰트 500/11.5px 에서 한글 1자 ≈10.58px, th 좌우 padding 합 8px, 화살표(▼/▲) 는
@@ -105,17 +105,34 @@ export function sortListRows(rows, sortKey, sortDir) {
  * - OVR(영문 3자, 정렬 활성 시 화살표까지 자기 안에 담아야 함): 텍스트 자체는 22px 안팎으로
  *   한글 3자보다 훨씬 좁지만 화살표 포함 시 34px 로는 5px 부족(실측 scrollWidth 39) → 42px.
  */
-const LEFT_WIDTH = { idx: "20px", tm: "32px", y: "26px", n: "auto", pos: "40px", ovr: "42px" };
+const LEFT_WIDTH = { idx: "20px", tm: "32px", y: "26px", pos: "40px", ovr: "42px" };
+
+// 이름 열 폭 — 표가 in-feed 광고로 여러 <StatsTable> 세그먼트로 쪼개질 때(AdSense 승인 후),
+// 세그먼트마다 "그 세그먼트에 보이는 이름 중 가장 긴 것"으로 auto 계산되면 세그먼트마다 폭이
+// 달라져 좌우 컬럼이 어긋난다(버그 리포트: 표 UI 불일치). 항상 이 함수가 받는 전체 rows
+// (세그먼트로 나뉘기 전의 sortedListRows 전량)를 기준으로 한 번만 계산해, 모든 세그먼트가
+// 같은 값을 쓰게 한다 — 분할 여부와 무관하게 항상 같은 로직이라 단일 표(분할 없음) 결과도
+// 기존 auto 계산과 거의 동일하다(한글 1자 ≈10.58px 실측치 기반, 여유 padding 포함).
+function computeNameColWidth(rows) {
+  let maxLen = 3; // 최소 3자 폭은 항상 보장(기존 흔한 케이스 46px 언저리와 맞춘다)
+  for (const r of rows) {
+    if (r.n && r.n.length > maxLen) maxLen = r.n.length;
+  }
+  return `${maxLen * 11 + 13}px`;
+}
 
 export function buildTable({ rows, isPitch, statLabels, sortKey, sortDir, onSort }) {
   const fixed = isPitch
     ? [["idx", "#"], ["tm", "구단"], ["y", "연도"], ["n", "이름"]]
     : [["idx", "#"], ["tm", "구단"], ["y", "연도"], ["n", "이름"], ["pos", "포지션"], ["ovr", "OVR"]];
 
+  const nameColWidth = computeNameColWidth(rows);
+  const widthOf = (key) => (key === "n" ? nameColWidth : LEFT_WIDTH[key]);
+
   const leftCols = fixed.map(([key, label]) => ({
     key,
     label,
-    width: LEFT_WIDTH[key],
+    width: widthOf(key),
     align: key === "n" ? "left" : "center",
     active: sortKey === key,
     dir: sortKey === key ? sortDir : 0,
