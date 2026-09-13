@@ -2,7 +2,7 @@
 
 - 정본: `test-docs/타자_스탯_입력_시트_정리_최종본.xlsx` (게임 화면을 파이썬으로 찍어 뽑은 결과)
 - 대조 대상: 선수 카드 마스터 (`data_player_card`, 노말 카드 11,668행)
-- 대조 스크립트: `scripts/compare_excel_db_player_names.py`
+- 대조 스크립트: `scripts/compare_excel_db_player_names.py` (삭제됨 — 2026-09-13, 데이터 생성 스크립트는 별도 프로젝트로 분리)
 - 수정 스크립트: `sql/updateData/fixPlayerNamesFromStatSheet.sql`
 - ⚠️ 운영 DB 에 질의하지 않았다. DB 쪽은 시드 파일(`sql/V3/data/data_player_card_INSERT.sql`)을 사본으로 썼다.
 

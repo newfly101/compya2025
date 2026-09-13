@@ -33,8 +33,8 @@
   --color-mileage-glow-done: rgba(94, 234, 212, 0.4);
 
   // ── 저격 선수 리스트 탭 전용(target-list-design-spec.md §2) ──
-  // 표 헤더 배경 — legendStats 의 --color-ls-head-bg 와 같은 값으로 맞춰 통일성 확보
-  --color-mileage-list-head-bg: #15121c;
+  // 표 헤더 배경은 공용 토큰 --color-table-head-bg(2026-09-13 공용화)를 바로 쓴다 — 값이 같은
+  // #15121c 를 로컬에 중복 정의하지 않는다.
   // 행 hover/선택 — legendStats/admin 의 값(#161320)과 다른 톤이라 로컬로 새로 둔다
   --color-mileage-list-row-hover: #1b1633;
   // 비활성 포지션 칩 텍스트 — 전역에 이 정도로 어두운 비활성 톤이 없어 신규

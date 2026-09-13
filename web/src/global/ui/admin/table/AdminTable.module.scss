@@ -1,69 +1,42 @@
+// 표 뼈대(박스/th·td/헤더 sticky/정렬 표시/열 고정)는 global/styles/mixins/_table.scss
+// 의 data-table-* 공용 믹스인을 쓴다(레전드 기준으로 공용화, 2026-09-13). 열 폭 고정(fixed)·
+// 셀 말줄임·좌측 정렬·행 hover 등 어드민 표만의 성질만 아래 이어서 로컬로 남긴다.
 .tableBox {
-  overflow-x: auto;
-  // 레전드·히스토리 재료 표와 동일 — 필터 영역과의 경계만 위쪽에 굵은 선으로 준다.
-  // 상자 전체를 두르는 border+radius 는 v2 스크린샷에도 없어 제거한다.
-  border-top: 1px solid var(--color-border-strong);
+  @include data-table-box;
 }
 
 .table {
-  width: 100%;
+  @include data-table-skin(var(--admin-row-h), var(--admin-head-h));
   // 폭을 지정한 칸은 그 값을 그대로 지키고, 폭 미지정 칸(보통 주요 정보 칸)이
-  // 남는 폭을 흡수한다 — 히스토리 재료 표와 동일 원리. auto 로 두면 긴 텍스트가
-  // 지정 폭을 밀어내 가로 스크롤이 생긴다.
+  // 남는 폭을 흡수한다 — auto 로 두면 긴 텍스트가 지정 폭을 밀어내 가로 스크롤이 생긴다.
   table-layout: fixed;
-  border-collapse: separate;
-  border-spacing: 0;
-  @include text-body;
-  // 레전드·히스토리 재료 표는 mixin 대신 12.5px 를 직접 쓴다 — 톤을 맞추기 위해 덮어쓴다.
-  font-size: 12.5px;
 }
 
 .cell {
-  height: var(--admin-row-h);
-  padding: 0 $space-1;
   overflow: hidden;
-  border-bottom: 1px solid var(--color-border);
-  text-align: center;
   text-overflow: ellipsis;
-  white-space: nowrap;
-}
 
-.alignLeft {
-  padding-left: $space-2;
-  text-align: left;
-}
-
-thead .cell,
-thead th {
-  position: sticky;
-  top: 0;
-  z-index: $z-above;
-  height: var(--admin-head-h);
-  // 헤더/본문 경계를 본문 행 구분선(--color-border)보다 굵게 — 레전드·히스토리와 동일
-  border-bottom: 1px solid var(--color-border-strong);
-  background: var(--color-admin-table-head-bg);
-  color: var(--color-text-secondary);
-  @include text-caption;
-  // 레전드·히스토리 재료 표는 11.5px — text-caption(11px) 을 표에서만 덮어쓴다
-  font-size: 11.5px;
-  font-weight: 500;
-  user-select: none;
+  // mixin 의 th/td 기본(text-align:center)보다 특이도가 높아야 이겨서, .alignLeft 단독이
+  // 아니라 .cell 과 묶어 선언한다(JSX 에서 항상 두 클래스를 같이 준다).
+  &.alignLeft {
+    padding-left: $space-2;
+    text-align: left;
+  }
 }
 
 .sticky {
-  position: sticky;
   left: 0;
-  z-index: $z-above;
-  background: var(--color-bg-card);
+  @include data-table-sticky-col(var(--color-bg-card));
 }
 
-thead .sticky {
-  z-index: $z-dropdown;
-  background: var(--color-admin-table-head-bg);
+// mixin data-table-skin 의 `thead th` 와 특이도가 같아야 나중에 쓴 이 규칙이 이긴다
+// (열 고정을 쓰는 화면은 아직 없지만 향후 대비 — sticky:true 컬럼 config 참고: legendStats).
+thead th.sticky {
+  @include data-table-sticky-head;
 }
 
 .sortable {
-  cursor: pointer;
+  @include data-table-sortable;
 
   &:hover {
     color: var(--color-text-primary);
@@ -71,10 +44,7 @@ thead .sticky {
 }
 
 .arrow {
-  // 레전드·히스토리 재료 표와 동일 — $space-1(4px) 은 화살표가 라벨과 너무 떨어져 보인다
-  margin-left: 1px;
-  color: var(--color-brand);
-  font-size: 9px;
+  @include data-table-sort-arrow;
 }
 
 .checkboxCell {

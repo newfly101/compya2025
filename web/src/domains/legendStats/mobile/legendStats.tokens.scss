@@ -12,8 +12,11 @@
   --color-ls-dim: #7b6f86; // 66 이하
   --color-ls-warn: #fbbf24; // 구종 등급(수치 미확인)
 
-  // 고정 열 배경 — 가로 스크롤 시 비쳐 보이면 안 되므로 불투명
-  --color-ls-head-bg: #15121c;
+  // 표 헤더 배경은 --color-ls-head-bg 로 로컬 정의했었으나, admin/historyLegend/
+  // mileage(리스트)/players 도 정확히 같은 값(#15121c)을 각자 로컬로 갖고 있어
+  // 공용 토큰 --color-table-head-bg 로 승격했다(global/styles/semantic/_color.scss).
+  // 행 hover 색은 화면마다 값이 달라(admin #161320 / mileage-list #1b1633 / players
+  // rgba(255,255,255,.025)) 공용화하지 않고 로컬로 남긴다.
   --color-ls-row-hover: #161320;
 
   // OVR 열 (파생값)

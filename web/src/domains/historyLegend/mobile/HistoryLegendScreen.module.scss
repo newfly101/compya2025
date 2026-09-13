@@ -186,71 +186,44 @@
 
 /* ── 표 ───────────────────────────────────────────────── */
 
+// 표 뼈대(박스/th·td/헤더 sticky/정렬 표시/고정 열)는 global/styles/mixins/_table.scss
+// 의 data-table-* 공용 믹스인을 쓴다(2026-09-13 공용화, legendStats 기준). 열 폭·말줄임처럼
+// 이 화면에만 있는 성질만 아래 이어서 로컬로 남긴다.
 .tableBox {
-  overflow-x: auto;
-  border-top: 1px solid var(--color-border-strong);
+  @include data-table-box;
 }
 
 .table {
-  width: 100%;
+  @include data-table-skin(var(--hl-row-h), var(--hl-head-h));
   // 남는 폭은 폭을 지정하지 않은 마지막 칸(등장 일차 / 대상 레전드)이 흡수한다.
   // 모든 칸에 폭을 주면 남는 만큼 비례 분배돼 내용이 한쪽으로 몰린다.
   // auto 면 긴 텍스트(대상 레전드)가 지정 폭을 밀어내 표가 행마다 늘었다 줄었다 한다.
   // fixed 로 두면 아래 지정 폭이 그대로 지켜지고, 넘치는 글자는 말줄임으로 처리된다.
   table-layout: fixed;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 12.5px;
 
   th,
   td {
-    height: var(--hl-row-h);
     // 좁은 화면에서 한 칸이라도 더 벌기 위해 좌우 여백을 최소로 둔다
     padding: 0 3px;
     overflow: hidden;
-    border-bottom: 1px solid var(--color-border);
-    text-align: center;
     text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  thead th {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    height: var(--hl-head-h);
-    border-bottom: 1px solid var(--color-border-strong);
-    background: var(--color-hl-head-bg);
-    color: var(--color-text-secondary);
-    font-size: 11.5px;
-    font-weight: 500;
-    user-select: none;
-
-    &:hover {
-      color: var(--color-text-primary);
-    }
   }
 }
 
 .sortable {
-  cursor: pointer;
+  @include data-table-sortable;
 }
 
 .arrowMark {
-  margin-left: 1px;
-  color: var(--color-brand);
-  font-size: 9px;
+  @include data-table-sort-arrow;
 }
 
 .sticky {
-  position: sticky;
-  z-index: 10;
-  background: var(--color-bg-deepest);
+  @include data-table-sticky-col;
 }
 
 thead .sticky {
-  z-index: 25;
-  background: var(--color-hl-head-bg);
+  @include data-table-sticky-head;
 }
 
 // .table th / .table td 의 center 를 이기려면 같은 요소 선택자를 써야 한다

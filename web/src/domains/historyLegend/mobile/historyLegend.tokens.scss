@@ -5,8 +5,10 @@
   --hl-row-h: 38px;
   --hl-head-h: 32px;
 
-  // 고정 열 배경 — 가로 스크롤 시 비쳐 보이면 안 되므로 불투명
-  --color-hl-head-bg: #15121c;
+  // 머리행 배경은 공용 토큰 --color-table-head-bg(2026-09-13 공용화)로 옮기고 여기선 뺐다 — 값이 같은 걸 두 곳에 두지 않는다.
+
+  // 고정 열 hover — legendStats(--color-ls-row-hover)와 같은 표 스타일이라 같은 값을 쓴다
+  --color-hl-row-hover: #161320;
 
   // 일차 홀짝 2색. D1/D2 경계가 안 보인다는 문제 때문에 넣었다
   --color-hl-row-odd: #100e14;

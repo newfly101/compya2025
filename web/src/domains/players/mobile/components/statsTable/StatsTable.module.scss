@@ -46,11 +46,15 @@
   }
 }
 
-// 머리행 배경·글꼴은 legendStats 표(LegendStatsScreen.module.scss thead th)와 모양만 맞춘다.
+// 머리행 배경·글꼴은 공용 data-table-skin(mixins/_table.scss) 이 내는 모양과 같은 값을 쓴다.
+// ⚠️ mixin 을 그대로 @include 하지 않는다 — mixin 은 `th, td` 같은 태그 선택자를 내는데,
+// 이 표는 좌우 두 <table> 을 .thActive/.tdActive/.tdRight 같은 클래스 우선순위로 덮어쓰는
+// 구조라 태그 선택자가 끼면 그 클래스들의 특이도를 이겨버려 활성/강조색이 깨진다.
+// 그래서 값만 그대로 옮기고 선택자 구조(클래스 전용)는 유지한다.
 .th {
   height: 32px;
   padding: 0 $space-1;
-  background-color: var(--color-pe-table-head-bg);
+  background-color: var(--color-table-head-bg);
   color: var(--color-text-secondary);
   font-size: 11.5px;
   font-weight: 500;
@@ -60,7 +64,7 @@
 }
 
 .sortable {
-  cursor: pointer;
+  @include data-table-sortable;
 }
 
 .thActive {
@@ -74,9 +78,7 @@
 }
 
 .arrow {
-  margin-left: 3px;
-  font-size: 9px;
-  color: var(--color-brand);
+  @include data-table-sort-arrow;
 }
 
 .td {
