@@ -35,3 +35,13 @@
   @include text-micro;
   color: var(--color-text-muted);
 }
+
+// 운영자/사업자 정보용 — 값 확정 시 Footer.jsx 의 HITL 주석 구조 사용
+.bizInfo {
+  @include flex-col($space-1);
+}
+
+.bizLine {
+  @include text-micro;
+  color: var(--color-text-muted);
+}

@@ -17,8 +17,23 @@ const Footer = () => {
         <Link to="/contact" className={styles.link}>문의하기</Link>
       </nav>
 
-      {/* TODO: 사업자 정보 (상호명 / 대표자 / 사업자등록번호 / 통신판매업신고번호 / 주소) —
-          확정 데이터 없어 지어내지 않고 비워둠. 확보되면 이 자리에 추가. */}
+      {/*
+        [HITL: 운영자 표기값 필요 — 이름/이메일/(선택)사업자등록번호]
+        확정되면 아래 구조로 링크 nav 와 copyright 사이에 렌더 추가 (styles.bizInfo 는
+        Footer.module.scss 에 이미 정의돼 있음):
+
+        <div className={styles.bizInfo}>
+          <p className={styles.bizLine}>상호: {'{name}'}</p>
+          <p className={styles.bizLine}>대표자: {'{representative}'}</p>
+          <p className={styles.bizLine}>사업자등록번호: {'{registrationNumber}'}</p>
+          <p className={styles.bizLine}>통신판매업신고번호: {'{mailOrderNumber}'}</p>
+          <p className={styles.bizLine}>주소: {'{address}'}</p>
+          <p className={styles.bizLine}>이메일: {'{email}'}</p>
+        </div>
+
+        값이 없는 항목(예: 사업자등록번호 미보유 개인)은 해당 <p> 줄만 생략한다.
+        절대 임의 값으로 미리 채우지 않는다.
+      */}
 
       <p className={styles.copyright}>
         © {currentYear} 컴프야펀. All rights reserved.
