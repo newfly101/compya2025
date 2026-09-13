@@ -9,6 +9,19 @@ const TopBar = () => {
   const { isAuthenticated, login, logout } = useAuthentication();
   const { variant, title, rightAction, onBack } = config;
 
+  // page / section variant 는 이미 특정 화면 안이라 로그인 유도는 화면 본문이 담당.
+  // 로그인 상태일 때만 로그아웃 진입점을 우측에 추가 노출한다 (rightAction 과 공존).
+  const logoutAction = isAuthenticated && (
+    <button
+      type="button"
+      className={styles.logoutIconBtn}
+      onClick={logout}
+      aria-label="로그아웃"
+    >
+      <span className={styles.logoutIcon}>⏻</span>
+    </button>
+  );
+
   if (variant === "page") {
     return (
       <header className={styles.topBar}>
@@ -21,7 +34,12 @@ const TopBar = () => {
         <span className={styles.pageTitle}>{title}</span>
 
         <div className={styles.right}>
-          {rightAction && rightAction}
+          {(rightAction || logoutAction) && (
+            <div className={styles.rightAction}>
+              {rightAction}
+              {logoutAction}
+            </div>
+          )}
         </div>
       </header>
     );
@@ -39,8 +57,8 @@ const TopBar = () => {
         <span className={styles.pageTitle}>{title}</span>
 
         <div className={styles.right}>
-          {rightAction
-            ? <div className={styles.rightAction}>{rightAction}</div>
+          {(rightAction || logoutAction)
+            ? <div className={styles.rightAction}>{rightAction}{logoutAction}</div>
             : <div className={styles.rightPlaceholder} aria-hidden="true" />
           }
         </div>
