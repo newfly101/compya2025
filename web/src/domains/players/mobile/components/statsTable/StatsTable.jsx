@@ -45,7 +45,7 @@ const StatsTable = ({ leftCols, rightCols, rows, rightColWidth }) => (
     </div>
 
     <div className={styles.rightPanel}>
-      <table className={styles.table} style={{ tableLayout: "fixed" }}>
+      <table className={`${styles.table} ${styles.rightTable}`} style={{ tableLayout: "fixed" }}>
         <thead>
           <tr>
             {rightCols.map((c) => (

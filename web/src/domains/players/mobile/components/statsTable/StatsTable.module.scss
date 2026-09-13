@@ -1,13 +1,14 @@
-// 배경 진행 순서(옅음→짙음)는 전역 bg 스케일을 그대로 쓴다 — handoff 값과 순서가 같다
-// (컨테이너 #13121c ≈ --color-bg-deep, 헤더 기본 #1a1826 ≈ --color-bg-overlay).
+// 바깥 틀은 legendStats 와 같은 data-table-box 를 쓴다 — 카드처럼 사방 테두리+radius+배경을
+// 주지 않고, 위쪽 구분선 하나만 긋고 화면 배경(--color-bg-deepest)에 그대로 붙인다.
+// 다만 이 표는 좌우 두 패널을 grid 로 나눠 각자 폭 계산으로 스크롤 없이 담는 구조라
+// mixin 의 overflow-x:auto(표 전체 가로 스크롤)는 그대로 쓰지 않고 hidden 으로 덮는다
+// — 가로 스크롤이 필요한 399px 이하 구간은 .leftPanel 이 개별로 처리한다.
 // 정렬 중 열 강조·활성 텍스트는 이미 화면 다른 곳에서 쓰는 --color-brand-tint 를 재사용한다.
 .wrap {
+  @include data-table-box;
+  overflow: hidden;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  border: 1px solid var(--color-border-strong);
-  border-radius: $radius-lg;
-  background-color: var(--color-bg-deep);
-  overflow: hidden;
 }
 
 // 기본(400px~): 좌우 스크롤 없이 폭 계산으로 한 화면에 다 담는다. 구종 표는 능력치 10열을
@@ -28,10 +29,12 @@
   overflow: hidden;
 }
 
+// 표 뼈대(테두리색·머리행 배경/폰트·sticky 선언)는 legendStats 와 같은 data-table-skin 을 쓴다.
+// (헤더의 position:sticky 는 이 표에서는 무해하다 — .leftPanel/.rightPanel 이 자체
+// overflow:hidden 이라 sticky 의 기준 스크롤 상자가 되는데, 그 상자 자체는 내부적으로
+// 스크롤하지 않고 페이지와 함께 움직이므로 실제로 떠다니는 헤더가 되지 않는다.)
 .table {
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 12.5px; // legendStats 표와 동일
+  @include data-table-skin(38px, 32px); // legendStats --ls-row-h/--ls-head-h 와 동일 값
 }
 
 // table-layout: fixed + width:100% 로 두면 px 를 지정한 열(#·구단·연도·포지션)을 뺀
@@ -46,20 +49,19 @@
   }
 }
 
-// 머리행 배경·글꼴은 공용 data-table-skin(mixins/_table.scss) 이 내는 모양과 같은 값을 쓴다.
-// ⚠️ mixin 을 그대로 @include 하지 않는다 — mixin 은 `th, td` 같은 태그 선택자를 내는데,
-// 이 표는 좌우 두 <table> 을 .thActive/.tdActive/.tdRight 같은 클래스 우선순위로 덮어쓰는
-// 구조라 태그 선택자가 끼면 그 클래스들의 특이도를 이겨버려 활성/강조색이 깨진다.
-// 그래서 값만 그대로 옮기고 선택자 구조(클래스 전용)는 유지한다.
+// mixin 이 `.table` 에 width:100% 를 준다 — 오른쪽 표는 .rightPanel(grid auto 트랙)의
+// 유일한 자식이라, 폭이 아직 안 정해진 auto 트랙 안에서 자식이 100% 를 요구하면 그 트랙이
+// 거의 전체 폭을 먹어버려 왼쪽 패널이 0px 로 찌그러진다(실측). 오른쪽 표는 폭 없이
+// 열 너비(rightColWidth) 합만큼만 차지해야 하므로 100%를 되돌린다.
+.rightTable {
+  width: auto;
+}
+
+// 머리행 뼈대(높이·배경·글자색/크기·border-bottom)는 위 .table 의 data-table-skin 이
+// `.table thead th` 로 이미 낸다 — 여기서는 그 값과 안 겹치는 것만 남긴다.
+// .th 는 값이 비어도 JSX 가 이 클래스를 항상 얹으므로 지우지 않는다(아래 .thActive/.thRight
+// 결합 선택자가 여기 기대는 특이도 상승분 때문).
 .th {
-  height: 32px;
-  padding: 0 $space-1;
-  background-color: var(--color-table-head-bg);
-  color: var(--color-text-secondary);
-  font-size: 11.5px;
-  font-weight: 500;
-  white-space: nowrap;
-  border-bottom: 1px solid var(--color-border-strong);
   user-select: none;
 }
 
@@ -67,12 +69,15 @@
   @include data-table-sortable;
 }
 
-.thActive {
+// ⚠️ 특이도 트릭 — mixin 이 내는 `.table thead th`(class 1 + tag 2)를 `.thActive` 단독
+// (class 1)으로는 못 이긴다. AdminTable(.cell.alignLeft)과 같은 방식으로 항상 같이 붙는
+// 기본 클래스(.th/.td)와 묶어 class 2개(0,2,0)로 특이도를 올려서 이긴다.
+.th.thActive {
   background-color: var(--color-brand-tint);
   color: #fff;
 }
 
-.thRight {
+.th.thRight {
   text-align: center;
   padding: 0 2px;
 }
@@ -81,29 +86,26 @@
   @include data-table-sort-arrow;
 }
 
+// 뼈대(높이·padding·border-bottom·white-space·정렬)는 mixin 이 `.table td` 로 낸다.
 .td {
-  height: 38px; // legendStats 표와 동일(--ls-row-h)
-  padding: 0 $space-1;
-  white-space: nowrap;
-  border-bottom: 1px solid var(--color-border);
   color: var(--color-text-primary);
   font-weight: 700;
 }
 
 // 이름 열은 스크롤 없이 계산한 폭이라 아주 긴 이름은 빠듯할 수 있다 — 잘리면 말줄임표로.
-.tdName {
+.td.tdName {
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.tdRight {
+.td.tdRight {
   padding: 0 2px;
   text-align: center;
   font-weight: 900;
   background-color: transparent;
 }
 
-.tdActive {
+.td.tdActive {
   background-color: var(--color-brand-tint);
 }
 
