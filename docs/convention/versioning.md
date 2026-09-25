@@ -1,0 +1,232 @@
+# 버저닝·형상관리 컨벤션
+
+> 기준일: 2026-09-25 · 기준선: **`v2.0.0 (platform-2.0)`**
+> 버전은 **두 축**으로 따로 센다. 이용자가 보는 변화 = **기능 버전**, 코드 구조가 바뀌는 변화 = **플랫폼 버전**.
+> 변경 이력 기록: [`docs/CHANGELOG.md`](../CHANGELOG.md)
+
+---
+
+## 1. 두 축 한눈에
+
+| 축 | 식별자 | 누가 체감 | 올리는 계기 | 기록 위치 |
+|---|---|---|---|---|
+| **기능(Release)** | `vMAJOR.MINOR.PATCH` (SemVer) | 이용자·운영자 | 화면/기능 추가·수정·버그 수정 | CHANGELOG `Added/Changed/Fixed` |
+| **플랫폼(Code)** | `platform-MAJOR.MINOR` | 개발자 | 언어·프레임워크·상태관리·DB 스키마 세대·모듈 구조 변경 | CHANGELOG `Platform` |
+
+- 두 축은 **독립**이다. 기능 버전이 올라가도 플랫폼 버전은 그대로일 수 있고, 그 반대도 된다.
+- 표기는 항상 **기능 버전 먼저, 플랫폼 버전은 괄호**: `v2.1.0 (platform-2.0)`.
+
+---
+
+## 2. 경계 판단표 — 이 변경은 어느 축을 올리나
+
+| # | 변경 예시 | 기능 버전 | 플랫폼 버전 |
+|---|---|---|---|
+| 1 | 신규 화면 오픈 (예: 마일리지 저격 `/mileage`) | MINOR | — |
+| 2 | 기존 화면에 필터·탭 추가 (예: 선수 백과 연도 필터) | MINOR | — |
+| 3 | 버그 수정 / 문구·오탈자 / 레이아웃 깨짐 수정 | PATCH | — |
+| 4 | 어드민 전용 신규 탭·API (예: 컨텐츠 동기화 탭) | MINOR | — |
+| 5 | 전면 UX 개편 (PC → 모바일 전환, 내비게이션 체계 교체) | **MAJOR** | 보통 MAJOR 동반 |
+| 6 | FE 에 TypeScript 도입 (JS → TS 점진 전환 시작) | — | **MAJOR** |
+| 7 | BE 에 Kotlin 추가 (Java 와 혼용 시작) | — | **MAJOR** |
+| 8 | 상태관리 교체 (Redux Toolkit → 다른 라이브러리) | — | **MAJOR** |
+| 9 | DB 스키마 세대 교체 (`sql/V3` → `sql/V4` 신설) | — | **MAJOR** |
+| 10 | 멀티모듈 분리 (Gradle 단일 모듈 → `api`/`core` 분리) | — | MINOR |
+| 11 | 프레임워크 메이저 업그레이드 (Spring Boot 3 → 4, React 19 → 20, Vite 7 → 8) | — | MINOR |
+| 12 | 라우트 주소 일원화·폴더 이동 등 **동작 불변** 리팩터 | — | — (CHANGELOG `Internal` 만) |
+| 13 | 라이브러리 패치·마이너 업데이트, 경고 정리 | — | — |
+| 14 | 배포 파이프라인 변경 (workflow, CloudFront 함수) | — | — (ops, `Internal`) |
+| 15 | 기존 스키마 세대 안에서 테이블/컬럼 추가 (`sql/V3/CREATE_NN_` 추가) | 연결된 기능 기준 | — |
+| 16 | 기능 제거 / 서비스 중단 (메뉴에서 빠짐) | MINOR (`Removed`) | — |
+
+### 판단 순서 (체크리스트)
+
+- [ ] 이용자·운영자가 **눈으로 차이를 느끼는가?** → 기능 축 검토 (아니면 기능 버전 불변)
+- [ ] 개발자가 **새 언어/도구를 배워야 하거나, 기존 코드 규칙(컨벤션 문서)이 바뀌는가?** → 플랫폼 MAJOR
+- [ ] 규칙은 그대로지만 **빌드 구조·주요 의존성 메이저**가 바뀌는가? → 플랫폼 MINOR
+- [ ] 둘 다 아니면 → 버전 불변, CHANGELOG `Internal` 에 1줄
+- [ ] 한 릴리스에 여러 변경이 섞이면 → **각 축에서 가장 큰 단계 하나만** 올린다 (MINOR + PATCH = MINOR)
+
+---
+
+## 3. 기능 버전 — `vMAJOR.MINOR.PATCH`
+
+| 자리 | 의미 | 예 |
+|---|---|---|
+| MAJOR | 서비스 개편 / 대규모 UX 변경 / 이용 방식이 바뀜 | v1(PC) → **v2(모바일 리뉴얼)** |
+| MINOR | 신규 기능·화면, 기존 화면의 의미 있는 기능 추가, 기능 제거 | v2.0.0 → v2.1.0 |
+| PATCH | 버그 수정, 문구 수정, 스타일 보정 | v2.1.0 → v2.1.1 |
+
+- **기준선 선언: 현재 운영 상태 = `v2.0.0`.** 이후 첫 기능 릴리스부터 이 규칙으로 센다.
+- MINOR 가 오르면 PATCH 는 0 으로, MAJOR 가 오르면 MINOR·PATCH 모두 0 으로.
+- 베타/미리보기 노출(메뉴 `BETA` 뱃지)도 **이용자에게 열리는 시점**에 MINOR 로 센다. `comingSoon`(클릭 차단) 은 버전 대상 아님.
+- 사전 릴리스가 필요하면 `v2.1.0-rc.1` 형식 (기본은 사용 안 함).
+
+### 커밋 제목 → 기능 버전 매핑
+
+현행 커밋 제목 관례 `[리뉴얼] [type] 설명` 을 그대로 쓰고, **type 으로 bump 후보**를 정한다.
+
+| type | 기본 bump | 비고 |
+|---|---|---|
+| `feat` | MINOR | 어드민 전용·내부 계측이면 MINOR 또는 `Internal` — 이용자 체감 여부로 판단 |
+| `fix` | PATCH | |
+| `refactor` | 없음 | § 2 #6~#11 에 해당하면 **platform bump 후보** |
+| `chore` / `docs` | 없음 | |
+| `perf` (선택) | PATCH | 체감 속도 개선일 때 |
+
+- 커밋 prefix `[리뉴얼]` 은 v2 세대 작업 표식이다. 다음 MAJOR(v3) 작업이 시작되면 prefix 를 새로 정한다 (예: `[v3]`).
+- 플랫폼 변경 커밋은 설명에 `platform:` 을 붙여 CHANGELOG 수집을 쉽게 한다. 예: `[리뉴얼] [refactor] platform: FE TypeScript 도입 — tsconfig·빌드 설정`
+
+---
+
+## 4. 플랫폼 버전 — `platform-MAJOR.MINOR`
+
+### 식별자 선택 (권고: `platform-X.Y`)
+
+| 후보 | 장점 | 단점 | 판정 |
+|---|---|---|---|
+| `platform-X.Y` | 세대(MAJOR) + 세대 내 구조 변경(MINOR) 2단계 표현, git 태그 정렬 가능, 기능 버전과 모양이 달라 혼동 없음 | 자리 하나 더 관리 | **채택** |
+| 코드 세대 `G1/G2` | 짧고 직관적 | 세대 안의 모듈 분리·프레임워크 업그레이드를 표현 못 함 | 보조 호칭으로만 (`G2` = `platform-2.x`) |
+
+### 규칙
+
+| 자리 | 올리는 계기 | 컨벤션 문서 영향 |
+|---|---|---|
+| MAJOR | 언어 추가/교체, 프레임워크 교체, 상태관리 교체, DB 스키마 세대(`sql/V{N}`) 교체, FE/BE 아키텍처 재편 | `frontend.md`/`backend.md` 개정 **필수** |
+| MINOR | 빌드·모듈 구조 분리, 주요 프레임워크 메이저 업그레이드, 공용 인프라 계층 교체 | 해당 절 보완 |
+
+- **기준 세대 선언: 현재 구성 = `platform-2.0`** (v2 모바일 리뉴얼과 같은 세대 번호로 맞춤).
+- `platform-1.x` = v1(PC) 시절 구성. 당시 스택 상세는 **미확인** — 소급 기록 여부는 § 9 HITL.
+
+### 세대별 스택 매트릭스
+
+| 영역 | platform-1.x (v1 PC) | **platform-2.0 (기준, 현재)** | platform-3.0 (가상 예시) |
+|---|---|---|---|
+| BE 언어 | 미확인 | Java 21 (toolchain) | Java 21 + Kotlin |
+| BE 프레임워크 | 미확인 | Spring Boot 3.3.2 (Gradle 단일 모듈) | Spring Boot 3.x, 멀티모듈 |
+| 영속 계층 | 미확인 | MyBatis 3.0.3 + MapStruct 1.5.5, MariaDB | 동일 |
+| DB 스키마 세대 | `sql/V2` (구버전) | **`sql/V3` (현행)** — `V2` 는 이력 보존용 | `sql/V4` |
+| FE 언어 | 미확인 | JavaScript (JSX) | TypeScript |
+| FE 프레임워크 | PC 화면 (2026-05-09 코드 삭제) | React 19 + react-router-dom 7 + Vite 7, 모바일 우선 | 동일 |
+| 상태관리 | 미확인 | Redux Toolkit 2 | (교체 시 MAJOR) |
+| 배포 | 미확인 | FE: GitHub Actions `deploy-fe.yml` (master push) / BE: `deploy-be.yml` 수동 dispatch | — |
+
+> 수치(버전)는 `build.gradle` / `web/package.json` 기준. 플랫폼 bump 시 이 표를 갱신한다.
+
+---
+
+## 5. 두 버전 매핑
+
+| 어디에 | 무엇을 | 형식 |
+|---|---|---|
+| CHANGELOG 섹션 제목 | 기능 버전 + 플랫폼 버전 | `## [v2.1.0] (platform-2.0) — 2026-10-01` |
+| 기능 태그 annotation | 첫 줄에 플랫폼 버전 명시 | `platform: platform-2.0` |
+| 플랫폼 태그 annotation | 도입된 기능 버전 명시 | `release: v2.1.0` |
+| 사이트 표기 (선택) | 이용자에게는 기능 버전만 | `v2.1.0` |
+
+- 플랫폼만 바뀌고 기능 변화가 없는 릴리스 → 기능 버전은 **PATCH 만 올리거나 그대로** 두고 `platform-X.Y` 태그만 단다. CHANGELOG 에는 `[platform-3.0]` 단독 섹션.
+- 기능 MAJOR 와 플랫폼 MAJOR 를 **같은 커밋**에 동시에 찍을 수 있다 (예: `v3.0.0 (platform-3.0)`).
+
+```bash
+# 기능 릴리스 태그 (annotated 필수)
+git tag -a v2.1.0 -m "v2.1.0 (platform-2.0)" -m "platform: platform-2.0" -m "요약: 선수 백과 리스트형 완성"
+# 플랫폼 세대 태그
+git tag -a platform-3.0 -m "platform-3.0" -m "release: v2.3.0" -m "요약: FE TypeScript 도입"
+```
+
+---
+
+## 6. git 태그 · 브랜치
+
+### 태그 네임스페이스
+
+| 패턴 | 용도 | 예 |
+|---|---|---|
+| `vX.Y.Z` | 기능 릴리스 | `v2.0.0`, `v2.1.0`, `v2.1.1` |
+| `vX.Y.Z-rc.N` | (선택) 사전 릴리스 | `v2.1.0-rc.1` |
+| `platform-X.Y` | 플랫폼 세대/구조 변경 | `platform-2.0`, `platform-2.1` |
+
+- **annotated 태그만** (`git tag -a`). lightweight 태그 금지.
+- 태그는 **master 에 머지된 커밋**에만 단다. 태그 이동·삭제(force) 금지 — 잘못 달았으면 다음 PATCH 로 새로 단다.
+- 태그 push 는 명시적으로: `git push origin v2.1.0`.
+
+### 브랜치 전략
+
+| 브랜치 | 역할 | 수명 |
+|---|---|---|
+| `master` | 운영 배포 기준 (FE 는 push 시 자동 배포) | 영구 |
+| `dev` | 통합 확인용 (원격에 존재, 현재 master 와 동일 커밋) | 영구 — 운용 여부 § 9 HITL |
+| `feat/{도메인}-{요약}` | 기능 작업 → master 머지 | 짧게 (수일) |
+| `fix/{도메인}-{요약}` | 버그 수정 | 짧게 |
+| `refactor/platform-{N}-{요약}` | 플랫폼 MAJOR 장기 작업 (예: `refactor/platform-3-typescript`) | 세대 전환 완료 시 머지 후 삭제 |
+| `claude/*` | 자동 agent 작업 브랜치 | PR 머지 후 삭제 |
+
+- 도메인 이름은 CLAUDE.md § 10 의 살아있는 도메인만 쓴다 (`home` `coupons` `events` `notices` `users` `quiz` `authentication` `historyMode` `community` `admin`).
+- 장기 리팩터 브랜치는 master 를 주기적으로 merge 받아 격차를 줄인다. 기능 작업을 장기 브랜치에 섞지 않는다.
+
+### 기존 `v2.0.0-refactor-mobile` 해석
+
+| 항목 | 정리 |
+|---|---|
+| 의미 | v1(PC) → v2(모바일) 전환 = **기능 MAJOR v2 + platform-2 세대 전환**을 한 브랜치에서 진행한 옛 방식 |
+| 현재 상태 | 원격에는 `master`, `dev` 만 보임 (2026-09-25 `git ls-remote`). 로컬 문서에만 이름이 남아 있음 |
+| 앞으로 | 새 이름 규칙(`refactor/platform-{N}-…`)으로 **대체**. 브랜치명에 기능 버전(`v2.0.0-`)을 넣지 않는다 — 버전은 태그로만 표시 |
+| 보존 | 브랜치가 어딘가 남아 있다면 삭제 대신 `v2.0.0` 태그로 끝점을 고정 → 브랜치 정리 여부는 § 9 HITL |
+
+---
+
+## 7. 버전 필드 동기화 정책 (정책만 — 파일 변경은 미적용)
+
+| 파일 | 현재 값 | 정책 |
+|---|---|---|
+| `web/package.json` `version` | `"0.1.1"` | **기능 버전과 동일**하게 유지 (`"2.1.0"`, `v` 접두사 없음). 릴리스 커밋에서만 변경 |
+| `build.gradle` `version` | `''` (빈 값) | **기능 버전과 동일** (`'2.1.0'`). BE 산출 jar 이름에 반영됨 |
+| 플랫폼 버전 | 파일에 없음 | 코드 파일에 넣지 않는다. 태그 + CHANGELOG 로만 관리 |
+
+- 단일 진실 원천 = **git 태그**. 파일 값은 태그를 따라간다 (반대 방향 금지).
+- FE/BE 가 한 릴리스에서 한쪽만 바뀌어도 **두 파일 모두 같은 값**으로 맞춘다 (저장소 1개 = 버전 1개).
+
+### 후속 작업 (미적용 — ops 트랙에서 별도 진행)
+
+- [ ] `web/package.json` `version` → `"2.0.0"` 로 정렬
+- [ ] `build.gradle` `version` → `'2.0.0'` 설정 (jar 이름 변경 영향 → `deploy-be.yml`·수동 배포 스크립트 확인 후)
+- [ ] 기준선 태그 `v2.0.0`, `platform-2.0` 부착 (대상 커밋 결정 — § 9 HITL)
+- [ ] (선택) FE 빌드에 버전 주입 (`import.meta.env` 등) → 푸터/사이트 소개에 기능 버전 노출
+- [ ] (선택) `deploy-*.yml` 에 태그 push 트리거 추가 여부 검토
+
+---
+
+## 8. 릴리스 절차 체크리스트
+
+1. **버전 결정**
+   - [ ] 직전 태그 이후 커밋 목록 확인: `git log --oneline v2.0.0..master`
+   - [ ] § 2 판단표로 기능 bump(MAJOR/MINOR/PATCH/없음) + 플랫폼 bump(MAJOR/MINOR/없음) 결정
+2. **CHANGELOG 갱신**
+   - [ ] `docs/CHANGELOG.md` 의 `[Unreleased]` 내용을 새 섹션 `## [vX.Y.Z] (platform-A.B) — YYYY-MM-DD` 로 이동
+   - [ ] 이용자 관점 문장으로 작성 (커밋 제목 복붙 금지), 커밋 해시는 대표 1~3개만
+   - [ ] 플랫폼 bump 시 § 4 매트릭스 갱신 + 해당 컨벤션 문서 개정 여부 확인
+3. **버전 필드** (§ 7 후속 작업 적용 이후부터)
+   - [ ] `web/package.json`, `build.gradle` version 동기화
+   - [ ] 커밋: `[리뉴얼] [chore] 릴리스 vX.Y.Z`
+4. **태그**
+   - [ ] master 머지 확인 → `git tag -a vX.Y.Z …` (+ 필요 시 `platform-A.B`)
+   - [ ] `git push origin vX.Y.Z`
+5. **배포**
+   - [ ] FE: master push 로 `deploy-fe.yml` 자동 실행 확인
+   - [ ] BE: `deploy-be.yml` 수동 dispatch (또는 수동 배포) — 변경 있을 때만
+   - [ ] DB: 스키마 변경 있으면 `sql/V3/` DDL 을 배포 **전** 운영 적용 (자동 실행 금지 파일 주의)
+6. **사후**
+   - [ ] 운영 화면 확인 후 CHANGELOG 에 이상 없음 확인, 문제 시 PATCH 릴리스
+
+---
+
+## 9. 초기 도입(백필) — 사용자 결정 사항 (HITL)
+
+| # | 결정 사항 | 권고안 |
+|---|---|---|
+| H1 | 과거 이력에 태그를 소급할지 | **소급 안 함** — 현재 master HEAD 에 `v2.0.0` + `platform-2.0` 만 부착. 과거(v1, v2 이전 단계)는 CHANGELOG 서술로 대체 |
+| H2 | 소급한다면 v1 기준 커밋 | 2026-05-09 v1 PC 코드 삭제 직전 커밋을 `v1.0.0 (platform-1.0)` 로 — 현재 클론이 shallow 라 커밋 특정 불가, 전체 이력 확인 필요 |
+| H3 | `v2.0.0` 부착 대상 커밋 | 이 문서 도입 시점의 master HEAD (권고) vs 9월 릴리스 로그 마지막 커밋 |
+| H4 | `dev` 브랜치 운용 | 쓰지 않으면 정리, 쓰면 "master 직전 통합" 역할 명문화 |
+| H5 | `v2.0.0-refactor-mobile` 잔존 브랜치 처리 | 태그로 고정 후 삭제 |
+| H6 | 사이트에 버전 노출 여부 | 사이트 소개 하단에 기능 버전만 노출 |
