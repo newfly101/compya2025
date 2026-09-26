@@ -43,9 +43,8 @@
 |---|---|
 | [file-locks.md](../conventions/file-locks.md) | 다중 기능 병렬 시 충돌 방지 |
 | [file-split.md](../conventions/file-split.md) | 산출물 100줄 초과 시 분할 룰 |
-| [fe-code-base.md](../conventions/fe-code-base.md) | FE 코드 패턴 cheat sheet |
-| [responsive.md](../conventions/responsive.md) | 반응형 (본 프로젝트 mobile-first 단일) |
-| [figma-plugin.md](../conventions/figma-plugin.md) | (폐기된 code.ts 방식 기록 — 참고용) |
+| [frontend.md](../../docs/convention/frontend.md) | FE 코드 패턴 cheat sheet |
+| [responsive-mobile-first.md](../conventions/responsive-mobile-first.md) | 반응형 (본 프로젝트 mobile-first 단일) |
 | [figma-mcp-rules.md](../../docs/global-guide/design/figma-mcp-rules.md) | Figma 작업 현행 룰 — MCP(`use_figma`) 직접 조작 |
 | [hitl-markers.md](../conventions/hitl-markers.md) | 의사결정 마커 |
 

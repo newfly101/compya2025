@@ -108,7 +108,7 @@ Phase 5 — 통합 검증    (developer-integrate)
 3. 각 frontend-developer brief: "공용 파일 (router/store/routeMeta/routePath) 수정 금지 — 이미 등록됨"
 ```
 
-상세 FE 코드 패턴: [.claude/conventions/fe-code-base.md](../conventions/fe-code-base.md)
+상세 FE 코드 패턴: [docs/convention/frontend.md](../../docs/convention/frontend.md)
 
 ---
 

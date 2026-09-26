@@ -21,7 +21,7 @@
 
 ## 2. 분할 우선순위
 
-1. **의미 단위 분리** — 기능별 § 를 별도 파일로 (예: `figma-plugin.md` → `figma-plugin-tokens.md` + `figma-plugin-helpers.md`)
+1. **의미 단위 분리** — 기능별 § 를 별도 파일로 (예: `responsive-mobile-first.md` → `responsive-mobile-first-tokens.md` + `responsive-mobile-first-patterns.md`)
 2. **컨벤션 외부 추출** — 1차 가이드는 함축, 깊이 명세는 `docs/global-guide/**` 로
 3. **부록 분리** — 본문 + `{name}.appendix.md` (예시 / 참고 자료)
 

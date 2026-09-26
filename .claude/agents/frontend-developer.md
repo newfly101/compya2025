@@ -30,9 +30,8 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 컨벤션 | 경로 | 언제 Read |
 |---|---|---|
-| FE 코드베이스 cheat sheet | `.claude/conventions/fe-code-base.md` | 시작 시 1회 (필수 — 트리/패턴 정확도) |
-| 반응형 (축약) | `.claude/conventions/responsive.md` | 시작 시 1회 |
-| 반응형 (디테일) | `.claude/conventions/responsive-mobile-first.md` | 골격/구현 직전 1회 |
+| FE 코드베이스 컨벤션 | `docs/convention/frontend.md` | 시작 시 1회 (필수 — 트리/패턴 정확도) |
+| 반응형 | `.claude/conventions/responsive-mobile-first.md` | 골격/구현 직전 1회 |
 | 파일 분할 룰 | `.claude/conventions/file-split.md` | 구현 중 100줄 초과 트리거 시 |
 | HITL 마커 | `.claude/conventions/hitl-markers.md` | 위험 항목 식별 시 1회 |
 
@@ -53,7 +52,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 ## 4. 작업 흐름 (전체 자동)
 
 ```
-1. 컨벤션 Read (fe-code-base + responsive + responsive-mobile-first)
+1. 컨벤션 Read (docs/convention/frontend.md + responsive-mobile-first.md)
 2. analysis.md Read (§ 1 / § 4 / § 5 FE 측)
 3. fe-history.md 존재 확인 → 없으면 신규 생성 (docs/domain/{feature}/develop/)
 4. FOR EACH FN (FN-1부터 순차):

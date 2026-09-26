@@ -27,12 +27,11 @@ tools: Read, Write, Edit, Glob, Grep
 
 | 컨벤션 | 경로 | 언제 Read |
 |---|---|---|
-| 반응형 (축약) | `.claude/conventions/responsive.md` | 시작 시 1회 |
-| 반응형 (디테일) | `.claude/conventions/responsive-mobile-first.md` | FE 명세 작성 시 |
+| 반응형 | `.claude/conventions/responsive-mobile-first.md` | FE 명세 작성 시 |
 | HITL 마커 | `.claude/conventions/hitl-markers.md` | 위험 항목 식별 시 1회 |
 | 파일 분할 룰 | `.claude/conventions/file-split.md` | 200줄 초과 트리거 시 |
 
-⭐ FE 코드베이스 cheat sheet (`fe-code-base.md`) 는 본 agent 가 직접 Read 안 함 — 각 sub-agent 책임.
+⭐ FE 코드베이스 컨벤션 (`docs/convention/frontend.md`) 은 본 agent 가 직접 Read 안 함 — 각 sub-agent 책임.
 
 ---
 

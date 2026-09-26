@@ -31,7 +31,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash, mcp__claude_ai_Figma__get_figma_skil
 
 | 컨벤션 | 언제 Read |
 |---|---|
-| `.claude/conventions/responsive.md` (축약) + `responsive-mobile-first.md` (디테일) | Phase 1 |
+| `.claude/conventions/responsive-mobile-first.md` | Phase 1 |
 | `docs/global-guide/design/figma-mcp-rules.md` (스킬 로드 / 재사용 / Variable 바인딩 룰) | Phase 2 시작 |
 | `.claude/conventions/hitl-markers.md` | 첫 결정 항목 |
 | `.claude/conventions/file-split.md` | screen-spec 200줄 초과 시 |
@@ -50,7 +50,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash, mcp__claude_ai_Figma__get_figma_skil
 **작업 흐름**:
 
 ```
-1. 컨벤션 Read — responsive.md + responsive-mobile-first.md
+1. 컨벤션 Read — responsive-mobile-first.md
 2. 기획자 산출물 Read (지정 경로)
    - § 2 (기능 명세) 시나리오 추출
    - § 4 (예외 케이스) 상태 분기 추출
