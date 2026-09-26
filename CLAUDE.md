@@ -175,7 +175,7 @@ Track C: domain notices
 - OS: Windows 10, PowerShell 5.1 (`&&`/`||` 미지원, `;` + `if ($?)` 사용)
 - Bash 도구도 사용 가능 (POSIX 스크립트)
 - 빌드: Gradle (BE), Vite (FE in `web/`)
-- DB: MariaDB + MyBatis (JPA 아님)
+- DB: MariaDB + MyBatis (JPA 아님) — ⚠ test DB = prod DB 동일 인스턴스, DDL 작성 시 즉시 운영 적용
 - 배포 환경: 로컬(`application.properties`) + 운영(`application-prod.properties`)
 
 ---

@@ -34,6 +34,8 @@
 ### Internal
 - Claude 작업환경 재정비 — `.claude` 구조 개편·라우팅 규칙(tool-routing) 신설·무료 도구 5종 연결 (`a5919bd8`)
 - 버저닝 컨벤션 도입 — 기능 버전(vX.Y.Z)·플랫폼 버전(platform-X.Y) 2축 정의 + 본 CHANGELOG 기준선 작성 (`5eeac364`)
+- 소급 버전 확정 — 2025-12~2026-09 이력을 9단계로 나눠 `retro/v0.1.0` ~ `retro/v4.1.0` 태그 부여. 기존 `v1.0.0`·`v1.1.0`·`v2.0.0` 태그는 보존
+- 변천사 문서 통합 — 조사 자료 4편을 폐기하고 확정본 1편(`docs/domain/_roadmap/prd/evolution.md`)으로 단일화
 
 ---
 
