@@ -180,17 +180,17 @@ flowchart LR
 
 | 우선 | 공백 | 왜 막는가 | 해소 산출물 | 트랙 |
 |---|---|---|---|---|
-| P0 | 일정·마일스톤 문서 없음 | 버전·기한·완료 기준이 어디에도 없다. `_roadmap/prd/` 는 조사·기록뿐 | `_roadmap/prd/roadmap.md` (본 문서 § 5 를 확정본으로) | planner |
-| P0 | 도메인 정본 목록 불일치 (M1·M2·M5) | agent 가 CLAUDE.md 를 믿고 "스킬 백과사전은 삭제됨" 같은 틀린 전제로 일한다 | CLAUDE.md § 10 갱신 + 도메인 이름 대응표 | ops(메타) |
-| P0 | 보류·미결 항목 결정 대기 | 스킬 시뮬레이터 / 커뮤니티 쓰기(동결 해제는 12월쯤 예정 — 확정 아님) / 로그인 전용 선수카드 / 업적(gamification) / 마이페이지 재기획 — 어느 것이 다음인지 정해지지 않았다 | 결정 기록 1건 | 사용자 |
-| P1 | 운영 중 도메인 9개에 기획 문서 없음 (M4) | 현재 동작이 곧 사양. 개선 범위·완료 조건을 적을 기준선이 없다 | 도메인별 `prd/ia.md` (reverse 모드) | planner |
-| P1 | 디자인 문서·Figma 링크 부재 | admin 외엔 디자인 산출물 0, Figma URL 0건 → designer 트랙 착수 불가 | Figma 정본 URL + 도메인별 `design/*.md` | designer |
-| P1 | ops 가이드 미작성 | BE 배포가 수동(`deploy-be.yml` 은 `workflow_dispatch` 만), 운영 설정 파일(`application-prod.properties`)이 리포에 없음 — 위치 확인 필요 | `docs/convention/ops.md` | ops |
-| P1 | 테스트 공백 | BE 매퍼 테스트 4건, FE 0건. 회귀 기준이 없어 구현 단계 완료 조건을 못 건다 | 도메인별 최소 테스트 기준 | develop |
-| P2 | 진행 중 작업의 끝이 없음 | 선수 백과사전 리스트형 · 마일리지 계산기 서버 연동 · 퀴즈 공개 화면 · 이벤트 타입 선택 UI · 재활성화 안내 | 각 항목 완료 조건 | planner/develop |
-| P2 | 오래된 문서 (M7) · 폐기 agent 호출 (§ 3) | 잘못된 현황이 다시 인용된다 | 문서 갱신, command 수정 | ops(메타) |
-| P3 | 이름 체계 통일 (M5) | 검색·자동화에서 누락이 생긴다. 당장 막지는 않음 | 이름 대응표만 먼저 | develop |
-| P3 | 광고(AdSense) 승인 이후 작업 | `ADS_ENABLED=false` 상태 — 08-22 신청 후 반려 반복 중, `nextjs-migration` 브랜치에서 해결 시도 중 | `docs/convention/adsense.md` 후속 | ops |
+| 1순위 | 일정·마일스톤 문서 없음 | 버전·기한·완료 기준이 어디에도 없다. `_roadmap/prd/` 는 조사·기록뿐 | `_roadmap/prd/roadmap.md` (본 문서 § 5 를 확정본으로) | planner |
+| 1순위 | 도메인 정본 목록 불일치  | agent 가 CLAUDE.md 를 믿고 "스킬 백과사전은 삭제됨" 같은 틀린 전제로 일한다 | CLAUDE.md § 10 갱신 + 도메인 이름 대응표 | ops(메타) |
+| 1순위 | 보류·미결 항목 결정 대기 | 스킬 시뮬레이터 / 커뮤니티 쓰기(동결 해제는 12월쯤 예정 — 확정 아님) / 로그인 전용 선수카드 / 업적(gamification) / 마이페이지 재기획 — 어느 것이 다음인지 정해지지 않았다 | 결정 기록 1건 | 사용자 |
+| 2순위 | 운영 중 도메인 9개에 기획 문서 없음 | 현재 동작이 곧 사양. 개선 범위·완료 조건을 적을 기준선이 없다 | 도메인별 `prd/ia.md` (reverse 모드) | planner |
+| 2순위 | 디자인 문서·Figma 링크 부재 | admin 외엔 디자인 산출물 0, Figma URL 0건 → designer 트랙 착수 불가 | Figma 정본 URL + 도메인별 `design/*.md` | designer |
+| 2순위 | ops 가이드 미작성 | BE 배포가 수동(`deploy-be.yml` 은 `workflow_dispatch` 만), 운영 설정 파일(`application-prod.properties`)이 리포에 없음 — 위치 확인 필요 | `docs/convention/ops.md` | ops |
+| 2순위 | 테스트 공백 | BE 매퍼 테스트 4건, FE 0건. 회귀 기준이 없어 구현 단계 완료 조건을 못 건다 | 도메인별 최소 테스트 기준 | develop |
+| 3순위 | 진행 중 작업의 끝이 없음 | 선수 백과사전 리스트형 · 마일리지 계산기 서버 연동 · 퀴즈 공개 화면 · 이벤트 타입 선택 UI · 재활성화 안내 | 각 항목 완료 조건 | planner/develop |
+| 3순위 | 오래된 문서 · 폐기 agent 호출 (§ 3) | 잘못된 현황이 다시 인용된다 | 문서 갱신, command 수정 | ops(메타) |
+| 4순위 | 이름 체계 통일 | 검색·자동화에서 누락이 생긴다. 당장 막지는 않음 | 이름 대응표만 먼저 | develop |
+| 4순위 | 광고(AdSense) 승인 이후 작업 | `ADS_ENABLED=false` 상태 — 08-22 신청 후 반려 반복 중, `nextjs-migration` 브랜치에서 해결 시도 중 | `docs/convention/adsense.md` 후속 | ops |
 
 ---
 
@@ -287,7 +287,7 @@ flowchart LR
 ## 7. 사용자 결정 필요
 
 1. **로드맵 단위** — 날짜 마일스톤 / 버전(v2.1, v2.2 …) / 주차 중 무엇으로 끊을까?
-2. **다음 구현 대상** — 스킬 시뮬레이터 · 커뮤니티 쓰기 · 로그인 전용 선수카드 · 업적(gamification) · 마이페이지 재기획 중 Phase 3 의 첫 1~2개는?
+2. **다음 구현 대상** — 스킬 시뮬레이터 · 커뮤니티 쓰기 · 로그인 전용 선수카드 · 업적(gamification) · 마이페이지 재기획 중 구현 단계의 첫 1~2개는?
 3. **도메인 정본** — CLAUDE.md § 10 을 § 1.1 의 19개로 갱신할까? 이름 기준은 FE 폴더명 / BE 패키지명 / docs 폴더명 중 어느 쪽?
 4. **Figma 정본** — 기준으로 삼을 Figma 파일 URL 은? (현재 문서에 0건)
 5. ~~미확인 도구~~ — 해소. `taste`→design-taste-frontend, `emilkowalski`→emil-design-eng, `포니테일`→ponytail, `archify` 모두 연결 확인 (§ 6). `layweb`·`inspoAI`·`옴니라우트`·`그래피파이` 는 `tool-routing.md` 에 없어 미연결로 정리 — 여전히 필요하면 별도 요청.
