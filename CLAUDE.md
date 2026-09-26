@@ -64,7 +64,9 @@ docs/
 │   ├── frontend.md
 │   ├── backend.md
 │   ├── design.md
+│   ├── versioning.md        # 버저닝 (기능 vX.Y.Z / platform-X.Y) · 태그·브랜치
 │   └── README.md            # 색인
+├── CHANGELOG.md             # 변경 이력 (두 축 기록)
 ├── mcp/                     # MCP 도구 사용 규칙
 │   └── figma-convention.md
 ├── domain/                  # 도메인 단위 산출물
@@ -94,6 +96,7 @@ docs/
 | FE 컨벤션 | `docs/convention/frontend.md` |
 | BE 컨벤션 | `docs/convention/backend.md` |
 | 디자인 컨벤션 | `docs/convention/design.md` |
+| 버저닝 컨벤션 / 변경 이력 | `docs/convention/versioning.md` / `docs/CHANGELOG.md` |
 | Figma MCP 규칙 | `docs/mcp/figma-convention.md` |
 | DB 실측 reference | `docs/global-guide/develop/specs/db/*.md` |
 | v1 ↔ mobile 기능 대조 | `docs/domain/_roadmap/prd/v1-mobile-gap.md` |
@@ -179,6 +182,7 @@ Track C: domain notices
 - ✅ `docs/convention/frontend.md` — FE 컨벤션
 - ✅ `docs/convention/backend.md` — BE 컨벤션 (인증 포함)
 - ✅ `docs/convention/design.md` — 디자인·토큰 컨벤션
+- ✅ `docs/convention/versioning.md` + `docs/CHANGELOG.md` — 버저닝 두 축(기능/플랫폼) · 릴리스 절차 (기준선 v2.0.0 / platform-2.0)
 - ✅ `docs/mcp/figma-convention.md` — Figma MCP 규칙 (플러그인 방식 폐기 반영)
 - ⏳ ops (배포 / 환경 / 보안정책) — 미작성
 
