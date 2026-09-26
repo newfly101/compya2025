@@ -24,12 +24,16 @@
 
 ## [Unreleased]
 
+> 기능 버전 bump 없음 / `platform-2.0` 유지 — 아래는 모두 작업환경·문서 정비
+
 ### Added
 ### Changed
 ### Fixed
 ### Admin
 ### Platform
 ### Internal
+- Claude 작업환경 재정비 — `.claude` 구조 개편·라우팅 규칙(tool-routing) 신설·무료 도구 5종 연결 (`a5919bd8`)
+- 버저닝 컨벤션 도입 — 기능 버전(vX.Y.Z)·플랫폼 버전(platform-X.Y) 2축 정의 + 본 CHANGELOG 기준선 작성 (`5eeac364`)
 
 ---
 

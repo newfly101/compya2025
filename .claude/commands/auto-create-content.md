@@ -10,37 +10,41 @@ argument-hint: <domain>
 
 ---
 
-## 1. planner — IA + 사용자 합의 + skills
+## 1. planner-division — 3라운드 통합 기획 (R1~R3)
 
-`subagent_type: planner`
+`subagent_type: planner-division` (model: opus — feature / prefix 사용자 지정 필수)
 
-**Phase 1-A — IA 초안 + 사용자 인터랙션**
-- planner 가 IA 초안 (`docs/domain/$ARGUMENTS/prd/ia.md` draft) 작성
-- 메인 세션이 IA 핵심 결정 사항 (페이지 구조 / 진입점 / 라우팅 / 상태 모델) 을 사용자에게 `AskUserQuestion` 으로 합의
-- 사용자 결정 받으면 IA 확정
+**R1 — IA + 요구사항 + 정책**
+- `_common.md` feature 정의, `{feature}.md` § 1 IA · § 2 요구사항 · § 3 정책 결정, `_decision_log.md` 생성
+- 메인 세션이 🔴 정책 결정 항목을 사용자에게 `AskUserQuestion` 으로 확인 후 R2 진입
 
-**Phase 1-B — 7 sub-skills 산출**
-- ia (확정본) / requirements / policy-draft / feature-spec / endpoint-spec-draft / edge-cases / qa-checklist
-- 산출: `docs/domain/$ARGUMENTS/prd/*.md`
+**R2 — 기능 명세 + 외부 IF**
+- `{feature}.md` § 4 기능 명세 (G/W/T) · § 5 API/외부 IF — 🔴 권한·보안 분야 사용자 확인 후 R3 진입
+
+**R3 — 예외 + QA + tasks**
+- `{feature}.md` § 6 예외 케이스 · § 7 QA · § 8 사용자 확인 잔여, `_tasks.md`
+
+**산출**: `docs/domain/$ARGUMENTS/prd/{_common,{feature},_tasks,_decision_log}.md`
 
 **제약**
-- HITL 4 분야 (법무 / 결제 / 권한 / DB 파괴적) 에서만 강제 중단
+- HITL 4 분야 (법무 / 결제 / 권한 / DB 파괴적) — 라운드 종료 시 강제 중단, 답변 받고 다음 라운드 진입
 - 그 외는 가정/미정 마커 표시 후 진행
 
 ---
 
-## 2. designer (MCP 작성 모드) — 기획 → figma
+## 2. designer-render — 기획 → 화면 설계 → figma
 
-`subagent_type: designer`
+`subagent_type: designer-render` (Phase 1 분석 → Phase 2 MCP 렌더, 동일 agent 가 2단계 운영)
 
 **brief**
-- 입력: `docs/domain/$ARGUMENTS/prd/**` (Phase 1-B 산출)
-- 작업:
-  1. 분석 → `docs/domain/$ARGUMENTS/design/design-analysis.md`
-  2. 선행 필수: `get_figma_skill("skill://figma/figma-use/SKILL.md")` + `figma-generate-design` 로드
-  3. `use_figma` 로 대상 파일 `VCVQzOpSIpwpZw11gxG7N1` 페이지 `0:1` 에 신규 frame/컴포넌트 직접 작성 — 색·간격·타이포 Variable 바인딩, 기존 컴포넌트는 `search_design_system` 으로 인스턴스 재사용, auto layout
-  4. `get_screenshot` 으로 되읽어 자가 검수
-- 산출: `design-report.md`, `implementation-handoff.md` (Figma 파일 자체가 1차 산출물, 로컬 코드 파일 없음)
+- 입력: `docs/domain/$ARGUMENTS/prd/**` (Step 1 산출)
+- Phase 1: 분석 → `docs/domain/$ARGUMENTS/design/screen-spec.md` (화면 인벤토리 + 재사용/신규 컴포넌트 + 토큰 매핑)
+  - auto-create-content 전체 흐름상 사용자 IA/정책 합의는 Step 1 에서 이미 완료 — Phase 1 종료 후 별도 대기 없이 Phase 2 즉시 진행 지시
+- Phase 2:
+  1. 선행 필수: `get_figma_skill("skill://figma/figma-use/SKILL.md")` + `figma-generate-design` 로드
+  2. `use_figma` 로 대상 파일 `VCVQzOpSIpwpZw11gxG7N1` 페이지 `0:1` 에 신규 frame/컴포넌트 직접 작성 — 색·간격·타이포 Variable 바인딩, 기존 컴포넌트는 `search_design_system` 으로 인스턴스 재사용, auto layout
+  3. `get_screenshot` 으로 되읽어 자가 검수
+- 산출: `screen-spec.md`, `design-report.md` (Figma 파일 자체가 1차 산출물, 로컬 코드 파일 없음)
 - 글로벌 룰: `docs/global-guide/design/figma-mcp-rules.md`
 - HITL: 디자인 토큰 / 컴포넌트 라이브러리 / 레이아웃 / 외부 자산 변경 시 강제 중단
 
@@ -57,34 +61,31 @@ argument-hint: <domain>
 
 ---
 
-## 4. designer (sync 모드) — figma → 문서 sync (조건부)
+## 4. designer-review — 사용자 figma 수정분 평가 (조건부)
 
 사용자가 figma 직접 수정한 경우만.
 
-`subagent_type: designer`
+`subagent_type: designer-review`
 
 **brief (최소)**
 - 입력: figma 현재 상태 (`get_design_context` / `get_metadata` / `get_screenshot`)
-- 작업: `design-report.md` § 사후검증 + `implementation-handoff.md` 매핑 갱신
-- 제약: 이 라운드는 figma 가 source of truth — 재작성(`use_figma`) 하지 않고 문서만 갱신
+- 작업: 편의성/직관성/일관성 3축 평가 + 개선점 우선순위 (P0~P2)
+- 산출: `docs/domain/$ARGUMENTS/design/review-{YYYY-MM-DD}.md`
+- 제약: Figma/코드 직접 수정 X (제안만) — P0 발견 시 메인 세션이 designer-render 재호출 여부 판단
 
 ---
 
-## 5. developer — 디자인 산출물 확인 + BE/FE 분배 plan
+## 5. developer-analyze — BE/FE 공통 분석문서 작성
 
-`subagent_type: developer` (read-only supervisor — 코드 직접 작성 X)
+`subagent_type: developer-analyze` (read-only + 분석문서 Write — 코드 직접 작성 X)
 
 **brief**
 - 입력:
-  - `docs/domain/$ARGUMENTS/prd/**` (planner 산출)
-  - `docs/domain/$ARGUMENTS/design/implementation-handoff.md` (designer 산출)
-- 모드: **dispatch-plan**
-- 작업: BE/FE 작업 분배 plan 작성 (`docs/domain/$ARGUMENTS/develop/dispatch-plan.md`)
-  - BE: controller / service / mapper / SQL / migration
-  - FE: 도메인 컴포넌트 / store / 라우트
-  - cross-domain 의존 관계 / 작업 순서 / 인터페이스 (endpoint-spec) 정합
-- HITL 4 분야 (권한 / 결제 / DB 파괴적 / 외부 시스템 통합) 에서만 강제 중단
-- 산출: `dispatch-plan.md`
+  - `docs/domain/$ARGUMENTS/prd/{feature}.md` (planner-division 산출)
+  - `docs/domain/$ARGUMENTS/design/screen-spec.md` (designer-render 산출)
+- 작업: 기능 단위 분해 (FN-# ID) + BE 작업 명세 + FE 작업 명세 + cross-domain 정합 + 자체 평가 (기획 부합도/UI 일관성/누락/위험·가정값)
+- 산출: `docs/domain/$ARGUMENTS/develop/analysis.md`, `decisions.log`
+- HITL 4 분야 (법무/결제/권한/DB 파괴적) — 자체 결정 금지, 마커만 표시 + decisions.log 기록
 
 ---
 
@@ -97,44 +98,44 @@ argument-hint: <domain>
 `subagent_type: backend-developer`
 
 **brief**
-- 입력: dispatch-plan.md (BE 섹션) + endpoint-spec-draft.md + qa-checklist.md
-- 작업 영역: `src/main/java/**`, `src/main/resources/**`, `sql/V*/`
-- 작업 영역 금지: `web/src/**`
-- HITL 4 분야 강제 중단
+- 입력: `docs/domain/$ARGUMENTS/develop/analysis.md` (§ 1/§ 3/§ 5) + `decisions.log`
+- 작업 영역: `src/main/java/**`, `src/main/resources/mapper/**`, `src/test/**`
+- 작업 영역 금지: `web/src/**`, `sql/V*/**` (마이그레이션 필요 시 analysis.md 에 SQL 권고만)
+- open-policy 자동 진행 — 3회 실패 시 [미해결] 마크 후 다음 기능
 
 ### 6-B. frontend-developer
 
 `subagent_type: frontend-developer`
 
 **brief**
-- 입력: dispatch-plan.md (FE 섹션) + implementation-handoff.md + endpoint-spec-draft.md
-- 작업 영역: `web/src/**`
+- 입력: `docs/domain/$ARGUMENTS/develop/analysis.md` (§ 1/§ 4/§ 5) + `decisions.log`
+- 작업 영역: `web/src/domains/$ARGUMENTS/**`, `web/src/app/router/**`, `web/src/app/store/store.js`
 - 작업 영역 금지: `src/main/**`, `sql/**`
-- 모바일 우선 반응형 (tablet/PC 도 모바일 형태 + 좌우 여백)
-- HITL 4 분야 (글로벌 토큰 / 라우팅 / 외부 라이브러리 / 보안) 강제 중단
+- 모바일 우선 반응형 (tablet/PC 도 모바일 형태 + 좌우 여백) — 골격 단계 route+store+lazy 검증 강제
+- open-policy 자동 진행 — 3회 실패 시 [미해결] 마크 후 다음 기능
 
 ---
 
-## 7. developer — 종합 검수 (integrate-review)
+## 7. developer-integrate — 종합 검수
 
-`subagent_type: developer` (read-only)
+`subagent_type: developer-integrate` (read-only + 보고서 Write)
 
 **brief**
-- 입력: 6-A / 6-B 양쪽 산출 결과
-- 모드: **integrate-review**
-- 작업: cross-domain 정합 검증 (endpoint contract / 데이터 모델 / 권한 흐름 / 에러 처리)
-- 산출: `docs/domain/$ARGUMENTS/develop/integrate-review.md`
-- 위반/누락 발견 시 → BE 또는 FE 추가 라운드 디스패치 (메인 세션 판단)
+- 입력: `analysis.md` + `be-history.md` + `fe-history.md` + `decisions.log`
+- 작업: cross-domain 정합 검증 (endpoint/DTO/권한/에러/라우트 5항목) + BE/FE history 통합 + 미해결 항목 집계
+- 산출: `docs/domain/$ARGUMENTS/develop/integrate-report.md`
+- 위반/누락 발견 시 → 권고만 제시 (P0/P1) — BE 또는 FE 추가 라운드 디스패치는 메인 세션 판단
 
 ---
 
-## 8. 사용자 최종 보고
+## 8. 사용자 최종 보고 + 버전 기록
 
 메인 세션이 200자 내로:
 - 산출 파일 list
 - BE / FE 빌드 결과
 - 미해결 위반/누락 (있으면)
-- 검증 가이드 (qa-checklist.md 위치)
+- 검증 가이드 (`{feature}.md` § 7 QA 위치)
+- 신규 화면/기능 완료 → 기능 버전 MINOR bump + `docs/CHANGELOG.md` Added 1줄 기록 (`docs/convention/versioning.md` 기준)
 
 ---
 
@@ -159,6 +160,6 @@ argument-hint: <domain>
 | 축 | /code-to-design | /auto-create-content |
 |---|---|---|
 | 방향 | 코드 → 기획 → 디자인 (역설계) | 기획 → 디자인 → 코드 (신규 생성) |
-| 1단계 | developer + planner reverse | planner IA + 사용자 합의 |
-| 종착 | figma 적용 (MCP 직접 반영, 수작업 없음) | BE/FE 풀스택 + integrate-review |
-| HITL | figma 분석 검토 1 회 | IA 합의 + figma 확인 + 최종 검수 |
+| 1단계 | developer-analyze + planner-lite reverse | planner-division R1 (IA + 사용자 합의) |
+| 종착 | figma 적용 (MCP 직접 반영, 수작업 없음) | BE/FE 풀스택 + developer-integrate 종합 검수 |
+| HITL | figma 분석 검토 1 회 (designer-review) | R1~R3 라운드별 확인 + figma 확인 + 최종 검수 |

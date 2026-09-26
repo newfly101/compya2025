@@ -16,6 +16,8 @@
 
 한 요청에 여러 트랙이 섞이면 **트랙별 agent 분리**.
 
+- **버전 영향** — develop=기능 또는 플랫폼 / planner·designer=기능만 / ops=플랫폼 또는 무영향. 판단 기준: [versioning.md](docs/convention/versioning.md) § 2
+
 ### 1.1 도구 라우팅 (트랙 안에서 무엇을 켜나)
 
 - 비슷한 도구가 같은 요청에 겹쳐 반응한다 — 디자인 개선 3종 · 그림 3종 · 브라우저 2종. **요청별 정답은 하나**
@@ -36,7 +38,7 @@
    - 한 파일군 = 한 agent 가 Edit. 나머지는 Read only
    - 검증/문서화는 Read only agent
 5. **agent 디스패치 시 brief 필수** (각 agent 는 컨텍스트 모름):
-   - 목적 / 산출물 위치 / 작업 범위 / 제약 (Edit 가능 여부 / 회피할 영역) / 출력 형식
+   - 목적 / 산출물 위치 / 작업 범위 / 제약 (Edit 가능 여부 / 회피할 영역) / **버전 영향** (기능·플랫폼 축 / bump 등급 / CHANGELOG 기록 여부 — [versioning.md](docs/convention/versioning.md) § 2) / 출력 형식
    - **진행상황 stream** — 단계 ≥ 3, 예상 시간 ≥ 5분 인 백그라운드 sub-agent 는 `progress.log` 룰 적용 + 메인이 `Monitor` 띄움. 룰: [.claude/conventions/agent-progress.md](.claude/conventions/agent-progress.md)
 6. **메인 어시스턴트 진행 로그 (필수)** — 모든 작업 완료 단위마다 `.claude/.progress/claude-YYYYMMDD.log` 에 1줄 append.
    - **하루 1 파일** — 같은 일자의 모든 사용자 요청·작업이 동일 파일에 누적
@@ -47,7 +49,8 @@
 7. **결과 보고 받으면**:
    - (a) 산출물 검증 (`Read`/`Bash ls/wc`)
    - (b) Task 완료 처리 + claude-*.log 1줄 추가
-   - (c) 사용자에게 핵심 결과만 짧게 (200자 내)
+   - (c) **CHANGELOG 갱신 판단** — 기능/화면 변경이면 `docs/CHANGELOG.md` `[Unreleased]` 에 기록, 문서·도구 정비 등 무영향이면 생략 ([versioning.md](docs/convention/versioning.md) § 2 경계표 기준)
+   - (d) 사용자에게 핵심 결과만 짧게 (200자 내)
 8. **예외 — 메인에서 직접 처리**:
    - 사용자가 명시적으로 "메인에서 해" 요청
    - 즉답 가능한 단순 질문 (코드 위치 안내, 짧은 설명)

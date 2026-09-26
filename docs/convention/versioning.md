@@ -205,6 +205,7 @@ git tag -a platform-3.0 -m "platform-3.0" -m "release: v2.3.0" -m "요약: FE Ty
    - [ ] `docs/CHANGELOG.md` 의 `[Unreleased]` 내용을 새 섹션 `## [vX.Y.Z] (platform-A.B) — YYYY-MM-DD` 로 이동
    - [ ] 이용자 관점 문장으로 작성 (커밋 제목 복붙 금지), 커밋 해시는 대표 1~3개만
    - [ ] 플랫폼 bump 시 § 4 매트릭스 갱신 + 해당 컨벤션 문서 개정 여부 확인
+   - > agent 워크플로우에서는 각 트랙 agent 완료 보고 시점에 **메인 세션**이 `[Unreleased]` 를 갱신한다 (CLAUDE.md § 2-7). 릴리스 섹션 확정·태깅·버전 필드 변경은 사용자 확인 후 메인 세션이 진행
 3. **버전 필드** (§ 7 후속 작업 적용 이후부터)
    - [ ] `web/package.json`, `build.gradle` version 동기화
    - [ ] 커밋: `[리뉴얼] [chore] 릴리스 vX.Y.Z`
@@ -230,3 +231,16 @@ git tag -a platform-3.0 -m "platform-3.0" -m "release: v2.3.0" -m "요약: FE Ty
 | H4 | `dev` 브랜치 운용 | 쓰지 않으면 정리, 쓰면 "master 직전 통합" 역할 명문화 |
 | H5 | `v2.0.0-refactor-mobile` 잔존 브랜치 처리 | 태그로 고정 후 삭제 |
 | H6 | 사이트에 버전 노출 여부 | 사이트 소개 하단에 기능 버전만 노출 |
+
+---
+
+## 10. 트랙 연동 — 4트랙이 완료 시 무엇을 기록하나
+
+| 트랙 | 완료 시 기록 | 위치 |
+|---|---|---|
+| **develop** | 기능 변경이면 `Added`/`Changed`/`Fixed`, 플랫폼 변경이면 `Platform` | `docs/CHANGELOG.md` `[Unreleased]` |
+| **planner** | 기획 확정만으로는 기록 안 함 — 실제 반영(develop 완료)까지 대기 | — |
+| **designer** | 디자인 확정만으로는 기록 안 함 — 코드 반영 시점에 develop 이 기록 | — |
+| **ops** | 이용자 무관이면 `Internal`, 스키마 세대 교체 등 구조 변경이면 `Platform` | `docs/CHANGELOG.md` `[Unreleased]` |
+
+- 기획·디자인 단계는 CHANGELOG 를 직접 건드리지 않는다 — 코드로 실현된 시점(develop)에 한 번만 기록해 중복을 막는다.
