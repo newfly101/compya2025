@@ -13,7 +13,10 @@
 | import 경로 | `@/...` 절대경로만 사용. `../../` 같은 깊은 상대경로 금지. 같은 폴더 안 파일 참조(`./X`)만 상대경로 허용 |
 | SCSS 변수·믹스인 | `@/global/styles/index.scss` 가 모든 `*.module.scss` 파일에 자동으로 미리 불러와짐 → 컴포넌트 SCSS에서 `@use` 문 안 써도 바로 사용 가능 |
 | 진입 파일 | `web/src/main.jsx` → `<AppProvider><RouterProvider /></AppProvider>` |
+| 전역 Provider | `web/src/app/provider/AppProvider.jsx` — Redux + Auth + TopBar provider 통합 |
+| 모바일 레이아웃 | `web/src/app/wrapper/mobile/MobileLayout.jsx` — TopBar + Drawer + outlet |
 | 화면 형태 | 모바일 전용 단일 레이아웃. PC 전용 레이아웃 분기 없음 |
+| 파일 확장자 | `.js`/`.jsx`만 사용. TypeScript 아님 — `.tsx`, `slice.ts`, `router.tsx`, `store.ts` 같은 파일명 금지 |
 
 ---
 
@@ -77,8 +80,27 @@ domains/{도메인명}/store/
 ```
 
 - 정렬·필터는 `thunks.js`에서 끝낸다. 컴포넌트나 훅에서 다시 가공하지 않는다
-- `slices.js`는 공용 헬퍼(`applyAsyncHandlers`)로 로딩·에러 상태를 자동 관리한다
-- 새 스토어는 반드시 `web/src/app/store/store.js`에 한 줄 등록해야 동작한다 (등록 안 하면 dispatch 해도 상태가 안 바뀜)
+- `slices.js`는 공용 헬퍼 `@/app/store/utils/applyAsyncHandlers`로 로딩·에러 상태를 자동 관리한다. `extraReducers`에 `addCase`를 직접 쓰지 않는다:
+
+  ```js
+  import { createSlice } from "@reduxjs/toolkit";
+  import { applyAsyncHandlers } from "@/app/store/utils/applyAsyncHandlers";
+  import * as thunks from "./thunks";
+
+  const slice = createSlice({
+    name: "{domain}",
+    initialState: { items: [], loading: false, error: null },
+    reducers: { /* 동기 */ },
+    extraReducers: (builder) => applyAsyncHandlers(builder, thunks),
+  });
+  export const { actions, reducer } = slice;
+  ```
+- 새 스토어는 반드시 `web/src/app/store/store.js`에 한 줄 등록해야 동작한다 (등록 안 하면 dispatch 해도 상태가 안 바뀜):
+
+  ```js
+  import { reducer as {domain}Reducer } from "@/domains/{name}/store/slices";
+  reducer: { {domain}: {domain}Reducer, ... }
+  ```
 - axios 호출은 반드시 `@/infra/http/client.js`의 단일 인스턴스만 사용
 
 ### 4.2 관리자 응답 모달 규칙
@@ -98,7 +120,7 @@ domains/{도메인명}/store/
 ## 5. 화면 레이아웃 규칙
 
 - 전역 레이아웃 하나가 상단바 + 서랍 메뉴 + 본문 영역을 감싼다. 도메인 화면은 이 틀 안의 본문 자리에만 들어간다
-- 상단바 모양을 바꾸고 싶으면 화면 진입 시 `useSetTopBar({ variant, title, rightAction, onBack })`를 호출한다. 호출하지 않으면 기본 모양이 적용된다
+- 상단바 모양을 바꾸고 싶으면 화면 진입 시 `@/app/provider/TopBarProvider`의 `useSetTopBar({ variant, title, rightAction, onBack })`를 호출한다. 호출하지 않으면 기본 모양이 적용된다
 - 도메인 화면에 별도 헤더나 상단 영역을 새로 만들지 않는다
 
 ---
@@ -111,7 +133,8 @@ domains/{도메인명}/store/
 2. 라우트 파일(`PublicRoutes.jsx` 등)에 `lazy(() => import(...))`로 화면 불러오기 추가
 3. 라우터 변수명은 `{도메인명}Page` 형태로 통일 (예: `CouponPage`)
 4. `handle: ROUTE_META.{키}.title`로 페이지 제목 지정
-5. (선택) 서랍 메뉴에 노출하려면 `MENU_GROUPS.js`에 항목 추가
+5. 로그인 보호가 필요하면 `web/src/app/router/guards/AuthGuard.jsx`로 감싼다
+6. (선택) 서랍 메뉴에 노출하려면 `MENU_GROUPS.js`에 항목 추가
 
 ```jsx
 const CouponPage = lazy(() => import("@/domains/coupons/mobile/CouponScreen.jsx"));
@@ -181,6 +204,7 @@ export const PublicRoutes = [
 - 도메인 폴더 밑에 `page/`나 `feature/` 같은 옛 방식 폴더를 새로 만들지 않는다 — 새 코드는 항상 `mobile/`
 - `mobile/components/` 바깥에 하위 부품을 두지 않는다
 - thunk 안에서 처리해야 할 가공(정렬/필터)을 컴포넌트나 훅에서 다시 하지 않는다
+- `extraReducers`에 `addCase`를 직접 쓰지 않는다 — 항상 `applyAsyncHandlers`
 - 도메인 화면에 자체 `<header>`를 만들지 않는다
 - 다른 도메인의 `mobile/components/**`를 직접 import하지 않는다 — 재사용이 필요하면 `containers/`나 `global/ui/`로 옮긴다
 - 스토어 등록을 빼먹지 않는다 (빼먹으면 dispatch해도 상태가 안 바뀌는 조용한 버그가 생긴다)
@@ -191,3 +215,5 @@ export const PublicRoutes = [
 
 - 스타일 토큰(색상/간격/타이포/반응형) 규칙은 `docs/convention/design.md` 참조
 - 백엔드 쪽 응답 형식·권한 규칙은 `docs/convention/backend.md` 참조
+- 모바일 wrapper / frame width 전략(375 / 320 보호 / 8pt grid / tap 44px)은 `docs/global-guide/design/mobile-frame.md` 참조
+- 뱃지 컴포넌트 사용법은 `docs/convention/badge-components.md` 참조

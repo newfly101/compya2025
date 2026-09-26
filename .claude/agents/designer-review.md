@@ -168,14 +168,13 @@ tools: Read, Write, Edit, Glob, Grep, mcp__claude_ai_Figma__get_design_context, 
 
 | 컨벤션 | 경로 | 언제 Read |
 |---|---|---|
-| 반응형 (축약) | `.claude/conventions/responsive.md` | 평가 시작 시 1회 |
-| 반응형 (디테일) | `.claude/conventions/responsive-mobile-first.md` | 모바일 기준 부합 검토 시 |
+| 반응형 | `.claude/conventions/responsive-mobile-first.md` | 평가 시작 시 1회 |
 | HITL 마커 | `.claude/conventions/hitl-markers.md` | 첫 결정 항목 만났을 때 1회 |
 
 ### 반응형 평가 절차 (mobile-first 단일 모드)
 
 ```
-1. responsive.md + responsive-mobile-first.md Read
+1. responsive-mobile-first.md Read
 2. 평가 대상이 모바일 컨벤션 부합 여부 점검
 3. 부합 미달 시 — § 3 개선점에 P0/P1 으로 기록
 ```

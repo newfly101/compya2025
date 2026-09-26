@@ -8,6 +8,9 @@
 
 **모바일 우선. tablet / PC 도 모바일 형태 + 좌우 여백.** 데스크탑 전용 레이아웃 X, multi-column X, PC 전용 인터랙션 X.
 
+- **단일 코드베이스 / 단일 컴포넌트** — SSR/CSR 분기 X, 컴포넌트 분기 X
+- **디자인 토큰 일원화** — color / typography / spacing / radius 는 항상 같은 토큰 사용
+
 ---
 
 ## 2. 환경별 동작
@@ -31,6 +34,8 @@
 ---
 
 ## 4. CSS 변환 규칙
+
+⭐ `clamp() / min() / max()` 로 부드러운 스케일링 권장. media query 는 아래 320px 예외 외에는 쓰지 않는다.
 
 ```css
 .page-wrapper { max-width: 480px; margin: 0 auto; width: 100%; }
@@ -93,4 +98,12 @@
 
 ⭐ Figma 작업은 **MCP 직접 조작** (Claude 가 `use_figma` 로 직접 씀, 사용자 수작업 없음). 상세: [figma-mcp-rules.md](../../docs/global-guide/design/figma-mcp-rules.md)
 
-`figma-plugin/domains/{domain}.ts` + `code.ts` 누적 append 방식은 ⛔ 폐기 (2026-08-20). [figma-plugin.md](./figma-plugin.md) 는 과거 기록으로만 보존, 재실행 금지.
+`figma-plugin/domains/{domain}.ts` + `code.ts` 누적 append 방식은 ⛔ 폐기 (2026-08-20). 과거 기록은 git 이력 참조, 재실행 금지.
+
+---
+
+## 10. 자가 점검 (모든 agent 공통)
+
+- [ ] 본 문서를 1회 Read 했는가?
+- [ ] 산출물에 mobile-first 원칙 반영했는가? (도메인 헤더 X / multi-column X / hover 의존 X)
+- [ ] `<MobileLayout>` 사용했는가? (도메인 자체 wrapper X)
