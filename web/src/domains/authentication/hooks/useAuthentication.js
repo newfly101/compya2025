@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearUser } from "@/domains/authentication/store/slices.js";
 import { requestUserLogout } from "@/domains/authentication/store/thunks.js";
 import { trackLogin, trackLogout } from "@/infra/analytics/events/authEvents.js";
 
@@ -28,8 +27,8 @@ export const useAuthentication = () => {
 
   const logout = async () => {
     trackLogout();
+    // requestUserLogout 이 resetAuthSession 으로 Redux 상태와 세션 마커를 함께 비운다.
     await dispatch(requestUserLogout());
-    dispatch(clearUser());
     window.location.replace("/");
   };
 

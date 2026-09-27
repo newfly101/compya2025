@@ -10,7 +10,7 @@ import {
   requestDeleteMyAccount,
 } from "@/domains/users/store/public/thunks.js";
 import { useProfileImageUpload } from "@/domains/users/mobile/hooks/useProfileImageUpload.js";
-import { clearUser } from "@/domains/authentication/store/slices.js";
+import { resetAuthSession } from "@/domains/authentication/store/thunks.js";
 import styles from "./MyPageScreen.module.scss";
 
 const NICKNAME_MAX_LENGTH = 20;
@@ -94,8 +94,8 @@ export default function MyPageScreen() {
     try {
       await dispatch(requestDeleteMyAccount()).unwrap();
       // BE 가 refresh token 삭제 + 쿠키 만료까지 처리한다.
-      // FE 는 별도 로그아웃 API 호출 없이 인증 상태만 정리한다.
-      dispatch(clearUser());
+      // FE 는 별도 로그아웃 API 호출 없이 인증 상태만 정리한다 — 세션 마커까지 함께 비운다.
+      dispatch(resetAuthSession());
       navigate(ROUTE_PATHS.home, { replace: true });
     } catch (e) {
       setWithdrawError(typeof e === "string" ? e : "탈퇴 처리에 실패했습니다.");

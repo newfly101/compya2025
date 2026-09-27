@@ -1,6 +1,10 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config/env.js";
-import { hasAuthSessionMarker, clearAuthSessionMarker } from "@/infra/http/authSessionMarker.js";
+import { hasAuthSessionMarker } from "@/infra/http/authSessionMarker.js";
+// store / thunks 는 client.js 와 순환 참조다 (store → slices → thunks → api → client).
+// 모듈 평가 시점에는 쓰지 않고 인터셉터 콜백 안에서만 쓰므로 ESM live binding 으로 안전하다.
+import { store } from "@/app/store/store.js";
+import { resetAuthSession } from "@/domains/authentication/store/thunks.js";
 
 export const API = axios.create({
   baseURL: API_BASE_URL,
@@ -34,8 +38,29 @@ const LOGOUT_PATH = "/auth/logout";
 // TypeError 로 터진다. 대신 reject 하되, 호출부(thunk)가 이미 공통으로
 // try/catch → rejectWithValue(error.message) 패턴을 쓰고 있으므로
 // 여기서 message 만 한글로 채워주면 화면은 그 문구를 그대로 보여줄 수 있다.
-// isAuthError 플래그는 필요 시 호출부가 인증 실패를 구분해 분기할 수 있게 남겨둔다.
 const AUTH_ERROR_MESSAGE = "로그인이 필요합니다. 다시 로그인해 주세요.";
+const BLOCKED_MESSAGE = "이용이 제한된 계정입니다. 고객센터로 문의해 주세요.";
+const FORBIDDEN_MESSAGE = "접근 권한이 없습니다.";
+
+// 실패 응답 본문은 { success:false, code, data:null } 형태다 (BE GlobalResponse.fail).
+// 403 은 세 갈래 — 계정 정지 / 인증 만료 / 일반 권한 부족. 문구가 아니라 code 로 가른다.
+const CODE_USER_BLOCKED = "AUTH_USER_BLOCKED";
+const CODE_UNAUTHORIZED = "AUTH_UNAUTHORIZED";
+
+// 시큐리티의 AccessDeniedHandler 도 AUTH_USER_BLOCKED 를 쓴다(역할 부족).
+// 역할 검사가 걸린 경로의 403 은 계정 정지가 아니라 권한 부족으로 본다.
+// BE 가 권한 부족용 코드를 따로 내려주게 되면 이 경로 예외는 지운다.
+const ROLE_GUARDED_PATH = /^\/?(admin|upload)\//;
+
+// "blocked" = 계정 정지·탈퇴 / "expired" = 인증 만료 / null = 일반 권한 부족
+const classifyForbidden = (error) => {
+  const code = error.response?.data?.code;
+  if (code === CODE_UNAUTHORIZED) return "expired";
+  if (code === CODE_USER_BLOCKED && !ROLE_GUARDED_PATH.test(error.config?.url ?? "")) {
+    return "blocked";
+  }
+  return null;
+};
 
 // 401 외의 실패도 여기서 한글로 바꿔 둔다.
 // 안 그러면 axios 기본 문구("Request failed with status code 500")가 화면에 그대로 뜬다.
@@ -49,16 +74,19 @@ const toUserMessage = (error) => {
     return "연결에 실패했습니다. 네트워크 상태를 확인해 주세요.";
   }
   const status = error.response.status;
-  if (status === 403) return "접근 권한이 없습니다.";
+  if (status === 403) return FORBIDDEN_MESSAGE;
   if (status === 404) return "요청한 정보를 찾을 수 없습니다.";
   if (status >= 500) return "서버에 문제가 생겼습니다. 잠시 후 다시 시도해 주세요.";
   return "데이터를 받지 못했습니다. 잠시 후 다시 시도해 주세요.";
 };
 
-const createAuthError = (original) => {
-  original.isAuthError = true;
-  original.message = AUTH_ERROR_MESSAGE;
-  return original;
+// 인증 최종 실패(재발급까지 실패 / 계정 정지 확정) 지점 — 로그인 상태 정리는 여기 한 곳에서만
+// 한다. resetAuthSession 이 세션 마커와 Redux 상태를 함께 비우므로 화면마다 흩뿌릴 필요가 없다.
+const failAuth = (error, message) => {
+  error.isAuthError = true;
+  error.message = message;
+  store.dispatch(resetAuthSession());
+  return error;
 };
 
 let refreshing = null;
@@ -74,8 +102,18 @@ API.interceptors.response.use(
     const isAuthEndpoint =
       url.includes(REFRESH_PATH) || url.includes(LOGOUT_PATH);
 
+    // 계정 정지·탈퇴는 401 이 아니라 403 으로 온다 — 서버가 refresh token 을 이미 지웠으니
+    // 재발급으로 되살릴 수 없다. 바로 최종 인증 실패로 처리한다.
+    if (status === 403) {
+      const forbiddenKind = classifyForbidden(error);
+      if (forbiddenKind) {
+        const message = forbiddenKind === "blocked" ? BLOCKED_MESSAGE : AUTH_ERROR_MESSAGE;
+        return Promise.reject(failAuth(error, message));
+      }
+    }
+
     if (status !== 401 || original?._retried || isAuthEndpoint) {
-      if (status === 401) return Promise.reject(createAuthError(error));
+      if (status === 401) return Promise.reject(failAuth(error, AUTH_ERROR_MESSAGE));
       error.message = toUserMessage(error);
       return Promise.reject(error);
     }
@@ -84,7 +122,7 @@ API.interceptors.response.use(
     // 마커 없을 때 /users/me 호출을 건너뛰지만, 다른 API 가 우연히 401 을 낼 경우를 막는
     // 이중 안전장치.
     if (!hasAuthSessionMarker()) {
-      return Promise.reject(createAuthError(error));
+      return Promise.reject(failAuth(error, AUTH_ERROR_MESSAGE));
     }
 
     original._retried = true;
@@ -99,11 +137,10 @@ API.interceptors.response.use(
       await refreshing;
       return API(original);
     } catch {
-      // refresh 실패 → 미인증 상태. 마커도 지워 다음 요청부터는 재시도하지 않는다.
-      // 원 요청의 401 에러를 그대로 reject 해 호출부(thunk)가 "로그인이 필요합니다" 류
-      // 메시지를 낼 수 있게 한다.
-      clearAuthSessionMarker();
-      return Promise.reject(createAuthError(error));
+      // refresh 실패 → 미인증 확정. 마커·Redux 상태를 함께 비워 다음 요청부터는
+      // 재발급을 시도하지 않게 한다. 원 요청의 에러를 그대로 reject 해
+      // 호출부(thunk)가 "로그인이 필요합니다" 문구를 낼 수 있게 한다.
+      return Promise.reject(failAuth(error, AUTH_ERROR_MESSAGE));
     }
   }
 );
