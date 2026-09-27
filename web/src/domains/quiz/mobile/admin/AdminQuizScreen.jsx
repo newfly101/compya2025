@@ -314,6 +314,7 @@ export default function AdminQuizScreen() {
               className={styles.input}
               type="number"
               name="round"
+              min="1"
               value={form.round}
               onChange={handleFormChange}
               required
