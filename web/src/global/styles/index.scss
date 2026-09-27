@@ -19,8 +19,8 @@
 @forward "variables/font";         // $font-size-9 ~ $font-size-28, weight, line-height
 @forward "variables/spacing";      // $space-1 ~ $space-12, layout constants
 @forward "variables/radius";       // $radius-sm ~ $radius-full
-@forward "variables/breakpoints"; // $bp-mobile-sm ~ $bp-desktop
-@forward "variables/zindex";      // $z-base ~ $z-toast
+@forward "variables/breakpoints"; // $bp-mobile-sm, $bp-tablet
+@forward "variables/zindex";      // $z-base ~ $z-sheet
 
 // ── Mixins ────────────────────────────────────────────────
 @forward "mixins/flex";    // flex-row, flex-col, flex-center, flex-between
