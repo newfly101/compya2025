@@ -242,7 +242,7 @@ td.cname {
 .cteam {
   width: 50px;
   color: var(--color-text-secondary);
-  font-size: 12.5px;
+  font-size: 12px;
 }
 
 .cyear {
@@ -255,7 +255,7 @@ td.cname {
   overflow: hidden;
   width: 56px;
   color: var(--color-text-secondary);
-  font-size: 12.5px;
+  font-size: 12px;
   text-overflow: ellipsis;
   // 겸업 표기("1B/DH")가 주포지션 단독 표기보다 길어 칸 폭이 밀릴 수 있어 말줄임 처리한다.
 }
@@ -301,7 +301,7 @@ td.cname {
   background: var(--color-bg-card);
   color: var(--color-text-secondary);
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 12px;
   cursor: pointer;
 }
 

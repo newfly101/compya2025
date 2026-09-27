@@ -16,7 +16,7 @@
 .lead {
   margin: 0 0 $space-5;
   color: var(--color-text-muted);
-  font-size: 12.5px;
+  font-size: 12px;
   max-width: 60ch;
 }
 
@@ -118,7 +118,7 @@
     padding: 13px 16px;
     list-style: none;
     color: var(--color-text-muted);
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
 
@@ -157,7 +157,7 @@
 
   b {
     color: var(--color-text-primary);
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 600;
     line-height: 2;
   }
@@ -254,7 +254,7 @@
   background: var(--color-bg-card);
   color: var(--color-text-muted);
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
 
@@ -351,7 +351,7 @@
     max-width: 34ch;
     margin: 0 auto;
     color: var(--color-text-muted);
-    font-size: 12.5px;
+    font-size: 12px;
   }
 }
 
@@ -398,7 +398,7 @@
   border-radius: 999px;
   background: var(--color-bg-card);
   color: var(--color-text-muted);
-  font-size: 12.5px;
+  font-size: 12px;
   white-space: nowrap;
 
   i {
