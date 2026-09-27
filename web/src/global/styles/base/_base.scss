@@ -71,6 +71,12 @@ textarea {
   font-size: inherit;
   color: inherit;
   width: 100%;
+
+  // 키보드 포커스일 때만 링 복원 — 마우스 클릭엔 안 뜬다 (접근성, outline 만 사용)
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
 }
 
 // 체크박스·라디오는 네이티브 위젯 생김새(체크 표시 포함)를 그대로 두고
