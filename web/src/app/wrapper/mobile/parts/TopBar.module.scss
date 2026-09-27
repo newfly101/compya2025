@@ -73,7 +73,6 @@ $color-naver-font: $color-white-100;
   height: rem(28);             // mobile-frame § 4.3 — 토큰 외 size, rem 강제
   padding: 0 $space-3;
   border-radius: $radius-sm;
-  color: $color-naver-font;
   @include text-micro;
   white-space: nowrap;
   flex-shrink: 0;
@@ -81,10 +80,12 @@ $color-naver-font: $color-white-100;
 }
 
 .loginBtn {
+  color: $color-naver-font;
   background-color: $color-naver-background;
 }
 
 .logoutBtn {
+  color: var(--color-text-primary);
   background-color: var(--color-bg-card);
 }
 
@@ -120,18 +121,3 @@ $color-naver-font: $color-white-100;
   justify-content: flex-end;
 }
 
-// ── 로그아웃 아이콘 버튼 (page / section variant 전용) ────────
-// 기본 갈래의 텍스트형 .logoutBtn 과 달리 좁은 공간에 맞춰 아이콘만 표시
-.logoutIconBtn {
-  @include flex-center;
-  width: $control-height-sm;   // 36px — backBtn 과 동일 규격
-  aspect-ratio: 1 / 1;
-  flex-shrink: 0;
-  color: var(--color-text-primary);
-  @include pressable;
-}
-
-.logoutIcon {
-  width: rem(18);
-  height: rem(18);
-}

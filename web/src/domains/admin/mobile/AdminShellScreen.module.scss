@@ -52,14 +52,3 @@
   flex-direction: column;
   min-width: 0;
 }
-
-.logoutBtn {
-  @include reset-button;
-  padding: 3px $space-2;
-  border: 1px solid var(--color-brand-tint);
-  border-radius: $radius-md;
-  color: var(--color-brand-dark);
-  @include text-caption;
-  font-weight: 600;
-  cursor: pointer;
-}

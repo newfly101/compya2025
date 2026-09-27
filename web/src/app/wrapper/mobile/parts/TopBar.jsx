@@ -9,23 +9,11 @@ const TopBar = () => {
   const { isAuthenticated, login, logout } = useAuthentication();
   const { variant, title, rightAction, onBack } = config;
 
-  // page / section variant 는 이미 특정 화면 안이라 로그인 유도는 화면 본문이 담당하는 게 기본이지만,
-  // 상단바 우측 슬롯은 home variant 와 동일하게 로그인 상태를 항상 노출한다.
-  // 로그인 상태 → 로그아웃 아이콘 버튼(좁은 공간용), 비로그인 → home 과 동일한 네이버 로그인 버튼.
+  // 상단바 우측 슬롯은 어느 갈래에서나 같은 것을 그린다 — 글자형 로그아웃 / 네이버 로그인.
+  // 예전에는 page / section 갈래만 전원 기호 아이콘을 썼는데, 화면이 준 rightAction 옆에
+  // 또 하나의 로그아웃 진입점이 생겨 버튼이 둘로 보였고 글리프도 깨졌다.
   const authAction = isAuthenticated ? (
-    <button
-      type="button"
-      className={styles.logoutIconBtn}
-      onClick={logout}
-      aria-label="로그아웃"
-    >
-      {/* 전원 기호 U+23FB 는 기본 폰트 대부분에 글리프가 없어 두부(네모) 로 깨진다 — 인라인 SVG 로 고정 */}
-      <svg className={styles.logoutIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor"
-           strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-        <path d="M12 3v9" />
-        <path d="M6.3 7A8 8 0 1 0 17.7 7" />
-      </svg>
-    </button>
+    <button type="button" className={styles.logoutBtn} onClick={logout}>로그아웃</button>
   ) : (
     <button type="button" className={styles.loginBtn} onClick={login}>N 네이버 로그인</button>
   );
@@ -81,12 +69,7 @@ const TopBar = () => {
         ⚾&nbsp;&nbsp;컴프야펀
       </Link>
 
-      <div className={styles.right}>
-        {isAuthenticated
-          ? <button className={styles.logoutBtn} onClick={logout}>로그아웃</button>
-          : <button className={styles.loginBtn} onClick={login}>N 네이버 로그인</button>
-        }
-      </div>
+      <div className={styles.right}>{authAction}</div>
     </header>
   );
 };
