@@ -82,8 +82,8 @@
   padding-top: $space-4;
   padding-bottom: $space-4;
   background-color: var(--color-bg-card);
-  // accent strip — brand violet (168,106,240) @ 0.5 alpha. 토큰 매핑 없음(1회 액센트).
-  border-top: 3px solid rgba(168, 106, 240, 0.5);
+  // accent strip — brand violet @ 0.5 alpha. 전역 --color-brand-alpha-50 으로 회수(2026-09-27).
+  border-top: 3px solid var(--color-brand-alpha-50);
 }
 
 .summaryLabel {

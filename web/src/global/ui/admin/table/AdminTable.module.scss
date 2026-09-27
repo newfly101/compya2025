@@ -55,7 +55,7 @@ thead th.sticky {
 .row {
   // 클릭 가능 여부와 무관하게 살짝 밝아진다 — 프로토타입 리스트 hover 톤
   &:hover td:not(.sticky) {
-    background: rgba(255, 255, 255, 0.025);
+    background: var(--color-row-hover-soft);
   }
 
   &:hover td.sticky {

@@ -10,12 +10,9 @@
   // 카드 등급색 — 기본(노말). 전역 text-muted 는 alpha 라서 border/dot 용 solid 값이 필요하다.
   --color-pe-normal: #9ca3af;
 
-  // 카드 등급색 — 스페셜(코치 기본값). 이번 범위는 코치 탭이 항상 disabled 라 미사용,
-  // 추후 코치 데이터 연동 시를 대비해 정의만 유지한다.
-  --color-pe-special: #22c55e;
-
-  // 로딩 스켈레톤 카드 배경 — design_handoff README 지정값. 전역 토큰에 대응 값이 없다.
-  --color-pe-skeleton: #171622;
+  // 로딩 스켈레톤 카드 배경 — historyLegend 카드 배경과 같은 값이라 공용 토큰으로
+  // 승격됐다(--color-skeleton-card-bg, 2026-09-27). 값은 동일해 화면은 그대로다.
+  --color-pe-skeleton: var(--color-skeleton-card-bg);
 
   // 리스트형 스탯 표 — 선수별 최고 능력치(70+) 강조. 민트는 전역에 대응 색이 없다.
   --color-pe-mint: #4fe3c1;
@@ -30,4 +27,17 @@
   // 머리행 배경은 공용 토큰 --color-table-head-bg 로 승격했다(StatsTable.module.scss) — 로컬
   // 중복 제거. hover 색은 표마다 다를 수 있어 공용화하지 않고 로컬로 남긴다.
   --color-pe-table-row-hover: rgba(255, 255, 255, 0.025);
+}
+
+// ── 밝은톤 ─────────────────────────────────────────────────────
+// 등급 색(--color-pe-gold / -gold-tint-bg / -normal / -grade-s|b|c)은 등급 축이라
+// 밝은톤 값을 두지 않는다 — 게임 본편 등급 색 체계 미확보(DESIGN.md § Grade).
+// gold 와 gold-tint-bg 는 "밝은 금색 글자 + 어두운 금색 배경" 한 짝이라 둘 중 하나만
+// 밝은톤으로 바꾸면 대비가 깨진다. 값이 확보될 때까지 짝째로 다크 값을 유지한다.
+// --color-pe-skeleton 은 공용 토큰 참조라 전역에서 함께 뒤집힌다.
+:root[data-theme="light"] {
+  --color-pe-mint: #0f766e; // 흰 카드 5.47:1 (전역 --color-mint 밝은톤 값과 동일하게 맞춤)
+
+  // 다크에선 흰색 2.5% 덧칠로 hover 를 냈다 — 밝은 면에서는 사라지므로 연한 회색 면으로 바꾼다
+  --color-pe-table-row-hover: #f4f2fa;
 }

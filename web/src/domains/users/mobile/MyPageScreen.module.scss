@@ -73,8 +73,10 @@
   align-items: center;
   justify-content: center;
   border-radius: $radius-full;
+  // 아바타 사진 위 막 — 사진은 테마와 무관하게 어두우므로 막·글자 모두 두 테마 공용으로 둔다.
+  // (--color-text-primary 는 밝은톤에서 진한 글자로 뒤집혀 이 막 위에서 읽히지 않는다)
   background: rgba(0, 0, 0, 0.55);
-  color: var(--color-text-primary);
+  color: var(--color-media-on-text);
   @include text-caption;
   text-align: center;
   padding: 0 $space-1;

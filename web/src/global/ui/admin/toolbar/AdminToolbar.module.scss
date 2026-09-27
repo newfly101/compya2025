@@ -100,7 +100,7 @@
   font-size: $font-size-10;
 
   [aria-pressed="true"] & {
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--color-admin-accent-active-text-soft);
   }
 }
 

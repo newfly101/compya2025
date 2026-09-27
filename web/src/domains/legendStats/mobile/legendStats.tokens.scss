@@ -8,26 +8,26 @@
   --ls-head-h: 32px;
 
   // 스탯 강조 2색
-  --color-ls-good: #5eead4; // 76 이상
+  --color-ls-good: var(--color-mint); // 76 이상
   --color-ls-dim: #7b6f86; // 66 이하
   --color-ls-warn: #fbbf24; // 구종 등급(수치 미확인)
 
   // 표 헤더 배경은 --color-ls-head-bg 로 로컬 정의했었으나, admin/historyLegend/
   // mileage(리스트)/players 도 정확히 같은 값(#15121c)을 각자 로컬로 갖고 있어
   // 공용 토큰 --color-table-head-bg 로 승격했다(global/styles/semantic/_color.scss).
-  // 행 hover 색은 화면마다 값이 달라(admin #161320 / mileage-list #1b1633 / players
-  // rgba(255,255,255,.025)) 공용화하지 않고 로컬로 남긴다.
-  --color-ls-row-hover: #161320;
+  // 행 hover — admin과 값이 같아 공용 토큰으로 승격됨(2026-09-27). mileage-list(#1b1633) /
+  // players(rgba(255,255,255,.025))는 톤이 달라 승격 대상이 아니라 로컬로 남는다.
+  --color-ls-row-hover: var(--color-table-row-hover);
 
   // OVR 열 (파생값)
-  --color-ls-ovr-text: #c4b5fd;
+  --color-ls-ovr-text: var(--color-accent-violet-text);
   --color-ls-ovr-bg: rgba(139, 92, 246, 0.07);
 
   // 평점 미정 행 이름
   --color-ls-prov: #d8c9ff;
 
   // 선택된 칩
-  --color-ls-chip-on-text: #dcd3ff;
+  --color-ls-chip-on-text: var(--color-chip-on-text);
 
   // 히스토리 모드 배지 — 퍼플 계열과 구분되게 파랑
   --color-ls-history: #60a5fa;
@@ -38,4 +38,29 @@
   --color-ls-mileage: #4ade80;
   --color-ls-mileage-bg: rgba(74, 222, 128, 0.14);
   --color-ls-mileage-border: rgba(74, 222, 128, 0.35);
+}
+
+// ── 밝은톤 ─────────────────────────────────────────────────────
+// 공용 토큰 참조(--color-ls-good / -row-hover / -ovr-text)는 전역에서 뒤집히므로 제외.
+// --color-ls-warn(구종 등급)은 등급 축이라 밝은톤 값을 두지 않는다 — 게임 본편 등급 색
+// 체계 미확보(DESIGN.md § Grade). 확보 전까지 다크 값이 그대로 남는다.
+:root[data-theme="light"] {
+  --color-ls-dim: #6b6478; // 흰 카드 대비 5.65:1
+  --color-ls-ovr-bg: rgba(124, 58, 237, 0.07);
+  --color-ls-prov: #5b4a9c; // 7.23:1
+
+  // 히스토리 배지(파랑) — 틴트 채움 + 진한 글자로 뒤집는다
+  --color-ls-history: #1d4ed8; // 틴트 위 5.82:1
+  --color-ls-history-bg: rgba(37, 99, 235, 0.1);
+  --color-ls-history-border: rgba(37, 99, 235, 0.4);
+
+  // 마일리지 배지(초록) — 히스토리와 색상 구분 유지
+  --color-ls-mileage: #166534; // 틴트 위 6.40:1
+  --color-ls-mileage-bg: rgba(22, 163, 74, 0.1);
+  --color-ls-mileage-border: rgba(22, 163, 74, 0.4);
+
+  // 선택된 칩 글자 — 전역 --color-chip-on-text 는 밝은톤에서도 밝은 값(#f5f3ff)이다.
+  // 그건 채움이 진한 보라인 칩 전제이고, 이 화면 칩 채움은 옅은 틴트(--color-brand-alpha-15)라
+  // 그대로 쓰면 1.11:1 로 사라진다. 진한 보라로 뒤집는다.
+  --color-ls-chip-on-text: #4c1d95; // 틴트 위 8.97:1
 }

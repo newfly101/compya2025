@@ -14,7 +14,7 @@
 .filters {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: $z-sticky;
   padding-bottom: 8px;
   background: linear-gradient(var(--color-bg-deepest) 84%, transparent);
 }
@@ -240,7 +240,7 @@ td.alignLeft {
 
   // filter 는 배경이 있는 칸만 밝아진다. 투명한 칸은 반응이 없어 행이 반쪽만 켜진다
   &:hover td {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--color-hl-row-hover-soft);
   }
 
   // 고정 칸은 스크롤 시 뒤가 비치면 안 되므로 불투명하게 덮는다

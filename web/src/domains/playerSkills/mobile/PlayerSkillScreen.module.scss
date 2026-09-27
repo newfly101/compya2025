@@ -10,7 +10,7 @@
 .filters {
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: $z-sticky;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -89,7 +89,7 @@
   border: 1px solid var(--color-border-strong);
   border-radius: $radius-full;
   background: var(--color-bg-card);
-  color: #fff;
+  color: var(--color-text-strong);
   font-family: inherit;
   font-weight: 700;
   font-size: 13px;
@@ -138,7 +138,7 @@
     border: 1px solid var(--color-border-strong);
     border-radius: $radius-xl;
     background: var(--color-bg-card);
-    color: #fff;
+    color: var(--color-text-strong);
     font-family: inherit;
     font-weight: 700;
     font-size: 15px;
@@ -165,7 +165,7 @@
   border: 1px solid var(--color-border-strong);
   border-radius: $radius-full;
   background: var(--color-bg-card);
-  color: #fff;
+  color: var(--color-text-strong);
   font-family: inherit;
   font-weight: 800;
   font-size: 13px;
@@ -195,7 +195,7 @@
   font-size: 12px;
 
   b {
-    color: #fff;
+    color: var(--color-text-strong);
   }
 }
 

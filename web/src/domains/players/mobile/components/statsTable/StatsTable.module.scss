@@ -85,7 +85,7 @@
 // 기본 클래스(.th/.td)와 묶어 class 2개(0,2,0)로 특이도를 올려서 이긴다.
 .th.thActive {
   background-color: var(--color-brand-tint);
-  color: #fff;
+  color: var(--color-text-strong);
 }
 
 .th.thRight {

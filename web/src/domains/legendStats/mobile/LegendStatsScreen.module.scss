@@ -14,7 +14,7 @@
 .filters {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: $z-sticky;
   padding-bottom: 8px;
   background: linear-gradient(var(--color-bg-deepest) 82%, transparent);
 }
@@ -273,7 +273,7 @@ td.cName {
   cursor: pointer;
 
   &:hover td:not(.sticky) {
-    background: rgba(255, 255, 255, 0.025);
+    background: var(--color-row-hover-soft);
   }
 
   &:hover td.sticky {
@@ -581,12 +581,12 @@ td.cStat {
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: $z-modal;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--color-overlay-strong);
 }
 
 .helpCard {

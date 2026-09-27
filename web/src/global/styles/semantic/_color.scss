@@ -22,8 +22,6 @@
 
   // ── Brand Alpha (overlay용) ────────────────────────────────
   --color-brand-alpha-15: rgba(168, 106, 240, 0.15);
-  --color-brand-dark-alpha-15: rgba(109, 74, 211, 0.15);
-  --color-brand-violet-alpha-12: rgba(108, 92, 231, 0.12);
 
   // ── Text ───────────────────────────────────────────────────
   --color-text-primary:   #{$color-white-92};
@@ -43,17 +41,122 @@
   --color-warning:       #{$color-warning-400};
   --color-warning-dim:   #{$color-warning-100};
 
-  // ── Surface (이벤트·커뮤니티 특수 배경) ──────────────────────
-  --color-surface-event:     #3c1e50;
-  --color-surface-community: #19284b;
-
   // ── Table (리스트형 데이터 표 공통 — mixins/_table.scss data-table-*) ──────
   // legendStats·historyLegend·admin·mileage(리스트)·players 5개 도메인이 로컬 토큰으로
   // 각자 갖고 있던 값(#15121c)이 전부 동일해 여기로 승격한다. 표 헤더 전용 배경.
   --color-table-head-bg: #15121c;
+  // 표 행 hover — historyLegend/legendStats/admin 3곳이 각자 로컬로 갖고 있던 값(#161320)이
+  // 전부 동일해 여기로 승격한다(2026-09-27 토큰 정리). mileage 리스트 행 hover(#1b1633)는
+  // 톤이 달라 승격 대상이 아니라 로컬로 남긴다.
+  --color-table-row-hover: #161320;
+
+  // ── Domain Accent (도메인 여러 곳에서 같은 값을 각자 이름만 다르게 정의하던 것을
+  // 공용 토큰으로 승격 — 2026-09-27 토큰 정리) ──────────────────
+  --color-mint: #5eead4; // historyLegend/legendStats/mileage/admin 4곳 중복
+  --color-accent-violet-text: #c4b5fd; // historyLegend/legendStats/mileage 3곳 중복
+  --color-chip-on-text: #dcd3ff; // historyLegend/legendStats/mileage/admin 4곳 중복
+  // historyLegend 카드 배경(#171422)과 players 스켈레톤 배경(#171622) — 1px 차이라 공용화.
+  // players.tokens.scss가 다른 세션 작업 중이라 이번 라운드는 historyLegend 쪽만 이 토큰을
+  // 참조하도록 전환하고, 값 자체는 잠긴 players 쪽(#171622)에 맞춘다.
+  --color-skeleton-card-bg: #171622;
+
+  // ── 리터럴 회수분 (2026-09-27) — 다크 값은 회수 전 리터럴과 바이트 동일 ──
+  // 순백 글자. 다크에선 #fff 그대로, 밝은톤에선 면이 흰색/옅은 보라로 뒤집혀 진한 글자가 된다.
+  // text-primary(흰 92%)로 대체하지 않는 이유: 다크 렌더가 미세하게 달라진다.
+  --color-text-strong: #ffffff;
+  // 사진 위 막에 얹는 글자 — 사진은 테마와 무관하게 어두우므로 두 테마 공용.
+  --color-media-on-text: #{$color-white-92};
+  // 표 행 hover 중 배경이 비치는 칸(투명 td) 전용 덧칠. 다크는 흰색 2.5%,
+  // 밝은톤은 흰 면에서 덧칠이 사라지므로 --color-table-row-hover 와 같은 연회색 면으로 바꾼다.
+  --color-row-hover-soft: rgba(255, 255, 255, 0.025);
+  // 도움말 모달 바닥 막 — --color-overlay(0.55)보다 한 단계 짙은 값을 쓰던 곳.
+  --color-overlay-strong: rgba(0, 0, 0, 0.6);
+  // 브랜드 보라 알파 면/선
+  --color-brand-alpha-20: rgba(168, 106, 240, 0.2);
+  --color-brand-alpha-50: rgba(168, 106, 240, 0.5);
+  // 성공 칩 배경 — danger-dim / warning-dim 과 같은 역할
+  --color-success-dim: rgba(3, 199, 90, 0.15);
 
   // ── Modal / Overlay ────────────────────────────────────────
   // D3=a: 신규 raw 색 직접 정의 (analysis § 8.5 — 사용자 확정 2026-05-31)
   --color-bg-modal: #{$color-bg-modal};
   --color-overlay: rgba(0, 0, 0, 0.55);
+}
+
+// ============================================================
+// 밝은톤 (light) — 다크가 기본값이고 이 블록이 같은 토큰을 덮는다.
+// 위 :root 값은 건드리지 않는다.
+//
+// 켜는 방법(기기 설정 따라가기 / 토글)은 아직 미정이라 여기 없다.
+// prefers-color-scheme 미디어쿼리도 일부러 넣지 않았다 — html 에
+// data-theme="light" 가 붙을 때만 적용된다.
+//
+// 값 원칙
+//  - 페이지 바닥에 순백을 쓰지 않는다. 아주 연한 자주빛 회색으로 눈부심을 낮춘다
+//  - 깊이는 밝기 단계로만 낸다 (그림자 금지). 카드가 흰색이고 바닥이 연한 회색이라
+//    "올라온 면"(칩·강조 블록)은 흰색보다 위로 갈 자리가 없다 — 카드에서 가장
+//    멀어지는 쪽, 즉 옅은 라벤더 채움으로 낸다
+//  - 글자·테두리는 흰 면 위에서 본문 4.5:1 / 테두리 3:1 을 넘긴다 (전 조합 실측 통과)
+//  - 보라는 면적을 늘리지 않는다. 글자·테두리·강조로만 쓴다
+// ============================================================
+
+:root[data-theme='light'] {
+  // ── Background — 바닥(연한 회색) → 카드(흰색), 칩은 카드에서 멀어지는 쪽 ──
+  --color-bg-deepest:  #f2f0f7; // 페이지 바닥
+  --color-bg-deep:     #f7f5fb; // 한 겹 올라온 구역
+  --color-bg-overlay:  #fbfafd; // 행 카드·표 바탕
+  --color-bg-card:     #ffffff; // 카드 — 목록의 기본 단위
+  --color-bg-elevated: #e9e4f4; // 칩·태그·강조 블록
+
+  // ── Brand — 채움이 아니라 글자·테두리·강조로 쓰는 진한 보라 ──
+  --color-brand:        #6d28d9;
+  --color-brand-dark:   #5b21b6;
+  --color-brand-violet: #4f46e5;
+  --color-brand-tint:   #ede9fe; // 자리 표시용 옅은 보라 면
+
+  // ── Brand Alpha (overlay용) ────────────────────────────────
+  --color-brand-alpha-15: rgba(109, 40, 217, 0.12);
+
+  // ── Text ───────────────────────────────────────────────────
+  --color-text-primary:     #1c1626;
+  --color-text-secondary:   #4d4560;
+  --color-text-muted:       #6b6280; // 흰 면에서 5.70:1 — 다크의 38% 흰색과 달리 본문 기준 통과
+  --color-text-code:        #3a3247;
+  --color-text-placeholder: #6f6683;
+
+  // ── Border — 흰색 투명도를 그대로 쓰면 밝은 면에서 사라진다 ──
+  --color-border:        #878097; // 흰 면 3.77:1 / 칩 면 3.03:1
+  --color-border-strong: #5f5673;
+
+  // ── Status — 흰 면에서 전부 4.5:1 이상. 다크 값은 1.4~2.3:1 로 깨진다 ──
+  --color-success:     #0f7a3d;
+  --color-danger:      #c0272d;
+  --color-danger-dim:  rgba(192, 39, 45, 0.10);
+  --color-warning:     #946200;
+  --color-warning-dim: rgba(148, 98, 0, 0.12);
+
+  // ── Table ──────────────────────────────────────────────────
+  --color-table-head-bg:   #f0edf6;
+  --color-table-row-hover: #f4f1fa;
+
+  // ── Domain Accent ──────────────────────────────────────────
+  --color-mint:               #0f766e;
+  --color-accent-violet-text: #7326d1;
+  // 칩 채움(brand-dark)은 밝은톤에서도 진한 보라라서 그 위 글자는 밝게 유지한다
+  --color-chip-on-text:       #f5f3ff;
+  --color-skeleton-card-bg:   #eeebf4;
+
+  // ── 리터럴 회수분 (2026-09-27) ─────────────────────────────
+  --color-text-strong:    #1c1626; // 흰 면 17.9:1 / 틴트 면 15.1:1
+  --color-media-on-text:  rgba(255, 255, 255, 0.92); // 사진 위 막 — 테마 무관, 다크와 같은 값
+  --color-row-hover-soft: #f4f1fa; // 흰색 덧칠은 밝은 면에서 안 보인다 → 연회색 면으로
+  --color-overlay-strong: rgba(24, 16, 38, 0.5); // 막은 밝은톤에서도 어둡다(뒤 화면을 눌러야 하므로). --color-overlay(0.45)보다 한 단계 짙게
+  --color-brand-alpha-20: rgba(109, 40, 217, 0.1);  // 칩 면. 그 위 --color-brand 글자 6.08:1
+  --color-brand-alpha-50: rgba(109, 40, 217, 0.65); // 3px 액센트 선. 흰 면 3.45:1 (0.5 는 2.50:1 미달이라 올렸다)
+  --color-success-dim:    rgba(15, 122, 61, 0.1);   // 그 위 --color-success 글자 4.73:1
+
+  // ── Modal / Overlay ────────────────────────────────────────
+  // 모달은 흰색으로 띄우고, 바닥 막은 밝은톤에서도 어둡게 둔다 (뒤 화면을 눌러야 하므로)
+  --color-bg-modal: #ffffff;
+  --color-overlay:  rgba(24, 16, 38, 0.45);
 }
