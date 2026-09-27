@@ -44,13 +44,16 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
         return noticeMapStruct.toResponseList(notices);
     }
 
-    // 운영자가 DB 에 직접 반영한 변경사항을 즉시 앱에 반영하기 위해 공지 관련 캐시를 전부 비우고 최신 목록을 다시 조회
-    // notice(admin/public)뿐 아니라 noticeDetail(id별 admin/public)도 함께 비운다 — 하나라도 빠지면 상세는 여전히 옛 값이 보인다
+    // 운영자가 DB 에 직접 반영한 변경사항을 즉시 앱에 반영하기 위해 공지 관련 캐시를 비우고 최신 목록을 다시 조회
+    // notice 캐시는 'public' 키 하나만 실제로 쓰인다(어드민 목록 getAdminNoticeList 는 캐시 없이 항상 DB 직접 조회) —
+    // allEntries 대신 그 키만 명시로 비워 범위를 넓히지 않는다
+    // noticeDetail 은 공지 id 별로 키가 갈려(#noticeId + '_admin'/'_public') 전체를 알 수 없으므로 allEntries 유지 —
+    // 하나라도 빠지면 상세는 여전히 옛 값이 보인다
     // 자기호출(getAdminNoticeList) 시 AOP 프록시를 우회해 캐시가 안 타므로 repository 를 직접 호출한다
     @Override
     @Transactional(readOnly = true)
     @Caching(evict = {
-            @CacheEvict(value = "notice", allEntries = true),
+            @CacheEvict(value = "notice", key = "'public'"),
             @CacheEvict(value = "noticeDetail", allEntries = true)
     })
     public List<NoticeResponse> refreshNotices() {
