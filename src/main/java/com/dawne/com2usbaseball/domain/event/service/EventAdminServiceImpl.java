@@ -84,6 +84,8 @@ public class EventAdminServiceImpl implements EventAdminService {
         eventMapStruct.updateEntity(request, event);
 
         // 수정은 부분 수정 허용 — 값이 안 온 필드는 기존 값을 유지(정규화 결과가 null이면 건드리지 않음)
+        // 날짜만 오면 등록과 같은 기본 시각(시작 12:00:00 / 종료 23:59:59), 시각까지 오면 그 시각 그대로.
+        // 관리자 폼이 시각을 함께 보내므로(AdminEventScreen 기간 시각 입력) 덮어쓰기는 폼 쪽에서 막는다.
         LocalDateTime startAt = normalizeDateTime(request.startAt(), DEFAULT_START_TIME, EventMessages.EVENT_START_AT_INVALID_FORMAT);
         LocalDateTime expireAt = normalizeDateTime(request.expireAt(), DEFAULT_EXPIRE_TIME, EventMessages.EVENT_EXPIRE_AT_INVALID_FORMAT);
         if (startAt != null) {

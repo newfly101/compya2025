@@ -19,7 +19,9 @@
         created_at      AS createdAt,
         updated_at      AS updatedAt
         FROM site_events
+        <!-- INTERNAL 은 내부 이벤트(DDL 주석) — 노출 토글만으로 공개되면 안 되므로 공개 목록은 OFFICIAL 만 -->
         WHERE is_visible = true
+          AND event_type = 'OFFICIAL'
         ORDER BY start_at DESC
     </select>
 
@@ -100,8 +102,9 @@
             <if test="imageUrl != null">
                 image_url = #{imageUrl},
             </if>
+            <!-- 빈 문자열은 "링크 삭제"로 본다 — 키를 아예 안 보내면(null) 기존 값을 유지 -->
             <if test="externalLink != null">
-                external_link = #{externalLink},
+                external_link = NULLIF(#{externalLink}, ''),
             </if>
             <if test="visible != null">
                 is_visible = #{visible},

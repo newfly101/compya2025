@@ -13,6 +13,7 @@ import AdminSegmented from "@/global/ui/admin/fields/AdminSegmented.jsx";
 import AdminDateRange from "@/global/ui/admin/fields/AdminDateRange.jsx";
 import AdminFilePicker from "@/global/ui/admin/fields/AdminFilePicker.jsx";
 import useTableModal from "@/global/ui/admin/hooks/useTableModal.js";
+import { formatNow } from "@/global/utils/datetime/dateUtils";
 import "@/global/ui/admin/admin.tokens.scss";
 import {
   requestAdminGetAllEventList,
@@ -36,21 +37,29 @@ const IMAGE_SOURCE_OPTIONS = [
   { value: "upload", label: "파일 업로드" },
 ];
 
+// startTime/expireTime 은 폼 전용 필드다 — 저장 직전에 날짜와 합쳐 startAt/expireAt 한 값으로 보낸다.
+// 비워 두면 날짜만 전송되고 서버가 기본 시각(시작 12:00 / 종료 23:59:59)을 채운다.
 const EMPTY_FORM = {
   title: "",
   eventType: "OFFICIAL",
   startAt: "",
+  startTime: "",
   expireAt: "",
+  expireTime: "",
   imageUrl: "",
   externalLink: "",
   visible: true,
 };
 
+// 편집 모달은 원본 시각까지 채운다 — 날짜만 담아 두면 제목만 고쳐 저장해도 서버 기본 시각으로 덮어써졌다.
+// 응답 형식은 "yyyy-MM-dd HH:mm"(EventResponse @JsonFormat) 이라 11~16 이 시각이다.
 const formOf = (event) => ({
   title: event.title ?? "",
   eventType: event.eventType ?? "OFFICIAL",
   startAt: event.startAt?.slice(0, 10) ?? "",
+  startTime: event.startAt?.slice(11, 16) ?? "",
   expireAt: event.expireAt?.slice(0, 10) ?? "",
+  expireTime: event.expireAt?.slice(11, 16) ?? "",
   imageUrl: event.imageUrl ?? "",
   externalLink: event.externalLink ?? "",
   visible: event.visible ?? true,
@@ -66,19 +75,15 @@ const extractUploadedUrl = (result) => {
   return null;
 };
 
-const todayStr = () => new Date().toISOString().slice(0, 10);
-
-// v2 "진행" 필터: 전체 · 진행중 · 종료. "종료" 카운트 API 가 없어 쿠폰 만료 판정과 동일하게
-// 클라이언트에서 expireAt 비교로 처리한다.
-const isEnded = (event) => {
-  const d = event.expireAt?.slice(0, 10);
-  return !!d && d < todayStr();
-};
+// v2 "진행" 필터: 전체 · 진행중 · 종료. "종료" 카운트 API 가 없어 클라이언트에서 expireAt 비교로 처리한다.
+// 기준은 공개 화면(useEventList)과 같은 KST 분 단위다 — 날짜 단위 UTC 비교였을 때는 오전에 끝난
+// 이벤트가 관리자 화면에서만 자정까지 "진행중" 으로 남아 두 화면이 서로 어긋났다.
+const isEnded = (event, now) => !!event.expireAt && event.expireAt < now;
 
 const STATUS_MATCH = {
   all: () => true,
-  ongoing: (e) => !isEnded(e),
-  ended: (e) => isEnded(e),
+  ongoing: (e, now) => !isEnded(e, now),
+  ended: (e, now) => isEnded(e, now),
 };
 
 const STATUS_OPTIONS = [
@@ -99,6 +104,9 @@ const VIS_OPTIONS = [
   { value: "visible", label: "노출" },
   { value: "hidden", label: "숨김" },
 ];
+
+// 시각이 비면 날짜만 보낸다(서버가 기본 시각을 채움). 시각이 있으면 "yyyy-MM-dd HH:mm" 로 그대로 전달.
+const joinDateTime = (date, time) => (date && time ? `${date} ${time}` : date ?? "");
 
 const formatPeriod = (startAt, expireAt) => {
   const md = (d) => {
@@ -127,7 +135,9 @@ const EVENTS_FETCH_ALL_SIZE = 1000;
 // 셸이 상단바(제목/로그아웃)를 한 번만 소유하고, 탭 전환은 뒤로가기가 아니라 탭 클릭으로 처리된다.
 export default function AdminEventScreen() {
   const dispatch = useDispatch();
-  const { events, loading, error } = useSelector((s) => s.events);
+  const { events, loading, error, hasMore } = useSelector((s) => s.events);
+  // 진행/종료 판정 기준 시각 — 공개 화면과 같은 KST 분 단위 문자열. 렌더마다 재계산한다.
+  const now = formatNow();
 
   const [search, setSearch] = useState("");
   // v2 기본값 — 진행:전체 / 노출:전체 (스크린샷 기준 초기 진입 상태)
@@ -154,16 +164,16 @@ export default function AdminEventScreen() {
 
   const statusOptions = STATUS_OPTIONS.map((opt) => ({
     ...opt,
-    count: searched.filter((e) => STATUS_MATCH[opt.value](e) && VIS_MATCH[vis](e)).length,
+    count: searched.filter((e) => STATUS_MATCH[opt.value](e, now) && VIS_MATCH[vis](e)).length,
   }));
 
   const visOptions = VIS_OPTIONS.map((opt) => ({
     ...opt,
-    count: searched.filter((e) => VIS_MATCH[opt.value](e) && STATUS_MATCH[status](e)).length,
+    count: searched.filter((e) => VIS_MATCH[opt.value](e) && STATUS_MATCH[status](e, now)).length,
   }));
 
   const filtered = searched
-    .filter((e) => STATUS_MATCH[status](e) && VIS_MATCH[vis](e))
+    .filter((e) => STATUS_MATCH[status](e, now) && VIS_MATCH[vis](e))
     .sort((a, b) => {
       const da = a.startAt?.slice(0, 10) ?? "";
       const db = b.startAt?.slice(0, 10) ?? "";
@@ -282,11 +292,16 @@ export default function AdminEventScreen() {
     if (saving) return;
     setSubmitError(null);
     setSaving(true);
+    const payload = {
+      ...form,
+      startAt: joinDateTime(form.startAt, form.startTime),
+      expireAt: joinDateTime(form.expireAt, form.expireTime),
+    };
     try {
       if (editTarget) {
-        await dispatch(requestAdminUpdateExEvent({ id: editTarget.id, ...form })).unwrap();
+        await dispatch(requestAdminUpdateExEvent({ id: editTarget.id, ...payload })).unwrap();
       } else {
-        await dispatch(requestAdminInsertNewExEvent(form)).unwrap();
+        await dispatch(requestAdminInsertNewExEvent(payload)).unwrap();
       }
       closeModal();
     } catch (err) {
@@ -322,8 +337,8 @@ export default function AdminEventScreen() {
             <div className={styles.thumbEmpty} />
           )}
           <div className={styles.titleRow}>
-            <AdminTag variant={isEnded(e) ? "neutral" : "green"}>
-              {isEnded(e) ? "종료" : "진행중"}
+            <AdminTag variant={isEnded(e, now) ? "neutral" : "green"}>
+              {isEnded(e, now) ? "종료" : "진행중"}
             </AdminTag>
             <span className={styles.title}>{e.title}</span>
           </div>
@@ -396,6 +411,14 @@ export default function AdminEventScreen() {
           <button type="button" onClick={() => setBulkNotice(null)} aria-label="닫기">
             ×
           </button>
+        </div>
+      )}
+
+      {/* 목록을 전량 받아 클라이언트에서 검색·필터·정렬하므로, 상한에 걸려 잘리면 그 값들이 전부 틀린다.
+          서버 count/페이징이 없는 동안은 최소한 잘렸다는 사실을 알린다(slice 의 hasMore = 응답이 상한과 동일). */}
+      {hasMore && (
+        <div className={styles.bulkNotice}>
+          <span>이벤트가 {EVENTS_FETCH_ALL_SIZE}건을 넘어 목록이 잘렸습니다 — 검색·필터·카운트가 정확하지 않습니다.</span>
         </div>
       )}
 
@@ -476,6 +499,30 @@ export default function AdminEventScreen() {
               onEndChange={(v) => setForm((prev) => ({ ...prev, expireAt: v }))}
               name="period"
             />
+            {/* 시각은 선택 입력 — 비워 두면 시작 12:00 / 종료 23:59:59 로 저장된다.
+                편집 시에는 원본 시각이 채워져 있어 그대로 저장하면 시각이 바뀌지 않는다. */}
+            <div className={styles.timeRow}>
+              <input
+                type="time"
+                className={styles.input}
+                name="startTime"
+                value={form.startTime}
+                onChange={handleFormChange}
+                aria-label="시작 시각"
+              />
+              <span className={styles.timeSep}>~</span>
+              <input
+                type="time"
+                className={styles.input}
+                name="expireTime"
+                value={form.expireTime}
+                onChange={handleFormChange}
+                aria-label="종료 시각"
+              />
+            </div>
+            <p className={styles.uploadPreviewCaption}>
+              시각을 비워 두면 시작 12:00 · 종료 23:59 로 저장돼요.
+            </p>
           </div>
 
           <div className={styles.toggleRow}>

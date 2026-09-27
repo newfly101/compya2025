@@ -26,11 +26,12 @@ export const requestAdminInsertNewExEvent = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.CREATE, async (newEvent, { rejectWithValue }) => {
     try {
       // options 는 응답 엔티티 필드가 아니라 "화면에 띄울 알림" 이어야 한다.
-      const { id: eventId } = await fetchAdminInsertExEvent(baseEventDTO(newEvent));
+      // 폼 값이 아니라 서버가 저장한 값을 그대로 목록에 넣는다 — 폼은 날짜(10자리)만 다루므로
+      // 폼 값을 되돌리면 목록의 기간이 서버에 저장된 시각과 달라진다.
+      const saved = await fetchAdminInsertExEvent(baseEventDTO(newEvent));
 
       return {
-        ...newEvent,
-        id: eventId,
+        ...saved,
         options: { success: true, message: "이벤트를 등록했습니다." },
       };
     } catch (error) {
@@ -41,11 +42,11 @@ export const requestAdminInsertNewExEvent = createAsyncThunk(
 export const requestAdminUpdateExEvent = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.UPDATE, async ({ id, ...event }, { rejectWithValue }) => {
     try {
-      const { id: eventId } = await fetchAdminUpdateExEvent(id, baseEventDTO(event));
+      // 등록과 같은 이유로 서버 응답을 그대로 반영한다(보존된 시작·종료 시각 포함).
+      const saved = await fetchAdminUpdateExEvent(id, baseEventDTO(event));
 
       return {
-        ...event,
-        id: eventId,
+        ...saved,
         options: { success: true, message: "이벤트를 수정했습니다." },
       };
     } catch (error) {

@@ -157,6 +157,22 @@
   margin: 0;
 }
 
+/* 기간 시각(선택) 입력 — 날짜 행(AdminDateRange)과 같은 배치. */
+.timeRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  input[type='time'] {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.timeSep {
+  @include admin-date-range-sep;
+}
+
 .toggleRow {
   display: flex;
   align-items: center;
