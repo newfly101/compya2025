@@ -17,7 +17,6 @@
   border: 1px solid var(--color-border-strong);
   border-radius: $radius-lg;
   background: var(--color-bg-card);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
   font-family: inherit;
   cursor: pointer;
   outline: none;
@@ -73,6 +72,8 @@
   letter-spacing: -0.2px;
   text-align: center;
   text-overflow: ellipsis;
+  // 티어 판 위 흰 글자 가독 보정 — 장식이 아니라 읽히게 하려는 그림자다.
+  // platinum/hero/normal 은 판 색이 밝아 이게 없으면 글자가 뭉갠다(순수 대비 2.3~3.4:1).
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
   white-space: nowrap;
 }
