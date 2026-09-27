@@ -2,13 +2,3 @@
   width: 100%;
   margin: $space-4 0;
 }
-
-// 개발 확인용 슬롯 표시 — 문구 없이 얇은 점선만. 운영 빌드에서는 렌더되지 않는다.
-.devMarker {
-  width: 100%;
-  min-height: 24px;
-  margin: $space-4 0;
-  border: 1px dashed var(--color-border);
-  border-radius: $radius-md;
-  opacity: 0.5;
-}
