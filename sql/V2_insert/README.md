@@ -9,7 +9,7 @@
 | `INSERT_DATA_TABLE.sql` | `teams` | `sql/V2/CREATE_01_TABLE_V1.sql` 실행 후 |
 | `INSERT_SITE_COUPONS_DATA.sql` | `site_coupons` | `sql/V2/CREATE_04_TABLE_SITE.sql` 실행 후 |
 | `INSERT_SITE_EVENTS_DATA.sql` | `site_events` | 〃 |
-| `INSERT_LEGEND_PLAYER.sql` (구 `legendPlayer.sql`) | `player_legend` | `sql/V2/CREATE_02_TABLE_PLAYER_LEGEND_V1.sql` 실행 후. 죽은 테이블 계열 — 상세는 `docs/global-guide/develop/specs/db/sql-folder-map.md` |
+| `INSERT_LEGEND_PLAYER.sql` (구 `legendPlayer.sql`) | `player_legend` | ⚠️ 대상 DDL(`sql/V2/CREATE_02_TABLE_PLAYER_LEGEND_V1.sql`)이 2026-09-27 운영 DB 실측으로 삭제됨 — 이 INSERT 는 이제 실행 불가(죽은 파일). 정리는 별도 결정 대기 |
 
 ## UPDATE_ — 1회성 데이터 보정 (자동 실행 금지)
 

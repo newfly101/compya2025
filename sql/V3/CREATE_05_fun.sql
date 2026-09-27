@@ -28,6 +28,10 @@
 --   - 모바일: HomeScreen QuizSection 이 최신 1건 fetch (`GET /api/quiz/latest`)
 --
 -- 기존 데이터: 운영 row 0건 (사용자 진술 — fun_quiz 미사용) → DROP & CREATE 안전.
+--
+-- ⚠️ 접두 불일치 (2026-09-27 실측) — fun_quiz 는 관리자가 등록하는 사이트
+-- 컨텐츠라 fun_ 보다 site_ 가 결에 맞는다 (fun_ 은 게임 참조 데이터 계열).
+-- 아직 이름은 바꾸지 않았다 — 바꾸려면 mapper XML·엔티티까지 함께 고쳐야 한다.
 -- ============================================================================
 DROP TABLE IF EXISTS fun_quiz;
 

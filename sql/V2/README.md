@@ -6,12 +6,11 @@
 
 | 파일 | 테이블 | 실행 순서 근거 |
 |---|---|---|
-| `CREATE_01_TABLE_V1.sql` | `teams` `users` `user_roles` `events` `coupons` `boards` `posts` `tags` `posts_tags` `notices` `quiz_answers` (+주석 `player_card` 3종) | `teams` 를 `CREATE_02` 가 FK 로 참조 — 반드시 먼저 |
-| `CREATE_02_TABLE_PLAYER_LEGEND_V1.sql` | `player_legend` `player_legend_hitter_career` `player_legend_pitcher_career` `legend_pitcher_pitch_slot` | `player_legend.team_id` → `CREATE_01` 의 `teams(id)` FK |
-| `CREATE_03_TABLE_FUN.sql` | `fun_teams` `fun_quiz`(V3 가 최종 덮어씀, 아래 참고) (+주석 `fun_player_card*` 4종) | 독립 (FK 없음) |
+| `CREATE_01_TABLE_V1.sql` | `boards` `posts` `tags` `posts_tags` | 독립 (FK 없음) |
+| `CREATE_03_TABLE_FUN.sql` | `fun_teams` `fun_quiz`(V3 가 최종 덮어씀, 아래 참고) | 독립 (FK 없음) |
 | `CREATE_04_TABLE_SITE.sql` | `site_coupons` `site_notices` `site_events` `site_users` `site_user_oauth_accounts` `site_board` `site_post` `site_comment` `site_tag` `site_post_tag` `site_post_reaction` `site_comment_reaction` `site_report` | 독립 (내부 FK만, `site_board`→`site_post`→`site_comment`/`site_tag` 순으로 파일 내부에 이미 정렬됨) |
 
-⚠️ `CREATE_01`/`CREATE_02` 는 **죽은 테이블**이다 (`teams`/`player_legend*` → `fun_teams`/`data_player_legend*` 로 대체됨, 상세는 `docs/global-guide/develop/specs/db/sql-folder-map.md`). 이 두 파일은 `users`/`user_roles`/`events`/`coupons`/`notices`/`quiz_answers` 처럼 운영에서 이미 사라진 테이블도 갖고 있다 — v1 이관 흐름 재현용으로 그대로 뒀다. 빈 DB에 현재 운영 스키마만 만들 때는 생략 가능 — 자세한 건 `sql/README.md` 참고.
+⚠️ 2026-09-27 운영 DB 실측(36테이블) 대조로 죽은 DDL 을 정리했다: `CREATE_01_TABLE_V1.sql` 에서 `teams`/`users`/`user_roles`/`events`/`coupons`/`notices`/`quiz_answers`(+주석 처리된 `player_card` 3종)를 삭제(`boards`/`posts`/`tags`/`posts_tags` 만 남음), `CREATE_03_TABLE_FUN.sql` 에서 주석 처리된 `fun_player_card*` 4종을 삭제, `player_legend` 계열 4테이블을 담던 `CREATE_02_TABLE_PLAYER_LEGEND_V1.sql` 은 전부 DB 에 없어 파일째 삭제했다. 상세는 `docs/global-guide/develop/specs/db/sql-folder-map.md`.
 
 ⚠️ `CREATE_03_TABLE_FUN.sql` 의 `fun_quiz` 는 `sql/V3/CREATE_05_fun.sql` 에서 `DROP TABLE IF EXISTS fun_quiz` 후 재생성된다(컬럼 구성이 다르다 — `is_visible` 없음) — 최종 스키마는 V3 쪽이 이긴다.
 

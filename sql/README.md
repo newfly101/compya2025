@@ -38,7 +38,7 @@
 3. `V3/CREATE_01_data_history_mode.sql` → `CREATE_02_data_player_legend.sql` → `CREATE_03_data_player_card.sql` → `CREATE_04_data_player_skill.sql` → `CREATE_05_fun.sql` → `CREATE_06_site_refresh_tokens.sql` → `CREATE_07_site_user_event.sql` (번호 순 그대로)
    - `CREATE_03_data_player_card.sql` 맨 끝에서 `data_player_legend_material.player_card_id` FK(`fk_dplm_card`)를 건다 — `CREATE_02` 가 컬럼만 먼저 선언하고 FK 는 `data_player_card` 가 생기는 이 시점에 붙인다
 
-`V2/CREATE_01_TABLE_V1.sql` / `CREATE_02_TABLE_PLAYER_LEGEND_V1.sql` 은 죽은 테이블(V1 레거시)이라 위 순서에 없다 — v1 이관 흐름 자체를 재현하고 싶을 때만 맨 앞에 추가로 실행한다(그 경우 `CREATE_02_TABLE_PLAYER_LEGEND_V1.sql` 이 `teams` FK 로 `CREATE_01_TABLE_V1.sql` 을 필요로 한다). 이 두 파일은 `users`/`user_roles`/`events`/`coupons`/`notices`/`quiz_answers` 등 운영에서 이미 지워진 테이블도 갖고 있다 — 그대로 둔다(V1 시점 재현용이므로 덤프와 안 맞는 게 정상).
+`V2/CREATE_01_TABLE_V1.sql` 은 위 순서에 없다 — `boards`/`posts`/`tags`/`posts_tags` 만 남은 v1 커뮤니티 잔존 스키마다 (2026-09-27 운영 DB 실측으로 `teams`/`users`/`user_roles`/`events`/`coupons`/`notices`/`quiz_answers`·주석 처리된 `player_card` 3종은 DB 에 없어 삭제, `player_legend` 계열 4테이블을 담던 `CREATE_02_TABLE_PLAYER_LEGEND_V1.sql` 도 전체가 DB 에 없어 파일 자체를 삭제했다). 필요하면 이 파일만 별도로 실행한다.
 
 빈 DB 에 `CREATE_` 만 순서대로 실행하면 **운영과 동일한 최종 스키마**가 나온다. `UPDATE_`/`MIGRATE_`/`DROP_` 파일은 스키마가 아니라 **과거 이력·데이터 보정**이라 새 DB 에는 대부분 필요 없다 — 예외는 `V2/UPDATE_material_card_id_link.sql`(레전드 재료 ↔ 카드 연결, `INSERT_` 로 두 테이블을 채운 뒤 실행)과 `V2_insert/UPDATE_sub_position.sql` 류처럼 컬럼은 있는데 값은 `INSERT_` 시드에 없는 데이터 보정들이다. 이런 건 각 폴더 README 표에서 개별로 확인한다.
 
