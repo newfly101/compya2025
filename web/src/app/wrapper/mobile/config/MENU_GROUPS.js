@@ -17,7 +17,7 @@ export const MENU_GROUPS = [
         tag: { variant: 'hot' } },
       { icon: '🎯', label: '히스토리 재료',   to: '/history-mode/legend' },
       { icon: '🧭', label: '마일리지 저격',   to: '/mileage',
-        tag: { variant: 'new' } },
+        tag: { variant: 'catNew' } },
       { icon: '⚾', label: '선수 백과사전',   to: '/players',
         tag: { variant: 'beta' } },
       { icon: '📖', label: '스킬 백과사전',   to: ROUTE_PATHS.player_skills },

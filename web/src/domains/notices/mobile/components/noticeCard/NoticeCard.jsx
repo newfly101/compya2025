@@ -27,7 +27,7 @@ const NoticeCard = ({ notice, variant = "list" }) => {
           {/* 「사이트 공지」 목록과 섞여도 구분되도록 중요 공지에만 배지를 얹는다 */}
           {isPinned && (
             <div className={styles.pinnedBadge}>
-              <PinnedBadge variant="important" />
+              <PinnedBadge variant="mark" />
             </div>
           )}
         </div>

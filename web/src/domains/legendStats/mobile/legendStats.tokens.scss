@@ -29,15 +29,16 @@
   // 선택된 칩
   --color-ls-chip-on-text: var(--color-chip-on-text);
 
-  // 히스토리 모드 배지 — 퍼플 계열과 구분되게 파랑
-  --color-ls-history: #60a5fa;
-  --color-ls-history-bg: rgba(96, 165, 250, 0.14);
-  --color-ls-history-border: rgba(96, 165, 250, 0.35);
+  // 재료 획득 경로 배지(마·히) — 분류 축 --color-cat-route 토큰(전역, 테마별 자동 전환).
+  // 2026-09-27 이전엔 파랑/연두로 색을 나눴으나, 분류 팔레트 확정으로 같은 색조를
+  // 채움(마) vs 테두리만(히)으로 구분하는 방식으로 바뀌었다.
+  --color-ls-history: var(--color-cat-route);
+  --color-ls-history-bg: transparent;
+  --color-ls-history-border: var(--color-cat-route);
 
-  // 마일리지 배지 — 히스토리(파랑)와 구분되는 연두
-  --color-ls-mileage: #4ade80;
-  --color-ls-mileage-bg: rgba(74, 222, 128, 0.14);
-  --color-ls-mileage-border: rgba(74, 222, 128, 0.35);
+  --color-ls-mileage: var(--color-cat-route);
+  --color-ls-mileage-bg: var(--color-cat-route-dim);
+  --color-ls-mileage-border: var(--color-cat-route);
 }
 
 // ── 밝은톤 ─────────────────────────────────────────────────────
@@ -49,15 +50,8 @@
   --color-ls-ovr-bg: rgba(124, 58, 237, 0.07);
   --color-ls-prov: #5b4a9c; // 7.23:1
 
-  // 히스토리 배지(파랑) — 틴트 채움 + 진한 글자로 뒤집는다
-  --color-ls-history: #1d4ed8; // 틴트 위 5.82:1
-  --color-ls-history-bg: rgba(37, 99, 235, 0.1);
-  --color-ls-history-border: rgba(37, 99, 235, 0.4);
-
-  // 마일리지 배지(초록) — 히스토리와 색상 구분 유지
-  --color-ls-mileage: #166534; // 틴트 위 6.40:1
-  --color-ls-mileage-bg: rgba(22, 163, 74, 0.1);
-  --color-ls-mileage-border: rgba(22, 163, 74, 0.4);
+  // 히스토리·마일리지 배지(마·히) — --color-cat-route 를 var() 로 참조만 하므로
+  // 전역 밝은톤 값(#075985)이 그대로 전달된다. 여기서 재정의하지 않는다.
 
   // 선택된 칩 글자 — 전역 --color-chip-on-text 는 밝은톤에서도 밝은 값(#f5f3ff)이다.
   // 그건 채움이 진한 보라인 칩 전제이고, 이 화면 칩 채움은 옅은 틴트(--color-brand-alpha-15)라

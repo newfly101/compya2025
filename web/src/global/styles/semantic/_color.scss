@@ -41,6 +41,16 @@
   --color-warning:       #{$color-warning-400};
   --color-warning-dim:   #{$color-warning-100};
 
+  // ── Category (분류 축 — 상태 축과 별도. 종류 표시, 계속 늘어날 수 있다) ──────
+  // 근거: docs/design-review-v1/semantic-color-proposal.md § 6. 값 확정, 임의 변경 금지.
+  --color-cat-new:        #dc2626; // NEW 전용 — 불투명 채움 + 흰 글자. 두 테마 공용 1값
+  --color-cat-route:      #7dd3fc; // 마(채움) / 히(테두리)
+  --color-cat-route-dim:  rgba(125, 211, 252, 0.18); // 채움용 18% 알파
+  --color-cat-mark:       #f472b6; // 중요
+  --color-cat-mark-dim:   rgba(244, 114, 182, 0.18);
+  --color-cat-neutral:    #9ca3af; // BETA · 준비중 · 공식 · 게시판 태그명
+  --color-cat-neutral-dim: rgba(156, 163, 175, 0.18);
+
   // ── Table (리스트형 데이터 표 공통 — mixins/_table.scss data-table-*) ──────
   // legendStats·historyLegend·admin·mileage(리스트)·players 5개 도메인이 로컬 토큰으로
   // 각자 갖고 있던 값(#15121c)이 전부 동일해 여기로 승격한다. 표 헤더 전용 배경.
@@ -134,6 +144,15 @@
   --color-danger-dim:  rgba(192, 39, 45, 0.10);
   --color-warning:     #946200;
   --color-warning-dim: rgba(148, 98, 0, 0.12);
+
+  // ── Category ───────────────────────────────────────────────
+  --color-cat-new:        #dc2626; // 두 테마 공용 1값
+  --color-cat-route:      #075985;
+  --color-cat-route-dim:  rgba(7, 89, 133, 0.18);
+  --color-cat-mark:       #9d174d;
+  --color-cat-mark-dim:   rgba(157, 23, 77, 0.18);
+  --color-cat-neutral:    #4b5563;
+  --color-cat-neutral-dim: rgba(75, 85, 99, 0.18);
 
   // ── Table ──────────────────────────────────────────────────
   --color-table-head-bg:   #f0edf6;
