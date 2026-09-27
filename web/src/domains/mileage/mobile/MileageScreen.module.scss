@@ -552,12 +552,10 @@
   }
 }
 
+// 대상 아닌 칸 — 빗금(반복 그라디언트) 대신 표 배경보다 한 단계만 어두운 평면.
+// 헤더(.yearHead 등)와 같은 --color-bg-deep 을 재사용해 "여긴 대상 아님"만 옅게 읽히게 한다.
 .void {
-  background: repeating-linear-gradient(
-    135deg,
-    transparent 0 3px,
-    var(--color-border) 3px 6px
-  );
+  background: var(--color-bg-deep);
 }
 
 .team,
