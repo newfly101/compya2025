@@ -30,7 +30,7 @@
   aspect-ratio: 1 / 1;
   border-radius: $radius-full;
   background-color: rgba(254, 229, 0, 0.18);
-  @include font-size-rem(18);
+  @include font-size-rem(17);
   animation: supportPulse 2.4s ease-in-out infinite;
 
   @media (prefers-reduced-motion: reduce) {
@@ -45,7 +45,7 @@
 }
 
 .bannerText {
-  @include font-size-rem(14, 1.4);
+  @include font-size-rem(15, 1.4);
   font-weight: $font-weight-semibold;
   color: var(--color-text-primary);
   @include text-ellipsis;

@@ -51,7 +51,7 @@
 }
 
 .cardCount {
-  @include font-size-rem(18);
+  @include font-size-rem(17);
   font-weight: 600;
   line-height: 1;
   color: var(--color-admin-accent);

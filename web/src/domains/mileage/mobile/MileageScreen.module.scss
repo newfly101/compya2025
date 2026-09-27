@@ -8,7 +8,7 @@
   padding: $space-5 $space-4 $space-8;
   background: var(--color-bg-deepest);
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.45;
   font-variant-numeric: tabular-nums;
 }
@@ -36,7 +36,7 @@
   background: none;
   color: var(--color-text-muted);
   font-family: inherit;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   cursor: pointer;
 
@@ -98,7 +98,7 @@
   border: 0;
   background: none;
   color: var(--color-text-muted);
-  font-size: 16px;
+  font-size: 17px;
   cursor: pointer;
 }
 
@@ -115,7 +115,7 @@
     display: flex;
     align-items: center;
     gap: $space-2;
-    padding: 13px 16px;
+    padding: $space-3 16px;
     list-style: none;
     color: var(--color-text-muted);
     font-size: 12px;
@@ -163,7 +163,7 @@
   }
 
   p {
-    margin: 0 0 11px;
+    margin: 0 0 $space-3;
 
     &:last-child {
       margin: 0;
@@ -199,7 +199,7 @@
   flex: 1 1 110px;
   flex-direction: column;
   min-width: 100px;
-  gap: 5px;
+  gap: $space-1;
 
   span {
     color: var(--color-text-muted);
@@ -209,7 +209,7 @@
 
   select {
     width: 100%;
-    padding: 9px 28px 9px 11px;
+    padding: $space-2 28px $space-2 $space-3;
     border: 1px solid var(--color-border-strong);
     border-radius: 10px;
     appearance: none;
@@ -224,7 +224,7 @@
     background-size: 5px 5px, 5px 5px;
     color: var(--color-text-primary);
     font-family: inherit;
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
 
@@ -236,8 +236,8 @@
 }
 
 .tag {
-  padding: 1px 5px;
-  margin-left: 5px;
+  padding: 2px $space-1;
+  margin-left: $space-1;
   border: 1px solid var(--color-border-strong);
   border-radius: 5px;
   color: var(--color-text-muted);
@@ -248,7 +248,7 @@
 
 .mini {
   flex: 0 0 auto;
-  padding: 9px 12px;
+  padding: $space-2 $space-3;
   border: 1px solid var(--color-border-strong);
   border-radius: 10px;
   background: var(--color-bg-card);
@@ -297,7 +297,7 @@
   i {
     flex: 1;
     color: var(--color-text-muted);
-    font-size: 11.5px;
+    font-size: 12px;
     font-style: normal;
   }
 }
@@ -369,13 +369,13 @@
 /* 뽑기 결과 고르는 순서 */
 
 .picks {
-  padding: 12px 14px 15px;
+  padding: 12px 14px $space-4;
   border-top: 1px solid var(--color-border-strong);
 
   h3 {
-    margin: 0 0 9px;
+    margin: 0 0 $space-2;
     color: var(--color-text-muted);
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 500;
 
     b {
@@ -402,8 +402,8 @@
   white-space: nowrap;
 
   i {
-    margin-right: 5px;
-    font-size: 10.5px;
+    margin-right: $space-1;
+    font-size: 11px;
     font-style: normal;
     opacity: 0.6;
   }
@@ -434,7 +434,7 @@
 }
 
 .actions button {
-  padding: 11px 0;
+  padding: $space-3 0;
   border: 1px solid var(--color-border-strong);
   border-radius: 10px;
   background: var(--color-bg-card);
@@ -497,7 +497,7 @@
 // 글자가 위아래로 쌓이므로 letter-spacing 을 음수로 주면 세로쓰기에서 잘린다 — 0 으로 둘 것.
 .table thead th {
   height: auto;
-  padding: 8px 0 7px;
+  padding: $space-2 0;
   border-bottom: 1px solid var(--color-border-strong);
   background: var(--color-bg-deep);
   color: var(--color-text-muted);
@@ -583,7 +583,7 @@
 }
 
 .toggleBtn {
-  padding: 5px 10px;
+  padding: $space-1 10px;
   border: 1px solid var(--color-border-strong);
   border-radius: 999px;
   background: var(--color-bg-card);
@@ -613,16 +613,16 @@
 .legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 11px;
+  gap: $space-3;
   padding: 8px 14px;
   border-top: 1px solid var(--color-border-strong);
   background: var(--color-bg-deep);
   color: var(--color-text-muted);
-  font-size: 10.5px;
+  font-size: 11px;
   line-height: 1.5;
 
   i {
-    margin-right: 3px;
+    margin-right: $space-1;
     color: var(--color-mileage-accent-text);
     font-style: normal;
   }

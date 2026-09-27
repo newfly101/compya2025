@@ -98,7 +98,7 @@
   background-color: var(--color-brand);
   color: #fff;
   font-size: 10px;
-  font-weight: 900;
+  font-weight: 700;
   font-style: italic;
   display: flex;
   align-items: center;
@@ -115,7 +115,7 @@
   background: linear-gradient(180deg, var(--color-brand), var(--color-brand-dark));
   border: 1px solid var(--color-brand);
   border-radius: $radius-sm - 1;
-  padding: 3px 4px;
+  padding: $space-1 4px;
   text-align: center;
   line-height: 1.2;
   overflow: hidden;
@@ -123,7 +123,7 @@
 
 .legendPopoverLabel {
   display: block;
-  font-size: 7px;
+  font-size: 9px;
   color: #fff;
   opacity: 0.85;
   white-space: nowrap;
@@ -132,7 +132,7 @@
 .legendPopoverName {
   display: block;
   font-size: 9px;
-  font-weight: 900;
+  font-weight: 700;
   color: #fff;
   letter-spacing: -0.4px;
   @include text-ellipsis;

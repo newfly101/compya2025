@@ -31,7 +31,7 @@
     background: var(--color-bg-card);
     color: var(--color-text-primary);
     font-family: inherit;
-    font-size: 13.5px;
+    font-size: 13px;
 
     &::placeholder {
       color: var(--color-text-muted);
@@ -76,13 +76,13 @@
   border: 0;
   background: none;
   color: var(--color-text-muted);
-  font-size: 16px;
+  font-size: 17px;
   cursor: pointer;
 }
 
 .chipRow {
   display: flex;
-  gap: 7px;
+  gap: $space-2;
   padding: 6px 16px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -97,7 +97,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 13px;
+  padding: 6px $space-3;
   border: 1px solid var(--color-border-strong);
   border-radius: 999px;
   background: var(--color-bg-card);
@@ -140,7 +140,7 @@
     background: var(--color-bg-card);
     color: var(--color-text-secondary);
     font-family: inherit;
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
 
@@ -158,7 +158,7 @@
   align-items: center;
   padding: 10px 16px 6px;
   color: var(--color-text-muted);
-  font-size: 11.5px;
+  font-size: 12px;
 
   b {
     color: var(--color-text-secondary);
@@ -178,7 +178,7 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 8px 3px 5px;
+  padding: $space-1 8px $space-1 $space-1;
   border: 1px solid var(--color-brand-dark);
   border-radius: 999px;
   background: var(--color-brand-alpha-15);
@@ -199,7 +199,7 @@
   border-radius: 50%;
   background: var(--color-brand);
   color: var(--color-bg-deepest);
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 700;
 }
 
@@ -314,7 +314,7 @@ td.cName {
 .nameInner {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: $space-1;
 }
 
 .nameDot {
@@ -334,12 +334,12 @@ td.cName {
   flex: 0 0 auto;
   // 카드 오른쪽 끝에 붙인다
   margin-left: auto;
-  padding: 0 3px;
+  padding: 0 $space-1;
   border: 1px solid var(--color-ls-history-border);
   border-radius: 3px;
   background: var(--color-ls-history-bg);
   color: var(--color-ls-history);
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 600;
   line-height: 1.5;
   text-decoration: none;
@@ -384,7 +384,7 @@ td.cName {
   line-height: 1.6;
 
   li {
-    margin-bottom: 5px;
+    margin-bottom: $space-1;
     list-style: none;
     text-indent: -10px;
 
@@ -410,7 +410,7 @@ td.cName {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 7px;
+    margin-bottom: $space-2;
     color: var(--color-text-secondary);
     font-size: 12px;
   }
@@ -423,7 +423,7 @@ td.cName {
 
 td.cPos {
   color: var(--color-text-secondary);
-  font-size: 11.5px;
+  font-size: 12px;
   letter-spacing: -0.02em;
 }
 
@@ -475,17 +475,17 @@ td.cStat {
   align-items: baseline;
   margin-bottom: 10px;
   color: var(--color-text-secondary);
-  font-size: 11.5px;
+  font-size: 12px;
 
   strong {
     color: var(--color-text-primary);
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
   }
 }
 
 .detailSub {
-  margin: 11px 0 5px;
+  margin: 12px 0 $space-1;
   color: var(--color-text-muted);
   font-size: 11px;
 }
@@ -493,18 +493,18 @@ td.cStat {
 .pitches {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: $space-1;
 }
 
 .pitch {
-  padding: 3px 7px;
+  padding: $space-1 $space-2;
   border: 1px solid var(--color-border-strong);
   border-radius: 6px;
   color: var(--color-text-secondary);
-  font-size: 11.5px;
+  font-size: 12px;
 
   b {
-    margin-left: 3px;
+    margin-left: $space-1;
     color: var(--color-text-primary);
     font-weight: 600;
   }
@@ -523,16 +523,16 @@ td.cStat {
 
 // 재료 요청 전/실패 시
 .detailNote {
-  padding: 10px 0;
+  padding: $space-3 0;
   color: var(--color-text-muted);
-  font-size: 11.5px;
+  font-size: 12px;
 }
 
 .material {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 9px;
+  padding: $space-2;
   border: 1px solid var(--color-border-strong);
   border-radius: 8px;
   background: var(--color-bg-card);
@@ -544,11 +544,11 @@ td.cStat {
 .materialTeam {
   flex: 0 0 auto;
   min-width: 38px;
-  padding: 1px 3px;
+  padding: 2px $space-1;
   border: 1px solid var(--color-border-strong);
   border-radius: 4px;
   color: var(--color-text-muted);
-  font-size: 9.5px;
+  font-size: 10px;
   text-align: center;
 }
 
@@ -602,7 +602,7 @@ td.cStat {
 .helpTitle {
   margin: 0 0 10px;
   color: var(--color-text-primary);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   text-align: center;
 }
@@ -633,7 +633,7 @@ td.cStat {
 
 .helpClose {
   width: 100%;
-  padding: 9px 0;
+  padding: $space-2 0;
   border: 1px solid var(--color-border-strong);
   border-radius: 9px;
   background: var(--color-bg-elevated);

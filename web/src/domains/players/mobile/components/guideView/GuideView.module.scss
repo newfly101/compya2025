@@ -36,7 +36,7 @@
 }
 
 .title {
-  @include font-size-rem(24, 1.25);
+  @include font-size-rem(22, 1.25);
   font-weight: $font-weight-bold;
   letter-spacing: $letter-spacing-tight;
   color: var(--color-text-primary);
@@ -84,7 +84,7 @@
   background-color: var(--color-brand);
   color: #fff;
   font-size: 12px;
-  font-weight: 900;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,7 +101,7 @@
 .viewIconWrap {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: $space-1;
 }
 
 .viewIconGrid {
@@ -110,6 +110,8 @@
   gap: 1.5px;
   width: 14px;
   height: 14px;
+  // 14x14 안에 도형을 그리는 값이다 — 간격 격자 대상이 아니다.
+  // 4px 로 올리면 내용 영역이 8->6px 로 줄어 흰 사각형이 뭉갠다.
   padding: 3px;
   border-radius: $radius-sm;
   background-color: var(--color-brand);
@@ -127,6 +129,7 @@
   align-content: center;
   width: 14px;
   height: 14px;
+  // 위 .viewIconGrid 와 같은 이유 — 3줄(1.5px)+간격 2줄(2px)=8.5px 가 들어가야 한다.
   padding: 3px 2.5px;
   border-radius: $radius-sm;
   background-color: var(--color-border-strong);
@@ -249,6 +252,6 @@
   background-color: var(--color-brand);
   color: #fff;
   @include text-body-bold;
-  font-size: 16px;
+  font-size: 17px;
   text-align: center;
 }

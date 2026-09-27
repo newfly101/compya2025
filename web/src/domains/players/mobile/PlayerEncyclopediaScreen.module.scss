@@ -40,7 +40,7 @@
   outline: none;
   color: var(--color-text-primary);
   @include text-body;
-  font-size: 14px;
+  font-size: 15px;
 
   &::placeholder {
     color: var(--color-text-muted);
@@ -92,7 +92,7 @@
   background-color: #fff;
   color: var(--color-brand);
   font-size: 9px;
-  font-weight: 900;
+  font-weight: 700;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -116,7 +116,7 @@
   border-radius: $radius-lg;
   color: var(--color-text-primary);
   @include text-body-bold;
-  font-size: 14px;
+  font-size: 15px;
   appearance: none;
   // 우측 ▾ — 이미지 없이 그라디언트 대신 배경 SVG 로 그리면 색 하드코딩이 늘어나 배경 텍스트로 대체
 }
@@ -146,7 +146,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1px;
+  gap: 2px;
   line-height: 1.1;
 
   &:disabled {
@@ -169,7 +169,7 @@
 .viewToggle {
   height: $control-height-md;
   display: flex;
-  padding: 3px;
+  padding: $space-1;
   gap: 2px;
   background-color: var(--color-bg-overlay);
   border: 1px solid var(--color-border-strong);
@@ -184,7 +184,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
-  padding: $space-2 9px;
+  padding: $space-2 $space-2;
   cursor: pointer;
 
   span {
@@ -201,7 +201,7 @@
   display: grid;
   grid-auto-rows: 2px;
   gap: $space-1;
-  padding: 11px $space-2;
+  padding: $space-3 $space-2;
   align-content: center;
   cursor: pointer;
 
@@ -294,7 +294,7 @@
   background-color: var(--color-brand);
   color: #fff;
   font-size: 9px;
-  font-weight: 900;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -342,7 +342,7 @@
   background-color: var(--color-border-strong);
   color: var(--color-text-primary);
   font-size: 10px;
-  font-weight: 900;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -371,7 +371,7 @@
   background-color: var(--color-brand);
   color: #fff;
   font-size: 10px;
-  font-weight: 900;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -429,7 +429,7 @@
 .segment {
   align-self: flex-start;
   display: flex;
-  padding: 3px;
+  padding: $space-1;
   gap: 2px;
   background-color: var(--color-bg-overlay);
   border: 1px solid var(--color-border-strong);
