@@ -12,6 +12,7 @@ import com.dawne.com2usbaseball.domain.notice.dto.request.NoticeVisibleRequest;
 import com.dawne.com2usbaseball.domain.notice.dto.response.NoticeResponse;
 import com.dawne.com2usbaseball.domain.notice.enums.NoticeMessages;
 import com.dawne.com2usbaseball.domain.notice.service.AdminNoticeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,7 @@ public class AdminNoticeController implements AdminNoticeSwaggerDocs {
     @Override
     @PostMapping
     public GlobalResponse<NoticeResponse> createNotice(
-            @RequestBody NoticeRequest request
+            @Valid @RequestBody NoticeRequest request
     ) {
         NoticeResponse newNotice = adminNoticeService.createNotice(request);
         return GlobalResponse.success(NoticeMessages.NOTICE_CREATED, newNotice);
@@ -62,7 +63,7 @@ public class AdminNoticeController implements AdminNoticeSwaggerDocs {
     @PutMapping("/{noticeId}")
     public GlobalResponse<NoticeResponse> updateNotice(
             @PathVariable Long noticeId,
-            @RequestBody NoticeRequest request
+            @Valid @RequestBody NoticeRequest request
     ) {
         NoticeResponse updatedNotice = adminNoticeService.updateNotice(request, noticeId);
         return GlobalResponse.success(NoticeMessages.NOTICE_UPDATED, updatedNotice);
@@ -72,7 +73,7 @@ public class AdminNoticeController implements AdminNoticeSwaggerDocs {
     @PatchMapping("/{noticeId}/visible")
     public GlobalResponse<Void> updateNoticeVisible(
             @PathVariable Long noticeId,
-            @RequestBody NoticeVisibleRequest request
+            @Valid @RequestBody NoticeVisibleRequest request
     ) {
         adminNoticeService.updateNoticeVisible(noticeId, request.isVisible());
         return GlobalResponse.success(NoticeMessages.NOTICE_VISIBLE_UPDATED, null);
@@ -82,7 +83,7 @@ public class AdminNoticeController implements AdminNoticeSwaggerDocs {
     @PatchMapping("/{noticeId}/pinned")
     public GlobalResponse<Void> updateNoticePinned(
             @PathVariable Long noticeId,
-            @RequestBody NoticePinnedRequest request
+            @Valid @RequestBody NoticePinnedRequest request
     ) {
         adminNoticeService.updateNoticePinned(noticeId, request.isPinned());
         return GlobalResponse.success(NoticeMessages.NOTICE_PINNED_UPDATED, null);
@@ -97,14 +98,14 @@ public class AdminNoticeController implements AdminNoticeSwaggerDocs {
 
     @Override
     @DeleteMapping("/bulk")
-    public GlobalResponse<BulkOperationResponse> bulkDeleteNotices(@RequestBody BulkIdsRequest request) {
+    public GlobalResponse<BulkOperationResponse> bulkDeleteNotices(@Valid @RequestBody BulkIdsRequest request) {
         BulkOperationResponse result = adminNoticeService.bulkDeleteNotices(request.ids());
         return GlobalResponse.success(NoticeMessages.NOTICE_BULK_DELETED, result);
     }
 
     @Override
     @PatchMapping("/bulk/visible")
-    public GlobalResponse<BulkOperationResponse> bulkUpdateNoticesVisible(@RequestBody BulkVisibleRequest request) {
+    public GlobalResponse<BulkOperationResponse> bulkUpdateNoticesVisible(@Valid @RequestBody BulkVisibleRequest request) {
         BulkOperationResponse result = adminNoticeService.bulkUpdateNoticesVisible(request.ids(), request.visible());
         return GlobalResponse.success(NoticeMessages.NOTICE_BULK_VISIBLE_UPDATED, result);
     }

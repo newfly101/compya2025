@@ -7,6 +7,7 @@ import com.dawne.com2usbaseball.domain.community.dto.response.PostReactionRespon
 import com.dawne.com2usbaseball.domain.community.service.reaction.PostReactionService;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class PostReactionController {
     }
 
     @PostMapping
-    public PostReactionResponse savePostReaction(@RequestBody PostReactionRequest request,
+    public PostReactionResponse savePostReaction(@Valid @RequestBody PostReactionRequest request,
                                                  HttpServletRequest httpRequest) {
         Long userId = requireUserId(httpRequest);
         return postReactionService.savePostReaction(request, userId);

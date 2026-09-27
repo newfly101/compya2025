@@ -8,6 +8,7 @@ import com.dawne.com2usbaseball.domain.quiz.dto.request.QuizRequest;
 import com.dawne.com2usbaseball.domain.quiz.dto.response.QuizResponse;
 import com.dawne.com2usbaseball.domain.quiz.enums.QuizMessages;
 import com.dawne.com2usbaseball.domain.quiz.service.QuizAdminService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class AdminQuizController implements AdminQuizSwaggerDocs {
 
     @Override
     @PostMapping
-    public GlobalResponse<QuizResponse> create(@RequestBody QuizRequest request) {
+    public GlobalResponse<QuizResponse> create(@Valid @RequestBody QuizRequest request) {
         QuizResponse newQuiz = quizAdminService.createQuiz(request);
         return GlobalResponse.success(QuizMessages.QUIZ_CREATED, newQuiz);
     }
@@ -39,7 +40,7 @@ public class AdminQuizController implements AdminQuizSwaggerDocs {
     @Override
     @PatchMapping("/{id}")
     public GlobalResponse<QuizResponse> update(@PathVariable Long id,
-                                               @RequestBody QuizRequest request) {
+                                               @Valid @RequestBody QuizRequest request) {
         QuizResponse updatedQuiz = quizAdminService.updateQuiz(id, request);
         return GlobalResponse.success(QuizMessages.QUIZ_UPDATED, updatedQuiz);
     }
@@ -53,7 +54,7 @@ public class AdminQuizController implements AdminQuizSwaggerDocs {
 
     @Override
     @DeleteMapping("/bulk")
-    public GlobalResponse<BulkOperationResponse> bulkDelete(@RequestBody BulkIdsRequest request) {
+    public GlobalResponse<BulkOperationResponse> bulkDelete(@Valid @RequestBody BulkIdsRequest request) {
         BulkOperationResponse result = quizAdminService.bulkDeleteQuizzes(request.ids());
         return GlobalResponse.success(QuizMessages.QUIZ_BULK_DELETED, result);
     }
