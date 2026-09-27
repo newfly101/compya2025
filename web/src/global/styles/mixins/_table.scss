@@ -74,7 +74,7 @@
   thead th {
     position: sticky;
     top: 0;
-    z-index: 20;
+    z-index: $z-table-head;
     height: $head-h;
     border-bottom: 1px solid var(--color-border-strong);
     background: $head-bg;
@@ -109,6 +109,6 @@
 }
 
 @mixin data-table-sticky-head($bg: var(--color-table-head-bg)) {
-  z-index: 25;
+  z-index: $z-table-head-pin;
   background: $bg;
 }
