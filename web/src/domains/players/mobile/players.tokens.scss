@@ -27,6 +27,12 @@
   // 머리행 배경은 공용 토큰 --color-table-head-bg 로 승격했다(StatsTable.module.scss) — 로컬
   // 중복 제거. hover 색은 표마다 다를 수 있어 공용화하지 않고 로컬로 남긴다.
   --color-pe-table-row-hover: rgba(255, 255, 255, 0.025);
+
+  // 카드 이미지 가장자리 — 테마 무관. 전역 --color-border-strong 은 UI 면 경계용(테마별로
+  // 반전)이라 여기 못 쓴다 — 이건 선수 사진을 배경에서 떼어내는 선이라 사진처럼 두 테마에서
+  // 같은 검정이어야 한다(--color-media-on-text 와 같은 논리).
+  --color-pe-card-ring: rgba(0, 0, 0, 0.4);
+  --color-pe-badge-ring: rgba(0, 0, 0, 0.5);
 }
 
 // ── 밝은톤 ─────────────────────────────────────────────────────
@@ -40,4 +46,8 @@
 
   // 다크에선 흰색 2.5% 덧칠로 hover 를 냈다 — 밝은 면에서는 사라지므로 연한 회색 면으로 바꾼다
   --color-pe-table-row-hover: #f4f2fa;
+
+  // 카드 이미지 가장자리 — 테마 무관, 다크와 같은 값(사진은 테마에 따라 바뀌지 않는다)
+  --color-pe-card-ring: rgba(0, 0, 0, 0.4);
+  --color-pe-badge-ring: rgba(0, 0, 0, 0.5);
 }

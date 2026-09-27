@@ -572,7 +572,8 @@
 }
 
 .here {
-  box-shadow: inset 0 0 0 2px var(--color-mileage-current);
+  outline: 2px solid var(--color-mileage-current);
+  outline-offset: -2px;
 }
 
 // 표 위 토글 컨트롤 — 히트맵 on/off · 격자 글리프 화살표/글자
