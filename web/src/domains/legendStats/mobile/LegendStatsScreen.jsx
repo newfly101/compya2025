@@ -39,6 +39,7 @@ const LegendStatsScreen = () => {
     error,
     loadMaterials,
     materialsOf,
+    hasMaterialsResponse,
     materialsLoading,
     retry,
   } = useLegendStats();
@@ -62,6 +63,7 @@ const LegendStatsScreen = () => {
   );
 
   const unrated = rows.filter((l) => l.score == null).length;
+  const totalUnrated = useMemo(() => LEGENDS.filter((l) => l.score == null).length, [LEGENDS]);
 
   // 표는 단일 <table> 이라 in-feed 광고는 colSpan 행으로 끼운다(선수 백과 카드 그리드와 동일 규칙:
   // 10번째 뒤 1개, 이후 30개 간격, 화면당 최대 2개).
@@ -248,7 +250,11 @@ const LegendStatsScreen = () => {
           </div>
         ) : (
           <div className={styles.detailNote}>
-            {materialsLoading ? "재료 불러오는 중…" : "재료 정보를 불러오지 못했습니다."}
+            {materialsLoading
+              ? "재료 불러오는 중…"
+              : hasMaterialsResponse(legend.id)
+                ? "등록된 재료가 없습니다."
+                : "재료 정보를 불러오지 못했습니다."}
           </div>
         )}
 
@@ -434,7 +440,7 @@ const LegendStatsScreen = () => {
       )}
 
       <div className={styles.foot}>
-        OVR은 스탯 평균으로 그때그때 계산합니다. 평점이 비어 있는 6명은 표 아래에 모아 두었습니다.
+        {`OVR은 스탯 평균으로 그때그때 계산합니다. 평점이 비어 있는 ${totalUnrated}명은 표 아래에 모아 두었습니다.`}
       </div>
     </div>
   );
