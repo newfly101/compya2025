@@ -17,11 +17,21 @@ import { requestAdminGetNoticeList } from "@/domains/notices/store/admin/thunks.
 import { requestAdminGetUserList } from "@/domains/users/store/admin/thunks.js";
 import { requestCacheSyncTargets } from "@/domains/admin/store/admin/thunks.js";
 
+// 이벤트·회원 목록만 BE 가 페이지로 자른다(EventAdminListRequest / AdminUserListRequest — 기본 size 20).
+// 파라미터를 안 보내면 20건만 와서 배지가 "불러온 만큼"을 세고 있었다(회원 545명이 20으로 표시).
+// 총건수를 주는 응답 필드도, count 엔드포인트도 BE 에 없어서 AdminEventScreen 과 같은 방식으로
+// 한 번에 전량을 요청한다. 퀴즈·쿠폰·공지·동기화는 BE 가 페이징 없이 전량을 주므로 그대로 둔다.
+const FETCH_ALL_SIZE = 1000;
+
 // 로딩 중이거나 실패한 도메인은 건수를 못 구한 것으로 보고 null 을 돌려준다.
 // 호출부는 null 이면 0/가짜 숫자 대신 "–" 를 보여주거나(홈 카드) 배지 자체를 숨긴다(탭 바).
+// ponytail: 상한을 꽉 채우면 잘린 목록이라 셀 수 없다 — 틀린 숫자 대신 배지를 숨긴다.
+// 그 시점이 오면 BE 에 총건수(count) 가 필요하다.
 const countOf = (domainState, listKey) => {
   if (!domainState || domainState.loading || domainState.error) return null;
-  return domainState[listKey]?.length ?? null;
+  const length = domainState[listKey]?.length;
+  if (length == null) return null;
+  return length >= FETCH_ALL_SIZE ? null : length;
 };
 
 export function useAdminCounts() {
@@ -37,10 +47,10 @@ export function useAdminCounts() {
   // 하나가 실패해도 나머지 dispatch 는 그대로 진행 — 전체가 죽지 않는다.
   useEffect(() => {
     if (quiz.quizAnswers.length === 0 && !quiz.loading) dispatch(requestAdminQuizAll());
-    if (events.events.length === 0 && !events.loading) dispatch(requestAdminGetAllEventList());
+    if (events.events.length === 0 && !events.loading) dispatch(requestAdminGetAllEventList({ page: 0, size: FETCH_ALL_SIZE }));
     if (coupon.coupons.length === 0 && !coupon.loading) dispatch(requestGetAdminCouponList());
     if (notices.siteNotices.length === 0 && !notices.loading) dispatch(requestAdminGetNoticeList());
-    if (adminUsers.users.length === 0 && !adminUsers.loading) dispatch(requestAdminGetUserList());
+    if (adminUsers.users.length === 0 && !adminUsers.loading) dispatch(requestAdminGetUserList({ page: 0, size: FETCH_ALL_SIZE }));
     if (cacheSync.targets.length === 0 && !cacheSync.loading) dispatch(requestCacheSyncTargets());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
