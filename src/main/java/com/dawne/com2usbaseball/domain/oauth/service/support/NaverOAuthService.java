@@ -87,7 +87,14 @@ public class NaverOAuthService {
     }
 
     private NaverOAuthUserResponse parseUserInfo(Map<String, Object> body) {
-        Map<String, Object> info = (Map<String, Object>) body.get("response");
+        Map<String, Object> info = body == null ? null : (Map<String, Object>) body.get("response");
+        log.trace("NAVER USERINFO RESPONSE = {}", body);
+
+        // 네이버는 조회 실패도 200 + response 누락으로 돌려준다 — NPE(500) 대신 토큰 실패로 처리 (getAccessToken 과 동일 패턴)
+        if (info == null) {
+            throw new BaseException(AuthMessages.AUTH_NAVER_TOKEN_FAILED, HttpStatus.BAD_GATEWAY);
+        }
+
         return new NaverOAuthUserResponse(
                 (String) info.get("id"),
                 (String) info.get("nickname"),
