@@ -31,6 +31,8 @@ const initialState = {
   detailLoading: false,   // 어드민 단건 조회(글쓰기 화면 새로고침 대비) 전용
   detailError:   null,
 
+  contentError:  null,    // 공개 상세 본문(requestGetNoticeDetail) 조회 실패 — 제목/날짜는 이미 있어 무음으로 넘어가던 것을 화면이 구분하는 데 쓴다
+
   mutateLoading: false,   // 등록·수정·노출변경·고정·삭제·일괄 (쓰기) 전용
   mutateError:   null,
 };
@@ -60,13 +62,21 @@ const noticeSlice = createSlice({
 
     /* ── 공개 상세 본문 채우기 ─────────────────────────────────
        목록 SQL 이 본문을 내려주지 않아 상세 화면에서 한 건만 더 받아 합친다.
-       실패해도 제목·요약은 이미 있으니 공개 목록의 로딩/오류 상태는 건드리지 않는다. */
-    builder.addCase(requestGetNoticeDetail.fulfilled, (state, action) => {
-      const detail = action.payload;
-      if (!detail?.id) return;
-      const idx = state.publicSiteNotices.findIndex(n => Number(n.id) === Number(detail.id));
-      if (idx !== -1) state.publicSiteNotices[idx] = { ...state.publicSiteNotices[idx], ...detail };
-    });
+       제목·요약은 이미 있으니 공개 목록의 로딩/오류 상태(publicLoading/publicError)는 건드리지
+       않는다 — 대신 본문 전용 contentError 를 둬서 실패했는데 정상 화면처럼 보이는 것을 막는다. */
+    builder
+      .addCase(requestGetNoticeDetail.pending, (state) => {
+        state.contentError = null;
+      })
+      .addCase(requestGetNoticeDetail.fulfilled, (state, action) => {
+        const detail = action.payload;
+        if (!detail?.id) return;
+        const idx = state.publicSiteNotices.findIndex(n => Number(n.id) === Number(detail.id));
+        if (idx !== -1) state.publicSiteNotices[idx] = { ...state.publicSiteNotices[idx], ...detail };
+      })
+      .addCase(requestGetNoticeDetail.rejected, (state, action) => {
+        state.contentError = action.payload ?? "본문을 불러오지 못했습니다. 잠시 후 다시 시도해 주세요.";
+      });
 
     /* ── 어드민 조회 (전체 목록) ─────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminGetNoticeList, (state, action) => {

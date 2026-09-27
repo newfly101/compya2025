@@ -43,8 +43,9 @@ export const requestAdminInsertNotice = createAsyncThunk(
   ADMIN_NOTICE_ACTIONS.INSERT,
   async (notice, { rejectWithValue }) => {
     try {
-      const created = await fetchAdminInsertNotice(notice);
-      return { ...notice, id: created.id };
+      // 폼 값이 아니라 서버가 저장한 값을 그대로 반환한다 — 폼에는 createdAt/publishedAt 이
+      // 없어서 폼 값을 되돌리면 목록의 등록일이 항상 "-" 로 보인다(events·quiz 와 동일 패턴).
+      return await fetchAdminInsertNotice(notice);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -55,8 +56,8 @@ export const requestAdminUpdateNotice = createAsyncThunk(
   ADMIN_NOTICE_ACTIONS.UPDATE,
   async ({ id, ...notice }, { rejectWithValue }) => {
     try {
-      await fetchAdminUpdateNotice(id, notice);
-      return { id, ...notice };
+      // 등록과 같은 이유로 서버 응답을 그대로 반영한다(갱신된 updatedAt 포함).
+      return await fetchAdminUpdateNotice(id, notice);
     } catch (error) {
       return rejectWithValue(error.message);
     }

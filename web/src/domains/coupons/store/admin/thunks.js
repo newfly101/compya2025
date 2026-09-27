@@ -41,16 +41,16 @@ export const requestGetAdminCouponList = createAsyncThunk(
 export const requestAdminInsertNewCoupon = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.CREATE, async (newCoupon, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const { id: couponId } = await fetchAdminInsertCoupon(newCoupon);
+      // 폼 값이 아니라 서버가 저장한 값을 그대로 목록에 넣는다 — 폼은 시각을 비우면 날짜
+      // 10자만 보내므로 폼 값을 되돌리면 서버가 채운 만료 시각(23:59:59)을 못 받아 문자열
+      // 비교(isExpired)가 저장 직후에만 어긋난다(events 와 동일 패턴).
+      const saved = await fetchAdminInsertCoupon(newCoupon);
 
       // 통지 문구는 payload 가 아니라 meta 에 싣는다 — payload 에 섞으면 응답 엔티티가 아닌
       // 필드가 리듀서를 거쳐 목록 행에 그대로 저장되고, 실패는 payload 가 오류 문구 문자열이라
       // 통지를 담을 자리 자체가 없다(operationListener.js).
       // 실패 통지는 붙이지 않는다 — 등록 모달이 .unwrap() 으로 오류를 폼 안에 직접 보여준다.
-      return fulfillWithValue(
-        { ...newCoupon, id: Number(couponId) },
-        { notify: { success: true, message: "쿠폰을 등록했습니다." } },
-      );
+      return fulfillWithValue(saved, { notify: { success: true, message: "쿠폰을 등록했습니다." } });
     } catch (error) {
       return rejectWithValue(toSaveErrorMessage(error));
     }
@@ -60,12 +60,10 @@ export const requestAdminInsertNewCoupon = createAsyncThunk(
 export const requestAdminUpdateCoupon = createAsyncThunk(
   ADMIN_COUPON_ACTIONS.UPDATE, async ({ id, ...coupon }, { rejectWithValue, fulfillWithValue }) => {
     try {
-      const { id: couponId } = await fetchAdminUpdateCoupon(id, coupon);
+      // 등록과 같은 이유로 서버 응답을 그대로 반영한다(서버가 채운 만료 시각 포함).
+      const saved = await fetchAdminUpdateCoupon(id, coupon);
 
-      return fulfillWithValue(
-        { ...coupon, id: Number(couponId) },
-        { notify: { success: true, message: "쿠폰을 수정했습니다." } },
-      );
+      return fulfillWithValue(saved, { notify: { success: true, message: "쿠폰을 수정했습니다." } });
     } catch (error) {
       return rejectWithValue(toSaveErrorMessage(error));
     }
