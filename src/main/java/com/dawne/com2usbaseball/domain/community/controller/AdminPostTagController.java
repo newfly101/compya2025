@@ -5,10 +5,12 @@ import com.dawne.com2usbaseball.domain.community.dto.request.ReplacePostTagReque
 import com.dawne.com2usbaseball.domain.community.dto.response.PostTagResponse;
 import com.dawne.com2usbaseball.domain.community.service.posts.AdminPostTagService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/post-tags")
 public class AdminPostTagController {
 

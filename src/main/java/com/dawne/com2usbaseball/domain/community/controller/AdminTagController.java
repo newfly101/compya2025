@@ -6,10 +6,12 @@ import com.dawne.com2usbaseball.domain.community.dto.request.TagRequest;
 import com.dawne.com2usbaseball.domain.community.dto.response.TagResponse;
 import com.dawne.com2usbaseball.domain.community.service.tag.AdminTagService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/tags")
 public class AdminTagController {
 
