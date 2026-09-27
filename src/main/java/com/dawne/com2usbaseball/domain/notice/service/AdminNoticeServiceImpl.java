@@ -10,6 +10,7 @@ import com.dawne.com2usbaseball.domain.notice.enums.NoticeMessages;
 import com.dawne.com2usbaseball.domain.notice.enums.NoticeSource;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.notice.repository.AdminNoticeRepository;
+import com.dawne.com2usbaseball.common.support.cache.CacheEvictAfterCommit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -67,10 +68,7 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
     public NoticeResponse createNotice(NoticeRequest request) {
         validateSourcePayload(request);
 
@@ -96,12 +94,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", keyExpressions = {"#noticeId + '_admin'", "#noticeId + '_public'"})
     public NoticeResponse updateNotice(NoticeRequest request, Long noticeId) {
         validateSourcePayload(request);
 
@@ -124,12 +118,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", keyExpressions = {"#noticeId + '_admin'", "#noticeId + '_public'"})
     public void updateNoticeVisible(Long noticeId, Boolean isVisible) {
         // 존재 여부 먼저 확인
         adminNoticeRepository.findById(noticeId)
@@ -142,12 +132,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", keyExpressions = {"#noticeId + '_admin'", "#noticeId + '_public'"})
     public void updateNoticePinned(Long noticeId, Boolean isPinned) {
         adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -159,12 +145,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", keyExpressions = {"#noticeId + '_admin'", "#noticeId + '_public'"})
     public void deleteNotice(Long noticeId) {
         adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -178,11 +160,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     // 상세 캐시는 다건이라 개별 key evict 대신 noticeDetail 전체를 비운다(allEntries)
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", allEntries = true)
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", allEntries = true)
     public BulkOperationResponse bulkDeleteNotices(List<Long> ids) {
         List<Long> requestedIds = normalizeIds(ids);
         if (requestedIds.isEmpty()) {
@@ -201,11 +180,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     // 일괄 노출 여부 변경 — 위와 동일한 부분 실패 처리 방식
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", allEntries = true)
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", allEntries = true)
     public BulkOperationResponse bulkUpdateNoticesVisible(List<Long> ids, Boolean isVisible) {
         List<Long> requestedIds = normalizeIds(ids);
         if (requestedIds.isEmpty()) {

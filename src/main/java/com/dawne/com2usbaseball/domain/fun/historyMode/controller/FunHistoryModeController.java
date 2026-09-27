@@ -27,7 +27,8 @@ import java.time.Duration;
 @RequestMapping("/api/history-rounds")
 public class FunHistoryModeController {
 
-    private static final Duration MAX_AGE = Duration.ofHours(1);
+    // 관리자 캐시 동기화가 곧 반영돼야 해서 짧게 잡는다. 만료 뒤에는 ETag 로 304 만 주고받는다.
+    private static final Duration MAX_AGE = Duration.ofSeconds(60);
 
     private final FunHistoryModeService funHistoryModeService;
 
@@ -35,7 +36,7 @@ public class FunHistoryModeController {
     @GetMapping
     public ResponseEntity<GlobalResponse<?>> getAll(WebRequest request) {
         HistoryRoundSnapshot<?> snapshot = funHistoryModeService.getAllRounds();
-        CacheControl cacheControl = CacheControl.maxAge(MAX_AGE).cachePublic();
+        CacheControl cacheControl = CacheControl.maxAge(MAX_AGE).cachePrivate();
 
         // ETag 헤더는 checkNotModified 가 직접 써 준다
         if (request.checkNotModified(snapshot.etag())) {

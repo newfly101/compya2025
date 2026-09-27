@@ -9,10 +9,9 @@ import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
 import com.dawne.com2usbaseball.domain.event.enums.EventMessages;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.event.repository.EventRepository;
+import com.dawne.com2usbaseball.common.support.cache.CacheEvictAfterCommit;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,10 +48,7 @@ public class EventAdminServiceImpl implements EventAdminService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'"),
-            @CacheEvict(value = "events", key = "'external::public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "events", keys = {"external::admin", "external::public"})
     public EventResponse createEvent(EventRequest request) {
         EventEntity event = eventMapStruct.toEntity(request);
 
@@ -80,10 +76,7 @@ public class EventAdminServiceImpl implements EventAdminService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'"),
-            @CacheEvict(value = "events", key = "'external::public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "events", keys = {"external::admin", "external::public"})
     public EventResponse updateEvent(EventRequest request, Long id) {
         EventEntity event = repository.findById(id)
                 .orElseThrow(() -> new BaseException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -108,10 +101,7 @@ public class EventAdminServiceImpl implements EventAdminService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'"),
-            @CacheEvict(value = "events", key = "'external::public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "events", keys = {"external::admin", "external::public"})
     public void updateEventVisible(Long id, boolean visible) {
         repository.findById(id)
                 .orElseThrow(() -> new BaseException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -127,10 +117,7 @@ public class EventAdminServiceImpl implements EventAdminService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'"),
-            @CacheEvict(value = "events", key = "'external::public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "events", keys = {"external::admin", "external::public"})
     public void deleteEvent(Long id) {
         repository.findById(id)
                 .orElseThrow(() -> new BaseException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -139,10 +126,7 @@ public class EventAdminServiceImpl implements EventAdminService {
 
     // 일괄 삭제 — 존재하는 id만 삭제, 존재하지 않는 id는 실패 목록으로 반환(전체 롤백 X)
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'"),
-            @CacheEvict(value = "events", key = "'external::public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "events", keys = {"external::admin", "external::public"})
     public BulkOperationResponse bulkDeleteEvents(List<Long> ids) {
         List<Long> requestedIds = normalizeIds(ids);
         if (requestedIds.isEmpty()) {
@@ -160,10 +144,7 @@ public class EventAdminServiceImpl implements EventAdminService {
 
     // 일괄 노출 여부 변경 — 위와 동일한 부분 실패 처리 방식
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "events", key = "'external::admin'"),
-            @CacheEvict(value = "events", key = "'external::public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "events", keys = {"external::admin", "external::public"})
     public BulkOperationResponse bulkUpdateEventsVisible(List<Long> ids, boolean visible) {
         List<Long> requestedIds = normalizeIds(ids);
         if (requestedIds.isEmpty()) {

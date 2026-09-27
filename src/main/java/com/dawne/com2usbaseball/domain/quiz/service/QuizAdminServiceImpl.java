@@ -8,10 +8,9 @@ import com.dawne.com2usbaseball.domain.quiz.entity.QuizEntity;
 import com.dawne.com2usbaseball.domain.quiz.enums.QuizMessages;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.quiz.repository.QuizRepository;
+import com.dawne.com2usbaseball.common.support.cache.CacheEvictAfterCommit;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -36,10 +35,7 @@ public class QuizAdminServiceImpl implements QuizAdminService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "quiz", key = "'admin'"),
-            @CacheEvict(value = "quiz", key = "'latest'")
-    })
+    @CacheEvictAfterCommit(cacheName = "quiz", keys = {"admin", "latest"})
     public QuizResponse createQuiz(QuizRequest request) {
         QuizEntity entity = quizMapStruct.toEntity(request);
         try {
@@ -57,10 +53,7 @@ public class QuizAdminServiceImpl implements QuizAdminService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "quiz", key = "'admin'"),
-            @CacheEvict(value = "quiz", key = "'latest'")
-    })
+    @CacheEvictAfterCommit(cacheName = "quiz", keys = {"admin", "latest"})
     public QuizResponse updateQuiz(Long id, QuizRequest request) {
         QuizEntity entity = repository.findById(id)
                 .orElseThrow(() -> new BaseException(QuizMessages.QUIZ_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -77,10 +70,7 @@ public class QuizAdminServiceImpl implements QuizAdminService {
     }
 
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "quiz", key = "'admin'"),
-            @CacheEvict(value = "quiz", key = "'latest'")
-    })
+    @CacheEvictAfterCommit(cacheName = "quiz", keys = {"admin", "latest"})
     public void deleteQuiz(Long id) {
         // 존재 여부 먼저 확인
         repository.findById(id)
@@ -92,10 +82,7 @@ public class QuizAdminServiceImpl implements QuizAdminService {
 
     // 일괄 삭제 — 존재하는 id만 삭제, 존재하지 않는 id는 실패 목록으로 반환(전체 롤백 X)
     @Override
-    @Caching(evict = {
-            @CacheEvict(value = "quiz", key = "'admin'"),
-            @CacheEvict(value = "quiz", key = "'latest'")
-    })
+    @CacheEvictAfterCommit(cacheName = "quiz", keys = {"admin", "latest"})
     public BulkOperationResponse bulkDeleteQuizzes(List<Long> ids) {
         List<Long> requestedIds = normalizeIds(ids);
         if (requestedIds.isEmpty()) {

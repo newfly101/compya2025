@@ -27,7 +27,8 @@ import java.time.Duration;
 @RequestMapping("/api/player-skills")
 public class PlayerSkillController {
 
-    private static final Duration MAX_AGE = Duration.ofHours(1);
+    // 관리자 캐시 동기화가 곧 반영돼야 해서 짧게 잡는다. 만료 뒤에는 ETag 로 304 만 주고받는다.
+    private static final Duration MAX_AGE = Duration.ofSeconds(60);
 
     private final PlayerSkillService playerSkillService;
 
@@ -50,7 +51,7 @@ public class PlayerSkillController {
     private ResponseEntity<GlobalResponse<?>> respond(WebRequest request,
                                                         PlayerSkillSnapshot<?> snapshot,
                                                         Enum<?> message) {
-        CacheControl cacheControl = CacheControl.maxAge(MAX_AGE).cachePublic();
+        CacheControl cacheControl = CacheControl.maxAge(MAX_AGE).cachePrivate();
 
         if (request.checkNotModified(snapshot.etag())) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).cacheControl(cacheControl).build();
