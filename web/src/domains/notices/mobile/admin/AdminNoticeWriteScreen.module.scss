@@ -180,7 +180,7 @@
 .saveBtn {
   @include reset-button;
   background: var(--color-admin-accent);
-  color: #fff;
+  color: #fff;                                 // AdminToolbar .addBtn 과 동일 토큰·패턴
   @include text-caption;
   font-weight: 700;
   border-radius: $radius-md;

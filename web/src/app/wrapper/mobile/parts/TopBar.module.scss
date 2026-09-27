@@ -9,6 +9,7 @@
 @use '@/global/styles/variables/font' as *;
 @use '@/global/styles/variables/zindex' as *;
 
+// 네이버 브랜드 그린 — 로그인 버튼 전용, 두 테마 공용 고정값 (토큰 미적용)
 $color-naver-background: #03c75a;
 $color-naver-font: $color-white-100;
 

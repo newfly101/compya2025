@@ -177,7 +177,7 @@
   text-align: center;
 
   &[aria-pressed="true"] {
-    background: var(--color-brand);
+    background: var(--color-brand); // 브랜드 고정색 배경 위 글자 — 테마 무관
     color: #fff;
     font-weight: 700;
   }

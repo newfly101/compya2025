@@ -5,6 +5,7 @@
 // ============================================================
 
 // ── badge-specific color tokens ───────────────────────────────
+// 항상 어두운 판(종료 배지) — 두 테마 공용 고정값, 일치하는 토큰 없음
 $status-ended-color:   #2a2e3a;
 
 // ── Base ──────────────────────────────────────────────────────
@@ -18,7 +19,7 @@ $status-ended-color:   #2a2e3a;
   border-radius: $radius-sm;
   white-space: nowrap;
   flex-shrink: 0;
-  color: #fff;
+  color: #fff;                                 // active(브랜드 보라)·ended(고정 어두움) 모두 항상 어두운 면
 }
 
 // ── Variants ──────────────────────────────────────────────────

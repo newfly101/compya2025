@@ -46,7 +46,7 @@
   bottom: 16px;
   text-align: center;
   @include text-body-bold;
-  color: #fff;
+  color: #fff; // 사진 + 하단 그라데이션(.shade) 위 글자 — 테마 무관
   letter-spacing: -0.4px;
   padding: 0 $space-1;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
@@ -96,7 +96,7 @@
   height: 15px;
   border-radius: $radius-xs;
   background-color: var(--color-brand);
-  color: #fff;
+  color: #fff; // 브랜드 고정색 배경 위 글자 — 테마 무관
   font-size: 10px;
   font-weight: 700;
   font-style: italic;
@@ -121,6 +121,7 @@
   overflow: hidden;
 }
 
+// legendPopoverLabel/Name — 브랜드 그라데이션(.legendPopover) 배경 위 글자, 테마 무관
 .legendPopoverLabel {
   display: block;
   font-size: 9px;

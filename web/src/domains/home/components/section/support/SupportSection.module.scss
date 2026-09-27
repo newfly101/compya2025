@@ -104,7 +104,7 @@
   display: block;
   margin: $space-4 auto 0;
   border-radius: $radius-lg;
-  background-color: #fff;
+  background-color: #fff;                      // QR 스캔용 흰 판 — 두 테마 공용 고정값
 }
 
 .qrHint {
