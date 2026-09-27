@@ -172,7 +172,7 @@
   height: $control-height-md;
   border: none;
   border-radius: $radius-md;
-  background: var(--color-brand);
+  background: var(--color-brand-violet); // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
   color: #fff;
   @include text-body-bold;
   cursor: pointer;

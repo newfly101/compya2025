@@ -95,8 +95,8 @@
   width: 15px;
   height: 15px;
   border-radius: $radius-xs;
-  background-color: var(--color-brand);
-  color: #fff; // 브랜드 고정색 배경 위 글자 — 테마 무관
+  background-color: var(--color-brand-violet);
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
   font-size: $font-size-10;
   font-weight: $font-weight-bold;
   font-style: italic;
