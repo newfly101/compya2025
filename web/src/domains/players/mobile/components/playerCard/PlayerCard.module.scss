@@ -34,7 +34,7 @@
   justify-content: center;
   font-style: italic;
   font-weight: $font-weight-bold;
-  font-size: 13px;
+  font-size: $font-size-13;
   letter-spacing: 1px;
   color: var(--color-text-muted);
 }
@@ -67,7 +67,7 @@
   padding: 0 $space-1;
   font-style: italic;
   font-weight: $font-weight-bold;
-  font-size: 12px;
+  font-size: $font-size-12;
   line-height: 1;
 }
 
@@ -97,8 +97,8 @@
   border-radius: $radius-xs;
   background-color: var(--color-brand);
   color: #fff; // 브랜드 고정색 배경 위 글자 — 테마 무관
-  font-size: 10px;
-  font-weight: 700;
+  font-size: $font-size-10;
+  font-weight: $font-weight-bold;
   font-style: italic;
   display: flex;
   align-items: center;
@@ -124,7 +124,7 @@
 // legendPopoverLabel/Name — 브랜드 그라데이션(.legendPopover) 배경 위 글자, 테마 무관
 .legendPopoverLabel {
   display: block;
-  font-size: 9px;
+  font-size: $font-size-9;
   color: #fff;
   opacity: 0.85;
   white-space: nowrap;
@@ -132,8 +132,8 @@
 
 .legendPopoverName {
   display: block;
-  font-size: 9px;
-  font-weight: 700;
+  font-size: $font-size-9;
+  font-weight: $font-weight-bold;
   color: #fff;
   letter-spacing: -0.4px;
   @include text-ellipsis;

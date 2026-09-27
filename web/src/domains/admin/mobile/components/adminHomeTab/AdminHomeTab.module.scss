@@ -15,7 +15,7 @@
 .title {
   @include text-caption;
   color: var(--color-text-secondary);
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 }
 
 .subtitle {
@@ -52,14 +52,14 @@
 
 .cardCount {
   @include font-size-rem(17);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   line-height: 1;
   color: var(--color-admin-accent);
 }
 
 .cardLabel {
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   color: var(--color-text-primary);
 }
 

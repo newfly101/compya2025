@@ -32,7 +32,7 @@
 
 .headerTitle {
   @include text-body-bold;
-  font-size: 17px;
+  font-size: $font-size-17;
   color: var(--color-text-primary);
 }
 
@@ -40,7 +40,7 @@
   @include reset-button;
   @include tap-target;
   color: var(--color-text-secondary);
-  font-size: 17px;
+  font-size: $font-size-17;
 }
 
 .body {
@@ -149,7 +149,7 @@
   border: 1px solid var(--color-border-strong);
   background-color: var(--color-bg-overlay);
   color: var(--color-text-secondary);
-  font-size: 11px;
+  font-size: $font-size-11;
   font-weight: $font-weight-bold;
   white-space: nowrap;
 }
@@ -173,7 +173,7 @@
   border: 1px solid var(--color-border-strong);
   background-color: var(--color-bg-overlay);
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: $font-size-12;
   font-weight: $font-weight-bold;
   font-style: italic; // Barlow Condensed 대체
   min-width: 0;
@@ -219,7 +219,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
+  font-size: $font-size-9;
   line-height: 1;
 }
 

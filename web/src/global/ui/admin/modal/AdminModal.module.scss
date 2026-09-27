@@ -44,7 +44,7 @@
   @include reset-button;
   @include tap-target($control-height-sm);
   color: var(--color-text-muted);
-  font-size: 22px;
+  font-size: $font-size-22;
   line-height: 1;
 
   &:hover {

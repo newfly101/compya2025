@@ -68,7 +68,7 @@
 .coverLabel {
   @include text-caption;
   color: var(--color-text-secondary);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
 }
 
 .coverDesc {
@@ -125,7 +125,7 @@
   padding: $space-4;
   @include text-caption;
   color: var(--color-text-secondary);
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 }
 
 .externalInput {
@@ -182,7 +182,7 @@
   background: var(--color-admin-accent);
   color: #fff;                                 // AdminToolbar .addBtn 과 동일 토큰·패턴
   @include text-caption;
-  font-weight: 700;
+  font-weight: $font-weight-bold;
   border-radius: $radius-md;
   padding: $space-1 $space-3;
   cursor: pointer;

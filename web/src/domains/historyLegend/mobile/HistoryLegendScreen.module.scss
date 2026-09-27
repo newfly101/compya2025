@@ -31,7 +31,7 @@
     background: var(--color-bg-card);
     color: var(--color-text-primary);
     font-family: inherit;
-    font-size: 13px;
+    font-size: $font-size-13;
 
     &::placeholder {
       color: var(--color-text-muted);
@@ -76,7 +76,7 @@
   border: 0;
   background: none;
   color: var(--color-text-muted);
-  font-size: 17px;
+  font-size: $font-size-17;
   cursor: pointer;
 }
 
@@ -99,7 +99,7 @@
   align-self: center;
   margin-right: $space-1;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
   text-align: left;
 }
 
@@ -114,8 +114,8 @@
   background: var(--color-bg-card);
   color: var(--color-text-secondary);
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: $font-size-12;
+  font-weight: $font-weight-medium;
   white-space: nowrap;
   cursor: pointer;
 
@@ -136,7 +136,7 @@
 
 .chipCount {
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
 }
 
 .segment {
@@ -152,8 +152,8 @@
     background: var(--color-bg-card);
     color: var(--color-text-secondary);
     font-family: inherit;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: $font-size-13;
+    font-weight: $font-weight-medium;
     cursor: pointer;
 
     &[aria-pressed="true"] {
@@ -167,7 +167,7 @@
 .segCount {
   margin-left: 4px;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
 }
 
 .meta {
@@ -176,11 +176,11 @@
   align-items: baseline;
   padding: $space-2 16px $space-1;
   color: var(--color-text-muted);
-  font-size: 12px;
+  font-size: $font-size-12;
 
   b {
     color: var(--color-text-secondary);
-    font-weight: 500;
+    font-weight: $font-weight-medium;
   }
 }
 
@@ -280,8 +280,8 @@ td.alignLeft {
   border-radius: 5px;
   background: var(--color-hl-day-odd-bg);
   color: var(--color-hl-day-odd-text);
-  font-size: 11px;
-  font-weight: 600;
+  font-size: $font-size-11;
+  font-weight: $font-weight-semibold;
 }
 
 .dim {
@@ -294,7 +294,7 @@ td.alignLeft {
 
 .accent {
   color: var(--color-hl-accent-text);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
 }
 
 .nameInner {
@@ -356,12 +356,12 @@ td.alignLeft {
   align-items: baseline;
   margin-bottom: $space-2;
   color: var(--color-text-secondary);
-  font-size: 12px;
+  font-size: $font-size-12;
 
   strong {
     color: var(--color-text-primary);
-    font-size: 15px;
-    font-weight: 600;
+    font-size: $font-size-15;
+    font-weight: $font-weight-semibold;
   }
 }
 
@@ -371,12 +371,12 @@ td.alignLeft {
   align-items: baseline;
   margin: $space-3 0 $space-1;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
 }
 
 .detailNote {
   color: var(--color-text-muted);
-  font-size: 12px;
+  font-size: $font-size-12;
 }
 
 .materials {
@@ -394,7 +394,7 @@ td.alignLeft {
   border: 1px solid var(--color-border-strong);
   border-radius: 8px;
   background: var(--color-hl-card-bg);
-  font-size: 12px;
+  font-size: $font-size-12;
 }
 
 .mapRow {
@@ -420,7 +420,7 @@ td.alignLeft {
 // 여러 라운드에서 얻을 수 있는 카드 — 어느 쪽에서 먹어도 된다
 .cardMulti {
   color: var(--color-hl-card-multi);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
 }
 
 .arrow {
@@ -437,13 +437,13 @@ td.alignLeft {
 
 .legendName {
   color: var(--color-text-primary);
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 }
 
 .subText {
   overflow: hidden;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
   text-overflow: ellipsis;
 }
 
@@ -452,14 +452,14 @@ td.alignLeft {
 .empty {
   padding: 44px 16px;
   color: var(--color-text-muted);
-  font-size: 13px;
+  font-size: $font-size-13;
   text-align: center;
 }
 
 .foot {
   padding: 16px;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
   line-height: 1.7;
 
   p {

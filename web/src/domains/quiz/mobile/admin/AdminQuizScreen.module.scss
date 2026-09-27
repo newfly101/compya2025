@@ -20,13 +20,13 @@
   background: var(--color-warning-dim);
   color: var(--color-warning);
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 
   button {
     border: 0;
     background: transparent;
     color: inherit;
-    font-size: 15px;
+    font-size: $font-size-15;
     line-height: 1;
     cursor: pointer;
     @include pressable;
@@ -51,7 +51,7 @@
 
 .round {
   color: var(--color-text-primary);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   @include text-ellipsis;
 }
 
@@ -97,7 +97,7 @@
   background: transparent;
   color: var(--color-admin-accent-active-text);
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   cursor: pointer;
   @include pressable;
 }

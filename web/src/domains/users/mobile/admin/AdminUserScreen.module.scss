@@ -26,7 +26,7 @@
 
 .nickname {
   color: var(--color-text-primary);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   @include text-ellipsis;
 }
 
@@ -50,7 +50,7 @@
   display: block;
   color: var(--color-text-secondary);
   @include text-caption;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   text-align: right;
 }
 
@@ -71,7 +71,7 @@
   background: transparent;
   color: var(--color-brand);
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   cursor: pointer;
   @include pressable;
 }

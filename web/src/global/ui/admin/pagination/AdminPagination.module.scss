@@ -20,7 +20,7 @@
   background: var(--color-bg-card);
   color: var(--color-text-muted);
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   cursor: pointer;
 
   &[aria-pressed="true"] {

@@ -100,7 +100,7 @@
 // 뼈대(높이·padding·border-bottom·white-space·정렬)는 mixin 이 `.table td` 로 낸다.
 .td {
   color: var(--color-text-primary);
-  font-weight: 700;
+  font-weight: $font-weight-bold;
 }
 
 // 이름 열은 스크롤 없이 계산한 폭이라 아주 긴 이름은 빠듯할 수 있다 — 잘리면 말줄임표로.
@@ -112,7 +112,7 @@
 .td.tdRight {
   padding: 0 2px;
   text-align: center;
-  font-weight: 700;
+  font-weight: $font-weight-bold;
   background-color: transparent;
 }
 
@@ -135,7 +135,7 @@
   border-radius: $radius-xs;
   background-color: var(--color-brand);
   color: #fff; // 브랜드 고정색 배경 위 글자 — 테마 무관
-  font-size: 9px;
-  font-weight: 700;
+  font-size: $font-size-9;
+  font-weight: $font-weight-bold;
   line-height: 1;
 }

@@ -8,6 +8,7 @@
 @use '../variables/spacing' as *;
 @use '../variables/radius' as *;
 @use 'typography' as *;
+@use '../variables/font' as *;
 
 // ── 필드 라벨 (11px/600, 보조색) ──────────────────────────────
 @mixin admin-field-label {
@@ -15,7 +16,7 @@
   flex-direction: column;
   gap: $space-1;
   @include text-caption;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   color: var(--color-text-secondary);
 }
 
