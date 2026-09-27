@@ -64,8 +64,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     @Override
     @Cacheable(value = "noticeDetail", key = "#noticeId + '_admin'")
     public NoticeResponse getAdminNoticeDetail(Long noticeId) {
-        // Repository에서 null 시 BaseException 처리
-        NoticeEntity notice = adminNoticeRepository.getAdminNoticeDetail(noticeId);
+        NoticeEntity notice = adminNoticeRepository.getAdminNoticeDetail(noticeId)
+                .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
         return noticeMapStruct.toResponse(notice);
     }
 
