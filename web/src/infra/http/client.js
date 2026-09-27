@@ -1,10 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/config/env.js";
 import { hasAuthSessionMarker } from "@/infra/http/authSessionMarker.js";
-// store / thunks 는 client.js 와 순환 참조다 (store → slices → thunks → api → client).
-// 모듈 평가 시점에는 쓰지 않고 인터셉터 콜백 안에서만 쓰므로 ESM live binding 으로 안전하다.
-import { store } from "@/app/store/store.js";
-import { resetAuthSession } from "@/domains/authentication/store/thunks.js";
 
 export const API = axios.create({
   baseURL: API_BASE_URL,
@@ -80,12 +76,21 @@ const toUserMessage = (error) => {
   return "데이터를 받지 못했습니다. 잠시 후 다시 시도해 주세요.";
 };
 
+// store 를 여기서 직접 import 하면 순환이다 (store → slices → thunks → api → client).
+// slices 의 extraReducers 는 모듈 평가 시점에 thunk 를 참조하므로 "콜백 안에서만 쓴다" 로는
+// 안전해지지 않는다 — 실제로 TDZ 로 앱이 즉시 죽었다. 방향을 뒤집어 store 쪽에서 주입받는다.
+let dispatchAuthReset = null;
+
+export const setAuthResetDispatcher = (dispatcher) => {
+  dispatchAuthReset = dispatcher;
+};
+
 // 인증 최종 실패(재발급까지 실패 / 계정 정지 확정) 지점 — 로그인 상태 정리는 여기 한 곳에서만
 // 한다. resetAuthSession 이 세션 마커와 Redux 상태를 함께 비우므로 화면마다 흩뿌릴 필요가 없다.
 const failAuth = (error, message) => {
   error.isAuthError = true;
   error.message = message;
-  store.dispatch(resetAuthSession());
+  dispatchAuthReset?.();
   return error;
 };
 

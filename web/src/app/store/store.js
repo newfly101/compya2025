@@ -15,6 +15,8 @@ import playerSkillsReducer from "@/domains/playerSkills/store/slices.js";
 import mileageReducer from "@/domains/mileage/store/slices.js";
 import playersReducer from "@/domains/players/store/slices.js";
 import cacheSyncReducer from "@/domains/admin/store/slices.js";
+import { setAuthResetDispatcher } from "@/infra/http/client.js";
+import { resetAuthSession } from "@/domains/authentication/store/thunks.js";
 
 export const store = configureStore({
   reducer: {
@@ -44,3 +46,7 @@ export const store = configureStore({
       immutableCheck: { ignoredPaths: ["players"] },
     }).prepend(operationListener.middleware),
 });
+
+// http 인터셉터가 store 를 import 하면 순환(store → slices → thunks → api → client)이 되어
+// 모듈 평가 중 TDZ 로 터진다. 인증 최종 실패 시 상태 초기화만 여기서 주입한다.
+setAuthResetDispatcher(() => store.dispatch(resetAuthSession()));
