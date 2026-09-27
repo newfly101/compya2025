@@ -5,6 +5,8 @@ public enum AuthMessages {
     AUTH_SUCCESS,
     // 인가 실패
     AUTH_UNAUTHORIZED,
+    // 권한 부족 (계정은 정상, 접근 권한만 없음 — 차단/정지와 구분)
+    AUTH_FORBIDDEN,
     // 유저 없음
     AUTH_USER_NOT_FOUND,
     // 유저 차단됨

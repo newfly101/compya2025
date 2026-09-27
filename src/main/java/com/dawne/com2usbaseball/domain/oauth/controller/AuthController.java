@@ -56,19 +56,28 @@ public class AuthController implements AuthSwaggerDocs {
      */
     @Override
     @GetMapping("/naver/callback")
-    public void naverCallback(@RequestParam String code,
-                              @RequestParam String state,
+    public void naverCallback(@RequestParam(required = false) String code,
+                              @RequestParam(required = false) String state,
                               HttpServletResponse response,
                               HttpServletRequest request
     ) throws IOException {
 
-        verifyState(state, request, response);
+        try {
+            verifyState(state, request, response);
+            if (code == null) {
+                throw new BaseException(AuthMessages.AUTH_UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
+            }
 
-        AuthTokens tokens = authService.loginWithNaver(code, state);
-        writeAuthCookies(tokens, response, request);
+            AuthTokens tokens = authService.loginWithNaver(code, state);
+            writeAuthCookies(tokens, response, request);
 
-        String url = redirectProvider.setRedirectUrl(request);
-        response.sendRedirect(url);
+            String url = redirectProvider.setRedirectUrl(request);
+            response.sendRedirect(url);
+        } catch (BaseException e) {
+            // 실패도 성공 경로와 동일하게 프론트로 리다이렉트 — 오류 코드만 쿼리로 얹는다 (JSON 원문 노출 방지)
+            String url = redirectProvider.setRedirectUrl(request) + "?error=" + e.getCode().name();
+            response.sendRedirect(url);
+        }
     }
 
     /**
