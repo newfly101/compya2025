@@ -2,7 +2,6 @@ package com.dawne.com2usbaseball.domain.admin.controller;
 
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.security.cookie.AuthCookieFactory;
-import com.dawne.com2usbaseball.security.provider.JwtProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,18 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Profile("local")
 public class SwaggerController {
 
-    private final JwtProvider jwtProvider;
     private final AuthCookieFactory authCookieFactory;
 
-    @Operation(summary = "ADMIN 토큰 cookie 발급", description = "Try it out 한 번 호출 → ACCESS_TOKEN cookie 자동 저장")
-    @GetMapping("/test-token")
-    public ResponseEntity<GlobalResponse<String>> getTestToken(HttpServletRequest request) {
-        String token = jwtProvider.createAccessToken(1L, "ADMIN");
-        ResponseCookie cookie = authCookieFactory.createAccessToken(token, request);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(GlobalResponse.success("ADMIN cookie 발급 완료. 이후 admin endpoint 호출 시 cookie 자동 전송."));
-    }
+    // getTestToken(/test-token) 제거됨 — ADMIN 토큰을 발급하는 엔드포인트인데 자기 자신이
+    // SecurityConfig 의 "/api/admin/**" → hasRole("ADMIN") 뒤에 있어 구조적으로 호출 불가능했다.
+    // (docs/code-review-v1/admin/readme-verdict.md M3)
 
     @Operation(summary = "ACCESS_TOKEN cookie 만료", description = "테스트 세션 종료용")
     @GetMapping("/logout")
