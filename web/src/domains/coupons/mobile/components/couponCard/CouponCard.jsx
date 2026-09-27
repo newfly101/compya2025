@@ -34,7 +34,7 @@ const CouponCard = ({ coupon, showDetail = false, isExpired = false }) => {
 
       <p className={styles.couponExpire}>
         <span className={styles.expireDot}>⏱</span>
-        유효기간 {coupon.expireAt}
+        유효기간 {coupon.expireAt?.slice(0, 16)}
       </p>
       {showDetail && (
         <p className={styles.couponExplain}>

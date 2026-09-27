@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.domain.coupon.service;
 
 import com.dawne.com2usbaseball.common.support.cache.CacheEvictAfterCommit;
 import com.dawne.com2usbaseball.common.support.dto.BulkOperationResponse;
+import com.dawne.com2usbaseball.common.util.DateTimeUtils;
 import com.dawne.com2usbaseball.domain.coupon.dto.mapstruct.CouponMapStruct;
 import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponRequest;
 import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -51,6 +53,7 @@ public class AdminCouponServiceImpl implements AdminCouponService {
     @CacheEvictAfterCommit(cacheName = "coupons", keys = {"admin", "public"})
     public CouponResponse createCoupon(CouponRequest request) {
         CouponEntity coupon = couponMapStruct.toEntity(request);
+        coupon.setExpireAt(normalizeExpireAt(request));
         try {
             if (!repository.insertCoupon(coupon)) {
                 throw new BaseException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -72,6 +75,12 @@ public class AdminCouponServiceImpl implements AdminCouponService {
                 .orElseThrow(() -> new BaseException(CouponMessages.COUPON_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         couponMapStruct.updateEntity(request, coupon);
+
+        // 부분 수정 허용 — 값이 안 온 필드는 기존 값을 유지(정규화 결과가 null 이면 건드리지 않음)
+        LocalDateTime expireAt = normalizeExpireAt(request);
+        if (expireAt != null) {
+            coupon.setExpireAt(expireAt);
+        }
 
         try {
             if (!repository.updateCoupon(coupon)) {
@@ -148,6 +157,15 @@ public class AdminCouponServiceImpl implements AdminCouponService {
             return e; // 다른 제약 위반은 원래 예외를 그대로 올린다
         }
         return new BaseException(CouponMessages.COUPON_CODE_DUPLICATED, HttpStatus.CONFLICT);
+    }
+
+    // 날짜만 오면 그날 끝(23:59:59), 분까지만 오면 0초를 채운다 — 이벤트 기간과 같은 규칙.
+    private LocalDateTime normalizeExpireAt(CouponRequest request) {
+        return DateTimeUtils.normalize(
+                request.expireAt(),
+                DateTimeUtils.DEFAULT_EXPIRE_TIME,
+                CouponMessages.COUPON_EXPIRE_AT_INVALID_FORMAT
+        );
     }
 
     private List<Long> normalizeIds(List<Long> ids) {

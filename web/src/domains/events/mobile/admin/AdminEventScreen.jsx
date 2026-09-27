@@ -52,14 +52,15 @@ const EMPTY_FORM = {
 };
 
 // 편집 모달은 원본 시각까지 채운다 — 날짜만 담아 두면 제목만 고쳐 저장해도 서버 기본 시각으로 덮어써졌다.
-// 응답 형식은 "yyyy-MM-dd HH:mm"(EventResponse @JsonFormat) 이라 11~16 이 시각이다.
+// 응답 형식은 "yyyy-MM-dd HH:mm:ss"(EventResponse @JsonFormat) 이라 11~19 가 시각이다.
+// 초까지 담아야(시각 칸 step="1") 23:59:59 를 그대로 되돌려 보내 왕복 시 시각이 밀리지 않는다.
 const formOf = (event) => ({
   title: event.title ?? "",
   eventType: event.eventType ?? "OFFICIAL",
   startAt: event.startAt?.slice(0, 10) ?? "",
-  startTime: event.startAt?.slice(11, 16) ?? "",
+  startTime: event.startAt?.slice(11, 19) ?? "",
   expireAt: event.expireAt?.slice(0, 10) ?? "",
-  expireTime: event.expireAt?.slice(11, 16) ?? "",
+  expireTime: event.expireAt?.slice(11, 19) ?? "",
   imageUrl: event.imageUrl ?? "",
   externalLink: event.externalLink ?? "",
   visible: event.visible ?? true,
@@ -76,7 +77,7 @@ const extractUploadedUrl = (result) => {
 };
 
 // v2 "진행" 필터: 전체 · 진행중 · 종료. "종료" 카운트 API 가 없어 클라이언트에서 expireAt 비교로 처리한다.
-// 기준은 공개 화면(useEventList)과 같은 KST 분 단위다 — 날짜 단위 UTC 비교였을 때는 오전에 끝난
+// 기준은 공개 화면(useEventList)과 같은 KST 초 단위다 — 날짜 단위 UTC 비교였을 때는 오전에 끝난
 // 이벤트가 관리자 화면에서만 자정까지 "진행중" 으로 남아 두 화면이 서로 어긋났다.
 const isEnded = (event, now) => !!event.expireAt && event.expireAt < now;
 
@@ -105,7 +106,7 @@ const VIS_OPTIONS = [
   { value: "hidden", label: "숨김" },
 ];
 
-// 시각이 비면 날짜만 보낸다(서버가 기본 시각을 채움). 시각이 있으면 "yyyy-MM-dd HH:mm" 로 그대로 전달.
+// 시각이 비면 날짜만 보낸다(서버가 기본 시각을 채움). 시각이 있으면 "yyyy-MM-dd HH:mm:ss" 로 그대로 전달.
 const joinDateTime = (date, time) => (date && time ? `${date} ${time}` : date ?? "");
 
 const formatPeriod = (startAt, expireAt) => {
@@ -504,6 +505,7 @@ export default function AdminEventScreen() {
             <div className={styles.timeRow}>
               <input
                 type="time"
+                step="1"
                 className={styles.input}
                 name="startTime"
                 value={form.startTime}
@@ -513,6 +515,7 @@ export default function AdminEventScreen() {
               <span className={styles.timeSep}>~</span>
               <input
                 type="time"
+                step="1"
                 className={styles.input}
                 name="expireTime"
                 value={form.expireTime}
@@ -521,7 +524,7 @@ export default function AdminEventScreen() {
               />
             </div>
             <p className={styles.uploadPreviewCaption}>
-              시각을 비워 두면 시작 12:00 · 종료 23:59 로 저장돼요.
+              시각을 비워 두면 시작 12:00:00 · 종료 23:59:59 로 저장돼요.
             </p>
           </div>
 

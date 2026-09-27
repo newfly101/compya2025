@@ -23,11 +23,8 @@ import {
 } from "@/domains/coupons/store/admin/thunks.js";
 import styles from "./AdminCouponScreen.module.scss";
 
-// 만료 시각을 비워두면 "그날 끝" 으로 본다 — 서버에 23:59:59 를 보낸다.
-// 응답 @JsonFormat 은 분 단위(yyyy-MM-dd HH:mm)라 되돌아올 때 초가 잘려 "23:59" 로 보인다.
-// 그래서 폼을 다시 열 때 시각이 23:59 면 칸을 비워 두고, 저장 시 같은 23:59:59 를 다시 보낸다 —
-// 다른 필드만 고쳐 저장해도 만료 시각이 23:59:00 으로 밀리지 않는다.
-const END_OF_DAY_HHMM = "23:59";
+// 만료 시각을 비워두면 "그날 끝"(23:59:59) 으로 본다 — 날짜만 보내고 서버가 채운다.
+// 응답·폼 모두 초 단위라 편집 시 원본 시각이 그대로 채워지고, 다른 필드만 고쳐 저장해도 시각이 밀리지 않는다.
 const END_OF_DAY_TIME = "23:59:59";
 
 // 서버 CouponRequest 와 일치하는 필드만 다룬다. 만료는 날짜·시각 두 칸으로 받아 전송 직전에 합친다.
@@ -40,13 +37,13 @@ const EMPTY_FORM = {
   visible: true,
 };
 
-// 시각을 비우면 그날 끝(23:59:59), 넣으면 그 시각 그대로. 서버는 두 형식을 모두 받는다.
+// 시각을 비우면 날짜만 보낸다(서버가 그날 끝으로 채움). 넣으면 그 시각 그대로.
 const toExpireAt = ({ expireDate, expireTime }) =>
-  expireDate ? `${expireDate} ${expireTime || END_OF_DAY_TIME}` : "";
+  expireDate ? (expireTime ? `${expireDate} ${expireTime}` : expireDate) : "";
 
 // v2 필터 두 줄 — "사용"(만료 기준: 전체·사용가능·만료) · "노출"(visible 기준: 전체·노출·숨김).
 // 두 축은 서로 독립이라 각각 따로 필터링한다(예: 만료됐지만 아직 노출 중인 쿠폰도 존재 가능).
-// 만료 판정은 공개 화면(useCouponList)과 같은 기준을 쓴다 — KST "yyyy-MM-dd HH:mm" 문자열 분 단위
+// 만료 판정은 공개 화면(useCouponList)과 같은 기준을 쓴다 — KST "yyyy-MM-dd HH:mm:ss" 문자열 초 단위
 // 비교. 날짜 단위로 자르거나 UTC 기준일을 쓰면 같은 쿠폰이 어드민·공개에서 다르게 보인다.
 const isExpired = (coupon, now) => !!coupon.expireAt && coupon.expireAt < now;
 
@@ -76,14 +73,14 @@ const VIS_OPTIONS = [
 
 const formOf = (coupon) => {
   const expireAt = coupon.expireAt ?? "";
-  const time = expireAt.slice(11, 16);
 
   return {
     couponCode: coupon.couponCode ?? "",
     title: coupon.title ?? "",
     detail: coupon.detail ?? "",
     expireDate: expireAt.slice(0, 10),
-    expireTime: time === END_OF_DAY_HHMM ? "" : time,
+    // 시각 칸은 초까지 담는다(step="1") — 23:59:59 를 그대로 되돌려 보내 왕복 시 밀리지 않는다.
+    expireTime: expireAt.slice(11, 19),
     visible: coupon.visible ?? true,
   };
 };
@@ -112,7 +109,7 @@ export default function AdminCouponScreen() {
     dispatch(requestGetAdminCouponList());
   }, [dispatch]);
 
-  // 만료 판정 기준 시각 — 공개 화면과 같은 KST 분 단위 문자열.
+  // 만료 판정 기준 시각 — 공개 화면과 같은 KST 초 단위 문자열.
   const now = formatNow();
 
   const searched = coupons.filter(
@@ -292,8 +289,8 @@ export default function AdminCouponScreen() {
       render: (c) => (
         <div className={styles.expireCell}>
           <span>{c.expireAt?.slice(0, 10) ?? "-"}</span>
-          {/* 그날 끝(23:59)이 아닌 시각이 지정된 쿠폰만 시각을 함께 보여준다 */}
-          {c.expireAt?.slice(11, 16) && c.expireAt.slice(11, 16) !== END_OF_DAY_HHMM && (
+          {/* 그날 끝(23:59:59)이 아닌 시각이 지정된 쿠폰만 시각을 함께 보여준다 — 표시는 분 단위까지 */}
+          {c.expireAt?.slice(11, 19) && c.expireAt.slice(11, 19) !== END_OF_DAY_TIME && (
             <span>{c.expireAt.slice(11, 16)}</span>
           )}
           {isExpired(c, now) && <AdminTag variant="rose">만료</AdminTag>}
@@ -413,7 +410,7 @@ export default function AdminCouponScreen() {
           </label>
           <label className={styles.label}>
             만료 시각 (비우면 그날 23:59:59)
-            <input className={styles.input} type="time" name="expireTime" value={form.expireTime} onChange={handleFormChange} />
+            <input className={styles.input} type="time" step="1" name="expireTime" value={form.expireTime} onChange={handleFormChange} />
           </label>
           <div className={styles.toggleRow}>
             <span>노출 여부</span>
