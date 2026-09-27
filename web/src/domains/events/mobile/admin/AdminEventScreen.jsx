@@ -293,10 +293,12 @@ export default function AdminEventScreen() {
     if (saving) return;
     setSubmitError(null);
     setSaving(true);
+    // 날짜·시각 두 칸을 서버 필드 하나로 합치고, 화면 전용 시각 칸은 여기서 걸러 낸다 (쿠폰 화면과 같은 방식).
+    const { startTime, expireTime, ...rest } = form;
     const payload = {
-      ...form,
-      startAt: joinDateTime(form.startAt, form.startTime),
-      expireAt: joinDateTime(form.expireAt, form.expireTime),
+      ...rest,
+      startAt: joinDateTime(form.startAt, startTime),
+      expireAt: joinDateTime(form.expireAt, expireTime),
     };
     try {
       if (editTarget) {
