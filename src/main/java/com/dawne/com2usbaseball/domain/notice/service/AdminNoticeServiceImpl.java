@@ -70,12 +70,13 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     @Transactional
     @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
     public NoticeResponse createNotice(NoticeRequest request) {
-        validateSourcePayload(request);
+        // 살균을 먼저 하고 그 결과를 검증한다 — 허용 태그가 하나도 없는 본문은 살균 후 빈 문자열이
+        // 되는데, 빈 문자열은 DB CHECK(content IS NOT NULL)를 통과해 본문 없는 공지로 저장된다.
+        String content = sanitizeHtml(request.content());
+        validateSourcePayload(request.source(), content, request.externalUrl());
 
         NoticeEntity notice = noticeMapStruct.toEntity(request);
-        if (notice.getContent() != null) {
-            notice.setContent(sanitizeHtml(notice.getContent()));
-        }
+        notice.setContent(content);
 
         // 어드민 글쓰기 화면에 발행일 입력이 없어 null 로 들어오면 등록 시각으로 채운다
         if (notice.getPublishedAt() == null) {
@@ -97,17 +98,15 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
     @CacheEvictAfterCommit(cacheName = "noticeDetail", keyExpressions = {"#noticeId + '_admin'", "#noticeId + '_public'"})
     public NoticeResponse updateNotice(NoticeRequest request, Long noticeId) {
-        validateSourcePayload(request);
+        // 생성과 동일하게 살균 → 검증 순서(살균 후 빈 본문을 걸러낸다)
+        String content = sanitizeHtml(request.content());
+        validateSourcePayload(request.source(), content, request.externalUrl());
 
         NoticeEntity notice = adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         noticeMapStruct.updateEntity(request, notice);
-
-        // 수정 시에도 새니타이징
-        if (notice.getContent() != null) {
-            notice.setContent(sanitizeHtml(notice.getContent()));
-        }
+        notice.setContent(content);
 
         if (!adminNoticeRepository.updateNotice(notice)) {
             throw new BaseException(NoticeMessages.NOTICE_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -204,26 +203,26 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
         return ids.stream().filter(java.util.Objects::nonNull).distinct().toList();
     }
 
-    // DB CHECK 제약 미러링
-    private void validateSourcePayload(NoticeRequest request) {
-        if (request.source() == null) {
+    // DB CHECK 제약 미러링 — content 는 살균을 거친 값을 넘긴다(호출부 참고)
+    private void validateSourcePayload(NoticeSource source, String content, String externalUrl) {
+        if (source == null) {
             throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
         }
 
-        if (request.source() == NoticeSource.INTERNAL) {
-            if (request.content() == null || request.content().isBlank()) {
+        if (source == NoticeSource.INTERNAL) {
+            if (content == null || content.isBlank()) {
                 throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
-            if (request.externalUrl() != null && !request.externalUrl().isBlank()) {
+            if (externalUrl != null && !externalUrl.isBlank()) {
                 throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
         }
 
-        if (request.source() == NoticeSource.EXTERNAL) {
-            if (request.externalUrl() == null || request.externalUrl().isBlank()) {
+        if (source == NoticeSource.EXTERNAL) {
+            if (externalUrl == null || externalUrl.isBlank()) {
                 throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
-            if (request.content() != null && !request.content().isBlank()) {
+            if (content != null && !content.isBlank()) {
                 throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
         }

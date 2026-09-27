@@ -6,11 +6,12 @@ const PAGE_SIZE = 3; // 「더보기」 한 번에 늘어나는 개수
 
 export const useNoticeList = () => {
   const dispatch        = useDispatch();
-  const siteNotices     = useSelector(state => state.notices.siteNotices);
+  // 공개 전용 상태만 읽는다 — siteNotices/loading/error 는 어드민 목록(숨긴 공지 포함) 필드다.
+  const siteNotices     = useSelector(state => state.notices.publicSiteNotices);
   const officialNotices = useSelector(state => state.notices.officialNotices);
-  const loading         = useSelector(state => state.notices.loading);
-  const error           = useSelector(state => state.notices.error);
-  const loaded          = useSelector(state => state.notices.loaded);
+  const loading         = useSelector(state => state.notices.publicLoading);
+  const error           = useSelector(state => state.notices.publicError);
+  const loaded          = useSelector(state => state.notices.publicLoaded);
 
   // 섹션별로 노출 개수를 따로 관리 — 「더보기」를 누를 때마다 PAGE_SIZE 씩 늘어난다.
   const [siteVisible, setSiteVisible] = useState(PAGE_SIZE);

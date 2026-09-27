@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { applyAsyncHandlers } from "@/app/store/utils/applyAsyncHandlers.js";
-import { requestGetNoticeList } from "@/domains/notices/store/public/thunks.js";
+import { requestGetNoticeList, requestGetNoticeDetail } from "@/domains/notices/store/public/thunks.js";
 import {
   requestAdminGetNoticeList,
   requestAdminGetNotice,
@@ -14,10 +14,17 @@ import {
   requestAdminRefreshNotices,
 } from "@/domains/notices/store/admin/thunks.js";
 
+// 공개 화면과 어드민 화면은 상태를 나눠 쓴다 — 어드민 목록에는 숨긴 공지가 들어 있어서
+// 한 배열을 공유하면 공개 상세가 숨긴 공지를 렌더하고 어드민 오류 문구까지 공개 화면에 새어 나온다.
+// publicXxx = 공개(GET /notices), siteNotices/loading/error = 어드민 전용.
 const initialState = {
-  siteNotices:     [],
-  officialNotices: [],
-  loaded:  false, // 공개 목록 조회가 한 번이라도 성공했는지 — "0건"과 "아직 로딩 전"을 구분하는 데 쓴다
+  publicSiteNotices: [],  // 공개 목록 중 INTERNAL(사이트 공지)
+  officialNotices:   [],  // 공개 목록 중 EXTERNAL(공식 공지)
+  publicLoaded:  false,   // 공개 목록 조회가 한 번이라도 성공했는지 — "0건"과 "아직 로딩 전"을 구분하는 데 쓴다
+  publicLoading: false,
+  publicError:   null,
+
+  siteNotices: [],        // 어드민 목록(숨긴 공지 포함)
   loading: false,
   error:   null,
 };
@@ -27,11 +34,32 @@ const noticeSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    /* ── 전체 공지 조회 (source 기준 분리) ───────────────────── */
-    applyAsyncHandlers(builder, requestGetNoticeList, (state, action) => {
-      state.siteNotices     = action.payload.siteNotices;
-      state.officialNotices = action.payload.officialNotices;
-      state.loaded = true;
+    /* ── 공개 목록 조회 (source 기준 분리) ─────────────────────
+       applyAsyncHandlers 는 loading/error 필드명이 고정이라 공개 전용 필드를 쓰려면 직접 다룬다. */
+    builder
+      .addCase(requestGetNoticeList.pending, (state) => {
+        state.publicLoading = true;
+        state.publicError   = null;
+      })
+      .addCase(requestGetNoticeList.fulfilled, (state, action) => {
+        state.publicLoading     = false;
+        state.publicSiteNotices = action.payload.siteNotices;
+        state.officialNotices   = action.payload.officialNotices;
+        state.publicLoaded      = true;
+      })
+      .addCase(requestGetNoticeList.rejected, (state, action) => {
+        state.publicLoading = false;
+        state.publicError   = action.payload ?? "잠시 후 다시 시도해 주세요.";
+      });
+
+    /* ── 공개 상세 본문 채우기 ─────────────────────────────────
+       목록 SQL 이 본문을 내려주지 않아 상세 화면에서 한 건만 더 받아 합친다.
+       실패해도 제목·요약은 이미 있으니 공개 목록의 로딩/오류 상태는 건드리지 않는다. */
+    builder.addCase(requestGetNoticeDetail.fulfilled, (state, action) => {
+      const detail = action.payload;
+      if (!detail?.id) return;
+      const idx = state.publicSiteNotices.findIndex(n => Number(n.id) === Number(detail.id));
+      if (idx !== -1) state.publicSiteNotices[idx] = { ...state.publicSiteNotices[idx], ...detail };
     });
 
     /* ── 어드민 조회 (전체 목록) ─────────────────────────────── */
