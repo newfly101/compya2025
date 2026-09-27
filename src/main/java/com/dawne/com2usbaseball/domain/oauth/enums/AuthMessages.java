@@ -13,6 +13,8 @@ public enum AuthMessages {
     AUTH_USER_INACTIVE,
     // 네이버 인증 실패
     AUTH_NAVER_TOKEN_FAILED,
+    // 같은 소셜 계정으로 동시에 첫 로그인 — 한쪽만 가입되고 나머지는 다시 로그인하면 된다
+    AUTH_SIGNUP_CONFLICT,
     // refresh token 없음/위변조
     AUTH_REFRESH_TOKEN_INVALID,
     // refresh token 만료/revoke

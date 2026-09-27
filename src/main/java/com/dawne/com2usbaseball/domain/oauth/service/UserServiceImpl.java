@@ -15,6 +15,7 @@ import com.dawne.com2usbaseball.domain.oauth.repository.RefreshTokenRepository;
 import com.dawne.com2usbaseball.domain.oauth.repository.UserOAuthAccountRepository;
 import com.dawne.com2usbaseball.domain.oauth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,12 +61,31 @@ public class UserServiceImpl implements UserService {
         UserEntity saved = repository.save(newUser);
 
         UserOAuthAccountEntity oauthAccount = userMapStruct.toOAuthAccountEntity(info, saved.getId());
-        oauthAccountRepository.save(oauthAccount);
+        try {
+            oauthAccountRepository.save(oauthAccount);
+        } catch (DuplicateKeyException e) {
+            if (!isDuplicateOAuthAccount(e)) {
+                throw e; // public_id UNIQUE 등 다른 제약 위반은 중복 가입으로 뭉개지 않는다
+            }
+            // 같은 네이버 계정으로 동시에 첫 로그인 → 한쪽이 uk_oauth_provider 에서 진다.
+            // [판단] 예외를 삼키지 않고 올려보내 위 site_users insert 까지 함께 롤백시킨다. 삼키면 InnoDB 가
+            // 실패한 INSERT 문장만 되돌리고 트랜잭션은 커밋되어 OAuth 계정 없는 고아 회원이 남는다.
+            // 같은 트랜잭션에서 재조회하는 폴백도 불가 — REPEATABLE READ 스냅샷에는 상대가 방금 커밋한 행이
+            // 보이지 않는다. 재조회는 새 트랜잭션이 있어야 하므로 재시도는 다시 로그인하는 쪽에 맡긴다.
+            throw new BaseException(AuthMessages.AUTH_SIGNUP_CONFLICT, HttpStatus.CONFLICT);
+        }
 
         // 방금 만든 값 — 재조회 없이 바로 응답에 쓸 수 있게 채워둔다 (JOIN 전용 읽기 필드)
         saved.setOauthEmail(oauthAccount.getEmail());
         saved.setOauthProfileImage(oauthAccount.getProfileImage());
         return saved;
+    }
+
+    // 중복 가입으로 볼 수 있는 것은 uk_oauth_provider 위반 하나뿐이다 — uk_site_users_public_id,
+    // fk_oauth_accounts_user 같은 다른 위반까지 같이 잡으면 원인이 뭉개진다.
+    private boolean isDuplicateOAuthAccount(DuplicateKeyException e) {
+        String message = e.getMostSpecificCause().getMessage();
+        return message != null && message.contains("uk_oauth_provider");
     }
 
     @Override
