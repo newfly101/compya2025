@@ -12,7 +12,7 @@
             created_at AS createdAt,
             updated_at AS updatedAt
         FROM fun_quiz
-        ORDER BY id DESC
+        ORDER BY round DESC
         LIMIT 1
     </select>
 

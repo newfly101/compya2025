@@ -66,7 +66,10 @@ public class QuizAdminServiceImpl implements QuizAdminService {
             // round UNIQUE 제약 (uq_round) 위반 — admin inline error 로 안내
             throw new BaseException(QuizMessages.QUIZ_ROUND_DUPLICATED, HttpStatus.CONFLICT);
         }
-        return quizMapStruct.toResponse(entity);
+        // updated_at 은 DB 가 자동 갱신하므로 등록(:50-51)과 동일하게 재조회 후 응답한다
+        QuizEntity updated = repository.findById(id)
+                .orElseThrow(() -> new BaseException(QuizMessages.QUIZ_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
+        return quizMapStruct.toResponse(updated);
     }
 
     @Override
