@@ -48,11 +48,8 @@ const HomeScreen = () => {
   // 재방문마다 스켈레톤이 깜빡이지 않게 "한 번도 못 받은 상태" 만 로딩으로 본다.
   const firstLoading = loading && !loaded;
 
-  const quizSectionTitle =
-    quiz?.title ??
-    (quiz?.round
-      ? `🎉컴프야 퀴즈 이벤트 ${quiz.round}회 정답`
-      : "컴프야 퀴즈 정답");
+  // 회차가 들어간 제목은 서버가 만들어 준다(QuizMapStruct.toResponse:title). FE 는 재계산하지 않고 그대로 쓴다.
+  const quizSectionTitle = quiz?.title ?? "컴프야 퀴즈 정답";
 
   return (
     <div className={styles.homeWrapper}>
@@ -70,12 +67,14 @@ const HomeScreen = () => {
       {/* ── 최신 쿠폰 ── @@@작업 완료@@@*/}
       <SectionBlock
         title={`최신 쿠폰`}
-        to={ROUTE_META.COUPONS.path}
+        to={!firstLoading && !couponError && activeCoupons.length > 0 ? ROUTE_META.COUPONS.path : undefined}
       >
         {firstLoading ? (
           <Skeleton count={1} height={96} />
         ) : couponError ? (
           <StateBox status="error" onRetry={retry} compact />
+        ) : activeCoupons.length === 0 ? (
+          <StateBox status="empty" message="진행 중인 쿠폰이 없습니다" compact />
         ) : (
           <CouponListHorizontal coupons={activeCoupons} />
         )}
@@ -94,12 +93,14 @@ const HomeScreen = () => {
       {/* ── 진행 중인 이벤트 ── */}
       <SectionBlock
         title={`진행 중인 이벤트`}
-        to={ROUTE_META.EVENTS.path}
+        to={!firstLoading && !eventError && activeEvents.length > 0 ? ROUTE_META.EVENTS.path : undefined}
       >
         {firstLoading ? (
           <Skeleton count={1} height={96} />
         ) : eventError ? (
           <StateBox status="error" onRetry={retry} compact />
+        ) : activeEvents.length === 0 ? (
+          <StateBox status="empty" message="진행 중인 이벤트가 없습니다" compact />
         ) : (
           <EventListHorizontal events={activeEvents} />
         )}
