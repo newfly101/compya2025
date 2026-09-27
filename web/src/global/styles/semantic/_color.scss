@@ -64,7 +64,7 @@
   // 공용 토큰으로 승격 — 2026-09-27 토큰 정리) ──────────────────
   --color-mint: #5eead4; // historyLegend/legendStats/mileage/admin 4곳 중복
   --color-accent-violet-text: #c4b5fd; // historyLegend/legendStats/mileage 3곳 중복
-  --color-chip-on-text: #dcd3ff; // historyLegend/legendStats/mileage/admin 4곳 중복
+  --color-chip-on-text: #dcd3ff; // historyLegend/legendStats/mileage/admin 4곳 중복 (다크)
   // historyLegend 카드 배경(#171422)과 players 스켈레톤 배경(#171622) — 1px 차이라 공용화.
   // players.tokens.scss가 다른 세션 작업 중이라 이번 라운드는 historyLegend 쪽만 이 토큰을
   // 참조하도록 전환하고, 값 자체는 잠긴 players 쪽(#171622)에 맞춘다.
@@ -163,8 +163,11 @@
   // ── Domain Accent ──────────────────────────────────────────
   --color-mint:               #0f766e;
   --color-accent-violet-text: #7326d1;
-  // 칩 채움(brand-dark)은 밝은톤에서도 진한 보라라서 그 위 글자는 밝게 유지한다
-  --color-chip-on-text:       #f5f3ff;
+  // 실제 4개 소비처(historyLegend/legendStats/mileage/admin) 칩 채움은 전부 옅은 알파
+  // 틴트다 — "채움이 진한 보라" 라는 옛 전제가 틀렸다(2026-09-28 교정). 밝은 글자를 얹으면
+  // 1.06~1.11:1 로 사라져 넷 다 로컬에서 진한 보라(#4c1d95)로 재지정해 무력화하고 있었다.
+  // 그 값을 전역으로 승격해 로컬 재지정 4건을 제거한다(각 소비처 대비 8.97~9.43:1).
+  --color-chip-on-text:       #4c1d95;
   --color-skeleton-card-bg:   #eeebf4;
 
   // ── 리터럴 회수분 (2026-09-27) ─────────────────────────────

@@ -86,9 +86,9 @@
   --color-admin-accent-soft: rgba(124, 58, 237, 0.1);
   --color-admin-row-selected-bg: rgba(124, 58, 237, 0.07);
 
-  // 세그먼트/페이지네이션 active 글자 — 채움이 위 accent-soft(옅은 틴트)라
-  // 전역 --color-chip-on-text 의 밝은톤 값(#f5f3ff)을 쓰면 1.06:1 로 사라진다.
-  --color-admin-accent-active-text: #4c1d95; // 틴트 위 9.43:1
+  // 세그먼트/페이지네이션 active 글자 — 전역 --color-chip-on-text 가 이 칩 채움
+  // (accent-soft, 옅은 틴트) 기준으로 교정되어(2026-09-28) 다크 참조만으로 밝은톤도 맞다.
+  // 로컬 재지정 제거.
   --color-admin-accent-active-text-soft: rgba(76, 29, 149, 0.75); // 틴트 위 4.78:1
 
   // 토글 off 트랙 — 흰 손잡이가 3:1 로 읽히는 최소 밝기(그림자 금지 규칙이라 밝기 차로만 낸다)
