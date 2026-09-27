@@ -10,7 +10,7 @@ import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDial
 import AdminToggleSwitch from "@/global/ui/admin/toggle/AdminToggleSwitch.jsx";
 import AdminTag from "@/global/ui/admin/tag/AdminTag.jsx";
 import useTableModal from "@/global/ui/admin/hooks/useTableModal.js";
-import { formatNow } from "@/global/utils/datetime/dateUtils.js";
+import { formatNow, normalizeHHMM, toHHMMSS } from "@/global/utils/datetime/dateUtils.js";
 import "@/global/ui/admin/admin.tokens.scss";
 import {
   requestGetAdminCouponList,
@@ -37,9 +37,9 @@ const EMPTY_FORM = {
   visible: true,
 };
 
-// 시각을 비우면 날짜만 보낸다(서버가 그날 끝으로 채움). 넣으면 그 시각 그대로.
+// 시각을 비우면 날짜만 보낸다(서버가 그날 끝으로 채움). 넣으면 HH:MM 을 저장용 HH:MM:SS 로 변환.
 const toExpireAt = ({ expireDate, expireTime }) =>
-  expireDate ? (expireTime ? `${expireDate} ${expireTime}` : expireDate) : "";
+  expireDate ? (expireTime ? `${expireDate} ${toHHMMSS(expireTime)}` : expireDate) : "";
 
 // v2 필터 두 줄 — "사용"(만료 기준: 전체·사용가능·만료) · "노출"(visible 기준: 전체·노출·숨김).
 // 두 축은 서로 독립이라 각각 따로 필터링한다(예: 만료됐지만 아직 노출 중인 쿠폰도 존재 가능).
@@ -79,8 +79,8 @@ const formOf = (coupon) => {
     title: coupon.title ?? "",
     detail: coupon.detail ?? "",
     expireDate: expireAt.slice(0, 10),
-    // 시각 칸은 초까지 담는다(step="1") — 23:59:59 를 그대로 되돌려 보내 왕복 시 밀리지 않는다.
-    expireTime: expireAt.slice(11, 19),
+    // 화면엔 HH:mm 만 보여준다(초는 저장 시 toHHMMSS 가 다시 붙인다 — 23:59 는 23:59:59, 그 밖엔 :00).
+    expireTime: expireAt.slice(11, 16),
     visible: coupon.visible ?? true,
   };
 };
@@ -410,7 +410,18 @@ export default function AdminCouponScreen() {
           </label>
           <label className={styles.label}>
             만료 시각 (비우면 그날 23:59:59)
-            <input className={styles.input} type="time" step="1" name="expireTime" value={form.expireTime} onChange={handleFormChange} />
+            <input
+              className={styles.input}
+              type="text"
+              inputMode="numeric"
+              maxLength={5}
+              placeholder="23:59"
+              pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+              title="24시간 형식 HH:MM (예: 23:59)"
+              name="expireTime"
+              value={form.expireTime}
+              onChange={(e) => setForm((prev) => ({ ...prev, expireTime: normalizeHHMM(e.target.value) }))}
+            />
           </label>
           <div className={styles.toggleRow}>
             <span>노출 여부</span>

@@ -13,7 +13,7 @@ import AdminSegmented from "@/global/ui/admin/fields/AdminSegmented.jsx";
 import AdminDateRange from "@/global/ui/admin/fields/AdminDateRange.jsx";
 import AdminFilePicker from "@/global/ui/admin/fields/AdminFilePicker.jsx";
 import useTableModal from "@/global/ui/admin/hooks/useTableModal.js";
-import { formatNow } from "@/global/utils/datetime/dateUtils";
+import { formatNow, normalizeHHMM, toHHMMSS } from "@/global/utils/datetime/dateUtils";
 import "@/global/ui/admin/admin.tokens.scss";
 import {
   requestAdminGetAllEventList,
@@ -53,14 +53,14 @@ const EMPTY_FORM = {
 
 // 편집 모달은 원본 시각까지 채운다 — 날짜만 담아 두면 제목만 고쳐 저장해도 서버 기본 시각으로 덮어써졌다.
 // 응답 형식은 "yyyy-MM-dd HH:mm:ss"(EventResponse @JsonFormat) 이라 11~19 가 시각이다.
-// 초까지 담아야(시각 칸 step="1") 23:59:59 를 그대로 되돌려 보내 왕복 시 시각이 밀리지 않는다.
+// 화면엔 HH:mm 만 보여준다(초는 저장 시 toHHMMSS 가 다시 붙인다 — 23:59 는 23:59:59, 그 밖엔 :00).
 const formOf = (event) => ({
   title: event.title ?? "",
   eventType: event.eventType ?? "OFFICIAL",
   startAt: event.startAt?.slice(0, 10) ?? "",
-  startTime: event.startAt?.slice(11, 19) ?? "",
+  startTime: event.startAt?.slice(11, 16) ?? "",
   expireAt: event.expireAt?.slice(0, 10) ?? "",
-  expireTime: event.expireAt?.slice(11, 19) ?? "",
+  expireTime: event.expireAt?.slice(11, 16) ?? "",
   imageUrl: event.imageUrl ?? "",
   externalLink: event.externalLink ?? "",
   visible: event.visible ?? true,
@@ -106,8 +106,8 @@ const VIS_OPTIONS = [
   { value: "hidden", label: "숨김" },
 ];
 
-// 시각이 비면 날짜만 보낸다(서버가 기본 시각을 채움). 시각이 있으면 "yyyy-MM-dd HH:mm:ss" 로 그대로 전달.
-const joinDateTime = (date, time) => (date && time ? `${date} ${time}` : date ?? "");
+// 시각이 비면 날짜만 보낸다(서버가 기본 시각을 채움). 시각이 있으면 HH:MM 을 HH:MM:SS 로 변환해 합친다.
+const joinDateTime = (date, time) => (date && time ? `${date} ${toHHMMSS(time)}` : date ?? "");
 
 const formatPeriod = (startAt, expireAt) => {
   const md = (d) => {
@@ -504,22 +504,30 @@ export default function AdminEventScreen() {
                 편집 시에는 원본 시각이 채워져 있어 그대로 저장하면 시각이 바뀌지 않는다. */}
             <div className={styles.timeRow}>
               <input
-                type="time"
-                step="1"
+                type="text"
+                inputMode="numeric"
+                maxLength={5}
+                placeholder="00:00"
+                pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+                title="24시간 형식 HH:MM (예: 23:59)"
                 className={styles.input}
                 name="startTime"
                 value={form.startTime}
-                onChange={handleFormChange}
+                onChange={(e) => setForm((prev) => ({ ...prev, startTime: normalizeHHMM(e.target.value) }))}
                 aria-label="시작 시각"
               />
               <span className={styles.timeSep}>~</span>
               <input
-                type="time"
-                step="1"
+                type="text"
+                inputMode="numeric"
+                maxLength={5}
+                placeholder="23:59"
+                pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+                title="24시간 형식 HH:MM (예: 23:59)"
                 className={styles.input}
                 name="expireTime"
                 value={form.expireTime}
-                onChange={handleFormChange}
+                onChange={(e) => setForm((prev) => ({ ...prev, expireTime: normalizeHHMM(e.target.value) }))}
                 aria-label="종료 시각"
               />
             </div>
