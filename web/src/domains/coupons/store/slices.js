@@ -4,7 +4,6 @@ import {
   requestAdminInsertNewCoupon,
   requestAdminUpdateCoupon, requestAdminUpdateCouponVisible,
   requestGetAdminCouponList,
-  requestAdminDeleteCoupon,
   requestAdminBulkDeleteCoupons, requestAdminBulkUpdateCouponsVisible,
   requestAdminRefreshCoupons,
 } from "@/domains/coupons/store/admin/thunks.js";
@@ -80,15 +79,6 @@ const couponSlice = createSlice({
         Number(c.id) === Number(updated.id)
           ? { ...c, visible: updated.visible }
           : c
-      );
-    }, "mutate");
-    /* ===============================
-     * 쿠폰 삭제 — 서버는 is_visible=false 로 내린다(행은 남는다). 목록에서 지우면
-     * 숨김 필터로도 못 찾아 같은 코드 재등록 시 409 원인을 알 수 없다.
-     * =============================== */
-    applyAsyncHandlers(builder, requestAdminDeleteCoupon, (state, action) => {
-      state.coupons = state.coupons.map(c =>
-        Number(c.id) === Number(action.payload) ? { ...c, visible: false } : c
       );
     }, "mutate");
     /* ===============================

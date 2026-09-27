@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import {
   fetchAdminCouponList,
   fetchAdminInsertCoupon,
-  fetchAdminUpdateCoupon, fetchAdminUpdateVisible, fetchAdminDeleteCoupon,
+  fetchAdminUpdateCoupon, fetchAdminUpdateVisible,
   fetchAdminBulkDeleteCoupons, fetchAdminBulkUpdateVisible,
   fetchAdminRefreshCoupons,
 } from "@/domains/coupons/store/admin/api.js";
@@ -86,17 +86,6 @@ export const requestAdminUpdateCouponVisible = createAsyncThunk(
       return rejectWithValue(error.message, {
         notify: { success: false, message: "노출 설정을 바꾸지 못했습니다." },
       });
-    }
-  },
-);
-
-export const requestAdminDeleteCoupon = createAsyncThunk(
-  ADMIN_COUPON_ACTIONS.DELETE, async (id, { rejectWithValue }) => {
-    try {
-      await fetchAdminDeleteCoupon(id);
-      return id;
-    } catch (error) {
-      return rejectWithValue(error.message);
     }
   },
 );

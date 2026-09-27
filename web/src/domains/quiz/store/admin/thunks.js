@@ -3,7 +3,6 @@ import {
   fetchAdminQuizAll,
   fetchAdminQuizCreate,
   fetchAdminQuizUpdate,
-  fetchAdminQuizDelete,
   fetchAdminQuizBulkDelete,
 } from "@/domains/quiz/store/admin/api.js";
 import { ADMIN_QUIZ_ACTIONS } from "@/domains/quiz/store/admin/endpoints.js";
@@ -52,18 +51,6 @@ export const requestAdminQuizUpdate = createAsyncThunk(
       return fulfillWithValue(updated, {
         notify: { success: true, message: "퀴즈를 수정했습니다." },
       });
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-export const requestAdminQuizDelete = createAsyncThunk(
-  ADMIN_QUIZ_ACTIONS.DELETE,
-  async (id, { rejectWithValue }) => {
-    try {
-      await fetchAdminQuizDelete(id);
-      return id;
     } catch (error) {
       return rejectWithValue(error.message);
     }

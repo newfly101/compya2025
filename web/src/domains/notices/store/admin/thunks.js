@@ -6,8 +6,6 @@ import {
   fetchAdminInsertNotice,
   fetchAdminUpdateNotice,
   fetchAdminUpdateVisible,
-  fetchAdminUpdatePinned,
-  fetchAdminDeleteNotice,
   fetchAdminBulkDeleteNotices,
   fetchAdminBulkUpdateNoticesVisible,
   fetchAdminRefreshNotices,
@@ -76,33 +74,6 @@ export const requestAdminUpdateNoticeVisible = createAsyncThunk(
       return rejectWithValue(error.message, {
         notify: { success: false, message: "노출 설정을 바꾸지 못했습니다." },
       });
-    }
-  }
-);
-
-export const requestAdminUpdateNoticePinned = createAsyncThunk(
-  ADMIN_NOTICE_ACTIONS.UPDATE_PINNED,
-  async ({ id, pinned }, { rejectWithValue }) => {
-    try {
-      // pinned 토글 응답도 Void(null) — visible 토글과 동일 패턴.
-      await fetchAdminUpdatePinned(id, pinned);
-      return { id, isPinned: pinned };
-    } catch (error) {
-      return rejectWithValue(error.message, {
-        notify: { success: false, message: "고정 설정을 바꾸지 못했습니다." },
-      });
-    }
-  }
-);
-
-export const requestAdminDeleteNotice = createAsyncThunk(
-  ADMIN_NOTICE_ACTIONS.DELETE,
-  async (id, { rejectWithValue }) => {
-    try {
-      await fetchAdminDeleteNotice(id);
-      return id;
-    } catch (error) {
-      return rejectWithValue(error.message);
     }
   }
 );

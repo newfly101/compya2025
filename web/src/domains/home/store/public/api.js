@@ -6,3 +6,9 @@ export const fetchGetHome = async () => {
   const { data } = await API.get(HOME.GET_HOME);
   return data.data;
 };
+
+// 이 엔드포인트만 예외적으로 봉투가 없다 — BE 가 성공·실패 무관하게 204 No Content 를
+// 고정 반환한다(StatisticsController). 그래서 반환값이 없다(authentication fetchLogout 과 동일).
+export const fetchSupportClick = async (target) => {
+  await API.post(HOME.SUPPORT_CLICK, { target });
+};

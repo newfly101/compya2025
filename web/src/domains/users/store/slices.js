@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { applyAsyncHandlers } from "@/app/store/utils/applyAsyncHandlers.js";
 import {
   requestAdminGetUserList,
-  requestAdminGetUserDetail,
   requestAdminPatchUserRole,
   requestAdminPatchUserStatus,
 } from "@/domains/users/store/admin/thunks.js";
@@ -15,15 +14,11 @@ import {
 
 // 칸 이름 규칙: app/store/utils/applyAsyncHandlers.js
 //   loading/error             → 유저 목록 조회 전용
-//   detailLoading/detailError → 단건 상세 조회 전용
 //   mutateLoading/mutateError → 역할·상태 변경 (쓰기)
 const initialState = {
   users: [],
-  selectedUser: null,
   loading: false,
   error: null,
-  detailLoading: false,
-  detailError: null,
   mutateLoading: false,
   mutateError: null,
 };
@@ -37,10 +32,6 @@ const adminUsersSlice = createSlice({
     applyAsyncHandlers(builder, requestAdminGetUserList, (state, action) => {
       state.users = action.payload;
     });
-    /* ── 유저 상세 조회 ─────────────────────────────────────── */
-    applyAsyncHandlers(builder, requestAdminGetUserDetail, (state, action) => {
-      state.selectedUser = action.payload;
-    }, "detail");
     /* ── 유저 역할 변경 ─────────────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminPatchUserRole, (state, action) => {
       const { publicId, userRole } = action.payload;

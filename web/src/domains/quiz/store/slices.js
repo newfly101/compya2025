@@ -4,22 +4,17 @@ import {
   requestAdminQuizAll,
   requestAdminQuizCreate,
   requestAdminQuizUpdate,
-  requestAdminQuizDelete,
   requestAdminQuizBulkDelete,
 } from "@/domains/quiz/store/admin/thunks.js";
-import { requestLatestQuizAnswer } from "@/domains/quiz/store/public/thunks.js";
 
 // 칸 이름 규칙: app/store/utils/applyAsyncHandlers.js
 //   loading/error             → 어드민 목록 조회 전용
-//   publicLoading/publicError → 공개 최신 정답 조회 전용
-//   mutateLoading/mutateError → 등록·수정·삭제·일괄 (쓰기)
+//   mutateLoading/mutateError → 등록·수정·일괄삭제 (쓰기)
+// 공개 화면은 홈(state.home.quiz)이 /home 응답으로 퀴즈를 받아 쓴다 — 이 슬라이스에 공개 칸은 없다.
 const initialState = {
   quizAnswers: [],
-  latest: null,
   loading: false,
   error: null,
-  publicLoading: false,
-  publicError: null,
   mutateLoading: false,
   mutateError: null,
 };
@@ -29,10 +24,6 @@ const quizSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    applyAsyncHandlers(builder, requestLatestQuizAnswer, (state, action) => {
-      state.latest = action.payload;
-    }, "public");
-
     applyAsyncHandlers(builder, requestAdminQuizAll, (state, action) => {
       state.quizAnswers = action.payload;
     });
@@ -47,10 +38,6 @@ const quizSlice = createSlice({
       if (index !== -1) {
         state.quizAnswers[index] = { ...state.quizAnswers[index], ...updated };
       }
-    }, "mutate");
-
-    applyAsyncHandlers(builder, requestAdminQuizDelete, (state, action) => {
-      state.quizAnswers = state.quizAnswers.filter((q) => Number(q.id) !== Number(action.payload));
     }, "mutate");
 
     /* ===============================

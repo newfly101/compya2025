@@ -1,10 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { applyAsyncHandlers } from "@/app/store/utils/applyAsyncHandlers.js";
 import {
-  requestAdminGetExEventList,
   requestAdminInsertNewExEvent,
   requestAdminUpdateExEvent, requestAdminUpdateExEventVisible,
-  requestAdminGetAllEventList, requestAdminDeleteEvent,
+  requestAdminGetAllEventList,
   requestAdminBulkDeleteEvents, requestAdminBulkUpdateEventsVisible,
 } from "@/domains/events/store/admin/thunks.js";
 import { requestGetExternalEventList } from "@/domains/events/store/public/thunks.js";
@@ -42,9 +41,6 @@ const eventsSlice = createSlice({
       state.publicEvents = action.payload;
     }, "public");
 
-    applyAsyncHandlers(builder, requestAdminGetExEventList, (state, action) => {
-      state.events = action.payload;
-    });
     /* ===============================
      * 이벤트 신규 생성
      * =============================== */
@@ -87,12 +83,6 @@ const eventsSlice = createSlice({
       state.page = page;
       state.hasMore = action.payload.length === size;
     });
-    /* ===============================
-     * 이벤트 삭제
-     * =============================== */
-    applyAsyncHandlers(builder, requestAdminDeleteEvent, (state, action) => {
-      state.events = state.events.filter(e => Number(e.id) !== Number(action.payload));
-    }, "mutate");
     /* ===============================
      * 이벤트 일괄 삭제 (v2) — successIds 만 제거, failedIds 는 화면에 남는다
      * =============================== */

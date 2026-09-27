@@ -22,10 +22,6 @@ export const fetchAdminUpdateVisible = async (id, visible) => {
   const { data } = await API.patch(`${ADMIN_COUPONS.UPDATE_COUPON_VISIBLE(id)}`, { visible });
   return data.data;
 };
-export const fetchAdminDeleteCoupon = async (id) => {
-  const { data } = await API.delete(`${ADMIN_COUPONS.DELETE_COUPON(id)}`);
-  return data.data;
-};
 
 // 일괄 삭제·숨김 — BE 계약: DELETE .../bulk { ids: [] } / PATCH .../bulk/visible { ids: [], visible }.
 // 응답 payload 는 { successIds, failedIds } (BulkOperationResponse) — 부분 실패를 담고 있다.

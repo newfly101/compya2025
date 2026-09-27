@@ -7,8 +7,6 @@ import {
   requestAdminInsertNotice,
   requestAdminUpdateNotice,
   requestAdminUpdateNoticeVisible,
-  requestAdminUpdateNoticePinned,
-  requestAdminDeleteNotice,
   requestAdminBulkDeleteNotices,
   requestAdminBulkUpdateNoticesVisible,
   requestAdminRefreshNotices,
@@ -33,7 +31,7 @@ const initialState = {
 
   contentError:  null,    // 공개 상세 본문(requestGetNoticeDetail) 조회 실패 — 제목/날짜는 이미 있어 무음으로 넘어가던 것을 화면이 구분하는 데 쓴다
 
-  mutateLoading: false,   // 등록·수정·노출변경·고정·삭제·일괄 (쓰기) 전용
+  mutateLoading: false,   // 등록·수정·노출변경·일괄 (쓰기) 전용
   mutateError:   null,
 };
 
@@ -43,22 +41,12 @@ const noticeSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     /* ── 공개 목록 조회 (source 기준 분리) ─────────────────────
-       applyAsyncHandlers 는 loading/error 필드명이 고정이라 공개 전용 필드를 쓰려면 직접 다룬다. */
-    builder
-      .addCase(requestGetNoticeList.pending, (state) => {
-        state.publicLoading = true;
-        state.publicError   = null;
-      })
-      .addCase(requestGetNoticeList.fulfilled, (state, action) => {
-        state.publicLoading     = false;
-        state.publicSiteNotices = action.payload.siteNotices;
-        state.officialNotices   = action.payload.officialNotices;
-        state.publicLoaded      = true;
-      })
-      .addCase(requestGetNoticeList.rejected, (state, action) => {
-        state.publicLoading = false;
-        state.publicError   = action.payload ?? "잠시 후 다시 시도해 주세요.";
-      });
+       "public" scope = publicLoading/publicError — 공개 전용 칸도 규약이 이미 갖고 있다. */
+    applyAsyncHandlers(builder, requestGetNoticeList, (state, action) => {
+      state.publicSiteNotices = action.payload.siteNotices;
+      state.officialNotices   = action.payload.officialNotices;
+      state.publicLoaded      = true;
+    }, "public");
 
     /* ── 공개 상세 본문 채우기 ─────────────────────────────────
        목록 SQL 이 본문을 내려주지 않아 상세 화면에서 한 건만 더 받아 합친다.
@@ -114,19 +102,6 @@ const noticeSlice = createSlice({
       state.siteNotices = state.siteNotices.map(n =>
         Number(n.id) === Number(id) ? { ...n, isVisible } : n
       );
-    }, "mutate");
-
-    /* ── pinned(고정) 변경 ────────────────────────────────────── */
-    applyAsyncHandlers(builder, requestAdminUpdateNoticePinned, (state, action) => {
-      const { id, isPinned } = action.payload;
-      state.siteNotices = state.siteNotices.map(n =>
-        Number(n.id) === Number(id) ? { ...n, isPinned } : n
-      );
-    }, "mutate");
-
-    /* ── 삭제 ─────────────────────────────────────────────────── */
-    applyAsyncHandlers(builder, requestAdminDeleteNotice, (state, action) => {
-      state.siteNotices = state.siteNotices.filter(n => Number(n.id) !== Number(action.payload));
     }, "mutate");
 
     /* ── 일괄 삭제 (v2) — 서버가 처리한 successIds 만 반영한다 ── */

@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { HOME_ACTIONS } from "@/domains/home/store/public/endpoints.js";
-import { fetchGetHome } from "@/domains/home/store/public/api.js";
+import { fetchGetHome, fetchSupportClick } from "@/domains/home/store/public/api.js";
 
 const byIdDesc = (a, b) => b.id - a.id;
 
@@ -29,4 +29,17 @@ export const requestGetHome = createAsyncThunk(
   },
   // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
   { condition: (_, { getState }) => !getState().home.loading },
+);
+
+// 후원 버튼 클릭 기록. 화면에 담을 상태가 없어 슬라이스 리듀서를 두지 않는다 —
+// fire-and-forget 통계라 실패해도 송금 흐름을 막지 않는다(실패는 rejectWithValue 로 삼킨다).
+export const requestSupportClick = createAsyncThunk(
+  HOME_ACTIONS.SUPPORT_CLICK,
+  async (target, { rejectWithValue }) => {
+    try {
+      await fetchSupportClick(target);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  },
 );
