@@ -5,7 +5,8 @@ import { formatNow } from "@/global/utils/datetime/dateUtils.js";
 
 export const useCouponList = () => {
   const dispatch = useDispatch();
-  const couponList = useSelector(state => state.coupon.coupons) ?? [];
+  // 공개 목록 전용 칸 — 관리자 목록(state.coupon.coupons)에는 숨김 쿠폰이 들어 있다.
+  const couponList = useSelector(state => state.coupon.publicCoupons) ?? [];
   const loading = useSelector(state => state.coupon.loading);
   const error = useSelector(state => state.coupon.error);
 

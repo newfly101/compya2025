@@ -27,8 +27,8 @@ export const fetchAdminDeleteCoupon = async (id) => {
   return data.data;
 };
 
-// v2 일괄 삭제·숨김 — BE 계약: DELETE .../bulk { ids: [] } / PATCH .../bulk/visible { ids: [], visible }.
-// 엔드포인트가 아직 없어 연결 시 404 가 나지만, 배선 자체는 완료해 둔다.
+// 일괄 삭제·숨김 — BE 계약: DELETE .../bulk { ids: [] } / PATCH .../bulk/visible { ids: [], visible }.
+// 응답 payload 는 { successIds, failedIds } (BulkOperationResponse) — 부분 실패를 담고 있다.
 export const fetchAdminBulkDeleteCoupons = async (ids) => {
   const { data } = await API.delete(`${ADMIN_COUPONS.BULK_DELETE_COUPONS}`, { data: { ids } });
   return data.data;

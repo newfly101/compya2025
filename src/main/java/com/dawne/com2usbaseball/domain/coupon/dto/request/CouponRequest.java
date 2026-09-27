@@ -11,7 +11,9 @@ public record CouponRequest(
         @Size(max = 100) String couponCode,
         @Size(max = 255) String title,
         @Size(max = 500) String detail,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+        // 초는 선택 — 어드민이 만료 시각을 비우면 "그날 끝"(23:59:59)을 보내고, 시각을 지정하면
+        // 분 단위(HH:mm)로 보낸다. 응답(CouponResponse)은 분 단위 포맷이라 초는 표시되지 않는다.
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm[:ss]")
         LocalDateTime expireAt,
         Boolean visible
 ) { }

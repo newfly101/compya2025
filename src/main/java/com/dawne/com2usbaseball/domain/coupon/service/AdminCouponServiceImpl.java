@@ -12,7 +12,7 @@ import com.dawne.com2usbaseball.domain.coupon.repository.CouponAdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,8 +59,8 @@ public class AdminCouponServiceImpl implements AdminCouponService {
                     .orElseThrow(() -> new BaseException(CouponMessages.COUPON_CREATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR));
 
             return couponMapStruct.toResponse(saved);
-        } catch (DataIntegrityViolationException e) {
-            throw new BaseException(CouponMessages.COUPON_CODE_DUPLICATED, HttpStatus.CONFLICT);
+        } catch (DuplicateKeyException e) {
+            throw toCouponCodeConflict(e);
         }
     }
 
@@ -73,8 +73,12 @@ public class AdminCouponServiceImpl implements AdminCouponService {
 
         couponMapStruct.updateEntity(request, coupon);
 
-        if (!repository.updateCoupon(coupon)) {
-            throw new BaseException(CouponMessages.COUPON_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+        try {
+            if (!repository.updateCoupon(coupon)) {
+                throw new BaseException(CouponMessages.COUPON_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        } catch (DuplicateKeyException e) {
+            throw toCouponCodeConflict(e);
         }
         return couponMapStruct.toResponse(coupon);
     }
@@ -97,7 +101,7 @@ public class AdminCouponServiceImpl implements AdminCouponService {
         repository.deleteCoupon(id);
     }
 
-    // 일괄 삭제 — 존재하는 id만 처리(soft delete), 존재하지 않는 id는 실패 목록으로 반환(전체 롤백 X)
+    // 일괄 삭제 — 존재하는 id만 노출 끄기(is_visible=false), 존재하지 않는 id는 실패 목록으로 반환(전체 롤백 X)
     @Override
     @Transactional
     @CacheEvictAfterCommit(cacheName = "coupons", keys = {"admin", "public"})
@@ -133,6 +137,17 @@ public class AdminCouponServiceImpl implements AdminCouponService {
             repository.updateCouponsVisibleByIds(existingIds, visible);
         }
         return BulkOperationResponse.of(existingIds, failedIds);
+    }
+
+    // 중복으로 볼 수 있는 것은 coupon_code UNIQUE 위반 하나뿐이다 — title/detail 길이 초과나
+    // NOT NULL 위반까지 같이 409 "코드 중복" 으로 바꾸면 관리자가 원인과 무관한 메시지를 보고
+    // 코드만 바꿔가며 재시도한다. 인라인 UNIQUE(이름 없음)라 MariaDB 가 인덱스명을 컬럼명으로 부여한다.
+    private RuntimeException toCouponCodeConflict(DuplicateKeyException e) {
+        String message = e.getMostSpecificCause().getMessage();
+        if (message == null || !message.contains("coupon_code")) {
+            return e; // 다른 제약 위반은 원래 예외를 그대로 올린다
+        }
+        return new BaseException(CouponMessages.COUPON_CODE_DUPLICATED, HttpStatus.CONFLICT);
     }
 
     private List<Long> normalizeIds(List<Long> ids) {
