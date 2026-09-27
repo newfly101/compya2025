@@ -13,7 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 조회 전용. 캐시를 비우는 경로가 없어 SQL 로 값을 고쳤으면 서버를 재시작해야 한다.
+ * 조회 전용. 캐시(historyRound) 무효화 경로는 있다 — 어드민 "캐시 동기화" 화면에서
+ * {@code POST /api/admin/cache-sync/historyRound/sync}(또는 sync-all)를 눌러야 비워지고
+ * 곧바로 이 서비스로 다시 채워진다({@code CacheSyncServiceImpl}). TTL 이 없어(spring.cache.type=simple)
+ * SQL 로 라운드·로스터를 직접 고쳤다면 이 버튼이 갱신의 유일한 수단이다 — 누르지 않으면 옛 값이 영구히 남는다.
  */
 @Service
 @RequiredArgsConstructor
