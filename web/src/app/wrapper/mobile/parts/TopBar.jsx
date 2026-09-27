@@ -19,7 +19,12 @@ const TopBar = () => {
       onClick={logout}
       aria-label="로그아웃"
     >
-      <span className={styles.logoutIcon}>⏻</span>
+      {/* 전원 기호 U+23FB 는 기본 폰트 대부분에 글리프가 없어 두부(네모) 로 깨진다 — 인라인 SVG 로 고정 */}
+      <svg className={styles.logoutIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+        <path d="M12 3v9" />
+        <path d="M6.3 7A8 8 0 1 0 17.7 7" />
+      </svg>
     </button>
   ) : (
     <button type="button" className={styles.loginBtn} onClick={login}>N 네이버 로그인</button>

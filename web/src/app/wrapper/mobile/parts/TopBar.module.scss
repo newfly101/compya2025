@@ -132,6 +132,6 @@ $color-naver-font: $color-white-100;
 }
 
 .logoutIcon {
-  @include text-page-title;
-  color: var(--color-text-primary);
+  width: rem(18);
+  height: rem(18);
 }
