@@ -5,7 +5,7 @@ import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
 import AdminPagination from "@/global/ui/admin/pagination/AdminPagination.jsx";
 import useAdminPagination from "@/global/ui/admin/pagination/useAdminPagination.js";
 import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
-import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
 import AdminToggleSwitch from "@/global/ui/admin/toggle/AdminToggleSwitch.jsx";
 import AdminTag from "@/global/ui/admin/tag/AdminTag.jsx";
@@ -363,16 +363,16 @@ export default function AdminCouponScreen() {
         </div>
       )}
 
-      {loading && <AdminStateBox status="loading" />}
+      {loading && <StateBox status="loading" message="불러오는 중..." />}
       {!loading && error && (
-        <AdminStateBox
+        <StateBox
           status="error"
           message={error}
           onRetry={() => dispatch(requestGetAdminCouponList())}
         />
       )}
       {!loading && !error && filtered.length === 0 && (
-        <AdminStateBox status="empty" message="쿠폰이 없습니다." />
+        <StateBox status="empty" message="쿠폰이 없습니다." />
       )}
       {!loading && !error && filtered.length > 0 && (
         <>

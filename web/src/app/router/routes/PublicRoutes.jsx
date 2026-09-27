@@ -1,6 +1,6 @@
 import React, { lazy } from "react";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
-import AuthCallback from "@/domains/authentication/callback/AuthCallBack.jsx";
+const AuthCallback = lazy(() => import("@/domains/authentication/callback/AuthCallBack.jsx"));
 const HomePage = lazy(() => import("@/domains/home/components/HomeScreen.jsx"));
 const CouponPage = lazy(() => import("@/domains/coupons/mobile/CouponScreen.jsx"));
 const EventPage = lazy(() => import("@/domains/events/mobile/EventScreen.jsx"));

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { Avatar, pickProfileImageSrc } from "@/global/ui/avatar";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import {
   requestGetMyInfo,
   requestUpdateMyNickname,
@@ -107,9 +108,7 @@ export default function MyPageScreen() {
   if (loading && !profile) {
     return (
       <div className={styles.page}>
-        <div className={styles.stateBox}>
-          <p className={styles.stateText}>불러오는 중...</p>
-        </div>
+        <StateBox status="loading" message="불러오는 중..." />
       </div>
     );
   }
@@ -118,16 +117,7 @@ export default function MyPageScreen() {
   if (error && !profile) {
     return (
       <div className={styles.page}>
-        <div className={styles.stateBox}>
-          <p className={styles.stateError}>{error}</p>
-          <button
-            type="button"
-            className={styles.retryBtn}
-            onClick={() => dispatch(requestGetMyInfo())}
-          >
-            다시 시도
-          </button>
-        </div>
+        <StateBox status="error" message={error} onRetry={() => dispatch(requestGetMyInfo())} />
       </div>
     );
   }
@@ -136,9 +126,7 @@ export default function MyPageScreen() {
   if (!profile) {
     return (
       <div className={styles.page}>
-        <div className={styles.stateBox}>
-          <p className={styles.stateText}>회원 정보를 찾을 수 없습니다.</p>
-        </div>
+        <StateBox status="empty" message="회원 정보를 찾을 수 없습니다." />
       </div>
     );
   }

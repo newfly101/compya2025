@@ -5,7 +5,7 @@ import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
 import AdminPagination from "@/global/ui/admin/pagination/AdminPagination.jsx";
 import useAdminPagination from "@/global/ui/admin/pagination/useAdminPagination.js";
 import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
-import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
 import AdminToggleSwitch from "@/global/ui/admin/toggle/AdminToggleSwitch.jsx";
 import AdminTag from "@/global/ui/admin/tag/AdminTag.jsx";
@@ -15,6 +15,7 @@ import AdminFilePicker from "@/global/ui/admin/fields/AdminFilePicker.jsx";
 import useTableModal from "@/global/ui/admin/hooks/useTableModal.js";
 import { formatNow, normalizeHHMM, toHHMMSS } from "@/global/utils/datetime/dateUtils";
 import "@/global/ui/admin/admin.tokens.scss";
+import { extractUploadedUrl } from "@/infra/api/uploads/index.js";
 import {
   requestAdminGetAllEventList,
   requestAdminInsertNewExEvent,
@@ -65,16 +66,6 @@ const formOf = (event) => ({
   externalLink: event.externalLink ?? "",
   visible: event.visible ?? true,
 });
-
-// 업로드 응답 형태가 raw string / { url, fileName } / 래핑된 { data: {...} } 중 무엇이 오든 URL 을 뽑아낸다.
-const extractUploadedUrl = (result) => {
-  if (typeof result === "string") return result;
-  if (result && typeof result === "object") {
-    if (typeof result.url === "string") return result.url;
-    if (result.data) return extractUploadedUrl(result.data);
-  }
-  return null;
-};
 
 // v2 "진행" 필터: 전체 · 진행중 · 종료. "종료" 카운트 API 가 없어 클라이언트에서 expireAt 비교로 처리한다.
 // 기준은 공개 화면(useEventList)과 같은 KST 초 단위다 — 날짜 단위 UTC 비교였을 때는 오전에 끝난
@@ -425,16 +416,16 @@ export default function AdminEventScreen() {
         </div>
       )}
 
-      {loading && events.length === 0 && <AdminStateBox status="loading" />}
+      {loading && events.length === 0 && <StateBox status="loading" message="불러오는 중..." />}
       {!loading && error && events.length === 0 && (
-        <AdminStateBox
+        <StateBox
           status="error"
           message={error}
           onRetry={() => dispatch(requestAdminGetAllEventList({ page: 0, size: EVENTS_FETCH_ALL_SIZE }))}
         />
       )}
       {!loading && !(error && events.length === 0) && filtered.length === 0 && (
-        <AdminStateBox status="empty" message="이벤트가 없습니다." />
+        <StateBox status="empty" message="이벤트가 없습니다." />
       )}
       {!(loading && events.length === 0) && !(error && events.length === 0) && filtered.length > 0 && (
         <>
