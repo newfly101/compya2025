@@ -334,6 +334,8 @@
 
   .glyph {
     color: var(--color-mileage-accent-text);
+    // 글자 스케일(최대 28px) 예외 — 본문이 아니라 화면에 하나뿐인 큰 기호다.
+    // 규칙 위반 아니니 스케일에 맞춰 내리지 마라.
     font-size: 44px;
     line-height: 1;
     text-shadow: 0 0 22px var(--color-mileage-glow);
