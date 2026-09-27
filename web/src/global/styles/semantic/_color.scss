@@ -156,7 +156,9 @@
 
   // ── Table ──────────────────────────────────────────────────
   --color-table-head-bg:   #f0edf6;
-  --color-table-row-hover: #f4f1fa;
+  // 밝은톤 바닥(--color-bg-deepest #f2f0f7)과 대비가 거의 없어(1.01:1) hover 가 안 보이던
+  // 결함 수정(2026-09-27) — 바닥 대비 1.12:1(다크 바닥/hover 차와 동급)로 어둡게.
+  --color-table-row-hover: #e6e4eb;
 
   // ── Domain Accent ──────────────────────────────────────────
   --color-mint:               #0f766e;
@@ -168,7 +170,8 @@
   // ── 리터럴 회수분 (2026-09-27) ─────────────────────────────
   --color-text-strong:    #1c1626; // 흰 면 17.9:1 / 틴트 면 15.1:1
   --color-media-on-text:  rgba(255, 255, 255, 0.92); // 사진 위 막 — 테마 무관, 다크와 같은 값
-  --color-row-hover-soft: #f4f1fa; // 흰색 덧칠은 밝은 면에서 안 보인다 → 연회색 면으로
+  // --color-table-row-hover 와 같은 결함(바닥과 거의 같은 색)이라 같은 값으로 어둡게 맞춘다.
+  --color-row-hover-soft: #e6e4eb;
   --color-overlay-strong: rgba(24, 16, 38, 0.5); // 막은 밝은톤에서도 어둡다(뒤 화면을 눌러야 하므로). --color-overlay(0.45)보다 한 단계 짙게
   --color-brand-alpha-20: rgba(109, 40, 217, 0.1);  // 칩 면. 그 위 --color-brand 글자 6.08:1
   --color-brand-alpha-50: rgba(109, 40, 217, 0.65); // 3px 액센트 선. 흰 면 3.45:1 (0.5 는 2.50:1 미달이라 올렸다)

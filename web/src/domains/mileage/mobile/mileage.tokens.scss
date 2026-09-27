@@ -65,6 +65,8 @@
   --color-mileage-glow: rgba(109, 74, 211, 0.35);
   --color-mileage-glow-done: rgba(13, 148, 136, 0.35);
 
-  --color-mileage-list-row-hover: #f1eefb;
+  // 밝은톤 바닥(--color-bg-deepest #f2f0f7)과 대비가 거의 없어(1.01:1) hover 가 안 보이던
+  // 결함 수정(2026-09-27) — 바닥 대비 1.12:1(다크 바닥/hover 차와 동급)로 어둡게.
+  --color-mileage-list-row-hover: #e6e3f0;
   --color-mileage-list-disabled: #8b8598; // 흰 면 3.56:1 — 비활성이라 본문 기준은 일부러 넘기지 않는다
 }
