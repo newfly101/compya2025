@@ -6,14 +6,8 @@
 // ============================================================
 
 // ── badge-specific color tokens ───────────────────────────────
-$pinned-purple-bg:    rgba(167, 139, 250, 0.18);
-$pinned-purple-border:#a78bfa;
-$pinned-blue-bg:      rgba(96, 165, 250, 0.18);
-$pinned-blue-border:  #60a5fa;
 $pinned-gray-bg:      rgba(156, 163, 175, 0.18);
 $pinned-gray-border:  #9ca3af;
-$pinned-emerald-bg:   rgba(52, 211, 153, 0.18);
-$pinned-emerald-border:#34d399;
 $pinned-yellow-bg:    rgba(254, 204, 26, 0.18);
 $pinned-yellow-border:#fecc1a;
 $pinned-red-bg:       rgba(248, 113, 113, 0.18);
@@ -39,10 +33,7 @@ $pinned-hot-border:   #ef4444;
 }
 
 // ── Variants ──────────────────────────────────────────────────
-.update    { background-color: $pinned-purple-bg;  border-color: $pinned-purple-border;  color: $pinned-purple-border; }
-.patch     { background-color: $pinned-blue-bg;    border-color: $pinned-blue-border;    color: $pinned-blue-border; }
 .cafe      { background-color: $pinned-gray-bg;    border-color: $pinned-gray-border;    color: $pinned-gray-border; }
-.tip       { background-color: $pinned-emerald-bg; border-color: $pinned-emerald-border; color: $pinned-emerald-border; }
 .important { background-color: $pinned-yellow-bg;  border-color: $pinned-yellow-border;  color: $pinned-yellow-border; }
 .mustread  { background-color: $pinned-red-bg;     border-color: $pinned-red-border;     color: $pinned-red-border; }
 

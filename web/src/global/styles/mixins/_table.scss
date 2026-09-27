@@ -3,6 +3,8 @@
 // TABLE / LIST PATTERNS
 // ============================================================
 
+@use '../variables/zindex' as *;
+
 // ── 리스트 행 기본 ────────────────────────────────────────────
 @mixin list-row($height: 60px) {
   display: flex;
@@ -102,7 +104,7 @@
 // 구조는 해당 없다). 헤더/본문 배경이 서로 달라 둘로 나눈다.
 @mixin data-table-sticky-col($bg: var(--color-bg-deepest)) {
   position: sticky;
-  z-index: 10;
+  z-index: $z-above;
   background: $bg;
 }
 

@@ -5,13 +5,7 @@
 // ============================================================
 
 // ── badge-specific color tokens ───────────────────────────────
-$status-new-color:     #16a34a;
-$status-hot-color:     #ff3b3b;
 $status-ended-color:   #2a2e3a;
-$status-pick-color:    #2563eb;
-$status-limited-color: #f59e0b;
-$status-event-color:   #ec4899;
-$status-reward-color:  #14b8a6;
 
 // ── Base ──────────────────────────────────────────────────────
 .badge {
@@ -29,11 +23,5 @@ $status-reward-color:  #14b8a6;
 
 // ── Variants ──────────────────────────────────────────────────
 .active  { background-color: var(--color-brand-violet); }
-.new     { background-color: $status-new-color; }
-.hot     { background-color: $status-hot-color; }
 .ended,
 .expired { background-color: $status-ended-color; }  // D2=a (2026-05-31): expired = ended alias
-.pick    { background-color: $status-pick-color; }
-.limited { background-color: $status-limited-color; }
-.event   { background-color: $status-event-color; }
-.reward  { background-color: $status-reward-color; }

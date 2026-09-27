@@ -8,7 +8,7 @@
 .toolbar {
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: $z-sticky;
   display: flex;
   gap: 2px;
   padding: $space-2 $space-3;
