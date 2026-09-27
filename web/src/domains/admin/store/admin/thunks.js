@@ -14,7 +14,9 @@ export const requestCacheSyncTargets = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
+  // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
+  { condition: (_, { getState }) => !getState().cacheSync.loading },
 );
 
 // 단건 동기화 — 실패해도 어떤 대상(id)이 실패했는지 알아야 그 줄에만 이유를 보여줄 수 있다.

@@ -7,7 +7,7 @@ export const requestGetSniperTargets = createAsyncThunk(
   MILEAGE_SNIPER_ACTIONS.GET_TARGET_LIST,
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await fetchGetSniperTargets();
+      const data = await fetchGetSniperTargets();
       return data ?? [];
     } catch (error) {
       return rejectWithValue(error.message);

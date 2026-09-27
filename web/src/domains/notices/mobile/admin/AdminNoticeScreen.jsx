@@ -66,6 +66,7 @@ export default function AdminNoticeScreen() {
   const [sortAsc, setSortAsc] = useState(false); // 기본: 등록일 최신순
   const [selectedIds, setSelectedIds] = useState(() => new Set());
   const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
+  const [bulkNotice, setBulkNotice] = useState(null);
 
   useEffect(() => {
     dispatch(requestAdminGetNoticeList());
@@ -126,16 +127,40 @@ export default function AdminNoticeScreen() {
     setBulkDeleteConfirmOpen(true);
   };
 
-  const confirmBulkDelete = () => {
-    dispatch(requestAdminBulkDeleteNotices([...selectedIds]));
-    setSelectedIds(new Set());
-    setBulkDeleteConfirmOpen(false);
+  // 서버는 처리 못한 id 를 failedIds 로 분리해 돌려주고 리듀서는 successIds 만 목록에서
+  // 반영한다 — 그래서 실패한 공지는 목록에 그냥 남는다. 알리지 않으면 관리자는 전부
+  // 처리된 줄 안다(쿠폰·이벤트·퀴즈 화면과 동일 패턴).
+  const noticeBulkResult = ({ successIds, failedIds }, doneLabel) => {
+    if (failedIds.length === 0) return;
+    setBulkNotice(
+      `${successIds.length}개를 ${doneLabel}. ${failedIds.length}개는 이미 없는 공지라 처리하지 못했습니다 — 목록을 새로 불러오세요.`,
+    );
   };
 
-  const handleBulkHide = () => {
-    if (selectedIds.size === 0) return;
-    dispatch(requestAdminBulkUpdateNoticesVisible({ ids: [...selectedIds], visible: false }));
+  // .unwrap() 없이 dispatch 만 하면 실패해도 선택만 조용히 풀리고 아무 표시가 없다.
+  const confirmBulkDelete = async () => {
+    const ids = [...selectedIds];
     setSelectedIds(new Set());
+    setBulkDeleteConfirmOpen(false);
+    try {
+      noticeBulkResult(await dispatch(requestAdminBulkDeleteNotices(ids)).unwrap(), "삭제했습니다");
+    } catch (err) {
+      setBulkNotice(typeof err === "string" ? err : "일괄 삭제에 실패했습니다.");
+    }
+  };
+
+  const handleBulkHide = async () => {
+    if (selectedIds.size === 0) return;
+    const ids = [...selectedIds];
+    setSelectedIds(new Set());
+    try {
+      const result = await dispatch(
+        requestAdminBulkUpdateNoticesVisible({ ids, visible: false }),
+      ).unwrap();
+      noticeBulkResult(result, "숨겼습니다");
+    } catch (err) {
+      setBulkNotice(typeof err === "string" ? err : "일괄 숨김 처리에 실패했습니다.");
+    }
   };
 
   const handleToggleVisible = (n, next) => {
@@ -232,6 +257,15 @@ export default function AdminNoticeScreen() {
         onRefresh={handleRefresh}
         refreshing={loading}
       />
+
+      {bulkNotice && (
+        <div className={styles.bulkNotice}>
+          <span>{bulkNotice}</span>
+          <button type="button" onClick={() => setBulkNotice(null)} aria-label="닫기">
+            ×
+          </button>
+        </div>
+      )}
 
       {loading && <AdminStateBox status="loading" />}
       {!loading && error && (

@@ -15,7 +15,9 @@ export const requestGetMyInfo = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
+  // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
+  { condition: (_, { getState }) => !getState().myPage.loading },
 );
 
 // nickname: string — trim/길이 검증은 화면(폼)에서 먼저 하고, 여기서는 그대로 전달한다.

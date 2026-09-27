@@ -25,8 +25,14 @@ const initialState = {
   publicError:   null,
 
   siteNotices: [],        // 어드민 목록(숨긴 공지 포함)
-  loading: false,
+  loading: false,         // 어드민 목록 조회 전용
   error:   null,
+
+  detailLoading: false,   // 어드민 단건 조회(글쓰기 화면 새로고침 대비) 전용
+  detailError:   null,
+
+  mutateLoading: false,   // 등록·수정·노출변경·고정·삭제·일괄 (쓰기) 전용
+  mutateError:   null,
 };
 
 const noticeSlice = createSlice({
@@ -78,19 +84,19 @@ const noticeSlice = createSlice({
       const idx = state.siteNotices.findIndex(n => n.id === notice.id);
       if (idx !== -1) state.siteNotices[idx] = { ...state.siteNotices[idx], ...notice };
       else state.siteNotices.unshift(notice);
-    });
+    }, "detail");
 
     /* ── 신규 등록 ────────────────────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminInsertNotice, (state, action) => {
       state.siteNotices.unshift(action.payload);
-    });
+    }, "mutate");
 
     /* ── 수정 ─────────────────────────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminUpdateNotice, (state, action) => {
       const updated = action.payload;
       const idx = state.siteNotices.findIndex(n => n.id === updated.id);
       if (idx !== -1) state.siteNotices[idx] = { ...state.siteNotices[idx], ...updated };
-    });
+    }, "mutate");
 
     /* ── visible 변경 ─────────────────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminUpdateNoticeVisible, (state, action) => {
@@ -98,7 +104,7 @@ const noticeSlice = createSlice({
       state.siteNotices = state.siteNotices.map(n =>
         Number(n.id) === Number(id) ? { ...n, isVisible } : n
       );
-    });
+    }, "mutate");
 
     /* ── pinned(고정) 변경 ────────────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminUpdateNoticePinned, (state, action) => {
@@ -106,27 +112,27 @@ const noticeSlice = createSlice({
       state.siteNotices = state.siteNotices.map(n =>
         Number(n.id) === Number(id) ? { ...n, isPinned } : n
       );
-    });
+    }, "mutate");
 
     /* ── 삭제 ─────────────────────────────────────────────────── */
     applyAsyncHandlers(builder, requestAdminDeleteNotice, (state, action) => {
       state.siteNotices = state.siteNotices.filter(n => Number(n.id) !== Number(action.payload));
-    });
+    }, "mutate");
 
-    /* ── 일괄 삭제 (v2) ───────────────────────────────────────── */
+    /* ── 일괄 삭제 (v2) — 서버가 처리한 successIds 만 반영한다 ── */
     applyAsyncHandlers(builder, requestAdminBulkDeleteNotices, (state, action) => {
-      const ids = new Set(action.payload.map(Number));
+      const ids = new Set(action.payload.successIds);
       state.siteNotices = state.siteNotices.filter(n => !ids.has(Number(n.id)));
-    });
+    }, "mutate");
 
-    /* ── 일괄 노출 변경 (v2) ──────────────────────────────────── */
+    /* ── 일괄 노출 변경 (v2) — 위와 동일하게 successIds 만 반영 ── */
     applyAsyncHandlers(builder, requestAdminBulkUpdateNoticesVisible, (state, action) => {
-      const { ids, visible } = action.payload;
-      const idSet = new Set(ids.map(Number));
+      const { successIds, visible } = action.payload;
+      const idSet = new Set(successIds);
       state.siteNotices = state.siteNotices.map(n =>
         idSet.has(Number(n.id)) ? { ...n, isVisible: visible } : n
       );
-    });
+    }, "mutate");
   },
 });
 

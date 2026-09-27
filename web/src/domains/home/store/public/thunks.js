@@ -10,8 +10,8 @@ export const requestGetHome = createAsyncThunk(
   HOME_ACTIONS.GET_HOME,
   async (_, { rejectWithValue }) => {
     try {
-      // api.js 가 봉투 바디를 반환하고 여기서 data 를 한 번 더 꺼낸다 — 홈 기존 4경로와 같은 2단 언랩.
-      const { data } = await fetchGetHome();
+      // api.js 가 봉투를 벗겨 4섹션 묶음만 준다(전역 계약: api 함수는 내용물만 반환).
+      const data = await fetchGetHome();
 
       return {
         coupons: (data.coupons ?? []).filter(coupon => coupon.visible).sort(byIdDesc),
@@ -27,4 +27,6 @@ export const requestGetHome = createAsyncThunk(
       return rejectWithValue(error.message);
     }
   },
+  // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
+  { condition: (_, { getState }) => !getState().home.loading },
 );

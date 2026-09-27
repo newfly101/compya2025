@@ -34,19 +34,23 @@ export const requestGetAdminCouponList = createAsyncThunk(
       return rejectWithValue(error.message);
     }
   },
+  // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
+  { condition: (_, { getState }) => !getState().coupon.loading },
 );
 
 export const requestAdminInsertNewCoupon = createAsyncThunk(
-  ADMIN_COUPON_ACTIONS.CREATE, async (newCoupon, { rejectWithValue }) => {
+  ADMIN_COUPON_ACTIONS.CREATE, async (newCoupon, { rejectWithValue, fulfillWithValue }) => {
     try {
-      // options 는 응답 엔티티 필드가 아니라 "화면에 띄울 알림" 이어야 한다.
       const { id: couponId } = await fetchAdminInsertCoupon(newCoupon);
 
-      return {
-        ...newCoupon,
-        id: Number(couponId),
-        options: { success: true, message: "쿠폰을 등록했습니다." },
-      };
+      // 통지 문구는 payload 가 아니라 meta 에 싣는다 — payload 에 섞으면 응답 엔티티가 아닌
+      // 필드가 리듀서를 거쳐 목록 행에 그대로 저장되고, 실패는 payload 가 오류 문구 문자열이라
+      // 통지를 담을 자리 자체가 없다(operationListener.js).
+      // 실패 통지는 붙이지 않는다 — 등록 모달이 .unwrap() 으로 오류를 폼 안에 직접 보여준다.
+      return fulfillWithValue(
+        { ...newCoupon, id: Number(couponId) },
+        { notify: { success: true, message: "쿠폰을 등록했습니다." } },
+      );
     } catch (error) {
       return rejectWithValue(toSaveErrorMessage(error));
     }
@@ -54,15 +58,14 @@ export const requestAdminInsertNewCoupon = createAsyncThunk(
 );
 
 export const requestAdminUpdateCoupon = createAsyncThunk(
-  ADMIN_COUPON_ACTIONS.UPDATE, async ({ id, ...coupon }, { rejectWithValue }) => {
+  ADMIN_COUPON_ACTIONS.UPDATE, async ({ id, ...coupon }, { rejectWithValue, fulfillWithValue }) => {
     try {
       const { id: couponId } = await fetchAdminUpdateCoupon(id, coupon);
 
-      return {
-        ...coupon,
-        id: Number(couponId),
-        options: { success: true, message: "쿠폰을 수정했습니다." },
-      }
+      return fulfillWithValue(
+        { ...coupon, id: Number(couponId) },
+        { notify: { success: true, message: "쿠폰을 수정했습니다." } },
+      );
     } catch (error) {
       return rejectWithValue(toSaveErrorMessage(error));
     }
@@ -80,7 +83,11 @@ export const requestAdminUpdateCouponVisible = createAsyncThunk(
         visible,
       }
     } catch (error) {
-      return rejectWithValue(error.message);
+      // 행 토글은 화면에 오류 자리가 없다 — 실패하면 스위치가 조용히 제자리로 돌아가
+      // 관리자는 눌렸는지조차 모른다. 그래서 실패만 전역 모달로 알린다.
+      return rejectWithValue(error.message, {
+        notify: { success: false, message: "노출 설정을 바꾸지 못했습니다." },
+      });
     }
   },
 );
@@ -129,4 +136,6 @@ export const requestAdminRefreshCoupons = createAsyncThunk(
       return rejectWithValue(error.message);
     }
   },
+  // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
+  { condition: (_, { getState }) => !getState().coupon.loading },
 );

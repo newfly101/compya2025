@@ -16,24 +16,28 @@ export const requestGetLegendStats = createAsyncThunk(
   LEGEND_STAT_ACTIONS.GET_STAT_LIST,
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await fetchGetLegendStats();
+      const data = await fetchGetLegendStats();
       return data ?? [];
     } catch (error) {
       return rejectWithValue(error.message);
     }
   },
+  // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
+  { condition: (_, { getState }) => !getState().legendStat.stats.loading },
 );
 
 export const requestGetPitchTypes = createAsyncThunk(
   LEGEND_STAT_ACTIONS.GET_PITCH_TYPE_LIST,
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await fetchGetPitchTypes();
+      const data = await fetchGetPitchTypes();
       return buildPitchNameByCode(data ?? []);
     } catch (error) {
       return rejectWithValue(error.message);
     }
   },
+  // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
+  { condition: (_, { getState }) => !getState().legendStat.pitchTypes.loading },
 );
 
 /** 실패해도 표는 teamCode 를 그대로 보여주며 동작해야 한다. */
@@ -41,19 +45,21 @@ export const requestGetTeams = createAsyncThunk(
   LEGEND_STAT_ACTIONS.GET_TEAM_LIST,
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await fetchGetTeams();
+      const data = await fetchGetTeams();
       return buildTeamNameByCode(data ?? []);
     } catch (error) {
       return rejectWithValue(error.message);
     }
   },
+  // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
+  { condition: (_, { getState }) => !getState().legendStat.teams.loading },
 );
 
 export const requestGetLegendMaterials = createAsyncThunk(
   LEGEND_STAT_ACTIONS.GET_LEGEND_MATERIALS,
   async (legendId, { rejectWithValue }) => {
     try {
-      const { data } = await fetchGetLegendMaterials(legendId);
+      const data = await fetchGetLegendMaterials(legendId);
       return { legendId, detail: data };
     } catch (error) {
       return rejectWithValue(error.message);

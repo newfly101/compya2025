@@ -7,9 +7,11 @@ import { useKstDayTick } from "@/global/hooks/useKstDayTick.js";
 
 export const useEventList = () => {
   const dispatch = useDispatch();
-  const eventList = useSelector(state => state.events.events);
-  const loading = useSelector(state => state.events.loading);
-  const error = useSelector(state => state.events.error);
+  // 공개 전용 칸 — state.events.events 는 관리자 목록(숨김 포함)이고
+  // loading/error 는 관리자 조회 칸이다. 공유하면 관리자 쪽 오류가 공개 화면에 새어 나온다.
+  const eventList = useSelector(state => state.events.publicEvents);
+  const loading = useSelector(state => state.events.publicLoading);
+  const error = useSelector(state => state.events.publicError);
 
   useEffect(() => {
     dispatch(requestGetExternalEventList());

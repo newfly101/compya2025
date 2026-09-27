@@ -16,7 +16,7 @@ export const resetAuthSession = () => (dispatch) => {
 export const requestUserHealthCheck = createAsyncThunk(
   AUTH.HEALTH, async (_, { dispatch, rejectWithValue }) => {
     try {
-      const { data } = await fetchHealthCheck();
+      const data = await fetchHealthCheck();
 
       const { userRole, ...userDetail } = data;
 

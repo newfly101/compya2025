@@ -68,7 +68,9 @@ export default function AdminNoticeWriteScreen() {
   const { id } = useParams();
   const isEdit = id != null;
 
-  const { siteNotices, error } = useSelector((s) => s.notices);
+  // 단건 조회 전용 칸 — 목록 조회(error) / 저장(mutateError) 과 칸을 나눠 쓴다.
+  // 한 칸을 공유하면 저장 실패 문구가 "공지를 못 불러왔다" 화면으로 잘못 뜬다.
+  const { siteNotices, detailError } = useSelector((s) => s.notices);
   const existing = useMemo(
     () => (isEdit ? siteNotices.find((n) => String(n.id) === String(id)) : null),
     [isEdit, siteNotices, id],
@@ -188,12 +190,12 @@ export default function AdminNoticeWriteScreen() {
     );
   }
 
-  if (isEdit && hydrated && !existing && error) {
+  if (isEdit && hydrated && !existing && detailError) {
     return (
       <div className={styles.page}>
         <AdminStateBox
           status="error"
-          message={error}
+          message={detailError}
           onRetry={() => {
             setHydrated(false);
             dispatch(requestAdminGetNotice(id))
@@ -206,7 +208,7 @@ export default function AdminNoticeWriteScreen() {
     );
   }
 
-  if (isEdit && hydrated && !existing && !error) {
+  if (isEdit && hydrated && !existing && !detailError) {
     return (
       <div className={styles.page}>
         <AdminStateBox status="empty" message="공지를 찾을 수 없습니다." />
