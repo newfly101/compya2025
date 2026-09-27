@@ -3,17 +3,17 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dawne.com2usbaseball.domain.fun.historyMode.repository.mapper.FunHistoryModeMapper">
+<mapper namespace="com.dawne.com2usbaseball.domain.fun.historyLegend.repository.mapper.FunHistoryLegendMapper">
 
     <resultMap id="HistoryRoundResultMap"
-               type="com.dawne.com2usbaseball.domain.fun.historyMode.entity.HistoryRoundEntity">
+               type="com.dawne.com2usbaseball.domain.fun.historyLegend.entity.HistoryRoundEntity">
         <id property="id" column="id"/>
         <result property="dayNo" column="day_no"/>
         <result property="roundNo" column="round_no"/>
         <result property="roundLabel" column="round_label"/>
 
         <collection property="roster"
-                    ofType="com.dawne.com2usbaseball.domain.fun.historyMode.entity.HistoryRosterEntity">
+                    ofType="com.dawne.com2usbaseball.domain.fun.historyLegend.entity.HistoryRosterEntity">
             <id property="rosterGroup" column="roster_group"/>
             <id property="orderNo" column="order_no"/>
             <result property="playerName" column="player_name"/>

@@ -1,9 +1,9 @@
-package com.dawne.com2usbaseball.domain.fun.historyMode.controller;
+package com.dawne.com2usbaseball.domain.fun.historyLegend.controller;
 
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
-import com.dawne.com2usbaseball.domain.fun.historyMode.dto.HistoryRoundSnapshot;
-import com.dawne.com2usbaseball.domain.fun.historyMode.enums.FunHistoryModeMessages;
-import com.dawne.com2usbaseball.domain.fun.historyMode.service.FunHistoryModeService;
+import com.dawne.com2usbaseball.domain.fun.historyLegend.dto.HistoryRoundSnapshot;
+import com.dawne.com2usbaseball.domain.fun.historyLegend.enums.FunHistoryLegendMessages;
+import com.dawne.com2usbaseball.domain.fun.historyLegend.service.FunHistoryLegendService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -25,17 +25,17 @@ import java.time.Duration;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/history-rounds")
-public class FunHistoryModeController {
+public class FunHistoryLegendController {
 
     // 관리자 캐시 동기화가 곧 반영돼야 해서 짧게 잡는다. 만료 뒤에는 ETag 로 304 만 주고받는다.
     private static final Duration MAX_AGE = Duration.ofSeconds(60);
 
-    private final FunHistoryModeService funHistoryModeService;
+    private final FunHistoryLegendService funHistoryLegendService;
 
     /** 라운드 70개 + 25인 로스터 전량. 재료만 추리지 않는다 — 덱빌딩도 이 응답을 쓴다. */
     @GetMapping
     public ResponseEntity<GlobalResponse<?>> getAll(WebRequest request) {
-        HistoryRoundSnapshot<?> snapshot = funHistoryModeService.getAllRounds();
+        HistoryRoundSnapshot<?> snapshot = funHistoryLegendService.getAllRounds();
         CacheControl cacheControl = CacheControl.maxAge(MAX_AGE).cachePrivate();
 
         // ETag 헤더는 checkNotModified 가 직접 써 준다
@@ -44,7 +44,7 @@ public class FunHistoryModeController {
         }
         return ResponseEntity.ok()
                 .cacheControl(cacheControl)
-                .body(GlobalResponse.success(FunHistoryModeMessages.FUN_HISTORY_ROUND_LIST_SUCCESS,
+                .body(GlobalResponse.success(FunHistoryLegendMessages.FUN_HISTORY_ROUND_LIST_SUCCESS,
                         snapshot.items()));
     }
 }

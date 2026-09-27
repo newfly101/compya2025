@@ -1,4 +1,4 @@
-package com.dawne.com2usbaseball.domain.fun.historyMode.entity;
+package com.dawne.com2usbaseball.domain.fun.historyLegend.entity;
 
 import lombok.*;
 

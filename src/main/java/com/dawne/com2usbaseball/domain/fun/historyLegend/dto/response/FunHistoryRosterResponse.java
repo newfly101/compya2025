@@ -1,4 +1,4 @@
-package com.dawne.com2usbaseball.domain.fun.historyMode.dto.response;
+package com.dawne.com2usbaseball.domain.fun.historyLegend.dto.response;
 
 /**
  * 로스터 1명.

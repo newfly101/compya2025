@@ -1,10 +1,10 @@
-package com.dawne.com2usbaseball.domain.fun.historyMode.service;
+package com.dawne.com2usbaseball.domain.fun.historyLegend.service;
 
-import com.dawne.com2usbaseball.domain.fun.historyMode.dto.HistoryRoundSnapshot;
-import com.dawne.com2usbaseball.domain.fun.historyMode.dto.response.FunHistoryRoundResponse;
-import com.dawne.com2usbaseball.domain.fun.historyMode.dto.response.FunHistoryRosterResponse;
-import com.dawne.com2usbaseball.domain.fun.historyMode.entity.HistoryRoundEntity;
-import com.dawne.com2usbaseball.domain.fun.historyMode.repository.FunHistoryModeRepository;
+import com.dawne.com2usbaseball.domain.fun.historyLegend.dto.HistoryRoundSnapshot;
+import com.dawne.com2usbaseball.domain.fun.historyLegend.dto.response.FunHistoryRoundResponse;
+import com.dawne.com2usbaseball.domain.fun.historyLegend.dto.response.FunHistoryRosterResponse;
+import com.dawne.com2usbaseball.domain.fun.historyLegend.entity.HistoryRoundEntity;
+import com.dawne.com2usbaseball.domain.fun.historyLegend.repository.FunHistoryLegendRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -20,20 +20,20 @@ import java.util.List;
  */
 @Service
 @RequiredArgsConstructor
-public class FunHistoryModeServiceImpl implements FunHistoryModeService {
+public class FunHistoryLegendServiceImpl implements FunHistoryLegendService {
 
     /** 1일차 = 월요일. 일차가 곧 요일이라 DB 에 두지 않고 계산한다. */
     private static final String[] DAY_OF_WEEK = {"월", "화", "수", "목", "금", "토", "일"};
 
-    private final FunHistoryModeRepository funHistoryModeRepository;
+    private final FunHistoryLegendRepository funHistoryLegendRepository;
 
     @Override
     @Transactional(readOnly = true)
     @Cacheable(value = "historyRound", key = "'public'")
     public HistoryRoundSnapshot<FunHistoryRoundResponse> getAllRounds() {
-        List<FunHistoryRoundResponse> items = funHistoryModeRepository.findAllWithRoster()
+        List<FunHistoryRoundResponse> items = funHistoryLegendRepository.findAllWithRoster()
                 .stream()
-                .map(FunHistoryModeServiceImpl::toResponse)
+                .map(FunHistoryLegendServiceImpl::toResponse)
                 .toList();
         return HistoryRoundSnapshot.of(items);
     }

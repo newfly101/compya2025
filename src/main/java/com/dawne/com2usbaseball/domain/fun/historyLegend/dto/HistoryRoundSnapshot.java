@@ -1,4 +1,4 @@
-package com.dawne.com2usbaseball.domain.fun.historyMode.dto;
+package com.dawne.com2usbaseball.domain.fun.historyLegend.dto;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
