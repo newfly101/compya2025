@@ -40,21 +40,17 @@ const FORBIDDEN_MESSAGE = "접근 권한이 없습니다.";
 
 // 실패 응답 본문은 { success:false, code, data:null } 형태다 (BE GlobalResponse.fail).
 // 403 은 세 갈래 — 계정 정지 / 인증 만료 / 일반 권한 부족. 문구가 아니라 code 로 가른다.
+// 시큐리티의 AccessDeniedHandler(역할 부족)는 AUTH_FORBIDDEN 을 내린다 — AUTH_USER_BLOCKED 와 code 로 구분된다.
 const CODE_USER_BLOCKED = "AUTH_USER_BLOCKED";
 const CODE_UNAUTHORIZED = "AUTH_UNAUTHORIZED";
+const CODE_FORBIDDEN = "AUTH_FORBIDDEN";
 
-// 시큐리티의 AccessDeniedHandler 도 AUTH_USER_BLOCKED 를 쓴다(역할 부족).
-// 역할 검사가 걸린 경로의 403 은 계정 정지가 아니라 권한 부족으로 본다.
-// BE 가 권한 부족용 코드를 따로 내려주게 되면 이 경로 예외는 지운다.
-const ROLE_GUARDED_PATH = /^\/?(admin|upload)\//;
-
-// "blocked" = 계정 정지·탈퇴 / "expired" = 인증 만료 / null = 일반 권한 부족
+// "blocked" = 계정 정지·탈퇴 / "expired" = 인증 만료 / "forbidden" = 일반 권한 부족 / null = 미분류
 const classifyForbidden = (error) => {
   const code = error.response?.data?.code;
   if (code === CODE_UNAUTHORIZED) return "expired";
-  if (code === CODE_USER_BLOCKED && !ROLE_GUARDED_PATH.test(error.config?.url ?? "")) {
-    return "blocked";
-  }
+  if (code === CODE_USER_BLOCKED) return "blocked";
+  if (code === CODE_FORBIDDEN) return "forbidden";
   return null;
 };
 
@@ -111,9 +107,13 @@ API.interceptors.response.use(
     // 재발급으로 되살릴 수 없다. 바로 최종 인증 실패로 처리한다.
     if (status === 403) {
       const forbiddenKind = classifyForbidden(error);
-      if (forbiddenKind) {
+      if (forbiddenKind === "blocked" || forbiddenKind === "expired") {
         const message = forbiddenKind === "blocked" ? BLOCKED_MESSAGE : AUTH_ERROR_MESSAGE;
         return Promise.reject(failAuth(error, message));
+      }
+      if (forbiddenKind === "forbidden") {
+        error.message = FORBIDDEN_MESSAGE;
+        return Promise.reject(error);
       }
     }
 
