@@ -3,7 +3,7 @@
 // 시드: domains/odds/mobile/OddsIndexScreen.jsx, OddsSectionScreen.jsx,
 // components/oddsNote/OddsNote.jsx, data/odds/cpb2015_1_3.json(intro/categories),
 // app/router/config/routePath.js(odds), home/config/QUICK_MENUS.js·
-// app/wrapper/mobile/config/MENU_GROUPS.js(loginRequired 표시 확인).
+// app/wrapper/mobile/config/MENU_GROUPS.js(공개 화면, 로그인 불필요).
 
 export const probabilityGuide = {
   slug: "probability-guide",
@@ -87,10 +87,6 @@ export const probabilityGuide = {
             "이 화면은 확률형 아이템 구성이 바뀔 때마다 사이트 운영자가 게임 공식 공시 내용을 다시 확인해 반영하는 " +
             "방식으로 운영됩니다. 정해진 갱신 주기가 있는 것은 아니므로, 신규 상품이나 이벤트 확률이 궁금하다면 이 " +
             "화면과 함께 게임 공식 확률 공시 페이지도 함께 확인하는 습관을 들이는 것을 권장합니다.",
-        },
-        {
-          type: "note",
-          text: "확률 공시 화면은 로그인 후 이용할 수 있습니다. 홈 화면 빠른 메뉴나 드로어 메뉴에서 '확률 공시'를 눌렀을 때 로그인 안내가 뜬다면 먼저 로그인해 주세요.",
         },
       ],
     },

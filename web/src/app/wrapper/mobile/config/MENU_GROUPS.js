@@ -21,7 +21,7 @@ export const MENU_GROUPS = [
       { icon: '⚾', label: '선수 백과사전',   to: '/players',
         tag: { variant: 'beta' } },
       { icon: '📖', label: '스킬 백과사전',   to: ROUTE_PATHS.player_skills },
-      { icon: '📊', label: '확률 공시',      to: '/probability', loginRequired: true },
+      { icon: '📊', label: '확률 공시',      to: '/probability' },
       { icon: '📚', label: '가이드',        to: ROUTE_PATHS.guides },
       { icon: '🎮', label: '스킬 시뮬레이터', to: '/skill', comingSoon: true,
         tag: { variant: 'neutral', label: '준비중' } },
