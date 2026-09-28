@@ -17,7 +17,7 @@ updated: 2026-09-28
 | `sql/v.2.0.0/02_data.sql` | data_ 실측 13종 DDL | 자동 — 파일 안 순서대로 |
 | `sql/v.2.0.0/03_fun.sql` | fun_ 2종 + `statistic_support_click` DDL | 자동 — 파일 안 순서대로 |
 | `sql/v.2.0.0/insert/<table>.sql` | 테이블당 1파일, 시드·마스터 데이터 (16개 — 나머지 20개 실측 테이블은 seed 없음, 앱이 채움) | 자동 — 대상 DDL 이후. `fun_teams.sql` 은 `latest_team_id` 실측 대조 후 실행(§6) |
-| `sql/v.2.0.0/applied/*.sql` | 이미 운영 반영된 1회성 UPDATE/MIGRATE (7개). 머리에 반영 상태 주석 | ⛔ 재실행 금지 — 빈 DB 재현 시에만 사용 |
+| `sql/v.2.0.0/applied/*.sql` | 이미 운영 반영된 1회성 UPDATE/MIGRATE/ALTER (8개, `kst_timestamp_to_datetime.sql` 포함). 머리에 반영 상태 주석 | ⛔ 재실행 금지 — 빈 DB 재현 시에만 사용 |
 | `sql/draft/community/` | 동결 도메인 — v1 4종 + v2 8종 DDL + 이관/DROP 스크립트 | ⛔ 전부 사람 확인 후 |
 | `sql/draft/pending/` | 계획분 테이블 DDL (현재 0개 — §5) | 해당 없음 |
 
@@ -70,8 +70,8 @@ community(`draft/community/`)는 재현 대상이 아니다 — 현재 운영 �
 ⚠️ `insert/fun_teams.sql` 의 `latest_team_id` 값(자기참조 FK)은 옛 `teams` 테이블의 INSERT 순서 기반
 위치값을 그대로 옮긴 것 — fun_teams 의 실제 AUTO_INCREMENT id 와 대조 전에는 실행 금지. 상세는 파일 머리 주석.
 
-## 7. applied/ 안 유일한 상태 혼재 파일
+## 7. applied/small_fixes.sql 상태 (2026-09-28 해소)
 
-`applied/small_fixes.sql` — 3구획 병합 파일인데 1구획(`site_notices.published_at` 보정)은 원본 주석에
+`applied/small_fixes.sql` — 3구획 병합 파일인데 1구획(`site_notices.published_at` 보정)은 원본 주석에 '실행하지 말 것' 이었으나 2026-09-28 사용자가 실행해 반영됨 — 이제 3구획 전부 반영 상태.
 "실행하지 말 것"이 명시된 **미반영** 상태다. 나머지 2구획(`data_player_legend_material` 보정)만 반영 완료.
 파일 머리 주석에 구획별 상태를 표기해뒀다 — 일괄 "이미 반영됨"으로 오독하지 말 것.

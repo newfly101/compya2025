@@ -19,8 +19,8 @@ CREATE TABLE site_coupons
     detail      VARCHAR(500),
     expire_at   DATETIME     NOT NULL,
     is_visible  BOOLEAN      NOT NULL DEFAULT true,
-    created_at  DATETIME              DEFAULT CURRENT_TIMESTAMP, -- 2026-09-28 KST 통일(ADR 0007 3단계). draft/kst-timezone/02 실행 전까지는 운영은 TIMESTAMP
-    updated_at  DATETIME              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- 2026-09-28 KST 통일(ADR 0007 3단계). draft/kst-timezone/02 실행 전까지는 운영은 TIMESTAMP
+    created_at  DATETIME              DEFAULT CURRENT_TIMESTAMP, -- 2026-09-28 KST 통일(ADR 0007 3단계) 운영 반영됨 — applied/kst_timestamp_to_datetime.sql
+    updated_at  DATETIME              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP -- 2026-09-28 KST 통일(ADR 0007 3단계) 운영 반영됨 — applied/kst_timestamp_to_datetime.sql
 );
 
 
@@ -38,8 +38,8 @@ CREATE TABLE site_notices
     is_pinned      BOOLEAN NOT NULL DEFAULT false COMMENT '상단 고정 여부',
 
     published_at   DATETIME NULL COMMENT '실제 게시 시각',
-    created_at     DATETIME  DEFAULT CURRENT_TIMESTAMP, -- 2026-09-28 KST 통일(ADR 0007 3단계). draft/kst-timezone/02 실행 전까지는 운영은 TIMESTAMP
-    updated_at     DATETIME  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 2026-09-28 KST 통일(ADR 0007 3단계). draft/kst-timezone/02 실행 전까지는 운영은 TIMESTAMP
+    created_at     DATETIME  DEFAULT CURRENT_TIMESTAMP, -- 2026-09-28 KST 통일(ADR 0007 3단계) 운영 반영됨 — applied/kst_timestamp_to_datetime.sql
+    updated_at     DATETIME  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 2026-09-28 KST 통일(ADR 0007 3단계) 운영 반영됨 — applied/kst_timestamp_to_datetime.sql
 
     CONSTRAINT chk_site_notices_source_payload
         CHECK (

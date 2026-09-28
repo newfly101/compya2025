@@ -6,6 +6,23 @@ updated: 2026-09-28
 
 # coupons — 변경 이력
 
+## 2026-09-28 — 등록·수정 시각 컬럼을 서버 시간대에 안 흔들리는 형식으로 바꿈
+
+- 버전: 유지 (ops — 스키마 타입만, 동작 불변)
+- 커밋: 미커밋 (SQL 은 사용자가 직접 실행)
+
+**고친 것**
+
+- `site_coupons` 의 `created_at`·`updated_at` 을 TIMESTAMP 에서 DATETIME 으로 바꿨다. TIMESTAMP 는 서버 세션 시간대에 따라 값이 달리 읽히는데, DATETIME 은 저장한 벽시계 그대로라 서버 이전·설정 변경에도 시각이 밀리지 않는다. `expire_at` 은 원래 DATETIME 이라 이제 세 컬럼이 같은 방식이다. [ADR 0007](../../decisions/0007-kst-timezone.md) 3단계.
+
+**손대지 말 것**
+
+- 변환은 세션 시간대 `+09:00` 을 먼저 맞춘 상태에서 실행했다 — 그래야 기존 값이 KST 벽시계 그대로 보존된다. 같은 작업을 다시 할 일이 있으면 순서를 지킨다(`applied/kst_timestamp_to_datetime.sql` 주석).
+
+**미결**
+
+- 서버 전역 타임존·`my.cnf`·앱 설정 배포는 아직 — `sql/draft/kst-timezone/README.txt`
+
 ## 2026-09-28 — 쓰이지 않는 단건 취소 요청·API 정리
 
 - 버전: 유지 (refactor, 1.0.4 기준)

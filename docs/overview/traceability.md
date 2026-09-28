@@ -22,7 +22,7 @@ updated: 2026-09-28
 | admin | ADM | 01 | 운영 | 1.0.5 |
 | coupons | CP | 02 | 운영 | 1.0.4 |
 | events | EVT | 03 | 운영 | 1.0.4 |
-| notices | NTC | 04 | 운영 | 1.0.4 |
+| notices | NTC | 04 | 운영 | 1.0.5 |
 | community | CMT | 05 | 동결 | 1.0.1 |
 | quiz | QZ | 06 | 운영 | 1.0.3 |
 | home | HM | 07 | 운영 | 1.0.4 |
