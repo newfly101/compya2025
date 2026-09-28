@@ -36,7 +36,8 @@ case "$cmd" in
   *"git add"*)
     rest=${cmd#*git add}
     for tok in $rest; do
-      case "$tok" in -*|"&&"|";"|"|"*) continue ;; esac
+      # 명령 구분자를 만나면 add 의 인자는 끝난 것 — 뒤에 오는 push 브랜치명(docs/…) 등을 파일로 오인하지 않는다
+      case "$tok" in "&&"|";"|"||"|"|"|"|"*) break ;; -*) continue ;; esac
       tok=${tok%\"}; tok=${tok#\"}; tok=${tok%\'}; tok=${tok#\'}
       [ -n "$tok" ] && check "$tok"
     done ;;

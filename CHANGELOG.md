@@ -29,7 +29,9 @@
 ### Fixed
 ### Admin
 ### Platform
+
 ### Internal
+- FE 빌드 시 공지 목록 API 실패(502 등)를 조용히 건너뛰고 배포하던 것을 재시도(2·5·10초 간격) 후에도 실패하면 빌드를 중단하도록 고쳤다. 데이터 라우트(쿠폰·이벤트·공지·선수·레전드 재료·스킬)도 API 건수와 대조해 빈 스냅샷이면 재시도 후 그래도 비면 빌드를 막는다 — sitemap 에는 있는데 실제 페이지가 없던 상태가 배포되는 사고 재발 방지 (`web/scripts/prerender.mjs`, `web/scripts/verify-prerender.mjs`)
 
 ---
 

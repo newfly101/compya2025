@@ -10,13 +10,11 @@
 // (/players 는 2026-09-13 게이트 제거 이후 진입 즉시 선수 리스트를 부른다 — 데이터 확인 대상에 포함)
 // ⚠️ /notice/:slug (공지 상세) 는 빌드 시점에 공지 목록 API 를 별도로 받아 동적으로 라우트를
 // 늘려서 프리렌더한다 — STATIC_ROUTES 에는 안 넣는다(§ main() 하단, notice-source.mjs 공유).
-// API_BASE_URL(src/config/env.js) 이
-// 운영 빌드에서 절대경로 https://api.compyafun.com/api 라서 vite.config.js 의 프록시는
-// 관여하지 않는다 — 실제 관문은 BE CorsConfig.java 의
-// allowedOrigins("http://localhost:3000", "https://compyafun.com") 다. 그래서 아래 preview
-// 서버를 반드시 host=localhost, port=3000 으로 고정한다. 이 값이 어긋나면 브라우저가 CORS 로
-// fetch 를 막아 목록이 빈 채로 스냅샷된다(콘솔 에러는 나지만 page load 자체는 성공하므로
-// 별도 데이터 도착 확인 없이는 실패를 못 알아챈다 — DATA_ROUTES 체크가 그 역할).
+// API_BASE_URL(src/config/env.js) 이 운영 빌드에서 절대경로 https://api.compyafun.com/api 라서
+// vite.config.js 의 프록시는 관여하지 않는다 — 실제 관문은 BE CorsConfig.java 의
+// allowedOrigins("http://localhost:3000", "https://compyafun.com") 다. 그래서 아래 preview 서버를
+// 반드시 host=localhost, port=3000 으로 고정한다 — 어긋나면 CORS 로 fetch 가 막혀 목록이 빈 채로
+// 스냅샷된다(page load 자체는 성공하므로 DATA_ROUTES 체크 없이는 실패를 못 알아챈다).
 
 import { preview } from "vite";
 import puppeteer from "puppeteer";
@@ -28,6 +26,55 @@ import { fetchVisibleInternalNotices, noticeTitleToSlug } from "./notice-source.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const webRoot = path.resolve(__dirname, "..");
 const distDir = path.join(webRoot, "dist");
+
+// 공지 목록 API 재시도 간격(ms) — 순서대로 소진, 다 실패하면 빌드를 막는다(§ main 하단).
+// 비상 우회 PRERENDER_ALLOW_PARTIAL=1 은 워크플로엔 넣지 않는다(로컬 임시 확인용만).
+const NOTICE_RETRY_DELAYS_MS = [2000, 5000, 10000];
+
+// 데이터 라우트가 실제로 쓰는 BE API — DOM 0건일 때 "API 도 빈 것"과 "API 는 정상인데 렌더가
+// 안 된 것"을 가른다(§ main 루프). 각 도메인 store/public/endpoints.js 원본과 맞출 것.
+const API_BASE = "https://api.compyafun.com/api";
+const DATA_ROUTE_APIS = {
+  "/events": [`${API_BASE}/events/external`],
+  "/coupons": [`${API_BASE}/coupons`],
+  "/notices": [`${API_BASE}/notices`],
+  "/legend-stats": [`${API_BASE}/legend-stats`],
+  "/history-mode/legend": [`${API_BASE}/history-rounds`],
+  "/players": [`${API_BASE}/player-cards`],
+  "/skills": [`${API_BASE}/player-skills/hitters`, `${API_BASE}/player-skills/pitchers`],
+};
+const DATA_API_TIMEOUT_MS = 10000;
+
+// dataRoutes API 건수 조회 — 실패하면 그대로 던진다(호출자가 "대조 불가"로 처리).
+async function fetchApiItemCount(urls) {
+  let total = 0;
+  for (const url of urls) {
+    const res = await fetch(url, { signal: AbortSignal.timeout(DATA_API_TIMEOUT_MS) });
+    if (!res.ok) {
+      await res.text().catch(() => {});
+      throw new Error(`HTTP ${res.status} (${url})`);
+    }
+    const json = await res.json();
+    total += Array.isArray(json?.data) ? json.data.length : 0;
+  }
+  return total;
+}
+
+// 공지 목록 조회 — 실패 시 NOTICE_RETRY_DELAYS_MS 간격으로 재시도, 끝까지 실패하면 던진다.
+async function fetchNoticesWithRetry() {
+  for (let attempt = 0; ; attempt++) {
+    try {
+      return await fetchVisibleInternalNotices();
+    } catch (err) {
+      if (attempt >= NOTICE_RETRY_DELAYS_MS.length) throw err;
+      const delay = NOTICE_RETRY_DELAYS_MS[attempt];
+      console.warn(
+        `[prerender] 경고 — 공지 목록 API 조회 실패(${err.message}), ${delay / 1000}초 후 재시도 (${attempt + 1}/${NOTICE_RETRY_DELAYS_MS.length})`
+      );
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+}
 
 // verify-prerender.mjs 가 이 목록을 그대로 import 해서 쓴다 — 라우트 목록을 다른 곳에
 // 또 하드코딩하지 않기 위함(export 추가 외 로직 변경 없음).
@@ -128,23 +175,94 @@ export function routeToOutputFile(route) {
 const FALLBACK_SELECTOR = '[class*="loading"]';
 const LOADING_TEXT = "로딩중";
 
+// 라우트 한 번 방문 — goto → (데이터/fallback) 대기 → rowCount·html 확보. 재시도(§ main 루프)도
+// 이 함수를 다시 호출하는 것으로 처리한다(새 page 로 처음부터 다시).
+async function visitRoute(browser, base, route) {
+  const page = await browser.newPage();
+  try {
+    // 'load' 까지만 대기 — 목록 화면의 API fetch(coupons/events/notices)가
+    // 응답 지연/실패해도 스냅샷 생성이 그것 때문에 막히지 않게 한다.
+    await page.goto(`${base}${route}`, { waitUntil: "load", timeout: 30000 });
+
+    const dataSelector = getDataSelector(route);
+
+    if (dataSelector) {
+      // React.lazy 청크 렌더 + API 응답 완료까지 실제 항목이 DOM 에 나타나는 것으로 판정한다.
+      // "로딩중" 소멸은 청크 로드 신호일 뿐 데이터 도착 신호가 아니라서 쓰지 않는다.
+      await page
+        .waitForFunction(
+          (sel) => document.querySelectorAll(sel).length > 0,
+          { timeout: 20000 },
+          dataSelector
+        )
+        .catch(() => {
+          // 20초 내 못 채워도 있는 그대로 스냅샷 — 호출자의 rowCount 체크가 이어받는다
+        });
+    } else {
+      // 데이터 라우트가 아닌 정적 페이지 — Suspense fallback 이 DOM 에서 사라질 때까지만 기다린다
+      // (청크 로드 완료 신호, innerText 대신 구조적 존재 여부로 판정).
+      // ⚠️ "사라짐"만 기다리면 레이스가 생긴다 — goto('load') 직후 아직 fallback 마운트 전에 검사하면
+      // "이미 없음"으로 즉시 통과해 실제로는 로드 중인 chunk 가 그대로 스냅샷된다. 그래서 먼저
+      // fallback 이 (있었다면) 한 번 나타나는 것까지 짧게 확인한 뒤 사라지는 것을 기다린다.
+      await page
+        .waitForFunction(
+          (sel) => Boolean(document.querySelector(sel)),
+          { timeout: 2000 },
+          FALLBACK_SELECTOR
+        )
+        .catch(() => {
+          // fallback 이 뜰 새도 없이 이미 렌더 완료된 경우 — 정상
+        });
+      await page
+        .waitForFunction(
+          (sel) => !document.querySelector(sel),
+          { timeout: 15000 },
+          FALLBACK_SELECTOR
+        )
+        .catch(() => {
+          // 15초 내 못 벗어나도 있는 그대로 스냅샷 — 레이아웃 확인 목적은 달성됨
+        });
+    }
+
+    // useDocumentMeta 의 useEffect(title/description/canonical) flush 유예
+    await new Promise((resolve) => setTimeout(resolve, 150));
+
+    const rowCount = dataSelector
+      ? await page.$$eval(dataSelector, (els) => els.length).catch(() => 0)
+      : null;
+    const html = await page.content();
+
+    return { dataSelector, rowCount, html };
+  } finally {
+    await page.close();
+  }
+}
+
 async function main() {
   if (!fs.existsSync(path.join(distDir, "index.html"))) {
     console.error("[prerender] dist/index.html 이 없다 — 먼저 vite build 를 실행해야 한다.");
     process.exit(1);
   }
 
-  // 공지 상세는 best-effort — sitemap 확장(generate-sitemap.mjs)과 같은 철학이다. 목록 API 가
-  // 실패하거나 응답이 비어도 정적 라우트 프리렌더/빌드는 그대로 진행하고 공지 상세만 건너뛴다.
+  // ⚠️ 2026-09-28 사고: 목록 API 502 를 "건너뛰고 계속 진행"으로 처리해 sitemap ↔ 실제 페이지가
+  // 어긋난 채 배포됐다. 재시도로도 안 되면 기본은 빌드를 막는다(PRERENDER_ALLOW_PARTIAL=1 예외).
   let noticeRoutes = [];
   try {
-    const notices = await fetchVisibleInternalNotices();
+    const notices = await fetchNoticesWithRetry();
     // 원문(디코딩된) slug 그대로 라우트를 만든다 — routeToOutputFile 이 이 값을 그대로
     // 디렉터리 세그먼트로 써서 CloudFront/S3 조회 키와 맞춘다(위 routeToOutputFile 주석 참고).
     noticeRoutes = notices.map((n) => `/notice/${noticeTitleToSlug(n.title, n.id)}`);
     console.log(`[prerender] 공지 상세 ${noticeRoutes.length}건 대상에 추가`);
   } catch (err) {
-    console.warn(`[prerender] 경고 — 공지 목록 API 조회 실패, 공지 상세 프리렌더를 건너뛴다: ${err.message}`);
+    const message = `공지 목록 API 조회 실패(재시도 ${NOTICE_RETRY_DELAYS_MS.length}회 소진): ${err.message}`;
+    if (process.env.PRERENDER_ALLOW_PARTIAL === "1") {
+      console.warn(`[prerender] 경고 — ${message}. PRERENDER_ALLOW_PARTIAL=1 이라 공지 상세만 건너뛰고 계속 진행`);
+    } else {
+      console.error(
+        `[prerender] 치명적 오류 — ${message}. 공지 상세 없이 sitemap 과 어긋난 채 배포되는 것을 막기 위해 빌드를 중단한다. (임시 우회: PRERENDER_ALLOW_PARTIAL=1 — 워크플로에는 넣지 말 것)`
+      );
+      process.exit(1);
+    }
   }
 
   const routes = [...STATIC_ROUTES, ...noticeRoutes];
@@ -172,76 +290,44 @@ async function main() {
 
   const failed = [];
   const dataWarnings = [];
+  const dataFailures = [];
   const fallbackWarnings = [];
   let ok = 0;
 
   try {
     for (const route of routes) {
-      const page = await browser.newPage();
       try {
-        // 'load' 까지만 대기 — 목록 화면의 API fetch(coupons/events/notices)가
-        // 응답 지연/실패해도 스냅샷 생성이 그것 때문에 막히지 않게 한다.
-        await page.goto(`${base}${route}`, { waitUntil: "load", timeout: 30000 });
-
-        const dataSelector = getDataSelector(route);
-
-        if (dataSelector) {
-          // React.lazy 청크 렌더 + API 응답(또는 정적 데이터 계산) 완료까지 실제 항목이 DOM 에
-          // 나타나는 것으로 판정한다. "로딩중" 소멸은 청크 로드 신호일 뿐 데이터 도착 신호가
-          // 아니라서 쓰지 않는다. /legend-stats, /history-mode/legend 는 운영 API 왕복이 껴서
-          // 여유 있게 20초를 둔다.
-          await page
-            .waitForFunction(
-              (sel) => document.querySelectorAll(sel).length > 0,
-              { timeout: 20000 },
-              dataSelector
-            )
-            .catch(() => {
-              // 20초 내 못 채워도 있는 그대로 스냅샷 — 아래 rowCount 체크가 경고를 남긴다
-            });
-        } else {
-          // 데이터 라우트가 아닌 정적 페이지 — Suspense fallback 이 DOM 에서 사라질 때까지만
-          // 기다린다(청크 로드 완료 신호). innerText 대신 구조적 존재 여부로 판정한다.
-          //
-          // ⚠️ "사라짐"만 기다리면 레이스가 생긴다 — goto('load') 직후 아직 React 가 fallback을
-          // 마운트하기 전 이 시점에 검사하면 "이미 없음"으로 즉시 통과해버려, 실제로는 chunk 가
-          // 로드 중인데 그대로 스냅샷된다. 그래서 먼저 fallback 이 (있었다면) 한 번 나타나는
-          // 것까지 짧게 확인한 뒤에, 사라지는 것을 기다린다.
-          await page
-            .waitForFunction(
-              (sel) => Boolean(document.querySelector(sel)),
-              { timeout: 2000 },
-              FALLBACK_SELECTOR
-            )
-            .catch(() => {
-              // fallback 이 뜰 새도 없이 이미 렌더 완료된 경우 — 정상
-            });
-          await page
-            .waitForFunction(
-              (sel) => !document.querySelector(sel),
-              { timeout: 15000 },
-              FALLBACK_SELECTOR
-            )
-            .catch(() => {
-              // 15초 내 못 벗어나도 있는 그대로 스냅샷 — 레이아웃 확인 목적은 달성됨
-            });
-        }
-
-        // useDocumentMeta 의 useEffect(title/description/canonical) flush 유예
-        await new Promise((resolve) => setTimeout(resolve, 150));
+        let { dataSelector, rowCount, html } = await visitRoute(browser, base, route);
 
         // 데이터 도착 확인 — CORS 가 막혀도 page load 자체는 성공하므로 이 체크가 없으면
-        // 빈 목록이 그대로 "성공"으로 기록된다.
-        if (dataSelector) {
-          const rowCount = await page.$$eval(dataSelector, (els) => els.length).catch(() => 0);
-          if (rowCount === 0) {
+        // 빈 목록이 그대로 "성공"으로 기록된다. DOM 0건이면 API 를 직접 호출해 대조한다.
+        if (dataSelector && rowCount === 0) {
+          const apiUrls = DATA_ROUTE_APIS[route];
+          let apiCount = null;
+          if (apiUrls) {
+            try {
+              apiCount = await fetchApiItemCount(apiUrls);
+            } catch (err) {
+              console.warn(`[prerender] 경고 — ${route} API 건수 확인 실패, 대조를 건너뛴다: ${err.message}`);
+            }
+          }
+
+          if (apiCount > 0) {
+            console.warn(`[prerender] ${route} — API ${apiCount}건인데 DOM 0건, 재시도 1회`);
+            ({ rowCount, html } = await visitRoute(browser, base, route));
+            if (rowCount === 0) {
+              const message = `API ${apiCount}건인데 재시도 후에도 DOM 0건 — 셀렉터 불일치 또는 렌더 실패 의심`;
+              dataFailures.push({ route, message });
+              console.error(`[prerender] 실패: ${route} — ${message}`);
+            } else {
+              console.log(`[prerender] ${route} — 재시도로 정상 확인 (${rowCount}건)`);
+            }
+          } else {
             const message = "데이터 없이 스냅샷됨 (항목 0개) — CORS/네트워크 확인 필요";
             dataWarnings.push({ route, message });
             console.warn(`[prerender] 경고: ${route} — ${message}`);
           }
         }
-
-        const html = await page.content();
 
         // 모든 라우트 공통 — 최종 HTML 에 fallback 문구가 여전히 남아 있으면 경고.
         // (데이터 라우트는 위 rowCount 체크와 별개로, 정적 라우트까지 포함해 빠짐없이 확인)
@@ -258,8 +344,6 @@ async function main() {
       } catch (err) {
         failed.push({ route, message: err.message, isNotice: route.startsWith("/notice/") });
         console.error(`[prerender] 실패: ${route} — ${err.message}`);
-      } finally {
-        await page.close();
       }
     }
   } finally {
@@ -277,6 +361,15 @@ async function main() {
   if (fallbackWarnings.length > 0) {
     console.warn("[prerender] fallback 잔존 경고:");
     fallbackWarnings.forEach((w) => console.warn(`  - ${w.route}: ${w.message}`));
+  }
+  if (dataFailures.length > 0) {
+    console.error("[prerender] API-DOM 불일치 실패 목록:");
+    dataFailures.forEach((f) => console.error(`  - ${f.route}: ${f.message}`));
+    if (process.env.PRERENDER_ALLOW_PARTIAL === "1") {
+      console.warn("[prerender] PRERENDER_ALLOW_PARTIAL=1 — 위 불일치가 있어도 빌드는 계속 진행");
+    } else {
+      process.exitCode = 1;
+    }
   }
   if (failed.length > 0) {
     console.error("[prerender] 실패 목록:");
