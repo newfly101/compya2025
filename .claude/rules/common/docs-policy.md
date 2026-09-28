@@ -29,7 +29,8 @@ docs/
 │   ├── spec.md                기획. 현재 버전만 유지. 버전의 단일 원천
 │   ├── design.md               설계·도식. 현재 상태만 유지
 │   └── history.md              변경 이력. 위에 추가만
-└── decisions/NNNN-slug.md     여러 기능에 걸친 결정만 (ADR)
+├── decisions/NNNN-slug.md     여러 기능에 걸친 결정만 (ADR)
+└── assets/                    루트 README·design.md 가 쓰는 이미지만 (readme/ 화면 캡처 · 도식). md 금지
 CHANGELOG.md                    루트. 릴리스 단위 요약. 각 항목이 features/*/history.md 로 링크
 ```
 
