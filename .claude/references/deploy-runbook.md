@@ -159,6 +159,12 @@ ssh <EC2_USER>@<EC2_HOST> \
 
 ---
 
+### 6.1 한국 밖에서는 모든 요청이 홈 HTML 로 온다 (2026-09-28 확정, 미해결)
+
+GitHub Actions 러너(미국)에서 `ads.txt`·`robots.txt`·`sitemap.xml`·JS 자산·없는 경로 **전부** `x-cache: Error from cloudfront` + `index.html`(200) 이었다. 한국 엣지 IP(`--resolve`)에 직접 붙어도 같았고, 한국에서 보내면 정상 — 즉 엣지·캐시·S3 문제가 아니라 **뷰어 국가 기준 차단**이다. CloudFront 배포 `E3TX8OFJBC8IML` 의 **Security → Geographic restrictions** 가 KR 허용 목록(또는 차단 목록)이거나, **WAF 웹 ACL** 의 지역 규칙이다. 차단된 요청은 403 → 사용자 지정 오류 응답(403/404 → `/index.html` 200) 을 타서 "정상 200 HTML" 처럼 보인다.
+
+영향: 한국 밖 이용자에게 사이트가 동작하지 않고(JS 도 HTML), 구글 크롤러(미국)는 ads.txt·sitemap 을 못 읽고 모든 URL 에서 홈 스냅샷만 본다 — 애드센스 반복 반려의 직접 원인. 해결은 콘솔에서 지리적 제한을 "제한 없음" 으로(WAF 면 해당 규칙 제거). 확인은 임시 워크플로 `diag-edge.yml`(브랜치 push 로 실행) 로 `ads.txt` 가 `text/plain` 인지 본다. 한국 밖만 막을 이유가 있었다면(예: 봇 트래픽) 지리 제한 대신 WAF 의 봇 규칙으로 바꾼다.
+
 ## 7. 운영 시 주의
 
 ⚠️ **테스트 DB 와 운영 DB 가 같은 인스턴스다.** `sql/V3/` 에 DDL 을 작성하는 순간 운영에도 즉시 반영된다. 스키마 변경 작업 전에는 반드시 사용자 확인을 받는다 — 로컬/스테이징에서 먼저 검증할 방법이 없다.
