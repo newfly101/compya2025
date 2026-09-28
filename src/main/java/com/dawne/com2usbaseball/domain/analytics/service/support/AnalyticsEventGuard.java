@@ -1,5 +1,8 @@
 package com.dawne.com2usbaseball.domain.analytics.service.support;
 
+import com.dawne.com2usbaseball.domain.analytics.dto.request.AnalyticsEventItemRequest;
+import com.dawne.com2usbaseball.domain.analytics.enums.AnalyticsEventType;
+
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -24,6 +27,7 @@ public final class AnalyticsEventGuard {
     public static final int CONTENT_TYPE_MAX_LENGTH = 20;
     public static final int CONTENT_ID_MAX_LENGTH = 50;
     public static final int COUNTRY_MAX_LENGTH = 10;
+    public static final int NAV_TYPE_MAX_LENGTH = 16;
 
     private static final Pattern UUID_PATTERN = Pattern.compile(
             "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
@@ -66,5 +70,93 @@ public final class AnalyticsEventGuard {
             return null;
         }
         return value.length() > maxLength ? value.substring(0, maxLength) : value;
+    }
+
+    /** UA 문자열에서 OS 만 뽑는다. 버전은 저장하지 않는다(요청사항). */
+    public static String detectOs(String userAgent) {
+        if (userAgent == null) {
+            return "Other";
+        }
+        String lower = userAgent.toLowerCase();
+        if (lower.contains("android")) {
+            return "Android";
+        }
+        if (lower.contains("iphone") || lower.contains("ipad")) {
+            return "iOS";
+        }
+        if (lower.contains("windows")) {
+            return "Windows";
+        }
+        if (lower.contains("mac os") || lower.contains("macintosh")) {
+            return "Mac";
+        }
+        return "Other";
+    }
+
+    /**
+     * UA 로 기기 종류를 가늠하되, 뷰포트 폭이 480px 이하면 무조건 mobile 로 덮어쓴다
+     * — 모바일 브라우저가 데스크탑 UA 를 흉내내는 경우가 있어 화면 폭이 더 믿을 만하다.
+     */
+    public static String detectDeviceType(String userAgent, Integer screenW) {
+        if (screenW != null && screenW <= 480) {
+            return "mobile";
+        }
+        if (userAgent == null) {
+            return "pc";
+        }
+        String lower = userAgent.toLowerCase();
+        if (lower.contains("ipad")) {
+            return "tablet";
+        }
+        if (lower.contains("iphone") || (lower.contains("android") && lower.contains("mobile"))) {
+            return "mobile";
+        }
+        return "pc";
+    }
+
+    /** 순서가 중요하다 — Edge/Chrome 의 UA 에도 "Safari" 문자열이 섞여 있다. */
+    public static String detectBrowser(String userAgent) {
+        if (userAgent == null) {
+            return "Other";
+        }
+        String lower = userAgent.toLowerCase();
+        if (lower.contains("edg/")) {
+            return "Edge";
+        }
+        if (lower.contains("chrome/")) {
+            return "Chrome";
+        }
+        if (lower.contains("samsungbrowser")) {
+            return "Samsung";
+        }
+        if (lower.contains("firefox/")) {
+            return "Firefox";
+        }
+        if (lower.contains("safari/")) {
+            return "Safari";
+        }
+        return "Other";
+    }
+
+    /**
+     * 이벤트 종류별 필수 필드가 다 채워졌는지 본다. 공통(anonId/sessionId/pagePath) +
+     * PAGE_VIEW 는 navType, OUTBOUND_CLICK 은 targetUrl. item_id 는 이번 라운드
+     * 실제로 채우는 FE 호출부가 없어 필수에서 제외한다(draft 표 수정, decisions.log).
+     */
+    public static boolean hasRequiredFields(AnalyticsEventItemRequest item, AnalyticsEventType eventType) {
+        if (isBlank(item.anonId()) || isBlank(item.sessionId()) || isBlank(item.pagePath())) {
+            return false;
+        }
+        if (eventType == AnalyticsEventType.PAGE_VIEW && isBlank(item.navType())) {
+            return false;
+        }
+        if (eventType == AnalyticsEventType.OUTBOUND_CLICK && isBlank(item.targetUrl())) {
+            return false;
+        }
+        return true;
+    }
+
+    private static boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }

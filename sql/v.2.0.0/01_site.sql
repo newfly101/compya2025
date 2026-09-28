@@ -185,6 +185,7 @@ CREATE TABLE site_user_event
                                 NOT NULL                COMMENT '이벤트 종류',
 
     anon_id        CHAR(36)    NOT NULL                COMMENT '익명 방문자 UUID (쿠키). 로그인 후에도 유지',
+    session_id     VARCHAR(36) NULL                     COMMENT '브라우저 세션 UUID, 30분 무활동 만료 (2026-09-29 추가 — draft/feat/admin-internal-stats/02 실행 전까지 운영엔 없음)',
     user_id        BIGINT      NULL                     COMMENT 'site_users.id. 로그인 상태일 때만 채워짐 (서버가 인증 컨텍스트에서 채운다 — 클라이언트 입력 아님). FK 제약은 걸지 않는다(쓰기 비용, 정합성은 앱 레벨 보장)',
 
     page_path      VARCHAR(255) NOT NULL                COMMENT '이벤트 발생 화면 경로',
@@ -198,6 +199,12 @@ CREATE TABLE site_user_event
     referrer       VARCHAR(500) NULL                    COMMENT 'document.referrer',
     country        VARCHAR(10) NULL                     COMMENT 'CloudFront-Viewer-Country 재사용',
     user_agent     VARCHAR(255) NULL                    COMMENT '봇 판별·통계용. 원문 앞 255자만 저장',
+    nav_type       VARCHAR(16) NULL                     COMMENT 'reload/navigate/back_forward/spa (2026-09-29 추가)',
+    screen_w       SMALLINT    NULL                     COMMENT '클라이언트 뷰포트 폭(px) (2026-09-29 추가)',
+    device_type    VARCHAR(8)  NULL                     COMMENT '서버 UA 파싱 — mobile/tablet/pc (2026-09-29 추가)',
+    os             VARCHAR(16) NULL                     COMMENT '서버 UA 파싱 (2026-09-29 추가)',
+    browser        VARCHAR(16) NULL                     COMMENT '서버 UA 파싱, 버전 미포함 (2026-09-29 추가)',
+    item_id        BIGINT      NULL                     COMMENT 'OUTBOUND_CLICK 콘텐츠 id (2026-09-29 추가)',
 
     extra          JSON        NULL                     COMMENT '스키마에 없는 부가 정보 임시 보관용. WHERE·인덱스 대상이 되는 값은 반드시 정규 컬럼으로 승격시킬 것 — JSON 컬럼엔 인덱스를 태우지 않는다. 1단계는 항상 NULL',
 
@@ -266,3 +273,29 @@ CREATE TABLE site_user_event_daily
 --         바꾸는 등 테이블 구조 변경이 필요 — 지금 CREATE TABLE 에는 반영하지 않았다.
 --   → (B) 를 권장하되, 실제 적용은 보관 기간(N)이 확정된 뒤 별도 마이그레이션으로 진행한다.
 -- =====================================================================
+
+-- ============================================================================
+-- 일별 집계 테이블 3종 (2026-09-29 추가, 내부 통계 3차 — draft/feat/admin-internal-stats/03 실행 전까지 운영엔 없음)
+-- site_user_event_daily 와 같이 새벽 배치가 채운다. FK 없음(집계 결과)
+-- ============================================================================
+CREATE TABLE site_user_event_daily_device (
+  event_date        DATE        NOT NULL COMMENT '집계 일자(KST)',
+  device_type       VARCHAR(8)  NOT NULL COMMENT 'mobile / tablet / pc / unknown',
+  unique_anon_count BIGINT      NOT NULL COMMENT '해당 기기로 방문한 anon_id 수',
+  page_view_count   BIGINT      NOT NULL DEFAULT 0 COMMENT '해당 기기의 PAGE_VIEW 수(중복 제거 후)',
+  PRIMARY KEY (event_date, device_type)
+) COMMENT '일별 기기 분포 — 새벽 집계 배치가 채운다';
+
+CREATE TABLE site_user_event_daily_session (
+  event_date        DATE   NOT NULL PRIMARY KEY COMMENT '집계 일자(KST)',
+  session_count     BIGINT NOT NULL COMMENT 'session_id 유일 수',
+  page_view_count   BIGINT NOT NULL COMMENT '같은 세션·경로 30초 내 중복 제거한 PAGE_VIEW 수',
+  unique_anon_count BIGINT NOT NULL DEFAULT 0 COMMENT 'anon_id 유일 수(방문자)'
+) COMMENT '일별 세션 요약 — 세션당 페이지뷰 = page_view_count / session_count';
+
+CREATE TABLE site_user_event_daily_referrer (
+  event_date    DATE         NOT NULL COMMENT '집계 일자(KST)',
+  referrer_host VARCHAR(255) NOT NULL COMMENT '외부 유입 호스트(자기 도메인·localhost 제외)',
+  event_count   BIGINT       NOT NULL COMMENT '그 호스트에서 시작한 PAGE_VIEW 수',
+  PRIMARY KEY (event_date, referrer_host)
+) COMMENT '일별 외부 유입 상위 — 새벽 집계 배치가 채운다';

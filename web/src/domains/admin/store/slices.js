@@ -4,6 +4,8 @@ import {
   requestCacheSyncTargets,
   requestCacheSyncOne,
   requestCacheSyncAll,
+  requestAdminAnalyticsSummary,
+  requestAdminAnalyticsAggregate,
 } from "@/domains/admin/store/admin/thunks.js";
 
 const initialState = {
@@ -87,3 +89,34 @@ const cacheSyncSlice = createSlice({
 });
 
 export default cacheSyncSlice.reducer;
+
+/* =========================================================================
+ * 관리자 통계 탭 — 방문·이벤트 요약(range 별). cacheSync 와 같은 파일에 두되
+ * named export 로 분리한다(파일 분할 기준 미달, 두 슬라이스 모두 짧다).
+ * ========================================================================= */
+const adminAnalyticsSlice = createSlice({
+  name: "adminAnalytics",
+  initialState: {
+    summary: null,  // AdminAnalyticsSummaryResponse — 조회 전엔 null
+    loading: false,
+    error: null,
+    range: "TODAY", // TODAY | WEEK | MONTH — 세그먼트 선택값, 캐시 안 함(바뀌면 항상 재조회)
+    mutateLoading: false, // 수동 재집계 진행 중
+    mutateError: null,    // 수동 재집계 실패 메시지
+  },
+  reducers: {
+    setAdminAnalyticsRange(state, action) {
+      state.range = action.payload;
+    },
+  },
+  extraReducers: (builder) => {
+    applyAsyncHandlers(builder, requestAdminAnalyticsSummary, (state, action) => {
+      state.summary = action.payload;
+    });
+    // 재집계 — 응답에 담을 상태 없음(성공 알림은 meta.notify), 로딩/에러 칸만 mutate 로 분리.
+    applyAsyncHandlers(builder, requestAdminAnalyticsAggregate, () => {}, "mutate");
+  },
+});
+
+export const { setAdminAnalyticsRange } = adminAnalyticsSlice.actions;
+export const adminAnalyticsReducer = adminAnalyticsSlice.reducer;

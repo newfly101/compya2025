@@ -3,8 +3,13 @@ import {
   fetchCacheSyncTargets,
   fetchCacheSyncOne,
   fetchCacheSyncAll,
+  fetchAdminAnalyticsSummary,
+  fetchAdminAnalyticsAggregate,
 } from "@/domains/admin/store/admin/api.js";
-import { ADMIN_CACHE_SYNC_ACTIONS } from "@/domains/admin/store/admin/endpoints.js";
+import {
+  ADMIN_CACHE_SYNC_ACTIONS,
+  ADMIN_ANALYTICS_ACTIONS,
+} from "@/domains/admin/store/admin/endpoints.js";
 
 export const requestCacheSyncTargets = createAsyncThunk(
   ADMIN_CACHE_SYNC_ACTIONS.GET_TARGETS,
@@ -38,6 +43,34 @@ export const requestCacheSyncAll = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       return await fetchCacheSyncAll();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// 관리자 통계 탭 — range(TODAY|WEEK|MONTH) 별 요약 조회. 캐시하지 않고 매번 새 요청.
+export const requestAdminAnalyticsSummary = createAsyncThunk(
+  ADMIN_ANALYTICS_ACTIONS.GET_SUMMARY,
+  async (range, { rejectWithValue }) => {
+    try {
+      return await fetchAdminAnalyticsSummary(range);
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// 통계 수동 재집계 — date(yyyy-MM-dd) 하루치를 다시 계산. 화면이 성공 시 현재 range 를
+// 이어서 재조회한다(여기서 하지 않음 — thunk 는 단일 책임).
+export const requestAdminAnalyticsAggregate = createAsyncThunk(
+  ADMIN_ANALYTICS_ACTIONS.AGGREGATE,
+  async (date, { rejectWithValue, fulfillWithValue }) => {
+    try {
+      await fetchAdminAnalyticsAggregate(date);
+      return fulfillWithValue(date, {
+        notify: { kind: "success", message: `${date} 재집계했습니다.` },
+      });
     } catch (error) {
       return rejectWithValue(error.message);
     }

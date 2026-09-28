@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.analytics.repository.mapper.AnalyticsEventDailyMapper">
+
+    <!--
+      대상일(:date) 하루치 site_user_event 원본을 (event_type, page_path) 로 묶어
+      site_user_event_daily 에 채운다. content_type/content_id 는 PK NOT NULL 이라 빈 문자열 리터럴.
+      매일 새벽 배치가 재실행돼도 같은 날을 다시 계산해 최신값으로 덮어쓰도록 ON DUPLICATE KEY UPDATE.
+    -->
+    <insert id="aggregatePageEvents" parameterType="java.time.LocalDate">
+        INSERT INTO site_user_event_daily
+            (event_date, event_type, page_path, content_type, content_id,
+             event_count, unique_anon_count, unique_user_count)
+        SELECT #{date},
+               event_type,
+               page_path,
+               '',
+               '',
+               COUNT(*),
+               COUNT(DISTINCT anon_id),
+               COUNT(DISTINCT user_id)
+        FROM site_user_event
+        WHERE event_type IN ('PAGE_VIEW', 'OUTBOUND_CLICK', 'SEARCH')
+          AND created_at >= #{date}
+          AND created_at &lt; #{date} + INTERVAL 1 DAY
+        GROUP BY event_type, page_path
+        ON DUPLICATE KEY UPDATE
+            event_count       = VALUES(event_count),
+            unique_anon_count = VALUES(unique_anon_count),
+            unique_user_count = VALUES(unique_user_count)
+    </insert>
+
+    <!-- 위와 동일하되 CONTENT_CLICK 을 (content_type, content_id) 로 묶는다. page_path 는 빈 문자열. -->
+    <insert id="aggregateContentEvents" parameterType="java.time.LocalDate">
+        INSERT INTO site_user_event_daily
+            (event_date, event_type, page_path, content_type, content_id,
+             event_count, unique_anon_count, unique_user_count)
+        SELECT #{date},
+               event_type,
+               '',
+               COALESCE(content_type, ''),
+               COALESCE(content_id, ''),
+               COUNT(*),
+               COUNT(DISTINCT anon_id),
+               COUNT(DISTINCT user_id)
+        FROM site_user_event
+        WHERE event_type = 'CONTENT_CLICK'
+          AND created_at >= #{date}
+          AND created_at &lt; #{date} + INTERVAL 1 DAY
+        GROUP BY event_type, COALESCE(content_type, ''), COALESCE(content_id, '')
+        ON DUPLICATE KEY UPDATE
+            event_count       = VALUES(event_count),
+            unique_anon_count = VALUES(unique_anon_count),
+            unique_user_count = VALUES(unique_user_count)
+    </insert>
+
+    <!--
+      3차: 일별 기기/세션/외부유입 집계 (site_user_event_daily_device/_session/_referrer, 03_daily_tables.sql).
+      device/session 의 page_view_count 는 "같은 세션·경로 30초 내 중복 제거" — 서브쿼리에서
+      LAG 로 직전 같은 (session_id, page_path) 방문과의 간격이 30초 미만이면 중복(is_new=0)으로 본다.
+    -->
+    <insert id="aggregateDeviceDaily" parameterType="java.time.LocalDate">
+        INSERT INTO site_user_event_daily_device (event_date, device_type, unique_anon_count, page_view_count)
+        SELECT #{date}, device_type, COUNT(DISTINCT anon_id), SUM(is_new)
+        FROM (
+            SELECT anon_id, COALESCE(device_type, 'unknown') AS device_type,
+                   CASE WHEN LAG(created_at) OVER (PARTITION BY session_id, page_path ORDER BY created_at) IS NULL
+                             OR LAG(created_at) OVER (PARTITION BY session_id, page_path ORDER BY created_at)
+                               &lt; created_at - INTERVAL 30 SECOND
+                        THEN 1 ELSE 0 END AS is_new
+            FROM site_user_event
+            WHERE event_type = 'PAGE_VIEW'
+              AND created_at &gt;= #{date}
+              AND created_at &lt; #{date} + INTERVAL 1 DAY
+        ) t
+        GROUP BY device_type
+        ON DUPLICATE KEY UPDATE
+            unique_anon_count = VALUES(unique_anon_count),
+            page_view_count   = VALUES(page_view_count)
+    </insert>
+
+    <!-- 세션은 PK 가 event_date 단독 — 하루 전체를 합쳐 한 행만 만든다. -->
+    <insert id="aggregateSessionDaily" parameterType="java.time.LocalDate">
+        INSERT INTO site_user_event_daily_session (event_date, session_count, page_view_count, unique_anon_count)
+        SELECT #{date}, COUNT(DISTINCT session_id), SUM(is_new), COUNT(DISTINCT anon_id)
+        FROM (
+            SELECT anon_id, session_id,
+                   CASE WHEN LAG(created_at) OVER (PARTITION BY session_id, page_path ORDER BY created_at) IS NULL
+                             OR LAG(created_at) OVER (PARTITION BY session_id, page_path ORDER BY created_at)
+                               &lt; created_at - INTERVAL 30 SECOND
+                        THEN 1 ELSE 0 END AS is_new
+            FROM site_user_event
+            WHERE event_type = 'PAGE_VIEW'
+              AND created_at &gt;= #{date}
+              AND created_at &lt; #{date} + INTERVAL 1 DAY
+        ) t
+        ON DUPLICATE KEY UPDATE
+            session_count     = VALUES(session_count),
+            page_view_count   = VALUES(page_view_count),
+            unique_anon_count = VALUES(unique_anon_count)
+    </insert>
+
+    <!-- 외부 유입은 dedup 불필요 — referrer 는 2라운드부터 host-only 로 저장돼 추가 파싱이 없다. -->
+    <insert id="aggregateReferrerDaily" parameterType="java.time.LocalDate">
+        INSERT INTO site_user_event_daily_referrer (event_date, referrer_host, event_count)
+        SELECT #{date}, referrer, COUNT(*)
+        FROM site_user_event
+        WHERE event_type = 'PAGE_VIEW'
+          AND referrer IS NOT NULL AND referrer &lt;&gt; ''
+          AND created_at &gt;= #{date}
+          AND created_at &lt; #{date} + INTERVAL 1 DAY
+        GROUP BY referrer
+        ON DUPLICATE KEY UPDATE event_count = VALUES(event_count)
+    </insert>
+
+</mapper>

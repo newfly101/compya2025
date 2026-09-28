@@ -19,6 +19,20 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const webRoot = path.resolve(__dirname, "..");
 const distDir = path.join(webRoot, "dist");
 const rootIndexFile = path.join(distDir, "index.html");
+const sitemapFile = path.join(distDir, "sitemap.xml");
+
+// 데이터 라우트별 "실제 항목이 들어있다"는 최소 증거 — prerender.mjs 의 DATA_ROUTES 셀렉터를
+// 검사 가능한 정규식으로 옮긴 것(원본이 바뀌면 같이 고칠 것). 항목이 하나도 없으면 이 패턴도
+// HTML 에 없다.
+const DATA_MARKER_PATTERNS = {
+  "/notices": /href="\/notice\//,
+  "/coupons": /<article/,
+  "/events": /class="[^"]*eventCard/,
+  "/players": /class="[^"]*card/,
+  "/legend-stats": /<tr[\s>]/,
+  "/history-mode/legend": /<tr[\s>]/,
+  "/skills": /aria-expanded=/,
+};
 
 // "빈 SPA 셸 의심" 판정 기준
 // ------------------------------------------------------------------
@@ -41,6 +55,25 @@ function isSuspectShellCopy(routeSize, rootSize) {
   return diff <= tolerance;
 }
 
+// sitemap.xml 에 실린 공지 상세 URL 수 — dist/notice/*/index.html 실제 스냅샷 수와 맞아야
+// "sitemap 에는 있는데 실제 페이지는 없다"(2026-09-28 사고)가 재발하지 않는다.
+// sitemap 자체가 없으면(별도 문제) 이 검사는 건너뛴다.
+function countSitemapNoticeUrls() {
+  if (!fs.existsSync(sitemapFile)) return null;
+  const xml = fs.readFileSync(sitemapFile, "utf-8");
+  const matches = xml.match(/<loc>[^<]*\/notice\/[^<]*<\/loc>/g);
+  return matches ? matches.length : 0;
+}
+
+function countNoticeSnapshotDirs() {
+  const noticeDir = path.join(distDir, "notice");
+  if (!fs.existsSync(noticeDir)) return 0;
+  return fs
+    .readdirSync(noticeDir, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && fs.existsSync(path.join(noticeDir, d.name, "index.html")))
+    .length;
+}
+
 function main() {
   if (!fs.existsSync(rootIndexFile)) {
     console.error(
@@ -54,6 +87,7 @@ function main() {
 
   const missing = [];
   const suspect = [];
+  const dataMissing = [];
 
   for (const route of STATIC_ROUTES) {
     const outFile = routeToOutputFile(route);
@@ -72,6 +106,11 @@ function main() {
     if (content === rootContent || isSuspectShellCopy(size, rootSize)) {
       suspect.push({ route: label, size, rootSize });
     }
+
+    const marker = DATA_MARKER_PATTERNS[route];
+    if (marker && !marker.test(content)) {
+      dataMissing.push(label);
+    }
   }
 
   console.log(`[verify-prerender] 대상 ${STATIC_ROUTES.length}개 라우트 확인`);
@@ -88,7 +127,21 @@ function main() {
     );
   }
 
-  if (missing.length > 0 || suspect.length > 0) {
+  if (dataMissing.length > 0) {
+    console.error("[verify-prerender] ✖ 데이터 항목 마커 없음 (0건으로 스냅샷됐을 가능성):");
+    dataMissing.forEach((r) => console.error(`    - ${r}`));
+  }
+
+  const sitemapNoticeCount = countSitemapNoticeUrls();
+  const snapshotNoticeCount = countNoticeSnapshotDirs();
+  const noticeMismatch = sitemapNoticeCount !== null && sitemapNoticeCount !== snapshotNoticeCount;
+  if (noticeMismatch) {
+    console.error(
+      `[verify-prerender] ✖ sitemap 공지 상세 URL ${sitemapNoticeCount}건 ≠ 스냅샷 ${snapshotNoticeCount}건`
+    );
+  }
+
+  if (missing.length > 0 || suspect.length > 0 || dataMissing.length > 0 || noticeMismatch) {
     console.error(
       "[verify-prerender] 배포 중단 — build:fast 로 잘못 빌드됐거나 prerender.mjs 가 실패했을 가능성. build:prerender 로 재빌드 후 재확인할 것"
     );

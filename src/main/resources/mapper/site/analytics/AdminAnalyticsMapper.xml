@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.analytics.repository.mapper.AdminAnalyticsMapper">
+
+    <!--
+      TODAY: 원본 site_user_event, 오늘(서버 기준) 하루치를 그대로 긁는다.
+      DATE(created_at) = CURDATE() 대신 범위 조건을 쓴다 — created_at 에 걸린
+      idx_ue_type_created 인덱스를 DATE() 로 감싸면 함수 적용이라 인덱스를 못 타고
+      풀스캔이 된다(task-analysis.md §3 FN-15 should 2).
+    -->
+    <select id="sumTodayVisitors" resultType="long">
+        SELECT COUNT(DISTINCT anon_id)
+        FROM site_user_event
+        WHERE event_type = 'PAGE_VIEW'
+          AND created_at >= CURDATE()
+          AND created_at &lt; CURDATE() + INTERVAL 1 DAY
+    </select>
+
+    <select id="sumTodayPageViews" resultType="long">
+        SELECT COUNT(*)
+        FROM site_user_event
+        WHERE event_type = 'PAGE_VIEW'
+          AND created_at >= CURDATE()
+          AND created_at &lt; CURDATE() + INTERVAL 1 DAY
+    </select>
+
+    <select id="sumTodayEventCounts" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsEventCountRow">
+        SELECT event_type AS eventType, COUNT(*) AS count
+        FROM site_user_event
+        WHERE created_at >= CURDATE()
+          AND created_at &lt; CURDATE() + INTERVAL 1 DAY
+        GROUP BY event_type
+    </select>
+
+    <select id="sumTodayTopPages" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.TopPageResponse">
+        SELECT page_path AS pagePath, COUNT(*) AS count
+        FROM site_user_event
+        WHERE event_type = 'PAGE_VIEW'
+          AND created_at >= CURDATE()
+          AND created_at &lt; CURDATE() + INTERVAL 1 DAY
+        GROUP BY page_path
+        ORDER BY count DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- TODAY 전용 세션·기기·외부유입 3종. session_id/device_type/referrer 컬럼은 2026-09-29 반영 완료. -->
+    <select id="sumTodaySessionCount" resultType="long">
+        SELECT COUNT(DISTINCT session_id)
+        FROM site_user_event
+        WHERE created_at >= CURDATE()
+          AND created_at &lt; CURDATE() + INTERVAL 1 DAY
+          AND session_id IS NOT NULL
+    </select>
+
+    <select id="sumTodayDeviceRatio" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.DeviceCountRow">
+        SELECT device_type AS deviceType, COUNT(DISTINCT anon_id) AS count
+        FROM site_user_event
+        WHERE created_at >= CURDATE()
+          AND created_at &lt; CURDATE() + INTERVAL 1 DAY
+          AND device_type IS NOT NULL
+        GROUP BY device_type
+    </select>
+
+    <select id="sumTodayTopReferrers" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.TopReferrerResponse">
+        SELECT referrer AS referrerHost, COUNT(*) AS count
+        FROM site_user_event
+        WHERE created_at >= CURDATE()
+          AND created_at &lt; CURDATE() + INTERVAL 1 DAY
+          AND referrer IS NOT NULL
+          AND referrer &lt;&gt; ''
+        GROUP BY referrer
+        ORDER BY count DESC
+        LIMIT #{limit}
+    </select>
+
+    <!--
+      WEEK/MONTH: 집계 site_user_event_daily, [start, end] 양끝 포함(완료된 날짜만 — 배치가
+      전날까지만 채우므로 end 는 항상 어제 이하). uniqueVisitors 는 PAGE_VIEW 행의
+      unique_anon_count 를 날짜·화면 구분 없이 합산한 근사치다 — 같은 방문자가 여러 날/여러
+      화면을 방문하면 중복 집계된다(task-analysis.md §3 FN-3 근사치 가정, 알고 채택한 트레이드오프).
+      ponytail: 정확한 기간 고유값이 필요해지면 원본(site_user_event) 직접 COUNT(DISTINCT) 로 교체.
+    -->
+    <select id="sumRangeVisitors" resultType="long">
+        SELECT COALESCE(SUM(unique_anon_count), 0)
+        FROM site_user_event_daily
+        WHERE event_type = 'PAGE_VIEW'
+          AND event_date BETWEEN #{start} AND #{end}
+    </select>
+
+    <select id="sumRangePageViews" resultType="long">
+        SELECT COALESCE(SUM(event_count), 0)
+        FROM site_user_event_daily
+        WHERE event_type = 'PAGE_VIEW'
+          AND event_date BETWEEN #{start} AND #{end}
+    </select>
+
+    <select id="sumRangeEventCounts" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsEventCountRow">
+        SELECT event_type AS eventType, SUM(event_count) AS count
+        FROM site_user_event_daily
+        WHERE event_date BETWEEN #{start} AND #{end}
+        GROUP BY event_type
+    </select>
+
+    <select id="sumRangeTopPages" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.TopPageResponse">
+        SELECT page_path AS pagePath, SUM(event_count) AS count
+        FROM site_user_event_daily
+        WHERE event_type = 'PAGE_VIEW'
+          AND event_date BETWEEN #{start} AND #{end}
+        GROUP BY page_path
+        ORDER BY count DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 3차: 일별 기기/세션/외부유입 집계 테이블(site_user_event_daily_device/_session/_referrer) 기간 합산. -->
+    <select id="sumRangeSessionStats" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.SessionStatsRow">
+        SELECT COALESCE(SUM(session_count), 0) AS sessionCount, COALESCE(SUM(page_view_count), 0) AS pageViewCount
+        FROM site_user_event_daily_session
+        WHERE event_date BETWEEN #{start} AND #{end}
+    </select>
+
+    <select id="sumRangeDeviceRatio" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.DeviceCountRow">
+        SELECT device_type AS deviceType, SUM(unique_anon_count) AS count
+        FROM site_user_event_daily_device
+        WHERE event_date BETWEEN #{start} AND #{end}
+        GROUP BY device_type
+    </select>
+
+    <select id="sumRangeTopReferrers" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.TopReferrerResponse">
+        SELECT referrer_host AS referrerHost, SUM(event_count) AS count
+        FROM site_user_event_daily_referrer
+        WHERE event_date BETWEEN #{start} AND #{end}
+        GROUP BY referrer_host
+        ORDER BY count DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>
