@@ -52,3 +52,9 @@ export const formatNow = (date = new Date()) => {
 
   return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
 }
+
+/**
+ * KST 기준 "어제" 날짜 (yyyy-MM-dd, `<input type="date">` 값 형식).
+ * 24시간을 그대로 빼도 KST 는 고정 오프셋(DST 없음)이라 달력상 하루 전이 정확히 나온다.
+ */
+export const getYesterdayKst = () => formatNow(new Date(Date.now() - 24 * 60 * 60 * 1000)).slice(0, 10);

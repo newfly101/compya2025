@@ -11,3 +11,14 @@ export const ADMIN_CACHE_SYNC_ACTIONS = {
   SYNC_ONE:    "POST/admin/cache-sync/sync-one",
   SYNC_ALL:    "POST/admin/cache-sync/sync-all",
 };
+
+// 관리자 통계 탭 — 방문·이벤트 요약. range 는 TODAY|WEEK|MONTH.
+export const ADMIN_ANALYTICS = {
+  GET_SUMMARY: (range) => `/admin/analytics/summary?range=${range}`,
+  AGGREGATE:   (date) => `/admin/analytics/aggregate?date=${date}`,
+};
+
+export const ADMIN_ANALYTICS_ACTIONS = {
+  GET_SUMMARY: "GET/admin/analytics/summary",
+  AGGREGATE:   "POST/admin/analytics/aggregate",
+};

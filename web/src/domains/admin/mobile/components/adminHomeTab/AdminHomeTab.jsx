@@ -1,7 +1,9 @@
 import { ADMIN_HOME_CARDS } from "@/domains/admin/mobile/ADMIN_TABS.js";
+import { formatNow } from "@/global/utils/datetime/dateUtils.js";
 import styles from "./AdminHomeTab.module.scss";
 
-const todayStr = () => new Date().toISOString().slice(0, 10);
+// UTC 기준 slice 는 KST 자정~09시에 하루 전 날짜가 나온다(fe-convention.md §9 금지 패턴) — formatNow(KST) 사용.
+const todayStr = () => formatNow().slice(0, 10);
 
 // counts/domains 는 AdminShellScreen 이 useAdminCounts() 로 이미 불러온 것을 그대로 받는다.
 // 홈 탭이 단독으로 다시 fetch 하지 않는다 — 탭을 옮겨 다녀도 재요청이 없다.
@@ -49,7 +51,9 @@ export default function AdminHomeTab({ onNavigateTab, counts, domains }) {
             className={styles.card}
             onClick={() => onNavigateTab(tab.key)}
           >
-            <span className={styles.cardCount}>{counts[tab.key] ?? "–"}</span>
+            {tab.hasCount !== false && (
+              <span className={styles.cardCount}>{counts[tab.key] ?? "–"}</span>
+            )}
             <span className={styles.cardLabel}>{tab.label}</span>
           </button>
         ))}

@@ -5,6 +5,7 @@
 // ⚠️ 실패해도 화면에 아무 영향이 없어야 한다 — throw 금지, 운영 콘솔 로그도 남기지 않는다.
 import { ANALYTICS_ENABLED, API_BASE_URL } from "@/config/env.js";
 import { getOrCreateAnonId } from "@/infra/analytics/anonId.js";
+import { getOrCreateSessionId } from "@/infra/analytics/sessionId.js";
 
 const ENDPOINT = `${API_BASE_URL}/analytics/events`;
 const FLUSH_INTERVAL_MS = 4000;
@@ -14,11 +15,27 @@ const isDev = import.meta.env.DEV;
 let queue = [];
 let flushTimer = null;
 
+// 내부 이동(referrer 호스트 == 현재 호스트, localhost 포함)은 유입 분석에 의미가 없어 버린다.
+// 외부 유입만 host-only 로 저장 — OUTBOUND_CLICK 의 "target 은 호스트만" 규칙과 결을 맞추고,
+// 통계 탭의 "외부 유입 상위" 집계를 BE 파싱 없이 GROUP BY referrer 그대로 가능하게 한다.
+const buildReferrer = () => {
+  const ref = document.referrer;
+  if (!ref) return undefined;
+  try {
+    const refHost = new URL(ref).host;
+    return refHost !== window.location.host ? refHost : undefined;
+  } catch {
+    return undefined;
+  }
+};
+
 const buildEvent = (eventType, payload = {}) => ({
   eventType,
   anonId: getOrCreateAnonId(),
+  sessionId: getOrCreateSessionId(),
   pagePath: window.location.pathname,
-  referrer: document.referrer || undefined,
+  screenW: window.innerWidth,
+  referrer: buildReferrer(),
   occurredAt: new Date().toISOString(),
   ...payload,
 });

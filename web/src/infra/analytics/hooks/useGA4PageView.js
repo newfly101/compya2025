@@ -2,6 +2,10 @@ import { useLocation, useMatches } from "react-router-dom";
 import { useEffect } from "react";
 import { pushEvent } from "@/infra/analytics/ga.js";
 
+// 모듈 스코프 — 진짜 새로고침(모듈 재초기화)에서는 리셋되어 정상 전송되고,
+// 같은 문서에서의 재마운트만으로는 유지되어 중복 PAGE_VIEW 전송을 막는다.
+let lastEmittedPath = null;
+
 export const useGA4PageView = () => {
   const location = useLocation();
   const matches = useMatches();
@@ -15,6 +19,14 @@ export const useGA4PageView = () => {
   // 구단·필터를 쿼리로 관리하는 화면(선수 백과사전, 레전드 재료)에서 특히 심하다.
   useEffect(() => {
     if (isDynamicTitle) return;
+    if (location.pathname === lastEmittedPath) return; // 재마운트 중복 차단
+
+    // 이 모듈 최초 호출(=진짜 새로고침/최초 진입)만 navigation 타입을 읽는다. 이후는 전부 SPA 이동.
+    const navType =
+      lastEmittedPath === null
+        ? (performance.getEntriesByType("navigation")[0]?.type ?? "navigate")
+        : "spa";
+    lastEmittedPath = location.pathname;
 
     // document.title 세팅 책임은 useDocumentMeta 로 이관됨 (infra/seo/useDocumentMeta.js)
     pushEvent({
@@ -22,6 +34,7 @@ export const useGA4PageView = () => {
       page_path: location.pathname,
       page_location: window.location.href,
       page_title: document.title,
+      nav_type: navType,
     });
   }, [location.pathname, isDynamicTitle]);
 }
