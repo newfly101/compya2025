@@ -4,6 +4,9 @@ name: Diag Edge
 # 원인이 잡히면 이 파일은 지운다. 배포·쓰기 없음.
 on:
   workflow_dispatch:
+  push:
+    branches: [fix/prerender-empty-snapshot]
+    paths: ['.github/workflows/diag-edge.yml']
 
 jobs:
   diag:
