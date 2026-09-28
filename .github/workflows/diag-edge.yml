@@ -1,0 +1,27 @@
+name: Diag Edge
+
+# 임시 진단 — 미국 러너 엣지에서 정적 파일이 어떻게 응답되는지 본다 (2026-09-28 ads.txt 가 HTML 로 오던 문제).
+# 원인이 잡히면 이 파일은 지운다. 배포·쓰기 없음.
+on:
+  workflow_dispatch:
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: DNS
+        run: |
+          echo "▶ compyafun.com 이 가리키는 곳"
+          getent hosts compyafun.com || true
+          dig +short compyafun.com CNAME || true
+          dig +short compyafun.com A | head -4 || true
+      - name: 정적 파일 응답 헤더
+        run: |
+          for u in https://compyafun.com/ads.txt "https://compyafun.com/ads.txt?v=$GITHUB_RUN_ID" https://compyafun.com/robots.txt https://compyafun.com/sitemap.xml https://compyafun.com/manifest.webmanifest https://compyafun.com/nonexistent-diag.txt; do
+            echo "=================== $u"
+            curl -s -D - -o /tmp/body -H "Cache-Control: no-cache" "$u" | tr -d '\r' | grep -iE '^HTTP/|^content-type|^x-cache|^age|^x-amz-cf-pop|^via|^etag|^last-modified|^content-length' || true
+            echo "본문 앞 80자: $(head -c 80 /tmp/body | tr '\n' ' ')"
+          done
+      - name: HEAD 와 GET 차이
+        run: |
+          echo "▶ HEAD"; curl -sI https://compyafun.com/ads.txt | tr -d '\r' | grep -iE '^HTTP/|^content-type|^x-cache|^age' || true
