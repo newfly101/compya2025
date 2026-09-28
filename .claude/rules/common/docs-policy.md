@@ -89,6 +89,8 @@ updated: 2026-09-28
 
 ## 6. 작업 흐름 5단계
 
+> 이 다섯 단계를 한 번에 돌리는 것이 `/feature <기능>` (`.claude/skills/feature/SKILL.md` → `.claude/workflows/feature.js`). 사람은 ① 투입과 마지막 자가 테스트만 한다. `/feature` 흐름 안의 문서 커밋은 사전 승인된 것으로 본다.
+
 ① 투입 — 사람 창작물(Claude Design html · 기획 md · 엑셀)을 `drafts/<branch>/` 에 둔다 (세션 = worktree = 브랜치 = 기능 하나, `claude --worktree {이름}`)
 ② 분석 — `developer-analyze` 가 `drafts/<branch>/**` + 현재 `spec.md`/`design.md` 를 읽고 `.claude/.progress/<branch>/analysis.md` 와, 바뀔 § 만 담은 `.claude/.progress/<branch>/spec-delta.md` 를 작성
 ③ 개발 — `frontend-developer` / `backend-developer` 가 기능 구현 후 각자 `docs/features/<f>/history.md` 맨 위에 항목 1개를 **직접** 추가 (`.claude/templates/history-entry.md`). 지금의 `fe-history.md`/`be-history.md` 는 그 재료

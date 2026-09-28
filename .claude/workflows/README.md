@@ -7,6 +7,7 @@
 | 워크플로 | 파일 | 용도 |
 |---|---|---|
 | Multi-Feature Parallel | `multi-feature-parallel.md` | 다중 도메인 한 세션 병렬 처리 (planner → integrate) |
+| **feature (열차)** | `feature.js` — Workflow 도구 스크립트 | 기능 하나를 자동으로 끝까지: drafts → 분석 → FE∥BE → Playwright 실측·수정 루프(3회) → 문서 검사. 호출은 `/feature <기능>` 스킬(`.claude/skills/feature/SKILL.md`)이 한다 |
 
 ## 2. 사용 방법
 
