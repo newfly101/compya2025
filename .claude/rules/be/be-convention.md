@@ -78,7 +78,7 @@ domain/{도메인}/
 - 응답 봉투 `{ success, code, data }`. 예외는 `BaseException(도메인Messages.코드, HttpStatus)` 하나만, 도메인별 예외 클래스 금지. 코드는 `NOTICE_` 처럼 도메인 대문자 접두, 성공·실패 한 enum. `*_NOT_FOUND` 는 404 (다른 status 금지)
 - `GlobalExceptionHandler` 는 MVC 표준 예외를 제 코드로 낸다 — 없는 주소 404 · 깨진 JSON/타입/필수 누락 400 · 405 · 415 · 5MB 초과 400. **새 예외를 catch-all(`Exception` → 500) 에 떨어뜨리지 말고 전용 핸들러를 둔다** (경위 `docs/decisions/0008`)
 - `BaseException` 은 cause 를 못 받는다 → 외부 예외(S3 등)를 감쌀 때 catch 안에서 `log.error("…", e)` 필수. 아니면 원인이 어디에도 안 남는다
-- 시각은 `LocalDateTime.now()` = JVM 기본 타임존(현재 미명시, OS 의존). 타임존 명시는 ❓ D8 — 확정 전 `TIMESTAMP` 컬럼 신설 금지, `DATETIME` 만
+- 시각은 `LocalDateTime.now()`. 타임존은 KST 로 명시한다(`docs/decisions/0007-kst-timezone.md` 확정) — 신규 컬럼은 `DATETIME` 만 쓴다, `TIMESTAMP` 금지
 
 ## 6. 권한
 

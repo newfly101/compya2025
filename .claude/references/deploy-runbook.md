@@ -69,6 +69,7 @@ FE 와 BE 는 같은 AWS 계정을 쓰지만 버킷은 분리돼 있다. `compya
 | `AWS_CREDENTIALS_ACCESS_KEY` / `AWS_CREDENTIALS_SECRET_KEY` / `PROD_AWS_ACCESS_KEY` / `PROD_AWS_SECRET_KEY` | BE 애플리케이션이 S3 업로드(이미지)에 쓰는 자격증명 — 위 GitHub Actions 배포용 키와는 **별개** | 로컬: 서버 환경변수 / 운영: EC2 환경변수 |
 | `AWS_REGION_STATIC_VALUE` / `AWS_S3_BUCKET` / `AWS_S3_URL` | 로컬용 S3 리전·버킷·URL (운영은 `application-prod.properties` 에 고정값) | 서버 환경변수 |
 | `SWAGGER_UI_ENABLED` | 로컬 Swagger UI 노출 여부 (운영은 properties 에서 항상 `false`) | 서버 환경변수 (기본값 `false`) |
+| `-Duser.timezone=Asia/Seoul` | JVM 기본 타임존 고정 (ADR 0007 2단계, properties 값과 별개로 기동 명령에 필요) | EC2 systemd 유닛의 실행 커맨드 (`java -Duser.timezone=Asia/Seoul -jar ...`) — 이 문서에서 yml·systemd 파일은 직접 수정하지 않는다 |
 
 BE 배포용 IAM 사용자는 FE 배포 권한 외에 `s3:PutObject`(아티팩트 버킷), `ssm:SendCommand`, `ssm:GetCommandInvocation` 이 추가로 필요하다. EC2 인스턴스 역할에는 `AmazonSSMManagedInstanceCore` + 아티팩트 버킷 `s3:GetObject` 가 필요하다. 상세 체크리스트는 `docs/global-guide/develop/be-deploy-setup.md` 참고.
 

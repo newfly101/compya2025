@@ -1,6 +1,6 @@
 ---
 adr: 0007
-title: 시각 기준을 한국 시간(KST)으로 명시한다 — 3단계 중 1단계만 완료
+title: 시각 기준을 한국 시간(KST)으로 명시한다 — 2단계 설정 반영(배포 대기) · 3단계 SQL 준비(실행 대기)
 status: partial
 date: 2026-09-27
 created: 2026-09-27
@@ -22,8 +22,8 @@ related: rules/be/be-convention.md § 5
 | 단계 | 범위 | 되돌릴 수 있나 | 상태 |
 |---|---|---|---|
 | 1단계 (화면만) | FE 3파일의 `toISOString().slice(0,10)` 을 기존 `dateUtils` 유틸(KST 명시)로 교체 | 예 — FE 배포 롤백만으로 즉시 복원 | **완료** |
-| 2단계 (+ 서버·DB 연결) | `spring.jackson.time-zone=Asia/Seoul`, JDBC `serverTimezone=Asia/Seoul`, 필요 시 `-Duser.timezone=Asia/Seoul` 추가. DDL 변경 없음 | 예 — 설정값 롤백으로 원복 | 미착수 (❓ D8) |
-| 3단계 (+ DB 스키마) | `site_coupons`/`site_notices` 의 `created_at`/`updated_at` 을 `TIMESTAMP` → `DATETIME` 으로 통일 | 아니오 — `ALTER TABLE` 은 즉시 반영 | 미착수 |
+| 2단계 (+ 서버·DB 연결) | `spring.jackson.time-zone=Asia/Seoul`, JDBC URL `timezone=Asia/Seoul`(mariadb-java-client 3.3.3, 3.x 형식), `-Duser.timezone=Asia/Seoul` | 예 — 설정값 롤백으로 원복 | **설정 파일 반영 완료, 배포 대기** — `application.properties`·`application-prod.properties` 수정됨, EC2 systemd 기동 커맨드에 JVM 옵션 추가는 `.claude/references/deploy-runbook.md` § 3 참고, 아직 미실행 |
+| 3단계 (+ DB 스키마) | `site_coupons`/`site_notices` 의 `created_at`/`updated_at` 을 `TIMESTAMP` → `DATETIME` 으로 통일 | 아니오 — `ALTER TABLE` 은 즉시 반영 | **SQL 준비 완료(`sql/draft/kst-timezone/`), 사용자 실행 대기** — DDL(`sql/v.2.0.0/01_site.sql`)에도 반영 예고 주석 추가함 |
 
 1단계부터 착수한 이유: 사용자가 실제로 본 증상을 정확히 이 3파일이 일으키고 있었고, 같은 도메인 안에 이미 정답 패턴(`formatNow()`)이 있어 새 코드 작성이 거의 필요 없었으며, DB·서버를 안 건드려 위험이 0에 가까웠다.
 
@@ -46,13 +46,14 @@ related: rules/be/be-convention.md § 5
 ## 영향받는 곳
 
 - `web/src/domains/{admin,coupons,events}/mobile/**` — 1단계 완료분
-- `application.properties` · `application-prod.properties` — 2단계 대상, 아직 미착수
-- `sql/V2/site/CREATE_TABLE_SITE.sql` (`site_coupons`, `site_notices`) — 3단계 대상
-- `rules/be/be-convention.md` § 5 — "시각 명시는 ❓ D8, 확정 전 `TIMESTAMP` 컬럼 신설 금지, `DATETIME` 만" 표기의 근거
+- `application.properties` · `application-prod.properties` — 2단계, 설정 반영 완료(배포 전까지 효력 없음)
+- `sql/v.2.0.0/01_site.sql` (`site_coupons`, `site_notices`) — 3단계 대상, DDL에 예고 주석 추가
+- `sql/draft/kst-timezone/` — 3단계 실행용 SQL 7개(00_check~99_rollback), 사용자가 직접 실행
+- `rules/be/be-convention.md` § 5 — "시각 명시는 ❓ D8, 확정 전 `TIMESTAMP` 컬럼 신설 금지, `DATETIME` 만" → "`DATETIME` 만 쓴다(0007 확정)" 로 갱신
 
 ## 아직 미정인 것 (❓ D8)
 
 1. **운영 EC2 인스턴스의 OS 타임존이 실제로 무엇인가** — 저장소 파일만으로는 확인 불가. `timedatectl` 로 직접 확인 필요
-2. 2단계에서 JDBC `serverTimezone` 을 명시하면 기존 `TIMESTAMP` 컬럼 값의 해석이 바뀔 수 있는데, 바뀐 값을 그대로 감수할지 먼저 실측 비교(적용 전 vs 후)를 거칠지
+2. ~~JDBC 타임존 파라미터 도입 시 기존 `TIMESTAMP` 값 해석 변경 여부~~ → 결정됨: `timezone=Asia/Seoul` 적용(mariadb-java-client 3.3.3 형식). 적용 전후 값 비교는 실제 배포 시 `sql/draft/kst-timezone/00_check.sql`·`04_verify.sql` 대조로 수행
 3. 3단계 대상에 `site_coupons`/`site_notices` 외에 레거시 `users`/`coupons`/`events`(현재 dual-write 중)도 포함할지, 그 정리가 끝난 뒤로 미룰지
 4. admin 날짜 보정 정책 — 종료 시각을 리터럴 `23:59:59` 로 할지 기존 관례 `23:59:00`(분 단위) 로 유지할지, 백필 실행 여부

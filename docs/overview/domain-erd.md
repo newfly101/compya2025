@@ -58,21 +58,23 @@ erDiagram
 
 ## 2. 테이블 ↔ 기능 대응표
 
-| 도메인 | 주요 테이블 | 매퍼 위치 |
-|---|---|---|
-| authentication / users | `site_users`, `site_user_oauth_accounts`, `site_refresh_tokens` | `mapper/site/oauth/*.xml` |
-| coupons | `site_coupons` | `mapper/site/coupon/CouponMapper.xml` |
-| events | `site_events` | `mapper/site/event/EventMapper.xml` |
-| notices | `site_notices` | `mapper/site/notice/NoticeMapper.xml` |
-| quiz | `fun_quiz`(⚠️ 접두는 `fun_`이나 관리자가 등록하는 사이트 콘텐츠) | `mapper/site/quiz/QuizMapper.xml` |
-| community(동결) | `site_board/post/comment/tag/post_tag/post_reaction/comment_reaction/report` + 레거시 `boards/posts/tags/posts_tags` | `mapper/site/community/*.xml` |
-| players | `data_player_card`, `data_player_card_stat`, `data_player_card_pitch`, `fun_teams` | `mapper/fun/playerCard/*.xml`, `mapper/fun/team/FunTeamMapper.xml` |
-| legendStats | `data_player_legend`, `data_player_legend_material`, `data_player_legend_stat`, `data_player_legend_pitch`, `data_pitch_type` | `mapper/fun/legendCard/*.xml`, `mapper/fun/legendStat/FunLegendStatMapper.xml` |
-| historyLegend(BE 패키지명 `historyMode`) | `data_history_round`, `data_history_roster` | `mapper/fun/historyMode/FunHistoryModeMapper.xml` |
-| playerSkills | `data_player_skill`, `data_player_skill_tier`, `data_player_skill_tier_value` | `mapper/fun/playerSkill/PlayerSkillMapper.xml` |
-| mileage | 전용 테이블 없음 — `data_player_card`/`data_player_legend_material` 조회 | `mapper/fun/mileage/MileageMapper.xml` |
-| admin / 내부 로깅 | `site_user_event`, `site_user_event_daily`(집계 배치 미구현) | `mapper/site/analytics/AnalyticsEventMapper.xml` |
-| home (후원 클릭 집계, REQ-HM-08) | `statistic_support_click` | `mapper/site/statistics/StatisticSupportClickMapper.xml` |
-| guides / policy / error | 없음 — FE 정적 콘텐츠 | - |
+재현 순서(빈 DB에 운영과 같은 스키마 만들기)와 폴더 구조는 [`.claude/references/db/sql-folders.md`](../../.claude/references/db/sql-folders.md) 참고 — `v.2.0.0/01_site.sql → 02_data.sql → 03_fun.sql → insert/*.sql → applied/*.sql` 순.
+
+| 도메인 | 주요 테이블 | 매퍼 위치 | 위치 |
+|---|---|---|---|
+| authentication / users | `site_users`, `site_user_oauth_accounts`, `site_refresh_tokens` | `mapper/site/oauth/*.xml` | `v.2.0.0/01_site` |
+| coupons | `site_coupons` | `mapper/site/coupon/CouponMapper.xml` | `v.2.0.0/01_site` |
+| events | `site_events` | `mapper/site/event/EventMapper.xml` | `v.2.0.0/01_site` |
+| notices | `site_notices` | `mapper/site/notice/NoticeMapper.xml` | `v.2.0.0/01_site` |
+| quiz | `fun_quiz`(⚠️ 접두는 `fun_`이나 관리자가 등록하는 사이트 콘텐츠) | `mapper/site/quiz/QuizMapper.xml` | `v.2.0.0/03_fun` |
+| community(동결) | `site_board/post/comment/tag/post_tag/post_reaction/comment_reaction/report` + 레거시 `boards/posts/tags/posts_tags` | `mapper/site/community/*.xml` | `draft/community` |
+| players | `data_player_card`, `data_player_card_stat`, `data_player_card_pitch`, `fun_teams` | `mapper/fun/playerCard/*.xml`, `mapper/fun/team/FunTeamMapper.xml` | `v.2.0.0/02_data` + `03_fun`(fun_teams) |
+| legendStats | `data_player_legend`, `data_player_legend_material`, `data_player_legend_stat`, `data_player_legend_pitch`, `data_pitch_type` | `mapper/fun/legendCard/*.xml`, `mapper/fun/legendStat/FunLegendStatMapper.xml` | `v.2.0.0/02_data` |
+| historyLegend(BE 패키지명 `historyMode`) | `data_history_round`, `data_history_roster` | `mapper/fun/historyMode/FunHistoryModeMapper.xml` | `v.2.0.0/02_data` |
+| playerSkills | `data_player_skill`, `data_player_skill_tier`, `data_player_skill_tier_value` | `mapper/fun/playerSkill/PlayerSkillMapper.xml` | `v.2.0.0/02_data` |
+| mileage | 전용 테이블 없음 — `data_player_card`/`data_player_legend_material` 조회 | `mapper/fun/mileage/MileageMapper.xml` | `v.2.0.0/02_data` |
+| admin / 내부 로깅 | `site_user_event`, `site_user_event_daily`(집계 배치 미구현) | `mapper/site/analytics/AnalyticsEventMapper.xml` | `v.2.0.0/01_site` |
+| home (후원 클릭 집계, REQ-HM-08) | `statistic_support_click` | `mapper/site/statistics/StatisticSupportClickMapper.xml` | `v.2.0.0/03_fun` |
+| guides / policy / error | 없음 — FE 정적 콘텐츠 | - | - |
 
 테이블 상세 정의(컬럼·인덱스·행수)는 별도 DB 색인 문서에 있다 — 여기서는 링크하지 않는다(재편 대상 경로).
