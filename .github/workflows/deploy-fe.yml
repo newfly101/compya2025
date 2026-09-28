@@ -87,34 +87,42 @@ jobs:
 
       - name: 배포 후 라이브 검증
         # 실패해도 배포 자체는 이미 나갔다 — 사용자가 결과가 기대와 다름을 즉시 알아야
-        # 하므로 job 을 실패 처리한다(아래 안내 메시지 참고).
+        # 하므로 job 을 실패 처리한다. 단 무효화 직후 엣지가 옛 응답을 잠깐 돌려주는 일이
+        # 있어(2026-09-28 ads.txt 가 text/html 로 잡힘 → 직접 열면 정상) 6회·20초 간격으로
+        # 재시도하고, HEAD 대신 GET 으로 본문까지 본다.
         run: |
-          ADS_CONTENT_TYPE=$(curl -sI "https://compyafun.com/ads.txt" 2>/dev/null | tr -d '\r' | grep -i '^content-type:' | head -1 || true)
-          HOME_HTML=$(curl -s "https://compyafun.com/" 2>/dev/null || true)
+          check() {
+            local ok=1
+            # ads.txt — content-type 과 본문(google.com, pub-…) 둘 다
+            ADS_HDR=$(curl -s -D - -o /tmp/ads.txt -H "Cache-Control: no-cache" "https://compyafun.com/ads.txt?v=${GITHUB_RUN_ID}" 2>/dev/null | tr -d '\r' || true)
+            ADS_CT=$(printf '%s\n' "$ADS_HDR" | grep -i '^content-type:' | head -1 || true)
+            if [[ "$ADS_CT" == *text/plain* ]] && grep -q '^google.com, pub-' /tmp/ads.txt 2>/dev/null; then
+              echo "✓ ads.txt: text/plain + 본문 확인"
+            else
+              echo "✖ ads.txt: ${ADS_CT:-<응답 없음>} / 본문 첫 줄: $(head -c 80 /tmp/ads.txt 2>/dev/null)"
+              ok=0
+            fi
+            # 홈 — "최신 쿠폰" 은 HomeScreen 이 렌더하는 실제 텍스트. index.html 원본(SPA 셸)에는
+            # 없고 prerender 스냅샷에만 구워진다. 이게 안 보이면 루트가 빈 SPA 셸로 나간 것이다.
+            HOME_HTML=$(curl -s -H "Cache-Control: no-cache" "https://compyafun.com/?v=${GITHUB_RUN_ID}" 2>/dev/null || true)
+            if [[ "$HOME_HTML" == *"최신 쿠폰"* ]]; then
+              echo "✓ 홈 HTML 에 prerender 실텍스트 확인 (\"최신 쿠폰\")"
+            else
+              echo "✖ 홈 HTML 에서 prerender 텍스트를 못 찾음 — 빈 SPA 셸로 나갔을 수 있다"
+              ok=0
+            fi
+            [[ $ok -eq 1 ]]
+          }
 
-          FAILED=0
+          for i in 1 2 3 4 5 6; do
+            echo "▶ 라이브 검증 시도 $i/6"
+            if check; then echo "✓ 라이브 검증 통과"; exit 0; fi
+            [[ $i -lt 6 ]] && { echo "  20초 뒤 재시도 (엣지 캐시 전파 대기)"; sleep 20; }
+          done
 
-          if [[ "$ADS_CONTENT_TYPE" == *text/plain* ]]; then
-            echo "✓ ads.txt content-type: text/plain"
-          else
-            echo "✖ ads.txt content-type 이 text/plain 이 아니다: ${ADS_CONTENT_TYPE:-<응답 없음>}"
-            FAILED=1
-          fi
-
-          # "최신 쿠폰" 은 HomeScreen 이 렌더하는 실제 텍스트 — index.html 원본(SPA 셸)에는
-          # 없고 prerender 스냅샷에만 구워진다. 이게 안 보이면 루트가 빈 SPA 셸로 나간 것이다.
-          if [[ "$HOME_HTML" == *"최신 쿠폰"* ]]; then
-            echo "✓ 홈 HTML 에 prerender 실텍스트 확인 (\"최신 쿠폰\")"
-          else
-            echo "✖ 홈 HTML 에서 prerender 텍스트를 못 찾음 — 빈 SPA 셸로 나갔을 수 있다"
-            FAILED=1
-          fi
-
-          if [[ "$FAILED" -eq 1 ]]; then
-            echo ""
-            echo "▶ 배포는 완료됐으나 결과가 기대와 다르다. CloudFront 무효화는 이미 끝난 뒤라"
-            echo "  캐시 문제는 아니다. 아래를 직접 열어 확인할 것:"
-            echo "    https://compyafun.com/ads.txt"
-            echo "    https://compyafun.com/"
-            exit 1
+          echo ""
+          echo "▶ 배포는 완료됐으나 2분 동안 6회 확인해도 결과가 기대와 다르다. 아래를 직접 열어 확인할 것:"
+          echo "    https://compyafun.com/ads.txt"
+          echo "    https://compyafun.com/"
+          exit 1
           fi
