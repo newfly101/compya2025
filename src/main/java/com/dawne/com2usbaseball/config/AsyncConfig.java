@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.lang.reflect.Method;
@@ -19,9 +20,13 @@ import java.util.concurrent.ThreadPoolExecutor;
  * 풀이 꽉 차면 CallerRunsPolicy 대신 DiscardPolicy 를 쓴다 — CallerRunsPolicy 는 제출한
  * 스레드(=요청 스레드)가 대신 실행하게 만들어 결국 사용자 요청을 막아버린다. 통계 수집이
  * 밀렸다고 사용자 화면이 느려지면 본말전도이므로, 밀리면 그냥 버린다.
+ *
+ * @EnableScheduling 은 AnalyticsAggregationServiceImpl 의 일별 집계 @Scheduled 배치를
+ * 위해 여기 얹었다 — 비동기/스케줄링 계열 애너테이션이 모이는 자리라 별도 Config 를 새로 만들지 않는다.
  */
 @Configuration
 @EnableAsync
+@EnableScheduling
 @Slf4j
 public class AsyncConfig implements AsyncConfigurer {
 

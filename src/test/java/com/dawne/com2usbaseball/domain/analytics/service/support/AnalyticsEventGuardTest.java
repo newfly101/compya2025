@@ -1,5 +1,7 @@
 package com.dawne.com2usbaseball.domain.analytics.service.support;
 
+import com.dawne.com2usbaseball.domain.analytics.dto.request.AnalyticsEventItemRequest;
+import com.dawne.com2usbaseball.domain.analytics.enums.AnalyticsEventType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -76,5 +78,93 @@ class AnalyticsEventGuardTest {
     @DisplayName("한 요청 최대 이벤트 수는 20건이다")
     void 최대_이벤트_수는_20() {
         assertThat(AnalyticsEventGuard.MAX_EVENTS_PER_REQUEST).isEqualTo(20);
+    }
+
+    @Test
+    @DisplayName("UA 에서 OS 를 판별한다")
+    void OS_판별() {
+        assertThat(AnalyticsEventGuard.detectOs("Mozilla/5.0 (Linux; Android 14)")).isEqualTo("Android");
+        assertThat(AnalyticsEventGuard.detectOs("Mozilla/5.0 (iPhone; CPU iPhone OS 17_0)")).isEqualTo("iOS");
+        assertThat(AnalyticsEventGuard.detectOs("Mozilla/5.0 (Windows NT 10.0; Win64; x64)")).isEqualTo("Windows");
+        assertThat(AnalyticsEventGuard.detectOs("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15)")).isEqualTo("Mac");
+        assertThat(AnalyticsEventGuard.detectOs("Mozilla/5.0 (X11; Linux x86_64)")).isEqualTo("Other");
+        assertThat(AnalyticsEventGuard.detectOs(null)).isEqualTo("Other");
+    }
+
+    @Test
+    @DisplayName("UA와 화면폭으로 기기 종류를 판별한다")
+    void 기기종류_판별() {
+        String ipad = "Mozilla/5.0 (iPad; CPU OS 17_0)";
+        String iphone = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0)";
+        String androidMobile = "Mozilla/5.0 (Linux; Android 14; Mobile)";
+        String desktop = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)";
+
+        assertThat(AnalyticsEventGuard.detectDeviceType(ipad, 1024)).isEqualTo("tablet");
+        assertThat(AnalyticsEventGuard.detectDeviceType(iphone, 390)).isEqualTo("mobile");
+        assertThat(AnalyticsEventGuard.detectDeviceType(androidMobile, 412)).isEqualTo("mobile");
+        assertThat(AnalyticsEventGuard.detectDeviceType(desktop, 1920)).isEqualTo("pc");
+    }
+
+    @Test
+    @DisplayName("화면폭이 480 이하면 UA 판정과 무관하게 mobile 로 덮어쓴다")
+    void 좁은_화면폭은_모바일로_보정() {
+        String desktopUa = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)";
+        assertThat(AnalyticsEventGuard.detectDeviceType(desktopUa, 480)).isEqualTo("mobile");
+        assertThat(AnalyticsEventGuard.detectDeviceType(desktopUa, 481)).isEqualTo("pc");
+    }
+
+    @Test
+    @DisplayName("UA 에서 브라우저를 판별한다 (Edge/Chrome 이 Safari 문자열을 포함해도 순서대로 걸린다)")
+    void 브라우저_판별() {
+        String edge = "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36 Edg/124.0";
+        String chrome = "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
+        String safari = "Mozilla/5.0 AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15";
+        // 스펙 순서상 Chrome 체크가 Samsung 보다 앞이라 "Chrome/" 토큰이 같이 있으면 Chrome 으로 잡힌다(의도된 동작) — 토큰 없는 UA 로 Samsung 분기 자체를 검증
+        String samsung = "Mozilla/5.0 AppleWebKit/537.36 SamsungBrowser/24.0 Mobile Safari/537.36";
+        String firefox = "Mozilla/5.0 Gecko/20100101 Firefox/124.0";
+
+        assertThat(AnalyticsEventGuard.detectBrowser(edge)).isEqualTo("Edge");
+        assertThat(AnalyticsEventGuard.detectBrowser(chrome)).isEqualTo("Chrome");
+        assertThat(AnalyticsEventGuard.detectBrowser(safari)).isEqualTo("Safari");
+        assertThat(AnalyticsEventGuard.detectBrowser(samsung)).isEqualTo("Samsung");
+        assertThat(AnalyticsEventGuard.detectBrowser(firefox)).isEqualTo("Firefox");
+        assertThat(AnalyticsEventGuard.detectBrowser(null)).isEqualTo("Other");
+    }
+
+    @Test
+    @DisplayName("공통 필수값이 비어 있으면 거부한다")
+    void 공통_필수값_누락시_거부() {
+        AnalyticsEventItemRequest 세션없음 = item(null, "/home", "reload", null);
+        assertThat(AnalyticsEventGuard.hasRequiredFields(세션없음, AnalyticsEventType.CONTENT_CLICK)).isFalse();
+    }
+
+    @Test
+    @DisplayName("PAGE_VIEW 는 navType 이 없으면 거부한다")
+    void PAGE_VIEW_navType_누락시_거부() {
+        AnalyticsEventItemRequest navType없음 = item("session-1", "/home", null, null);
+        assertThat(AnalyticsEventGuard.hasRequiredFields(navType없음, AnalyticsEventType.PAGE_VIEW)).isFalse();
+
+        AnalyticsEventItemRequest navType있음 = item("session-1", "/home", "reload", null);
+        assertThat(AnalyticsEventGuard.hasRequiredFields(navType있음, AnalyticsEventType.PAGE_VIEW)).isTrue();
+    }
+
+    @Test
+    @DisplayName("OUTBOUND_CLICK 은 targetUrl 이 없으면 거부하고, item_id 는 없어도 통과한다")
+    void OUTBOUND_CLICK_targetUrl_누락시_거부_itemId는_필수아님() {
+        AnalyticsEventItemRequest targetUrl없음 = item("session-1", "/home", null, null);
+        assertThat(AnalyticsEventGuard.hasRequiredFields(targetUrl없음, AnalyticsEventType.OUTBOUND_CLICK)).isFalse();
+
+        AnalyticsEventItemRequest itemId없이_targetUrl만 = new AnalyticsEventItemRequest(
+                "OUTBOUND_CLICK", "anon-1", "/home", null, null, "example.com",
+                null, null, null, "session-1", null, null, null
+        );
+        assertThat(AnalyticsEventGuard.hasRequiredFields(itemId없이_targetUrl만, AnalyticsEventType.OUTBOUND_CLICK)).isTrue();
+    }
+
+    private AnalyticsEventItemRequest item(String sessionId, String pagePath, String navType, String targetUrl) {
+        return new AnalyticsEventItemRequest(
+                "CONTENT_CLICK", "anon-1", pagePath, null, null, targetUrl,
+                null, null, null, sessionId, navType, null, null
+        );
     }
 }

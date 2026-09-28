@@ -25,5 +25,12 @@ public class AnalyticsEventEntity {
     private String referrer;
     private String country;
     private String userAgent;
+    private String sessionId;
+    private String navType;
+    private Integer screenW;
+    private String deviceType;
+    private String os;
+    private String browser;
+    private Long itemId;
     private LocalDateTime createdAt;
 }

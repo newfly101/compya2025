@@ -57,11 +57,17 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         int limit = Math.min(items.size(), AnalyticsEventGuard.MAX_EVENTS_PER_REQUEST);
 
         List<AnalyticsEventEntity> entities = new ArrayList<>(limit);
+        int rejectedCount = 0;
         for (int i = 0; i < limit; i++) {
             AnalyticsEventEntity entity = toEntity(items.get(i), context);
             if (entity != null) {
                 entities.add(entity);
+            } else {
+                rejectedCount++;
             }
+        }
+        if (rejectedCount > 0) {
+            log.warn("[ANALYTICS] {}건 거부 (형식/필수값 미달)", rejectedCount);
         }
 
         if (entities.isEmpty()) {
@@ -85,7 +91,13 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         if (eventType == null) {
             return null;
         }
+        if (!AnalyticsEventGuard.hasRequiredFields(item, eventType)) {
+            return null;
+        }
         if (!AnalyticsEventGuard.isValidUuid(item.anonId())) {
+            return null;
+        }
+        if (!AnalyticsEventGuard.isValidUuid(item.sessionId())) {
             return null;
         }
 
@@ -94,6 +106,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
             return null;
         }
 
+        String userAgent = context.userAgent();
         return AnalyticsEventEntity.builder()
                 .eventType(eventType)
                 .anonId(item.anonId())
@@ -105,7 +118,14 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                 .searchKeyword(AnalyticsEventGuard.truncate(item.searchKeyword(), AnalyticsEventGuard.SEARCH_KEYWORD_MAX_LENGTH))
                 .referrer(AnalyticsEventGuard.truncate(item.referrer(), AnalyticsEventGuard.REFERRER_MAX_LENGTH))
                 .country(AnalyticsEventGuard.truncate(context.country(), AnalyticsEventGuard.COUNTRY_MAX_LENGTH))
-                .userAgent(AnalyticsEventGuard.truncate(context.userAgent(), AnalyticsEventGuard.USER_AGENT_MAX_LENGTH))
+                .userAgent(AnalyticsEventGuard.truncate(userAgent, AnalyticsEventGuard.USER_AGENT_MAX_LENGTH))
+                .sessionId(item.sessionId())
+                .navType(AnalyticsEventGuard.truncate(item.navType(), AnalyticsEventGuard.NAV_TYPE_MAX_LENGTH))
+                .screenW(item.screenW())
+                .deviceType(AnalyticsEventGuard.detectDeviceType(userAgent, item.screenW()))
+                .os(AnalyticsEventGuard.detectOs(userAgent))
+                .browser(AnalyticsEventGuard.detectBrowser(userAgent))
+                .itemId(item.itemId())
                 .createdAt(parseOccurredAt(item.occurredAt()))
                 .build();
     }

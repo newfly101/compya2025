@@ -14,6 +14,10 @@ public record AnalyticsEventItemRequest(
         String targetUrl,
         String searchKeyword,
         String referrer,
-        String occurredAt
+        String occurredAt,
+        String sessionId,
+        String navType,
+        Integer screenW,
+        Long itemId
 ) {
 }

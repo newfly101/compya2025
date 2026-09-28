@@ -9,15 +9,22 @@
       한 요청(최대 20건, AnalyticsEventGuard.MAX_EVENTS_PER_REQUEST)을 한 번의 INSERT 로 적재.
       event_type 은 자바 enum 이름(PAGE_VIEW 등)과 DB ENUM 값이 동일해 MyBatis 기본
       EnumTypeHandler 가 그대로 매핑한다 — 별도 typeHandler 지정 불필요.
+
+      session_id/nav_type/screen_w/device_type/os/browser/item_id 7컬럼은 2026-09-29 DDL
+      초안(sql/draft/feat/admin-internal-stats/02_event_columns.sql, 실행은 사용자)이 대상.
+      DDL 실행 전까지는 이 INSERT 가 "Unknown column" 으로 실패한다 — 컴파일·문법까지만
+      확인하고 실 DB 검증은 DDL 실행 이후로 넘긴다(task-analysis.md §2).
     -->
     <insert id="insertAll" parameterType="java.util.List">
         INSERT INTO site_user_event
         (event_type, anon_id, user_id, page_path, content_type, content_id,
-         target_url, search_keyword, referrer, country, user_agent, created_at)
+         target_url, search_keyword, referrer, country, user_agent,
+         session_id, nav_type, screen_w, device_type, os, browser, item_id, created_at)
         VALUES
         <foreach collection="events" item="e" separator=",">
             (#{e.eventType}, #{e.anonId}, #{e.userId}, #{e.pagePath}, #{e.contentType}, #{e.contentId},
-             #{e.targetUrl}, #{e.searchKeyword}, #{e.referrer}, #{e.country}, #{e.userAgent}, #{e.createdAt})
+             #{e.targetUrl}, #{e.searchKeyword}, #{e.referrer}, #{e.country}, #{e.userAgent},
+             #{e.sessionId}, #{e.navType}, #{e.screenW}, #{e.deviceType}, #{e.os}, #{e.browser}, #{e.itemId}, #{e.createdAt})
         </foreach>
     </insert>
 
