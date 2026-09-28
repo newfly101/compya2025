@@ -37,7 +37,7 @@ multi ─ integrate-summary → PR 본문    ┘
 | 항목 | 현재 | 고칠 것 |
 |---|---|---|
 | 산출물 경로 | `docs/domain/{feature}/{prd,design,develop}/` | § 2 표 |
-| 컨벤션 JIT 표 | `.claude/conventions/{hitl-markers,file-split,responsive-mobile-first}.md`, `docs/convention/frontend.md`, `docs/global-guide/design/figma-mcp-rules.md` | `.claude/rules/**` 경로. `responsive-mobile-first` → `fe/fe-design.md`. `figma-mcp-rules.md` 는 **존재하지 않음** — `references/designer/` 확인 후 경로 확정 ❓ D5 |
+| 컨벤션 JIT 표 | `.claude/conventions/{hitl-markers,file-split,responsive-mobile-first}.md`(경로 갱신은 별도 과제) · `docs/convention/frontend.md` → `.claude/rules/fe/fe-convention.md` (완료) · `docs/global-guide/design/figma-mcp-rules.md` → `.claude/rules/fe/fe-figma.md` (완료, D5 해결) | `.claude/rules/**` 경로. `responsive-mobile-first` → `fe/fe-design.md` |
 | 프로젝트 컨텍스트 | `v2.0.0-refactor-mobile` 브랜치 언급 | 삭제 (브랜치 규칙 교체됨) |
 | 보고 템플릿 | agent 별 이모지 양식 | `dispatch-brief.md` 의 4항 형식으로 통일 (300줄 상한 명시) |
 

@@ -39,8 +39,8 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 입력 | 출처 | 사용 § |
 |------|------|--------|
-| analysis.md | `docs/domain/{feature}/develop/analysis.md` | § 1 (기능 분해) / § 3 (BE 명세) / § 5 (cross-domain 정합 — BE 측만) |
-| decisions.log | `docs/domain/{feature}/develop/decisions.log` | 가정값 확인 |
+| analysis.md | `.claude/.progress/<branch>/analysis.md` | § 1 (기능 분해) / § 3 (BE 명세) / § 5 (cross-domain 정합 — BE 측만) |
+| decisions.log | `.claude/.progress/<branch>/decisions.log` | 가정값 확인 |
 | 진행 모드 | 메인 어시스턴트 지정 | "전체" / "FN-N부터" / "FN-N 만" |
 
 ---
@@ -49,7 +49,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 ```
 1. analysis.md Read (§ 1 / § 3 / § 5 BE 측)
-2. be-history.md 존재 확인 → 없으면 신규 생성 (docs/domain/{feature}/develop/)
+2. be-history.md 존재 확인 → 없으면 신규 생성 (.claude/.progress/<branch>/)
 3. FOR EACH FN (FN-1부터 순차):
    3-1. 골격 연결
         - Controller / Service / DTO / Mapper interface skeleton
@@ -140,13 +140,13 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 ### 6.5 history 기록
 
-`docs/domain/{feature}/develop/be-history.md` 에 한 줄 append.
+`.claude/.progress/<branch>/be-history.md` 에 한 줄 append.
 
 ---
 
 ## 7. be-history.md 작성 규칙 (한글 자연어 강제)
 
-**경로**: `docs/domain/{feature}/develop/be-history.md`
+**경로**: `.claude/.progress/<branch>/be-history.md`
 
 ### 좋은 예
 

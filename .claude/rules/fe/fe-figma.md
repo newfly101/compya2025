@@ -13,12 +13,26 @@
 
 ## 2. 쓰기 절차 (`use_figma`)
 
-1. `get_metadata` + `get_variable_defs` — 기존 컴포넌트·토큰 확인
+1. `get_metadata` + `get_variable_defs` — 기존 컴포넌트·토큰 확인. 노드 상세가 필요하면 `get_design_context` 추가
 2. `search_design_system` — 재사용 가능 컴포넌트 탐색. **재사용 > 신규**
 3. `get_figma_skill("skill://figma/figma-use/SKILL.md")` 로드. 화면 생성이면 `figma-generate-design` 추가 — **스킬 없이 `use_figma` 호출 금지, 예외 없음**
 4. `use_figma` — 색·간격·타이포는 **Variable 바인딩**(raw hex 0건) · **auto layout**(절대 좌표 0건) · 기존 컴포넌트는 인스턴스
 5. `get_screenshot` 으로 되읽어 자가 검수. 어긋나면 4 재수행
 6. 쓰기는 한 번에 하나 — 병렬 feature 는 Figma 파일을 `shared_files` lock 으로 순차 (`workflows/multi-feature-parallel.md` § 5)
+
+## 2.1 토큰 컬렉션 · 단위 주의
+
+| 컬렉션 | 내용 |
+|---|---|
+| `Primitives` | raw 색상. 모든 피커에서 숨김 — 직접 바인딩하지 말 것 |
+| `Color` | semantic, 전부 `Primitives` alias. code syntax = `var(--color-*)` |
+| `Spacing` | `spacing/*` `layout/*` `control/*` |
+| `Radius` | `radius/none` ~ `radius/full` |
+| `Typography` | size·weight·line-height·letter-spacing·family |
+
+⚠️ **% 단위 변환** — Figma 의 line-height·letter-spacing 은 % 단위다. CSS 무단위 배수 `1.5` → `150`, `-0.02em` → `-2` 로 바꿔 입력한다.
+
+**토큰 드리프트(코드-Figma 값 불일치) 처리**: 발견해도 그 화면을 직접 손대는 시점에만 정리한다(전체 일괄 마이그레이션 금지). 처리 방향(흡수/토큰 추가/유지) 은 표로 보고만 하고 **어느 쪽으로 갈지는 사용자 결정 사안** — 임의 실행 금지. 토큰 namespace(`Primitives`/`Color` 등) 자체 변경은 항상 HITL.
 
 ## 3. 금지
 

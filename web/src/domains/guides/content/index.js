@@ -4,7 +4,7 @@
 //
 // 완성된 편만 여기 등록한다. 본문 없는 편은 절대 넣지 않는다 — 목록·라우트·사이트맵·
 // 프리렌더 어디에도 노출하지 않기 위해서다(placeholder 본문 금지 원칙).
-// 12편 전편 작성 완료 (2026-09-13) — 기획서 docs/domain/guides/prd/guides-content-plan.md 참조.
+// 12편 전편 작성 완료 (2026-09-13) — 기획서 docs/features/guides/spec.md 참조.
 
 import { legendMaterialPriority } from "@/domains/guides/content/legendMaterialPriority.js";
 import { legendStatsGuide } from "@/domains/guides/content/legendStatsGuide.js";

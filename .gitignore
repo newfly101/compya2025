@@ -72,3 +72,8 @@ test-docs/
 # 화면 검증 스크린샷 — 저장소 루트에 쌓인다. 확인용이라 커밋하지 않는다
 /*.png
 !/img.png
+
+### .claude 운영 산출물 (agent 진행 로그·lock·세션 목록 — commit 금지) ###
+.claude/.progress/
+.claude/.locks/
+.claude/.sessions/

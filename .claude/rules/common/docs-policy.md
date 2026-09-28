@@ -23,7 +23,8 @@ docs/
 ├── overview/
 │   ├── architecture.md       시스템 구성도 (mermaid)
 │   ├── domain.md              도메인 모델, ERD
-│   └── ai-workflow.md         AI 기반 개발 프로세스 외부용 설명
+│   ├── ai-workflow.md         AI 기반 개발 프로세스 외부용 설명
+│   └── traceability.md        요구사항 추적표 — REQ → 화면(SC) → API → 테이블 → 이력을 한 줄로
 ├── features/<feature>/
 │   ├── spec.md                기획. 현재 버전만 유지. 버전의 단일 원천
 │   ├── design.md               설계·도식. 현재 상태만 유지
@@ -69,12 +70,16 @@ CHANGELOG.md                    루트. 릴리스 단위 요약. 각 항목이 f
 feature: lineup-edit
 version: 2.0.0
 status: active        # active | frozen | deprecated
+created: 2026-01-29   # FE 도메인 폴더 최초 커밋일
 updated: 2026-09-28
 
 # design.md frontmatter
 spec_version: 2.0.0   # spec 의 version 과 다르면 design 이 뒤처졌다는 신호
+created: 2026-01-29
 updated: 2026-09-28
 ```
+
+모든 `docs/**/*.md` 는 frontmatter 에 `created` · `updated` 를 갖는다. history.md 는 `created` = 첫 항목 날짜, `updated` = 최신 항목 날짜. ID 체계: 화면 `SC-NN-NN`(overview/domain.md), 요구사항 `REQ-{약어}-NN`(spec § 3), 대응표는 overview/traceability.md.
 
 ---
 

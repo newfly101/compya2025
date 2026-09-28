@@ -5,7 +5,7 @@ paths:
 ---
 # BE 구조 지도 (현황)
 
-> 실측 2026-09-28 (`docs/consistency-audit/be-structure.md` 기준). **규칙은 `be-convention.md`**, 여기는 실제로 무엇이 어디 있는지만. 코드가 바뀌면 이 표부터 고친다 — 지도와 코드가 어긋나면 지도가 거짓말이 된다.
+> 실측 2026-09-28 (원본은 git 태그 `docs-archive-2026-09`). **규칙은 `be-convention.md`**, 여기는 실제로 무엇이 어디 있는지만. 코드가 바뀌면 이 표부터 고친다 — 지도와 코드가 어긋나면 지도가 거짓말이 된다.
 
 ## 1. 최상위 4구역과 `common` 재고
 
@@ -63,7 +63,7 @@ paths:
 | `FunPlayerCardController` | `@RestController("…V2")` 로 구버전과 이름 충돌 회피 | 정상 패턴, 이름 겹칠 때만 |
 | docs 인터페이스 | `coupon` `event` `notice` `oauth` `quiz` 5개만 `controller/docs/` | 나머지는 컨트롤러에 직접. 둘 다 허용 |
 
-테이블 접두 불일치 3건 — `fun_quiz`(사이트 콘텐츠인데 `fun_`), `fun_teams`(`data_` 가 맞음), `statistic_support_click`(접두 없음). 이름 변경은 ❓ D7, 바꾸면 `docs/consistency-audit/recheck-code.md` § 3 목록 전부 동시 수정.
+테이블 접두 불일치 3건 — `fun_quiz`(사이트 콘텐츠인데 `fun_`), `fun_teams`(`data_` 가 맞음), `statistic_support_click`(접두 없음). 이름 변경은 ❓ D7, 바꾸면 실측 2026-09-28 목록(원본은 git 태그 `docs-archive-2026-09`) 전부 동시 수정.
 
 사고 1줄: `fun/team` 에 `TeamMapper` 를 만들었다가 `domain/player.TeamMapper` 와 빈 이름 충돌로 기동 실패 → `FunTeamMapper` (경위 `docs/features/players/history.md`). `quiz` 매퍼 XML 이 `mapper/fun/` 에 있던 것을 2026-09-28 `mapper/site/` 로 이동.
 

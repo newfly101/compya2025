@@ -36,10 +36,10 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 입력 | 경로 |
 |------|------|
-| analysis.md | `docs/domain/{feature}/develop/analysis.md` |
-| be-history.md | `docs/domain/{feature}/develop/be-history.md` |
-| fe-history.md | `docs/domain/{feature}/develop/fe-history.md` |
-| decisions.log | `docs/domain/{feature}/develop/decisions.log` |
+| analysis.md | `.claude/.progress/<branch>/analysis.md` |
+| be-history.md | `.claude/.progress/<branch>/be-history.md` |
+| fe-history.md | `.claude/.progress/<branch>/fe-history.md` |
+| decisions.log | `.claude/.progress/<branch>/decisions.log` |
 | (선택) BE 코드 | `src/main/java/.../{feature}/` — 정합 검증용 read-only |
 | (선택) FE 코드 | `web/src/domains/{feature}/` — 정합 검증용 read-only |
 
@@ -66,7 +66,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 ## 5. 산출물 — `integrate-report.md`
 
-**경로**: `docs/domain/{feature}/develop/integrate-report.md`
+**경로**: `.claude/.progress/<branch>/verification.md`
 **줄 수 한도**: 200줄
 
 **구조**:
@@ -143,7 +143,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 ## § 5. 위험 항목 (decisions.log 요약)
 
-> 상세: docs/domain/{feature}/develop/decisions.log
+> 상세: .claude/.progress/<branch>/decisions.log
 
 | 마커 | 항목 | 적용값 | 사용자 검토 권장 |
 |------|------|--------|---------------|
@@ -261,7 +261,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 ```
 ✅ developer-integrate 완료
 
-📂 산출: docs/domain/{feature}/develop/integrate-report.md ({N}줄)
+📂 산출: .claude/.progress/<branch>/verification.md ({N}줄)
 
 📊 정합 결과:
 - ✅ 정합: {N}건

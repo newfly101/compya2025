@@ -118,10 +118,10 @@ R2 완료 + 사용자 답변 수신.
 ✅ R3 완료 — 통합 문서 작성 완료
 
 📂 산출 파일:
-- docs/domain/{feature}/prd/_common.md ({N}줄)
-- docs/domain/{feature}/prd/{feature}.md ({N}줄)
-- docs/domain/{feature}/prd/_tasks.md ({N}줄)
-- docs/domain/{feature}/prd/_decision_log.md (누적 {N}건)
+- .claude/.progress/<branch>/_common.md ({N}줄)
+- .claude/.progress/<branch>/{feature}.md ({N}줄)
+- .claude/.progress/<branch>/_tasks.md ({N}줄)
+- .claude/.progress/<branch>/_decision_log.md (누적 {N}건)
 
 🔢 기능 ID: {PFX}-1 ~ {PFX}-{N}
 📊 전체 토큰: ~{N}k (목표 150k 이내)

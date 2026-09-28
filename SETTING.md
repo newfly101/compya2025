@@ -88,18 +88,18 @@ npm run watch     # 별도 터미널에 띄움
 ```
 사용자 요청
    ↓
-[1] planner agent (기획)         → docs/domain/{feature}/prd/*.md
+[1] planner agent (기획)         → docs/features/{feature}/spec.md
    ↓
-[2] designer agent (디자인)       → docs/domain/{feature}/design/*.md
+[2] designer agent (디자인)       → docs/features/{feature}/design.md
                                   → figma-plugin/code.ts (덮어쓰기)
    ↓
    사용자: Ctrl+Alt+P (Figma 에서 plugin 실행) ← 사용자 액션 1회
    ↓
-[3] developer agent (분배 plan)   → docs/domain/{feature}/develop/dispatch-plan.md
+[3] developer agent (분배 plan)   → .claude/.progress/<branch>/verification.md
    ↓
 [4] backend-developer + frontend-developer 병렬 → BE/FE 코드 작성
    ↓
-[5] developer agent (통합 검증)   → docs/domain/{feature}/develop/integrate-review.md
+[5] developer agent (통합 검증)   → .claude/.progress/<branch>/verification.md
 ```
 
 자세한 폴더 구조는 [`docs/README.md`](./docs/README.md) 참조.
@@ -115,7 +115,7 @@ npm run watch     # 별도 터미널에 띄움
 ```
 {도메인명} 도메인을 신규 기획해줘. planner agent 사용. forward 모드.
 사용자 요구: <한 단락 자유 서술>
-산출물은 docs/domain/{도메인명}/prd/ 에.
+산출물은 docs/features/{도메인명}/spec.md 에.
 ```
 
 ### 4.2 기존 코드 → 기획 추출 (reverse)
@@ -123,14 +123,14 @@ npm run watch     # 별도 터미널에 띄움
 ```
 {도메인명} 도메인을 reverse 기획해줘. planner agent.
 코드 baseline: web/src/domains/{도메인명}/ + src/main/java/.../{도메인명}/
-산출물: docs/domain/{도메인명}/prd/
+산출물: docs/features/{도메인명}/spec.md
 ```
 
 ### 4.3 Figma 에 화면 자동 그리기 (전체 도메인)
 
 ```
 {도메인명} 도메인 화면을 Figma 에 frame 으로 자동 생성해줘. designer agent.
-- 입력: docs/domain/{도메인명}/prd/feature-spec.md
+- 입력: docs/features/{도메인명}/spec.md
 - Figma URL: https://www.figma.com/design/{file-key}/?node-id={node-id}
 - 모드: create (수정 X, 생성 위주)
 
@@ -149,8 +149,8 @@ designer-plugin-code skill 단독 호출 (분석 단계 skip).
 ```
 {도메인명} 도메인을 코드로 구현해줘. developer agent 가 작업 분배 plan 짜고,
 backend-developer / frontend-developer 병렬 dispatch.
-- 기획: docs/domain/{도메인명}/prd/
-- 디자인: docs/domain/{도메인명}/design/
+- 기획: docs/features/{도메인명}/spec.md
+- 디자인: docs/features/{도메인명}/design.md
 - 산출물 위치: src/main/.../{도메인명}/, web/src/domains/{도메인명}/
 양쪽 완료 후 developer integrate-review 로 cross-domain 정합 검증.
 ```
@@ -158,7 +158,7 @@ backend-developer / frontend-developer 병렬 dispatch.
 ### 4.6 코드 구조 분석 (글로벌 spec 작성)
 
 ```
-현재 {영역} 코드 분석해서 docs/global-guide/develop/specs/{영역}/ 에 spec 작성해줘.
+현재 {영역} 코드 분석해서 .claude/references/{영역}/ 에 spec 작성해줘.
 - {영역}: be / db / fe
 - 입력: src/main/** 또는 web/src/**
 - 도메인 골고루 cover
@@ -168,10 +168,9 @@ backend-developer / frontend-developer 병렬 dispatch.
 
 ```
 {도메인명} 도메인의 기존 PC 버전 기획을 모바일 기준으로 재작성해줘.
-- legacy 참고: docs/domain/legacy/{도메인명}.md
 - 현재 코드: web/src/domains/{도메인명}/
 - planner reverse + 현행 정합
-- 산출물: docs/domain/{도메인명}/prd/
+- 산출물: docs/features/{도메인명}/spec.md
 ```
 
 ### 4.8 백그라운드 병렬 처리 (다중 작업)
@@ -221,7 +220,7 @@ backend-developer / frontend-developer 병렬 dispatch.
 - [ ] `figma-plugin/` 에서 `npm run build` PASS (TypeScript strict)
 - [ ] Figma Desktop plugin list 에 "Compyafun Designer Bridge" 노출
 - [ ] Claude Code 도구 list 에 `mcp__figma-dev-mode__*` 3개 노출
-- [ ] `docs/README.md` 의 트리대로 `docs/domain/`, `docs/global-guide/` 폴더 존재
+- [ ] `docs/README.md` 의 트리대로 `docs/features/`, `docs/decisions/` 폴더 존재
 
 ---
 
@@ -234,7 +233,7 @@ backend-developer / frontend-developer 병렬 dispatch.
 | `mcp__figma-dev-mode__*` 도구 없음 | Figma Desktop Dev Mode ON + Claude MCP 설정 활성화 후 재시작 |
 | `code.ts` 빌드 fail | TypeScript strict 에러 — agent 가 작성한 code.ts 에 type cast 누락 가능. 첫 에러 라인 보고 |
 | HITL 4분야 (🔴) 항목 멈춤 | agent 가 사용자 답변을 기다리는 정상 동작. 답변 후 재dispatch |
-| `docs/domain/{feature}/` 가 안 만들어짐 | agent 가 Write 권한이 있어야 함 (각 agent.md 의 tools 확인) |
+| `docs/features/{feature}/` 가 안 만들어짐 | agent 가 Write 권한이 있어야 함 (각 agent.md 의 tools 확인) |
 
 ---
 

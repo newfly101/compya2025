@@ -4,7 +4,7 @@ import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 
 // 단일 셸 — /admin, /admin/:tab 모두 이 화면 하나를 렌더링하고 내부 탭으로 전환한다.
-// (근거: docs/domain/admin/design/_redesign-spec.md § 라우팅 변경안)
+// (근거: docs/features/admin/design.md § 라우팅 변경안)
 const AdminShellPage = lazy(() => import("@/domains/admin/mobile/AdminShellScreen.jsx"));
 
 // 공지 글쓰기 — 셸 탭이 아니라 전체 페이지로 전환되는 유일한 예외(Tiptap 에디터).

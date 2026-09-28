@@ -1,0 +1,46 @@
+---
+created: 2026-09-28
+updated: 2026-09-28
+---
+
+# 요구사항 추적표 — 게임 데이터
+
+> [overview/traceability.md](./traceability.md) 에서 분리(150줄 상한). § 1 읽는 법·§ 2 약어표·§ 4 집계·§ 5 빈 자리는 그 문서에 있다.
+
+| REQ | 기능 | 규칙 요지 | 화면(SC) | API | 테이블 | 근거·이력 |
+|---|---|---|---|---|---|---|
+| REQ-HL-01 | historyLegend | 조회 | SC-14-01 | GET /api/history-rounds | data_history_round, data_history_roster | [spec §3](../features/historyLegend/spec.md) · 2026-09-28 |
+| REQ-HL-02 | historyLegend | 두 관점 탐색 | SC-14-01 | GET /api/history-rounds | data_history_round, data_history_roster | [spec §3](../features/historyLegend/spec.md) · 2026-09-28 |
+| REQ-HL-03 | historyLegend | 필터·정렬·검색 | SC-14-01 | GET /api/history-rounds | data_history_round, data_history_roster | [spec §3](../features/historyLegend/spec.md) · 2026-09-28 |
+| REQ-HL-04 | historyLegend | 로딩·에러 분리 | SC-14-01 | GET /api/history-rounds | data_history_round, data_history_roster | [spec §3](../features/historyLegend/spec.md) · 2026-09-28 |
+| REQ-HL-05 | historyLegend | 카드-레전드 유일성 제약 (미구현) | SC-14-01 | GET /api/history-rounds | data_history_round, data_history_roster | [spec §3](../features/historyLegend/spec.md) · 2026-09-28 |
+| REQ-HL-06 | historyLegend | 요일·주차 계산 | SC-14-01 | GET /api/history-rounds | data_history_round, data_history_roster | [spec §3](../features/historyLegend/spec.md) · 2026-09-28 |
+| REQ-LS-01 | legendStats | 조회 | SC-15-01 | GET /api/legend-stats | data_player_legend, data_player_legend_material, data_player_legend_stat | [spec §3](../features/legendStats/spec.md) · 2026-09-28 |
+| REQ-LS-02 | legendStats | 재료 조회 | SC-15-01 | GET /api/legends/{id} | data_player_legend, data_player_legend_material, data_player_legend_stat | [spec §3](../features/legendStats/spec.md) · 2026-09-28 |
+| REQ-LS-03 | legendStats | 필터·정렬 | SC-15-01 | GET /api/legend-stats; GET /api/legends/{id}; GET /api/teams; GET /api/legend-stats/pitch-types | data_player_legend, data_player_legend_material, data_player_legend_stat | [spec §3](../features/legendStats/spec.md) · 2026-09-28 |
+| REQ-LS-04 | legendStats | 저격 배지 링크 | SC-15-01 | GET /api/legend-stats; GET /api/legends/{id}; GET /api/teams; GET /api/legend-stats/pitch-types | data_player_legend, data_player_legend_material, data_player_legend_stat | [spec §3](../features/legendStats/spec.md) · 2026-09-28 |
+| REQ-LS-05 | legendStats | 미사용 API 정리 (미구현) | SC-15-01 | GET /api/legends | data_player_legend, data_player_legend_material, data_player_legend_stat | [spec §3](../features/legendStats/spec.md) · 2026-09-28 |
+| REQ-LS-06 | legendStats | OVR 계산 | SC-15-01 | GET /api/legend-stats; GET /api/legends/{id}; GET /api/teams; GET /api/legend-stats/pitch-types | data_player_legend, data_player_legend_material, data_player_legend_stat | [spec §3](../features/legendStats/spec.md) · 2026-09-28 |
+| REQ-MLG-01 | mileage | 뽑기 비용 | SC-16-01 | GET /api/mileage/sniper-targets | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-MLG-02 | mileage | 다음 수 추천 | SC-16-01 | GET /api/mileage/sniper-targets | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-MLG-03 | mileage | 기대비용 비노출 | SC-16-01 | GET /api/mileage/sniper-targets | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-MLG-04 | mileage | 알고리즘 변경 금지 | SC-16-01 | GET /api/mileage/sniper-targets | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-MLG-05 | mileage | 포지션 선택 미반영 | SC-16-01 | GET /api/mileage/sniper-targets | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-MLG-06 | mileage | 저격 대상 판정 | SC-16-01 | GET /api/mileage/sniper-targets | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-MLG-07 | mileage | 리스트→시뮬레이션 자동 채움 | SC-16-01 | GET /api/mileage/sniper-targets | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-MLG-08 | mileage | 레전드 미정 카운터 미표시 | SC-16-01 | GET /api/mileage/sniper-targets | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-MLG-09 | mileage | 캐시 갱신 | SC-16-01 | POST /api/admin/cache-sync/mileageSniperTarget/sync | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-MLG-10 | mileage | 중복 요청 방지 | SC-16-01 | GET /api/mileage/sniper-targets | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-MLG-11 | mileage | 초기화 없음 | SC-16-01 | GET /api/mileage/sniper-targets | - | [spec §3](../features/mileage/spec.md) · 2026-09-28 |
+| REQ-PLR-01 | players | 조회·필터 | SC-11-01 | GET /api/player-cards; GET /api/player-cards/{teamCode}/stats | data_player_card, data_player_card_stat, data_player_card_pitch, fun_teams | [spec §3](../features/players/spec.md) · 2026-09-28 |
+| REQ-PLR-02 | players | 보기 방식 전환 | SC-11-01 | GET /api/player-cards; GET /api/player-cards/{teamCode}/stats | data_player_card, data_player_card_stat, data_player_card_pitch, fun_teams | [spec §3](../features/players/spec.md) · 2026-09-28 |
+| REQ-PLR-03 | players | 레전드 재료 배지 | SC-11-01 | GET /api/player-cards; GET /api/player-cards/{teamCode}/stats | data_player_card, data_player_card_stat, data_player_card_pitch, fun_teams | [spec §3](../features/players/spec.md) · 2026-09-28 |
+| REQ-PLR-04 | players | 카드 종류 필터는 배타 방식이 최종 사양 | SC-11-01 | GET /api/player-cards; GET /api/player-cards/{teamCode}/stats | data_player_card, data_player_card_stat, data_player_card_pitch, fun_teams | [spec §3](../features/players/spec.md) · 2026-09-28 |
+| REQ-PLR-05 | players | URL 쿼리 딥링크 (미구현) | SC-11-01 | GET /api/player-cards; GET /api/player-cards/{teamCode}/stats | data_player_card, data_player_card_stat, data_player_card_pitch, fun_teams | [spec §3](../features/players/spec.md) · 2026-09-28 |
+| REQ-PLR-06 | players | 카드 종류 확장분 대기 (미구현) | SC-11-01 | GET /api/player-cards; GET /api/player-cards/{teamCode}/stats | data_player_card, data_player_card_stat, data_player_card_pitch, fun_teams | [spec §3](../features/players/spec.md) · 2026-09-28 |
+| REQ-PLR-07 | players | 정렬 기본값 | SC-11-01 | GET /api/player-cards; GET /api/player-cards/{teamCode}/stats | data_player_card, data_player_card_stat, data_player_card_pitch, fun_teams | [spec §3](../features/players/spec.md) · 2026-09-28 |
+| REQ-PSK-01 | playerSkills | 조회 | SC-17-01 | GET /api/player-skills/{hitters | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-09-28 |
+| REQ-PSK-02 | playerSkills | 필터·강화 티어 선택 | SC-17-01 | GET /api/player-skills/hitters; GET /api/player-skills/pitchers | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-09-28 |
+| REQ-PSK-03 | playerSkills | 목록 정렬 | SC-17-01 | GET /api/player-skills/hitters; GET /api/player-skills/pitchers | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-09-28 |
+| REQ-PSK-04 | playerSkills | 라벨(표 행 이름) | SC-17-01 | GET /api/player-skills/hitters; GET /api/player-skills/pitchers | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-09-28 |
+| REQ-PSK-05 | playerSkills | 원 문자 그룹 표기 (미구현) | SC-17-01 | GET /api/player-skills/hitters; GET /api/player-skills/pitchers | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-09-28 |

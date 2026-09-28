@@ -1,6 +1,6 @@
 // AdminShellScreen.jsx — 어드민 단일 셸.
 // /admin, /admin/:tab 모두 이 화면 하나를 렌더링하고 상단 탭으로 내부 전환한다.
-// (근거: docs/domain/admin/design/_redesign-spec.md § 라우팅 변경안)
+// (근거: docs/features/admin/design.md § 라우팅 변경안)
 //
 // 탭 전환은 navigate() 로 주소도 함께 바꾼다 — 새로고침/뒤로가기에서도 같은 탭이 유지되고,
 // home ↔ 다른 탭 전환은 서로 다른 라우트 엔트리라 화면이 리마운트되며,

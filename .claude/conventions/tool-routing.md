@@ -10,7 +10,7 @@
 
 | 순서 | 갈래 | 이럴 때 | 예시 |
 |---|---|---|---|
-| 1 | **컨벤션 문서** | 규칙만 적어두면 될 때 | `docs/convention/frontend.md`, `.claude/conventions/responsive-mobile-first.md` |
+| 1 | **컨벤션 문서** | 규칙만 적어두면 될 때 | `.claude/rules/fe/fe-convention.md`, `.claude/rules/fe/fe-design.md` |
 | 2 | **스킬** | 규칙에 더해 "이럴 땐 이렇게" 절차가 필요할 때 | `impeccable`, `archify` |
 | 3 | **에이전트** | 파일을 여러 개 고치거나 병렬로 돌릴 때 | `frontend-developer`, `planner-division` |
 | 4 | **MCP (바깥 연결)** | 저장소 밖 데이터가 필요할 때 | Figma 커넥터, Notion |

@@ -5,7 +5,7 @@ paths:
 ---
 # 공용 Badge — 코드 기준으로 재작성 필요 ❓
 
-> `docs/convention/badge-components.md`(2026-08) 는 낡았다 — variant 표 3개가 전부 현재 코드와 다르다. 이 파일은 `web/src/global/ui/badge/*.jsx|.module.scss` 를 읽고 다시 쓴다. 아래는 2026-09-28 기록에서 확인된 것만.
+> 이 문서가 대체한 옛 파일 `docs/convention/badge-components.md`(2026-08, 폐지됨)는 낡았다 — variant 표 3개가 전부 현재 코드와 다르다. 이 파일은 `web/src/global/ui/badge/*.jsx|.module.scss` 를 읽고 다시 쓴다. 아래는 2026-09-28 기록에서 확인된 것만.
 
 ## 확인된 현재 상태 (cat-palette-apply · design.json)
 

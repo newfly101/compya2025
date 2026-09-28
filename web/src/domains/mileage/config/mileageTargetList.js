@@ -2,7 +2,7 @@
 // 「저격 선수 리스트」 탭 전용 순수 함수/상수. config/mileage.js(불가침, node 사전계산용)와는
 // 별도 파일로 둔다 — 이 파일은 그 계약(DOM 미참조 등)에 얽매이지 않지만, 굳이 섞지 않는다.
 //
-// 대상: docs/domain/mileage/prd/target-list-design-spec.md §4/§6
+// 대상: docs/features/mileage/design.md §4/§6
 
 import { TEAMS_RAW } from "@/domains/mileage/config/mileage.js";
 

@@ -31,7 +31,7 @@ tools: Read, Write, Edit, Glob, Grep
 | HITL 마커 | `.claude/conventions/hitl-markers.md` | 위험 항목 식별 시 1회 |
 | 파일 분할 룰 | `.claude/conventions/file-split.md` | 200줄 초과 트리거 시 |
 
-⭐ FE 코드베이스 컨벤션 (`docs/convention/frontend.md`) 은 본 agent 가 직접 Read 안 함 — 각 sub-agent 책임.
+⭐ FE 코드베이스 컨벤션 (`.claude/rules/fe/fe-convention.md`) 은 본 agent 가 직접 Read 안 함 — 각 sub-agent 책임.
 
 ---
 
@@ -39,8 +39,8 @@ tools: Read, Write, Edit, Glob, Grep
 
 | 입력 | 필수/선택 | 출처 |
 |------|----------|------|
-| 기획서 | 필수 | `docs/domain/{feature}/prd/{feature}.md` |
-| screen-spec | 권장 | `docs/domain/{feature}/design/screen-spec.md` |
+| 기획서 | 필수 | `docs/features/{feature}/spec.md` |
+| screen-spec | 권장 | `docs/features/{feature}/design.md` |
 | feature | 필수 | 예: `schedule`, `history`, `kbo` |
 
 ⭐ 기획서 미존재 → 메인 어시스턴트에 planner 호출 권고 후 종료.
@@ -68,7 +68,7 @@ tools: Read, Write, Edit, Glob, Grep
 
 ### 5.1 `analysis.md` (BE/FE 공통 input)
 
-**경로**: `docs/domain/{feature}/develop/analysis.md`
+**경로**: `.claude/.progress/<branch>/analysis.md`
 **줄 수 한도**: 200줄 (초과 시 `file-split.md` 참조하여 분할 — 예: `analysis/{section}.md`)
 
 **구조**:
@@ -76,8 +76,8 @@ tools: Read, Write, Edit, Glob, Grep
 ```markdown
 # {feature} 개발 분석문서
 
-> 입력: docs/domain/{feature}/prd/{feature}.md
-> screen-spec: docs/domain/{feature}/design/screen-spec.md (있으면)
+> 입력: docs/features/{feature}/spec.md
+> screen-spec: docs/features/{feature}/design.md (있으면)
 > 모드: mobile-first
 > 작성일: YYYY-MM-DD by developer-analyze
 
@@ -154,7 +154,7 @@ tools: Read, Write, Edit, Glob, Grep
 
 ## § 7. 가정값 / 위험 항목 요약
 
-> 상세: docs/domain/{feature}/develop/decisions.log
+> 상세: .claude/.progress/<branch>/decisions.log
 
 | 마커 | 항목 | 적용값 |
 |------|------|--------|
@@ -165,7 +165,7 @@ tools: Read, Write, Edit, Glob, Grep
 
 ### 5.2 `decisions.log` (위험 항목 + 가정값 누적 로그)
 
-**경로**: `docs/domain/{feature}/develop/decisions.log`
+**경로**: `.claude/.progress/<branch>/decisions.log`
 **형식**: append-only
 
 ```markdown
@@ -266,8 +266,8 @@ tools: Read, Write, Edit, Glob, Grep
 ✅ developer-analyze 완료
 
 📂 산출:
-- docs/domain/{feature}/develop/analysis.md ({N}줄)
-- docs/domain/{feature}/develop/decisions.log ({N}건 기록)
+- .claude/.progress/<branch>/analysis.md ({N}줄)
+- .claude/.progress/<branch>/decisions.log ({N}건 기록)
 
 🔢 기능 분해: FN-1 ~ FN-{N}
 📊 자체 평가:
