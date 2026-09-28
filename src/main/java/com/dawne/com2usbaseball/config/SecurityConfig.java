@@ -116,7 +116,7 @@ public class SecurityConfig {
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.setCharacterEncoding("UTF-8");
 
-            GlobalResponse<Void> body = GlobalResponse.fail(AuthMessages.AUTH_USER_BLOCKED);
+            GlobalResponse<Void> body = GlobalResponse.fail(AuthMessages.AUTH_FORBIDDEN);
             objectMapper.writeValue(response.getWriter(), body);
         }
     }

@@ -3,6 +3,7 @@
 // ============================================================
 
 
+// 네이버 브랜드 그린 — 로그인 버튼 전용, 두 테마 공용 고정값 (토큰 미적용)
 $color-naver-background: #03c75a;
 $color-naver-font: $color-white-100;
 
@@ -158,7 +159,7 @@ $color-naver-font: $color-white-100;
 }
 
 .menuIcon {
-  font-size: 1.125rem;   // 18px → rem (도메인 토큰 외, mobile-frame § 6.4)
+  font-size: $font-size-17;   // 17px (허용 스케일 정합, 18px → 17px)
   flex-shrink: 0;
   // 이모지는 글자마다 폭이 달라(⚾ vs 🎮) 그대로 두면 라벨 시작점이 어긋난다
   width: 1.375rem;       // 22px

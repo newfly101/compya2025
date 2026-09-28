@@ -1,10 +1,7 @@
 // ============================================================
 // _spacing.scss
-// 8pt GRID SYSTEM — space-N 으로만 참조
+// 간격 규칙 — 짝수 px, 1px 은 선·테두리 두께 전용, 2px 이상 홀수 금지, 4의 배수 권장. space-N 으로만 참조
 // ============================================================
-
-// ── Base Unit ─────────────────────────────────────────────────
-$space-base: 8px;
 
 // ── Scale ─────────────────────────────────────────────────────
 $space-1:  4px;   // space-1  — 4px  : 아이콘 내부, 뱃지 패딩
@@ -18,8 +15,7 @@ $space-10: 40px;  // space-10 — 40px
 $space-12: 48px;  // space-12 — 48px : 페이지 상단 여백
 
 // ── Layout Constants ──────────────────────────────────────────
-$layout-screen-width:    480px;  // Figma 기준 = 코드 wrapper (mobile-frame.md § 1 / § 2 — 480 단일)
-$layout-wrapper-max:     480px;  // 코드 wrapper 한도 (mobile-frame.md § 2) — body / page-layout / TopBar / Drawer 공용
+$layout-wrapper-max:     480px;  // 코드 wrapper 한도 (mobile-frame.md § 1 / § 2 — 480 단일, body / page-layout / TopBar / Drawer 공용)
 $layout-card-width:      448px;  // 480 - 16×2 (mobile-frame.md § 2 — 480 정합)
 $layout-h-pad:           16px;   // $space-4 동일
 $layout-h-pad-sm:        12px;   // 320 미만 보호용 (mobile-frame.md § 3.2)

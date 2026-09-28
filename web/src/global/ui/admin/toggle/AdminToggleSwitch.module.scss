@@ -1,5 +1,5 @@
-// 34×20 pill (v2 원본 치수) — on 색은 admin.tokens.scss 참조,
-// off 트랙은 기존 --color-bg-elevated 그대로 — 톤 대비만으로 on/off 구분.
+// 34×20 pill (v2 원본 치수) — on/off 트랙 색 모두 admin.tokens.scss 참조.
+// 톤 대비만으로 on/off 를 구분한다(그림자 금지). 손잡이는 두 테마 모두 흰색이라 리터럴로 둔다.
 .toggle {
   @include reset-button;
   position: relative;
@@ -7,7 +7,7 @@
   width: 34px;
   height: 20px;
   border-radius: $radius-full;
-  background: var(--color-bg-elevated);
+  background: var(--color-admin-toggle-off);
   transition: background-color 0.15s ease;
   cursor: pointer;
 

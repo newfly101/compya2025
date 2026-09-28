@@ -20,7 +20,7 @@
   background: var(--color-bg-card);
   color: var(--color-text-muted);
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   cursor: pointer;
 
   &[aria-pressed="true"] {
@@ -33,4 +33,10 @@
     opacity: 0.4;
     cursor: not-allowed;
   }
+}
+
+.ellipsis {
+  cursor: default;
+  border-color: transparent;
+  background: transparent;
 }

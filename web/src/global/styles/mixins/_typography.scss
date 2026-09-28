@@ -97,8 +97,8 @@
 // mobile-frame.md § 4.3 — 도메인에서 font-size 직접 px 금지.
 // 부득이 토큰 외 사이즈 필요 시 본 mixin 으로 rem 변환 강제.
 // 사용 예:
-//   .foo { @include font-size-rem(14); }            → font-size: 0.875rem;
-//   .bar { @include font-size-rem(18, 1.4); }        → font-size: 1.125rem; line-height: 1.4;
+//   .foo { @include font-size-rem(15); }            → font-size: 0.9375rem;
+//   .bar { @include font-size-rem(17, 1.4); }        → font-size: 1.0625rem; line-height: 1.4;
 @mixin font-size-rem($px, $line-height: normal) {
   font-size: rem($px);
   line-height: $line-height;

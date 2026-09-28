@@ -14,6 +14,7 @@ import {
   posOptions,
   resolveLegend,
   roundLabel,
+  sortAscending,
   sortDirectionLabel,
   sortRows,
   teamColor,
@@ -54,7 +55,7 @@ const COLS = {
 const HistoryLegendScreen = () => {
   useDomainTopBar("히스토리 재료");
 
-  const { rounds, legends, materials, meta, loading, loaded, error, retry } = useHistoryLegend();
+  const { rounds, legends, meta, loading, loaded, error, metaError, retry } = useHistoryLegend();
   const [searchParams] = useSearchParams();
 
   const [view, setView] = useState(VIEW.LEGEND);
@@ -106,6 +107,8 @@ const HistoryLegendScreen = () => {
   );
   // 일차 범위는 데이터에서 뽑는다 — 라운드가 늘면 안내도 따라 바뀐다
   const maxDay = useMemo(() => rounds.reduce((a, r) => Math.max(a, r.day), 0), [rounds]);
+  // 등장 위치 수(materials.length)가 아니라 카드 단위 중복 제거 수 — 표의 재료 칸과 같은 기준
+  const materialCount = useMemo(() => legends.reduce((sum, l) => sum + l.mats.length, 0), [legends]);
   const cols = COLS[view];
 
   const rows = useMemo(() => {
@@ -115,7 +118,8 @@ const HistoryLegendScreen = () => {
       );
       const keyOf = {
         day: (r) => r.day * 10 + r.round,
-        dow: (r) => r.day % 7,
+        // 7·14일차(일요일)는 나머지가 0이 되어 월요일보다 앞으로 온다 — BE와 같은 월=1…일=7로 맞춘다
+        dow: (r) => r.day % 7 || 7,
         cnt: (r) => matchedMaterials(r, legendHit).length,
       }[sort] ?? ((r) => r.day * 10 + r.round);
       return sortRows(list, keyOf, {
@@ -198,6 +202,16 @@ const HistoryLegendScreen = () => {
           setOpenId(null);
         })}
       </>
+    ) : metaError ? (
+      // 레전드 메타(구단·타입·포지션)가 실패한 상태 — 값이 전부 빈 폴백이라 필터가 못 쓰게 된다.
+      // 조용히 0건 결과를 내는 대신 실패를 알리고 재시도를 준다.
+      <div className={styles.chipRow}>
+        <span className={styles.chipLabel}>구단·타입·포지션</span>
+        <span className={styles.dim}>정보를 불러오지 못했습니다.</span>
+        <button type="button" className={styles.chip} onClick={retry}>
+          다시 시도
+        </button>
+      </div>
     ) : (
       <>
         {filterRow("구단", teamOptions(legends), team, (v) => {
@@ -460,7 +474,9 @@ const HistoryLegendScreen = () => {
                   >
                     {col.label}
                     {SORTABLE.has(col.key) && sort === col.key && (
-                      <span className={styles.arrowMark}>{dir < 0 ? "▼" : "▲"}</span>
+                      <span className={styles.arrowMark}>
+                        {sortAscending(sort, dir) ? "▲" : "▼"}
+                      </span>
                     )}
                   </th>
                 ))}
@@ -511,7 +527,7 @@ const HistoryLegendScreen = () => {
           레전드 이름이나 구단으로 검색하세요. 카드 이름(이만수&apos;82)으로는 찾을 수 없습니다.
         </p>
         <p>
-          {`지금은 1~${maxDay}일차까지 정리돼 있습니다 · ${rounds.length}라운드 · 재료 ${materials.length}장`}
+          {`지금은 1~${maxDay}일차까지 정리돼 있습니다 · ${rounds.length}라운드 · 재료 ${materialCount}장`}
         </p>
       </div>
     </div>

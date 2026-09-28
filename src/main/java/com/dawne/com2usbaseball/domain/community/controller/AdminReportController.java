@@ -6,10 +6,12 @@ import com.dawne.com2usbaseball.domain.community.dto.response.ReportResponse;
 import com.dawne.com2usbaseball.domain.community.enums.ReportTargetType;
 import com.dawne.com2usbaseball.domain.community.service.report.AdminReportService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/reports")
 public class AdminReportController {
 

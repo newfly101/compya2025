@@ -72,14 +72,14 @@ tools: Read, Write, Edit, Glob, Grep
 ### 디렉토리 컨벤션
 
 ```
-docs/domain/{feature}/prd/
+.claude/.progress/<branch>/
 ├── _common.md                  # 도메인 공통 정책
 ├── {feature}.md                # 통합 기획 (1개 또는 화면 그룹별 N개)
 ├── _tasks.md                   # 개발자 요약
 └── _decision_log.md            # ⭐ 라운드 간 결정 이력 (Opus 전용)
 ```
 
-> 본 프로젝트 default 경로: `docs/domain/{feature}/prd/`. 사용자 지정 시 우선.
+> 본 프로젝트 default 경로: `.claude/.progress/<branch>/`. 사용자 지정 시 우선. 확정본은 `docs/features/{feature}/spec.md` (develop 반영 시).
 
 ### 파일별 역할
 
@@ -102,7 +102,7 @@ docs/domain/{feature}/prd/
 
 ### prefix 사전 검사 (R1 진입 전 1회)
 
-1. 베이스 경로 (`docs/domain/`) 하위 grep — 기존 prefix 목록 추출
+1. 베이스 경로 (`docs/features/`) 하위 grep — 기존 prefix 목록 추출
 2. 사용자 지정 prefix 와 충돌 검사
 3. 충돌 시 메인 어시스턴트에 보고 → 사용자 재지정 요청
 
@@ -246,7 +246,7 @@ planner-lite 와 동일 + Opus 특화:
   "prefix": "...",                      # 필수 (자동 채번 X)
   "round": 1 | 2 | 3 | 4,               # 필수
   "feature_names": [...],               # R1 필수 (sub-feature 가 여럿이면)
-  "base_path": "docs/domain/",          # 선택 (default)
+  "base_path": ".claude/.progress/<branch>/",   # 선택 (default)
   "project_type": "ui | backend | library | data_pipeline | custom",
   "extra_hitl_domains": [...],          # 선택 — plug-in 강제 HITL 분야
   "user_decisions": {...}               # R2/R3/R4 진입 시 — 이전 라운드 🔴 답변
@@ -264,10 +264,10 @@ planner-lite 와 동일 + Opus 특화:
 ✅ {feature} 통합 문서 작성 완료 (3 라운드 + 정리 R4)
 
 📂 산출 파일:
-- docs/domain/{feature}/prd/_common.md ({N}줄)
-- docs/domain/{feature}/prd/{feature}.md ({N}줄)
-- docs/domain/{feature}/prd/_tasks.md ({N}줄)
-- docs/domain/{feature}/prd/_decision_log.md (누적 {N}건)
+- .claude/.progress/<branch>/_common.md ({N}줄)
+- .claude/.progress/<branch>/{feature}.md ({N}줄)
+- .claude/.progress/<branch>/_tasks.md ({N}줄)
+- .claude/.progress/<branch>/_decision_log.md (누적 {N}건)
 
 🧹 정리 작업 (R4):
 - 통 파일 삭제: {N}개

@@ -1,22 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { requestUploadImage } from "@/infra/api/uploads/index.js";
+import { requestUploadImage, extractUploadedUrl } from "@/infra/api/uploads/index.js";
 import { requestUpdateMyProfileImage } from "@/domains/users/store/public/thunks.js";
 import {
   resizeProfileImage,
   validateProfileImageFile,
 } from "@/domains/users/mobile/utils/resizeProfileImage.js";
-
-// 업로드 응답 형태가 raw string / { url, fileName } / 래핑된 { data: {...} } 중
-// 무엇이 오든 URL 을 뽑아낸다 — 다른 도메인 업로드 화면(AdminEventScreen 등)과 동일 패턴.
-const extractUploadedUrl = (result) => {
-  if (typeof result === "string") return result;
-  if (result && typeof result === "object") {
-    if (typeof result.url === "string") return result.url;
-    if (result.data) return extractUploadedUrl(result.data);
-  }
-  return null;
-};
 
 /**
  * 마이페이지 프로필 이미지 변경 훅.

@@ -4,13 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { Avatar, pickProfileImageSrc } from "@/global/ui/avatar";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import {
   requestGetMyInfo,
   requestUpdateMyNickname,
   requestDeleteMyAccount,
 } from "@/domains/users/store/public/thunks.js";
 import { useProfileImageUpload } from "@/domains/users/mobile/hooks/useProfileImageUpload.js";
-import { clearUser } from "@/domains/authentication/store/slices.js";
+import { resetAuthSession } from "@/domains/authentication/store/thunks.js";
 import styles from "./MyPageScreen.module.scss";
 
 const NICKNAME_MAX_LENGTH = 20;
@@ -94,8 +95,8 @@ export default function MyPageScreen() {
     try {
       await dispatch(requestDeleteMyAccount()).unwrap();
       // BE 가 refresh token 삭제 + 쿠키 만료까지 처리한다.
-      // FE 는 별도 로그아웃 API 호출 없이 인증 상태만 정리한다.
-      dispatch(clearUser());
+      // FE 는 별도 로그아웃 API 호출 없이 인증 상태만 정리한다 — 세션 마커까지 함께 비운다.
+      dispatch(resetAuthSession());
       navigate(ROUTE_PATHS.home, { replace: true });
     } catch (e) {
       setWithdrawError(typeof e === "string" ? e : "탈퇴 처리에 실패했습니다.");
@@ -107,9 +108,7 @@ export default function MyPageScreen() {
   if (loading && !profile) {
     return (
       <div className={styles.page}>
-        <div className={styles.stateBox}>
-          <p className={styles.stateText}>불러오는 중...</p>
-        </div>
+        <StateBox status="loading" message="불러오는 중..." />
       </div>
     );
   }
@@ -118,16 +117,7 @@ export default function MyPageScreen() {
   if (error && !profile) {
     return (
       <div className={styles.page}>
-        <div className={styles.stateBox}>
-          <p className={styles.stateError}>{error}</p>
-          <button
-            type="button"
-            className={styles.retryBtn}
-            onClick={() => dispatch(requestGetMyInfo())}
-          >
-            다시 시도
-          </button>
-        </div>
+        <StateBox status="error" message={error} onRetry={() => dispatch(requestGetMyInfo())} />
       </div>
     );
   }
@@ -136,9 +126,7 @@ export default function MyPageScreen() {
   if (!profile) {
     return (
       <div className={styles.page}>
-        <div className={styles.stateBox}>
-          <p className={styles.stateText}>회원 정보를 찾을 수 없습니다.</p>
-        </div>
+        <StateBox status="empty" message="회원 정보를 찾을 수 없습니다." />
       </div>
     );
   }

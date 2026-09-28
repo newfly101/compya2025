@@ -14,7 +14,7 @@
 .filters {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: $z-sticky;
   padding-bottom: 8px;
   background: linear-gradient(var(--color-bg-deepest) 84%, transparent);
 }
@@ -31,7 +31,7 @@
     background: var(--color-bg-card);
     color: var(--color-text-primary);
     font-family: inherit;
-    font-size: 13.5px;
+    font-size: $font-size-13;
 
     &::placeholder {
       color: var(--color-text-muted);
@@ -76,14 +76,14 @@
   border: 0;
   background: none;
   color: var(--color-text-muted);
-  font-size: 16px;
+  font-size: $font-size-17;
   cursor: pointer;
 }
 
 .chipRow {
   display: flex;
-  gap: 7px;
-  padding: 7px 16px;
+  gap: $space-2;
+  padding: $space-2 16px;
   overflow-x: auto;
   scrollbar-width: none;
 
@@ -97,9 +97,9 @@
   flex: 0 0 40px;
   width: 40px;
   align-self: center;
-  margin-right: 3px;
+  margin-right: $space-1;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
   text-align: left;
 }
 
@@ -107,15 +107,15 @@
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: $space-1;
   padding: 6px 12px;
   border: 1px solid var(--color-border-strong);
   border-radius: 999px;
   background: var(--color-bg-card);
   color: var(--color-text-secondary);
   font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 500;
+  font-size: $font-size-12;
+  font-weight: $font-weight-medium;
   white-space: nowrap;
   cursor: pointer;
 
@@ -136,7 +136,7 @@
 
 .chipCount {
   color: var(--color-text-muted);
-  font-size: 10.5px;
+  font-size: $font-size-11;
 }
 
 .segment {
@@ -146,14 +146,14 @@
 
   button {
     flex: 1;
-    padding: 9px 0;
+    padding: $space-2 0;
     border: 1px solid var(--color-border-strong);
     border-radius: 10px;
     background: var(--color-bg-card);
     color: var(--color-text-secondary);
     font-family: inherit;
-    font-size: 13px;
-    font-weight: 500;
+    font-size: $font-size-13;
+    font-weight: $font-weight-medium;
     cursor: pointer;
 
     &[aria-pressed="true"] {
@@ -167,20 +167,20 @@
 .segCount {
   margin-left: 4px;
   color: var(--color-text-muted);
-  font-size: 10.5px;
+  font-size: $font-size-11;
 }
 
 .meta {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  padding: 9px 16px 5px;
+  padding: $space-2 16px $space-1;
   color: var(--color-text-muted);
-  font-size: 11.5px;
+  font-size: $font-size-12;
 
   b {
     color: var(--color-text-secondary);
-    font-weight: 500;
+    font-weight: $font-weight-medium;
   }
 }
 
@@ -204,7 +204,7 @@
   th,
   td {
     // 좁은 화면에서 한 칸이라도 더 벌기 위해 좌우 여백을 최소로 둔다
-    padding: 0 3px;
+    padding: 0 $space-1;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -229,7 +229,7 @@ thead .sticky {
 // .table th / .table td 의 center 를 이기려면 같은 요소 선택자를 써야 한다
 th.alignLeft,
 td.alignLeft {
-  padding-left: 5px;
+  padding-left: $space-1;
   text-align: left;
 }
 
@@ -240,7 +240,7 @@ td.alignLeft {
 
   // filter 는 배경이 있는 칸만 밝아진다. 투명한 칸은 반응이 없어 행이 반쪽만 켜진다
   &:hover td {
-    background: rgba(255, 255, 255, 0.04);
+    background: var(--color-hl-row-hover-soft);
   }
 
   // 고정 칸은 스크롤 시 뒤가 비치면 안 되므로 불투명하게 덮는다
@@ -276,12 +276,12 @@ td.alignLeft {
 .dayBadge {
   display: inline-block;
   min-width: 26px;
-  padding: 1px 5px;
+  padding: 2px $space-1;
   border-radius: 5px;
   background: var(--color-hl-day-odd-bg);
   color: var(--color-hl-day-odd-text);
-  font-size: 11px;
-  font-weight: 600;
+  font-size: $font-size-11;
+  font-weight: $font-weight-semibold;
 }
 
 .dim {
@@ -294,13 +294,13 @@ td.alignLeft {
 
 .accent {
   color: var(--color-hl-accent-text);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
 }
 
 .nameInner {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: $space-1;
 }
 
 .dot {
@@ -344,7 +344,7 @@ td.alignLeft {
 }
 
 .detail {
-  padding: 11px 14px 14px;
+  padding: $space-3 14px 14px;
   text-align: left;
   white-space: normal;
 }
@@ -354,14 +354,14 @@ td.alignLeft {
   flex-wrap: wrap;
   gap: 8px;
   align-items: baseline;
-  margin-bottom: 9px;
+  margin-bottom: $space-2;
   color: var(--color-text-secondary);
-  font-size: 11.5px;
+  font-size: $font-size-12;
 
   strong {
     color: var(--color-text-primary);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: $font-size-15;
+    font-weight: $font-weight-semibold;
   }
 }
 
@@ -369,20 +369,20 @@ td.alignLeft {
   display: flex;
   gap: 6px;
   align-items: baseline;
-  margin: 11px 0 5px;
+  margin: $space-3 0 $space-1;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
 }
 
 .detailNote {
   color: var(--color-text-muted);
-  font-size: 11.5px;
+  font-size: $font-size-12;
 }
 
 .materials {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 5px;
+  gap: $space-1;
 }
 
 // grid 로 열을 맞춘다. flex 로 짜면 카드명 길이에 따라 화살표가 행마다 어긋난다
@@ -394,7 +394,7 @@ td.alignLeft {
   border: 1px solid var(--color-border-strong);
   border-radius: 8px;
   background: var(--color-hl-card-bg);
-  font-size: 12px;
+  font-size: $font-size-12;
 }
 
 .mapRow {
@@ -408,7 +408,7 @@ td.alignLeft {
 // 획득 가능한 라운드가 여럿이면 배지를 나란히 둔다
 .dayGroup {
   display: inline-flex;
-  gap: 3px;
+  gap: $space-1;
 }
 
 .card {
@@ -420,7 +420,7 @@ td.alignLeft {
 // 여러 라운드에서 얻을 수 있는 카드 — 어느 쪽에서 먹어도 된다
 .cardMulti {
   color: var(--color-hl-card-multi);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
 }
 
 .arrow {
@@ -437,13 +437,13 @@ td.alignLeft {
 
 .legendName {
   color: var(--color-text-primary);
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 }
 
 .subText {
   overflow: hidden;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
   text-overflow: ellipsis;
 }
 
@@ -452,14 +452,14 @@ td.alignLeft {
 .empty {
   padding: 44px 16px;
   color: var(--color-text-muted);
-  font-size: 13px;
+  font-size: $font-size-13;
   text-align: center;
 }
 
 .foot {
   padding: 16px;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
   line-height: 1.7;
 
   p {

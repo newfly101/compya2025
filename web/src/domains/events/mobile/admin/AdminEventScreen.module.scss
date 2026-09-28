@@ -20,13 +20,13 @@
   background: var(--color-warning-dim);
   color: var(--color-warning);
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 
   button {
     border: 0;
     background: transparent;
     color: inherit;
-    font-size: 14px;
+    font-size: $font-size-15;
     line-height: 1;
     cursor: pointer;
     @include pressable;
@@ -71,7 +71,7 @@
   min-width: 0;
   flex: 1 1 auto;
   color: var(--color-text-primary);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   @include text-ellipsis;
 }
 
@@ -87,7 +87,7 @@
   display: block;
   color: var(--color-text-secondary);
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   white-space: nowrap;
 }
 
@@ -106,7 +106,7 @@
   background: transparent;
   color: var(--color-admin-accent-active-text);
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   cursor: pointer;
   @include pressable;
 }
@@ -155,6 +155,22 @@
   @include text-caption;
   color: var(--color-danger);
   margin: 0;
+}
+
+/* 기간 시각(선택) 입력 — 날짜 행(AdminDateRange)과 같은 배치. */
+.timeRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  input[type='time'] {
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+.timeSep {
+  @include admin-date-range-sep;
 }
 
 .toggleRow {

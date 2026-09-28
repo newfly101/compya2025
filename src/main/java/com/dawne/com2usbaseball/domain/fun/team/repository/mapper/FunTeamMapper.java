@@ -15,7 +15,7 @@ import java.util.List;
  *
  * 두 테이블(`teams` 20건 / `fun_teams` 20건)은 컬럼이 사실상 같고 병존 중이다.
  * 정리 시 한쪽으로 합치면서 이 매퍼도 함께 통합할 대상이다.
- * 근거: docs/global-guide/develop/specs/db/dead-suspects.md § 3
+ * 근거: .claude/references/db/dead-suspects.md § 3
  */
 @Mapper
 public interface FunTeamMapper {

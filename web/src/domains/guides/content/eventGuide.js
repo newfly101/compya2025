@@ -1,7 +1,7 @@
 // domains/guides/content/eventGuide.js
 // 가이드 9편 — 이벤트 참여 전 확인할 것들.
 // 시드: 신규 작성. 근거는 domains/events/mobile/components/eventCard/EventCard.jsx
-// (externalLink 유무에 따른 카드 분기, 진행중/종료 배지), domains/events/README.md
+// (externalLink 유무에 따른 카드 분기, 진행중/종료 배지), docs/features/events/spec.md
 // (eventType INTERNAL/OFFICIAL 정의 — OFFICIAL은 공식 카페 이벤트로 externalLink 이동),
 // domains/events/mobile/EventScreen.jsx.
 

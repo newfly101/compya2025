@@ -4,16 +4,28 @@ import {
   requestAdminInsertNewCoupon,
   requestAdminUpdateCoupon, requestAdminUpdateCouponVisible,
   requestGetAdminCouponList,
-  requestAdminDeleteCoupon,
   requestAdminBulkDeleteCoupons, requestAdminBulkUpdateCouponsVisible,
   requestAdminRefreshCoupons,
 } from "@/domains/coupons/store/admin/thunks.js";
 import { requestGetUserCouponList } from "@/domains/coupons/store/public/thunks.js";
 
+// coupons = 관리자 목록(숨김 포함) / publicCoupons = 공개 목록(BE 가 is_visible=true 로 필터한 것).
+// 한 칸을 같이 쓰면 관리자 화면을 본 뒤 공개 화면으로 이동할 때 숨김 쿠폰이 노출되고,
+// 공개 목록 조회가 실패하면 낡은 관리자 데이터가 그대로 남는다 — 그래서 칸을 나눈다.
+//
+// 로딩·오류 칸도 같은 이유로 셋으로 나눈다(규칙: app/store/utils/applyAsyncHandlers.js).
+//   loading/error             → 관리자 목록 조회 전용
+//   publicLoading/publicError → 공개 목록 조회 전용
+//   mutateLoading/mutateError → 등록·수정·노출변경·삭제·일괄 (쓰기)
 const initialState = {
   coupons: [],
+  publicCoupons: [],
   loading: false,
   error: null,
+  publicLoading: false,
+  publicError: null,
+  mutateLoading: false,
+  mutateError: null,
 };
 
 const couponSlice = createSlice({
@@ -25,8 +37,8 @@ const couponSlice = createSlice({
      * 쿠폰 목록 조회
      * =============================== */
     applyAsyncHandlers(builder, requestGetUserCouponList, (state, action) => {
-      state.coupons = action.payload;
-    });
+      state.publicCoupons = action.payload;
+    }, "public");
 
     applyAsyncHandlers(builder, requestGetAdminCouponList, (state, action) => {
       state.coupons = action.payload;
@@ -42,7 +54,7 @@ const couponSlice = createSlice({
      * =============================== */
     applyAsyncHandlers(builder, requestAdminInsertNewCoupon, (state, action) => {
       state.coupons.unshift(action.payload);
-    });
+    }, "mutate");
     /* ===============================
      * 쿠폰 수정
      * =============================== */
@@ -56,7 +68,7 @@ const couponSlice = createSlice({
           ...updated,
         };
       }
-    });
+    }, "mutate");
     /* ===============================
      * 쿠폰 visible 변경
      * =============================== */
@@ -68,30 +80,26 @@ const couponSlice = createSlice({
           ? { ...c, visible: updated.visible }
           : c
       );
-    });
+    }, "mutate");
     /* ===============================
-     * 쿠폰 삭제
-     * =============================== */
-    applyAsyncHandlers(builder, requestAdminDeleteCoupon, (state, action) => {
-      state.coupons = state.coupons.filter(c => Number(c.id) !== Number(action.payload));
-    });
-    /* ===============================
-     * 쿠폰 일괄 삭제 (v2 — 서버 API 연결 전)
+     * 쿠폰 일괄 삭제 — 서버가 처리한 successIds 만 반영한다(failedIds 는 화면에 그대로 남긴다)
      * =============================== */
     applyAsyncHandlers(builder, requestAdminBulkDeleteCoupons, (state, action) => {
-      const ids = new Set(action.payload.map(Number));
-      state.coupons = state.coupons.filter(c => !ids.has(Number(c.id)));
-    });
+      const ids = new Set(action.payload.successIds);
+      state.coupons = state.coupons.map(c =>
+        ids.has(Number(c.id)) ? { ...c, visible: false } : c
+      );
+    }, "mutate");
     /* ===============================
-     * 쿠폰 일괄 노출 변경 (v2 — 서버 API 연결 전)
+     * 쿠폰 일괄 노출 변경 — 위와 동일하게 successIds 만 반영
      * =============================== */
     applyAsyncHandlers(builder, requestAdminBulkUpdateCouponsVisible, (state, action) => {
-      const { ids, visible } = action.payload;
-      const idSet = new Set(ids.map(Number));
+      const { successIds, visible } = action.payload;
+      const idSet = new Set(successIds);
       state.coupons = state.coupons.map(c =>
         idSet.has(Number(c.id)) ? { ...c, visible } : c
       );
-    });
+    }, "mutate");
   },
 });
 

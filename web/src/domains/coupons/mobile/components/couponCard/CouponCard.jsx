@@ -23,7 +23,8 @@ const CouponCard = ({ coupon, showDetail = false, isExpired = false }) => {
       </div>
       <p className={styles.couponTitle}>{coupon.title}</p>
 
-      {showDetail && coupon?.detail.length > 0 && (
+      {/* detail 은 NULL 허용 컬럼이다 — 위에서 이미 ?? [] 로 받은 details 로 판정한다 */}
+      {showDetail && details.length > 0 && (
         <div className={styles.couponBody}>
           {details.map((item, idx) => (
             <p key={idx}>{item}</p>
@@ -33,7 +34,7 @@ const CouponCard = ({ coupon, showDetail = false, isExpired = false }) => {
 
       <p className={styles.couponExpire}>
         <span className={styles.expireDot}>⏱</span>
-        유효기간 {coupon.expireAt}
+        유효기간 {coupon.expireAt?.slice(0, 16)}
       </p>
       {showDetail && (
         <p className={styles.couponExplain}>

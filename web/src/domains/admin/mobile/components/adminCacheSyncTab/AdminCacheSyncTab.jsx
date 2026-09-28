@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
 import "@/global/ui/admin/admin.tokens.scss";
 import {
@@ -59,10 +59,10 @@ export default function AdminCacheSyncTab() {
 
       {allSyncError && <p className={styles.allError}>{allSyncError}</p>}
 
-      {loading && <AdminStateBox status="loading" message="동기화 대상을 불러오는 중..." />}
-      {!loading && error && <AdminStateBox status="error" message={error} onRetry={handleRetry} />}
+      {loading && <StateBox status="loading" message="동기화 대상을 불러오는 중..." />}
+      {!loading && error && <StateBox status="error" message={error} onRetry={handleRetry} />}
       {!loading && !error && targets.length === 0 && (
-        <AdminStateBox status="empty" message="동기화할 대상이 없습니다." />
+        <StateBox status="empty" message="동기화할 대상이 없습니다." />
       )}
 
       {!loading && !error && targets.length > 0 && (

@@ -7,16 +7,11 @@
   border-radius: $radius-2xl;
   background:
     linear-gradient(135deg, rgba(254, 229, 0, 0.16), rgba(254, 229, 0, 0.04));
-  box-shadow: 0 0 0.75rem rgba(254, 229, 0, 0.12);
   cursor: pointer;
   text-align: left;
-  transition: box-shadow 0.2s ease, transform 0.15s ease;
+  transition: transform 0.15s ease;
 
   @include flex-row($gap: $space-3);
-
-  &:hover {
-    box-shadow: 0 0 1.25rem rgba(254, 229, 0, 0.22);
-  }
 
   &:active {
     transform: scale(0.99);
@@ -30,7 +25,7 @@
   aspect-ratio: 1 / 1;
   border-radius: $radius-full;
   background-color: rgba(254, 229, 0, 0.18);
-  @include font-size-rem(18);
+  @include font-size-rem(17);
   animation: supportPulse 2.4s ease-in-out infinite;
 
   @media (prefers-reduced-motion: reduce) {
@@ -45,7 +40,7 @@
 }
 
 .bannerText {
-  @include font-size-rem(14, 1.4);
+  @include font-size-rem(15, 1.4);
   font-weight: $font-weight-semibold;
   color: var(--color-text-primary);
   @include text-ellipsis;
@@ -109,7 +104,7 @@
   display: block;
   margin: $space-4 auto 0;
   border-radius: $radius-lg;
-  background-color: #fff;
+  background-color: #fff;                      // QR 스캔용 흰 판 — 두 테마 공용 고정값
 }
 
 .qrHint {

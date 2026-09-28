@@ -6,14 +6,7 @@
 // ============================================================
 
 // ── badge-specific color tokens ───────────────────────────────
-$pinned-purple-bg:    rgba(167, 139, 250, 0.18);
-$pinned-purple-border:#a78bfa;
-$pinned-blue-bg:      rgba(96, 165, 250, 0.18);
-$pinned-blue-border:  #60a5fa;
-$pinned-gray-bg:      rgba(156, 163, 175, 0.18);
-$pinned-gray-border:  #9ca3af;
-$pinned-emerald-bg:   rgba(52, 211, 153, 0.18);
-$pinned-emerald-border:#34d399;
+// community(동결 도메인) 호출부가 쓰는 값 — PostRow.jsx 가 여기 걸려 있어 재색칠하지 않는다.
 $pinned-yellow-bg:    rgba(254, 204, 26, 0.18);
 $pinned-yellow-border:#fecc1a;
 $pinned-red-bg:       rgba(248, 113, 113, 0.18);
@@ -30,7 +23,7 @@ $pinned-hot-border:   #ef4444;
   // 글자 수가 달라도 폭이 같아야 목록에서 오른쪽 끝이 맞는다.
   // 가장 긴 축(공사중 = 한글 3자) 기준. 그보다 긴 라벨은 자연히 늘어난다
   min-width: 42px;
-  padding: 3px $space-2;
+  padding: $space-1 $space-2;
   border-radius: $radius-sm;
   border-width: 0.5px;
   border-style: solid;
@@ -38,20 +31,20 @@ $pinned-hot-border:   #ef4444;
   flex-shrink: 0;
 }
 
-// ── Variants ──────────────────────────────────────────────────
-.update    { background-color: $pinned-purple-bg;  border-color: $pinned-purple-border;  color: $pinned-purple-border; }
-.patch     { background-color: $pinned-blue-bg;    border-color: $pinned-blue-border;    color: $pinned-blue-border; }
-.cafe      { background-color: $pinned-gray-bg;    border-color: $pinned-gray-border;    color: $pinned-gray-border; }
-.tip       { background-color: $pinned-emerald-bg; border-color: $pinned-emerald-border; color: $pinned-emerald-border; }
-.important { background-color: $pinned-yellow-bg;  border-color: $pinned-yellow-border;  color: $pinned-yellow-border; }
-.mustread  { background-color: $pinned-red-bg;     border-color: $pinned-red-border;     color: $pinned-red-border; }
+// ── Variants — community 호출부(동결) 는 옛 값 그대로 둔다 ──────
+.important { background-color: $pinned-yellow-bg;  border-color: $pinned-yellow-border;  color: $pinned-yellow-border; } // PostRow "공지" 전용
+.mustread  { background-color: $pinned-red-bg;     border-color: $pinned-red-border;     color: $pinned-red-border; } // PostRow "인기"/"고정" 전용
+.new       { background-color: $pinned-red-bg;     border-color: $pinned-red-border;     color: $pinned-red-border; } // PostRow "new" 전용
 
-// D1=a (2026-05-31): CommunityBadge / BoardTagBadge 흡수용 신규 2종
-.new       { background-color: $pinned-red-bg;     border-color: $pinned-red-border;     color: $pinned-red-border; }
-.neutral   { background-color: $pinned-gray-bg;    border-color: $pinned-gray-border;    color: $pinned-gray-border; }
-
-// 선수 백과사전 BETA 뱃지용 — 기존 $pinned-yellow-* 토큰 재사용 (신규 색상 추가 없음)
-.beta      { background-color: $pinned-yellow-bg;  border-color: $pinned-yellow-border;  color: $pinned-yellow-border; }
-
-// 레전드 재료 HOT 뱃지용 — new(red-400) 보다 진한 red-500, alpha 상향으로 강조
+// 레전드 재료 HOT 뱃지용 — 폐기 확정(코드 제거는 별도 세션), 값만 유지
 .hot       { background-color: $pinned-hot-bg;     border-color: $pinned-hot-border;     color: $pinned-hot-border; }
+
+// ── Variants — 분류 축 토큰(semantic/_color.scss --color-cat-*) ─
+.cafe,
+.neutral,
+.beta      { background-color: var(--color-cat-neutral-dim); border-color: var(--color-cat-neutral); color: var(--color-cat-neutral); }
+
+.mark      { background-color: var(--color-cat-mark-dim);    border-color: var(--color-cat-mark);    color: var(--color-cat-mark); }
+
+// 메뉴 "NEW" 전용 — 분류 빨강은 이 배지에서만, 불투명 채움 + 흰 글자
+.catNew    { background-color: var(--color-cat-new); border-color: var(--color-cat-new); color: #fff; }

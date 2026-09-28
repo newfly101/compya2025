@@ -20,5 +20,5 @@ public class RefreshTokenEntity {
     private String tokenHash;
     private LocalDateTime expiresAt;
     private LocalDateTime createdAt;
-    private LocalDateTime revokedAt;
+    // revoked_at 컬럼은 읽지 않는다 — 무효화는 하드 삭제 설계다 (RefreshTokenMapper.xml 상단 주석)
 }

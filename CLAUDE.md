@@ -1,256 +1,78 @@
-# CLAUDE.md — 작업 워크플로우
+# CLAUDE.md — 컴프야펀 (COMPYAFUN) 작업 허브
 
-> 이 파일은 Claude Code 가 모든 세션 시작 시 자동 로드하는 **글로벌 instruction**.
-> 핵심 룰: **모든 작업은 백그라운드 agent 로 병렬화 강제**. 메인 세션은 사용자 입력 대기.
+> Claude Code 가 세션마다 자동 로드하는 유일한 진입점. **규칙 본문은 여기 없다** — `.claude/rules/` 가 경로별로 자동 실리고, 운영 절차는 `.claude/conventions/` 에 있다. 이 파일은 100줄 안에 유지한다.
 
----
+## 0. 프로젝트
 
-## 1. 트랙 분류 (모든 요청은 4 트랙 중 하나 이상)
+컴투스프로야구 팬을 위한 비공식 데이터 사이트. 쿠폰·이벤트·공지 모음 + 게임 데이터(스킬·구종·선수·레전드 재료) 검색. 이용자·제약·원칙: `PRODUCT.md`.
 
-| 트랙 | 무엇 | 1차 참조 | 산출물 위치 |
-|---|---|---|---|
-| **develop** | 코드 작성/수정/리팩터/디버그 (FE/BE/auth/db) | `docs/convention/frontend.md`, `docs/convention/backend.md` | 코드 |
-| **planner** | 기능 정의 / IA / feature spec / endpoint spec / qa-checklist | (전용 가이드 없음 — 기존 도메인 문서 참조) | `docs/domain/{name}/prd/*.md` |
-| **designer** | Figma MCP 조작 / 디자인 토큰 / wireframe 검증 | `docs/mcp/figma-convention.md`, `docs/convention/design.md` | `docs/domain/{name}/design/*.md` |
-| **ops** | devops / db migration / CI / 배포 / 환경설정 / 보안정책 / 트랙 외 작업 | `docs/global-guide/develop/specs/db/*.md` (DB 실측) | `sql/`, `application*.properties` |
-
-한 요청에 여러 트랙이 섞이면 **트랙별 agent 분리**.
-
----
-
-## 2. 병렬화 강제 룰 (이 세션의 절대 룰)
-
-1. **모든 작업은 백그라운드 agent 로 분리** — **메인 세션은 입력 대기 / HITL 처리 / 결과 검증만**. 작업이 있으면 무조건 백그라운드 agent. (사용자 별도 지시 없어도 default — Auto Mode 가정)
-2. **요청 들어오면 즉시**:
-   - (a) 트랙 식별 (1~N 개)
-   - (b) 트랙별/병렬 가능 단위로 백그라운드 agent 디스패치 (`run_in_background: true`)
-   - (c) 메인 세션은 입력 대기 진입
-3. **단일 자명 작업**(파일 1개 1줄 수정 등) 도 가능하면 백그라운드. 메인 세션 부담 최소화. **메인 직접 처리는 § 2-8 의 예외만**
-4. **agent 역할 분리** — 동일 파일 충돌 회피:
-   - 한 파일군 = 한 agent 가 Edit. 나머지는 Read only
-   - 검증/문서화는 Read only agent
-5. **agent 디스패치 시 brief 필수** (각 agent 는 컨텍스트 모름):
-   - 목적 / 산출물 위치 / 작업 범위 / 제약 (Edit 가능 여부 / 회피할 영역) / 출력 형식
-   - **진행상황 stream** — 단계 ≥ 3, 예상 시간 ≥ 5분 인 백그라운드 sub-agent 는 `progress.log` 룰 적용 + 메인이 `Monitor` 띄움. 룰: [.claude/conventions/agent-progress.md](.claude/conventions/agent-progress.md)
-6. **메인 어시스턴트 진행 로그 (필수)** — 모든 작업 완료 단위마다 `.claude/.progress/claude-YYYYMMDD.log` 에 1줄 append.
-   - **하루 1 파일** — 같은 일자의 모든 사용자 요청·작업이 동일 파일에 누적
-   - 포맷: `YYYY-MM-DD HH:MM:SS | (N/M) | {작업 내용} | {상태} [| ref:{ref}]`
-   - 새 사용자 요청 시작 시 구분 표시 줄 권장 (`# === 17:28 사용자 요청: ... ===`)
-   - 상세 룰: [.claude/conventions/agent-progress.md](.claude/conventions/agent-progress.md) § 7
-   - **sub-agent 완료 시 sub-agent log 를 claude-*.log 에 통합 + 원본 삭제** (백그라운드 agent 위임). 상세 룰: [.claude/conventions/agent-progress.md](.claude/conventions/agent-progress.md) § 8
-7. **결과 보고 받으면**:
-   - (a) 산출물 검증 (`Read`/`Bash ls/wc`)
-   - (b) Task 완료 처리 + claude-*.log 1줄 추가
-   - (c) 사용자에게 핵심 결과만 짧게 (200자 내)
-8. **예외 — 메인에서 직접 처리**:
-   - 사용자가 명시적으로 "메인에서 해" 요청
-   - 즉답 가능한 단순 질문 (코드 위치 안내, 짧은 설명)
-   - 워크플로우 룰 / 메모리 / CLAUDE.md / 컨벤션 같은 메타 갱신 (사용자 직접 확인 필요) — **단 갱신 작업이 5분/3단계 이상이면 백그라운드**
-   - agent 결과 보고 후 후속 메시지
-
----
-
-## 3. 트랙별 1차 ↔ 깊이 참조 매핑
-
-```
-docs/
-├── convention/              # 코드·디자인 컨벤션 (1차 참조)
-│   ├── frontend.md
-│   ├── backend.md
-│   ├── design.md
-│   └── README.md            # 색인
-├── mcp/                     # MCP 도구 사용 규칙
-│   └── figma-convention.md
-├── domain/                  # 도메인 단위 산출물
-│   ├── admin/{prd,design}/  # admin 재설계 (진행 중)
-│   └── _roadmap/prd/v1-mobile-gap.md   # v1 ↔ mobile 기능 대조표
-└── global-guide/develop/specs/db/      # 운영 DB 실측 (진행 중)
-```
-
-⚠️ 2026-08-21 대정리 — docs 문서 113개 → 25개. 컨벤션은 `docs/convention/`, MCP 규칙은 `docs/mcp/` 로 일원화.
-⚠️ 삭제된 옛 위치: `docs/develop/`, `docs/global-guide/{plan,design}/`, `docs/ops/`, `docs/temp/`, `docs/todo/`, `docs/domain/legacy/`, `specs/{be,fe}/`. **다시 만들지 않는다.**
-
-**규칙**:
-- 메인 세션은 1차만 읽음 (토큰/사고 비용 최소화)
-- 깊이 참조는 agent 가 필요 시 본인 컨텍스트에서 읽음
-- 1차 가이드 = 함축 (200~350줄 권장). 깊이 참조 = 풀 명세
-
----
-
-## 4. 산출물 위치 룰
-
-| 작업 | 위치 |
+| 항목 | 값 |
 |---|---|
-| FE 코드 | `web/src/**` |
-| BE 코드 | `src/main/java/**`, `src/main/resources/**` |
-| 도메인 기능 기획 | `docs/domain/{feature}/prd/*.md` |
-| 도메인 wireframe / 디자인 | `docs/domain/{feature}/design/*.md` |
-| FE 컨벤션 | `docs/convention/frontend.md` |
-| BE 컨벤션 | `docs/convention/backend.md` |
-| 디자인 컨벤션 | `docs/convention/design.md` |
-| Figma MCP 규칙 | `docs/mcp/figma-convention.md` |
-| DB 실측 reference | `docs/global-guide/develop/specs/db/*.md` |
-| v1 ↔ mobile 기능 대조 | `docs/domain/_roadmap/prd/v1-mobile-gap.md` |
-| DB schema | `sql/V2/{site,fun}/*.sql` |
-| DB 정리 스크립트 | `sql/cleanup/*.sql`, `sql/migration/*.sql` |
+| BE | Java 21 · Spring Boot 3 · MyBatis · MariaDB. **JPA 아님.** `src/main/java/com/dawne/com2usbaseball` |
+| FE | React 19 · Redux Toolkit 2 · Vite 7 · JS/JSX. **TS 아님.** `web/src` |
+| DB | ⚠️ **test = prod 동일 인스턴스.** DDL 은 즉시 운영 반영 → 항상 사용자 승인 + ops 트랙 |
+| 환경 | Windows 10 · PowerShell 5.1(`&&` 미지원, `;` + `if ($?)`) · Bash 도 사용 가능 |
+| 버전 | 기능 `vX.Y.Z` / 플랫폼 `platform-X.Y` 두 축. 기준선 `v2.0.0 (platform-2.0)` |
 
-신규 산출물은 **반드시 위 트리 안에**. 임시 파일은 작업 후 삭제.
+## 1. 규칙이 어디서 오나
 
----
-
-## 5. agent 디스패치 패턴 (실전)
-
-### 5.1 단일 트랙, 분석 + 수정 분리
-
-```
-Track A (Edit):  "{도메인} 코드 검증 + 명백 결함 수정"
-Track B (Read):  "{도메인} 코드 ↔ docs/convention/{frontend|backend}.md 정합 검증"
-```
-
-### 5.2 멀티 트랙 (개발 + 기획 동시)
-
-```
-Track A (planner): "{도메인}.md Part B IA 정립"
-Track B (develop): "{도메인} 현재 코드 ↔ Part A 차이 보고서"
-Track C (designer): "{도메인} figma ↔ 구현 design-sync 보고서" (live 도메인만)
-```
-
-### 5.3 도메인 단위 병렬
-
-```
-Track A: domain coupons
-Track B: domain events
-Track C: domain notices
-(같은 작업을 여러 도메인에 병렬 적용)
-```
-
----
-
-## 6. 메모리 vs 가이드 경계
-
-- **auto memory** (`C:\Users\hibee\.claude\projects\D--NewProjects-com2usbaseball\memory\`) — user / feedback / project / reference. 세션 간 영속, 짧은 fact
-- **`docs/convention/*`, `docs/mcp/*`** — 코드 컨벤션, 디자인 규칙, MCP 사용법. 사람도 읽고 Claude 도 참조
-- **`MEMORY.md`** — 메모리 인덱스 (자동 로드)
-- **CLAUDE.md** (이 파일) — 워크플로우 룰. 모든 세션 자동 로드
-
-같은 정보를 두 곳에 중복 저장 금지. 코드 컨벤션은 항상 `docs/`, 사용자 개인 선호는 메모리.
-
----
-
-## 7. 보고 톤
-
-- **메인 세션 응답** — 짧게. 핵심 결과 + 검증 포인트 + 다음 액션. 200자 내 권장
-- **agent 보고** — 풍부 OK (메인 세션 외부에서 일어남, 토큰 부담 분리)
-- **에러/위험** — 즉시 보고. 사용자 결정 사안은 옵션 제시 (1~2 권고안)
-
----
-
-## 8. 주의 / 안티패턴
-
-- ❌ 메인 세션이 직접 코드 광범위 Edit — 항상 agent 디스패치
-- ❌ 메인 세션이 직접 코드/문서 광범위 Edit — 항상 agent 디스패치
-- ❌ agent 가 끝난 후 메인이 동일 영역 추가 Edit — agent 한 번에 끝내기
-- ❌ Edit 담당 agent 2개 이상이 같은 파일군 — 충돌
-- ❌ agent 에 brief 없이 "그냥 해줘" — 컨텍스트 누락
-- ❌ 트랙 외 작업을 도메인 트랙에 끼워넣기 (e.g. CI 설정을 develop 에) — ops 로 분리
-- ❌ 1차 가이드를 길게 쓰기 (400줄 초과) — 깊이로 분리
-- ❌ 사용자 결정 없이 destructive 작업 (db drop / 환경변수 변경 / git force) — 항상 확인
-
----
-
-## 9. 환경
-
-- OS: Windows 10, PowerShell 5.1 (`&&`/`||` 미지원, `;` + `if ($?)` 사용)
-- Bash 도구도 사용 가능 (POSIX 스크립트)
-- 빌드: Gradle (BE), Vite (FE in `web/`)
-- DB: MariaDB + MyBatis (JPA 아님)
-- 배포 환경: 로컬(`application.properties`) + 운영(`application-prod.properties`)
-
----
-
-## 10. 가이드 현황 (2026-08-21 대정리 완료)
-
-- ✅ `docs/convention/frontend.md` — FE 컨벤션
-- ✅ `docs/convention/backend.md` — BE 컨벤션 (인증 포함)
-- ✅ `docs/convention/design.md` — 디자인·토큰 컨벤션
-- ✅ `docs/mcp/figma-convention.md` — Figma MCP 규칙 (플러그인 방식 폐기 반영)
-- ⏳ ops (배포 / 환경 / 보안정책) — 미작성
-
-작성 시: 200~250줄, 표/체크리스트/짧은 코드 위주, history 서술 제거.
-
-⚠️ **삭제된 도메인** — `wiki` / `skill`(스킬 백과사전) / `coach` / `kbo` / 크롤러 `kbocrol` 은 2026-08-20 에 코드·문서 전부 제거됨. 예시로 쓰지 않는다.
-살아있는 도메인: `home` `coupons` `events` `notices` `users` `quiz` `authentication` `historyMode` `community`(동결) `admin`
-
----
-
-## 11. Agent 모델 정책 (cost 효율)
-
-본 프로젝트 sub-agent 의 default 모델 매핑. agent `.md` frontmatter 의 `model:` 키로 적용. **다음 세션부터 자동 일관 적용**.
-
-| agent | 모델 | 사유 |
+| 위치 | 로드 | 내용 |
 |---|---|---|
-| frontend-developer | sonnet | 코드 작성/수정 — 패턴 매칭 중심, Sonnet 충분 |
-| backend-developer | sonnet | 동상 |
-| developer-analyze | sonnet | 분석 brief self-contained 시 Sonnet 충분 (brief 강화 룰 함께 적용 — agent .md § 12) |
-| planner-lite | sonnet | 단일 라운드 통합 기획 — Sonnet 충분 |
-| designer-render / designer-review | sonnet | Figma 비교/렌더 — 시각 reasoning 보다 토큰 매핑 중심 |
-| **developer-integrate** | **opus** | cross-validate — 다중 결과 통합 + mismatch reasoning 필요 |
-| **planner-division** | **opus** | 3라운드 분할 + HITL 운영 — reasoning 깊이 필요 |
-| **planner / designer / developer / prd-wireframe-generator** | (`_deprecated_/`) | active 풀 외 — 신규 사용 시 별도 결정 |
-| general-purpose | (내장 — Claude Code 매핑 따름) | 직접 변경 불가. brief 강화로 보완 |
+| `.claude/rules/common/*.md` | 항상 | docs-policy · file-split · hitl-markers · commit-version · git-scope · domain-naming |
+| `.claude/rules/be/*.md` | `src/main/**` 를 읽을 때 | BE 규칙 · 구조 지도 |
+| `.claude/rules/fe/*.md` | `web/src/**` 를 읽을 때 | FE 구조 · store · 디자인 값 · 디자인 검사 · 광고 · 뱃지 |
+| `.claude/conventions/*.md` | 메인 세션이 Read / dispatch brief 에서 지정 | tool-routing · agent-progress · file-locks · release-procedure |
+| `.claude/agents/*.md` · `workflows/` · `templates/` · `references/` | Claude Code 규약대로 | agent 정의 · 병렬 워크플로 · 문서 템플릿 · agent 전용 자료 |
 
-### 11.1 메인 어시스턴트 dispatch 시 주의
+@.claude/conventions/tool-routing.md
 
-- **Sonnet agent dispatch** → brief 를 더 self-contained 하게 (체크리스트 / 출력 § 구조 / 회피 영역 / 검증 명시)
-- **Opus agent dispatch** → cross-validate / mismatch 탐지 / 사용자 결정 사안 추출이 brief 핵심
-- 모델 변경이 필요하면 (예: 특정 라운드만 Opus 로 부스트) `Agent` 도구의 `model` 파라미터로 override 가능
+sub-agent 에게는 path 규칙 자동 적용을 믿지 말고 **brief 에 Read 할 rules 파일을 명시**한다 (예: `Read .claude/rules/fe/fe-store.md`).
 
-### 11.2 developer-analyze 강화 룰 (Sonnet 다운그레이드 보완)
+## 2. 트랙 4개 — 모든 요청은 하나 이상
 
-- 분석문서 § 구조 7항목 강제 (현황 / 발견 / 매핑 / follow-up 우선순위 4단계 / 트랙 / dispatch brief / 자체 평가)
-- HITL 4분야 (법무/결제/권한/db/secret) — agent 가 **자체 결정 금지**, 마커만 표시
-- 상세: `.claude/agents/developer-analyze.md` § 12
+| 트랙 | 무엇 | 산출물 | 버전 영향 |
+|---|---|---|---|
+| **develop** | 코드 작성·수정·리팩터·디버그 | 코드 + `docs/features/<f>/history.md` | 기능 또는 플랫폼 |
+| **planner** | 기능 정의·IA·spec | `docs/features/<f>/spec.md` | 기록 안 함 (develop 반영 시) |
+| **designer** | Figma MCP 조작·디자인 토큰·화면 검증 | `docs/features/<f>/design.md` + Figma | 기록 안 함 |
+| **ops** | DB 마이그레이션·CI·배포·환경·보안 | `sql/` · `application*.properties` · `.github/` | 플랫폼 또는 무영향 |
 
----
+한 요청에 트랙이 섞이면 트랙별 agent 분리. 도구 선택은 위 `tool-routing` 표를 위에서부터 읽고 처음 걸린 줄에서 멈춘다.
 
-## 12. Token Efficiency 룰 (메인 컨텍스트 부담 최소화)
+## 3. 메인 세션의 절대 룰
 
-본 세션에서 messages 가 200k+ 누적된 분석 결과 — sub-agent 보고 본문이 메인 컨텍스트로 그대로 흡수되는 게 가장 큰 원인. 다음 룰 강제.
+1. **작업은 백그라운드 agent 로.** 메인은 트랙 식별 → dispatch(`run_in_background: true`) → 입력 대기 → HITL 처리 → 결과 검증만. 메인 직접 처리는: 즉답 · 메타 갱신(CLAUDE.md·rules·메모리, 단 3단계/5분 미만) · agent 보고 후 후속 메시지 · 사용자가 "메인에서 해" 라고 한 것
+2. **한 파일군 = Edit agent 하나.** 나머지는 Read only. dispatch 전 `.claude/.locks/` 검사 → `conventions/file-locks.md`
+3. **brief 필수** — 목적 · 산출물 경로 · 범위 · Edit 가능 여부 · 회피 영역 · Read 할 rules · 버전 영향 · 보고 형식(§ 5). 단계 ≥ 3 또는 5분 이상이면 progress.log + Monitor → `conventions/agent-progress.md`
+4. **진행 로그** — 요청 단위마다 `.claude/.progress/claude-YYYYMMDD.log` 에 1줄. sub-agent 완료 시 그 로그를 흡수 + 원본 삭제
+5. **master 직접 커밋·푸시 금지.** 브랜치(`feat/` `fix/` `refactor/` `docs/` `ops/`) → PR → 머지. `--force` 는 승인 사안. **세션 = worktree = 브랜치 = 기능 하나가 기본** — 병렬 세션은 `claude --worktree`, 같은 디렉터리에 세션 둘은 금지
+   **커밋은 이 세션이 고친 파일만** `git add <경로>` 로 (`-A`/`.`/`-a` 금지). **`docs/**`·`*.md` 는 사용자가 명시적으로 문서 커밋을 지시했을 때만** `ALLOW_DOCS=1` 로 스테이징 — 그 외엔 빼고 보고에 한 줄. 상세 `rules/common/git-scope.md`, hook 이 강제
+6. **파괴적 작업은 항상 확인** — DB drop/DDL · 환경변수 · git force · 파일 대량 삭제. HITL 마커 🔴 는 답변 전 확정하지 않는다
+7. **결과 보고 받으면** 산출물 존재 확인 → 로그 1줄 → `CHANGELOG.md` `[Unreleased]` 갱신 판단(기능·플랫폼 영향 시만) → 사용자에게 200자 내 핵심
 
-### 12.1 sub-agent 보고 형식 (필수 — 모든 dispatch brief 에 포함)
+## 4. 문서 — 새 파일은 딱 둘
 
-```
-산출 후 메인 보고 — **다음 형식 엄수**:
-1. 산출물 경로 (절대 경로 1줄)
-2. 핵심 결과 표 (3~7행, 1열당 1줄)
-3. build/검증 결과 (1줄)
-4. 미해결 / HITL 마커 (있을 때만)
+① 새 기능 → `docs/features/<f>/{spec,design,history}.md` ② 여러 기능에 걸친 결정 → `docs/decisions/NNNN-slug.md`. 버그 수정·리팩터·리뷰·감사·실측은 **기존 파일 갱신**. 작업 문서는 `.claude/.progress/<branch>/` 에 두고 머지 전 삭제(PR 본문 첨부). 사람 창작물(디자인 html·기획 md·엑셀)은 `drafts/<branch>/` 에 두고 통합 단계에서 삭제. 템플릿은 `.claude/templates/` 만. 상세 `rules/common/docs-policy.md`.
 
-⚠️ 본 보고는 메인 컨텍스트로 흡수됨 — **300줄 이하** 엄수. 상세 내용은 산출 파일에. 진행 단계 나열 / 코드 snippet / 변경 라인별 설명 금지.
-```
+`docs/` 는 포트폴리오(사람이 읽음), `.claude/` 는 운영(agent 가 읽음). 같은 내용을 두 곳에 적지 않는다.
 
-### 12.2 메인 어시스턴트 Read 룰
+## 5. 토큰 규율
 
-| 상황 | 룰 |
-|---|---|
-| 분석문서 / 가이드 / 큰 산출물 (300줄+) 검증 | **sub-agent 에 위임** (Read + 핵심 요약 보고). 메인 직접 Read X |
-| 메인이 직접 Read 해야 할 때 | **§ 단위 offset + limit** — 한 번에 200줄 이내. 첫 100줄 보고 무관하면 종료 |
-| 작은 파일 (frontmatter / config / 짧은 보고서) | 메인 직접 Read OK |
-| 분석문서 § 7 dispatch brief | 메인 직접 Read 권장 (그대로 sub-agent 에 복붙) — 단 §  단위만 |
+- sub-agent 보고는 **300줄 이하**: 산출물 경로 1줄 · 핵심 표 3~7행 · 검증 1줄 · 미해결/HITL. 상세는 파일에
+- 메인은 300줄+ 파일을 직접 Read 하지 않는다 — sub-agent 에 요약 위임. 직접 읽어야 하면 § 단위 200줄 이내
+- brief 가 200줄 넘으면 분석문서 § 참조로 대체. 반복 룰은 rules 파일 경로로
+- messages 100k → `/compact`, 200k → 새 세션. 큰 요청은 시작 시 라운드 분할 제안
 
-### 12.3 메인 응답 룰
+## 6. 도메인 이름
 
-- 사용자에게는 **200자 내 핵심만** (이미 기존 § 7 룰 — 재강조)
-- 표/체크리스트 우선, 산문 최소화
-- agent 보고 본문 그대로 사용자에 forward 금지 — 메인이 1차 가공
+목록을 외우지 않는다 — `bash .claude/scripts/domain-map.sh` 가 FE 폴더(정본) ↔ BE 패키지 ↔ API 를 뽑는다. 이름 계약·버전 접미 금지·legacy 일몰은 `rules/common/domain-naming.md`. `community` 는 동결(수정 금지). 삭제된 도메인 이름은 예시로 쓰지 않는다.
 
-### 12.4 세션 분할 권고
+## 7. Agent 모델
 
-- messages 100k 도달 시 — `/compact` 권고 (자동 요약)
-- messages 200k 도달 시 — 새 세션 권고 (현재 작업 마무리 후 다음 작업은 신규 세션)
-- 단일 사용자 요청이 100k+ context 예상되면 — **시작 시점에 trail (작은 라운드로 분할) 권고**
+sonnet: `frontend-developer` `backend-developer` `developer-analyze` `planner-lite` `designer-render` `designer-review` — brief 를 self-contained 하게(체크리스트·출력 §·회피 영역·검증).
+opus: `developer-integrate` `planner-division` — cross-validate · mismatch · 사용자 결정 추출이 brief 핵심.
+`_deprecated_/` 의 `planner` `designer` `developer` `prd-wireframe-generator` 는 사용 안 함.
 
-### 12.5 dispatch brief 자체도 토큰 절약
+## 8. 안티패턴
 
-- brief 가 200줄 이상이면 — 분석문서 § 참조로 대체 (`상세: docs/.../analysis.md § 7.2`)
-- 반복 룰은 컨벤션 파일 참조 (`적용 룰: .claude/conventions/responsive-mobile-first.md § 3`)
+메인이 코드 광범위 Edit · Edit agent 둘이 같은 파일군 · brief 없는 dispatch · agent 끝난 뒤 메인이 같은 영역 재수정 · 트랙 외 작업을 develop 에 끼워넣기 · master 직접 커밋 · agent 보고 본문을 사용자에게 그대로 전달 · `docs/` 에 리뷰·감사 폴더 신설.

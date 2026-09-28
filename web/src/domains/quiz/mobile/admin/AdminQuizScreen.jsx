@@ -5,12 +5,13 @@ import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
 import AdminPagination from "@/global/ui/admin/pagination/AdminPagination.jsx";
 import useAdminPagination from "@/global/ui/admin/pagination/useAdminPagination.js";
 import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
-import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
 import AdminSegmented from "@/global/ui/admin/fields/AdminSegmented.jsx";
 import AdminFilePicker from "@/global/ui/admin/fields/AdminFilePicker.jsx";
 import useTableModal from "@/global/ui/admin/hooks/useTableModal.js";
 import "@/global/ui/admin/admin.tokens.scss";
+import { extractUploadedUrl } from "@/infra/api/uploads/index.js";
 import {
   requestAdminQuizAll,
   requestAdminQuizCreate,
@@ -25,16 +26,6 @@ import styles from "./AdminQuizScreen.module.scss";
 const EMPTY_FORM = {
   round: "",
   imageUrl: "",
-};
-
-// 업로드 응답 형태가 raw string / { url, fileName } / 래핑된 { data: {...} } 중 무엇이 오든 URL 을 뽑아낸다.
-const extractUploadedUrl = (result) => {
-  if (typeof result === "string") return result;
-  if (result && typeof result === "object") {
-    if (typeof result.url === "string") return result.url;
-    if (result.data) return extractUploadedUrl(result.data);
-  }
-  return null;
 };
 
 const formOf = (quiz) => ({
@@ -279,16 +270,16 @@ export default function AdminQuizScreen() {
         </div>
       )}
 
-      {loading && <AdminStateBox status="loading" />}
+      {loading && <StateBox status="loading" message="불러오는 중..." />}
       {!loading && error && (
-        <AdminStateBox
+        <StateBox
           status="error"
           message={error}
           onRetry={() => dispatch(requestAdminQuizAll())}
         />
       )}
       {!loading && !error && filtered.length === 0 && (
-        <AdminStateBox status="empty" message="등록된 퀴즈가 없습니다." />
+        <StateBox status="empty" message="등록된 퀴즈가 없습니다." />
       )}
       {!loading && !error && filtered.length > 0 && (
         <>
@@ -314,6 +305,7 @@ export default function AdminQuizScreen() {
               className={styles.input}
               type="number"
               name="round"
+              min="1"
               value={form.round}
               onChange={handleFormChange}
               required

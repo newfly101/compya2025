@@ -20,13 +20,13 @@
   background: var(--color-warning-dim);
   color: var(--color-warning);
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 
   button {
     border: 0;
     background: transparent;
     color: inherit;
-    font-size: 14px;
+    font-size: $font-size-15;
     line-height: 1;
     cursor: pointer;
     @include pressable;
@@ -50,7 +50,7 @@
 
 .title {
   color: var(--color-text-primary);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   @include text-ellipsis;
 }
 
@@ -68,7 +68,7 @@
   gap: 2px;
   color: var(--color-text-secondary);
   @include text-caption;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
 }
 
 /* 행 번호(#) — 우측 정렬, 보조색 */
@@ -93,7 +93,7 @@
   background: transparent;
   color: var(--color-admin-accent-active-text);
   @include text-caption;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   cursor: pointer;
   @include pressable;
 }

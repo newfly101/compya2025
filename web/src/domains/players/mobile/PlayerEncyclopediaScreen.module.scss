@@ -40,7 +40,7 @@
   outline: none;
   color: var(--color-text-primary);
   @include text-body;
-  font-size: 14px;
+  font-size: $font-size-15;
 
   &::placeholder {
     color: var(--color-text-muted);
@@ -54,7 +54,7 @@
   border-radius: 50%;
   background-color: var(--color-bg-elevated);
   color: var(--color-text-secondary);
-  font-size: 11px;
+  font-size: $font-size-11;
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -79,11 +79,12 @@
 }
 
 .filterBtnActive {
-  border-color: var(--color-brand);
-  background-color: var(--color-brand);
-  color: #fff;
+  border-color: var(--color-brand-violet);
+  background-color: var(--color-brand-violet);
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
 }
 
+// 브랜드 버튼 위에 얹는 흰 원형 카운터 배지 — 배경 자체가 항상 흰색(테마 무관)
 .filterBadge {
   min-width: 14px;
   height: 14px;
@@ -91,8 +92,8 @@
   border-radius: 7px;
   background-color: #fff;
   color: var(--color-brand);
-  font-size: 9px;
-  font-weight: 900;
+  font-size: $font-size-9;
+  font-weight: $font-weight-bold;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -116,7 +117,7 @@
   border-radius: $radius-lg;
   color: var(--color-text-primary);
   @include text-body-bold;
-  font-size: 14px;
+  font-size: $font-size-15;
   appearance: none;
   // 우측 ▾ — 이미지 없이 그라디언트 대신 배경 SVG 로 그리면 색 하드코딩이 늘어나 배경 텍스트로 대체
 }
@@ -146,7 +147,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 1px;
+  gap: 2px;
   line-height: 1.1;
 
   &:disabled {
@@ -162,14 +163,14 @@
 }
 
 .tabCount {
-  font-size: 10px;
+  font-size: $font-size-10;
   opacity: 0.7;
 }
 
 .viewToggle {
   height: $control-height-md;
   display: flex;
-  padding: 3px;
+  padding: $space-1;
   gap: 2px;
   background-color: var(--color-bg-overlay);
   border: 1px solid var(--color-border-strong);
@@ -184,7 +185,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2px;
-  padding: $space-2 9px;
+  padding: $space-2 $space-2;
   cursor: pointer;
 
   span {
@@ -201,7 +202,7 @@
   display: grid;
   grid-auto-rows: 2px;
   gap: $space-1;
-  padding: 11px $space-2;
+  padding: $space-3 $space-2;
   align-content: center;
   cursor: pointer;
 
@@ -217,7 +218,7 @@
 
 // 카드형·리스트형 공통 — 현재 선택된 쪽만 보라 배경 + 흰 아이콘
 .viewActive {
-  background-color: var(--color-brand);
+  background-color: var(--color-brand-violet); // 인접 버튼류(filterBtnActive 등)와 채움 통일
 
   span {
     background-color: #fff;
@@ -240,7 +241,7 @@
   background-color: var(--color-bg-overlay);
   color: var(--color-text-secondary);
   @include text-body-bold;
-  font-size: 13px;
+  font-size: $font-size-13;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -267,7 +268,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
+  font-size: $font-size-9;
   line-height: 1;
 }
 
@@ -291,10 +292,10 @@
   width: 14px;
   height: 14px;
   border-radius: $radius-xs;
-  background-color: var(--color-brand);
-  color: #fff;
-  font-size: 9px;
-  font-weight: 900;
+  background-color: var(--color-brand-violet);
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
+  font-size: $font-size-9;
+  font-weight: $font-weight-bold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -314,7 +315,7 @@
 
   b {
     color: var(--color-text-primary);
-    font-weight: 700;
+    font-weight: $font-weight-bold;
   }
 }
 
@@ -327,8 +328,8 @@
   border: 1px solid var(--color-border-strong);
   background-color: var(--color-bg-overlay);
   color: var(--color-text-secondary);
-  font-size: 11px;
-  font-weight: 700;
+  font-size: $font-size-11;
+  font-weight: $font-weight-bold;
   display: flex;
   align-items: center;
   gap: $space-1;
@@ -341,37 +342,8 @@
   border-radius: 50%;
   background-color: var(--color-border-strong);
   color: var(--color-text-primary);
-  font-size: 10px;
-  font-weight: 900;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.helpPill {
-  @include reset-button;
-  height: 24px;
-  padding: 0 $space-2 0 $space-1;
-  border-radius: $radius-full;
-  border: 1px solid var(--color-brand);
-  background-color: var(--color-brand-tint);
-  color: var(--color-text-primary);
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: $space-1;
-  white-space: nowrap;
-}
-
-.helpMark {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: var(--color-brand);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 900;
+  font-size: $font-size-10;
+  font-weight: $font-weight-bold;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -429,7 +401,7 @@
 .segment {
   align-self: flex-start;
   display: flex;
-  padding: 3px;
+  padding: $space-1;
   gap: 2px;
   background-color: var(--color-bg-overlay);
   border: 1px solid var(--color-border-strong);
@@ -444,14 +416,14 @@
   border-radius: $radius-md;
   background: none;
   color: var(--color-text-secondary);
-  font-size: 12px;
-  font-weight: 700;
+  font-size: $font-size-12;
+  font-weight: $font-weight-bold;
   white-space: nowrap;
 }
 
 .segmentBtnActive {
-  background-color: var(--color-brand);
-  color: #fff;
+  background-color: var(--color-brand-violet);
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
 }
 
 // 능력치·합 열로 정렬 중일 때만 뜨는 배지 — "해제" 로 기본 정렬로 되돌린다.
@@ -471,7 +443,7 @@
 
 .sortBadgeText {
   @include text-ellipsis;
-  font-size: 11px;
+  font-size: $font-size-11;
   color: var(--color-text-secondary);
 
   b {
@@ -482,13 +454,14 @@
 .sortBadgeClear {
   @include reset-button;
   flex-shrink: 0;
-  height: 20px;
+  height: 20px; // 고정 높이 — border 대신 outline 으로 경계 (border-box 라 border 는 내용 영역을 줄인다)
   padding: 0 $space-2;
   border-radius: $radius-sm;
-  background-color: var(--color-brand);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
+  background-color: var(--color-brand-violet);
+  outline: 1px solid var(--color-brand); // sortBadge(tint) 컨테이너와의 경계 대비 확보 — 다크 2.89:1 미달 보완, 라이트 5.29:1 여유
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
+  font-size: $font-size-10;
+  font-weight: $font-weight-bold;
   white-space: nowrap;
 }
 

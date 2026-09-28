@@ -1,6 +1,6 @@
 // 타자/투수 스킬을 store 에서 읽고, 현재 보고 있는 role 만 불러온다.
-// 이미 채워진 role 은 다시 요청하지 않는다 — admin useAdminCounts.js 와 같은 가드 패턴
-// (리스트가 비어있고 로딩중이 아닐 때만 dispatch).
+// 이미 받은 role 은 다시 요청하지 않는다 — players·mileage 와 같은 가드 패턴
+// (loaded 가 false 이고 로딩중이 아닐 때만 dispatch).
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -18,13 +18,13 @@ export const usePlayerSkills = (type) => {
   // useAdminCounts.js 와 같은 이유로 상태값은 deps 에서 뺀다. 가드는 effect 안에서만 읽는다).
   useEffect(() => {
     if (type !== "hitter") return;
-    if (hitters.items.length === 0 && !hitters.loading) dispatch(requestGetHitterSkills());
+    if (!hitters.loaded && !hitters.loading) dispatch(requestGetHitterSkills());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, type]);
 
   useEffect(() => {
     if (type !== "pitcher") return;
-    if (pitchers.items.length === 0 && !pitchers.loading) dispatch(requestGetPitcherSkills());
+    if (!pitchers.loaded && !pitchers.loading) dispatch(requestGetPitcherSkills());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, type]);
 
@@ -41,7 +41,7 @@ export const usePlayerSkills = (type) => {
     all,
     loading: current.loading,
     error: current.error,
-    loaded: current.items.length > 0,
+    loaded: current.loaded,
     retry,
   };
 };

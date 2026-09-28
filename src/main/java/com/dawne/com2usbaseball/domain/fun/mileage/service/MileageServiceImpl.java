@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 조회 전용. 캐시를 비우는 경로가 없어 화면에서 수정되지 않는 데이터다 —
- * 운영자가 DB(선수 카드/레전드 재료)를 직접 고치면 서버를 재시작해야 반영된다.
+ * 조회 전용. TTL 없는 메모리 캐시(spring.cache.type=simple)라 운영자가 DB(선수
+ * 카드/레전드 재료)를 직접 고쳐도 자동으로는 반영되지 않는다 — 서버 재시작이
+ * 아니라, 어드민 화면의 캐시 동기화(CacheSyncServiceImpl 가 mileageSniperTarget
+ * 을 비우고 다시 채움)를 눌러야 반영된다.
  */
 @Service
 @RequiredArgsConstructor

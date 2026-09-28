@@ -7,6 +7,7 @@ import com.dawne.com2usbaseball.domain.community.enums.ReportTargetType;
 import com.dawne.com2usbaseball.domain.community.service.report.ReportService;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class ReportController {
     }
 
     @PostMapping
-    public ReportResponse createReport(@RequestBody ReportRequest request, HttpServletRequest httpRequest) {
+    public ReportResponse createReport(@Valid @RequestBody ReportRequest request, HttpServletRequest httpRequest) {
         Long reporterId = requireUserId(httpRequest);
         return reportService.createReport(request, reporterId);
     }

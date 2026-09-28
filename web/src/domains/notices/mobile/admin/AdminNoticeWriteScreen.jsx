@@ -5,13 +5,13 @@ import { useSetTopBar } from "@/app/provider/TopBarProvider";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import AdminSegmented from "@/global/ui/admin/fields/AdminSegmented.jsx";
 import AdminToggleSwitch from "@/global/ui/admin/toggle/AdminToggleSwitch.jsx";
-import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import RichEditor from "@/global/ui/richEditor/RichEditor.jsx";
 import { stripHtml } from "@/global/utils/html/htmlUtils.js";
 // 목록(AdminNoticeScreen)과 같은 v2 강조 퍼플 토큰(--color-admin-accent 등)을 쓰기 위한 side-effect
 // import — 이 화면은 셸 밖 독립 라우트라 AdminShellScreen 의 :root 주입을 상속받지 못한다.
 import "@/global/ui/admin/admin.tokens.scss";
-import { requestUploadImage } from "@/infra/api/uploads/index.js";
+import { requestUploadImage, extractUploadedUrl } from "@/infra/api/uploads/index.js";
 import {
   requestAdminGetNotice,
   requestAdminInsertNotice,
@@ -51,24 +51,15 @@ const formOf = (notice) => ({
 
 const firstImageOf = (html) => html?.match(/<img[^>]+src="([^"]+)"/)?.[1] ?? "";
 
-// 업로드 응답 형태가 raw string / { url, fileName } / 래핑된 { data: {...} } 중 무엇이 오든
-// URL 을 뽑아낸다(AdminEventScreen 과 동일 패턴).
-const extractUploadedUrl = (result) => {
-  if (typeof result === "string") return result;
-  if (result && typeof result === "object") {
-    if (typeof result.url === "string") return result.url;
-    if (result.data) return extractUploadedUrl(result.data);
-  }
-  return null;
-};
-
 export default function AdminNoticeWriteScreen() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
   const isEdit = id != null;
 
-  const { siteNotices, error } = useSelector((s) => s.notices);
+  // 단건 조회 전용 칸 — 목록 조회(error) / 저장(mutateError) 과 칸을 나눠 쓴다.
+  // 한 칸을 공유하면 저장 실패 문구가 "공지를 못 불러왔다" 화면으로 잘못 뜬다.
+  const { siteNotices, detailError } = useSelector((s) => s.notices);
   const existing = useMemo(
     () => (isEdit ? siteNotices.find((n) => String(n.id) === String(id)) : null),
     [isEdit, siteNotices, id],
@@ -183,17 +174,17 @@ export default function AdminNoticeWriteScreen() {
   if (isEdit && !hydrated) {
     return (
       <div className={styles.page}>
-        <AdminStateBox status="loading" />
+        <StateBox status="loading" message="불러오는 중..." />
       </div>
     );
   }
 
-  if (isEdit && hydrated && !existing && error) {
+  if (isEdit && hydrated && !existing && detailError) {
     return (
       <div className={styles.page}>
-        <AdminStateBox
+        <StateBox
           status="error"
-          message={error}
+          message={detailError}
           onRetry={() => {
             setHydrated(false);
             dispatch(requestAdminGetNotice(id))
@@ -206,10 +197,10 @@ export default function AdminNoticeWriteScreen() {
     );
   }
 
-  if (isEdit && hydrated && !existing && !error) {
+  if (isEdit && hydrated && !existing && !detailError) {
     return (
       <div className={styles.page}>
-        <AdminStateBox status="empty" message="공지를 찾을 수 없습니다." />
+        <StateBox status="empty" message="공지를 찾을 수 없습니다." />
       </div>
     );
   }

@@ -17,8 +17,10 @@ import java.util.List;
 
 /**
  * 조회 전용. 등록·수정·삭제는 다루지 않는다.
- * 캐시를 비우는 경로가 없어 SQL 로 값을 고쳤으면 서버를 재시작해야 한다
- * (운영 중 갱신이 필요해지면 @CacheEvict 관리자 엔드포인트를 추가하면 된다).
+ * 운영자가 SQL 로 값을 고치면, 어드민 캐시 동기화 화면에서 수동으로 이 캐시(playerSkill)를
+ * 비우고 다시 채워야 한다(CacheSyncServiceImpl, POST /api/admin/cache-sync/{targetId}/sync).
+ * 캐시에 만료 시간이 없어(spring.cache.type=simple) 그 동기화가 유일한 갱신 수단이다 —
+ * 자동 스케줄러는 없다.
  */
 @Service
 @RequiredArgsConstructor

@@ -98,7 +98,8 @@
         WHERE id = #{id}
     </update>
 
-    <!-- soft delete: is_visible = false 처리 -->
+    <!-- site_coupons 에는 is_deleted 컬럼이 없다(docs/convention/backend.md § 7.1) — "삭제" 는 노출 끄기다.
+         행은 그대로 남고 coupon_code UNIQUE 도 계속 점유하므로 같은 코드로 재등록하면 409 가 난다. -->
     <update id="deleteCouponById">
         UPDATE site_coupons
         SET
@@ -117,7 +118,7 @@
         </foreach>
     </select>
 
-    <!-- 일괄 삭제: 단건 삭제와 동일하게 soft delete(is_visible = false) 처리 -->
+    <!-- 일괄 삭제: 단건 삭제와 동일하게 노출 끄기(is_visible = false). 행·코드는 남는다 -->
     <update id="deleteCouponsByIds">
         UPDATE site_coupons
         SET

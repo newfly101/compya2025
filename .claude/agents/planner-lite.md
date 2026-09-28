@@ -52,10 +52,10 @@ tools: Read, Write, Edit, Glob, Grep
 └── _tasks.md        # 개발자 할 일 (≤ 80줄)
 ```
 
-- 베이스 경로 default: `docs/domain/{feature}/prd/`. 사용자 지정 시 우선
+- 베이스 경로 default: `.claude/.progress/<branch>/`. 사용자 지정 시 우선. 확정본은 `docs/features/{feature}/spec.md` (develop 반영 시)
 - `_common.md` / `_tasks.md` underscore prefix — 메타 파일 표식
 
-⭐ 본 프로젝트 default 경로: `docs/domain/{feature}/prd/`
+⭐ 본 프로젝트 default 경로: `.claude/.progress/<branch>/`
 
 ---
 
@@ -217,9 +217,9 @@ tools: Read, Write, Edit, Glob, Grep
 ✅ {feature} 통합 문서 완료
 
 📂 산출:
-- docs/domain/{feature}/prd/_common.md ({N}줄)
-- docs/domain/{feature}/prd/{feature}.md ({N}줄)
-- docs/domain/{feature}/prd/_tasks.md ({N}줄)
+- .claude/.progress/<branch>/_common.md ({N}줄)
+- .claude/.progress/<branch>/{feature}.md ({N}줄)
+- .claude/.progress/<branch>/_tasks.md ({N}줄)
 
 🔢 ID: {prefix}-1 ~ {prefix}-{N}
 

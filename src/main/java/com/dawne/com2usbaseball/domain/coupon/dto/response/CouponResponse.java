@@ -9,7 +9,7 @@ public record CouponResponse(
         String couponCode,
         String title,
         String detail,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime expireAt,
         boolean visible
 ) { }

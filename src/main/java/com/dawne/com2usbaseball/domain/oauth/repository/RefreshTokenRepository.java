@@ -28,8 +28,4 @@ public class RefreshTokenRepository {
     public int deleteByUserId(Long userId) {
         return mapper.deleteByUserId(userId);
     }
-
-    public int deleteExpired() {
-        return mapper.deleteExpired();
-    }
 }

@@ -10,6 +10,7 @@ import com.dawne.com2usbaseball.domain.coupon.dto.request.CouponVisibleRequest;
 import com.dawne.com2usbaseball.domain.coupon.dto.response.CouponResponse;
 import com.dawne.com2usbaseball.domain.coupon.enums.CouponMessages;
 import com.dawne.com2usbaseball.domain.coupon.service.AdminCouponService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class AdminCouponController implements AdminCouponSwaggerDocs {
 
     @Override
     @PostMapping
-    public GlobalResponse<CouponResponse> insertNewCoupons(@RequestBody CouponRequest request) {
+    public GlobalResponse<CouponResponse> insertNewCoupons(@Valid @RequestBody CouponRequest request) {
         CouponResponse createdCoupon = adminCouponService.createCoupon(request);
         return GlobalResponse.success(CouponMessages.COUPON_CREATED, createdCoupon);
     }
@@ -49,7 +50,7 @@ public class AdminCouponController implements AdminCouponSwaggerDocs {
     @Override
     @PatchMapping("/{id}")
     public GlobalResponse<CouponResponse> updateCoupon(
-            @RequestBody CouponRequest request, @PathVariable Long id
+            @Valid @RequestBody CouponRequest request, @PathVariable Long id
     ) {
         CouponResponse updatedCoupon = adminCouponService.updateCoupon(request, id);
         return GlobalResponse.success(CouponMessages.COUPON_UPDATED, updatedCoupon);
@@ -59,7 +60,7 @@ public class AdminCouponController implements AdminCouponSwaggerDocs {
     @PatchMapping("/{id}/visible")
     public GlobalResponse<Void> updateCouponVisible(
             @PathVariable Long id,
-            @RequestBody CouponVisibleRequest request
+            @Valid @RequestBody CouponVisibleRequest request
     ) {
         adminCouponService.updateCouponVisible(id, request.visible());
         return GlobalResponse.success(CouponMessages.COUPON_VISIBLE_UPDATED, null);
@@ -74,14 +75,14 @@ public class AdminCouponController implements AdminCouponSwaggerDocs {
 
     @Override
     @DeleteMapping("/bulk")
-    public GlobalResponse<BulkOperationResponse> bulkDeleteCoupons(@RequestBody BulkIdsRequest request) {
+    public GlobalResponse<BulkOperationResponse> bulkDeleteCoupons(@Valid @RequestBody BulkIdsRequest request) {
         BulkOperationResponse result = adminCouponService.bulkDeleteCoupons(request.ids());
         return GlobalResponse.success(CouponMessages.COUPON_BULK_DELETED, result);
     }
 
     @Override
     @PatchMapping("/bulk/visible")
-    public GlobalResponse<BulkOperationResponse> bulkUpdateCouponsVisible(@RequestBody BulkVisibleRequest request) {
+    public GlobalResponse<BulkOperationResponse> bulkUpdateCouponsVisible(@Valid @RequestBody BulkVisibleRequest request) {
         boolean visible = request.visible() != null && request.visible();
         BulkOperationResponse result = adminCouponService.bulkUpdateCouponsVisible(request.ids(), visible);
         return GlobalResponse.success(CouponMessages.COUPON_BULK_VISIBLE_UPDATED, result);

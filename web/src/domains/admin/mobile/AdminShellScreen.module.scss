@@ -22,14 +22,14 @@
   flex: none;
   padding: $space-3 14px 10px;
   @include text-body-bold;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   white-space: nowrap;
   color: var(--color-text-secondary);
   border-bottom: 2px solid transparent;
   cursor: pointer;
 
   &.active {
-    font-weight: 700;
+    font-weight: $font-weight-bold;
     color: var(--color-admin-accent-active-text);
     border-bottom-color: var(--color-admin-accent-line);
   }
@@ -51,15 +51,4 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-}
-
-.logoutBtn {
-  @include reset-button;
-  padding: 3px $space-2;
-  border: 1px solid var(--color-brand-tint);
-  border-radius: $radius-md;
-  color: var(--color-brand-dark);
-  @include text-caption;
-  font-weight: 600;
-  cursor: pointer;
 }

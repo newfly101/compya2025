@@ -25,6 +25,9 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
+//	Bean Validation (@Valid / @NotNull 등을 실제로 검사하는 provider)
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 //	lombok add
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'

@@ -1,11 +1,14 @@
 package com.dawne.com2usbaseball.domain.notice.service;
 
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.notice.dto.mapstruct.NoticeMapStruct;
 import com.dawne.com2usbaseball.domain.notice.dto.response.NoticeResponse;
 import com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity;
+import com.dawne.com2usbaseball.domain.notice.enums.NoticeMessages;
 import com.dawne.com2usbaseball.domain.notice.repository.NoticeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +32,8 @@ public class NoticeServiceImpl implements NoticeService{
     @Override
     @Cacheable(value = "noticeDetail", key = "#noticeId + '_public'")
     public NoticeResponse getNoticeDetail(Long noticeId) {
-        NoticeEntity notice = noticeRepository.getNoticeDetail(noticeId);
+        NoticeEntity notice = noticeRepository.getNoticeDetail(noticeId)
+                .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
         return noticeMapStruct.toResponse(notice);
     }
 }

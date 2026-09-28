@@ -30,9 +30,8 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 컨벤션 | 경로 | 언제 Read |
 |---|---|---|
-| FE 코드베이스 cheat sheet | `.claude/conventions/fe-code-base.md` | 시작 시 1회 (필수 — 트리/패턴 정확도) |
-| 반응형 (축약) | `.claude/conventions/responsive.md` | 시작 시 1회 |
-| 반응형 (디테일) | `.claude/conventions/responsive-mobile-first.md` | 골격/구현 직전 1회 |
+| FE 코드베이스 컨벤션 | `.claude/rules/fe/fe-convention.md` | 시작 시 1회 (필수 — 트리/패턴 정확도) |
+| 반응형 | `.claude/conventions/responsive-mobile-first.md` | 골격/구현 직전 1회 |
 | 파일 분할 룰 | `.claude/conventions/file-split.md` | 구현 중 100줄 초과 트리거 시 |
 | HITL 마커 | `.claude/conventions/hitl-markers.md` | 위험 항목 식별 시 1회 |
 
@@ -44,8 +43,8 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 입력 | 출처 | 사용 § |
 |------|------|--------|
-| analysis.md | `docs/domain/{feature}/develop/analysis.md` | § 1 / § 4 / § 5 FE 측 |
-| decisions.log | `docs/domain/{feature}/develop/decisions.log` | 가정값 확인 |
+| analysis.md | `.claude/.progress/<branch>/analysis.md` | § 1 / § 4 / § 5 FE 측 |
+| decisions.log | `.claude/.progress/<branch>/decisions.log` | 가정값 확인 |
 | 진행 모드 | 메인 어시스턴트 지정 | "전체" / "FN-N부터" / "FN-N 만" |
 
 ---
@@ -53,16 +52,17 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 ## 4. 작업 흐름 (전체 자동)
 
 ```
-1. 컨벤션 Read (fe-code-base + responsive + responsive-mobile-first)
+1. 컨벤션 Read (.claude/rules/fe/fe-convention.md + .claude/rules/fe/fe-design.md)
 2. analysis.md Read (§ 1 / § 4 / § 5 FE 측)
-3. fe-history.md 존재 확인 → 없으면 신규 생성 (docs/domain/{feature}/develop/)
+3. fe-history.md 존재 확인 → 없으면 신규 생성 (.claude/.progress/<branch>/)
 4. FOR EACH FN (FN-1부터 순차):
    4-1. 골격 연결 ⭐ 핵심 검증
    4-2. 기능 구현
    4-3. 테스트 실행
    4-4. 결과 검증 (성공/실패/3회 미해결)
    4-5. history 완료 또는 미해결 기록
-5. 전체 종료 → 보고
+5. 전체 종료 → `docs/features/<f>/history.md` 맨 위에 항목 1개 직접 추가 (`.claude/templates/history-entry.md`, fe-history.md 요약)
+6. 보고
 ```
 
 ⭐ 사용자 input 받기 위해 멈춤 X. 가정값은 `decisions.log` 적용.
@@ -189,13 +189,13 @@ cd web && npx vitest run src/domains/{name}/**
 
 ### 7.5 history 기록
 
-`docs/domain/{feature}/develop/fe-history.md` 에 한 줄 append.
+`.claude/.progress/<branch>/fe-history.md` 에 한 줄 append.
 
 ---
 
 ## 8. fe-history.md 작성 규칙 (한글 자연어 강제)
 
-**경로**: `docs/domain/{feature}/develop/fe-history.md`
+**경로**: `.claude/.progress/<branch>/fe-history.md`
 
 ### 좋은 예
 
@@ -265,6 +265,7 @@ cd web && npx vitest run src/domains/{name}/**
 - [ ] `applyAsyncHandlers` 패턴 준수 (extraReducers 직접 addCase 없음)
 - [ ] 빌드 통과 (`cd web && npm run build`)
 - [ ] decisions.log 신규 항목 있으면 append
+- [ ] `docs/features/<f>/history.md` 맨 위 항목 1개 직접 추가 완료
 
 ---
 

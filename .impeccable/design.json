@@ -57,6 +57,34 @@
         "displayName": "코션 앰버",
         "canonical": "#e8d541",
         "tonalRamp": ["#2b280a", "#4a4412", "#70681c", "#a59829", "#e8d541", "#efe273", "#f5eda5", "#fbf8d8"]
+      },
+      "cat-new": {
+        "role": "classification",
+        "displayName": "분류 – NEW",
+        "canonical": "#dc2626",
+        "tonalRamp": ["#dc2626", "#dc2626"],
+        "note": "두 테마 공용 1값. 불투명 배지 채움 + 흰 글자 전용, 상태 빨강과 형태로 구분. 최악 대비 4.83"
+      },
+      "cat-route": {
+        "role": "classification",
+        "displayName": "분류 – 마/히",
+        "canonical": "#7dd3fc",
+        "tonalRamp": ["#7dd3fc", "#075985"],
+        "note": "어두운톤/밝은톤. '마'는 채움, '히'는 테두리만. 최악 대비 5.65"
+      },
+      "cat-mark": {
+        "role": "classification",
+        "displayName": "분류 – 중요",
+        "canonical": "#f472b6",
+        "tonalRamp": ["#f472b6", "#9d174d"],
+        "note": "어두운톤/밝은톤. 알파 채움. 최악 대비 4.77"
+      },
+      "cat-neutral": {
+        "role": "classification",
+        "displayName": "분류 – BETA·준비중·공식·태그명",
+        "canonical": "#9ca3af",
+        "tonalRamp": ["#9ca3af", "#4b5563"],
+        "note": "어두운톤/밝은톤. 알파 채움. 최악 대비 4.85. BETA 를 포함해 4항목을 여기로 묶음(의도된 결과)"
       }
     },
     "typographyMeta": {
@@ -112,9 +140,9 @@
       "name": "Status Badge",
       "kind": "chip",
       "refersTo": "badge-status",
-      "description": "카드 위 상태 표시. 테두리 없이 색을 채우고 글자는 항상 흰색.",
-      "html": "<span class=\"ds-badge ds-badge-new\">NEW</span> <span class=\"ds-badge ds-badge-hot\">HOT</span> <span class=\"ds-badge ds-badge-ended\">종료</span>",
-      "css": ".ds-badge { display: inline-flex; align-items: center; justify-content: center; height: 20px; padding: 0 8px; border-radius: 4px; font-family: Inter, -apple-system, sans-serif; font-size: 0.5625rem; font-weight: 600; line-height: 1; letter-spacing: 0.04em; color: #fff; white-space: nowrap; } .ds-badge-new { background: #16a34a; } .ds-badge-hot { background: #ff3b3b; } .ds-badge-ended { background: #2a2e3a; }"
+      "description": "카드 위 상태 표시(활성·종료). 테두리 없이 색을 채우고 글자는 항상 흰색. 신규·인기 등 분류 변종은 2026-09-27 삭제 결정 — 분류 표시는 Pinned Badge + 분류 팔레트(cat-*)로 이관 완료(catNew/mark/beta/neutral/cafe variant).",
+      "html": "<span class=\"ds-badge ds-badge-active\">진행중</span> <span class=\"ds-badge ds-badge-ended\">종료</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; justify-content: center; height: 20px; padding: 0 8px; border-radius: 4px; font-family: Inter, -apple-system, sans-serif; font-size: 0.5625rem; font-weight: 600; line-height: 1; letter-spacing: 0.04em; color: #fff; white-space: nowrap; } .ds-badge-active { background: #a86af0; } .ds-badge-ended { background: #2a2e3a; }"
     },
     {
       "name": "Content Card",
@@ -136,9 +164,9 @@
       "name": "Search Input",
       "kind": "input",
       "refersTo": "input-search",
-      "description": "주변보다 눌려 보이는 바탕. 초점 시 테두리만 강해지고 빛번짐은 쓰지 않는다.",
+      "description": "주변보다 눌려 보이는 바탕. 초점은 :focus-visible 아웃라인만으로 표시하고 빛번짐(box-shadow)은 쓰지 않는다.",
       "html": "<input class=\"ds-input-search\" type=\"text\" placeholder=\"제목 또는 코드\" />",
-      "css": ".ds-input-search { width: 100%; height: 36px; padding: 0 12px; border-radius: 8px; background: #18141f; border: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.92); font-family: Inter, -apple-system, sans-serif; font-size: 0.75rem; line-height: 1.5; transition: border-color 0.15s ease, background 0.15s ease; } .ds-input-search::placeholder { color: #7c6f8f; } .ds-input-search:focus { outline: none; border-color: rgba(255,255,255,0.12); background: #1a1622; } .ds-input-search:focus-visible { border-color: #a86af0; }"
+      "css": ".ds-input-search { width: 100%; height: 36px; padding: 0 12px; border-radius: 8px; background: #18141f; border: 1px solid rgba(255,255,255,0.06); color: rgba(255,255,255,0.92); font-family: Inter, -apple-system, sans-serif; font-size: 0.75rem; line-height: 1.5; transition: border-color 0.15s ease, background 0.15s ease; } .ds-input-search::placeholder { color: #7c6f8f; } .ds-input-search:focus { outline: none; } .ds-input-search:focus-visible { outline: 2px solid #a86af0; outline-offset: 2px; }"
     },
     {
       "name": "Bottom Sheet",
@@ -169,19 +197,22 @@
     ],
     "rules": [
       { "name": "조명 규칙 (The Floodlight Rule)", "body": "보라는 한 화면에서 10%를 넘지 않는다. 켜진 곳이 적어야 신호가 된다. 보라 바탕을 넓게 깔고 싶어지면, 그건 배경 명도 단계로 해결할 문제다.", "section": "colors" },
-      { "name": "의미 고정 규칙 (The Fixed Meaning Rule)", "body": "초록은 성공과 네이버, 빨강은 위험과 마감, 노랑은 주의다. 세 색을 다른 뜻으로 재활용하지 않는다.", "section": "colors" },
+      { "name": "의미 고정 규칙 (The Fixed Meaning Rule)", "body": "색은 상태 축 · 분류 축 · 등급 축, 세 축으로 나뉜다. 상태 축(초록=성공·네이버, 빨강=위험·마감, 노랑=주의)은 상태 전용이며 다른 뜻으로 재활용하지 않는다. 분류 축(신규·BETA 등)은 상태색을 쓰지 않고 확정된 분류 팔레트(--color-cat-new/-route/-mark/-neutral 4색, 상한 5색)에서 고르며, 색 외 신호(테두리·밝기·굵기·아이콘·위치)를 함께 쓴다. 단 하나의 예외 — 분류 축의 빨강은 'NEW' 에만 허용한다. 두 빨강은 형태로 갈린다: 분류 빨강은 불투명 배지 채움으로만, 상태 빨강은 글자·테두리·아이콘으로만 나타난다. '인기'(HOT) 분류 항목은 폐기하며 색을 배정하지 않는다. 등급 축(구종·카드·스킬 등급, 값 구간)은 순서가 있는 척도이므로 분류 팔레트를 쓰지 않고 게임 본편 등급 색 체계를 그대로 쓰는 자체 팔레트를 쓴다 — 분류 5색 상한 계산에 포함되지 않으며, 값은 게임 쪽에서 확보 전까지 미정이다. 분류색은 두 테마 모두에서 대비 기준(본문 4.5:1, 큰 글자·아이콘 3:1)을 통과해야 하고, 반투명 채움 위 글자는 합성된 배경 기준으로 계산한다. 확정 값·실측: docs/decisions/0006-design-system-overhaul.md § 6.", "section": "colors" },
       { "name": "의미 이름 규칙 (The Named Value Rule)", "body": "화면에서 원시 색값을 직접 쓰지 않는다. 반드시 의미 이름(CSS 변수)을 거친다.", "section": "colors" },
-      { "name": "아홉 단계 규칙 (The Nine Steps Rule)", "body": "글자 크기는 9·10·11·12·13·15·17·22·28px 아홉 개뿐이다. 그 사이 값을 새로 만들지 않는다.", "section": "typography" },
+      { "name": "아홉 단계 규칙 (The Nine Steps Rule)", "body": "글자 크기는 9·10·11·12·13·15·17·22·28px 아홉 개뿐이다. 그 사이 값을 새로 만들지 않는다. 예외(승인, 2026-09-27 / 2026-09-28) — 화면에 하나뿐인 큰 기호(글리프·아이콘)는 스케일 밖 값을 허용한다. 현재 두 자리: MileageScreen.module.scss .hero .glyph 44px, ResponseModal.module.scss .iconSuccess/.iconFail 42px. 값은 통일하지 않는다. 본문 최대치 28px 는 그대로 유지. 세 번째가 나오면 기호 전용 단계 신설을 검토한다.", "section": "typography" },
       { "name": "작을수록 굵게 규칙 (The Small-Gets-Bold Rule)", "body": "13px 이하에서 강조는 색이 아니라 굵기(600)로 준다.", "section": "typography" },
       { "name": "단일 폭 규칙 (The Single Width Rule)", "body": "화면은 480px 하나로 동작한다. 폭에 따라 배치가 달라지는 화면을 새로 만들지 않는다.", "section": "layout" },
-      { "name": "격자 이탈 금지 규칙 (The Off-Grid Ban)", "body": "간격에 7px, 13px 같은 값을 쓰지 않는다. 격자에 없는 값이 필요하면 배치가 잘못된 것이다.", "section": "layout" },
-      { "name": "그림자 금지 규칙 (The No-Shadow Rule)", "body": "카드, 버튼, 입력창, 칩에 그림자를 넣지 않는다. 떠 보이게 하고 싶으면 한 단계 밝은 바탕으로 올린다.", "section": "elevation" },
+      { "name": "짝수 px 규칙 (The Even-Px Rule)", "body": "간격은 1px(선·테두리 전용) 또는 짝수 px만 쓴다. 2px 이상에서 홀수(5px, 7px, 13px 등)를 쓰지 않는다. 같은 조건이면 4의 배수를 우선한다. 예외(승인, 2026-09-27) — CSS 로 도형을 그리는 요소의 내부 값(칸 간격·안쪽 여백)은 격자 대상이 아니다. 격자는 레이아웃 리듬용이고 도형 내부 치수는 비례가 깨지면 형태가 뭉갠다. 사례: GuideView.module.scss .viewIconGrid/.viewIconList (14x14 안 격자, gap 1.5px, padding 3px 2.5px). 범위는 도형 내부 값만 — 이웃과의 간격(.viewIconWrap 의 gap)은 예외가 아니라 격자를 따른다.", "section": "layout" },
+      { "name": "겹침 순서 토큰 규칙 (The Z-Index Token Rule)", "body": "겹침 순서는 정해진 아홉 단계 토큰만 쓴다. 화면 코드에 숫자를 직접 기입하지 않는다.", "section": "layout" },
+      { "name": "그림자 금지 규칙 (The No-Shadow Rule)", "body": "카드, 버튼, 입력창, 칩에 그림자를 넣지 않는다. 떠 보이게 하고 싶으면 한 단계 밝은 바탕으로 올린다. 링·하이라이트 목적의 box-shadow도 같은 이유로 금지한다 — 테두리나 배경 밝기 차이로 대체한다.", "section": "elevation" },
+      { "name": "포커스 표시 규칙 (The Focus Outline Rule)", "body": "포커스는 :focus-visible + outline(1~2px) + outline-offset 으로만 만든다. box-shadow 로 포커스 링을 만들지 않는다 — 그림자 금지 규칙과 같은 이유다. 색은 반드시 토큰을 쓴다.", "section": "elevation" },
+      { "name": "테마 전환 규칙 (The Device-Only Theme Rule)", "body": "테마 전환은 기기 설정(prefers-color-scheme)을 따라가는 것 하나뿐이다. 사용자가 고르는 토글은 두지 않는다. web/index.html head 인라인 스크립트가 기동 시점에 document.documentElement.dataset.theme 를 설정한다.", "section": "theme" },
       { "name": "모서리 위계 규칙 (The Corner Hierarchy Rule)", "body": "모서리 값은 요소 크기와 함께 커진다. 배지 4 → 입력 6 → 모달 8 → 카드 10 → 시트 12.", "section": "shapes" }
     ],
     "dos": [
       "Do 색을 쓸 때 의미 이름(CSS 변수)을 거친다. #a86af0을 화면에 직접 적지 않는다.",
       "Do 깊이가 필요하면 바탕을 한 단계 밝게 올린다 (카드 #1f1a29 → 떠 있는 요소 #332947).",
-      "Do 간격을 8pt 격자 아홉 단계 안에서 고른다.",
+      "Do 간격은 짝수 px(1px은 선·테두리 전용)로 고르고, 같은 조건이면 4의 배수를 우선한다.",
       "Do 누를 수 있는 요소를 최소 44px 높이로 만든다. 게임 중 한 손 조작이 기본 전제다.",
       "Do 목록에서 눈이 처음 닿는 줄을 13px / 600으로 둔다.",
       "Do 종료·만료된 항목은 지우지 말고 흐리게 낮춰 남긴다."
@@ -191,6 +222,8 @@
       "Don't 보라를 넓은 면에 칠한다. 한 화면에서 10%를 넘기지 않는다.",
       "Don't 글자 크기를 아홉 단계 밖에서 새로 만든다 (14px, 16px 같은 값 금지).",
       "Don't 초록을 성공·네이버 외의 뜻으로, 빨강을 위험·마감 외의 뜻으로 쓴다.",
+      "Don't 분류 표시(신규·BETA 등)에 상태색(초록·빨강·노랑)을 쓴다. 분류는 확정된 4색 팔레트(cat-new/-route/-mark/-neutral)에서 고르고, 빨강은 'NEW' 에만 예외로 허용된다.",
+      "Don't 등급(S/A/B/C/D, 카드·스킬 등급)에 분류 팔레트나 임의 색을 쓴다. 등급은 게임 본편 등급 색 체계가 확보된 뒤 그 값만 쓴다.",
       "Don't 색 있는 테두리를 그린다. 경계는 흰색 투명도 6% 또는 12%로만 만든다.",
       "Don't 폭 값 480px을 화면 파일에 숫자로 직접 적는다. 이름 붙인 값을 거친다.",
       "Don't 화면 파일 안에서 버튼·입력창을 새로 꾸민다. 공용 부품이 없다는 건 만들어야 한다는 뜻이지, 각자 만들라는 뜻이 아니다."

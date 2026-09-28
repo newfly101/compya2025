@@ -14,7 +14,7 @@
 .filters {
   position: sticky;
   top: 0;
-  z-index: 30;
+  z-index: $z-sticky;
   padding-bottom: 8px;
   background: linear-gradient(var(--color-bg-deepest) 82%, transparent);
 }
@@ -31,7 +31,7 @@
     background: var(--color-bg-card);
     color: var(--color-text-primary);
     font-family: inherit;
-    font-size: 13.5px;
+    font-size: $font-size-13;
 
     &::placeholder {
       color: var(--color-text-muted);
@@ -76,13 +76,13 @@
   border: 0;
   background: none;
   color: var(--color-text-muted);
-  font-size: 16px;
+  font-size: $font-size-17;
   cursor: pointer;
 }
 
 .chipRow {
   display: flex;
-  gap: 7px;
+  gap: $space-2;
   padding: 6px 16px;
   overflow-x: auto;
   scrollbar-width: none;
@@ -97,14 +97,14 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 13px;
+  padding: 6px $space-3;
   border: 1px solid var(--color-border-strong);
   border-radius: 999px;
   background: var(--color-bg-card);
   color: var(--color-text-secondary);
   font-family: inherit;
-  font-size: 12.5px;
-  font-weight: 500;
+  font-size: $font-size-12;
+  font-weight: $font-weight-medium;
   white-space: nowrap;
   cursor: pointer;
   transition: color 0.12s, border-color 0.12s, background 0.12s;
@@ -140,8 +140,8 @@
     background: var(--color-bg-card);
     color: var(--color-text-secondary);
     font-family: inherit;
-    font-size: 13.5px;
-    font-weight: 500;
+    font-size: $font-size-13;
+    font-weight: $font-weight-medium;
     cursor: pointer;
 
     &[aria-pressed="true"] {
@@ -158,11 +158,11 @@
   align-items: center;
   padding: 10px 16px 6px;
   color: var(--color-text-muted);
-  font-size: 11.5px;
+  font-size: $font-size-12;
 
   b {
     color: var(--color-text-secondary);
-    font-weight: 500;
+    font-weight: $font-weight-medium;
   }
 }
 
@@ -178,14 +178,14 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 3px 8px 3px 5px;
+  padding: $space-1 8px $space-1 $space-1;
   border: 1px solid var(--color-brand-dark);
   border-radius: 999px;
   background: var(--color-brand-alpha-15);
   color: var(--color-ls-chip-on-text);
   font-family: inherit;
-  font-size: 11px;
-  font-weight: 500;
+  font-size: $font-size-11;
+  font-weight: $font-weight-medium;
   line-height: 1;
   cursor: pointer;
 }
@@ -199,8 +199,8 @@
   border-radius: 50%;
   background: var(--color-brand);
   color: var(--color-bg-deepest);
-  font-size: 9.5px;
-  font-weight: 700;
+  font-size: $font-size-10;
+  font-weight: $font-weight-bold;
 }
 
 /* ── 표 ───────────────────────────────────────────────── */
@@ -273,7 +273,7 @@ td.cName {
   cursor: pointer;
 
   &:hover td:not(.sticky) {
-    background: rgba(255, 255, 255, 0.025);
+    background: var(--color-row-hover-soft);
   }
 
   &:hover td.sticky {
@@ -293,28 +293,28 @@ td.cName {
 
 td.cRank {
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
 }
 
 td.cScore {
   color: var(--color-text-primary);
-  font-size: 13px;
-  font-weight: 700;
+  font-size: $font-size-13;
+  font-weight: $font-weight-bold;
 
   &.na {
     color: var(--color-text-muted);
-    font-weight: 500;
+    font-weight: $font-weight-medium;
   }
 }
 
 td.cName {
-  font-weight: 500;
+  font-weight: $font-weight-medium;
 }
 
 .nameInner {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: $space-1;
 }
 
 .nameDot {
@@ -334,13 +334,13 @@ td.cName {
   flex: 0 0 auto;
   // 카드 오른쪽 끝에 붙인다
   margin-left: auto;
-  padding: 0 3px;
+  padding: 0 $space-1;
   border: 1px solid var(--color-ls-history-border);
   border-radius: 3px;
   background: var(--color-ls-history-bg);
   color: var(--color-ls-history);
-  font-size: 9.5px;
-  font-weight: 600;
+  font-size: $font-size-10;
+  font-weight: $font-weight-semibold;
   line-height: 1.5;
   text-decoration: none;
 
@@ -380,11 +380,11 @@ td.cName {
   margin: 10px 0 12px;
   padding: 0 0 0 14px;
   color: var(--color-text-secondary);
-  font-size: 12.5px;
+  font-size: $font-size-12;
   line-height: 1.6;
 
   li {
-    margin-bottom: 5px;
+    margin-bottom: $space-1;
     list-style: none;
     text-indent: -10px;
 
@@ -410,9 +410,9 @@ td.cName {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 7px;
+    margin-bottom: $space-2;
     color: var(--color-text-secondary);
-    font-size: 12.5px;
+    font-size: $font-size-12;
   }
 }
 
@@ -423,14 +423,14 @@ td.cName {
 
 td.cPos {
   color: var(--color-text-secondary);
-  font-size: 11.5px;
+  font-size: $font-size-12;
   letter-spacing: -0.02em;
 }
 
 td.cOvr {
   background: var(--color-ls-ovr-bg);
   color: var(--color-ls-ovr-text);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
 }
 
 td.cStat {
@@ -438,7 +438,7 @@ td.cStat {
 
   &.hi {
     color: var(--color-ls-good);
-    font-weight: 600;
+    font-weight: $font-weight-semibold;
   }
 
   &.lo {
@@ -475,38 +475,38 @@ td.cStat {
   align-items: baseline;
   margin-bottom: 10px;
   color: var(--color-text-secondary);
-  font-size: 11.5px;
+  font-size: $font-size-12;
 
   strong {
     color: var(--color-text-primary);
-    font-size: 14px;
-    font-weight: 600;
+    font-size: $font-size-15;
+    font-weight: $font-weight-semibold;
   }
 }
 
 .detailSub {
-  margin: 11px 0 5px;
+  margin: 12px 0 $space-1;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
 }
 
 .pitches {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: $space-1;
 }
 
 .pitch {
-  padding: 3px 7px;
+  padding: $space-1 $space-2;
   border: 1px solid var(--color-border-strong);
   border-radius: 6px;
   color: var(--color-text-secondary);
-  font-size: 11.5px;
+  font-size: $font-size-12;
 
   b {
-    margin-left: 3px;
+    margin-left: $space-1;
     color: var(--color-text-primary);
-    font-weight: 600;
+    font-weight: $font-weight-semibold;
   }
 
   // 수치 없이 등급만 아는 구종
@@ -523,20 +523,20 @@ td.cStat {
 
 // 재료 요청 전/실패 시
 .detailNote {
-  padding: 10px 0;
+  padding: $space-3 0;
   color: var(--color-text-muted);
-  font-size: 11.5px;
+  font-size: $font-size-12;
 }
 
 .material {
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 7px 9px;
+  padding: $space-2;
   border: 1px solid var(--color-border-strong);
   border-radius: 8px;
   background: var(--color-bg-card);
-  font-size: 12px;
+  font-size: $font-size-12;
 }
 
 // 가장 긴 약칭(쌍방울·태평양·빙그레 = 한글 3자)에 폭을 맞춰 고정한다.
@@ -544,11 +544,11 @@ td.cStat {
 .materialTeam {
   flex: 0 0 auto;
   min-width: 38px;
-  padding: 1px 3px;
+  padding: 2px $space-1;
   border: 1px solid var(--color-border-strong);
   border-radius: 4px;
   color: var(--color-text-muted);
-  font-size: 9.5px;
+  font-size: $font-size-10;
   text-align: center;
 }
 
@@ -557,14 +557,14 @@ td.cStat {
 .empty {
   padding: 44px 16px;
   color: var(--color-text-muted);
-  font-size: 13px;
+  font-size: $font-size-13;
   text-align: center;
 }
 
 .foot {
   padding: 16px;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
   line-height: 1.7;
 }
 
@@ -581,12 +581,12 @@ td.cStat {
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: $z-modal;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--color-overlay-strong);
 }
 
 .helpCard {
@@ -602,20 +602,20 @@ td.cStat {
 .helpTitle {
   margin: 0 0 10px;
   color: var(--color-text-primary);
-  font-size: 14px;
-  font-weight: 600;
+  font-size: $font-size-15;
+  font-weight: $font-weight-semibold;
   text-align: center;
 }
 
 .helpBody {
   margin: 0 0 8px;
   color: var(--color-text-secondary);
-  font-size: 12.5px;
+  font-size: $font-size-12;
   line-height: 1.6;
 
   b {
     color: var(--color-text-primary);
-    font-weight: 600;
+    font-weight: $font-weight-semibold;
   }
 }
 
@@ -623,7 +623,7 @@ td.cStat {
   display: inline-block;
   margin: 4px 0 12px;
   color: var(--color-brand);
-  font-size: 12.5px;
+  font-size: $font-size-12;
   text-decoration: none;
 
   &:hover {
@@ -633,13 +633,13 @@ td.cStat {
 
 .helpClose {
   width: 100%;
-  padding: 9px 0;
+  padding: $space-2 0;
   border: 1px solid var(--color-border-strong);
   border-radius: 9px;
   background: var(--color-bg-elevated);
   color: var(--color-text-secondary);
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: $font-size-12;
   cursor: pointer;
 
   &:hover {

@@ -9,6 +9,8 @@
 OS-level 파일 lock 불가 → **dispatch 시점 사전 차단**.
 `dispatch 전 → .locks/ 확인 → 충돌? (없음=lock+dispatch / 있음=대기) → 완료 후 lock 삭제`
 
+⚠️ 세션 = worktree = 브랜치 = 기능 하나가 기본(`git-scope.md` § 1)이 되면서, 코드 파일은 worktree 가 서로 격리해 충돌이 없다. 이 lock 은 **공유 자원**(Figma 파일 · DB · 배포)처럼 worktree 밖에 있어 여전히 부딪힐 수 있는 것 전용이다.
+
 ---
 
 ## 2. Lock 파일 형식

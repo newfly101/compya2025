@@ -32,7 +32,7 @@
 }
 
 .roleAdmin {
-  background-color: rgba(168, 106, 240, 0.2);
+  background-color: var(--color-brand-alpha-20);
   border-color: var(--color-brand);
   color: var(--color-brand);
 }
@@ -44,9 +44,9 @@
 }
 
 .statusActive {
-  background-color: rgba(3, 199, 90, 0.15);
-  border-color: $color-success-400;
-  color: $color-success-400;
+  background-color: var(--color-success-dim);
+  border-color: var(--color-success);
+  color: var(--color-success);
 }
 
 .statusBlocked {

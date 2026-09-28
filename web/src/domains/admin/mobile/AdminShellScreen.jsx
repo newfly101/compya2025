@@ -1,6 +1,6 @@
 // AdminShellScreen.jsx — 어드민 단일 셸.
 // /admin, /admin/:tab 모두 이 화면 하나를 렌더링하고 상단 탭으로 내부 전환한다.
-// (근거: docs/domain/admin/design/_redesign-spec.md § 라우팅 변경안)
+// (근거: docs/features/admin/design.md § 라우팅 변경안)
 //
 // 탭 전환은 navigate() 로 주소도 함께 바꾼다 — 새로고침/뒤로가기에서도 같은 탭이 유지되고,
 // home ↔ 다른 탭 전환은 서로 다른 라우트 엔트리라 화면이 리마운트되며,
@@ -8,7 +8,6 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar.js";
-import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
 import { ROUTE_META } from "@/app/router/config/routeMeta.js";
 import { ADMIN_TABS } from "@/domains/admin/mobile/ADMIN_TABS.js";
 import { useAdminCounts } from "@/domains/admin/mobile/hooks/useAdminCounts.js";
@@ -27,21 +26,14 @@ const TAB_KEYS = ADMIN_TABS.map((t) => t.key);
 export default function AdminShellScreen() {
   const navigate = useNavigate();
   const { tab: tabParam } = useParams();
-  const { logout } = useAuthentication();
   // 홈이든 다른 탭이든 셸이 살아있는 동안 한 번만 5개 목록을 불러와 탭 배지 건수로 쓴다.
   const { counts, domains } = useAdminCounts();
 
   // 모르는 탭 키(오타/구주소)는 조용히 홈으로 흡수 — 빈 화면 대신 항상 뭔가는 보여준다.
   const activeTab = TAB_KEYS.includes(tabParam) ? tabParam : "home";
 
-  useDomainTopBar({
-    title: "컴프야펀 Admin",
-    rightAction: (
-      <button type="button" className={styles.logoutBtn} onClick={logout}>
-        로그아웃
-      </button>
-    ),
-  });
+  // 로그아웃 버튼은 상단바가 로그인 상태에 따라 직접 그린다 — 여기서 또 넣으면 둘로 보인다.
+  useDomainTopBar({ title: "컴프야펀 Admin" });
 
   // 브라우저 탭 제목만 활성 탭에 맞춰 갱신 — 상단바 제목("컴프야펀 Admin")은 고정.
   useEffect(() => {

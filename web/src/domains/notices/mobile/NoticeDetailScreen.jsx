@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useNoticeDetail } from "@/domains/notices/mobile/hooks/useNoticeDetail.js";
 import { formatNoticeDate } from "@/domains/notices/mobile/noticeDate.js";
@@ -17,6 +18,9 @@ const NoticeDetailScreen = () => {
   const location = useLocation();
   const { notice, error, notFound, retry } = useNoticeDetail(slug);
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  // 본문은 목록과 별도 요청(requestGetNoticeDetail)으로 채워진다 — 그 요청만 실패하면
+  // 제목·날짜는 이미 있어 notice 는 존재하는데 본문만 빈 채로 정상 화면처럼 보였다.
+  const contentError = useSelector((state) => state.notices.contentError);
 
   // 데이터 로드 전(undefined)에는 usePageSeo 가 라우트 기본값을 그대로 둔다.
   const fullTitle = notice?.title ? ROUTE_META.NOTICE_DETAILS.title(notice.title) : undefined;
@@ -117,10 +121,12 @@ const NoticeDetailScreen = () => {
       )}
 
       {/* ── 본문 ──────────────────────────────────────────── */}
-      {notice.content && (
+      {notice.content ? (
         <div className={styles.body}>
           <RichContent html={notice.content} />
         </div>
+      ) : contentError && (
+        <StateBox status="error" message={contentError} compact />
       )}
 
     </div>

@@ -57,10 +57,23 @@ export const useLegendStats = () => {
     [byId, teamNameByCode],
   );
 
+  // 정상 응답(재료 0건)과 요청 실패를 구분하기 위한 존재 여부 체크
+  const hasMaterialsResponse = useCallback((legendId) => legendId in byId, [byId]);
+
   // 목록 조회(requestGetLegendStats) 재시도 — 표를 채우는 본 데이터만 다시 받는다
   const retry = useCallback(() => {
     dispatch(requestGetLegendStats());
   }, [dispatch]);
 
-  return { legends, loading, loaded, error, loadMaterials, materialsOf, materialsLoading, retry };
+  return {
+    legends,
+    loading,
+    loaded,
+    error,
+    loadMaterials,
+    materialsOf,
+    hasMaterialsResponse,
+    materialsLoading,
+    retry,
+  };
 };

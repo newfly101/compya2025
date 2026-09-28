@@ -26,15 +26,18 @@
   // ── 표 헤더 배경 / 스티키 칸 hover ──
   // 헤더 배경은 공용 토큰 --color-table-head-bg(#15121c, global/styles/semantic/_color.scss)
   // 로 승격했다 — 레전드와 정확히 같은 값이라 로컬 중복을 걷어낸다(AdminTable.module.scss).
-  // hover 색은 표마다 달라 공용화하지 않고 로컬로 남긴다.
-  --color-admin-table-row-hover: #161320;
+  // hover 색은 historyLegend/legendStats와 값이 같아 공용 토큰으로 승격됨(2026-09-27).
+  --color-admin-table-row-hover: var(--color-table-row-hover);
 
   // ── 토글 스위치 on 색상 — v2: 초록 → 강조 퍼플 ────────────────
   // v1 프로토타입 고유 초록(#3f9c66)을 v2 디자인 확정본의 강조 퍼플로 교체.
   // 아래 --color-admin-accent 와 동일 값 — 토글 전용 별칭을 유지해 호출부
   // (AdminToggleSwitch)를 그대로 둔다.
   --color-admin-on: #8b5cf6;
-  // off 트랙(v2 원본 #2b2538)은 기존 --color-bg-elevated(#332947)로 근사 대체 — 신규 토큰 없음.
+  // off 트랙(v2 원본 #2b2538)은 기존 --color-bg-elevated(#332947)로 근사 대체.
+  // 밝은톤에서는 --color-bg-elevated 가 옅은 라벤더(#e9e4f4)로 뒤집혀 흰 손잡이가 사라지므로
+  // 별칭 토큰을 두고 밝은톤만 눌린 회보라로 바꾼다. 다크 값은 기존과 동일.
+  --color-admin-toggle-off: var(--color-bg-elevated);
 
   // ── v2 강조 퍼플 시스템 (체크박스 · 페이지네이션 · 필터칩/세그먼트 active) ──
   // 렌더 스크립트 테마 상수 T.accent 계열. 기존 브랜드 퍼플(#a86af0 계열)과
@@ -43,7 +46,9 @@
   --color-admin-accent: #8b5cf6;
   --color-admin-accent-line: var(--color-brand-dark);
   --color-admin-accent-soft: rgba(139, 92, 246, 0.16);
-  --color-admin-accent-active-text: #dcd3ff;
+  --color-admin-accent-active-text: var(--color-chip-on-text);
+  // active 칩 안의 보조 건수(10px) — 본문보다 한 단계 눌린 톤
+  --color-admin-accent-active-text-soft: rgba(255, 255, 255, 0.75);
   --color-admin-row-selected-bg: rgba(139, 92, 246, 0.08);
   --color-admin-checkbox-off: #3a3448;
 
@@ -60,11 +65,42 @@
   // 전역에 대응 토큰이 없다(success 는 네이버 그린이라 무관). 변수명(green)은 다른 도메인
   // 화면(AdminTag variant="green")과의 호환을 위해 유지하고 값만 교체한다.
   --color-admin-tag-green-bg: rgba(94, 234, 212, 0.14);
-  --color-admin-tag-green-text: #5eead4;
+  --color-admin-tag-green-text: var(--color-mint);
   --color-admin-tag-amber-bg: var(--color-warning-dim);
   --color-admin-tag-amber-text: var(--color-warning);
   --color-admin-tag-rose-bg: var(--color-danger-dim);
   --color-admin-tag-rose-text: var(--color-danger);
   --color-admin-tag-neutral-bg: var(--color-bg-elevated);
   --color-admin-tag-neutral-text: var(--color-text-secondary);
+}
+
+// ── 밝은톤 ─────────────────────────────────────────────────────
+// 공용 토큰 참조(--color-admin-table-row-hover / -accent-line / tag purple·rose·neutral /
+// tag-green-text)는 전역 밝은톤에서 함께 뒤집히므로 다시 정의하지 않는다.
+// 행/헤더 높이는 테마와 무관해 그대로 둔다.
+:root[data-theme="light"] {
+  // v2 강조 퍼플(#8b5cf6)은 흰 면 대비 4.23:1 로 본문 기준(4.5)에 못 미친다 —
+  // 밝은톤에서만 한 단계 내린다(5.70:1). 면적을 늘리지 않고 글자·테두리·채움 세기만 맞춘다.
+  --color-admin-on: #7c3aed;
+  --color-admin-accent: #7c3aed;
+  --color-admin-accent-soft: rgba(124, 58, 237, 0.1);
+  --color-admin-row-selected-bg: rgba(124, 58, 237, 0.07);
+
+  // 세그먼트/페이지네이션 active 글자 — 전역 --color-chip-on-text 가 이 칩 채움
+  // (accent-soft, 옅은 틴트) 기준으로 교정되어(2026-09-28) 다크 참조만으로 밝은톤도 맞다.
+  // 로컬 재지정 제거.
+  --color-admin-accent-active-text-soft: rgba(76, 29, 149, 0.75); // 틴트 위 4.78:1
+
+  // 토글 off 트랙 — 흰 손잡이가 3:1 로 읽히는 최소 밝기(그림자 금지 규칙이라 밝기 차로만 낸다)
+  --color-admin-toggle-off: #968ea9; // 흰 손잡이 대비 3.12:1
+
+  // 체크박스 off 테두리 — 흰 면에서 보이는 최소선(3:1) 위
+  --color-admin-checkbox-off: #8e8899; // 3.42:1
+
+  // 틸 태그 배경 — 글자(전역 --color-mint 밝은톤 #0f766e)와 같은 계열의 옅은 틴트
+  --color-admin-tag-green-bg: rgba(13, 148, 136, 0.12); // 글자 대비 4.74:1
+
+  // 호박 태그 배경 — 전역 --color-warning-dim(알파 0.12)을 그대로 쓰면 글자(--color-warning)
+  // 대비가 4.46:1 로 본문 기준에 0.04 못 미친다. 배경만 옅게 해 4.70:1 로 올린다.
+  --color-admin-tag-amber-bg: rgba(148, 98, 0, 0.08);
 }

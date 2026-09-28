@@ -4,6 +4,13 @@
 
 <mapper namespace="com.dawne.com2usbaseball.domain.oauth.repository.mapper.RefreshTokenMapper">
 
+    <!-- 무효화는 하드 삭제로 한다 — deleteByHash(rotation·로그아웃) / deleteByUserId(역할·상태 변경·탈퇴).
+         revoked_at 을 UPDATE 하는 코드는 없고, 아래 조회의 IS NULL 조건으로 "운영에서 손으로 채우면 즉시 무효"
+         안전판 역할만 한다.
+         만료된 행은 지우는 경로가 없어 계속 쌓인다 — 재사용하면 조회에서 걸러져 401 이라 인증에는 영향이 없다.
+         호출처가 없던 deleteExpired 는 지웠지만 그것만으로 누적이 멈추는 것은 아니다. 정리 주체(앱 배치 /
+         DB 이벤트 / 외부 cron)와 보존 기간은 승인 사안이라 여기서 배치를 만들지 않는다. -->
+
     <insert id="insertRefreshToken" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO site_refresh_tokens (
             user_id,
@@ -25,8 +32,7 @@
             user_id     AS userId,
             token_hash  AS tokenHash,
             expires_at  AS expiresAt,
-            created_at  AS createdAt,
-            revoked_at  AS revokedAt
+            created_at  AS createdAt
         FROM site_refresh_tokens
         WHERE token_hash = #{tokenHash}
           AND revoked_at IS NULL
@@ -42,12 +48,6 @@
     <delete id="deleteByUserId">
         DELETE FROM site_refresh_tokens
         WHERE user_id = #{userId}
-    </delete>
-
-    <delete id="deleteExpired">
-        DELETE FROM site_refresh_tokens
-        WHERE expires_at &lt;= NOW()
-           OR revoked_at IS NOT NULL
     </delete>
 
 </mapper>
