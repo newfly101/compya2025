@@ -24,7 +24,18 @@
 
 ## [Unreleased]
 
-> 기능 PATCH 후보 (v2.0.0 → **v2.0.1**) / `platform-2.0` 유지
+### Added
+### Changed
+### Fixed
+### Admin
+### Platform
+### Internal
+
+---
+
+## [v2.0.1] (platform-3.0) — 2026-09-28
+
+> 태그 `v2.0.1` · `platform-3.0` (master `212a41a4`, PR #33 → #34). 기능은 PATCH(버그 수정만), 플랫폼은 MAJOR(규칙·훅·SQL 세대 체계 변경). 상세 근거: `docs/features/*/history.md`, `docs/decisions/0001~0008`
 
 ### Added
 ### Changed
@@ -65,6 +76,8 @@
 - 쿠폰 만료 시각을 비우고 저장하면 그 자리에서 "만료" 로 보이던 문제. 실제 저장값은 맞았고 화면만 어긋났다 (`f2d10b87`)
 - 이미지 업로드가 실패해도 원인이 로그에 한 줄도 남지 않던 문제 (`8b697772`)
 ### Platform
+- `sql/` 세대 체계를 `V2`·`V3` 에서 실측 기준 `v.2.0.0`(접두별 DDL 3 · 테이블당 시드 · 반영 완료 스크립트) + `draft/`(신규·수정·동결 community) 로 교체. `site_coupons`·`site_notices` 시각 컬럼 DATETIME 통일은 운영 반영 완료(ADR 0007 3단계)
+- `docs/` 를 기능 18개 × (spec·design·history) + overview(구성도·도메인·ERD·요구사항 추적표) + ADR 로 재편하고 루트 README 를 포트폴리오 문서로. 추적표·README 기능표는 spec 에서 생성
 - 개발 흐름을 "세션 = worktree = 기능" 으로 고정 — `WorktreeCreate` 훅이 worktree 를 준비하고, 커밋 훅이 기능 코드와 `history.md` 동반·spec↔history 버전 일치를 강제한다. 사람 창작물은 `drafts/<branch>/` 로 투입, 추적표·README 기능표는 spec 에서 생성(`.claude/scripts/`). 기존 guard 훅이 Windows 의 `python3` 스텁 때문에 한 번도 실제로 차단하지 못하던 문제도 함께 고침
 ### Internal
 - 서버 응답에서 내용물을 꺼내는 규칙을 한 가지로 통일 — 요청 함수 46개 대 13개로 갈려 있던 두 방식 정리, 두 번 벗기던 곳 13개 제거 (`8369971a`)

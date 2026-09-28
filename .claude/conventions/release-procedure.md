@@ -77,7 +77,7 @@ git tag -a platform-3.0 -m "platform-3.0" -m "release: v2.3.0" -m "요약: FE Ty
 
 - [ ] `web/package.json` `version` → `"2.0.0"` 로 정렬
 - [ ] `build.gradle` `version` → `'2.0.0'` 설정 (jar 이름 변경 영향 → `deploy-be.yml`·수동 배포 스크립트 확인 후)
-- [ ] 기준선 태그 `v2.0.0`, `platform-2.0` 부착 (대상 커밋 결정 — § 9 HITL)
+- [x] 기준선 태그 `v2.0.0` 은 있음. `platform-2.0` 은 달지 않았고 2026-09-28 `platform-3.0`(`v2.0.1` 과 같은 커밋)부터 플랫폼 태그를 단다
 - [ ] (선택) FE 빌드에 버전 주입 (`import.meta.env` 등) → 푸터/사이트 소개에 기능 버전 노출
 - [ ] (선택) `deploy-*.yml` 에 태그 push 트리거 추가 여부 검토
 
@@ -102,7 +102,7 @@ git tag -a platform-3.0 -m "platform-3.0" -m "release: v2.3.0" -m "요약: FE Ty
 5. **배포**
    - [ ] FE: master push 로 `deploy-fe.yml` 자동 실행 확인
    - [ ] BE: `deploy-be.yml` 수동 dispatch (또는 수동 배포) — 변경 있을 때만
-   - [ ] DB: 스키마 변경 있으면 `sql/V3/` DDL 을 배포 **전** 운영 적용 (자동 실행 금지 파일 주의)
+   - [ ] DB: 스키마 변경 있으면 `sql/draft/<작업>/` 의 SQL 을 사용자가 배포 **전** 운영에 직접 적용 → 반영 뒤 `sql/v.2.0.0/`(DDL·insert·applied) 로 통합하고 draft 에서 지운다
 6. **사후**
    - [ ] master 에서 생성 스크립트 재실행: `python .claude/scripts/build-traceability.py` · `python .claude/scripts/build-readme-table.py` · `python .claude/scripts/docs-check.py`
    - [ ] 운영 화면 확인 후 CHANGELOG 에 이상 없음 확인, 문제 시 PATCH 릴리스
