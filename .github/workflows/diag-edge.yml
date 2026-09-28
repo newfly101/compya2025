@@ -30,7 +30,7 @@ jobs:
           echo "▶ HEAD"; curl -sI https://compyafun.com/ads.txt | tr -d '\r' | grep -iE '^HTTP/|^content-type|^x-cache|^age' || true
       - name: 한국 엣지 IP 로 강제 연결 (뷰어 국가 제한이면 여기서도 HTML, 엣지 문제면 text/plain)
         run: |
-          for ip in 168.126.63.1; do
+          for ip in 13.225.134.102; do
             echo "=================== --resolve compyafun.com:443:$ip  /ads.txt"
             curl -s -D - -o /tmp/body --resolve "compyafun.com:443:$ip" https://compyafun.com/ads.txt | tr -d '' | grep -iE '^HTTP/|^content-type|^x-cache|^x-amz-cf-pop' || true
             echo "본문 앞 60자: $(head -c 60 /tmp/body | tr '
