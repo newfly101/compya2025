@@ -11,6 +11,7 @@
 | 영역 | 흐름 |
 |---|---|
 | **FE** | `web/**` 변경 push → GitHub Actions 자동 실행 → 빌드+prerender → S3(`compya-images`) 동기화 → CloudFront 무효화 |
+| ⚠️ **FE 자동 배포는 아직 한 번도 성공한 적이 없다** (2026-09-28 확인) | 워크플로는 2026-09-13 신설 이후 4회 전부 `AWS 자격증명` 단계에서 실패 — 저장소 Secrets 에 `AWS_ACCESS_KEY_ID`·`AWS_SECRET_ACCESS_KEY` 가 없다(`gh secret list` 0건). 운영에 올라간 FE 는 그 전에 수동으로 올린 빌드다. Secrets 를 넣은 뒤 실패한 run 을 `gh run rerun <id>` 로 재실행하면 된다 |
 | **BE** | 사람이 Actions 탭에서 수동 실행(workflow_dispatch) → Gradle 빌드 → S3(비공개 아티팩트 버킷)에 jar 업로드 → AWS SSM 으로 EC2 에 원격 배포 명령 전달 |
 
 ⚠️ **BE 자동 배포는 현재 꺼져 있다.** `deploy-be.yml` 의 `push` 트리거는 주석 처리돼 있고 `workflow_dispatch` 만 열려 있다 — 사전 준비(§ 3, `docs/global-guide/develop/be-deploy-setup.md`)가 끝나지 않아서다. 지금은 BE 배포를 하려면 Actions 탭에서 수동으로 눌러야 한다.

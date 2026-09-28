@@ -145,6 +145,7 @@ updated: 2026-09-28
 | guides | `RESERVED_SLUGS`를 참조하는 사이트맵/프리렌더 스크립트가 실제로 있는지 |
 | playerSkills | DDL에 남은 검증 쿼리를 시드 적재 후 실행해 92건 전부 통과했는지 |
 | policy | 개인정보처리방침·이용약관 본문 자체의 법적 정확성 |
+| 운영 | **FE 자동 배포가 한 번도 성공한 적 없음** — 저장소 Secrets(`AWS_ACCESS_KEY_ID`·`AWS_SECRET_ACCESS_KEY`) 미설정으로 `deploy-fe.yml` 이 자격증명 단계에서 실패(2026-09-13 이후 4회). v2.0.1 의 FE 수정 40건이 아직 라이브에 없다. Secrets 등록 → 재실행이 선행 |
 | 운영 | `test-docs/` 미정리 잔재 150여개(디자인 handoff 원본·xlsx·`.claude` 백업 등) — 정리 여부·시점 |
 | 운영 | GitHub MCP 서버 422 연결 실패 지속 — `gh` CLI 로 대체 중, 근본 해결 여부 |
 | 운영 | PR #32(`/code-review-doc` 커맨드 신설) 머지 여부 — `OPEN` 상태 유지 중 |
