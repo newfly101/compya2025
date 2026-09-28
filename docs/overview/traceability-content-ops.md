@@ -1,6 +1,6 @@
 ---
-created: 2026-09-28
-updated: 2026-09-28
+created: 2026-09-29
+updated: 2026-09-29
 ---
 
 <!-- 생성 파일: python .claude/scripts/build-traceability.py — 손으로 고치지 말 것 -->
@@ -11,13 +11,14 @@ updated: 2026-09-28
 
 | REQ | 기능 | 규칙 요지 | 화면(SC) | API | 테이블 | 근거·이력 |
 |---|---|---|---|---|---|---|
-| REQ-ADM-01 | admin | 셸 접근 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all | - | [spec §3](../features/admin/spec.md) · 2026-09-28 |
-| REQ-ADM-02 | admin | 이중 방어 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all | - | [spec §3](../features/admin/spec.md) · 2026-09-28 |
-| REQ-ADM-03 | admin | 캐시 동기화 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all | - | [spec §3](../features/admin/spec.md) · 2026-09-28 |
-| REQ-ADM-04 | admin | 자기 보호 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all | - | [spec §3](../features/admin/spec.md) · 2026-09-28 |
-| REQ-ADM-05 | admin | 목록 전량 탐색 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all | - | [spec §3](../features/admin/spec.md) · 2026-09-28 |
-| REQ-ADM-06 | admin | 업로드 예외 순서 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all | - | [spec §3](../features/admin/spec.md) · 2026-09-28 |
-| REQ-ADM-07 | admin | 커뮤니티 모더레이션 동결 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all | - | [spec §3](../features/admin/spec.md) · 2026-09-28 |
+| REQ-ADM-01 | admin | 셸 접근 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all; GET /api/admin/analytics/summary?range=; POST /api/admin/analytics/aggregate?date= | site_user_event, site_user_event_daily, site_user_event_daily_device, site_ | [spec §3](../features/admin/spec.md) · 2026-09-29 |
+| REQ-ADM-02 | admin | 이중 방어 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all; GET /api/admin/analytics/summary?range=; POST /api/admin/analytics/aggregate?date= | site_user_event, site_user_event_daily, site_user_event_daily_device, site_ | [spec §3](../features/admin/spec.md) · 2026-09-29 |
+| REQ-ADM-03 | admin | 캐시 동기화 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all; GET /api/admin/analytics/summary?range=; POST /api/admin/analytics/aggregate?date= | site_user_event, site_user_event_daily, site_user_event_daily_device, site_ | [spec §3](../features/admin/spec.md) · 2026-09-29 |
+| REQ-ADM-04 | admin | 자기 보호 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all; GET /api/admin/analytics/summary?range=; POST /api/admin/analytics/aggregate?date= | site_user_event, site_user_event_daily, site_user_event_daily_device, site_ | [spec §3](../features/admin/spec.md) · 2026-09-29 |
+| REQ-ADM-05 | admin | 목록 전량 탐색 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all; GET /api/admin/analytics/summary?range=; POST /api/admin/analytics/aggregate?date= | site_user_event, site_user_event_daily, site_user_event_daily_device, site_ | [spec §3](../features/admin/spec.md) · 2026-09-29 |
+| REQ-ADM-06 | admin | 업로드 예외 순서 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all; GET /api/admin/analytics/summary?range=; POST /api/admin/analytics/aggregate?date= | site_user_event, site_user_event_daily, site_user_event_daily_device, site_ | [spec §3](../features/admin/spec.md) · 2026-09-29 |
+| REQ-ADM-07 | admin | 커뮤니티 모더레이션 동결 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all; GET /api/admin/analytics/summary?range=; POST /api/admin/analytics/aggregate?date= | site_user_event, site_user_event_daily, site_user_event_daily_device, site_ | [spec §3](../features/admin/spec.md) · 2026-09-29 |
+| REQ-ADM-08 | admin | 통계 탭 | SC-01-01, SC-04-03 | GET /api/admin/cache-sync/targets; POST /api/admin/cache-sync/{id}/sync; POST /api/admin/cache-sync/sync-all; GET /api/admin/analytics/summary?range=; POST /api/admin/analytics/aggregate?date= | site_user_event, site_user_event_daily, site_user_event_daily_device, site_ | [spec §3](../features/admin/spec.md) · 2026-09-29 |
 | REQ-CP-01 | coupons | 노출 조건 | SC-01-01, SC-02-01 | GET /api/coupons; GET /api/admin/coupons; POST /api/admin/coupons; POST /api/admin/coupons/refresh; PATCH /api/admin/coupons/{id}; PATCH /api/admin/coupons/{id}/visible; DELETE /api/admin/coupons/{id}; DELETE /api/admin/coupons/bulk; PATCH /api/admin/coupons/bulk/visible | site_coupons | [spec §3](../features/coupons/spec.md) · 2026-09-28 |
 | REQ-CP-02 | coupons | 사용가능/기간 만료 판정 | SC-01-01, SC-02-01 | GET /api/coupons; GET /api/admin/coupons; POST /api/admin/coupons; POST /api/admin/coupons/refresh; PATCH /api/admin/coupons/{id}; PATCH /api/admin/coupons/{id}/visible; DELETE /api/admin/coupons/{id}; DELETE /api/admin/coupons/bulk; PATCH /api/admin/coupons/bulk/visible | site_coupons | [spec §3](../features/coupons/spec.md) · 2026-09-28 |
 | REQ-CP-03 | coupons | 정렬 순서 | SC-01-01, SC-02-01 | GET /api/coupons; GET /api/admin/coupons; POST /api/admin/coupons; POST /api/admin/coupons/refresh; PATCH /api/admin/coupons/{id}; PATCH /api/admin/coupons/{id}/visible; DELETE /api/admin/coupons/{id}; DELETE /api/admin/coupons/bulk; PATCH /api/admin/coupons/bulk/visible | site_coupons | [spec §3](../features/coupons/spec.md) · 2026-09-28 |

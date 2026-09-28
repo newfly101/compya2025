@@ -14,7 +14,8 @@ export const useOutboundClickTracking = () => {
       const anchor = e.target?.closest?.('a[target="_blank"]');
       if (!anchor || anchor.dataset.analyticsTracked) return;
 
-      enqueueEvent("OUTBOUND_CLICK", { targetUrl: anchor.href });
+      // 전체 URL 대신 호스트만 — 쿼리스트링·경로에 개인식별 정보가 실려도 저장하지 않는다.
+      enqueueEvent("OUTBOUND_CLICK", { targetUrl: new URL(anchor.href).host });
     };
 
     // capture 단계 — 클릭 핸들러가 stopPropagation 을 해도 놓치지 않게

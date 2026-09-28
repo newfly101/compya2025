@@ -1,6 +1,6 @@
 ---
-created: 2026-09-28
-updated: 2026-09-28
+created: 2026-09-29
+updated: 2026-09-29
 ---
 
 <!-- 생성 파일: python .claude/scripts/build-traceability.py — 손으로 고치지 말 것 -->

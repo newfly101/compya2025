@@ -8,7 +8,7 @@ const isDev = window.location.hostname === "localhost" ||
 // GA 에 아예 없던 새 이벤트(검색/외부이동)는 이 표에 안 넣고 호출부에서 enqueueEvent 를 직접 부른다
 // (지킬 기존 GA 동작이 없으므로 나란히 보낼 필요도 없다).
 const SERVER_EVENT_MAP = {
-  page_view: (p) => ["PAGE_VIEW", { pagePath: p.page_path }],
+  page_view: (p) => ["PAGE_VIEW", { pagePath: p.page_path, navType: p.nav_type }],
   coupon_clicked: (p) => ["CONTENT_CLICK", { contentType: "COUPON", contentId: p.coupon_code, targetUrl: p.coupon_target_url }],
   event_clicked: (p) => ["CONTENT_CLICK", { contentType: "EVENT", contentId: String(p.event_id ?? ""), targetUrl: p.event_external_link }],
 }

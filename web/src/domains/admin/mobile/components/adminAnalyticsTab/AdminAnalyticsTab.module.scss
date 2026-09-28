@@ -1,0 +1,153 @@
+// 셸(AdminShellScreen)의 통계 탭 패널로 들어간다 — AdminCacheSyncTab 과 같은 원칙으로
+// 자체 480px 컨테이너를 다시 만들지 않는다.
+.tab {
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-4;
+}
+
+// 제목 줄(전체 폭) + 기간 토글 줄(전체 폭) 2행 — AdminToolbar 의 행 쌓기 관례와 같은 $space-2.
+.head {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+// AdminSegmented 는 그대로 두고 배치만 — 제목과 한 줄로 안 쓰니 폭 여유가 생겨 3개 옵션이
+// 안 눌린다. white-space 는 라디오 버튼(role="radio") 자체 속성으로 걸어 컴포넌트 내부
+// 클래스를 건드리지 않는다.
+.rangeRow {
+  [role="radio"] {
+    white-space: nowrap;
+  }
+}
+
+.title {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.subtitle {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.summaryCards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-3;
+}
+
+.summaryCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: $space-4;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-xl;
+  background: var(--color-bg-card);
+}
+
+.cardLabel {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.cardValue {
+  @include font-size-rem(22);
+  font-weight: $font-weight-semibold;
+  line-height: 1;
+  color: var(--color-admin-accent);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.sectionTitle {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.deviceBars {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.deviceBarRow {
+  display: grid;
+  grid-template-columns: 56px 1fr 48px;
+  align-items: center;
+  gap: $space-2;
+}
+
+.deviceBarLabel {
+  @include text-caption;
+  color: var(--color-text-secondary);
+}
+
+.deviceBarTrack {
+  height: 12px;
+  border-radius: $radius-full;
+  background: var(--color-bg-elevated);
+  overflow: hidden;
+}
+
+.deviceBarFill {
+  height: 100%;
+  border-radius: $radius-full;
+}
+
+.deviceBarCount {
+  @include text-caption;
+  color: var(--color-text-primary);
+  text-align: right;
+}
+
+// AdminDateRange 와 같은 어드민 날짜 입력 관례(admin-date-range-row) — input[type=date]에
+// flex:1 + min-width:0 을 줘서 좁은 폭에서 입력이 줄어들고, 고정폭 버튼과 나란히 둬도
+// 가로 스크롤이 생기지 않는다. 기존엔 flex:0 0 auto 로 입력을 고정폭 취급해 320px 근처에서
+// 밀려났다.
+.aggregateRow {
+  @include admin-date-range-row;
+}
+
+.aggregateInput {
+  @include admin-input;
+}
+
+.aggregateButton {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: $control-height-sm;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-admin-accent);
+  border-radius: $radius-lg;
+  background: var(--color-admin-accent);
+  color: #fff;                                 // AdminToolbar.module.scss:216 과 동일 — 진한 보라 배경, 두 테마 모두 대비 확보
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+.aggregateError {
+  @include text-caption;
+  color: var(--color-danger);
+}

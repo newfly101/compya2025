@@ -1,5 +1,5 @@
 import { API } from "@/infra/http/client.js";
-import { ADMIN_CACHE_SYNC } from "@/domains/admin/store/admin/endpoints.js";
+import { ADMIN_CACHE_SYNC, ADMIN_ANALYTICS } from "@/domains/admin/store/admin/endpoints.js";
 
 // BE 는 모든 응답을 { success, code, data } 로 감싼다. 실제 payload 는 data.data.
 export const fetchCacheSyncTargets = async () => {
@@ -14,5 +14,15 @@ export const fetchCacheSyncOne = async (id) => {
 
 export const fetchCacheSyncAll = async () => {
   const { data } = await API.post(ADMIN_CACHE_SYNC.SYNC_ALL);
+  return data.data;
+};
+
+export const fetchAdminAnalyticsSummary = async (range) => {
+  const { data } = await API.get(ADMIN_ANALYTICS.GET_SUMMARY(range));
+  return data.data;
+};
+
+export const fetchAdminAnalyticsAggregate = async (date) => {
+  const { data } = await API.post(ADMIN_ANALYTICS.AGGREGATE(date));
   return data.data;
 };

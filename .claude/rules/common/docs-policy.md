@@ -95,7 +95,7 @@ updated: 2026-09-28
 ② 분석 — `developer-analyze` 가 `drafts/<branch>/**` + 현재 `spec.md`/`design.md` 를 읽고 `.claude/.progress/<branch>/analysis.md` 와, 바뀔 § 만 담은 `.claude/.progress/<branch>/spec-delta.md` 를 작성
 ③ 개발 — `frontend-developer` / `backend-developer` 가 기능 구현 후 각자 `docs/features/<f>/history.md` 맨 위에 항목 1개를 **직접** 추가 (`.claude/templates/history-entry.md`). 지금의 `fe-history.md`/`be-history.md` 는 그 재료
 ④ 통합 — `developer-integrate` 가 spec-delta 를 spec.md/design.md 에 반영 · spec `version` 을 history 최상단 버전과 맞춤 · `CHANGELOG.md` `[Unreleased]` 1줄 · Playwright 실측 · `drafts/<branch>/` 삭제
-⑤ 커밋 — 훅 `guard-docs-sync.sh` 가 기능 코드 스테이징 시 같은 기능 `history.md` 동반 스테이징 + spec↔history 버전 일치를 검사한다. 예외는 `ALLOW_NODOCS=1` + 사유. PR → 머지
+⑤ 커밋 — 코드를 범주별(sql → be → web)로 각각 커밋하고 `history.md` 최상단 `커밋: 미커밋` 을 그 해시로 바꾼 뒤, md 는 세 갈래로 나눠 브랜치에서 **갈래마다 딱 1회, `.claude/**/*.md`(md-claude) → `docs/**/*.md`(md-docs) → 그 밖의 `*.md`(md-root, `CHANGELOG.md`·`README.md` 등) 순서로** 커밋한다. 훅 `guard-docs-sync.sh` 가 범주 혼합·md 순서 위반을 막고, md-docs 커밋에서만 브랜치가 건드린 기능마다 `history.md` 동반 + spec↔history 버전 일치를 검사한다. 예외는 `ALLOW_MIXED=1` + 사유 (`git-scope.md` § 2). PR → 머지
 
 ⚠️ **squash merge 를 쓰면 머지 전 삭제되는 작업 문서(`.claude/.progress/<branch>/`)가 master 이력에서 사라진다.** 과정 기록을 남기려면 merge commit 방식을 쓰거나 PR 본문에 analysis·verification 핵심을 붙인다. 이 프로젝트는 **PR 본문 첨부를 기본으로 한다.**
 
