@@ -1,0 +1,38 @@
+name: Diag Edge
+
+# 임시 진단 — 미국 러너 엣지에서 정적 파일이 어떻게 응답되는지 본다 (2026-09-28 ads.txt 가 HTML 로 오던 문제).
+# 원인이 잡히면 이 파일은 지운다. 배포·쓰기 없음.
+on:
+  workflow_dispatch:
+  push:
+    branches: [fix/prerender-empty-snapshot]
+    paths: ['.github/workflows/diag-edge.yml']
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 미국 엣지 기본 응답
+        run: |
+          for u in https://compyafun.com/ads.txt https://compyafun.com/robots.txt https://compyafun.com/nonexistent-diag.txt; do
+            echo "=================== $u"
+            curl -s -D - -o /tmp/body "$u" | tr -d '\r' | grep -iE '^HTTP/|^content-type|^x-cache|^x-amz-cf-pop|^age' || true
+            echo "본문 앞 60자: $(head -c 60 /tmp/body | tr '\n' ' ')"
+          done
+      - name: 한국 엣지 IP 로 강제 연결 (뷰어 국가 제한이면 여기서도 HTML, 엣지 문제면 text/plain)
+        run: |
+          for ip in 13.225.134.102; do
+            echo "=================== --resolve $ip  /ads.txt"
+            curl -s -D - -o /tmp/body --resolve "compyafun.com:443:$ip" https://compyafun.com/ads.txt | tr -d '\r' | grep -iE '^HTTP/|^content-type|^x-cache|^x-amz-cf-pop' || true
+            echo "본문 앞 60자: $(head -c 60 /tmp/body | tr '\n' ' ')"
+          done
+      - name: JS 자산도 HTML 로 오나 (미국 이용자에게 사이트가 깨지는지)
+        run: |
+          JS=$(curl -s https://compyafun.com/ | grep -oE '/assets/index-[^"]+\.js' | head -1)
+          echo "자산 경로: $JS"
+          curl -s -D - -o /tmp/body "https://compyafun.com$JS" | tr -d '\r' | grep -iE '^HTTP/|^content-type|^x-cache' || true
+          echo "본문 앞 40자: $(head -c 40 /tmp/body | tr '\n' ' ')"
+      - name: CloudFront 도메인 직접
+        run: |
+          curl -s -D - -o /tmp/body https://d2zps4faf1uuw6.cloudfront.net/ads.txt | tr -d '\r' | grep -iE '^HTTP/|^content-type|^x-cache' || true
+          echo "본문 앞 40자: $(head -c 40 /tmp/body | tr '\n' ' ')"
