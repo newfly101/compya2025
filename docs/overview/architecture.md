@@ -110,6 +110,8 @@ flowchart LR
 | dev(로컬) | `npm start`(Vite dev, 3000) | `bootRun`(8080), `application.properties` | `.env.properties`로 접속, JWT access 30분 |
 | prod | master push 시 자동 배포 | **수동**(workflow_dispatch만 — push 트리거는 비활성) | `application-prod.properties`, JWT access 60분 |
 
+CloudFront 쪽에는 뷰어 요청 함수(`infra/cloudfront/rewrite-index.js`)가 하나 붙어 있다 — `/legend-stats` 같은 디렉터리 경로를 `index.html` 로 바꿔 prerender 스냅샷이 실제로 서빙되게 하고, `www` 를 apex 로 301 한다. 이 함수만은 Actions 가 아니라 콘솔에서 수동 게시한다.
+
 ⚠️ **테스트 DB와 운영 DB가 같은 인스턴스다.** `sql/V3/`에 DDL을 작성하는 순간 운영에도 즉시 반영된다 — 스키마 변경 전에는 항상 사용자 확인이 먼저다.
 
 ## 6. 로컬 실행

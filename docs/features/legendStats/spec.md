@@ -37,6 +37,7 @@ updated: 2026-09-28
 | 태생 스탯·평점 | `data_player_legend_stat` | 74행(1:1). `rating`은 커뮤니티 출처값(산출식 불명), NULL 6명(DB 실측 확인) |
 | 재료 8행 | `data_player_legend_material` · `GET /api/legends/{id}` | 레전드당 선수 6 + 코치 2 = 8행, 74명×8 = 592행 전량 적재 확인(DB 실측). 재료 유일성은 일반 인덱스일 뿐 UNIQUE 아님 |
 | 구종 마스터 | `data_pitch_type` · `GET /api/legend-stats/pitch-types` | `players`와 공유하는 10종 마스터 |
+| 원천 우선순위 | 평점표 엑셀(작성자 사본) vs DB 마스터 | **둘이 다르면 DB 가 최신.** 엑셀이 원천인 값은 태생 5스탯·커뮤니티 평점·구종 등급뿐이고, `legend_type`·`team_code`·`position_code`·재료·코치는 DB 마스터가 원천. `legend_type` 17명 불일치(엑셀 "신규" ↔ DB "일반")는 엑셀이 옛 분류라 결함 아님(2026-09-02) |
 | 캐시 | `@Cacheable(value="legendStat"/"legendPitchType")` + ETag + `Cache-Control: max-age=1h` | 단건 조회(`/legends/{id}`)는 캐시 없음. TTL 0, 무효화는 admin 캐시 동기화 버튼(수동)뿐 — 서비스 클래스 주석은 이 경로를 반영해 정정됐다(2026-09-28) |
 
 ## 5. 하지 않는 것

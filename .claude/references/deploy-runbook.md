@@ -150,6 +150,7 @@ aws ssm send-command --instance-ids "<INSTANCE_ID>" --document-name AWS-RunShell
 - 운영자는 1인 체제다. 배포 실행·장애 대응·콘텐츠 등록이 전부 한 사람에게 몰린다.
 - 이벤트·공지·쿠폰 같은 콘텐츠는 어드민 화면에서 수동으로 등록한다 — 자동 발행 파이프라인은 없다.
 - BE 배포는 사람이 Actions 탭을 직접 눌러야 나간다(§ 2). 코드가 master 에 머지됐다고 자동으로 서버에 반영되지 않는다.
+- CloudFront 에는 뷰어 요청 함수 1개가 붙어 있다 — 원본은 `infra/cloudfront/rewrite-index.js`. 디렉터리 경로를 `index.html` 로 리라이트해 prerender 스냅샷이 서빙되게 하고, `www` → apex 301 을 처리한다. **Actions 가 배포하지 않는다** — 고치면 CloudFront 콘솔(배포 `E3TX8OFJBC8IML` → 함수 → 뷰어 요청)에 직접 붙여 넣고 게시한다. 런타임이 ES5.1 이라 최신 문법 금지(파일 머리 주석).
 
 ---
 

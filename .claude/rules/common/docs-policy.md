@@ -101,6 +101,8 @@ updated: 2026-09-28
 
 `.claude/templates/` 의 5개(`spec.md` `design.md` `history-entry.md` `analysis.md` `verification.md`)로만 문서를 만든다. 템플릿에 없는 섹션을 즉흥으로 추가하지 않는다.
 
+**문체 (모든 md 산출물)** — 일반인이 읽어도 이해되게 쓴다. 개발 용어는 처음 쓸 때 괄호로 푼다. `Phase`·`Step`·`스프린트` 같은 단계 워딩과 `RN-01` 식 코드형 식별자는 쓰지 않는다(예외: 규칙이 정한 `REQ-`·`SC-`·ADR 번호). 순서는 "지금 할 것 / 그다음 / 여유 있을 때" 처럼 자연어로.
+
 ---
 
 ## 8. agent 파이프라인 산출물 ↔ 이 정책

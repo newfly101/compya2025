@@ -12,6 +12,7 @@ claude --worktree {이름}        # .claude/worktrees/{이름}/ 에 자기 브�
 
 ## 2. 커밋 절차 (매번)
 
+0. **모든 git 명령 전에 `git branch --show-current`.** 병렬 agent 가 brief 의 금지에도 브랜치를 바꾼 사고가 있었고, `git status` 는 clean 이라 티가 안 난다. sub-agent brief 에는 `checkout`·`switch` 금지를 명시한다.
 1. `git status --porcelain` 을 본다. **변경 목록 ≠ 커밋 목록.**
 2. 이 세션이 고친 파일 목록은 `.claude/.sessions/{session_id}.files` — Write/Edit 마다 hook 이 채운다. 목록 밖 파일은 다른 세션 것으로 간주한다.
 3. `git add <파일> <파일> …` 로 **경로를 하나씩 지정.** `-A` · `.` · `--all` · `-u` · `commit -a` 는 hook 이 차단한다.
