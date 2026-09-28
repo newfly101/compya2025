@@ -52,7 +52,7 @@
   transform: translateY(-50%);
   padding: $space-1 $space-2;
   color: var(--color-text-muted);
-  font-size: 16px;
+  font-size: $font-size-17;
 }
 
 .filterRow {
@@ -84,7 +84,7 @@
   border-color: var(--color-border-strong);
   gap: $space-1;
   @include text-body;
-  font-weight: 500;
+  font-weight: $font-weight-medium;
   cursor: pointer;
 
   &[aria-pressed="true"] {
@@ -100,7 +100,7 @@
   font-size: $font-size-10;
 
   [aria-pressed="true"] & {
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--color-admin-accent-active-text-soft);
   }
 }
 
@@ -122,7 +122,7 @@
 
   b {
     color: var(--color-text-primary);
-    font-weight: 700;
+    font-weight: $font-weight-bold;
   }
 }
 
@@ -135,7 +135,7 @@
 
 .selectionCount {
   color: var(--color-admin-accent);
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   white-space: nowrap;
 }
 
@@ -148,7 +148,7 @@
   background: transparent;
   color: var(--color-danger);
   font-size: $font-size-10;
-  font-weight: 700;
+  font-weight: $font-weight-bold;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -213,7 +213,7 @@
   border: 1px solid var(--color-admin-accent);
   border-radius: $radius-lg;
   background: var(--color-admin-accent);
-  color: #fff;
+  color: #fff;                                 // 진한 보라 배경, 두 테마 모두 대비 확보
   @include text-body-bold;
   cursor: pointer;
   @include pressable;

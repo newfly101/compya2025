@@ -12,12 +12,20 @@ import java.io.IOException;
 @Tag(name = "1. [Auth] 인증", description = "OAuth 로그인 / 리프레시 / 로그아웃 API")
 public interface AuthSwaggerDocs {
     @Operation(
+            summary = "네이버 로그인 시작",
+            description = "state 를 발급해 OAUTH_STATE 쿠키(5분)에 저장하고 네이버 인가 화면으로 리다이렉트."
+    )
+    @ApiResponse(responseCode = "302", description = "네이버 인가 화면으로 리다이렉트")
+    void naverLogin(HttpServletResponse response, HttpServletRequest request) throws IOException;
+
+    @Operation(
             summary = "네이버 로그인 콜백",
             description = "네이버 OAuth 인증 후 콜백. ACCESS_TOKEN(/) + REFRESH_TOKEN(/api/auth) 쿠키 설정 후 프론트로 리다이렉트."
     )
     @ApiResponse(responseCode = "302", description = "로그인 성공 - 프론트로 리다이렉트")
     @ApiResponse(responseCode = "502", description = "네이버 토큰 발급 실패")
     @ApiResponse(responseCode = "403", description = "차단/정지/탈퇴 사용자")
+    @ApiResponse(responseCode = "401", description = "state 불일치 (로그인 CSRF 차단)")
     void naverCallback(String code, String state,
                        HttpServletResponse response,
                        HttpServletRequest request) throws IOException;

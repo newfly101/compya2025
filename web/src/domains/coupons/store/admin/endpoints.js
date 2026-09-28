@@ -3,8 +3,7 @@ export const ADMIN_COUPONS = {
   CREATE_COUPONS: "/admin/coupons",
   UPDATE_COUPONS: (id) => `/admin/coupons/${id}`,
   UPDATE_COUPON_VISIBLE: (id) => `/admin/coupons/${id}/visible`,
-  DELETE_COUPON: (id) => `/admin/coupons/${id}`,
-  // v2 일괄 삭제·숨김 — BE 작업 중(계약만 확정). 연결 전까지는 호출하면 404.
+  // 일괄 삭제(= 노출 끄기)·숨김. 둘 다 BE 에 구현되어 있다.
   BULK_DELETE_COUPONS: "/admin/coupons/bulk",
   BULK_UPDATE_COUPON_VISIBLE: "/admin/coupons/bulk/visible",
   // 캐시 동기화 — @Cacheable 때문에 DB 직접 insert 가 재시작 전까지 목록에 안 뜨는 문제 해결용.
@@ -16,7 +15,6 @@ export const ADMIN_COUPON_ACTIONS = {
   CREATE: "POST/admin/coupons",
   UPDATE: "PATCH/admin/coupons/update",
   UPDATE_VISIBLE: "PATCH/admin/coupons/updateVisible",
-  DELETE: "DELETE/admin/coupons/delete",
   BULK_DELETE: "DELETE/admin/coupons/bulk",
   BULK_UPDATE_VISIBLE: "PATCH/admin/coupons/bulk/visible",
   REFRESH: "POST/admin/coupons/refresh",

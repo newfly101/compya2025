@@ -16,6 +16,4 @@ public interface RefreshTokenMapper {
     int deleteByHash(@Param("tokenHash") String tokenHash);
 
     int deleteByUserId(@Param("userId") Long userId);
-
-    int deleteExpired();
 }

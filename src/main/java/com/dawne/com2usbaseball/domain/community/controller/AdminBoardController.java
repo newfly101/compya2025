@@ -8,12 +8,14 @@ import com.dawne.com2usbaseball.domain.community.entity.BoardEntity;
 import com.dawne.com2usbaseball.domain.community.enums.messages.CommunityMessages;
 import com.dawne.com2usbaseball.domain.community.service.board.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/boards")
 public class AdminBoardController {
 

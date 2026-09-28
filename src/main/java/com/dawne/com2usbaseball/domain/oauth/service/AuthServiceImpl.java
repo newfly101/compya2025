@@ -43,11 +43,16 @@ public class AuthServiceImpl implements AuthService {
         RefreshTokenEntity row = refreshTokenRepository.findActiveByHash(hash)
                 .orElseThrow(() -> new BaseException(AuthMessages.AUTH_REFRESH_TOKEN_EXPIRED, HttpStatus.UNAUTHORIZED));
 
+        // [판단] 상태 검사를 rotation 삭제보다 먼저 한다 — 클래스 레벨 @Transactional 이라 검사 실패 예외가
+        // 트랜잭션 전체를 롤백해 삭제까지 되돌린다(= 무효화했다고 믿은 refresh 가 되살아난다).
+        // 정지·차단·탈퇴 계정의 refresh 는 상태를 바꾸는 쪽(AdminUserServiceImpl.updateUserStatus,
+        // UserServiceImpl.withdraw)에서 이미 전량 삭제되고, 남아 있어도 매 재발급마다 여기서 다시 막힌다.
+        // findActiveUserById 가 ACTIVE 외 상태를 전부 FORBIDDEN 으로 거르므로 별도 상태 검사는 중복이다.
+        UserEntity user = userService.findActiveUserById(row.getUserId());
+
         // rotation — 기존 refresh 즉시 무효
         refreshTokenRepository.deleteByHash(hash);
 
-        UserEntity user = userService.findActiveUserById(row.getUserId());
-        validateUserStatus(user);
         return issueTokens(user);
     }
 

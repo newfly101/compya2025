@@ -4,8 +4,9 @@
 
 // 광고 게재 스위치(단일 지점). 승인 전(현재)엔 false — in-feed 세그먼트 분할 자체를 하지
 // 않는다(표/그리드를 광고 자리 없이 통짜로 렌더). 승인 통보 후에만 true 로 바꾼다.
-// 승인 후 작업 순서(docs/convention/adsense.md § 5): 1) 이 값을 true 로 2) index.html
-// 의 adsbygoogle 로더 스크립트 주석 해제 3) 아래 AD_SLOTS 의 TODO_* 값을 실제 슬롯 ID로 교체.
+// 승인 후 작업 순서(.claude/rules/fe/fe-ads.md § 5): 1) 아래 AD_SLOTS 의 TODO_* 값을 실제
+// 슬롯 ID로 교체 2) index.html 의 adsbygoogle 로더 스크립트 주석 해제 3) 이 값을 true 로.
+// (AdSlot 이 TODO_* 슬롯을 게재 미준비로 보고 접으므로, 순서가 바뀌어도 잘못된 요청은 나가지 않는다.)
 export const ADS_ENABLED = false;
 
 export const AD_CLIENT_ID = "ca-pub-8723423525807131";

@@ -1,5 +1,7 @@
 // 공지 제목 → 주소조각(slug) 변환. 서버는 id 로만 조회하고, 주소 표시에만 이 값을 쓴다.
 // 주의: 제목 → slug 는 단방향이다(역변환 불가). 조회는 목록을 훑어 title 을 다시 slugify 해서 대조한다.
+// id 를 항상 접미어로 붙인다 — 숫자만인 제목이 공지 id 로 오인되는 것과, 앞 180자가 같은
+// 긴 제목끼리 같은 slug 가 되는 것을 한 번에 막는다(접미어가 있으면 slug 는 절대 숫자만이 아니다).
 export const noticeTitleToSlug = (title, id) => {
   const cleaned = (title ?? "")
     .trim()
@@ -13,5 +15,5 @@ export const noticeTitleToSlug = (title, id) => {
     .slice(0, 180)
     .replace(/-+$/g, "");
 
-  return cleaned || `notice-${id}`;
+  return `${cleaned || "notice"}-${id}`;
 };

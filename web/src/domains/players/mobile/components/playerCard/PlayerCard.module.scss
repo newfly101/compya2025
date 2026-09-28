@@ -9,7 +9,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 4px 10px rgba(0, 0, 0, 0.5);
+  outline: 1px solid var(--color-pe-card-ring);
   cursor: pointer;
   overflow: hidden;
 }
@@ -34,7 +34,7 @@
   justify-content: center;
   font-style: italic;
   font-weight: $font-weight-bold;
-  font-size: 13px;
+  font-size: $font-size-13;
   letter-spacing: 1px;
   color: var(--color-text-muted);
 }
@@ -46,7 +46,7 @@
   bottom: 16px;
   text-align: center;
   @include text-body-bold;
-  color: #fff;
+  color: #fff; // 사진 + 하단 그라데이션(.shade) 위 글자 — 테마 무관
   letter-spacing: -0.4px;
   padding: 0 $space-1;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
@@ -67,7 +67,7 @@
   padding: 0 $space-1;
   font-style: italic;
   font-weight: $font-weight-bold;
-  font-size: 12px;
+  font-size: $font-size-12;
   line-height: 1;
 }
 
@@ -95,15 +95,15 @@
   width: 15px;
   height: 15px;
   border-radius: $radius-xs;
-  background-color: var(--color-brand);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 900;
+  background-color: var(--color-brand-violet);
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
+  font-size: $font-size-10;
+  font-weight: $font-weight-bold;
   font-style: italic;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+  outline: 1px solid var(--color-pe-badge-ring);
 }
 
 .legendPopover {
@@ -111,19 +111,20 @@
   left: 14px;
   right: 2px;
   bottom: 54px;
-  z-index: 10;
+  z-index: $z-dropdown;
   background: linear-gradient(180deg, var(--color-brand), var(--color-brand-dark));
   border: 1px solid var(--color-brand);
   border-radius: $radius-sm - 1;
-  padding: 3px 4px;
+  padding: $space-1 4px;
   text-align: center;
   line-height: 1.2;
   overflow: hidden;
 }
 
+// legendPopoverLabel/Name — 브랜드 그라데이션(.legendPopover) 배경 위 글자, 테마 무관
 .legendPopoverLabel {
   display: block;
-  font-size: 7px;
+  font-size: $font-size-9;
   color: #fff;
   opacity: 0.85;
   white-space: nowrap;
@@ -131,8 +132,8 @@
 
 .legendPopoverName {
   display: block;
-  font-size: 9px;
-  font-weight: 900;
+  font-size: $font-size-9;
+  font-weight: $font-weight-bold;
   color: #fff;
   letter-spacing: -0.4px;
   @include text-ellipsis;

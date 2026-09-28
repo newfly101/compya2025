@@ -1,7 +1,8 @@
 import styles from "./StateBox.module.scss";
 
-// 로딩 / 오류 / 빈 화면 3분기 공용 박스. 공개 화면(모바일 단일 모드) 전용.
-// admin/stateBox/AdminStateBox 와 같은 구조 — 전역 토큰만 쓰도록 바꿔서 이쪽으로 가져옴.
+// 로딩 / 오류 / 빈 화면 3분기 공용 박스. 공개·관리자 화면이 같이 쓴다.
+// 관리자 전용이던 AdminStateBox 는 이 파일과 스타일이 완전히 같았고 기본 문구만 달라서 지웠다 —
+// 관리자 화면은 문구를 전부 직접 넘긴다(이 파일의 기본값은 공개 화면 문구다).
 const DEFAULT_MESSAGE = {
   loading: "데이터를 불러오는 중입니다",
   error: "데이터를 받지 못했습니다. 잠시 후 다시 시도해 주세요.",

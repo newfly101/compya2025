@@ -8,7 +8,7 @@ import com.dawne.com2usbaseball.domain.coupon.service.AdminCouponService;
 import com.dawne.com2usbaseball.domain.coupon.service.CouponUserService;
 import com.dawne.com2usbaseball.domain.event.service.EventAdminService;
 import com.dawne.com2usbaseball.domain.event.service.EventUserService;
-import com.dawne.com2usbaseball.domain.fun.historyMode.service.FunHistoryModeService;
+import com.dawne.com2usbaseball.domain.fun.historyLegend.service.FunHistoryLegendService;
 import com.dawne.com2usbaseball.domain.fun.legendStat.service.FunLegendStatService;
 import com.dawne.com2usbaseball.domain.fun.mileage.service.MileageService;
 import com.dawne.com2usbaseball.domain.fun.playerCard.service.PlayerCardService;
@@ -48,7 +48,7 @@ public class CacheSyncServiceImpl implements CacheSyncService {
     private final PlayerCardService playerCardService;
     private final PlayerSkillService playerSkillService;
     private final FunLegendStatService funLegendStatService;
-    private final FunHistoryModeService funHistoryModeService;
+    private final FunHistoryLegendService funHistoryLegendService;
     private final QuizAdminService quizAdminService;
     private final QuizUserService quizUserService;
     private final EventAdminService eventAdminService;
@@ -80,7 +80,7 @@ public class CacheSyncServiceImpl implements CacheSyncService {
                         // 하나만 비우면 능력치는 새 값, 구종은 옛 값처럼 화면이 어긋나 함께 묶는다.
                         false, this::refillLegendStat),
                 new TargetDef("historyRound", "히스토리 모드", "히스토리 모드 라운드 + 로스터",
-                        false, funHistoryModeService::getAllRounds),
+                        false, funHistoryLegendService::getAllRounds),
                 new TargetDef("quiz", "퀴즈", "퀴즈 목록(어드민/최신 노출)",
                         false, this::refillQuiz),
                 new TargetDef("events", "이벤트", "외부 이벤트 목록(어드민/공개)",

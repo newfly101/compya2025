@@ -39,8 +39,8 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 | 입력 | 출처 | 사용 § |
 |------|------|--------|
-| analysis.md | `docs/domain/{feature}/develop/analysis.md` | § 1 (기능 분해) / § 3 (BE 명세) / § 5 (cross-domain 정합 — BE 측만) |
-| decisions.log | `docs/domain/{feature}/develop/decisions.log` | 가정값 확인 |
+| analysis.md | `.claude/.progress/<branch>/analysis.md` | § 1 (기능 분해) / § 3 (BE 명세) / § 5 (cross-domain 정합 — BE 측만) |
+| decisions.log | `.claude/.progress/<branch>/decisions.log` | 가정값 확인 |
 | 진행 모드 | 메인 어시스턴트 지정 | "전체" / "FN-N부터" / "FN-N 만" |
 
 ---
@@ -49,7 +49,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 ```
 1. analysis.md Read (§ 1 / § 3 / § 5 BE 측)
-2. be-history.md 존재 확인 → 없으면 신규 생성 (docs/domain/{feature}/develop/)
+2. be-history.md 존재 확인 → 없으면 신규 생성 (.claude/.progress/<branch>/)
 3. FOR EACH FN (FN-1부터 순차):
    3-1. 골격 연결
         - Controller / Service / DTO / Mapper interface skeleton
@@ -69,7 +69,8 @@ tools: Read, Write, Edit, Glob, Grep, Bash
         - 실패 (1~2회) → 수정 후 3-3 재실행
         - 실패 (3회) → [미해결] 마크 + 3-5
    3-5. history "{기능명} 완료" 또는 "{기능명} 미해결" 기록
-4. 전체 종료 → 보고
+4. 전체 종료 → `docs/features/<f>/history.md` 맨 위에 항목 1개 직접 추가 (`.claude/templates/history-entry.md`, be-history.md 요약)
+5. 보고
 ```
 
 ⭐ 사용자 input 받기 위해 멈춤 X. 모든 결정은 `analysis.md` / `decisions.log` 의 가정값 사용.
@@ -140,13 +141,13 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 ### 6.5 history 기록
 
-`docs/domain/{feature}/develop/be-history.md` 에 한 줄 append.
+`.claude/.progress/<branch>/be-history.md` 에 한 줄 append.
 
 ---
 
 ## 7. be-history.md 작성 규칙 (한글 자연어 강제)
 
-**경로**: `docs/domain/{feature}/develop/be-history.md`
+**경로**: `.claude/.progress/<branch>/be-history.md`
 
 ### 좋은 예
 
@@ -221,6 +222,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 - [ ] 컴파일 통과 (`./gradlew compileJava`)
 - [ ] mapper XML namespace = Mapper interface 패키지 + 클래스명 일치
 - [ ] decisions.log 신규 항목 있으면 append
+- [ ] `docs/features/<f>/history.md` 맨 위 항목 1개 직접 추가 완료
 
 ---
 

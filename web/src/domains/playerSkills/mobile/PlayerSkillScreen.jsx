@@ -12,6 +12,7 @@ import {
   isGradeAvailableInList,
 } from "@/domains/playerSkills/config/skillsUtils.js";
 import SkillItem from "./components/skillItem/SkillItem.jsx";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
@@ -159,16 +160,9 @@ const PlayerSkillScreen = () => {
       </div>
 
       {error && !loaded ? (
-        <div className={styles.stateBox}>
-          <p className={styles.stateError}>{error}</p>
-          <button type="button" className={styles.retryBtn} onClick={retry}>
-            다시 시도
-          </button>
-        </div>
+        <StateBox status="error" message={error} onRetry={retry} />
       ) : loading && !loaded ? (
-        <div className={styles.stateBox}>
-          <p className={styles.stateText}>불러오는 중…</p>
-        </div>
+        <StateBox status="loading" message="불러오는 중…" />
       ) : list.length === 0 ? (
         <div className={styles.empty}>조건에 맞는 스킬이 없습니다. 검색어나 필터를 확인해보세요.</div>
       ) : (

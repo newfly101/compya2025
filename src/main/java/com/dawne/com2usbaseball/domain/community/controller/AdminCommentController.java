@@ -5,10 +5,12 @@ import com.dawne.com2usbaseball.domain.community.dto.request.ChangeCommentVisibl
 import com.dawne.com2usbaseball.domain.community.dto.response.CommentResponse;
 import com.dawne.com2usbaseball.domain.community.service.comment.AdminCommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/comments")
 public class AdminCommentController {
 

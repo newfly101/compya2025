@@ -31,7 +31,7 @@ const EventCard = ({ event, showDetail = false, isExpired = false }) => {
         <p className={styles.title}>{event.title}</p>
         {showDetail &&
           <p className={styles.date}>
-            📅 {event.startAt} ~ {event.expireAt}
+            📅 {event.startAt?.slice(0, 16)} ~ {event.expireAt?.slice(0, 16)}
           </p>
         }
         {isExpired

@@ -21,7 +21,7 @@
   display: flex;
   flex: none;
   gap: 2px;
-  padding: 3px;
+  padding: $space-1;
   border: 1px solid var(--color-border-strong);
   border-radius: $radius-lg;
   background: var(--color-bg-deep);
@@ -33,8 +33,8 @@
     background: transparent;
     color: var(--color-text-muted);
     font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: $font-size-13;
+    font-weight: $font-weight-semibold;
     white-space: nowrap;
     cursor: pointer;
 
@@ -58,7 +58,7 @@
     background: var(--color-bg-deep);
     color: var(--color-text-primary);
     font-family: inherit;
-    font-size: 14px;
+    font-size: $font-size-15;
 
     &::placeholder {
       color: var(--color-text-muted);
@@ -84,30 +84,30 @@
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: start;
-  gap: 5px;
+  gap: $space-1;
 }
 
 .posRows {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: $space-1;
 }
 
 .posRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: $space-1;
 }
 
 .chip {
-  padding: 5px 9px;
+  padding: $space-1 $space-2;
   border: 1px solid var(--color-border-strong);
   border-radius: $radius-full;
   background: var(--color-bg-card);
   color: var(--color-text-muted);
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: $font-size-12;
+  font-weight: $font-weight-semibold;
   white-space: nowrap;
   cursor: pointer;
 
@@ -140,11 +140,11 @@
   align-items: center;
   gap: 6px;
   color: var(--color-text-muted);
-  font-size: 13px;
+  font-size: $font-size-13;
 
   b {
     color: var(--color-text-primary);
-    font-weight: 700;
+    font-weight: $font-weight-bold;
   }
 }
 
@@ -152,14 +152,14 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 9px 4px 6px;
+  padding: 4px $space-2 4px 6px;
   border: 1px solid var(--color-brand-dark);
   border-radius: $radius-full;
   background: var(--color-mileage-accent-bg);
   color: var(--color-mileage-chip-on-text);
   font-family: inherit;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: $font-size-12;
+  font-weight: $font-weight-bold;
   cursor: pointer;
 }
 
@@ -172,8 +172,8 @@
   border-radius: 50%;
   background: var(--color-brand-dark);
   color: var(--color-bg-deepest);
-  font-size: 10px;
-  font-weight: 700;
+  font-size: $font-size-10;
+  font-weight: $font-weight-bold;
 }
 
 .sortLabel {
@@ -183,7 +183,7 @@
   background: none;
   color: var(--color-text-muted);
   font-family: inherit;
-  font-size: 12px;
+  font-size: $font-size-12;
   white-space: nowrap;
   cursor: pointer;
 }
@@ -215,7 +215,7 @@
 .crank {
   width: 24px;
   color: var(--color-text-muted);
-  font-size: 11px;
+  font-size: $font-size-11;
 }
 
 .clegend {
@@ -236,26 +236,26 @@ td.cname {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-weight: 700;
+  font-weight: $font-weight-bold;
 }
 
 .cteam {
   width: 50px;
   color: var(--color-text-secondary);
-  font-size: 12.5px;
+  font-size: $font-size-12;
 }
 
 .cyear {
   width: 52px;
   color: var(--color-mileage-accent-text);
-  font-weight: 700;
+  font-weight: $font-weight-bold;
 }
 
 .cpos {
   overflow: hidden;
   width: 56px;
   color: var(--color-text-secondary);
-  font-size: 12.5px;
+  font-size: $font-size-12;
   text-overflow: ellipsis;
   // 겸업 표기("1B/DH")가 주포지션 단독 표기보다 길어 칸 폭이 밀릴 수 있어 말줄임 처리한다.
 }
@@ -263,7 +263,7 @@ td.cname {
 .nameInner {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: $space-1;
 }
 
 .nameDot {
@@ -287,9 +287,9 @@ td.cname {
 }
 
 .stateCell {
-  padding: 40px 0;
+  padding: $space-10 0;
   color: var(--color-text-muted);
-  font-size: 14px;
+  font-size: $font-size-15;
 }
 
 .retryBtn {
@@ -301,7 +301,7 @@ td.cname {
   background: var(--color-bg-card);
   color: var(--color-text-secondary);
   font-family: inherit;
-  font-size: 12.5px;
+  font-size: $font-size-12;
   cursor: pointer;
 }
 
@@ -310,12 +310,12 @@ td.cname {
 .overlay {
   position: fixed;
   inset: 0;
-  z-index: 100;
+  z-index: $z-modal;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--color-overlay-strong);
 }
 
 .helpCard {
@@ -331,14 +331,14 @@ td.cname {
 .helpTitle {
   margin: 0 0 6px;
   color: var(--color-text-primary);
-  font-size: 16px;
-  font-weight: 800;
+  font-size: $font-size-17;
+  font-weight: $font-weight-bold;
 }
 
 .helpSubtitle {
   margin: 0 0 14px;
   color: var(--color-text-muted);
-  font-size: 13px;
+  font-size: $font-size-13;
 }
 
 .helpList {
@@ -354,15 +354,15 @@ td.cname {
 
   dt {
     color: var(--color-mileage-accent-text);
-    font-size: 13px;
-    font-weight: 700;
+    font-size: $font-size-13;
+    font-weight: $font-weight-bold;
     white-space: nowrap;
   }
 
   dd {
     margin: 0;
     color: var(--color-text-secondary);
-    font-size: 13px;
+    font-size: $font-size-13;
     line-height: 1.5;
   }
 }
@@ -375,7 +375,7 @@ td.cname {
   background: var(--color-mileage-list-row-hover);
   color: var(--color-text-primary);
   font-family: inherit;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: $font-size-15;
+  font-weight: $font-weight-bold;
   cursor: pointer;
 }

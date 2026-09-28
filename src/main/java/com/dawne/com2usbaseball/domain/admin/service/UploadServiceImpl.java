@@ -90,6 +90,7 @@ public class UploadServiceImpl implements UploadService {
             s3Client.putObject(request, RequestBody.fromBytes(content));
         } catch (Exception e) {
             // PutObject 는 원자적이라 실패해도 기존 객체는 그대로 남는다 — 사용자는 이전 이미지를 계속 본다(깨지지 않음)
+            log.error("S3 프로필 이미지 업로드 실패 key={}", key, e);
             throw new BaseException(UploadMessages.UPLOAD_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -153,6 +154,7 @@ public class UploadServiceImpl implements UploadService {
         try {
             s3Client.putObject(request, RequestBody.fromBytes(content));
         } catch (Exception e) {
+            log.error("S3 업로드 실패 key={}", key, e);
             throw new BaseException(UploadMessages.UPLOAD_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

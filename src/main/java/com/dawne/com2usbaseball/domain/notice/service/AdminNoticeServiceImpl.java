@@ -10,6 +10,7 @@ import com.dawne.com2usbaseball.domain.notice.enums.NoticeMessages;
 import com.dawne.com2usbaseball.domain.notice.enums.NoticeSource;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.notice.repository.AdminNoticeRepository;
+import com.dawne.com2usbaseball.common.support.cache.CacheEvictAfterCommit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -43,13 +44,16 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
         return noticeMapStruct.toResponseList(notices);
     }
 
-    // 운영자가 DB 에 직접 반영한 변경사항을 즉시 앱에 반영하기 위해 공지 관련 캐시를 전부 비우고 최신 목록을 다시 조회
-    // notice(admin/public)뿐 아니라 noticeDetail(id별 admin/public)도 함께 비운다 — 하나라도 빠지면 상세는 여전히 옛 값이 보인다
+    // 운영자가 DB 에 직접 반영한 변경사항을 즉시 앱에 반영하기 위해 공지 관련 캐시를 비우고 최신 목록을 다시 조회
+    // notice 캐시는 'public' 키 하나만 실제로 쓰인다(어드민 목록 getAdminNoticeList 는 캐시 없이 항상 DB 직접 조회) —
+    // allEntries 대신 그 키만 명시로 비워 범위를 넓히지 않는다
+    // noticeDetail 은 공지 id 별로 키가 갈려(#noticeId + '_admin'/'_public') 전체를 알 수 없으므로 allEntries 유지 —
+    // 하나라도 빠지면 상세는 여전히 옛 값이 보인다
     // 자기호출(getAdminNoticeList) 시 AOP 프록시를 우회해 캐시가 안 타므로 repository 를 직접 호출한다
     @Override
     @Transactional(readOnly = true)
     @Caching(evict = {
-            @CacheEvict(value = "notice", allEntries = true),
+            @CacheEvict(value = "notice", key = "'public'"),
             @CacheEvict(value = "noticeDetail", allEntries = true)
     })
     public List<NoticeResponse> refreshNotices() {
@@ -60,24 +64,22 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     @Override
     @Cacheable(value = "noticeDetail", key = "#noticeId + '_admin'")
     public NoticeResponse getAdminNoticeDetail(Long noticeId) {
-        // Repository에서 null 시 BaseException 처리
-        NoticeEntity notice = adminNoticeRepository.getAdminNoticeDetail(noticeId);
+        NoticeEntity notice = adminNoticeRepository.getAdminNoticeDetail(noticeId)
+                .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
         return noticeMapStruct.toResponse(notice);
     }
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
     public NoticeResponse createNotice(NoticeRequest request) {
-        validateSourcePayload(request);
+        // 살균을 먼저 하고 그 결과를 검증한다 — 허용 태그가 하나도 없는 본문은 살균 후 빈 문자열이
+        // 되는데, 빈 문자열은 DB CHECK(content IS NOT NULL)를 통과해 본문 없는 공지로 저장된다.
+        String content = sanitizeHtml(request.content());
+        validateSourcePayload(request.source(), content, request.externalUrl());
 
         NoticeEntity notice = noticeMapStruct.toEntity(request);
-        if (notice.getContent() != null) {
-            notice.setContent(sanitizeHtml(notice.getContent()));
-        }
+        notice.setContent(content);
 
         // 어드민 글쓰기 화면에 발행일 입력이 없어 null 로 들어오면 등록 시각으로 채운다
         if (notice.getPublishedAt() == null) {
@@ -96,24 +98,18 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", keyExpressions = {"#noticeId + '_admin'", "#noticeId + '_public'"})
     public NoticeResponse updateNotice(NoticeRequest request, Long noticeId) {
-        validateSourcePayload(request);
+        // 생성과 동일하게 살균 → 검증 순서(살균 후 빈 본문을 걸러낸다)
+        String content = sanitizeHtml(request.content());
+        validateSourcePayload(request.source(), content, request.externalUrl());
 
         NoticeEntity notice = adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
 
         noticeMapStruct.updateEntity(request, notice);
-
-        // 수정 시에도 새니타이징
-        if (notice.getContent() != null) {
-            notice.setContent(sanitizeHtml(notice.getContent()));
-        }
+        notice.setContent(content);
 
         if (!adminNoticeRepository.updateNotice(notice)) {
             throw new BaseException(NoticeMessages.NOTICE_UPDATED_FAILED, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -124,12 +120,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", keyExpressions = {"#noticeId + '_admin'", "#noticeId + '_public'"})
     public void updateNoticeVisible(Long noticeId, Boolean isVisible) {
         // 존재 여부 먼저 확인
         adminNoticeRepository.findById(noticeId)
@@ -142,12 +134,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", keyExpressions = {"#noticeId + '_admin'", "#noticeId + '_public'"})
     public void updateNoticePinned(Long noticeId, Boolean isPinned) {
         adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -159,12 +147,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
 
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_admin'"),
-            @CacheEvict(value = "noticeDetail", key = "#noticeId + '_public'")
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", keyExpressions = {"#noticeId + '_admin'", "#noticeId + '_public'"})
     public void deleteNotice(Long noticeId) {
         adminNoticeRepository.findById(noticeId)
                 .orElseThrow(() -> new BaseException(NoticeMessages.NOTICE_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -178,11 +162,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     // 상세 캐시는 다건이라 개별 key evict 대신 noticeDetail 전체를 비운다(allEntries)
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", allEntries = true)
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", allEntries = true)
     public BulkOperationResponse bulkDeleteNotices(List<Long> ids) {
         List<Long> requestedIds = normalizeIds(ids);
         if (requestedIds.isEmpty()) {
@@ -201,11 +182,8 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
     // 일괄 노출 여부 변경 — 위와 동일한 부분 실패 처리 방식
     @Override
     @Transactional
-    @Caching(evict = {
-            @CacheEvict(value = "notice", key = "'admin'"),
-            @CacheEvict(value = "notice", key = "'public'"),
-            @CacheEvict(value = "noticeDetail", allEntries = true)
-    })
+    @CacheEvictAfterCommit(cacheName = "notice", keys = {"admin", "public"})
+    @CacheEvictAfterCommit(cacheName = "noticeDetail", allEntries = true)
     public BulkOperationResponse bulkUpdateNoticesVisible(List<Long> ids, Boolean isVisible) {
         List<Long> requestedIds = normalizeIds(ids);
         if (requestedIds.isEmpty()) {
@@ -228,26 +206,26 @@ public class AdminNoticeServiceImpl implements AdminNoticeService {
         return ids.stream().filter(java.util.Objects::nonNull).distinct().toList();
     }
 
-    // DB CHECK 제약 미러링
-    private void validateSourcePayload(NoticeRequest request) {
-        if (request.source() == null) {
+    // DB CHECK 제약 미러링 — content 는 살균을 거친 값을 넘긴다(호출부 참고)
+    private void validateSourcePayload(NoticeSource source, String content, String externalUrl) {
+        if (source == null) {
             throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
         }
 
-        if (request.source() == NoticeSource.INTERNAL) {
-            if (request.content() == null || request.content().isBlank()) {
+        if (source == NoticeSource.INTERNAL) {
+            if (content == null || content.isBlank()) {
                 throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
-            if (request.externalUrl() != null && !request.externalUrl().isBlank()) {
+            if (externalUrl != null && !externalUrl.isBlank()) {
                 throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
         }
 
-        if (request.source() == NoticeSource.EXTERNAL) {
-            if (request.externalUrl() == null || request.externalUrl().isBlank()) {
+        if (source == NoticeSource.EXTERNAL) {
+            if (externalUrl == null || externalUrl.isBlank()) {
                 throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
-            if (request.content() != null && !request.content().isBlank()) {
+            if (content != null && !content.isBlank()) {
                 throw new BaseException(NoticeMessages.NOTICE_INVALID_SOURCE_PAYLOAD, HttpStatus.BAD_REQUEST);
             }
         }

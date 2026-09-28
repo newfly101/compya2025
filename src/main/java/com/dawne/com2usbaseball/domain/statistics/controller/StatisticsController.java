@@ -3,6 +3,7 @@ package com.dawne.com2usbaseball.domain.statistics.controller;
 import com.dawne.com2usbaseball.domain.statistics.dto.request.StatisticSupportClickRequest;
 import com.dawne.com2usbaseball.domain.statistics.service.StatisticsService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +25,7 @@ public class StatisticsController {
     private final StatisticsService statisticsService;
 
     @PostMapping("/support-click")
-    public ResponseEntity<Void> recordSupportClick(@RequestBody(required = false) StatisticSupportClickRequest request,
+    public ResponseEntity<Void> recordSupportClick(@Valid @RequestBody(required = false) StatisticSupportClickRequest request,
                                                      HttpServletRequest httpRequest) {
         Long userId = (Long) httpRequest.getAttribute("userId");
         statisticsService.recordSupportClick(request, userId);

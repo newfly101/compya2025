@@ -16,8 +16,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 조회 전용. 캐시를 비우는 경로가 없어 SQL 로 값을 고쳤으면 서버를 재시작해야 한다
- * (운영 중 갱신이 필요해지면 @CacheEvict 관리자 엔드포인트를 추가하면 된다).
+ * 조회 전용. TTL 없는 메모리 캐시(spring.cache.type=simple)라 SQL 로 값을 고쳐도
+ * 자동으로는 반영되지 않는다 — 서버 재시작이 아니라, 어드민 화면의 캐시 동기화
+ * (CacheSyncServiceImpl 가 legendStat·legendPitchType 을 함께 비우고 다시 채움)를
+ * 눌러야 반영된다.
  */
 @Service
 @RequiredArgsConstructor

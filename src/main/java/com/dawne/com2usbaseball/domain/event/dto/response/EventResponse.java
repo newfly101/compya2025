@@ -9,9 +9,9 @@ public record EventResponse(
         Long id,
         EventType eventType,
         String title,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime startAt,
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         LocalDateTime expireAt,
         String imageUrl,
         String externalLink,

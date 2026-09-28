@@ -1,197 +1,102 @@
 # Multi-Feature Parallel Workflow
 
-> 다중 도메인(feature) 한 세션 병렬 처리. 메인 어시스턴트가 절차 따라 dispatch.
-> 본 프로젝트: **B2C 단일 권한 / mobile-first 고정**. Role / SuperAdmin 분기 없음.
-
----
+> 다중 도메인(feature) 한 세션 병렬 처리. 메인 어시스턴트가 절차 따라 dispatch. B2C 단일 권한 · mobile-first 고정.
+> 경로는 `rules/common/docs-policy.md` § 8 을 따른다 — `docs/domain/**` 는 폐지됐다.
 
 ## 1. 목적
 
 ```
-도메인1 (예: coupons): planner → designer → analyze → BE/FE → integrate  ┐
-도메인2 (예: events):  planner → designer → analyze → BE/FE → integrate  ├─ 병렬
-도메인3 (예: notices): planner → designer → analyze → BE/FE → integrate  ┘
+coupons: planner → designer → analyze → BE/FE → integrate  ┐
+events:  planner → designer → analyze → BE/FE → integrate  ├─ 병렬
+notices: planner → designer → analyze → BE/FE → integrate  ┘
 ```
 
-파일 충돌 시 → lock 기반 대기 → 해제 후 진행.
-
----
+세션 = worktree = 브랜치 = 기능 하나가 기본(`rules/common/git-scope.md` § 1)이다. 각 feature 는 자기 worktree(`claude --worktree {feature}`)·브랜치 `feat/{feature}-{요약}` 에서 진행하고 작업 문서는 `.claude/.progress/<branch>/` 에 둔다. 코드 파일은 worktree 가 격리하므로 lock 은 § 5 의 **저장소 밖 공유 자원**(Figma 파일)에만 쓴다.
 
 ## 2. 사전 조건
 
 | 조건 | 확인 |
 |---|---|
-| `.claude/agents/` agent 존재 | `ls .claude/agents/` |
-| `.claude/conventions/file-locks.md` 존재 | `ls .claude/conventions/file-locks.md` |
-| `.claude/.locks/` 폴더 | 없으면 `mkdir -p .claude/.locks` |
-| stale lock 검사 | § 7 참조 |
-
----
+| agent 9개 | `ls .claude/agents/` |
+| `.claude/.locks/` | 없으면 생성. stale lock 검사 (§ 7) |
+| 브랜치 | feature 마다 `master` 에서 분기 (`claude --worktree {feature}`). master 직접 작업 금지 (CLAUDE.md § 3-5) |
 
 ## 3. 사용자 input
 
-```
-"multi-parallel 워크플로로 coupons, events, notices 진행해줘"
-```
-
-추출:
-- features: `[coupons, events, notices]`
-- 기획 모드: `planner-lite` (default) 또는 `planner-division` (명시 시)
-
----
+`"multi-parallel 워크플로로 coupons, events, notices 진행해줘"` → features `[coupons, events, notices]`, 기획 모드 `planner-lite`(default) 또는 `planner-division`(명시 시), `Figma 렌더: skip` 옵션.
 
 ## 4. 전체 흐름 (5 Phase)
 
-```
-Phase 1 — 기획         (planner-lite | planner-division)
-Phase 2 — 디자인       (designer-render, 기존 screen-spec 있으면 개선)
-Phase 3 — 분석         (developer-analyze)
-Phase 4 — 개발         (backend-developer + frontend-developer 병렬)
-Phase 5 — 통합 검증    (developer-integrate)
-```
+| Phase | agent | 산출 (feature 마다) | 영속 여부 |
+|---|---|---|---|
+| 1 기획 | `planner-lite` \| `planner-division` | `docs/features/<f>/spec.md` · `.progress/<b>/{tasks.md,decisions.log}` | spec 영속 |
+| 2 디자인 | `designer-render` | `docs/features/<f>/design.md` · Figma · `.progress/<b>/design-report.md` | design 영속 |
+| 3 분석 | `developer-analyze` | `.progress/<b>/analysis.md` · `decisions.log` append | 작업 문서 |
+| 4 개발 | `backend-developer` + `frontend-developer` 병렬 | 코드 · `.progress/<b>/{be,fe}-history.md` | 작업 문서 |
+| 5 통합 | `developer-integrate` | `.progress/<b>/verification.md` → 마지막 § 를 `docs/features/<f>/history.md` 맨 위에 | history 영속 |
 
----
+brief 는 `templates/dispatch-brief.md`, Read 할 rules 는 `agents/README.md` § 1.
 
-## 5. 도메인별 산출물 위치
+## 5. 공용 파일 — worktree 는 격리, Figma 만 순차
 
-| 단계 | 위치 |
-|---|---|
-| 기획 | `docs/domain/{feature}/prd/*.md` |
-| 디자인 | `docs/domain/{feature}/design/screen-spec.md` |
-| 분석 | `docs/domain/{feature}/develop/analysis.md` |
-| 개발 BE/FE history | `docs/domain/{feature}/develop/{be,fe}-history.md` |
-| 통합 검증 | `docs/domain/{feature}/develop/integrate-report.md` |
-| 통합 요약 | `docs/domain/integrate-summary.md` |
-| 공용 decision log | `docs/domain/_decision_log.md` (append-only) |
-
-⭐ 모든 산출물은 `docs/domain/{feature}/**` 하위. `docs/build/`, `docs/{Role}/` 사용 X.
-
----
-
-## 6. Phase 별 충돌 영역
-
-| Phase | 도메인 전용 (병렬 OK) | 공용 (순차) |
+| Phase | feature 전용 (병렬 OK, worktree 로 격리) | 공용 (worktree 밖 · lock `shared_files`) |
 |---|---|---|
-| 1 기획 | `docs/domain/{feature}/prd/**` | — |
-| 2 디자인 | `docs/domain/{feature}/design/**` | Figma 파일 `VCVQzOpSIpwpZw11gxG7N1` 페이지 `0:1` (MCP `use_figma` 직접 반영 시만, 순차 필요) |
-| 3 분석 | `docs/domain/{feature}/develop/analysis.md` | `docs/domain/_decision_log.md` (append-only) |
-| 4 BE | `src/main/java/.../{feature}/**`, `src/main/resources/mapper/{feature}/**` | `build.gradle`, `application.properties` |
-| 4 FE | `web/src/domains/{feature}/**` | `web/src/app/router/routes/*.jsx`, `web/src/app/router/config/{routeMeta,routePath}.js`, `web/src/app/store/store.js`, `web/package.json` |
-| 5 통합 | `docs/domain/{feature}/develop/integrate-report.md` | — (read-only) |
+| 1 | `docs/features/<f>/spec.md` · `.progress/<b>/**` | — |
+| 2 | `docs/features/<f>/design.md` | Figma 파일 `VCVQzOpSIpwpZw11gxG7N1` 페이지 `0:1` (`use_figma` 쓰기는 한 번에 하나) |
+| 3 | `.progress/<b>/analysis.md` | — (`decisions.log` 는 브랜치별이라 충돌 없음) |
+| 4 BE | `src/main/java/.../domain/{f}/**` · `resources/mapper/{site\|fun}/{f}/**` · `build.gradle` · `application*.properties` (각자 worktree 사본) | — |
+| 4 FE | `web/src/domains/{f}/**` · `web/src/app/router/routes/*.jsx` · `router/config/{routeMeta,routePath}.js` · `app/store/store.js` · `web/package.json` (각자 worktree 사본) | — |
+| 5 | `.progress/<b>/verification.md` · `docs/features/<f>/history.md` | `CHANGELOG.md` `[Unreleased]` (메인이 머지 후 기록) |
 
----
+⚠️ FE 공용 파일(routes/store/config)도 worktree 마다 독립 사본이라 병렬 작업 중 충돌이 없다. 실제 병합은 각 feature 브랜치가 `master` 로 PR 머지될 때 git 이 처리한다.
 
-## 7. Stale Lock 처리 (세션 시작 시)
+## 6. Phase 4 FE 공용 파일 (각자 worktree 안에서)
 
-```
-1. .claude/.locks/ Glob
-2. 각 lock Read → started 시각 확인
-3. 30분+ 경과 → 사용자에게 보고:
-   "stale lock 감지: {feature}__{phase} (started: {시각})
-    이전 세션 비정상 종료일 수 있습니다. 삭제 후 진행할까요?"
-4. 사용자 "예" → 삭제 / "아니오" → 종료
-```
+frontend-developer 는 자기 worktree 안의 FE 공용 파일(§ 5)에 자기 feature 의 route/reducer 만 추가한다. 다른 feature 의 worktree 는 보이지 않으므로 사전 일괄 등록이 필요 없다.
 
----
+1. `analysis.md` FE 명세 Read
+2. `{Public|User|Admin}Routes.jsx` lazy import + Route · `routeMeta.js` · `routePath.js` · `store.js` reducer — 패턴은 `rules/fe/fe-convention.md` § 6
+3. PR 머지 순서가 늦은 feature 는 머지 시 충돌 나면 그 자리에서 해소 (git 표준 병합)
 
-## 8. Phase 4 사전 통합 (공용 파일)
+## 7. Stale Lock (세션 시작 시)
 
-⭐ **default 전략**: 메인이 Phase 4 진입 전 FE 공용 파일 (router/store/routeMeta/routePath) 에 모든 features 의 route/reducer 일괄 추가. 각 frontend-developer 는 공용 파일 건드리지 않음.
+`.claude/.locks/` Glob → `started` 30분+ 경과 → 사용자 보고 "stale lock {feature}__{phase} (started …). 삭제 후 진행?" → 예/아니오. 상세 `conventions/file-locks.md` § 5.
 
-```
-1. 모든 features 의 analysis.md 읽기 (FE 명세)
-2. 메인이 직접 Edit:
-   - PublicRoutes.jsx / UserRoutes.jsx / AdminRoutes.jsx 에 lazy import + Route 추가
-   - routeMeta.js 에 TopBar 메타 추가
-   - routePath.js 에 경로 상수 추가
-   - store.js 에 reducer 등록
-3. 각 frontend-developer brief: "공용 파일 (router/store/routeMeta/routePath) 수정 금지 — 이미 등록됨"
-```
+## 8. 진행 로그
 
-상세 FE 코드 패턴: [docs/convention/frontend.md](../../docs/convention/frontend.md)
+- 메인: 요청 수신 시 `.claude/.progress/claude-YYYYMMDD.log` 에 `# === HH:MM 사용자 요청: multi-parallel {features} ===` + `(0/M)`. Phase·feature 전환마다 1줄
+- sub-agent: Bash 있는 agent(BE/FE/render/integrate)는 progress.log + 메인 Monitor. 완료 시 로그 흡수 + 원본 삭제 (`agent-progress-main.md` § 2)
 
----
+## 9. 보고
 
-## 9. 보고 템플릿
-
-### Phase 진행 중 (간결)
+진행 중 (feature × Phase 한 줄씩 + 활성 lock / 대기 큐 수). 전체 완료 시:
 
 ```
-🔄 진행:
-- coupons: Phase 4 (BE / FE 진행 중)
-- events:  Phase 3 (analyze)
-- notices: Phase 2 (designer 완료, Phase 3 대기 — decision_log lock)
-
-📍 활성 lock: 5건 / ⏳ 대기 큐: 1건
+✅ multi-parallel 완료 — feature {N}개
+- coupons: ✅ / [미해결] {n}   - events: ✅   - notices: ⚠️ Phase 4 일부 미해결
+📂 docs/features/{f}/history.md 항목 {N}개 · PR {N}개 (본문에 analysis·verification 요약)
+🔴 결정 대기 {N} (각 .progress/<b>/decisions.log)
 ```
 
-### 전체 완료
-
-```
-✅ Multi-Feature Parallel Workflow 완료
-
-📊 도메인: {N}개
-- coupons: ✅ 완료 / [미해결] {n}
-- events:  ✅ 완료
-- notices: ⚠️ Phase 4 일부 미해결
-
-📂 산출물:
-- docs/domain/integrate-summary.md
-- docs/domain/{feature}/develop/integrate-report.md 각
-
-🔴 검토 권장:
-- _decision_log.md: {N}건 위험 항목
-- 미해결: {N}건
-```
-
----
-
-## 10. 실패 / 중단 처리
+## 10. 실패 / 중단
 
 | 케이스 | 처리 |
 |---|---|
-| Agent 실패 | lock 삭제 + 해당 feature/phase [실패] 마크 + 다른 features 진행 |
+| agent 실패 | lock 삭제 + [실패] 마크 + 다른 feature 진행. progress.log 에 `실패` 1줄 |
 | 사용자 중단 | 진행 중 dispatch 종료 + 모든 lock 삭제 + 부분 보고 |
-| Phase 2 실패 | Phase 3 진행 가능 (analysis 시 screen-spec 없음 인지) |
-| Phase 3 실패 | Phase 4 중단 (analysis 필수) |
-| Phase 4 BE 성공 / FE 실패 | Phase 5 진행 (integrate-report 미해결 보고) |
+| Phase 2 실패 | Phase 3 진행 (analysis 가 design.md 없음을 decisions.log 에 기록) |
+| Phase 3 실패 | Phase 4 중단 |
+| Phase 4 BE 성공 / FE 실패 | Phase 5 진행 (verification 에 미해결 기록) |
+| Phase 5 완료 | 브랜치별 `.progress/<b>/` 삭제 커밋 → PR (본문에 analysis·verification 핵심) → 머지 |
 
----
+## 11. 명령 예시
 
-## 11. 명령어 예시
+`"multi-parallel coupons, events, notices"` · `"multi-parallel coupons / 기획: planner-division / Figma 렌더: skip"` · `"multi-parallel coupons Phase 4 부터 재실행"` · `".claude/.locks/ 30분 이상 lock 모두 삭제"`
 
-```
-# 기본
-"multi-parallel 워크플로로 coupons, events, notices 진행해줘"
+## 12. 메인 체크리스트
 
-# 옵션 명시
-"multi-parallel features: coupons, events / 기획: planner-division / Figma 렌더: skip"
-
-# 부분 재실행
-"multi-parallel coupons Phase 4 부터 재실행"
-
-# stale lock 정리
-".claude/.locks/ 30분 이상 lock 모두 삭제"
-```
-
----
-
-## 12. 메인 어시스턴트 체크리스트
-
-세션 시작:
-- [ ] `.claude/.locks/` 폴더 존재 확인
-- [ ] stale lock 검사
-- [ ] features 파싱
-
-Phase 1~5 공통:
-- [ ] dispatch 전 충돌 검사 ([file-locks.md](../conventions/file-locks.md))
-- [ ] lock 생성 → dispatch → 완료 → lock 삭제
-- [ ] 대기 큐 관리
-
-Phase 4 사전:
-- [ ] FE 공용 파일 (router/store/routeMeta/routePath) 사전 통합
-
-전체 종료:
-- [ ] 모든 lock 삭제 확인
-- [ ] `docs/domain/integrate-summary.md` 작성
-- [ ] 사용자 최종 보고
+- [ ] 세션 시작: `.locks/` 확인 · stale lock · features 파싱 · feature 별 worktree·브랜치 분기
+- [ ] Phase 공통: Figma 등 공유 자원만 dispatch 전 충돌 검사 → lock → brief(rules 명시) → dispatch → 완료 → lock 삭제 → 로그 1줄
+- [ ] Phase 4: FE 공용 파일은 각 worktree 안에서 frontend-developer 가 직접 등록 (§ 6)
+- [ ] Phase 5 후: history 항목 확인 · `CHANGELOG.md` `[Unreleased]` 판단 · `.progress/<b>/` 삭제 · PR
+- [ ] 전체 종료: lock 0건 확인 · 사용자 보고

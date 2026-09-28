@@ -8,20 +8,20 @@
 // (legendStats/historyLegend 도메인의 동일 계열 로컬 토큰과 같은 패턴).
 
 :root {
-  // 표 이동 글리프(↔/↕) · 범례 화살표 — 액센트 보라
-  --color-mileage-accent-text: #c4b5fd;
+  // 표 이동 글리프(↔/↕) · 범례 화살표 — 액센트 보라(historyLegend/legendStats와 값 동일해 공용 토큰 승격)
+  --color-mileage-accent-text: var(--color-accent-violet-text);
 
   // 액센트 버튼/칩 채움(주 버튼, 1등 추천 칩) — 보라 틴트
   --color-mileage-accent-bg: rgba(139, 92, 246, 0.16);
   --color-mileage-accent-bg-hover: rgba(139, 92, 246, 0.26);
-  --color-mileage-chip-on-text: #dcd3ff;
+  --color-mileage-chip-on-text: var(--color-chip-on-text);
 
   // 목표 셀/칩 — 호박색(기존 빨강에서 교체)
   --color-mileage-goal: #fbbf24;
   --color-mileage-goal-text: #1a1400;
 
-  // 현재 위치 표시 — 청록(기존 초록에서 교체)
-  --color-mileage-current: #5eead4;
+  // 현재 위치 표시 — 청록(기존 초록에서 교체, historyLegend/legendStats/admin과 값 동일해 공용 토큰 승격)
+  --color-mileage-current: var(--color-mint);
 
   // 표 히트맵 배경(rgba) 계산용 RGB 성분 — 액센트 보라로 교체(기존 골드).
   // 셀마다 알파값이 달라 인라인 style 에서 rgba() 로 조합해야 하므로 hex 대신 성분으로 노출한다.
@@ -39,4 +39,32 @@
   --color-mileage-list-row-hover: #1b1633;
   // 비활성 포지션 칩 텍스트 — 전역에 이 정도로 어두운 비활성 톤이 없어 신규
   --color-mileage-list-disabled: #4e4862;
+}
+
+// ── 밝은톤 ─────────────────────────────────────────────────────
+// 공용 토큰 참조(--color-mileage-accent-text / -current)는 전역에서 뒤집히므로 제외.
+:root[data-theme="light"] {
+  // 액센트 채움 — 흰 바닥에서 알파를 조금 낮춰야 같은 세기로 읽힌다
+  --color-mileage-accent-bg: rgba(124, 58, 237, 0.12);
+  --color-mileage-accent-bg-hover: rgba(124, 58, 237, 0.2);
+
+  // 선택된 칩 글자 — 전역 --color-chip-on-text 가 이 화면 칩 채움(옅은 틴트) 기준으로
+  // 교정되어(2026-09-28) 다크 참조만으로 밝은톤도 맞다. 로컬 재지정 제거.
+
+  // 목표 칩은 원래 "호박색 채움 + 어두운 글자" 라 밝은톤에서도 그 구조를 유지한다.
+  // 흰 바닥과 갈리도록 채움만 한 단계 진하게 내렸다.
+  --color-mileage-goal: #f59e0b;
+  --color-mileage-goal-text: #1a1400; // 채움 위 8.55:1
+
+  // 히트맵 성분 — 흰 바닥에서 알파 0.05~0.35 가 연보라로 읽히도록 한 단계 진한 보라로
+  --color-mileage-heat-rgb: 124, 58, 237;
+
+  // 발광(text-shadow) — 흰 바닥에서 밝은 보라/민트는 사라지므로 진한 쪽으로 뒤집는다
+  --color-mileage-glow: rgba(109, 74, 211, 0.35);
+  --color-mileage-glow-done: rgba(13, 148, 136, 0.35);
+
+  // 밝은톤 바닥(--color-bg-deepest #f2f0f7)과 대비가 거의 없어(1.01:1) hover 가 안 보이던
+  // 결함 수정(2026-09-27) — 바닥 대비 1.12:1(다크 바닥/hover 차와 동급)로 어둡게.
+  --color-mileage-list-row-hover: #e6e3f0;
+  --color-mileage-list-disabled: #8b8598; // 흰 면 3.56:1 — 비활성이라 본문 기준은 일부러 넘기지 않는다
 }

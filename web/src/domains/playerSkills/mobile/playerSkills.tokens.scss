@@ -12,7 +12,7 @@
   --color-ps-platinum-grad-start: #dbae31;
   --color-ps-platinum-grad-end: #cb9d25;
   --color-ps-platinum-border: #eccb63;
-  --color-ps-platinum-dot: #dcae32;
+  --color-ps-platinum-dot: #dbae31; // 그라데이션 시작값과 1px 오차로 갈렸던 것을 통일(2026-09-27)
 
   --color-ps-hero-grad-start: #3aa85c;
   --color-ps-hero-grad-end: #329750;
@@ -42,4 +42,31 @@
 
   // 값 없음("–") — 전역 text-muted(38% 화이트)보다 더 죽인 톤
   --color-ps-value-empty: #44445a;
+}
+
+// ── 밝은톤 ─────────────────────────────────────────────────────
+// 티어 색 16개(legend/platinum/hero/normal × grad-start/grad-end/border/dot)는 인게임
+// 등급 색 재현이라 밝은톤 값을 두지 않는다 — 게임 본편 색 체계 미확보(DESIGN.md § Grade).
+// 결과적으로 스킬 바(티어 판)는 밝은톤에서도 인게임 색 그대로 남는다. 그래서 그 판 위에
+// 얹히는 등급 박스는 "어두운 판 위" 전제를 그대로 유지한다 — 흰 글자 + 검은 반투명 채움.
+:root[data-theme="light"] {
+  // 티어 판이 안 바뀌므로 그 위 오버레이도 안 바꾼다(전부 덮는다는 규칙상 값만 명시).
+  --color-ps-grade-box-bg: rgba(0, 0, 0, 0.3);
+  --color-ps-grade-box-border: rgba(255, 255, 255, 0.4);
+
+  // 설명 박스 — 다크에선 카드(어두움)보다 밝게 해서 떠 보이게 했다. 밝은톤에선 카드가
+  // 이미 흰색에 가까워 같은 수를 쓸 수 없다. 방향을 뒤집어 카드보다 한 단계 눌린 면으로
+  // 구분을 낸다(글자색은 그대로 — 원래부터 밝은 면 위 어두운 글자였다).
+  --color-ps-desc-bg: #eeedf3;
+  --color-ps-desc-text: #1c1c24; // 14.54:1
+
+  // 설명 박스(밝은 면)용 증감 — 빨강만 흰 면 기준을 넘기게 한 단계 내렸다
+  --color-ps-up-light: #c2181f; // 5.24:1
+  --color-ps-down-light: #1f5fe0; // 4.78:1
+
+  // 수치표는 카드 위라 밝은톤에서 밝은 면이 된다 — 어두운 배경용 밝은 빨강/파랑을 뒤집는다
+  --color-ps-up-dark: #c81e2a; // 흰 카드 5.71:1
+  --color-ps-down-dark: #1d4ed8; // 흰 카드 6.70:1
+
+  --color-ps-value-empty: #918c9e; // 흰 카드 3.26:1 — "–" 자리표시라 본문 기준은 일부러 넘기지 않는다
 }

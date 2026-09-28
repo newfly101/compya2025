@@ -16,8 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * 조회 전용. 캐시를 비우는 경로가 없어 운영자가 DB(선수 카드/레전드 재료)를 직접 고치면
- * 서버를 재시작해야 반영된다.
+ * 조회 전용. 운영자가 DB(선수 카드/레전드 재료)를 직접 고치면, 어드민 캐시 동기화 화면에서
+ * 수동으로 이 캐시(playerCard/playerCardStat)를 비우고 다시 채워야 한다(CacheSyncServiceImpl,
+ * POST /api/admin/cache-sync/{targetId}/sync). 캐시에 만료 시간이 없어(spring.cache.type=simple)
+ * 그 동기화가 유일한 갱신 수단이다 — 자동 스케줄러는 없다.
  */
 @Service
 @RequiredArgsConstructor

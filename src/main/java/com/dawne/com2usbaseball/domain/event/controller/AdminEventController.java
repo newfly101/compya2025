@@ -12,6 +12,7 @@ import com.dawne.com2usbaseball.domain.event.dto.request.EventVisibleRequest;
 import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
 import com.dawne.com2usbaseball.domain.event.enums.EventMessages;
 import com.dawne.com2usbaseball.domain.event.service.EventAdminService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class AdminEventController implements AdminEventSwaggerDocs {
 
     @Override
     @PostMapping
-    public GlobalResponse<EventResponse>  insertNewEvent(@RequestBody EventRequest request) {
+    public GlobalResponse<EventResponse>  insertNewEvent(@Valid @RequestBody EventRequest request) {
         EventResponse newEvent = eventAdminService.createEvent(request);
 
         return GlobalResponse.success(EventMessages.EVENT_CREATED, newEvent);
@@ -43,7 +44,7 @@ public class AdminEventController implements AdminEventSwaggerDocs {
 
     @Override
     @PatchMapping("/{id}")
-    public GlobalResponse<EventResponse> updateExternalEvent(@RequestBody EventRequest request, @PathVariable Long id) {
+    public GlobalResponse<EventResponse> updateExternalEvent(@Valid @RequestBody EventRequest request, @PathVariable Long id) {
         EventResponse updatedEvent = eventAdminService.updateEvent(request, id);
 
         return GlobalResponse.success(EventMessages.EVENT_UPDATED, updatedEvent);
@@ -51,7 +52,7 @@ public class AdminEventController implements AdminEventSwaggerDocs {
 
     @Override
     @PatchMapping("/{id}/visible")
-    public GlobalResponse<Void> updateExternalEventVisible(@PathVariable Long id, @RequestBody EventVisibleRequest request) {
+    public GlobalResponse<Void> updateExternalEventVisible(@PathVariable Long id, @Valid @RequestBody EventVisibleRequest request) {
         eventAdminService.updateEventVisible(id, request.visible());
 
         return GlobalResponse.success(EventMessages.EVENT_VISIBLE_UPDATED, null);
@@ -73,14 +74,14 @@ public class AdminEventController implements AdminEventSwaggerDocs {
 
     @Override
     @DeleteMapping("/bulk")
-    public GlobalResponse<BulkOperationResponse> bulkDeleteEvents(@RequestBody BulkIdsRequest request) {
+    public GlobalResponse<BulkOperationResponse> bulkDeleteEvents(@Valid @RequestBody BulkIdsRequest request) {
         BulkOperationResponse result = eventAdminService.bulkDeleteEvents(request.ids());
         return GlobalResponse.success(EventMessages.EVENT_BULK_DELETED, result);
     }
 
     @Override
     @PatchMapping("/bulk/visible")
-    public GlobalResponse<BulkOperationResponse> bulkUpdateEventsVisible(@RequestBody BulkVisibleRequest request) {
+    public GlobalResponse<BulkOperationResponse> bulkUpdateEventsVisible(@Valid @RequestBody BulkVisibleRequest request) {
         boolean visible = request.visible() != null && request.visible();
         BulkOperationResponse result = eventAdminService.bulkUpdateEventsVisible(request.ids(), visible);
         return GlobalResponse.success(EventMessages.EVENT_BULK_VISIBLE_UPDATED, result);

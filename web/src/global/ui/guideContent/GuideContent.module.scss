@@ -1,5 +1,5 @@
 // global/ui/guideContent/GuideContent.module.scss
-// 공용 렌더러 스타일 — /guides/:slug 전체 화면과 GuideModal 내부에서 동일하게 쓰인다.
+// 공용 렌더러 스타일 — /guides/:slug 전체 화면과 가이드 아코디언 내부에서 동일하게 쓰인다.
 .article {
   @include flex-col($space-4);
   width: 100%;
@@ -81,7 +81,7 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.75rem;
+  font-size: $font-size-12;   // 12px (토큰 정합)
 
   th,
   td {

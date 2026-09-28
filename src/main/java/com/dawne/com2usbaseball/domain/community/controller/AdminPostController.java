@@ -6,10 +6,12 @@ import com.dawne.com2usbaseball.domain.community.dto.response.PostResponse;
 import com.dawne.com2usbaseball.domain.community.entity.PostEntity;
 import com.dawne.com2usbaseball.domain.community.service.posts.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@PreAuthorize("hasRole('ADMIN')")
 @RequestMapping("/api/admin/posts")
 public class AdminPostController {
 

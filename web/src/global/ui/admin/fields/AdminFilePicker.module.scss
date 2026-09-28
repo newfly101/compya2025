@@ -26,7 +26,7 @@
   background: var(--color-bg-elevated);
   color: var(--color-text-primary);
   @include text-caption;
-  font-weight: 600;
+  font-weight: $font-weight-semibold;
   cursor: pointer;
   @include pressable;
 }

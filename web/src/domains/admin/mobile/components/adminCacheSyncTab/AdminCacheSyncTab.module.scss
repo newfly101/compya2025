@@ -42,7 +42,7 @@
   border: 1px solid var(--color-admin-accent);
   border-radius: $radius-lg;
   background: var(--color-admin-accent);
-  color: #fff;
+  color: #fff;                                 // AdminToolbar .addBtn 과 동일 토큰·패턴
   @include text-body-bold;
   cursor: pointer;
   @include pressable;

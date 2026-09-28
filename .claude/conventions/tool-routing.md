@@ -10,7 +10,7 @@
 
 | 순서 | 갈래 | 이럴 때 | 예시 |
 |---|---|---|---|
-| 1 | **컨벤션 문서** | 규칙만 적어두면 될 때 | `docs/convention/frontend.md`, `.claude/conventions/responsive-mobile-first.md` |
+| 1 | **컨벤션 문서** | 규칙만 적어두면 될 때 | `.claude/rules/fe/fe-convention.md`, `.claude/rules/fe/fe-design.md` |
 | 2 | **스킬** | 규칙에 더해 "이럴 땐 이렇게" 절차가 필요할 때 | `impeccable`, `archify` |
 | 3 | **에이전트** | 파일을 여러 개 고치거나 병렬로 돌릴 때 | `frontend-developer`, `planner-division` |
 | 4 | **MCP (바깥 연결)** | 저장소 밖 데이터가 필요할 때 | Figma 커넥터, Notion |
@@ -33,6 +33,7 @@
 | 그림인데 숫자가 없고, 결과물이 **독립 파일 한 장** — 구조도·흐름도·순서도 | **archify** | 사용 가능 |
 | 브라우저인데 **로그인이 걸린** 실제 사이트를 눈으로 확인 | **claude-in-chrome** | 사용 가능 |
 | 브라우저인데 **매번 같아야 하는** 반복 검사·화면 캡처 자동 수집 | **Playwright** | 사용 가능 |
+| **도메인 단위 코드 리뷰** — 포트폴리오 문서 산출까지 목적 | **`/code-review-doc`** | 사용 가능 · `/code-review`(현재 diff·PR 단위 빠른 점검)·`ponytail-audit`(과설계·삭제 대상 탐색)과 목적 분리 |
 
 ---
 

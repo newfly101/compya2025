@@ -9,13 +9,15 @@
          Public
     ========================================================== -->
 
+    <!-- 목록은 카드 렌더에 필요한 컬럼만 고른다 — content(LONGTEXT) 는 상세 조회(getNoticeDetail)에서 받는다.
+         응답 전체가 TTL 없는 캐시("notice"/'public')에 들어가므로 행 수 상한도 함께 둔다.
+         상한을 넘는 오래된 공지는 목록·slug 조회에서 빠진다(서버 페이징이 필요해지면 그때 파라미터화). -->
     <select id="getNoticeList"
             resultType="com.dawne.com2usbaseball.domain.notice.entity.NoticeEntity">
         SELECT id,
                source,
                title,
                summary,
-               content,
                external_url  AS externalUrl,
                image_url     AS imageUrl,
                is_visible    AS isVisible,
@@ -28,6 +30,7 @@
         ORDER BY is_pinned DESC,
                  published_at DESC,
                  id DESC
+        LIMIT 200
     </select>
 
     <select id="getNoticeDetail"

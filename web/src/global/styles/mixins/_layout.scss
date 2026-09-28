@@ -46,14 +46,6 @@
   }
 }
 
-// ── 카드 너비 고정 ────────────────────────────────────────────
-@mixin card-width {
-  width: $layout-card-width;
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
 // ── 섹션 구분선 ───────────────────────────────────────────────
 @mixin section-sep {
   height: $layout-section-sep;
@@ -72,14 +64,6 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
   &::-webkit-scrollbar { display: none; }
-}
-
-// ── 2열 그리드 (CombinationCard) ─────────────────────────────
-@mixin grid-2col($gap: 8px) {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: $gap;
-  @include h-pad;
 }
 
 // ── 절대 위치 오버레이 ────────────────────────────────────────

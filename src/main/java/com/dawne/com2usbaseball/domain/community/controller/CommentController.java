@@ -53,27 +53,32 @@ public class CommentController {
     }
 
     @PostMapping("/{id}/like")
-    public void increaseCommentLikeCount(@PathVariable Long id) {
+    public void increaseCommentLikeCount(@PathVariable Long id, HttpServletRequest httpRequest) {
+        requireUserId(httpRequest);
         commentService.increaseCommentLikeCount(id);
     }
 
     @DeleteMapping("/{id}/like")
-    public void decreaseCommentLikeCount(@PathVariable Long id) {
+    public void decreaseCommentLikeCount(@PathVariable Long id, HttpServletRequest httpRequest) {
+        requireUserId(httpRequest);
         commentService.decreaseCommentLikeCount(id);
     }
 
     @PostMapping("/{id}/dislike")
-    public void increaseCommentDislikeCount(@PathVariable Long id) {
+    public void increaseCommentDislikeCount(@PathVariable Long id, HttpServletRequest httpRequest) {
+        requireUserId(httpRequest);
         commentService.increaseCommentDislikeCount(id);
     }
 
     @DeleteMapping("/{id}/dislike")
-    public void decreaseCommentDislikeCount(@PathVariable Long id) {
+    public void decreaseCommentDislikeCount(@PathVariable Long id, HttpServletRequest httpRequest) {
+        requireUserId(httpRequest);
         commentService.decreaseCommentDislikeCount(id);
     }
 
     @PostMapping("/{id}/report")
-    public void increaseCommentReportCount(@PathVariable Long id) {
+    public void increaseCommentReportCount(@PathVariable Long id, HttpServletRequest httpRequest) {
+        requireUserId(httpRequest);
         commentService.increaseCommentReportCount(id);
     }
 

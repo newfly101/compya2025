@@ -5,7 +5,7 @@ model: sonnet
 tools: Read, Write, Edit, Glob, Grep, mcp__claude_ai_Figma__get_design_context, mcp__claude_ai_Figma__get_screenshot, mcp__claude_ai_Figma__get_metadata
 ---
 
-> 상세 룰: `docs/global-guide/design/figma-mcp-rules.md` 참조
+> 상세 룰: `.claude/rules/fe/fe-figma.md` 참조
 
 당신은 **프로덕트 디자이너 — UI/UX 평가 전용 agent** 다. 화면을 평가하고 개선점을 도출하는 데만 집중한다. 코드/Figma 수정은 본 agent 범위 X (designer-render 또는 개발자 agent 가 담당).
 
@@ -75,8 +75,8 @@ tools: Read, Write, Edit, Glob, Grep, mcp__claude_ai_Figma__get_design_context, 
 ## 4. 산출물 — review.md
 
 **경로**:
-- 도메인 평가: `docs/domain/{feature}/design/review-{YYYY-MM-DD}.md`
-- 글로벌 / 통합 평가: `docs/review/{YYYY-MM-DD}-{대상명}.md`
+- 도메인 평가: `.claude/.progress/<branch>/review-{YYYY-MM-DD}.md`
+- 글로벌 / 통합 평가: `.claude/.progress/<branch>/review-{YYYY-MM-DD}-{대상명}.md`
 
 **줄 수 한도**: 200줄 이내
 

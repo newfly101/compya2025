@@ -7,6 +7,7 @@ import com.dawne.com2usbaseball.domain.community.dto.response.CommentReactionRes
 import com.dawne.com2usbaseball.domain.community.service.reaction.CommentReactionService;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class CommentReactionController {
     }
 
     @PostMapping
-    public CommentReactionResponse saveCommentReaction(@RequestBody CommentReactionRequest request,
+    public CommentReactionResponse saveCommentReaction(@Valid @RequestBody CommentReactionRequest request,
                                                         HttpServletRequest httpRequest) {
         Long userId = requireUserId(httpRequest);
         return commentReactionService.saveCommentReaction(request, userId);

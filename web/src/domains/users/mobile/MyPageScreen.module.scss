@@ -7,35 +7,6 @@
 }
 
 /* 상태 박스 (로딩 / 에러 / 빈 데이터) */
-.stateBox {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $space-2;
-  padding: $space-12 0;
-}
-
-.stateText {
-  @include text-body;
-  color: var(--color-text-muted);
-}
-
-.stateError {
-  @include text-body;
-  color: var(--color-danger);
-  text-align: center;
-}
-
-.retryBtn {
-  height: $control-height-md;
-  padding: 0 $space-4;
-  border: 1px solid var(--color-danger);
-  border-radius: $radius-lg;
-  background: transparent;
-  color: var(--color-danger);
-  @include text-body;
-  cursor: pointer;
-}
 
 /* 내 정보 카드 */
 .card {
@@ -73,8 +44,10 @@
   align-items: center;
   justify-content: center;
   border-radius: $radius-full;
+  // 아바타 사진 위 막 — 사진은 테마와 무관하게 어두우므로 막·글자 모두 두 테마 공용으로 둔다.
+  // (--color-text-primary 는 밝은톤에서 진한 글자로 뒤집혀 이 막 위에서 읽히지 않는다)
   background: rgba(0, 0, 0, 0.55);
-  color: var(--color-text-primary);
+  color: var(--color-media-on-text);
   @include text-caption;
   text-align: center;
   padding: 0 $space-1;
@@ -199,7 +172,7 @@
   height: $control-height-md;
   border: none;
   border-radius: $radius-md;
-  background: var(--color-brand);
+  background: var(--color-brand-violet); // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
   color: #fff;
   @include text-body-bold;
   cursor: pointer;
@@ -273,7 +246,7 @@
 // 체크박스 크기·정렬은 이제 전역 리셋(base/_base.scss)에서 처리한다.
 // 여기서는 문구 첫 줄 x-height 와 광학적으로 맞추는 미세 조정만 남긴다.
 .agreeCheckbox {
-  margin-top: rem(1);
+  margin-top: rem(2);
 }
 
 // flex-basis: 0 + flex-grow: 1 로 남는 폭을 전부 차지해 왼쪽 정렬로

@@ -34,12 +34,6 @@
   justify-content: space-between;
 }
 
-@mixin flex-end {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-}
-
 @mixin flex-col-center {
   display: flex;
   align-items: center;

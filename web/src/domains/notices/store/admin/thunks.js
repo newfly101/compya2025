@@ -6,8 +6,6 @@ import {
   fetchAdminInsertNotice,
   fetchAdminUpdateNotice,
   fetchAdminUpdateVisible,
-  fetchAdminUpdatePinned,
-  fetchAdminDeleteNotice,
   fetchAdminBulkDeleteNotices,
   fetchAdminBulkUpdateNoticesVisible,
   fetchAdminRefreshNotices,
@@ -22,7 +20,9 @@ export const requestAdminGetNoticeList = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.message);
     }
-  }
+  },
+  // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
+  { condition: (_, { getState }) => !getState().notices.loading },
 );
 
 // 글쓰기 화면을 새로고침/직접 URL 진입한 경우 목록 store 가 비어있을 수 있어 단건 조회로 보강한다.
@@ -41,8 +41,9 @@ export const requestAdminInsertNotice = createAsyncThunk(
   ADMIN_NOTICE_ACTIONS.INSERT,
   async (notice, { rejectWithValue }) => {
     try {
-      const created = await fetchAdminInsertNotice(notice);
-      return { ...notice, id: created.id };
+      // 폼 값이 아니라 서버가 저장한 값을 그대로 반환한다 — 폼에는 createdAt/publishedAt 이
+      // 없어서 폼 값을 되돌리면 목록의 등록일이 항상 "-" 로 보인다(events·quiz 와 동일 패턴).
+      return await fetchAdminInsertNotice(notice);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -53,8 +54,8 @@ export const requestAdminUpdateNotice = createAsyncThunk(
   ADMIN_NOTICE_ACTIONS.UPDATE,
   async ({ id, ...notice }, { rejectWithValue }) => {
     try {
-      await fetchAdminUpdateNotice(id, notice);
-      return { id, ...notice };
+      // 등록과 같은 이유로 서버 응답을 그대로 반영한다(갱신된 updatedAt 포함).
+      return await fetchAdminUpdateNotice(id, notice);
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -69,56 +70,37 @@ export const requestAdminUpdateNoticeVisible = createAsyncThunk(
       await fetchAdminUpdateVisible(id, visible);
       return { id, isVisible: visible };
     } catch (error) {
-      return rejectWithValue(error.message);
+      // 행 토글은 화면에 오류 자리가 없다 — 실패하면 스위치가 조용히 제자리로 돌아간다.
+      return rejectWithValue(error.message, {
+        notify: { success: false, message: "노출 설정을 바꾸지 못했습니다." },
+      });
     }
   }
 );
 
-export const requestAdminUpdateNoticePinned = createAsyncThunk(
-  ADMIN_NOTICE_ACTIONS.UPDATE_PINNED,
-  async ({ id, pinned }, { rejectWithValue }) => {
-    try {
-      // pinned 토글 응답도 Void(null) — visible 토글과 동일 패턴.
-      await fetchAdminUpdatePinned(id, pinned);
-      return { id, isPinned: pinned };
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
+// 서버는 존재하지 않는 id 를 failedIds 로 분리해 돌려준다(BulkOperationResponse).
+// 요청한 ids 를 그대로 반환하면 실패분까지 성공 처리돼 관리자 화면에서 조용히 사라진다.
+const toBulkResult = (response) => {
+  const { successIds = [], failedIds = [] } = response ?? {};
+  return { successIds: successIds.map(Number), failedIds: failedIds.map(Number) };
+};
 
-export const requestAdminDeleteNotice = createAsyncThunk(
-  ADMIN_NOTICE_ACTIONS.DELETE,
-  async (id, { rejectWithValue }) => {
-    try {
-      await fetchAdminDeleteNotice(id);
-      return id;
-    } catch (error) {
-      return rejectWithValue(error.message);
-    }
-  }
-);
-
-// v2 일괄 삭제 — 쿠폰 어드민과 동일 패턴(낙관적 갱신, 요청한 ids 를 그대로 반환).
-// 서버가 부분 실패(failedIds)를 응답해도 현재는 별도 토스트 없이 요청 id 전량을 반영한다
-// (쿠폰 화면과 동일한 한계 — 프로젝트에 토스트 시스템이 없다).
+// v2 일괄 삭제 — 쿠폰·이벤트·퀴즈와 동일 계약: 서버 응답 { successIds, failedIds } 를 반환한다.
 export const requestAdminBulkDeleteNotices = createAsyncThunk(
   ADMIN_NOTICE_ACTIONS.BULK_DELETE, async (ids, { rejectWithValue }) => {
     try {
-      await fetchAdminBulkDeleteNotices(ids);
-      return ids;
+      return toBulkResult(await fetchAdminBulkDeleteNotices(ids));
     } catch (error) {
       return rejectWithValue(error.message);
     }
   },
 );
 
-// v2 일괄 노출 변경(주로 숨김) — 쿠폰 어드민과 동일 패턴.
+// v2 일괄 노출 변경(주로 숨김) — { successIds, failedIds, visible }.
 export const requestAdminBulkUpdateNoticesVisible = createAsyncThunk(
   ADMIN_NOTICE_ACTIONS.BULK_UPDATE_VISIBLE, async ({ ids, visible }, { rejectWithValue }) => {
     try {
-      await fetchAdminBulkUpdateNoticesVisible(ids, visible);
-      return { ids, visible };
+      return { ...toBulkResult(await fetchAdminBulkUpdateNoticesVisible(ids, visible)), visible };
     } catch (error) {
       return rejectWithValue(error.message);
     }
@@ -135,4 +117,6 @@ export const requestAdminRefreshNotices = createAsyncThunk(
       return rejectWithValue(error.message);
     }
   },
+  // 이미 같은 요청이 날아가 있으면 건너뛴다 — 훅/화면이 같은 틱에 각자 dispatch 해도 1번만 나간다.
+  { condition: (_, { getState }) => !getState().notices.loading },
 );

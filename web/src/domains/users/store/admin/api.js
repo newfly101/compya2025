@@ -6,10 +6,6 @@ export const fetchAdminUserList   = async (params) => {
   const { data } = await API.get(ADMIN_USERS.GET_LIST, { params });
   return data.data;
 };
-export const fetchAdminUserDetail = async (publicId) => {
-  const { data } = await API.get(ADMIN_USERS.GET_DETAIL(publicId));
-  return data.data;
-};
 export const fetchAdminPatchRole  = async (publicId, userRole) => {
   const { data } = await API.patch(ADMIN_USERS.PATCH_ROLE(publicId), { userRole });
   return data.data;

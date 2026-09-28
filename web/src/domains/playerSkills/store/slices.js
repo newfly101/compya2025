@@ -9,11 +9,14 @@ import {
 const makeSkillSlice = (name, thunk) =>
   createSlice({
     name: `playerSkills/${name}`,
-    initialState: { items: [], loading: false, error: null },
+    initialState: { items: [], loaded: false, loading: false, error: null },
     reducers: {},
     extraReducers: (builder) => {
       applyAsyncHandlers(builder, thunk, (state, action) => {
         state.items = action.payload;
+        // loaded = "한 번이라도 받았다" — items.length 로 대신하면 정상 0건과 미조회를
+        // 구분할 수 없다(players·mileage·legendStats 와 같은 형태).
+        state.loaded = true;
       });
     },
   });

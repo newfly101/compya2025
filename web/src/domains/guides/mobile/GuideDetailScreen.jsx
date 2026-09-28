@@ -1,5 +1,5 @@
 // domains/guides/mobile/GuideDetailScreen.jsx
-// /guides/:slug — 가이드 원본 전체 화면. GuideModal 과 동일한 GuideContent 렌더러를 그대로 쓴다.
+// /guides/:slug — 가이드 원본 전체 화면. 가이드 아코디언과 동일한 GuideContent 렌더러를 그대로 쓴다.
 // 콘텐츠가 빌드 시점에 이미 고정된 로컬 JS 데이터라 로딩 상태가 없다 — slug 매칭 실패(존재하지
 // 않거나 아직 미완성인 편)만 notFound 로 갈린다(loading/error 는 발생하지 않는 정적 화면).
 import { Link, useParams } from "react-router-dom";

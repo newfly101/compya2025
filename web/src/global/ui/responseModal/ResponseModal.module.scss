@@ -16,12 +16,15 @@
 }
 
 .iconSuccess {
+  // 글자 스케일(최대 28px) 예외 — 본문이 아니라 화면에 하나뿐인 큰 기호다.
+  // 규칙 위반 아니니 스케일에 맞춰 내리지 마라. (.iconFail 도 동일 사유)
   font-size: 2.625rem;                         // 42px → rem (mobile-frame § 6.4)
   color: var(--color-success);
   margin-bottom: $space-3;
 }
 
 .iconFail {
+  // 스케일 예외 사유는 .iconSuccess 주석 참조
   font-size: 2.625rem;
   color: var(--color-danger);
   margin-bottom: $space-3;

@@ -1,5 +1,6 @@
 import { API } from "@/infra/http/client.js";
 import { HISTORY_ROUNDS } from "@/domains/historyLegend/store/public/endpoints.js";
+// BE 는 모든 응답을 { success, code, data } 로 감싼다. api 함수는 내용물(data.data)만 반환한다.
 
 /**
  * 라운드 70개 + 25인 로스터 전량.
@@ -8,5 +9,5 @@ import { HISTORY_ROUNDS } from "@/domains/historyLegend/store/public/endpoints.j
  */
 export const fetchGetHistoryRounds = async () => {
   const { data } = await API.get(HISTORY_ROUNDS.GET_ROUNDS);
-  return data;
+  return data.data;
 };

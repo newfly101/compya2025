@@ -14,6 +14,7 @@ public interface QuizMapStruct {
     @Mapping(target = "updatedAt", ignore = true)
     QuizEntity toEntity(QuizRequest request);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)

@@ -164,12 +164,17 @@ export const SORT_LABEL = {
   days: "첫 등장",
 };
 
-/** day·days 는 순서 개념이라 빠른/늦은순, 나머지는 많은/적은순으로 읽힌다 */
+/** day·days 는 순서 개념(빠른/늦은순), 나머지는 개수 개념(많은/적은순) — 뜻이 다르다 */
+const isOrderedSort = (sort) => sort === "day" || sort === "days";
+
 export const sortDirectionLabel = (sort, dir) => {
-  const ordered = sort === "day" || sort === "days";
-  if (ordered) return dir < 0 ? "빠른순" : "늦은순";
+  if (isOrderedSort(sort)) return dir < 0 ? "빠른순" : "늦은순";
   return dir < 0 ? "많은순" : "적은순";
 };
+
+/** 헤더 화살표(▼▲)가 열마다 다른 뜻(빠른/늦은 ↔ 많은/적은)이 아니라
+ * "실제 결과가 오름차순인가"만 가리키도록 통일한다. sortDirectionLabel 과 같은 기준. */
+export const sortAscending = (sort, dir) => (dir < 0) === isOrderedSort(sort);
 
 const compare = (av, bv) =>
   typeof av === "string" ? String(bv).localeCompare(String(av), "ko") : bv - av;

@@ -7,8 +7,11 @@
 
   // 머리행 배경은 공용 토큰 --color-table-head-bg(2026-09-13 공용화)로 옮기고 여기선 뺐다 — 값이 같은 걸 두 곳에 두지 않는다.
 
-  // 고정 열 hover — legendStats(--color-ls-row-hover)와 같은 표 스타일이라 같은 값을 쓴다
-  --color-hl-row-hover: #161320;
+  // 고정 열 hover — legendStats/admin과 같은 값이라 공용 토큰으로 승격됨(2026-09-27)
+  --color-hl-row-hover: var(--color-table-row-hover);
+  // 배경이 비치는 칸(투명 td)의 hover 덧칠. 전역 --color-row-hover-soft(흰 2.5%)보다
+  // 한 단계 진한 흰 4% 를 쓰던 곳이라 공용화하지 않고 로컬로 둔다.
+  --color-hl-row-hover-soft: rgba(255, 255, 255, 0.04);
 
   // 일차 홀짝 2색. D1/D2 경계가 안 보인다는 문제 때문에 넣었다
   --color-hl-row-odd: #100e14;
@@ -21,12 +24,41 @@
   // 등장 일차 막대
   --color-hl-bar-off: #2b2538;
 
-  --color-hl-accent-text: #c4b5fd;
-  --color-hl-chip-on-text: #dcd3ff;
+  --color-hl-accent-text: var(--color-accent-violet-text);
+  --color-hl-chip-on-text: var(--color-chip-on-text);
   --color-hl-chip-count-on: #a78bfa;
 
-  --color-hl-card-bg: #171422;
+  --color-hl-card-bg: var(--color-skeleton-card-bg);
 
   // 여러 라운드에서 얻을 수 있는 재료 카드
-  --color-hl-card-multi: #5eead4;
+  --color-hl-card-multi: var(--color-mint);
+}
+
+// ── 밝은톤 ─────────────────────────────────────────────────────
+// 다크가 기본값이고 밝은톤만 여기서 덮는다. 공용 토큰 참조로 둔 것
+// (--color-hl-row-hover / -accent-text / -card-bg / -card-multi)은 전역 밝은톤에서
+// 함께 뒤집히므로 다시 정의하지 않는다.
+// 행 높이는 테마와 무관해 그대로 둔다.
+:root[data-theme="light"] {
+  // 다크의 "어두운 바닥 2단" 을 "흰 행 / 연보라 행" 으로 뒤집는다.
+  // 두 행의 밝기 차(1.20:1)는 다크(1.19:1)와 같은 폭이라 D1/D2 경계가 그대로 보인다.
+  --color-hl-row-odd: #ffffff;
+  --color-hl-row-even: #eee8fb;
+
+  --color-hl-day-odd-bg: #ece9f5;
+  --color-hl-day-odd-text: #4a4363; // 7.71:1
+  --color-hl-day-even-bg: rgba(124, 58, 237, 0.16);
+  --color-hl-day-even-text: #4c2d9e; // 7.9:1
+
+  // 등장 일차 막대의 꺼진 칸 — 흰 바닥보다 한 단계 눌린 회색
+  --color-hl-bar-off: #ddd9e6;
+
+  --color-hl-chip-count-on: #6d28d9; // 7.10:1
+
+  // 선택된 칩 글자 — 전역 --color-chip-on-text 가 이 화면 칩 채움(옅은 틴트) 기준으로
+  // 교정되어(2026-09-28) 다크 참조만으로 밝은톤도 맞다. 로컬 재지정 제거.
+
+  // 흰색 덧칠은 밝은 면에서 사라진다 → 연회색 면으로 뒤집는다.
+  // 고정 칸 hover(--color-table-row-hover #e6e4eb)보다 한 단계 진해 다크의 세기 차를 유지한다.
+  --color-hl-row-hover-soft: #e7e4ed;
 }

@@ -1,0 +1,83 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git commit *)",
+      "Bash(git checkout -b *)",
+      "Bash(git switch -c *)",
+      "Bash(git status *)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(grep *)",
+      "Bash(findstr *)",
+      "Bash(./gradlew compileJava*)",
+      "Bash(./gradlew test*)",
+      "Bash(npm run build*)",
+      "Bash(npx vite build*)",
+      "Bash(npx vitest*)",
+      "PowerShell(npm *)",
+      "PowerShell(Remove-Item .claude/.progress/*)",
+      "PowerShell(Remove-Item .claude/.locks/*)",
+      "PowerShell(Remove-Item .tmp-build-*)",
+      "mcp__claude_ai_Figma__get_design_context",
+      "mcp__claude_ai_Figma__get_screenshot",
+      "mcp__claude_ai_Figma__get_metadata",
+      "mcp__claude_ai_Figma__get_variable_defs",
+      "mcp__claude_ai_Figma__search_design_system",
+      "Bash(git add *)",
+      "Bash(git worktree *)",
+      "PowerShell(Remove-Item .claude/.sessions/*)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git branch -D master*)",
+      "Bash(git add -A*)",
+      "Bash(git add --all*)",
+      "Bash(git commit -a *)",
+      "Bash(git commit -am *)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/guard-master.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/guard-git.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/guard-ddl.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/guard-docs-sync.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/track-session-files.sh"
+          }
+        ]
+      }
+    ],
+    "WorktreeCreate": [
+      {
+        "type": "command",
+        "command": "bash .claude/hooks/worktree-create.sh"
+      }
+    ]
+  }
+}

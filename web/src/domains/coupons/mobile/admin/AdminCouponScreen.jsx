@@ -5,11 +5,12 @@ import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
 import AdminPagination from "@/global/ui/admin/pagination/AdminPagination.jsx";
 import useAdminPagination from "@/global/ui/admin/pagination/useAdminPagination.js";
 import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
-import AdminStateBox from "@/global/ui/admin/stateBox/AdminStateBox.jsx";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
 import AdminToggleSwitch from "@/global/ui/admin/toggle/AdminToggleSwitch.jsx";
 import AdminTag from "@/global/ui/admin/tag/AdminTag.jsx";
 import useTableModal from "@/global/ui/admin/hooks/useTableModal.js";
+import { formatNow, normalizeHHMM, toHHMMSS } from "@/global/utils/datetime/dateUtils.js";
 import "@/global/ui/admin/admin.tokens.scss";
 import {
   requestGetAdminCouponList,
@@ -22,29 +23,34 @@ import {
 } from "@/domains/coupons/store/admin/thunks.js";
 import styles from "./AdminCouponScreen.module.scss";
 
-// 서버 CouponRequest 와 정확히 일치하는 5개 필드만 다룬다(discountType 등 유령 필드 없음).
+// 만료 시각을 비워두면 "그날 끝"(23:59:59) 으로 본다 — 날짜만 보내고 서버가 채운다.
+// 응답·폼 모두 초 단위라 편집 시 원본 시각이 그대로 채워지고, 다른 필드만 고쳐 저장해도 시각이 밀리지 않는다.
+const END_OF_DAY_TIME = "23:59:59";
+
+// 서버 CouponRequest 와 일치하는 필드만 다룬다. 만료는 날짜·시각 두 칸으로 받아 전송 직전에 합친다.
 const EMPTY_FORM = {
   couponCode: "",
   title: "",
   detail: "",
-  expireAt: "",
+  expireDate: "",
+  expireTime: "",
   visible: true,
 };
 
-// v2 필터 두 줄 — "사용"(만료일 기준: 전체·사용가능·만료) · "노출"(visible 기준: 전체·노출·숨김).
-// 두 축은 서로 독립이라 각각 따로 필터링한다(예: 만료됐지만 아직 노출 중인 쿠폰도 존재 가능).
-// 만료 판정은 서버 count API 가 없어 클라이언트에서 expireAt 비교로 처리한다.
-const todayStr = () => new Date().toISOString().slice(0, 10);
+// 시각을 비우면 날짜만 보낸다(서버가 그날 끝으로 채움). 넣으면 HH:MM 을 저장용 HH:MM:SS 로 변환.
+const toExpireAt = ({ expireDate, expireTime }) =>
+  expireDate ? (expireTime ? `${expireDate} ${toHHMMSS(expireTime)}` : expireDate) : "";
 
-const isExpired = (coupon) => {
-  const d = coupon.expireAt?.slice(0, 10);
-  return !!d && d < todayStr();
-};
+// v2 필터 두 줄 — "사용"(만료 기준: 전체·사용가능·만료) · "노출"(visible 기준: 전체·노출·숨김).
+// 두 축은 서로 독립이라 각각 따로 필터링한다(예: 만료됐지만 아직 노출 중인 쿠폰도 존재 가능).
+// 만료 판정은 공개 화면(useCouponList)과 같은 기준을 쓴다 — KST "yyyy-MM-dd HH:mm:ss" 문자열 초 단위
+// 비교. 날짜 단위로 자르거나 UTC 기준일을 쓰면 같은 쿠폰이 어드민·공개에서 다르게 보인다.
+const isExpired = (coupon, now) => !!coupon.expireAt && coupon.expireAt < now;
 
 const USAGE_MATCH = {
   all: () => true,
-  usable: (c) => !isExpired(c),
-  expired: (c) => isExpired(c),
+  usable: (c, now) => !isExpired(c, now),
+  expired: (c, now) => isExpired(c, now),
 };
 
 const USAGE_OPTIONS = [
@@ -65,13 +71,19 @@ const VIS_OPTIONS = [
   { value: "hidden", label: "숨김" },
 ];
 
-const formOf = (coupon) => ({
-  couponCode: coupon.couponCode ?? "",
-  title: coupon.title ?? "",
-  detail: coupon.detail ?? "",
-  expireAt: coupon.expireAt?.slice(0, 10) ?? "",
-  visible: coupon.visible ?? true,
-});
+const formOf = (coupon) => {
+  const expireAt = coupon.expireAt ?? "";
+
+  return {
+    couponCode: coupon.couponCode ?? "",
+    title: coupon.title ?? "",
+    detail: coupon.detail ?? "",
+    expireDate: expireAt.slice(0, 10),
+    // 화면엔 HH:mm 만 보여준다(초는 저장 시 toHHMMSS 가 다시 붙인다 — 23:59 는 23:59:59, 그 밖엔 :00).
+    expireTime: expireAt.slice(11, 16),
+    visible: coupon.visible ?? true,
+  };
+};
 
 // 어드민 셸(AdminShellScreen)의 쿠폰 탭 패널로 렌더된다 — 자체 TopBar 를 세팅하지 않는다.
 // 셸이 상단바(제목/로그아웃)를 한 번만 소유하고, 탭 전환은 뒤로가기가 아니라 탭 클릭으로 처리된다.
@@ -97,6 +109,9 @@ export default function AdminCouponScreen() {
     dispatch(requestGetAdminCouponList());
   }, [dispatch]);
 
+  // 만료 판정 기준 시각 — 공개 화면과 같은 KST 초 단위 문자열.
+  const now = formatNow();
+
   const searched = coupons.filter(
     (c) =>
       c.title?.toLowerCase().includes(search.toLowerCase()) ||
@@ -105,19 +120,19 @@ export default function AdminCouponScreen() {
 
   const usageOptions = USAGE_OPTIONS.map((opt) => ({
     ...opt,
-    count: searched.filter((c) => USAGE_MATCH[opt.value](c) && VIS_MATCH[vis](c)).length,
+    count: searched.filter((c) => USAGE_MATCH[opt.value](c, now) && VIS_MATCH[vis](c)).length,
   }));
 
   const visOptions = VIS_OPTIONS.map((opt) => ({
     ...opt,
-    count: searched.filter((c) => VIS_MATCH[opt.value](c) && USAGE_MATCH[usage](c)).length,
+    count: searched.filter((c) => VIS_MATCH[opt.value](c) && USAGE_MATCH[usage](c, now)).length,
   }));
 
   const filtered = searched
-    .filter((c) => USAGE_MATCH[usage](c) && VIS_MATCH[vis](c))
+    .filter((c) => USAGE_MATCH[usage](c, now) && VIS_MATCH[vis](c))
     .sort((a, b) => {
-      const da = a.expireAt?.slice(0, 10) ?? "";
-      const db = b.expireAt?.slice(0, 10) ?? "";
+      const da = a.expireAt ?? "";
+      const db = b.expireAt ?? "";
       return sortAsc ? da.localeCompare(db) : db.localeCompare(da);
     });
 
@@ -150,12 +165,20 @@ export default function AdminCouponScreen() {
     });
   };
 
-  // 일괄 삭제·숨김 — 서버 일괄 API(DELETE /admin/coupons/bulk, PATCH /admin/coupons/bulk/visible)는
-  // 다음 단계에서 연결된다. 호출 자리(thunk 디스패치)만 지금 배선해 둔다.
-  // 삭제는 되돌릴 수 없어 확인 다이얼로그를 거친다 — 숨김은 언제든 다시 켤 수 있어 바로 실행.
+  // 일괄 삭제·숨김 — 서버는 둘 다 is_visible=false 로 처리한다("삭제" 도 행을 지우지 않는다).
+  // 삭제 쪽만 확인 다이얼로그를 거치고, 숨김은 언제든 다시 켤 수 있어 바로 실행.
   const handleBulkDelete = () => {
     if (selectedIds.size === 0) return;
     setBulkDeleteConfirmOpen(true);
+  };
+
+  // 서버는 존재하지 않는 id 를 failedIds 로 분리해 돌려준다 — 부분 실패를 성공으로 보이게 두면
+  // 관리자는 전부 처리된 줄 안다. 처리 못한 건수를 반드시 알린다.
+  const noticeBulkResult = ({ successIds, failedIds }, doneLabel) => {
+    if (failedIds.length === 0) return;
+    setBulkNotice(
+      `${successIds.length}개를 ${doneLabel}. ${failedIds.length}개는 이미 없는 쿠폰이라 처리하지 못했습니다 — 목록을 새로 불러오세요.`,
+    );
   };
 
   // .unwrap() 없이 dispatch 만 하면 실패해도 선택만 조용히 풀리고 아무 표시가 없다 — 결과를
@@ -165,9 +188,9 @@ export default function AdminCouponScreen() {
     setBulkDeleteConfirmOpen(false);
     setSelectedIds(new Set());
     try {
-      await dispatch(requestAdminBulkDeleteCoupons(ids)).unwrap();
+      noticeBulkResult(await dispatch(requestAdminBulkDeleteCoupons(ids)).unwrap(), "내렸습니다");
     } catch (err) {
-      setBulkNotice(typeof err === "string" ? err : "일괄 삭제에 실패했습니다.");
+      setBulkNotice(typeof err === "string" ? err : "일괄 내리기에 실패했습니다.");
     }
   };
 
@@ -176,7 +199,10 @@ export default function AdminCouponScreen() {
     const ids = [...selectedIds];
     setSelectedIds(new Set());
     try {
-      await dispatch(requestAdminBulkUpdateCouponsVisible({ ids, visible: false })).unwrap();
+      const result = await dispatch(
+        requestAdminBulkUpdateCouponsVisible({ ids, visible: false }),
+      ).unwrap();
+      noticeBulkResult(result, "숨겼습니다");
     } catch (err) {
       setBulkNotice(typeof err === "string" ? err : "일괄 숨김 처리에 실패했습니다.");
     }
@@ -213,12 +239,9 @@ export default function AdminCouponScreen() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (saving) return;
-    // type="date" 는 yyyy-MM-dd 만 주지만 서버는 yyyy-MM-dd HH:mm 을 기대한다.
-    // 만료일은 "그날 끝까지" 유효하도록 23:59 를 붙여 보낸다.
-    const payload = {
-      ...form,
-      expireAt: form.expireAt ? `${form.expireAt} 23:59` : form.expireAt,
-    };
+    // 날짜·시각 두 칸을 서버 필드(expireAt) 하나로 합친다 — 시각을 비우면 그날 끝(23:59:59).
+    const { expireDate, expireTime, ...rest } = form;
+    const payload = { ...rest, expireAt: toExpireAt({ expireDate, expireTime }) };
     setSubmitError(null);
     setSaving(true);
     try {
@@ -266,7 +289,11 @@ export default function AdminCouponScreen() {
       render: (c) => (
         <div className={styles.expireCell}>
           <span>{c.expireAt?.slice(0, 10) ?? "-"}</span>
-          {isExpired(c) && <AdminTag variant="rose">만료</AdminTag>}
+          {/* 그날 끝(23:59:59)이 아닌 시각이 지정된 쿠폰만 시각을 함께 보여준다 — 표시는 분 단위까지 */}
+          {c.expireAt?.slice(11, 19) && c.expireAt.slice(11, 19) !== END_OF_DAY_TIME && (
+            <span>{c.expireAt.slice(11, 16)}</span>
+          )}
+          {isExpired(c, now) && <AdminTag variant="rose">만료</AdminTag>}
         </div>
       ),
     },
@@ -322,6 +349,7 @@ export default function AdminCouponScreen() {
         selectedCount={selectedOnPageCount}
         onBulkDelete={handleBulkDelete}
         onBulkHide={handleBulkHide}
+        bulkDeleteLabel="선택 내리기"
         onRefresh={handleRefresh}
         refreshing={loading}
       />
@@ -335,16 +363,16 @@ export default function AdminCouponScreen() {
         </div>
       )}
 
-      {loading && <AdminStateBox status="loading" />}
+      {loading && <StateBox status="loading" message="불러오는 중..." />}
       {!loading && error && (
-        <AdminStateBox
+        <StateBox
           status="error"
           message={error}
           onRetry={() => dispatch(requestGetAdminCouponList())}
         />
       )}
       {!loading && !error && filtered.length === 0 && (
-        <AdminStateBox status="empty" message="쿠폰이 없습니다." />
+        <StateBox status="empty" message="쿠폰이 없습니다." />
       )}
       {!loading && !error && filtered.length > 0 && (
         <>
@@ -378,7 +406,22 @@ export default function AdminCouponScreen() {
           </label>
           <label className={styles.label}>
             만료일
-            <input className={styles.input} type="date" name="expireAt" value={form.expireAt} onChange={handleFormChange} required />
+            <input className={styles.input} type="date" name="expireDate" value={form.expireDate} onChange={handleFormChange} required />
+          </label>
+          <label className={styles.label}>
+            만료 시각 (비우면 그날 23:59:59)
+            <input
+              className={styles.input}
+              type="text"
+              inputMode="numeric"
+              maxLength={5}
+              placeholder="23:59"
+              pattern="([01][0-9]|2[0-3]):[0-5][0-9]"
+              title="24시간 형식 HH:MM (예: 23:59)"
+              name="expireTime"
+              value={form.expireTime}
+              onChange={(e) => setForm((prev) => ({ ...prev, expireTime: normalizeHHMM(e.target.value) }))}
+            />
           </label>
           <div className={styles.toggleRow}>
             <span>노출 여부</span>
@@ -401,10 +444,9 @@ export default function AdminCouponScreen() {
 
       <AdminConfirmDialog
         open={bulkDeleteConfirmOpen}
-        title="쿠폰 일괄 삭제"
-        message={`선택한 쿠폰 ${selectedIds.size}개를 삭제하시겠습니까?`}
-        dangerous
-        confirmLabel="삭제"
+        title="쿠폰 일괄 내리기"
+        message={`선택한 쿠폰 ${selectedIds.size}개를 목록에서 내립니다(노출 끄기). 행은 남고 쿠폰 코드도 계속 점유하므로 같은 코드로 새로 등록할 수 없습니다.`}
+        confirmLabel="내리기"
         onConfirm={confirmBulkDelete}
         onCancel={() => setBulkDeleteConfirmOpen(false)}
       />
