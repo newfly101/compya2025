@@ -69,7 +69,8 @@ tools: Read, Write, Edit, Glob, Grep, Bash
         - 실패 (1~2회) → 수정 후 3-3 재실행
         - 실패 (3회) → [미해결] 마크 + 3-5
    3-5. history "{기능명} 완료" 또는 "{기능명} 미해결" 기록
-4. 전체 종료 → 보고
+4. 전체 종료 → `docs/features/<f>/history.md` 맨 위에 항목 1개 직접 추가 (`.claude/templates/history-entry.md`, be-history.md 요약)
+5. 보고
 ```
 
 ⭐ 사용자 input 받기 위해 멈춤 X. 모든 결정은 `analysis.md` / `decisions.log` 의 가정값 사용.
@@ -221,6 +222,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 - [ ] 컴파일 통과 (`./gradlew compileJava`)
 - [ ] mapper XML namespace = Mapper interface 패키지 + 클래스명 일치
 - [ ] decisions.log 신규 항목 있으면 append
+- [ ] `docs/features/<f>/history.md` 맨 위 항목 1개 직접 추가 완료
 
 ---
 

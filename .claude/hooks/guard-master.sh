@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+. "$(dirname "$0")/_py.sh"
 # CLAUDE.md § 3-5: master 직접 커밋·푸시 금지. PreToolUse(Bash) — 명령이 git commit/push 이고 현재 브랜치가 master 면 차단.
-cmd=$(python3 -c 'import sys,json; print(json.load(sys.stdin).get("tool_input",{}).get("command",""))' 2>/dev/null)
+cmd=$("$PY" -c 'import sys,json; print(json.load(sys.stdin).get("tool_input",{}).get("command",""))' 2>/dev/null)
 case "$cmd" in
   *"git commit"*|*"git push"*|*"git merge"*)
     br=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)

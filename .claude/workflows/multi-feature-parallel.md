@@ -11,7 +11,7 @@ events:  planner → designer → analyze → BE/FE → integrate  ├─ 병렬
 notices: planner → designer → analyze → BE/FE → integrate  ┘
 ```
 
-파일 충돌 시 lock 기반 대기 → 해제 후 진행. 각 feature 는 자기 브랜치 `feat/{feature}-{요약}` 에서 진행하고 작업 문서는 `.claude/.progress/<branch>/` 에 둔다.
+세션 = worktree = 브랜치 = 기능 하나가 기본(`rules/common/git-scope.md` § 1)이다. 각 feature 는 자기 worktree(`claude --worktree {feature}`)·브랜치 `feat/{feature}-{요약}` 에서 진행하고 작업 문서는 `.claude/.progress/<branch>/` 에 둔다. 코드 파일은 worktree 가 격리하므로 lock 은 § 5 의 **저장소 밖 공유 자원**(Figma 파일)에만 쓴다.
 
 ## 2. 사전 조건
 
@@ -19,7 +19,7 @@ notices: planner → designer → analyze → BE/FE → integrate  ┘
 |---|---|
 | agent 9개 | `ls .claude/agents/` |
 | `.claude/.locks/` | 없으면 생성. stale lock 검사 (§ 7) |
-| 브랜치 | feature 마다 `master` 에서 분기. master 직접 작업 금지 (CLAUDE.md § 3-5) |
+| 브랜치 | feature 마다 `master` 에서 분기 (`claude --worktree {feature}`). master 직접 작업 금지 (CLAUDE.md § 3-5) |
 
 ## 3. 사용자 input
 
@@ -37,24 +37,26 @@ notices: planner → designer → analyze → BE/FE → integrate  ┘
 
 brief 는 `templates/dispatch-brief.md`, Read 할 rules 는 `agents/README.md` § 1.
 
-## 5. 공용 파일 — 순차 처리
+## 5. 공용 파일 — worktree 는 격리, Figma 만 순차
 
-| Phase | feature 전용 (병렬 OK) | 공용 (순차 · lock `shared_files`) |
+| Phase | feature 전용 (병렬 OK, worktree 로 격리) | 공용 (worktree 밖 · lock `shared_files`) |
 |---|---|---|
 | 1 | `docs/features/<f>/spec.md` · `.progress/<b>/**` | — |
 | 2 | `docs/features/<f>/design.md` | Figma 파일 `VCVQzOpSIpwpZw11gxG7N1` 페이지 `0:1` (`use_figma` 쓰기는 한 번에 하나) |
 | 3 | `.progress/<b>/analysis.md` | — (`decisions.log` 는 브랜치별이라 충돌 없음) |
-| 4 BE | `src/main/java/.../domain/{f}/**` · `resources/mapper/{site\|fun}/{f}/**` | `build.gradle` · `application*.properties` |
-| 4 FE | `web/src/domains/{f}/**` | `web/src/app/router/routes/*.jsx` · `router/config/{routeMeta,routePath}.js` · `app/store/store.js` · `web/package.json` |
-| 5 | `.progress/<b>/verification.md` · `docs/features/<f>/history.md` | `CHANGELOG.md` `[Unreleased]` (메인이 기록) |
+| 4 BE | `src/main/java/.../domain/{f}/**` · `resources/mapper/{site\|fun}/{f}/**` · `build.gradle` · `application*.properties` (각자 worktree 사본) | — |
+| 4 FE | `web/src/domains/{f}/**` · `web/src/app/router/routes/*.jsx` · `router/config/{routeMeta,routePath}.js` · `app/store/store.js` · `web/package.json` (각자 worktree 사본) | — |
+| 5 | `.progress/<b>/verification.md` · `docs/features/<f>/history.md` | `CHANGELOG.md` `[Unreleased]` (메인이 머지 후 기록) |
 
-## 6. Phase 4 사전 통합 (FE 공용 파일)
+⚠️ FE 공용 파일(routes/store/config)도 worktree 마다 독립 사본이라 병렬 작업 중 충돌이 없다. 실제 병합은 각 feature 브랜치가 `master` 로 PR 머지될 때 git 이 처리한다.
 
-메인이 Phase 4 진입 전 FE 공용 파일에 모든 feature 의 route/reducer 를 **한 번에** 추가한다. 이건 CLAUDE.md § 3-1 "메인 직접 처리" 예외에 해당한다 — 공용 파일 4개, 각 몇 줄.
+## 6. Phase 4 FE 공용 파일 (각자 worktree 안에서)
 
-1. 모든 feature 의 `analysis.md` FE 명세 Read
+frontend-developer 는 자기 worktree 안의 FE 공용 파일(§ 5)에 자기 feature 의 route/reducer 만 추가한다. 다른 feature 의 worktree 는 보이지 않으므로 사전 일괄 등록이 필요 없다.
+
+1. `analysis.md` FE 명세 Read
 2. `{Public|User|Admin}Routes.jsx` lazy import + Route · `routeMeta.js` · `routePath.js` · `store.js` reducer — 패턴은 `rules/fe/fe-convention.md` § 6
-3. 각 frontend-developer brief 에 "공용 파일 수정 금지 — 이미 등록됨" 명시
+3. PR 머지 순서가 늦은 feature 는 머지 시 충돌 나면 그 자리에서 해소 (git 표준 병합)
 
 ## 7. Stale Lock (세션 시작 시)
 
@@ -93,8 +95,8 @@ brief 는 `templates/dispatch-brief.md`, Read 할 rules 는 `agents/README.md` �
 
 ## 12. 메인 체크리스트
 
-- [ ] 세션 시작: `.locks/` 확인 · stale lock · features 파싱 · feature 별 브랜치 분기
-- [ ] Phase 공통: dispatch 전 충돌 검사 → lock → brief(rules 명시) → dispatch → 완료 → lock 삭제 → 로그 1줄
-- [ ] Phase 4 사전: FE 공용 파일 일괄 등록
+- [ ] 세션 시작: `.locks/` 확인 · stale lock · features 파싱 · feature 별 worktree·브랜치 분기
+- [ ] Phase 공통: Figma 등 공유 자원만 dispatch 전 충돌 검사 → lock → brief(rules 명시) → dispatch → 완료 → lock 삭제 → 로그 1줄
+- [ ] Phase 4: FE 공용 파일은 각 worktree 안에서 frontend-developer 가 직접 등록 (§ 6)
 - [ ] Phase 5 후: history 항목 확인 · `CHANGELOG.md` `[Unreleased]` 판단 · `.progress/<b>/` 삭제 · PR
 - [ ] 전체 종료: lock 0건 확인 · 사용자 보고

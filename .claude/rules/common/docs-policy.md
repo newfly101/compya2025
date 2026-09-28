@@ -5,12 +5,13 @@
 
 ---
 
-## 1. 문서 두 종류
+## 1. 문서 세 종류
 
 | 종류 | 위치 | 수명 |
 |---|---|---|
 | 누적 문서 | `docs/` | 영속. 기능마다 고정 파일. 작업 시 갱신·덧붙임만 |
 | 작업 문서 | `.claude/.progress/<branch-name>/` | 브랜치 1개당 존재. 머지 전 삭제. 원본은 git 이력·PR 본문에 남음. **agent 파이프라인 산출(analysis·be/fe-history·decisions.log·screen-spec 초안·integrate-report)도 전부 여기** |
+| 사람 창작물 | `drafts/<branch>/` | gitignore. 브랜치 1개당 존재. 통합 단계(§ 6 ④)에서 삭제. Claude Design html · 기획 md · 엑셀 등, 코드·문서 작업의 투입 재료 |
 
 ---
 
@@ -33,6 +34,8 @@ docs/
 └── assets/                    루트 README·design.md 가 쓰는 이미지만 (readme/ 화면 캡처 · 도식). md 금지
 CHANGELOG.md                    루트. 릴리스 단위 요약. 각 항목이 features/*/history.md 로 링크
 ```
+
+⚠️ **생성 파일 (손으로 편집 금지)**: `overview/traceability*.md`(`python .claude/scripts/build-traceability.py`), `README.md` § 3 기능표(`python .claude/scripts/build-readme-table.py`). 검사는 `python .claude/scripts/docs-check.py`. 머지 뒤 master 에서 재실행 — `.claude/conventions/release-procedure.md`.
 
 ---
 
@@ -84,16 +87,15 @@ updated: 2026-09-28
 
 ---
 
-## 6. 작업 흐름 6단계
+## 6. 작업 흐름 5단계
 
-1. `master` 에서 브랜치 분기 (`feat/` `fix/` `refactor/` `docs/` `ops/`)
-2. 분석 — `.claude/.progress/<branch>/analysis.md` 를 `.claude/templates/analysis.md` 로 작성. 현재 동작 / 문제점 / 측정 기준값(before) / 수정 계획
-3. 코드 수정 — 커밋 여러 개
-4. 실측 — 같은 폴더 `verification.md` 를 `.claude/templates/verification.md` 로. 수정 후 측정값(after) + 계획 대비 결과
-5. 이력 반영 — `docs/features/<기능>/history.md` 맨 위에 항목 1개 추가 (`.claude/templates/history-entry.md` 형식). analysis·verification 을 몇 줄로 요약. 기획 변경이 있었으면 spec.md / design.md 갱신 + 버전 올림
-6. 정리 — `.claude/.progress/<branch>/` 삭제 커밋 → PR → 머지
+① 투입 — 사람 창작물(Claude Design html · 기획 md · 엑셀)을 `drafts/<branch>/` 에 둔다 (세션 = worktree = 브랜치 = 기능 하나, `claude --worktree {이름}`)
+② 분석 — `developer-analyze` 가 `drafts/<branch>/**` + 현재 `spec.md`/`design.md` 를 읽고 `.claude/.progress/<branch>/analysis.md` 와, 바뀔 § 만 담은 `.claude/.progress/<branch>/spec-delta.md` 를 작성
+③ 개발 — `frontend-developer` / `backend-developer` 가 기능 구현 후 각자 `docs/features/<f>/history.md` 맨 위에 항목 1개를 **직접** 추가 (`.claude/templates/history-entry.md`). 지금의 `fe-history.md`/`be-history.md` 는 그 재료
+④ 통합 — `developer-integrate` 가 spec-delta 를 spec.md/design.md 에 반영 · spec `version` 을 history 최상단 버전과 맞춤 · `CHANGELOG.md` `[Unreleased]` 1줄 · Playwright 실측 · `drafts/<branch>/` 삭제
+⑤ 커밋 — 훅 `guard-docs-sync.sh` 가 기능 코드 스테이징 시 같은 기능 `history.md` 동반 스테이징 + spec↔history 버전 일치를 검사한다. 예외는 `ALLOW_NODOCS=1` + 사유. PR → 머지
 
-⚠️ **squash merge 를 쓰면 6단계에서 삭제한 작업 문서가 master 이력에서 사라진다.** 과정 기록을 남기려면 merge commit 방식을 쓰거나 PR 본문에 analysis·verification 핵심을 붙인다. 이 프로젝트는 **PR 본문 첨부를 기본으로 한다.**
+⚠️ **squash merge 를 쓰면 머지 전 삭제되는 작업 문서(`.claude/.progress/<branch>/`)가 master 이력에서 사라진다.** 과정 기록을 남기려면 merge commit 방식을 쓰거나 PR 본문에 analysis·verification 핵심을 붙인다. 이 프로젝트는 **PR 본문 첨부를 기본으로 한다.**
 
 ---
 
@@ -112,8 +114,8 @@ updated: 2026-09-28
 | planner `_common.md` + `{feature}.md` | `docs/features/<f>/spec.md` (템플릿 `spec.md`) |
 | planner `_tasks.md` · `_decision_log.md` | `.claude/.progress/<branch>/{tasks.md, decisions.log}` — 확정된 결정은 spec 규칙 표 또는 ADR 로 |
 | designer `screen-spec.md` | `docs/features/<f>/design.md` (템플릿 `design.md`). `design-report.md` 는 `.progress/` |
-| developer-analyze `analysis.md` | `.claude/.progress/<branch>/analysis.md` (템플릿 `analysis.md` + 기능 분해 §) |
-| `be-history.md` · `fe-history.md` | `.claude/.progress/<branch>/` |
+| developer-analyze `analysis.md` · `spec-delta.md` | `.claude/.progress/<branch>/` (템플릿 `analysis.md` + 기능 분해 §. `spec-delta.md` 는 통합 단계에서 spec/design 에 반영 후 폐기) |
+| `be-history.md` · `fe-history.md` | 재료 — frontend/backend-developer 가 직접 쓰는 `docs/features/<f>/history.md` 항목의 작업 로그. 최종 위치는 history.md 그 자체 |
 | developer-integrate `integrate-report.md` | `.claude/.progress/<branch>/verification.md` — 마지막 § 가 `history-entry` 블록, 그것만 `docs/features/<f>/history.md` 로 |
 | `integrate-summary.md` (multi) | PR 본문 |
 

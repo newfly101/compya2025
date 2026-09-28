@@ -54,6 +54,10 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/guard-ddl.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/guard-docs-sync.sh"
           }
         ]
       }
@@ -67,6 +71,12 @@
             "command": "bash .claude/hooks/track-session-files.sh"
           }
         ]
+      }
+    ],
+    "WorktreeCreate": [
+      {
+        "type": "command",
+        "command": "bash .claude/hooks/worktree-create.sh"
       }
     ]
   }

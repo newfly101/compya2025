@@ -1,16 +1,17 @@
 #!/usr/bin/env bash
+. "$(dirname "$0")/_py.sh"
 # PreToolUse(Bash): git add / git commit 범위 제한.
 #  1) 일괄 스테이징 금지 — git add -A / . / --all, git commit -a
 #  2) 세션 범위 — .claude/.sessions/{session_id}.files 에 없는 파일은 add·commit 불가 (ALLOW_FOREIGN=1 로 예외)
 #  3) 문서 게이트 — docs/** 와 루트 *.md 는 ALLOW_DOCS=1 이 명령에 있을 때만 (사용자가 "문서 커밋" 이라고 했을 때만 붙인다)
 in=$(cat)
-cmd=$(printf '%s' "$in" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("tool_input",{}).get("command",""))' 2>/dev/null)
-sid=$(printf '%s' "$in" | python3 -c 'import sys,json; print(json.load(sys.stdin).get("session_id",""))' 2>/dev/null)
+cmd=$(printf '%s' "$in" | "$PY" -c 'import sys,json; print(json.load(sys.stdin).get("tool_input",{}).get("command",""))' 2>/dev/null)
+sid=$(printf '%s' "$in" | "$PY" -c 'import sys,json; print(json.load(sys.stdin).get("session_id",""))' 2>/dev/null)
 case "$cmd" in *"git add"*|*"git commit"*) ;; *) exit 0 ;; esac
 block(){ echo "차단: $1" >&2; exit 2; }
 
 case "$cmd" in
-  *"git add -A"*|*"git add --all"*|*"git add ."*|*"git add -u"*|*"git commit -a"*|*"git commit --all"*|*"git commit -am"*)
+  *"git add -A"*|*"git add --all"*|*"git add . "*|*"git add ."|*"git add -u"*|*"git commit -a "*|*"git commit -a"|*"git commit --all"*|*"git commit -am"*)
     block "일괄 스테이징입니다. 다른 세션의 변경이 섞입니다. 이 세션이 고친 파일만 'git add <경로>' 로 지정하세요 (rules/common/git-scope.md)." ;;
 esac
 

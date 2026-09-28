@@ -2,13 +2,13 @@
 
 > 항상 로드. hook(`.claude/hooks/guard-git.sh`, `track-session-files.sh`)이 강제하고, 이 문서는 왜·어떻게를 적는다. 배경: 여러 세션이 한 작업 디렉터리를 쓰면 `git status` 에 남의 변경이 섞여 함께 커밋되는 사고가 반복됐다.
 
-## 1. 병렬 세션은 worktree 가 기본
+## 1. 세션 = worktree = 브랜치 = 기능 하나 — 필수
 
 ```
 claude --worktree {이름}        # .claude/worktrees/{이름}/ 에 자기 브랜치·자기 파일. 다른 세션 변경이 아예 안 보인다
 ```
 
-같은 디렉터리에서 세션을 여러 개 켜는 것은 예외 상황이다. 그 경우에만 § 2 의 세션 범위 검사가 의미를 갖는다. worktree 는 빈 상태로 시작하므로 `node_modules`·`.env` 는 세션 시작 시 다시 준비한다 (`WorktreeCreate` hook 으로 자동화 가능 — 미설정).
+**같은 디렉터리에서 세션을 여러 개 켜는 것은 금지.** 오늘 공유 인덱스에 남의 스테이징이 섞이고 남의 미커밋 수정을 덮은 사고가 반복됐다. 예외적으로 같은 디렉터리에서 세션을 두 개 이상 켜야 한다면 § 2 의 세션 범위 검사가 필수다. worktree 는 빈 상태로 시작하므로 `node_modules`·`.env` 복사·포트 배정은 `WorktreeCreate` hook(`.claude/hooks/worktree-create.sh`)이 자동으로 준비한다.
 
 ## 2. 커밋 절차 (매번)
 
@@ -18,6 +18,7 @@ claude --worktree {이름}        # .claude/worktrees/{이름}/ 에 자기 브�
 3. `git add <파일> <파일> …` 로 **경로를 하나씩 지정.** `-A` · `.` · `--all` · `-u` · `commit -a` 는 hook 이 차단한다.
 4. 목록 밖 파일을 꼭 넣어야 하면 사용자에게 "다른 세션 작업물로 보이는 X 도 포함할까요" 라고 묻고, 승인 시에만 `ALLOW_FOREIGN=1 git add X`.
 5. 커밋 본문에 `버전 영향:` 줄 (`commit-version.md`).
+6. 훅 `guard-docs-sync.sh` 가 기능 코드 스테이징 시 같은 기능 `docs/features/<f>/history.md` 동반 스테이징 + spec↔history 버전 일치를 검사한다 (`docs-policy.md` § 6 ⑤). 예외는 `ALLOW_NODOCS=1` + 사유.
 
 ## 3. 문서는 자동으로 커밋하지 않는다
 
@@ -26,6 +27,7 @@ claude --worktree {이름}        # .claude/worktrees/{이름}/ 에 자기 브�
 | `docs/**` (전부) · 루트 `*.md` | **스테이징 금지** | 사용자가 "문서 커밋" · "docs 도 넣어" 처럼 **명시적으로** 말했을 때만 |
 | `.claude/**` · `CHANGELOG.md` | 위 규칙에 걸린다(`.md`) | 동일 — 규칙·컨벤션 갱신도 지시받았을 때만 커밋 |
 | 코드 · `sql/` · 설정 | 세션 범위 검사만 | 평소대로 |
+| 생성 문서 3종 (`overview/traceability*.md`, `README.md` § 3 기능표) | **직접 편집 금지** | 스크립트로만 갱신 (`docs-policy.md` § 2) |
 
 허용 방법은 하나: 사용자 지시가 있었을 때 명령 앞에 `ALLOW_DOCS=1` 을 붙인다 — `ALLOW_DOCS=1 git add docs/features/coupons/history.md`. 지시 없이 이 접두를 붙이는 것은 규칙 위반이다. `.gitignore` 에 `docs/` 를 넣지 않는 이유: 문서도 결국 커밋돼야 하고, 무시가 아니라 **시점을 사용자가 정하는 것**이 목적이다.
 

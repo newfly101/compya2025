@@ -104,6 +104,7 @@ git tag -a platform-3.0 -m "platform-3.0" -m "release: v2.3.0" -m "요약: FE Ty
    - [ ] BE: `deploy-be.yml` 수동 dispatch (또는 수동 배포) — 변경 있을 때만
    - [ ] DB: 스키마 변경 있으면 `sql/V3/` DDL 을 배포 **전** 운영 적용 (자동 실행 금지 파일 주의)
 6. **사후**
+   - [ ] master 에서 생성 스크립트 재실행: `python .claude/scripts/build-traceability.py` · `python .claude/scripts/build-readme-table.py` · `python .claude/scripts/docs-check.py`
    - [ ] 운영 화면 확인 후 CHANGELOG 에 이상 없음 확인, 문제 시 PATCH 릴리스
 
 ---

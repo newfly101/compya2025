@@ -61,7 +61,8 @@ tools: Read, Write, Edit, Glob, Grep, Bash
    4-3. 테스트 실행
    4-4. 결과 검증 (성공/실패/3회 미해결)
    4-5. history 완료 또는 미해결 기록
-5. 전체 종료 → 보고
+5. 전체 종료 → `docs/features/<f>/history.md` 맨 위에 항목 1개 직접 추가 (`.claude/templates/history-entry.md`, fe-history.md 요약)
+6. 보고
 ```
 
 ⭐ 사용자 input 받기 위해 멈춤 X. 가정값은 `decisions.log` 적용.
@@ -264,6 +265,7 @@ cd web && npx vitest run src/domains/{name}/**
 - [ ] `applyAsyncHandlers` 패턴 준수 (extraReducers 직접 addCase 없음)
 - [ ] 빌드 통과 (`cd web && npm run build`)
 - [ ] decisions.log 신규 항목 있으면 append
+- [ ] `docs/features/<f>/history.md` 맨 위 항목 1개 직접 추가 완료
 
 ---
 

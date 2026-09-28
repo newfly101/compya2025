@@ -45,14 +45,14 @@ sub-agent 에게는 path 규칙 자동 적용을 믿지 말고 **brief 에 Read 
 2. **한 파일군 = Edit agent 하나.** 나머지는 Read only. dispatch 전 `.claude/.locks/` 검사 → `conventions/file-locks.md`
 3. **brief 필수** — 목적 · 산출물 경로 · 범위 · Edit 가능 여부 · 회피 영역 · Read 할 rules · 버전 영향 · 보고 형식(§ 5). 단계 ≥ 3 또는 5분 이상이면 progress.log + Monitor → `conventions/agent-progress.md`
 4. **진행 로그** — 요청 단위마다 `.claude/.progress/claude-YYYYMMDD.log` 에 1줄. sub-agent 완료 시 그 로그를 흡수 + 원본 삭제
-5. **master 직접 커밋·푸시 금지.** 브랜치(`feat/` `fix/` `refactor/` `docs/` `ops/`) → PR → 머지. `--force` 는 승인 사안. 병렬 세션은 `claude --worktree`
+5. **master 직접 커밋·푸시 금지.** 브랜치(`feat/` `fix/` `refactor/` `docs/` `ops/`) → PR → 머지. `--force` 는 승인 사안. **세션 = worktree = 브랜치 = 기능 하나가 기본** — 병렬 세션은 `claude --worktree`, 같은 디렉터리에 세션 둘은 금지
    **커밋은 이 세션이 고친 파일만** `git add <경로>` 로 (`-A`/`.`/`-a` 금지). **`docs/**`·`*.md` 는 사용자가 명시적으로 문서 커밋을 지시했을 때만** `ALLOW_DOCS=1` 로 스테이징 — 그 외엔 빼고 보고에 한 줄. 상세 `rules/common/git-scope.md`, hook 이 강제
 6. **파괴적 작업은 항상 확인** — DB drop/DDL · 환경변수 · git force · 파일 대량 삭제. HITL 마커 🔴 는 답변 전 확정하지 않는다
 7. **결과 보고 받으면** 산출물 존재 확인 → 로그 1줄 → `CHANGELOG.md` `[Unreleased]` 갱신 판단(기능·플랫폼 영향 시만) → 사용자에게 200자 내 핵심
 
 ## 4. 문서 — 새 파일은 딱 둘
 
-① 새 기능 → `docs/features/<f>/{spec,design,history}.md` ② 여러 기능에 걸친 결정 → `docs/decisions/NNNN-slug.md`. 버그 수정·리팩터·리뷰·감사·실측은 **기존 파일 갱신**. 작업 문서는 `.claude/.progress/<branch>/` 에 두고 머지 전 삭제(PR 본문 첨부). 템플릿은 `.claude/templates/` 만. 상세 `rules/common/docs-policy.md`.
+① 새 기능 → `docs/features/<f>/{spec,design,history}.md` ② 여러 기능에 걸친 결정 → `docs/decisions/NNNN-slug.md`. 버그 수정·리팩터·리뷰·감사·실측은 **기존 파일 갱신**. 작업 문서는 `.claude/.progress/<branch>/` 에 두고 머지 전 삭제(PR 본문 첨부). 사람 창작물(디자인 html·기획 md·엑셀)은 `drafts/<branch>/` 에 두고 통합 단계에서 삭제. 템플릿은 `.claude/templates/` 만. 상세 `rules/common/docs-policy.md`.
 
 `docs/` 는 포트폴리오(사람이 읽음), `.claude/` 는 운영(agent 가 읽음). 같은 내용을 두 곳에 적지 않는다.
 

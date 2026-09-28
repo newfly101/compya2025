@@ -3,6 +3,8 @@ created: 2026-09-28
 updated: 2026-09-28
 ---
 
+<!-- 생성 파일: python .claude/scripts/build-traceability.py — 손으로 고치지 말 것 -->
+
 # 요구사항 추적표 — 정적·기타
 
 > [overview/traceability.md](./traceability.md) 에서 분리(150줄 상한). § 1 읽는 법·§ 2 약어표·§ 4 집계·§ 5 빈 자리는 그 문서에 있다.

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
+. "$(dirname "$0")/_py.sh"
 # CLAUDE.md § 0: test DB = prod DB. ssh fun 또는 mysql 로 DDL/DML 을 실행하려는 명령은 차단 — 조회(SELECT/SHOW/COUNT)만 허용.
-cmd=$(python3 -c 'import sys,json; print(json.load(sys.stdin).get("tool_input",{}).get("command",""))' 2>/dev/null)
+cmd=$("$PY" -c 'import sys,json; print(json.load(sys.stdin).get("tool_input",{}).get("command",""))' 2>/dev/null)
 case "$cmd" in
   *"ssh fun"*|*mysql*|*mariadb*)
     up=$(printf '%s' "$cmd" | tr '[:lower:]' '[:upper:]')
