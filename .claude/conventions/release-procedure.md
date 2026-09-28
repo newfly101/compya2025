@@ -93,9 +93,9 @@ git tag -a platform-3.0 -m "platform-3.0" -m "release: v2.3.0" -m "요약: FE Ty
    - [ ] 이용자 관점 문장으로 작성 (커밋 제목 복붙 금지), 커밋 해시는 대표 1~3개만
    - [ ] 플랫폼 bump 시 § 4 매트릭스 갱신 + 해당 컨벤션 문서 개정 여부 확인
    - > agent 워크플로우에서는 각 트랙 agent 완료 보고 시점에 **메인 세션**이 `[Unreleased]` 를 갱신한다 (CLAUDE.md § 2-7). 릴리스 섹션 확정·태깅·버전 필드 변경은 사용자 확인 후 메인 세션이 진행
-3. **버전 필드** (§ 7 후속 작업 적용 이후부터)
-   - [ ] `web/package.json`, `build.gradle` version 동기화
-   - [ ] 커밋: `[리뉴얼] [chore] 릴리스 vX.Y.Z`
+3. **버전 필드** (§ 7 후속 작업 적용 이후부터) — `web/package.json`(web 범주) 과 `build.gradle`(be 범주) 을 한 커밋에 섞지 않는다 (`git-scope.md` § 2)
+   - [ ] `web/package.json` version 동기화 → 커밋: `[리뉴얼] [chore] 릴리스 vX.Y.Z (web)`
+   - [ ] `build.gradle` version 동기화 → 커밋: `[리뉴얼] [chore] 릴리스 vX.Y.Z (be)`
 4. **태그**
    - [ ] master 머지 확인 → `git tag -a vX.Y.Z …` (+ 필요 시 `platform-A.B`)
    - [ ] `git push origin vX.Y.Z`
@@ -104,6 +104,7 @@ git tag -a platform-3.0 -m "platform-3.0" -m "release: v2.3.0" -m "요약: FE Ty
    - [ ] BE: `deploy-be.yml` 수동 dispatch (또는 수동 배포) — 변경 있을 때만
    - [ ] DB: 스키마 변경 있으면 `sql/draft/<작업>/` 의 SQL 을 사용자가 배포 **전** 운영에 직접 적용 → 반영 뒤 `sql/v.2.0.0/`(DDL·insert·applied) 로 통합하고 draft 에서 지운다
 6. **사후**
+   - [ ] 머지된 기능 브랜치 삭제 — 로컬 `git branch -d <branch>` + 원격 `git push origin --delete <branch>` (`git-scope.md` § 4)
    - [ ] master 에서 생성 스크립트 재실행: `python .claude/scripts/build-traceability.py` · `python .claude/scripts/build-readme-table.py` · `python .claude/scripts/docs-check.py`
    - [ ] 운영 화면 확인 후 CHANGELOG 에 이상 없음 확인, 문제 시 PATCH 릴리스
 
