@@ -1,29 +1,26 @@
 name: Deploy BE
 
-# ⚠️ 자동 배포 비활성 (2026-09-13) — 사전 준비(비공개 아티팩트 버킷 + Secrets +
-#   EC2 SSM 권한, .claude/references/be-deploy-setup.md)가 끝나기 전까지
-#   BE 는 수동 배포로 운영한다. 준비가 끝나면 아래 push 트리거 주석을 해제한다.
-# on:
-#   push:
-#     branches: [master]
-#     paths:
-#       - 'src/**'
-#       - 'build.gradle'
-#       - 'settings.gradle'
-#       - 'gradle/**'
-#       - '.github/workflows/deploy-be.yml'
+# 2026-09-28 SSH 자동 배포 전환 — S3 아티팩트 + SSM 대신 scp 로 jar 업로드,
+#   ssh 로 원격 배포 스크립트를 실행한다. 필요 Secrets: EC2_HOST · EC2_USER · EC2_SSH_KEY.
 on:
+  push:
+    branches: [master]
+    paths:
+      - 'src/**'
+      - 'build.gradle'
+      - 'settings.gradle'
+      - 'gradle/**'
+      - '.github/workflows/deploy-be.yml'
   workflow_dispatch:
 
 concurrency:
-  group: deploy-be
+  group: be-deploy
   cancel-in-progress: false
 
 permissions:
   contents: read
 
 env:
-  AWS_REGION: ap-northeast-2
   SERVICE_NAME: compyafun-web
   JAR_NAME: compyafun-web.jar
   MIN_JAR_SIZE_BYTES: 5000000
@@ -73,63 +70,37 @@ jobs:
             exit 1
           fi
 
-      - name: Validate deployment secrets
+      - name: SSH 키 준비
         run: |
-          if [ -z "${{ secrets.BE_ARTIFACT_BUCKET }}" ]; then
-            echo "::error::secrets.BE_ARTIFACT_BUCKET 이 비어 있다 — 비공개 S3 버킷을 설정하라"
-            exit 1
-          fi
-          if [ -z "${{ secrets.BE_INSTANCE_ID }}" ]; then
-            echo "::error::secrets.BE_INSTANCE_ID 가 비어 있다 — EC2 인스턴스 ID 를 설정하라"
-            exit 1
-          fi
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Upload jar to S3
-        id: upload
-        env:
-          BUCKET: ${{ secrets.BE_ARTIFACT_BUCKET }}
+      - name: jar 업로드 (scp)
         run: |
-          KEY="be/${{ github.sha }}/${{ env.JAR_NAME }}"
-          aws s3 cp "build/libs/${{ env.JAR_NAME }}" "s3://$BUCKET/$KEY"
-          echo "key=$KEY" >> "$GITHUB_OUTPUT"
+          scp -i ~/.ssh/deploy_key "build/libs/${{ env.JAR_NAME }}" \
+            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/tmp/compyafun-web.jar.new"
 
-      - name: Deploy via SSM
-        id: deploy
-        env:
-          BUCKET: ${{ secrets.BE_ARTIFACT_BUCKET }}
-          INSTANCE_ID: ${{ secrets.BE_INSTANCE_ID }}
-          KEY: ${{ steps.upload.outputs.key }}
+      - name: 원격 배포 (ssh)
         run: |
           cat > /tmp/remote-deploy.sh <<'REMOTE_SCRIPT'
           #!/usr/bin/env bash
           set -euo pipefail
 
-          BUCKET="__BUCKET__"
-          KEY="__KEY__"
           REMOTE_DIR="/opt/compyafun"
           JAR_NAME="compyafun-web.jar"
           SERVICE="compyafun-web"
           TMP_JAR="/tmp/compyafun-web.jar.new"
           STAMP="$(date +%y%m%d-%H%M)"
 
-          echo "▶ S3 다운로드: s3://$BUCKET/$KEY"
-          rm -f "$TMP_JAR"
-          aws s3 cp "s3://$BUCKET/$KEY" "$TMP_JAR"
-
           if [ ! -s "$TMP_JAR" ]; then
-            echo "✖ 다운로드 실패 또는 빈 파일: $TMP_JAR — 기존 jar 유지, 배포 중단"
+            echo "✖ 업로드된 jar 가 없거나 빈 파일: $TMP_JAR — 기존 jar 유지, 배포 중단"
             exit 1
           fi
 
           SIZE=$(stat -c%s "$TMP_JAR")
-          echo "  다운로드 완료: ${SIZE} bytes"
+          echo "  업로드된 jar 크기: ${SIZE} bytes"
           if [ "$SIZE" -lt 5000000 ]; then
             echo "✖ jar 크기가 비정상적으로 작다 (${SIZE} bytes) — 기존 jar 유지, 배포 중단"
             exit 1
@@ -162,36 +133,8 @@ jobs:
           fi
           REMOTE_SCRIPT
 
-          sed -i "s|__BUCKET__|$BUCKET|; s|__KEY__|$KEY|" /tmp/remote-deploy.sh
+          ssh -i ~/.ssh/deploy_key "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" 'bash -s' < /tmp/remote-deploy.sh
 
-          jq -n --rawfile script /tmp/remote-deploy.sh '{"commands":[$script]}' > /tmp/ssm-params.json
-
-          COMMAND_ID=$(aws ssm send-command \
-            --instance-ids "$INSTANCE_ID" \
-            --document-name "AWS-RunShellScript" \
-            --comment "BE deploy ${{ github.sha }}" \
-            --parameters file:///tmp/ssm-params.json \
-            --query "Command.CommandId" --output text)
-          echo "SSM Command ID: $COMMAND_ID"
-
-          echo "▶ 원격 명령 완료 대기"
-          aws ssm wait command-executed --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" || true
-
-          STATUS=$(aws ssm get-command-invocation --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" --query "Status" --output text)
-          echo "▶ 원격 명령 상태: $STATUS"
-
-          echo "----- remote stdout -----"
-          aws ssm get-command-invocation --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" --query "StandardOutputContent" --output text
-          echo "----- remote stderr -----"
-          aws ssm get-command-invocation --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" --query "StandardErrorContent" --output text
-
-          if [ "$STATUS" != "Success" ]; then
-            echo "::error::SSM 원격 배포 실패 (상태: $STATUS)"
-            echo ""
-            echo "▶ 롤백하려면 (STAMP 은 위 stdout 로그의 백업 파일명에서 확인)"
-            echo '   aws ssm send-command --instance-ids "'"$INSTANCE_ID"'" --document-name AWS-RunShellScript \'
-            echo '     --parameters commands="sudo cp /opt/compyafun/bak/compyafun-web-<STAMP>.jar /opt/compyafun/compyafun-web.jar && sudo systemctl restart compyafun-web && sudo systemctl restart nginx"'
-            exit 1
-          fi
-
-          echo "▶ 배포 완료"
+      - name: SSH 키 정리
+        if: always()
+        run: rm -f ~/.ssh/deploy_key

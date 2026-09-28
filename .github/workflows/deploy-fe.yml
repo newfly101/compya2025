@@ -15,9 +15,10 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  BUCKET: compya-images
-  DIST_ID: E3TX8OFJBC8IML
-  AWS_REGION: ap-northeast-2
+  # 값은 저장소 Settings → Secrets → Actions 에 있다 (S3_BUCKET · CLOUDFRONT_DISTRIBUTION_ID · AWS_REGION)
+  BUCKET: ${{ secrets.S3_BUCKET }}
+  DIST_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
 
 jobs:
   deploy:

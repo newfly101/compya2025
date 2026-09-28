@@ -12,9 +12,9 @@
 |---|---|
 | **FE** | `web/**` 변경 push → GitHub Actions 자동 실행 → 빌드+prerender → S3(`compya-images`) 동기화 → CloudFront 무효화 |
 | ⚠️ **FE 자동 배포는 아직 한 번도 성공한 적이 없다** (2026-09-28 확인) | 워크플로는 2026-09-13 신설 이후 4회 전부 `AWS 자격증명` 단계에서 실패 — 저장소 Secrets 에 `AWS_ACCESS_KEY_ID`·`AWS_SECRET_ACCESS_KEY` 가 없다(`gh secret list` 0건). 운영에 올라간 FE 는 그 전에 수동으로 올린 빌드다. Secrets 를 넣은 뒤 실패한 run 을 `gh run rerun <id>` 로 재실행하면 된다 |
-| **BE** | 사람이 Actions 탭에서 수동 실행(workflow_dispatch) → Gradle 빌드 → S3(비공개 아티팩트 버킷)에 jar 업로드 → AWS SSM 으로 EC2 에 원격 배포 명령 전달 |
+| **BE** | `src/**` 등 변경 push 또는 수동 실행 → Gradle 빌드 → scp 로 EC2 에 jar 업로드 → ssh 로 원격 배포 스크립트 실행 |
 
-⚠️ **BE 자동 배포는 현재 꺼져 있다.** `deploy-be.yml` 의 `push` 트리거는 주석 처리돼 있고 `workflow_dispatch` 만 열려 있다 — 사전 준비(§ 3, `docs/global-guide/develop/be-deploy-setup.md`)가 끝나지 않아서다. 지금은 BE 배포를 하려면 Actions 탭에서 수동으로 눌러야 한다.
+BE 자동 배포는 2026-09-28 부터 SSH/SCP 방식으로 켜져 있다. S3 아티팩트 버킷·SSM 은 쓰지 않는다 — `EC2_HOST`·`EC2_USER`·`EC2_SSH_KEY` 세 Secrets 로 scp/ssh 직접 접속한다.
 
 FE(`compyafun.com`)와 BE API(`api.compyafun.com`)는 서브도메인이 나뉘어 있다 — `application-prod.properties` 의 네이버 redirect-uri, `web/src/config/env.js` 의 `API_BASE_URL` 로 확인된다.
 
@@ -29,7 +29,7 @@ FE 와 BE 는 같은 AWS 계정을 쓰지만 버킷은 분리돼 있다. `compya
 | 워크플로 | 언제 돈다 (트리거) | 하는 일 | 배포 대상 |
 |---|---|---|---|
 | `deploy-fe.yml` | `master` 에 `web/**` 변경 push, 또는 수동 실행 | 빌드 → prerender 검증 → S3 동기화 → CloudFront 무효화 → 라이브 검증 | S3 `compya-images` + CloudFront |
-| `deploy-be.yml` | **수동 실행만** (`workflow_dispatch`) — push 트리거는 비활성 | Gradle 빌드 → jar 크기 검증 → S3 업로드 → SSM 으로 EC2 원격 배포 | EC2 인스턴스 (systemd `compyafun-web`) |
+| `deploy-be.yml` | `master` 에 `src/**`·`build.gradle` 등 변경 push, 또는 수동 실행 | Gradle 빌드 → jar 크기 검증 → scp 업로드 → ssh 원격 배포 | EC2 인스턴스 (systemd `compyafun-web`) |
 
 두 워크플로 모두 `concurrency` 그룹으로 동시 실행을 막는다(`cancel-in-progress: false`) — 이미 도는 배포가 끝날 때까지 다음 배포는 대기한다.
 
@@ -46,10 +46,10 @@ FE 와 BE 는 같은 AWS 계정을 쓰지만 버킷은 분리돼 있다. `compya
 
 1. `build.gradle` 에서 Java 버전을 읽어 JDK 설치, `./gradlew clean bootJar` 로 빌드
 2. 산출물 `build/libs/compyafun-web.jar` 존재 여부 + 최소 크기(5MB) 검증
-3. 배포 시크릿(`BE_ARTIFACT_BUCKET`, `BE_INSTANCE_ID`) 존재 여부 검증 — 없으면 여기서 멈춘다
-4. jar 를 `s3://<BE_ARTIFACT_BUCKET>/be/<commit-sha>/compyafun-web.jar` 로 업로드
-5. AWS SSM `send-command` 로 EC2 에 원격 스크립트 전달 — 스크립트가 하는 일: S3 에서 jar 재다운로드 → 크기 재검증 → 기존 jar 를 `bak/compyafun-web-<시각>.jar` 로 백업 → 교체 → `systemctl restart compyafun-web` + `nginx` → 10초 대기 후 기동 상태 확인
-6. SSM 명령 완료를 기다려 상태(`Success`/그 외)와 원격 stdout/stderr 를 워크플로 로그에 그대로 출력
+3. SSH 키 준비 — `secrets.EC2_SSH_KEY` 를 `~/.ssh/deploy_key` 로 기록 + `ssh-keyscan` 으로 known_hosts 등록
+4. `scp` 로 jar 를 EC2 의 `/tmp/compyafun-web.jar.new` 로 업로드
+5. `ssh ... 'bash -s' < remote-deploy.sh` 로 원격 스크립트 실행 — 하는 일: 업로드된 jar 크기 재검증 → 기존 jar 를 `bak/compyafun-web-<시각>.jar` 로 백업 → 교체 → `systemctl restart compyafun-web` + `nginx` → 10초 대기 후 기동 상태 확인, 실패 시 `journalctl` 40줄 출력
+6. 마지막 단계(`if: always()`)에서 `~/.ssh/deploy_key` 삭제
 
 ---
 
@@ -59,9 +59,10 @@ FE 와 BE 는 같은 AWS 계정을 쓰지만 버킷은 분리돼 있다. `compya
 
 | 이름 | 무엇인가 | 어디에 설정하나 |
 |---|---|---|
-| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | FE·BE 배포가 공용으로 쓰는 IAM 사용자 키 (BE 는 추가 권한 필요, 표 아래 참고) | GitHub Secrets (저장소 Settings → Secrets and variables → Actions) |
-| `BE_ARTIFACT_BUCKET` | BE jar 를 올리는 **비공개** S3 버킷명 | GitHub Secrets |
-| `BE_INSTANCE_ID` | BE 를 배포할 EC2 인스턴스 ID | GitHub Secrets |
+| `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` | FE 배포(S3 동기화·CloudFront 무효화)가 쓰는 IAM 사용자 키. BE 는 더 이상 AWS 를 쓰지 않는다 | GitHub Secrets (저장소 Settings → Secrets and variables → Actions) |
+| `EC2_HOST` | BE 를 배포할 EC2 접속 주소 (도메인 또는 IP) | GitHub Secrets |
+| `EC2_USER` | EC2 SSH 접속 계정 — `sudo systemctl restart compyafun-web`/`nginx` 를 비밀번호 없이 실행 가능해야 함 | GitHub Secrets |
+| `EC2_SSH_KEY` | 위 계정으로 접속하는 SSH 개인키 (PEM, 평문) | GitHub Secrets |
 | `DB_HOST` / `DB_PORT` / `DB_NAME` / `DB_USERNAME` / `DB_PASSWORD` | 로컬 개발용 DB 접속 정보 | 서버 환경변수 또는 `.env.properties` (로컬 전용, git 미추적) |
 | `PROD_DB_HOST` / `PROD_DB_PORT` / `PROD_DB_NAME` / `PROD_DB_USERNAME` / `PROD_DB_PASSWORD` | 운영 DB 접속 정보 | 운영 서버 환경변수 (EC2 상의 `.env` — git 미추적) |
 | `NAVER_CLIENT_ID` / `NAVER_CLIENT_SECRET` / `NAVER_REDIRECT_URI` | 로컬용 네이버 OAuth 앱 키 | 서버 환경변수 / `.env.properties` |
@@ -72,9 +73,23 @@ FE 와 BE 는 같은 AWS 계정을 쓰지만 버킷은 분리돼 있다. `compya
 | `SWAGGER_UI_ENABLED` | 로컬 Swagger UI 노출 여부 (운영은 properties 에서 항상 `false`) | 서버 환경변수 (기본값 `false`) |
 | `-Duser.timezone=Asia/Seoul` | JVM 기본 타임존 고정 (ADR 0007 2단계, properties 값과 별개로 기동 명령에 필요) | EC2 systemd 유닛의 실행 커맨드 (`java -Duser.timezone=Asia/Seoul -jar ...`) — 이 문서에서 yml·systemd 파일은 직접 수정하지 않는다 |
 
-BE 배포용 IAM 사용자는 FE 배포 권한 외에 `s3:PutObject`(아티팩트 버킷), `ssm:SendCommand`, `ssm:GetCommandInvocation` 이 추가로 필요하다. EC2 인스턴스 역할에는 `AmazonSSMManagedInstanceCore` + 아티팩트 버킷 `s3:GetObject` 가 필요하다. 상세 체크리스트는 `docs/global-guide/develop/be-deploy-setup.md` 참고.
+BE 배포는 AWS IAM 권한이 필요 없다 — `EC2_USER` 계정이 SSH 로 접속해 `scp` 로 jar 를 받고, `sudo systemctl restart compyafun-web`/`nginx` 를 실행할 수 있으면 된다(EC2 상의 sudoers 설정 필요, 이 문서 범위 밖).
 
 ---
+
+### 3.1 FE 배포 IAM 사용자 최소 권한 (`compyfun-deploy-auto`)
+
+2026-09-28 첫 자동 배포가 `S3 동기화` 에서 `AccessDenied(ListObjectsV2)` 로 막혔다 — 시크릿은 맞았고 IAM 권한이 없었다. 아래 인라인 정책이 최소 집합이다(`<ACCOUNT_ID>` 는 12자리 계정 번호).
+
+```json
+{ "Version": "2012-10-17", "Statement": [
+  { "Sid": "FeStaticSync",    "Effect": "Allow", "Action": ["s3:ListBucket"], "Resource": "arn:aws:s3:::compya-images" },
+  { "Sid": "FeStaticObjects", "Effect": "Allow", "Action": ["s3:GetObject","s3:PutObject","s3:DeleteObject"], "Resource": "arn:aws:s3:::compya-images/*" },
+  { "Sid": "CdnInvalidate",   "Effect": "Allow", "Action": ["cloudfront:CreateInvalidation","cloudfront:GetInvalidation"], "Resource": "arn:aws:cloudfront::<ACCOUNT_ID>:distribution/E3TX8OFJBC8IML" }
+] }
+```
+
+`s3:DeleteObject` 는 `aws s3 sync --delete` 가 옛 정적 파일을 지우는 데 쓴다(`uploads/*`·`portfolio/*` 는 exclude). BE 는 SSH 배포라 이 사용자에게 EC2·SSM 권한은 필요 없다.
 
 ## 4. 환경 분리
 
@@ -110,7 +125,7 @@ BE 배포용 IAM 사용자는 FE 배포 권한 외에 `s3:PutObject`(아티팩�
    ```
 7. 배포한다.
    - FE: master 에 `web/**` 변경이 있으면 push 시점에 자동 배포됨 — Actions 탭에서 실행 결과 확인
-   - BE: 변경이 있을 때만 Actions 탭에서 `Deploy BE` 를 **workflow_dispatch** 로 수동 실행
+   - BE: master 에 `src/**`·`build.gradle` 등 변경이 있으면 push 시점에 자동 배포됨. 필요하면 `Deploy BE` 를 **workflow_dispatch** 로 수동 실행도 가능
    - DB: 스키마 변경이 있으면 `sql/V3/` DDL 을 배포 **전에** 운영에 직접 적용 (§ 7 의 DB 공유 경고 참고)
 8. 배포 후 운영 화면을 직접 확인하고, 이상 있으면 CHANGELOG 에 PATCH 릴리스로 기록한다.
 
@@ -123,10 +138,9 @@ BE 배포용 IAM 사용자는 FE 배포 권한 외에 `s3:PutObject`(아티팩�
 | FE 워크플로가 `prerender 스냅샷 검증` 단계에서 실패 | Actions 로그의 `verify-prerender.mjs` 출력 | S3 동기화 전이라 운영에는 영향 없음. 로컬에서 `npm run build:prerender` 재현 후 원인 수정 |
 | FE 워크플로는 성공했는데 "배포 후 라이브 검증"이 실패 | 로그가 안내하는 `https://compyafun.com/ads.txt`, `https://compyafun.com/` 을 직접 열어 확인 | 배포는 이미 나간 뒤 — CloudFront 캐시 문제는 아님(무효화 전파 대기 후 검증함). 원인 파악 후 재배포 |
 | BE 워크플로가 `Verify build artifact` 에서 실패 | 로그의 jar 크기 | 빌드 산출물이 비정상 — 로컬에서 `./gradlew clean bootJar` 재현 |
-| BE 워크플로가 `Validate deployment secrets` 에서 실패 | `BE_ARTIFACT_BUCKET`/`BE_INSTANCE_ID` 시크릿 등록 여부 | § 3 표대로 GitHub Secrets 등록 |
-| BE 원격 배포가 "다운로드 실패/크기 작음"으로 중단 | SSM 명령 stdout (워크플로 로그에 그대로 출력됨) | 기존 jar 는 그대로 유지된 상태 — S3 업로드본 재확인 후 재실행 |
+| BE 워크플로가 `SSH 키 준비`/`jar 업로드` 에서 실패 | `EC2_HOST`/`EC2_USER`/`EC2_SSH_KEY` 시크릿 등록 여부, EC2 보안그룹의 22번 포트 | § 3 표대로 GitHub Secrets 등록, 보안그룹에서 GitHub Actions IP 허용 확인 |
+| BE 원격 배포가 "업로드된 jar 없음/크기 작음"으로 중단 | 워크플로 로그(원격 스크립트 stdout 그대로 출력됨) | 기존 jar 는 그대로 유지된 상태 — scp 업로드 단계 재확인 후 재실행 |
 | BE 배포 후 서비스 기동 실패 | 워크플로 로그에 찍힌 `journalctl -u compyafun-web -n 40` 출력 | 아래 "BE 롤백" 참고 |
-| SSM 명령 자체가 `Success` 가 아닌 상태로 끝남 | 워크플로 로그의 `원격 명령 상태` / stdout·stderr | 아래 "BE 롤백" 참고 |
 | FE 를 이전 상태로 되돌리고 싶다 | 없음(자동 롤백 미구현, § 8) | 문제 커밋을 revert 하고 다시 master 에 push해 재배포하는 방식만 가능 |
 
 **BE 롤백** — 배포 스크립트가 교체 전 jar 를 `/opt/compyafun/bak/compyafun-web-<시각>.jar` 로 백업해 둔다. 실패 시 로그가 안내하는 시각(STAMP)을 넣어 되돌린다.
@@ -137,10 +151,10 @@ sudo cp /opt/compyafun/bak/compyafun-web-<시각>.jar /opt/compyafun/compyafun-w
 sudo systemctl restart compyafun-web
 ```
 
-로컬/CI 에서 SSM 으로 재전송한다면:
+로컬에서 ssh 로 재전송한다면:
 ```bash
-aws ssm send-command --instance-ids "<INSTANCE_ID>" --document-name AWS-RunShellScript \
-  --parameters commands="sudo cp /opt/compyafun/bak/compyafun-web-<시각>.jar /opt/compyafun/compyafun-web.jar && sudo systemctl restart compyafun-web && sudo systemctl restart nginx"
+ssh <EC2_USER>@<EC2_HOST> \
+  "sudo cp /opt/compyafun/bak/compyafun-web-<시각>.jar /opt/compyafun/compyafun-web.jar && sudo systemctl restart compyafun-web && sudo systemctl restart nginx"
 ```
 
 ---
@@ -151,7 +165,7 @@ aws ssm send-command --instance-ids "<INSTANCE_ID>" --document-name AWS-RunShell
 
 - 운영자는 1인 체제다. 배포 실행·장애 대응·콘텐츠 등록이 전부 한 사람에게 몰린다.
 - 이벤트·공지·쿠폰 같은 콘텐츠는 어드민 화면에서 수동으로 등록한다 — 자동 발행 파이프라인은 없다.
-- BE 배포는 사람이 Actions 탭을 직접 눌러야 나간다(§ 2). 코드가 master 에 머지됐다고 자동으로 서버에 반영되지 않는다.
+- BE 배포는 master 에 `src/**` 등 변경이 push 되면 자동으로 나간다(§ 2). 수동 실행도 가능하다.
 - CloudFront 에는 뷰어 요청 함수 1개가 붙어 있다 — 원본은 `infra/cloudfront/rewrite-index.js`. 디렉터리 경로를 `index.html` 로 리라이트해 prerender 스냅샷이 서빙되게 하고, `www` → apex 301 을 처리한다. **Actions 가 배포하지 않는다** — 고치면 CloudFront 콘솔(배포 `E3TX8OFJBC8IML` → 함수 → 뷰어 요청)에 직접 붙여 넣고 게시한다. 런타임이 ES5.1 이라 최신 문법 금지(파일 머리 주석).
 
 ---
@@ -163,7 +177,6 @@ aws ssm send-command --instance-ids "<INSTANCE_ID>" --document-name AWS-RunShell
 - 모니터링·알림 (에러율/응답시간 대시보드, 장애 알림 채널) — 없음
 - 스테이징(운영과 분리된 검증) 환경 — 없음. 테스트 DB = 운영 DB 라 로컬 실행이 사실상 유일한 사전 검증
 - BE/FE 자동 롤백 — 없음. BE 는 EC2 상의 백업 jar 로 수동 복구만 가능, FE 는 revert 후 재배포만 가능
-- BE 자동 배포(push 트리거) — 준비 중, 현재 비활성 (§ 2)
 - prod 프로필 활성화 방식(systemd 유닛 파일 등) — 이 저장소에는 없어 확인 불가
 - 배포 성공/실패에 대한 Slack 등 외부 알림 연동 — 없음 (GitHub Actions 로그 확인이 전부)
 - 배포 파이프라인 안에서의 자동 테스트 실행 — 두 워크플로 모두 빌드·검증 단계만 있고 `./gradlew test` / FE 테스트 실행 단계는 없음
