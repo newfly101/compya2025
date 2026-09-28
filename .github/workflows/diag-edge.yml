@@ -28,3 +28,23 @@ jobs:
       - name: HEAD 와 GET 차이
         run: |
           echo "▶ HEAD"; curl -sI https://compyafun.com/ads.txt | tr -d '\r' | grep -iE '^HTTP/|^content-type|^x-cache|^age' || true
+      - name: 한국 엣지 IP 로 강제 연결 (뷰어 국가 제한이면 여기서도 HTML, 엣지 문제면 text/plain)
+        run: |
+          for ip in 168.126.63.1; do
+            echo "=================== --resolve compyafun.com:443:$ip  /ads.txt"
+            curl -s -D - -o /tmp/body --resolve "compyafun.com:443:$ip" https://compyafun.com/ads.txt | tr -d '' | grep -iE '^HTTP/|^content-type|^x-cache|^x-amz-cf-pop' || true
+            echo "본문 앞 60자: $(head -c 60 /tmp/body | tr '
+' ' ')"
+          done
+      - name: JS 자산도 HTML 로 오나 (미국 이용자에게 사이트가 깨지는지)
+        run: |
+          JS=$(curl -s https://compyafun.com/ | grep -oE '/assets/index-[^"]+\.js' | head -1)
+          echo "자산 경로: $JS"
+          curl -s -D - -o /tmp/body "https://compyafun.com$JS" | tr -d '' | grep -iE '^HTTP/|^content-type|^x-cache' || true
+          echo "본문 앞 40자: $(head -c 40 /tmp/body | tr '
+' ' ')"
+      - name: CloudFront 도메인 직접
+        run: |
+          curl -s -D - -o /tmp/body https://d2zps4faf1uuw6.cloudfront.net/ads.txt | tr -d '' | grep -iE '^HTTP/|^content-type|^x-cache' || true
+          echo "본문 앞 40자: $(head -c 40 /tmp/body | tr '
+' ' ')"
