@@ -54,7 +54,7 @@ sub-agent 에게는 path 규칙 자동 적용을 믿지 말고 **brief 에 Read 
 
 ① 새 기능 → `docs/features/<f>/{spec,design,history}.md` ② 여러 기능에 걸친 결정 → `docs/decisions/NNNN-slug.md`. 버그 수정·리팩터·리뷰·감사·실측은 **기존 파일 갱신**. 작업 문서는 `.claude/.progress/<branch>/` 에 두고 머지 전 삭제(PR 본문 첨부). 템플릿은 `.claude/templates/` 만. 상세 `rules/common/docs-policy.md`.
 
-`docs/` 는 포트폴리오(사람이 읽음), `.claude/` 는 운영(agent 가 읽음). 같은 내용을 두 곳에 적지 않는다. `docs/code-review-v2/` 는 다른 세션 작업 중 — 손대지 않는다.
+`docs/` 는 포트폴리오(사람이 읽음), `.claude/` 는 운영(agent 가 읽음). 같은 내용을 두 곳에 적지 않는다.
 
 ## 5. 토큰 규율
 

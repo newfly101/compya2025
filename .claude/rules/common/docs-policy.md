@@ -42,7 +42,7 @@ CHANGELOG.md                    루트. 릴리스 단위 요약. 각 항목이 f
 
 버그 수정 / 리팩터링 / 성능 개선 / 기획 변경 / 리뷰 / 감사 / 실측 — **전부 기존 파일 갱신으로 끝난다. 새 파일 금지.**
 
-⚠️ 예외 — `docs/code-review-v2/` 는 재편 진행 중에도 위 구조 규칙 적용 대상이 아니다. 수정 반영 이전 기록이고 다른 세션이 동시 작업 중이라 **손대지 않는다.** 상세: [docs/decisions/0001-docs-restructure.md](../../docs/decisions/0001-docs-restructure.md)
+예외 없음. 2026-09-28 까지 남아 있던 `docs/code-review-v2/`(수정 반영 이전 PRD) 도 `features/*/spec.md` 로 흡수 후 삭제됐다 — [docs/decisions/0001-docs-restructure.md](../../docs/decisions/0001-docs-restructure.md)
 
 ---
 

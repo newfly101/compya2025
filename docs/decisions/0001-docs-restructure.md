@@ -37,7 +37,7 @@ updated: 2026-09-28
 | `docs/global-guide/`, `docs/mcp/` | `.claude/references/` (외부용 요약만 `docs/overview/`) |
 | `docs/domain/` | `docs/overview/domain.md` + 기능별 내용은 `docs/features/*/spec.md` |
 | `docs/design-review-v1/`, `docs/review-code-complete/`, `docs/consistency-audit/` | 결론만 해당 기능 `history.md` 첫 항목으로 요약. 원본은 태그 `docs-archive-2026-09` 로 보존 후 삭제 |
-| `docs/code-review-v2/` (87파일) | **현 위치 유지 — 손대지 않음.** 수정 반영 이전 기록이며 다른 세션이 동시 작업 중. 처리 시점은 사용자가 따로 지시한다 |
+| `docs/code-review-v2/` (87파일) | `features/<f>/spec.md`·`design.md` 의 원천(수정 반영 이전 PRD 라 코드·review-code-complete 로 정정), `architecture-system-total.md` → `overview/architecture.md` § 7~9. 2026-09-28 사용자 지시로 삭제(git 미추적, 태그에도 없음) |
 | `docs/todo-*.md` 3개 | 남은 항목은 GitHub Issues 로, 파일 삭제 |
 | `docs/refactoring-claude-ai.md` | `docs/overview/ai-workflow.md` 의 재료 |
 | `docs/CHANGELOG.md` | 루트로 이동 |
@@ -46,7 +46,7 @@ updated: 2026-09-28
 
 ## 이번 재편에서 제외한 것
 
-`docs/code-review-v2/` 87파일은 재편 범위 밖이다. 이 폴더를 읽거나 옮기거나 지우는 작업은 사용자 지시가 있을 때만 한다.
+`docs/code-review-v2/` 는 처음엔 다른 세션 작업 중이라 범위 밖이었으나, 흡수 확인 뒤 2026-09-28 사용자 지시로 삭제했다.
 
 ## 대안과 기각 사유
 

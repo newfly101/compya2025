@@ -115,3 +115,34 @@ flowchart LR
 ## 6. 로컬 실행
 
 BE `./gradlew bootRun`(8080) + FE `cd web && npm start`(3000). 상세 절차·환경변수 목록은 루트 [`SETTING.md`](../../SETTING.md) 참고.
+
+## 7. 공통 장치
+
+| 무엇 | 어디에 | 하는 일 |
+|---|---|---|
+| 인증 필터 | `security/filter/JwtAuthFilter.java` | 매 요청 쿠키의 액세스 토큰 검증 → 사용자 식별, 세션 없음 |
+| 전역 예외 처리 | `common/support/advice/GlobalExceptionHandler.java` | 예외 → 상태코드 매핑([ADR 0008](../decisions/0008-exception-status-mapping.md)), 내부 메시지는 로그에만 |
+| 응답 봉투 | `common/support/dto/GlobalResponse.java` | 모든 API 를 `{success, code, data}` 로 통일 |
+| 커밋 후 캐시 무효화 | `common/support/cache/CacheEvictAfterCommit*.java` | 트랜잭션 커밋 뒤에 캐시를 비우는 자체 애노테이션. coupons 만 적용, 나머지는 커밋 전 evict |
+| 캐시 수동 재적용 | `CacheSyncServiceImpl` + 관리자 "동기화" 탭 | 스케줄러가 없어 조회 전용 도메인 캐시는 운영자가 버튼으로 비운다 |
+| FE HTTP 클라이언트 | `web/src/infra/http/client.js` | axios 인스턴스, 401 이면 refresh 1회 재시도(동시 401 합침) |
+| FE 라우트 가드 | `app/router/guards/AuthGuard.jsx` | 로그인·권한 미충족 화면 차단. 실제 방어는 BE(§ 4) |
+| FE 비동기 상태 | `app/store/utils/applyAsyncHandlers.js` | 슬라이스마다 반복되는 loading/error 리듀서 공용화 |
+
+## 8. 외부 의존
+
+| 대상 | 용도 | 끊기면 |
+|---|---|---|
+| 네이버 OAuth | 유일한 로그인 수단 | 로그인·마이페이지·관리자 전부 불가 |
+| S3 호환 스토리지 | 프로필·퀴즈·공지 이미지 | 업로드·기존 이미지 서빙 중단 |
+| 광고 네트워크 | 홈·가이드 광고 슬롯(현재 꺼짐, [ADR 0003](../decisions/0003-adsense-manual-slots.md)) | 영향 없음 |
+| GA4 | 페이지뷰·이탈 클릭 추적(`.claude/rules/fe/fe-analytics.md`) | 지표만 끊김 |
+
+## 9. 알려진 구조적 제약
+
+- 캐시에 만료 시간이 없다 — 커밋 전 evict 도메인은 옛 값이 재적재되면 다음 쓰기까지 고착. [roadmap § 6 D-22](../roadmap.md)
+- 타임존이 DB·서버 어디에도 명시돼 있지 않다 — [ADR 0007](../decisions/0007-kst-timezone.md)
+- 배치 실행 기반(`@Scheduled`)이 없다 — 정리 작업은 전부 수동. [roadmap § 4](../roadmap.md)
+- FE 자동 테스트 0건 — 회귀는 수동 확인에 의존
+- test DB = prod DB 동일 인스턴스 — DDL·시드 실행이 곧 운영 반영(§ 5)
+- V1 레거시 테이블 4개가 아직 실재 — community 동결로 정리 보류. [roadmap § 6 D-18](../roadmap.md)
