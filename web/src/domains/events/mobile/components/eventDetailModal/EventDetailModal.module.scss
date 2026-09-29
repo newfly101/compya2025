@@ -1,5 +1,6 @@
 .overlay {
-  @include modal-backdrop;
+  // 관리자 편집 모달(z-modal-bg) 위에 겹쳐 뜨므로 한 단계 위(z-modal).
+  @include modal-backdrop(var(--color-overlay), $z-modal);
 }
 
 .modal {

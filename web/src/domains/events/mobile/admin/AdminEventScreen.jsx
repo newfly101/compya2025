@@ -103,14 +103,20 @@ const VIS_OPTIONS = [
 // 수집함 = 공식 카페에서 자동 수집된 초안(source_article_id 있고 비공개). 승인 = 기존 노출 토글로 공개.
 const isCollected = (e) => e.sourceArticleId != null && !e.visible;
 
-// 수집함 행 배지 — 구간 못 찾음(본문 없음) · 원문 변경(해시 불일치) · 마감 미확인.
-const collectedBadges = (e) => {
-  const badges = [];
-  if (!e.contentHtml) badges.push("구간 못 찾음");
-  if (e.sourceChanged) badges.push("원문 변경");
-  if (e.deadlineUnconfirmed) badges.push("마감 미확인");
-  return badges;
+// 본문 유무 — 관리자 목록 응답은 hasContent 와 contentHtml 을 둘 다 준다. 수집분·수동 등록분 공통 기준.
+const hasBody = (e) => !!e.hasContent || !!e.contentHtml?.trim();
+
+const CONTENT_MATCH = {
+  all: () => true,
+  has: (e) => hasBody(e),
+  none: (e) => !hasBody(e),
 };
+
+const CONTENT_OPTIONS = [
+  { value: "all", label: "전체" },
+  { value: "has", label: "본문 있음" },
+  { value: "none", label: "본문 없음" },
+];
 
 // 지금 수집 결과(건수 요약) → 알림 문구. 필드가 없으면 0건으로 본다.
 const syncNotice = (r) =>
@@ -155,6 +161,7 @@ export default function AdminEventScreen() {
   const [status, setStatus] = useState("all");
   const [vis, setVis] = useState("all");
   const [source, setSource] = useState("all"); // all | collected(수집함)
+  const [content, setContent] = useState("all"); // all | has | none
   const [syncing, setSyncing] = useState(false);
   const [previewEvent, setPreviewEvent] = useState(null);
   const [sortDesc, setSortDesc] = useState(true); // 기본: 기간 최신순(시작일 내림차순)
@@ -177,7 +184,8 @@ export default function AdminEventScreen() {
   const collectedCount = events.filter(isCollected).length;
   const searched = events
     .filter((e) => e.title?.toLowerCase().includes(search.toLowerCase()))
-    .filter((e) => source === "all" || isCollected(e));
+    .filter((e) => source === "all" || isCollected(e))
+    .filter((e) => CONTENT_MATCH[content](e));
   const sourceOptions = [
     { value: "all", label: "전체" },
     { value: "collected", label: "수집함", count: collectedCount },
@@ -206,7 +214,7 @@ export default function AdminEventScreen() {
   useEffect(() => {
     resetPage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, status, vis, source, sortDesc]);
+  }, [search, status, vis, source, content, sortDesc]);
 
   // 현재 페이지에 없는 행의 선택은 자동으로 떨어져 나간다(다음 페이지 이동 시 실수 방지).
   const pageIds = useMemo(() => new Set(pageItems.map((e) => e.id)), [pageItems]);
@@ -397,20 +405,19 @@ export default function AdminEventScreen() {
             </AdminTag>
             <span className={styles.title}>{e.title}</span>
           </div>
-          {isCollected(e) && (
-            <div className={styles.collectedRow}>
-              {collectedBadges(e).map((label) => (
-                <AdminTag key={label} variant="amber">{label}</AdminTag>
-              ))}
-              {e.contentHtml && (
-                <button type="button" className={styles.miniBtn} onClick={() => setPreviewEvent(e)}>본문 미리보기</button>
-              )}
-              {e.sourceChanged && (
-                <button type="button" className={styles.miniBtn} onClick={() => handleRefresh(e)}>본문 갱신</button>
-              )}
+          <div className={styles.collectedRow}>
+            <AdminTag variant={hasBody(e) ? "green" : "neutral"}>{hasBody(e) ? "본문 있음" : "본문 없음"}</AdminTag>
+            {e.sourceChanged && <AdminTag variant="amber">원문 변경</AdminTag>}
+            {hasBody(e) && (
+              <button type="button" className={styles.miniBtn} onClick={() => setPreviewEvent(e)}>본문 미리보기</button>
+            )}
+            {e.sourceArticleId != null && e.sourceChanged && (
+              <button type="button" className={styles.miniBtn} onClick={() => handleRefresh(e)}>본문 갱신</button>
+            )}
+            {isCollected(e) && (
               <button type="button" className={styles.miniBtnPrimary} onClick={() => handleApprove(e)}>승인</button>
-            </div>
-          )}
+            )}
+          </div>
           </div>
         </div>
       ),
@@ -464,6 +471,7 @@ export default function AdminEventScreen() {
           { key: "status", label: "진행", options: statusOptions, value: status, onChange: setStatus },
           { key: "vis", label: "노출", options: visOptions, value: vis, onChange: setVis },
           { key: "source", label: "출처", options: sourceOptions, value: source, onChange: setSource },
+          { key: "content", label: "본문", options: CONTENT_OPTIONS, value: content, onChange: setContent },
         ]}
         totalCount={filtered.length}
         totalLabel="개"
@@ -609,6 +617,21 @@ export default function AdminEventScreen() {
               시각을 비워 두면 시작 12:00:00 · 종료 23:59:59 로 저장돼요.
             </p>
           </div>
+
+          {/* 저장된 이벤트의 본문을 보여준다(편집 중인 폼 값 아님). 등록 모달에는 저장본이 없어 숨긴다. */}
+          {editTarget && (
+            <div className={styles.toggleRow}>
+              <span>본문</span>
+              {hasBody(editTarget) ? (
+                <button type="button" className={styles.miniBtn} onClick={() => setPreviewEvent(editTarget)}>본문 미리보기</button>
+              ) : (
+                <>
+                  <AdminTag variant="neutral">본문 없음</AdminTag>
+                  <button type="button" className={styles.miniBtn} disabled>본문 미리보기</button>
+                </>
+              )}
+            </div>
+          )}
 
           <div className={styles.toggleRow}>
             <span>노출 여부</span>

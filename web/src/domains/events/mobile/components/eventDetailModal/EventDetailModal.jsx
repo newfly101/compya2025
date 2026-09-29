@@ -7,9 +7,14 @@ import styles from "./EventDetailModal.module.scss";
 
 const EventDetailModal = ({ event, onClose }) => {
   useEffect(() => {
-    const onKeyDown = (e) => e.key === "Escape" && onClose?.();
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    // 편집 모달 위에 겹쳐 뜰 수 있다 — 캡처 단계에서 ESC 를 먼저 받아 이 미리보기만 닫고 아래 모달로 전파하지 않는다.
+    const onKeyDown = (e) => {
+      if (e.key !== "Escape") return;
+      e.stopImmediatePropagation();
+      onClose?.();
+    };
+    window.addEventListener("keydown", onKeyDown, true);
+    return () => window.removeEventListener("keydown", onKeyDown, true);
   }, [onClose]);
 
   if (!event) return null;
