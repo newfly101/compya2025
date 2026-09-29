@@ -87,6 +87,25 @@ class CafeArticleParserTest {
     }
 
     @Test
+    @DisplayName("본문 - 표의 병합 칸(rowspan·colspan)을 유지한다 (보름달 이벤트 보상표)")
+    void 본문_표_병합칸() {
+        String cell = "<td class=\"se-cell\" %s><div class=\"se-module se-module-text\"><p class=\"se-text-paragraph\">%s</p></div></td>";
+        String html = "<div class=\"se-component se-text\"><div class=\"se-component-content\">"
+                + "<p class=\"se-text-paragraph\">이벤트 기간: 9/21 ~ 10/18</p></div></div>"
+                + "<div class=\"se-component se-table\"><div class=\"se-component-content\"><table class=\"se-table-content\"><tbody>"
+                + "<tr class=\"se-tr\">" + cell.formatted("rowspan=\"3\"", "30개") + cell.formatted("", "고급 골드팩")
+                + cell.formatted("", "3") + cell.formatted("rowspan=\"3\"", "3종 택 1") + "</tr>"
+                + "<tr class=\"se-tr\">" + cell.formatted("", "고급 코치팩") + cell.formatted("", "3") + "</tr>"
+                + "<tr class=\"se-tr\">" + cell.formatted("colspan=\"2\"", "하급 등급 상승권 1") + "</tr>"
+                + "</tbody></table></div></div>"
+                + "<div class=\"se-component se-text\"><div class=\"se-component-content\">"
+                + "<p class=\"se-text-paragraph\">감사합니다.</p></div></div>";
+        String body = CafeArticleParser.extractBody(html, WRITTEN).html();
+        assertThat(body).contains("<td rowspan=\"3\">30개</td>", "<td rowspan=\"3\">3종 택 1</td>",
+                "<td colspan=\"2\">하급 등급 상승권 1</td>", "<td>고급 코치팩</td>");
+    }
+
+    @Test
     @DisplayName("본문 - 정제 후 허용하지 않는 태그·속성은 사라진다")
     void 정제() {
         String dirty = "<p onclick=\"x()\">안녕<script>alert(1)</script></p><img src=\"javascript:alert(1)\"><iframe src=\"https://a\"></iframe>";

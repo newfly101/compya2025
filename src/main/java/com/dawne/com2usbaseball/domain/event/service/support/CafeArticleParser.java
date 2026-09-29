@@ -40,6 +40,8 @@ public final class CafeArticleParser {
     private static final Safelist SAFELIST = new Safelist()
             .addTags("p", "br", "strong", "b", "img", "table", "tbody", "tr", "td", "th", "hr", "a")
             .addAttributes("img", "src", "loading", "alt")
+            .addAttributes("td", "rowspan", "colspan")
+            .addAttributes("th", "rowspan", "colspan")
             .addAttributes("a", "href", "target", "rel")
             .addProtocols("img", "src", "https", "http")
             .addProtocols("a", "href", "https", "http")
@@ -111,7 +113,10 @@ public final class CafeArticleParser {
 
     // ---------------- 본문 구간 ----------------
 
-    private record Unit(String type, String text, String src, List<List<String>> rows) { }
+    private record Unit(String type, String text, String src, List<List<Cell>> rows) { }
+
+    /** 표 칸 — 병합(rowspan/colspan)을 잃으면 뒤 칸이 앞으로 밀려 표가 어긋난다 (2026-09-30 보름달 이벤트 표) */
+    private record Cell(String text, int rowspan, int colspan) { }
 
     public static CafeBody extractBody(String contentHtml, LocalDateTime written) {
         if (contentHtml == null || contentHtml.isBlank()) return CafeBody.notFound(null);
@@ -143,9 +148,14 @@ public final class CafeArticleParser {
                 }
                 case "table" -> {
                     sb.append("<table>");
-                    for (List<String> r : u.rows()) {
+                    for (List<Cell> r : u.rows()) {
                         sb.append("<tr>");
-                        for (String c : r) sb.append("<td>").append(escape(c)).append("</td>");
+                        for (Cell c : r) {
+                            sb.append("<td");
+                            if (c.rowspan() > 1) sb.append(" rowspan=\"").append(c.rowspan()).append('"');
+                            if (c.colspan() > 1) sb.append(" colspan=\"").append(c.colspan()).append('"');
+                            sb.append('>').append(escape(c.text()).replace("\n", "<br>")).append("</td>");
+                        }
                         sb.append("</tr>");
                     }
                     sb.append("</table>\n");
@@ -163,6 +173,14 @@ public final class CafeArticleParser {
         if (m.find()) pStart = toDateTime(m, written, false);
         LocalDateTime pEnd = period.contains("~") ? readDate(period.substring(period.indexOf('~')), written, true) : null;
         return new CafeBody(true, html, images, period, pStart, pEnd, banner);
+    }
+
+    private static int span(Element td, String attr) {
+        try {
+            return Math.max(1, Integer.parseInt(td.attr(attr).trim()));
+        } catch (NumberFormatException e) {
+            return 1;
+        }
     }
 
     private static String norm(Unit u) {
@@ -185,10 +203,10 @@ public final class CafeArticleParser {
                     }
                 }
                 case "se-table" -> {
-                    List<List<String>> rows = new ArrayList<>();
+                    List<List<Cell>> rows = new ArrayList<>();
                     for (Element tr : comp.select("tr")) {
-                        List<String> cells = new ArrayList<>();
-                        for (Element td : tr.select("> td, > th")) cells.add(textOf(td));
+                        List<Cell> cells = new ArrayList<>();
+                        for (Element td : tr.select("> td, > th")) cells.add(new Cell(textOf(td), span(td, "rowspan"), span(td, "colspan")));
                         rows.add(cells);
                     }
                     units.add(new Unit("table", null, null, rows));
