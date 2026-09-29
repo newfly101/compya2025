@@ -102,6 +102,43 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
+    public String uploadCollectedImage(byte[] content, long articleId) {
+        if (content == null || content.length == 0 || content.length > uploadProperties.getMaxSizeBytes()) {
+            return null;
+        }
+        String extension = null;
+        for (String ext : new String[]{"jpg", "png", "gif", "webp"}) {
+            if (matchesImageSignature(content, ext)) {
+                extension = ext;
+                break;
+            }
+        }
+        if (extension == null) {
+            return null;
+        }
+        String key;
+        try {
+            byte[] digest = java.security.MessageDigest.getInstance("SHA-256").digest(content);
+            key = "events/" + articleId + "/" + java.util.HexFormat.of().formatHex(digest, 0, 8) + "." + extension;
+        } catch (java.security.NoSuchAlgorithmException e) {
+            return null;
+        }
+        try {
+            s3Client.putObject(
+                    PutObjectRequest.builder()
+                            .bucket(props.getS3().getBucket())
+                            .key(key)
+                            .contentType(EXTENSION_CONTENT_TYPE.get(extension))
+                            .build(),
+                    RequestBody.fromBytes(content));
+        } catch (Exception e) {
+            log.error("S3 수집 이미지 업로드 실패 key={}", key, e);
+            return null;
+        }
+        return resolveUrl(key);
+    }
+
+    @Override
     public boolean isProfileImageUrl(String url) {
         if (url == null || url.isBlank()) {
             return false;

@@ -15,5 +15,9 @@ public record EventResponse(
         LocalDateTime expireAt,
         String imageUrl,
         String externalLink,
-        boolean visible
+        boolean visible,
+        Long sourceArticleId,
+        String contentHtml,
+        boolean sourceChanged,
+        boolean deadlineUnconfirmed
 ) { }

@@ -47,7 +47,24 @@ public class EventRepository {
 
     // 관리자 전체 목록 (동적 필터)
     public List<EventEntity> findAdminEventList(EventAdminListRequest req) {
-        return mapper.selectAdminEventList(req.eventType(), req.visible(), req.size(), req.offset());
+        return mapper.selectAdminEventList(req.eventType(), req.visible(), req.collected(), req.size(), req.offset());
+    }
+
+    // 카페 자동 수집
+    public List<Long> findExistingSourceArticleIds(List<Long> ids) {
+        return ids.isEmpty() ? List.of() : mapper.selectExistingSourceArticleIds(ids);
+    }
+
+    public List<EventEntity> findTrackedCollectedEvents() {
+        return mapper.selectTrackedCollectedEvents();
+    }
+
+    public boolean updateCollectedContent(Long id, String contentHtml, String contentHash, String imageUrl) {
+        return mapper.updateCollectedContent(id, contentHtml, contentHash, imageUrl) > 0;
+    }
+
+    public boolean updateCollectedHash(Long id, String contentHash) {
+        return mapper.updateCollectedHash(id, contentHash) > 0;
     }
 
     // 이벤트 삭제

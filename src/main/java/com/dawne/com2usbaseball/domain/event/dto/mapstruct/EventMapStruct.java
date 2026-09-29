@@ -17,6 +17,10 @@ public interface EventMapStruct {
     @Mapping(target = "expireAt", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "sourceArticleId", ignore = true)
+    @Mapping(target = "contentHtml", ignore = true)
+    @Mapping(target = "contentHash", ignore = true)
+    @Mapping(target = "syncedAt", ignore = true)
     EventEntity toEntity(EventRequest request);
 
     @Mapping(target = "id", ignore = true)
@@ -24,8 +28,14 @@ public interface EventMapStruct {
     @Mapping(target = "expireAt", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "sourceArticleId", ignore = true)
+    @Mapping(target = "contentHtml", ignore = true)
+    @Mapping(target = "contentHash", ignore = true)
+    @Mapping(target = "syncedAt", ignore = true)
     void updateEntity(EventRequest request, @MappingTarget EventEntity entity);
 
+    @Mapping(target = "sourceChanged", expression = "java(com.dawne.com2usbaseball.domain.event.service.support.CafeSyncRules.isSourceChanged(entity))")
+    @Mapping(target = "deadlineUnconfirmed", expression = "java(com.dawne.com2usbaseball.domain.event.service.support.CafeSyncRules.isDeadlineUnconfirmed(entity))")
     EventResponse toResponse(EventEntity entity);
 
     List<EventResponse> toResponseList(List<EventEntity> entities);

@@ -6,7 +6,8 @@ public record EventAdminListRequest(
         Integer page,
         Integer size,
         EventType eventType,
-        Boolean visible
+        Boolean visible,
+        Boolean collected   // true 면 수집함 = 수집 초안(source_article_id 있고 비공개)
 ) {
     public EventAdminListRequest {
         // page/size 는 쿼리 파라미터라 음수도 그대로 들어온다. offset() = page * size 가
