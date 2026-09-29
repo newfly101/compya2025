@@ -7,27 +7,51 @@
   gap: $space-4;
 }
 
-// 제목 줄(전체 폭) + 기간 토글 줄(전체 폭) 2행 — AdminToolbar 의 행 쌓기 관례와 같은 $space-2.
 .head {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
-}
-
-.headText {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
 }
 
-// AdminSegmented 는 그대로 두고 배치만 — 제목과 한 줄로 안 쓰니 폭 여유가 생겨 3개 옵션이
-// 안 눌린다. white-space 는 라디오 버튼(role="radio") 자체 속성으로 걸어 컴포넌트 내부
-// 클래스를 건드리지 않는다.
+// AdminSegmented 는 그대로 두고 배치만 — 제목과 한 줄로 안 쓰니 폭 여유가 생겨 4개 옵션이
+// 안 눌린다(FN-5, CUSTOM 추가로 3→4개). white-space 는 라디오 버튼(role="radio") 자체
+// 속성으로 걸어 컴포넌트 내부 클래스를 건드리지 않는다.
 .rangeRow {
   [role="radio"] {
     white-space: nowrap;
   }
+}
+
+// FN-7 — 개요/상위경로/추이/방문자구성/외부유입 5개 box 를 가로 스크롤로. scroll-row 믹스인
+// (global/styles/mixins/_layout.scss)의 스크롤바 숨김 관례를 그대로 쓴다.
+.articleScroll {
+  @include scroll-row($space-3, 0);
+  padding-bottom: $space-1; // 아래 그림자/스크롤바 여백
+}
+
+// box peek — 320px 고정폭이라 480 프레임에서 다음 box 가장자리가 소량 노출된다(fe-design.md 참고, 🟨).
+.box {
+  flex: 0 0 320px;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-4;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-xl;
+  background: var(--color-bg-card);
+}
+
+.boxTitle {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+// CUSTOM 기간(FN-5) · 추이 날짜범위(FN-6) 공통 — 날짜범위 인풋 아래 "조회" 버튼.
+.customRow {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
 }
 
 .title {
@@ -127,10 +151,11 @@
   @include admin-input;
 }
 
-.aggregateButton {
-  flex: 0 0 auto;
+// 재집계 · CUSTOM 기간 조회 · 추이 조회 3곳이 같은 버튼 모양을 쓴다(%placeholder 로 중복 제거).
+%analyticsPrimaryButton {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: $control-height-sm;
   padding: 0 $space-4;
   border: 1px solid var(--color-admin-accent);
@@ -145,6 +170,69 @@
     opacity: 0.6;
     cursor: default;
   }
+}
+
+.aggregateButton {
+  @extend %analyticsPrimaryButton;
+  flex: 0 0 auto;
+}
+
+// CUSTOM 기간(FN-5) · 추이 날짜범위(FN-6) 조회 버튼 — customRow 안에서 오른쪽 정렬.
+.applyButton {
+  @extend %analyticsPrimaryButton;
+  align-self: flex-end;
+}
+
+// 추이(FN-5/6) 막대 — 일별/시간대별 공통. box 폭(320px) 안에서 가로 스크롤.
+.trendBars {
+  display: flex;
+  align-items: flex-end;
+  gap: $space-2;
+  overflow-x: auto;
+  padding-bottom: $space-1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.trendBarCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 32px;
+}
+
+.trendBarValue {
+  @include font-size-rem(9);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+.trendBarTrack {
+  width: 16px;
+  height: 80px;
+  border-radius: $radius-full;
+  background: var(--color-bg-elevated);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.trendBarFill {
+  width: 100%;
+  min-height: 2px;
+  border-radius: $radius-full;
+  background: var(--color-admin-accent);
+}
+
+.trendBarLabel {
+  @include text-caption;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
 }
 
 .aggregateError {

@@ -22,6 +22,7 @@ import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { useLegendStats } from "./hooks/useLegendStats";
 import { useHistoryBadge } from "./hooks/useHistoryBadge";
 import { useMileageBadge } from "./hooks/useMileageBadge";
+import { useSearchTracking } from "@/infra/analytics/hooks/useSearchTracking.js";
 import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
@@ -53,6 +54,7 @@ const LegendStatsScreen = () => {
   const [dir, setDir] = useState(-1);
   const [openId, setOpenId] = useState(null);
   const [query, setQuery] = useState("");
+  useSearchTracking(query);
 
   const teams = useMemo(() => teamOptions(LEGENDS), [LEGENDS]);
   const positions = useMemo(() => posOptions(LEGENDS, type), [LEGENDS, type]);

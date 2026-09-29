@@ -5,6 +5,7 @@ import {
   requestCacheSyncOne,
   requestCacheSyncAll,
   requestAdminAnalyticsSummary,
+  requestAdminAnalyticsTrend,
   requestAdminAnalyticsAggregate,
 } from "@/domains/admin/store/admin/thunks.js";
 
@@ -100,7 +101,10 @@ const adminAnalyticsSlice = createSlice({
     summary: null,  // AdminAnalyticsSummaryResponse — 조회 전엔 null
     loading: false,
     error: null,
-    range: "TODAY", // TODAY | WEEK | MONTH — 세그먼트 선택값, 캐시 안 함(바뀌면 항상 재조회)
+    range: "TODAY", // TODAY | WEEK | MONTH | CUSTOM — 세그먼트 선택값, 캐시 안 함(바뀌면 항상 재조회)
+    trend: { day: [], hour: [] }, // AnalyticsTrendPointResponse[] — granularity 별로 따로 보관(토글 시 재요청 없이 전환)
+    trendLoading: false,
+    trendError: null,
     mutateLoading: false, // 수동 재집계 진행 중
     mutateError: null,    // 수동 재집계 실패 메시지
   },
@@ -113,6 +117,15 @@ const adminAnalyticsSlice = createSlice({
     applyAsyncHandlers(builder, requestAdminAnalyticsSummary, (state, action) => {
       state.summary = action.payload;
     });
+    // granularity(day|hour) 는 응답에 없다 — 요청 인자(action.meta.arg)로 어느 칸에 넣을지 정한다.
+    applyAsyncHandlers(
+      builder,
+      requestAdminAnalyticsTrend,
+      (state, action) => {
+        state.trend[action.meta.arg.granularity] = action.payload;
+      },
+      "trend",
+    );
     // 재집계 — 응답에 담을 상태 없음(성공 알림은 meta.notify), 로딩/에러 칸만 mutate 로 분리.
     applyAsyncHandlers(builder, requestAdminAnalyticsAggregate, () => {}, "mutate");
   },
