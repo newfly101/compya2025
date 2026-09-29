@@ -17,7 +17,6 @@ public record AnalyticsEventItemRequest(
         String occurredAt,
         String sessionId,
         String navType,
-        Integer screenW,
-        Long itemId
+        Integer screenW
 ) {
 }

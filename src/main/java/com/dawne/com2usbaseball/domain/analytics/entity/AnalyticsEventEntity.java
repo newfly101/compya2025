@@ -24,6 +24,7 @@ public class AnalyticsEventEntity {
     private String searchKeyword;
     private String referrer;
     private String country;
+    private String city;
     private String userAgent;
     private String sessionId;
     private String navType;
@@ -31,6 +32,5 @@ public class AnalyticsEventEntity {
     private String deviceType;
     private String os;
     private String browser;
-    private Long itemId;
     private LocalDateTime createdAt;
 }

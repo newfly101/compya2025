@@ -1,10 +1,12 @@
 package com.dawne.com2usbaseball.domain.analytics.repository;
 
 import com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsEventCountRow;
+import com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsTrendPointResponse;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.DeviceCountRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.SessionStatsRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.TopPageResponse;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.TopReferrerResponse;
+import com.dawne.com2usbaseball.domain.analytics.dto.response.VisitorCompositionRow;
 import com.dawne.com2usbaseball.domain.analytics.repository.mapper.AdminAnalyticsMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -72,5 +74,21 @@ public class AdminAnalyticsRepository {
 
     public List<TopReferrerResponse> sumRangeTopReferrers(LocalDate start, LocalDate end, int limit) {
         return adminAnalyticsMapper.sumRangeTopReferrers(start, end, limit);
+    }
+
+    public SessionStatsRow sumTodaySessionStats() {
+        return adminAnalyticsMapper.sumTodaySessionStats();
+    }
+
+    public List<AnalyticsTrendPointResponse> sumDailyTrend(LocalDate start, LocalDate end) {
+        return adminAnalyticsMapper.sumDailyTrend(start, end);
+    }
+
+    public List<AnalyticsTrendPointResponse> sumHourlyTrend(LocalDate start, LocalDate end) {
+        return adminAnalyticsMapper.sumHourlyTrend(start, end);
+    }
+
+    public List<VisitorCompositionRow> sumVisitorComposition(LocalDate start, LocalDate end) {
+        return adminAnalyticsMapper.sumVisitorComposition(start, end);
     }
 }

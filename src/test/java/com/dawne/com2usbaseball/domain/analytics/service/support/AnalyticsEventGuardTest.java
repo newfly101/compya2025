@@ -149,22 +149,22 @@ class AnalyticsEventGuardTest {
     }
 
     @Test
-    @DisplayName("OUTBOUND_CLICK 은 targetUrl 이 없으면 거부하고, item_id 는 없어도 통과한다")
-    void OUTBOUND_CLICK_targetUrl_누락시_거부_itemId는_필수아님() {
+    @DisplayName("OUTBOUND_CLICK 은 targetUrl 이 없으면 거부한다")
+    void OUTBOUND_CLICK_targetUrl_누락시_거부() {
         AnalyticsEventItemRequest targetUrl없음 = item("session-1", "/home", null, null);
         assertThat(AnalyticsEventGuard.hasRequiredFields(targetUrl없음, AnalyticsEventType.OUTBOUND_CLICK)).isFalse();
 
-        AnalyticsEventItemRequest itemId없이_targetUrl만 = new AnalyticsEventItemRequest(
+        AnalyticsEventItemRequest targetUrl있음 = new AnalyticsEventItemRequest(
                 "OUTBOUND_CLICK", "anon-1", "/home", null, null, "example.com",
-                null, null, null, "session-1", null, null, null
+                null, null, null, "session-1", null, null
         );
-        assertThat(AnalyticsEventGuard.hasRequiredFields(itemId없이_targetUrl만, AnalyticsEventType.OUTBOUND_CLICK)).isTrue();
+        assertThat(AnalyticsEventGuard.hasRequiredFields(targetUrl있음, AnalyticsEventType.OUTBOUND_CLICK)).isTrue();
     }
 
     private AnalyticsEventItemRequest item(String sessionId, String pagePath, String navType, String targetUrl) {
         return new AnalyticsEventItemRequest(
                 "CONTENT_CLICK", "anon-1", pagePath, null, null, targetUrl,
-                null, null, null, sessionId, navType, null, null
+                null, null, null, sessionId, navType, null
         );
     }
 }

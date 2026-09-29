@@ -35,8 +35,9 @@
         GROUP BY event_type
     </select>
 
+    <!-- returningRate 는 TODAY 정의 불성립이라 항상 NULL(FE "-" 표시). -->
     <select id="sumTodayTopPages" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.TopPageResponse">
-        SELECT page_path AS pagePath, COUNT(*) AS count
+        SELECT page_path AS pagePath, COUNT(*) AS count, COUNT(DISTINCT anon_id) AS uniqueVisitors, NULL AS returningRate
         FROM site_user_event
         WHERE event_type = 'PAGE_VIEW'
           AND created_at >= CURDATE()
@@ -77,17 +78,16 @@
     </select>
 
     <!--
-      WEEK/MONTH: 집계 site_user_event_daily, [start, end] 양끝 포함(완료된 날짜만 — 배치가
-      전날까지만 채우므로 end 는 항상 어제 이하). uniqueVisitors 는 PAGE_VIEW 행의
-      unique_anon_count 를 날짜·화면 구분 없이 합산한 근사치다 — 같은 방문자가 여러 날/여러
-      화면을 방문하면 중복 집계된다(task-analysis.md §3 FN-3 근사치 가정, 알고 채택한 트레이드오프).
-      ponytail: 정확한 기간 고유값이 필요해지면 원본(site_user_event) 직접 COUNT(DISTINCT) 로 교체.
+      WEEK/MONTH/CUSTOM: 기간 고유 방문자는 원본(site_user_event) 직접 COUNT(DISTINCT) 로 조회한다
+      (FN-8) — daily 집계의 unique_anon_count 합산은 날짜별 근사치라 여러 날 방문한 사용자가
+      중복 집계됐다. CUSTOM 범위가 원본을 요구해 다른 지표도 자연히 원본 기준으로 맞춘다.
     -->
     <select id="sumRangeVisitors" resultType="long">
-        SELECT COALESCE(SUM(unique_anon_count), 0)
-        FROM site_user_event_daily
+        SELECT COUNT(DISTINCT anon_id)
+        FROM site_user_event
         WHERE event_type = 'PAGE_VIEW'
-          AND event_date BETWEEN #{start} AND #{end}
+          AND created_at >= #{start}
+          AND created_at &lt; #{end} + INTERVAL 1 DAY
     </select>
 
     <select id="sumRangePageViews" resultType="long">
@@ -104,12 +104,24 @@
         GROUP BY event_type
     </select>
 
+    <!--
+      FN-4: daily 집계로는 방문자가 이 기간 전에도 방문한 적 있는지(재방문) 판정할 수 없어
+      원본 직접 질의로 전환(FN-8과 같은 방향). returningRate = 기간 내 이 경로 순방문자 중
+      first_seen_date 가 기간 시작 이전인 비율(%, 소수 1자리). site_user_first_seen 이 없는
+      방문자(LEFT JOIN 미매칭)는 재방문 아님으로 취급.
+    -->
     <select id="sumRangeTopPages" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.TopPageResponse">
-        SELECT page_path AS pagePath, SUM(event_count) AS count
-        FROM site_user_event_daily
-        WHERE event_type = 'PAGE_VIEW'
-          AND event_date BETWEEN #{start} AND #{end}
-        GROUP BY page_path
+        SELECT e.page_path AS pagePath,
+               COUNT(*) AS count,
+               COUNT(DISTINCT e.anon_id) AS uniqueVisitors,
+               ROUND(100.0 * COUNT(DISTINCT CASE WHEN f.first_seen_date &lt; #{start} THEN e.anon_id END)
+                     / COUNT(DISTINCT e.anon_id), 1) AS returningRate
+        FROM site_user_event e
+        LEFT JOIN site_user_first_seen f ON f.anon_id = e.anon_id
+        WHERE e.event_type = 'PAGE_VIEW'
+          AND e.created_at >= #{start}
+          AND e.created_at &lt; #{end} + INTERVAL 1 DAY
+        GROUP BY e.page_path
         ORDER BY count DESC
         LIMIT #{limit}
     </select>
@@ -135,6 +147,71 @@
         GROUP BY referrer_host
         ORDER BY count DESC
         LIMIT #{limit}
+    </select>
+
+    <!--
+      FN-9: 오늘 하루 세션당 PV — 배치(aggregateSessionDaily)와 같은 "세션·경로 30초 내
+      중복 제거" 윈도우 함수를 오늘 하루 창에 한정해 재계산한다.
+      ponytail: 배치 SQL과 구조가 같지만 파라미터(고정 오늘 vs :date)가 달라 별 쿼리로 둔다 —
+      함수 하나로 묶으면 이득보다 바인딩 분기 복잡도가 더 크다.
+    -->
+    <select id="sumTodaySessionStats" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.SessionStatsRow">
+        SELECT COUNT(DISTINCT session_id) AS sessionCount, COALESCE(SUM(is_new), 0) AS pageViewCount
+        FROM (
+            SELECT session_id,
+                   CASE WHEN LAG(created_at) OVER (PARTITION BY session_id, page_path ORDER BY created_at) IS NULL
+                             OR LAG(created_at) OVER (PARTITION BY session_id, page_path ORDER BY created_at)
+                               &lt; created_at - INTERVAL 30 SECOND
+                        THEN 1 ELSE 0 END AS is_new
+            FROM site_user_event
+            WHERE event_type = 'PAGE_VIEW'
+              AND created_at >= CURDATE()
+              AND created_at &lt; CURDATE() + INTERVAL 1 DAY
+        ) t
+    </select>
+
+    <!-- FN-5: 일별 추이. site_user_event_daily 를 event_date 로 합산(배치 완료분 기준). -->
+    <select id="sumDailyTrend" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsTrendPointResponse">
+        SELECT DATE_FORMAT(event_date, '%Y-%m-%d') AS bucket,
+               COALESCE(SUM(unique_anon_count), 0) AS uniqueVisitors,
+               COALESCE(SUM(event_count), 0) AS pageViews
+        FROM site_user_event_daily
+        WHERE event_type = 'PAGE_VIEW'
+          AND event_date BETWEEN #{start} AND #{end}
+        GROUP BY event_date
+        ORDER BY event_date
+    </select>
+
+    <!-- FN-6: 시간대별 분포(0~23시). 원본 직접 집계 — 보존 경계(최근 3개월)는 서비스단 검증. -->
+    <select id="sumHourlyTrend" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsTrendPointResponse">
+        SELECT LPAD(HOUR(created_at), 2, '0') AS bucket,
+               COUNT(DISTINCT anon_id) AS uniqueVisitors,
+               COUNT(*) AS pageViews
+        FROM site_user_event
+        WHERE event_type = 'PAGE_VIEW'
+          AND created_at >= #{start}
+          AND created_at &lt; #{end} + INTERVAL 1 DAY
+        GROUP BY HOUR(created_at)
+        ORDER BY HOUR(created_at)
+    </select>
+
+    <!--
+      FN-10: 신규/재방문 구성. new = 이 기간에 처음 관측된 anon_id 수. returning = 이 기간에
+      PAGE_VIEW 를 발생시켰고 첫 관측일이 기간 시작 이전인 anon_id 수. start==end 를 넘기면
+      TODAY 창(하루)으로도 그대로 쓰인다.
+    -->
+    <select id="sumVisitorComposition" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.VisitorCompositionRow">
+        SELECT 'new' AS visitorType, COUNT(*) AS count
+        FROM site_user_first_seen
+        WHERE first_seen_date BETWEEN #{start} AND #{end}
+        UNION ALL
+        SELECT 'returning' AS visitorType, COUNT(DISTINCT e.anon_id) AS count
+        FROM site_user_event e
+        JOIN site_user_first_seen f ON f.anon_id = e.anon_id
+        WHERE e.event_type = 'PAGE_VIEW'
+          AND e.created_at >= #{start}
+          AND e.created_at &lt; #{end} + INTERVAL 1 DAY
+          AND f.first_seen_date &lt; #{start}
     </select>
 
 </mapper>

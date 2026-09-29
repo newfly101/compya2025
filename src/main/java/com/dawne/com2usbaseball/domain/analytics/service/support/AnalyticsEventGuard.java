@@ -28,6 +28,7 @@ public final class AnalyticsEventGuard {
     public static final int CONTENT_ID_MAX_LENGTH = 50;
     public static final int COUNTRY_MAX_LENGTH = 10;
     public static final int NAV_TYPE_MAX_LENGTH = 16;
+    public static final int CITY_MAX_LENGTH = 50;
 
     private static final Pattern UUID_PATTERN = Pattern.compile(
             "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
