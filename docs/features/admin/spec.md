@@ -1,9 +1,9 @@
 ---
 feature: admin
-version: 1.3.0
+version: 1.4.0
 status: active
 created: 2026-01-29
-updated: 2026-09-29
+updated: 2026-09-30
 ---
 
 # admin
@@ -33,6 +33,7 @@ updated: 2026-09-29
 | REQ-ADM-06 | 업로드 예외 순서 | `/api/upload/profile`은 로그인만 요구하는 규칙을 먼저 매칭시키고, 그 뒤에 `/api/upload/**` → ADMIN 규칙을 건다. `SecurityConfig` 안 규칙 순서가 실제 적용 여부를 바꾼다 | `SecurityConfig.java:63-66` |
 | REQ-ADM-07 | 커뮤니티 모더레이션 동결 | 커뮤니티 모더레이션 6개 컨트롤러(게시판·게시글·댓글·태그연결·신고·태그)는 리디자인 전까지 클래스 레벨 `@PreAuthorize` 없이 URL 규칙 하나에만 걸린 채 진입 경로 없는 동결 상태를 유지한다 | `AdminBoardController.java` 등 6개, `SecurityConfig.java:53-68` |
 | REQ-ADM-08 | 통계 탭 | 통계 탭은 기간(오늘·7일·30일)을 선택해 순방문자·페이지뷰·이벤트 종류별 건수·상위 경로·기기 비율·세션당 페이지뷰·외부 유입 상위를 본다. "오늘"은 원본 이벤트 테이블을, "7일"·"30일"은 전날까지 배치로 채운 일별 집계 테이블(요약 1종 + 기기·세션·외부유입 3종, 총 4종)을 조회한다(당일 미집계). 운영자는 날짜를 지정해 그날의 집계를 다시 실행할 수 있다(재집계 API, 배치 실패 보정용) | `AdminAnalyticsController.java`, `AnalyticsAggregationServiceImpl.java` |
+| REQ-ADM-09 | 카페 수집 | ADMIN 전용 `POST /api/admin/cafe-sync` 로 수동 실행한다(매일 11:01 스케줄과 같은 코드, 동시 실행 시 409). `/api/admin/**` 경로 + 클래스 레벨 `hasRole('ADMIN')` 이중 방어. 이벤트 탭의 "지금 수집" 버튼이 호출한다 | `AdminCafeSyncController.java` |
 
 ## 4. 데이터
 

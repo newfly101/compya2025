@@ -1,7 +1,7 @@
 ---
-spec_version: 1.3.0
+spec_version: 1.4.0
 created: 2026-01-29
-updated: 2026-09-29
+updated: 2026-09-30
 ---
 
 # admin — 설계
