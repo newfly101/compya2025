@@ -37,4 +37,12 @@ public class EventCollectServiceImpl implements EventCollectService {
     public void markSourceChanged(Long id, String newSourceHash) {
         repository.updateCollectedHash(id, newSourceHash);
     }
+
+    @Override
+    @CacheEvictAfterCommit(cacheName = "events", keys = {"external::admin", "external::public"})
+    public void mergeCollected(Long id, long sourceArticleId, String contentHtml, String contentHash, String imageUrl) {
+        if (!repository.updateMergeCollected(id, sourceArticleId, contentHtml, contentHash, imageUrl)) {
+            throw new BaseException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND);
+        }
+    }
 }

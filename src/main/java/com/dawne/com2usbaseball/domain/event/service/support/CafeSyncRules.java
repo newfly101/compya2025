@@ -26,4 +26,23 @@ public final class CafeSyncRules {
     public static boolean isDeadlineUnconfirmed(EventEntity e) {
         return e != null && e.getSourceArticleId() != null && UNCONFIRMED_EXPIRE.equals(e.getExpireAt());
     }
+
+    private static final java.util.regex.Pattern LINK_TAIL_RE = java.util.regex.Pattern.compile("(\\d+)(?:[?#].*)?/?$");
+
+    /** 주소 끝 숫자가 글번호인가 — cafe.naver.com/{카페}/{id} · f-e/.../articles/{id}?query 형식 모두 */
+    public static boolean linkEndsWithArticleId(String link, long articleId) {
+        if (link == null) return false;
+        java.util.regex.Matcher m = LINK_TAIL_RE.matcher(link.trim());
+        return m.find() && m.group(1).equals(Long.toString(articleId));
+    }
+
+    /**
+     * 이벤트 이름 비교용 정규화 — [이벤트] 머리말·공백·기호·이모지를 지우고 한글·영문·숫자만 남긴 뒤 끝의 "이벤트" 를 뺀다.
+     * 결과가 비면 빈 문자열(짝 판정에 쓰지 않는다).
+     */
+    public static String normalizeEventName(String name) {
+        if (name == null) return "";
+        String s = name.replace("[이벤트]", "").replaceAll("[^가-힣a-zA-Z0-9]", "");
+        return s.endsWith("이벤트") ? s.substring(0, s.length() - "이벤트".length()) : s;
+    }
 }

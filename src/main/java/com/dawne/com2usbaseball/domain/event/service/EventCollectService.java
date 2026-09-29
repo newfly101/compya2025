@@ -13,4 +13,7 @@ public interface EventCollectService {
 
     /** 원문이 바뀐 것을 표시 — 본문은 그대로 두고 마지막으로 본 해시만 바꾼다 */
     void markSourceChanged(Long id, String newSourceHash);
+
+    /** 수동 등록 행에 수집 데이터를 합친다 — 글번호·본문·해시·수집시각, 배너는 기존 값이 비었을 때만. 제목·기간·노출·링크는 그대로 */
+    void mergeCollected(Long id, long sourceArticleId, String contentHtml, String contentHash, String imageUrl);
 }

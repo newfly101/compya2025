@@ -43,6 +43,13 @@ public interface EventMapper {
     int updateCollectedHash(
             @Param("id") Long id,
             @Param("contentHash") String contentHash);          // 원문 변경 표시용 — 본문은 그대로
+    List<EventEntity> selectManualEventCandidates();            // 수동 등록 행 후보 (source_article_id 없음, id 큰 순)
+    int updateMergeCollected(
+            @Param("id") Long id,
+            @Param("sourceArticleId") long sourceArticleId,
+            @Param("contentHtml") String contentHtml,
+            @Param("contentHash") String contentHash,
+            @Param("imageUrl") String imageUrl);                // 수동 행에 수집 데이터 병합
 
     // 일괄 작업
     List<Long> selectExistingEventIds(@Param("ids") List<Long> ids);

@@ -134,4 +134,148 @@ class CafeSyncServiceImplTest {
         assertThat(r.coupons()).isEqualTo(1);
         verify(coupons).registerCollected(argThat(l -> l.size() == 1 && l.get(0).couponCode().equals("ABCD1234")));
     }
+
+    private static String couponTable(LocalDateTime now) {
+        LocalDateTime end = now.plusDays(5);
+        String date = end.getMonthValue() + "/" + end.getDayOfMonth();
+        return "<div class=\"se-component se-table\"><table><tr><td>쿠폰명</td><td>쿠폰 번호</td><td>쿠폰 보상</td><td>사용 가능 기한</td></tr>"
+                + "<tr><td>A 쿠폰</td><td>ABCD1234</td><td>스타 x1</td><td>~ " + date + "</td></tr></table></div>";
+    }
+
+    private static String eventSubject(LocalDateTime now, String name) {
+        LocalDateTime end = now.plusDays(3);
+        return "[이벤트] " + name + " (~" + end.getMonthValue() + "/" + end.getDayOfMonth() + " 23:59)";
+    }
+
+    @Test
+    @DisplayName("본문 구간을 못 찾으면 행을 만들지 않고 쿠폰은 등록한다")
+    void 구간_못_찾음_행_없음() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        var summary = new CafeArticleSummary(200L, eventSubject(now, "쿠폰 이벤트"), KEY, now.minusHours(1));
+        when(coupons.registerCollected(any())).thenReturn(1);
+
+        CafeSyncResult r = service(client(summary, couponTable(now))).syncNow();
+
+        assertThat(r.created()).isZero();
+        assertThat(r.skipped()).isEqualTo(1);
+        assertThat(r.coupons()).isEqualTo(1);
+        verify(collect, never()).saveDraft(any());
+        verify(collect, never()).mergeCollected(any(), anyLong(), any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("마감을 확인하지 못하면 행을 만들지 않는다")
+    void 마감_미확인_행_없음() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        var summary = new CafeArticleSummary(201L, "[이벤트] 마감 모름", KEY, now.minusHours(1));
+
+        CafeSyncResult r = service(client(summary, bodyHtml("보상 안내"))).syncNow();
+
+        assertThat(r.created()).isZero();
+        assertThat(r.skipped()).isEqualTo(1);
+        verify(collect, never()).saveDraft(any());
+    }
+
+    @Test
+    @DisplayName("주소가 글번호로 끝나는 수동 행에는 새 행 대신 병합한다")
+    void 링크로_병합() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        var manual = EventEntity.builder().id(9L).title("전혀 다른 제목").imageUrl("https://img/x.png")
+                .externalLink("https://cafe.naver.com/f-e/cafes/28/articles/300?boardtype=L").build();
+        when(repo.findManualEventCandidates()).thenReturn(List.of(manual));
+        var summary = new CafeArticleSummary(300L, eventSubject(now, "링크 이벤트"), KEY, now.minusHours(1));
+
+        CafeSyncResult r = service(client(summary, bodyHtml("보상 안내"))).syncNow();
+
+        assertThat(r.updated()).isEqualTo(1);
+        assertThat(r.created()).isZero();
+        verify(collect, never()).saveDraft(any());
+        verify(collect).mergeCollected(eq(9L), eq(300L), contains("보상 안내"), anyString(), isNull());
+    }
+
+    @Test
+    @DisplayName("이름이 정규화 후 같으면 병합하고 id 가 큰 행을 고른다 (수동 값은 그대로)")
+    void 이름으로_병합() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        var older = EventEntity.builder().id(3L).title("포스트시즌 트로피 제작 이벤트").imageUrl("").build();
+        var newer = EventEntity.builder().id(5L).title("포스트시즌 트로피 제작 이벤트").imageUrl("").visible(true).build();
+        when(repo.findManualEventCandidates()).thenReturn(List.of(newer, older));
+        var summary = new CafeArticleSummary(301L, eventSubject(now, "포스트시즌 트로피 제작"), KEY, now.minusHours(1));
+
+        CafeSyncResult r = service(client(summary, bodyHtml("보상 안내"))).syncNow();
+
+        assertThat(r.updated()).isEqualTo(1);
+        verify(collect).mergeCollected(eq(5L), eq(301L), anyString(), anyString(), any());
+        verify(collect, never()).saveDraft(any());
+        // 제목·노출·기간은 병합 API 가 받지도 않는다 — 수동 행 객체도 그대로
+        assertThat(newer.getTitle()).isEqualTo("포스트시즌 트로피 제작 이벤트");
+        assertThat(newer.isVisible()).isTrue();
+    }
+
+    @Test
+    @DisplayName("행 없는 쿠폰 글은 45일 안이면 다시 읽고, 밖이면 건너뛴다")
+    void 쿠폰_글_45일_창() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        when(coupons.registerCollected(any())).thenReturn(1);
+
+        var inside = new CafeArticleSummary(400L, "[쿠폰] 안내", KEY, now.minusDays(30));
+        CafeSyncResult in = service(client(inside, couponTable(now))).syncNow();
+        assertThat(in.coupons()).isEqualTo(1);
+        verify(coupons, times(1)).registerCollected(any());
+
+        var outside = new CafeArticleSummary(401L, "[쿠폰] 안내", KEY, now.minusDays(46));
+        CafeSyncResult out = service(client(outside, couponTable(now))).syncNow();
+        assertThat(out.skipped()).isEqualTo(1);
+        assertThat(out.coupons()).isZero();
+        verify(coupons, times(1)).registerCollected(any());
+    }
+
+    @Test
+    @DisplayName("이름 정규화: 머리말·공백·기호·끝의 이벤트를 뺀다")
+    void 이름_정규화() {
+        assertThat(CafeSyncRules.normalizeEventName("[이벤트] 포스트시즌 트로피 제작 이벤트"))
+                .isEqualTo(CafeSyncRules.normalizeEventName("포스트시즌 트로피 제작"))
+                .isEqualTo("포스트시즌트로피제작");
+        assertThat(CafeSyncRules.normalizeEventName("🎉 Hello, 월드!! 이벤트 ")).isEqualTo("Hello월드");
+        assertThat(CafeSyncRules.normalizeEventName(null)).isEmpty();
+        assertThat(CafeSyncRules.normalizeEventName("[이벤트] 이벤트")).isEmpty();
+    }
+
+    @Test
+    @DisplayName("주소 끝 숫자가 글번호인지 판정한다")
+    void 링크_글번호_판정() {
+        assertThat(CafeSyncRules.linkEndsWithArticleId("https://cafe.naver.com/com2usbaseball2015/2016389", 2016389L)).isTrue();
+        assertThat(CafeSyncRules.linkEndsWithArticleId("https://cafe.naver.com/f-e/cafes/28/articles/2016389?boardtype=L", 2016389L)).isTrue();
+        assertThat(CafeSyncRules.linkEndsWithArticleId("https://cafe.naver.com/x/12016389", 2016389L)).isFalse();
+        assertThat(CafeSyncRules.linkEndsWithArticleId(null, 1L)).isFalse();
+    }
+
+    @Test
+    @DisplayName("쿠폰 표가 있는 이벤트 글은 행 없이 쿠폰만 등록한다")
+    void 쿠폰_표_이벤트_글_행_없음() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        var summary = new CafeArticleSummary(500L, eventSubject(now, "출석 보상"), KEY, now.minusHours(1));
+        when(coupons.registerCollected(any())).thenReturn(1);
+
+        CafeSyncResult r = service(client(summary, bodyHtml("보상") + couponTable(now))).syncNow();
+
+        assertThat(r.created()).isZero();
+        assertThat(r.skipped()).isEqualTo(1);
+        assertThat(r.coupons()).isEqualTo(1);
+        verify(collect, never()).saveDraft(any());
+        verify(collect, never()).mergeCollected(any(), anyLong(), any(), any(), any());
+    }
+
+    @Test
+    @DisplayName("제목에 쿠폰이 들어간 이벤트 글은 표가 없어도 행을 만들지 않는다")
+    void 제목_쿠폰_행_없음() {
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        var summary = new CafeArticleSummary(501L, eventSubject(now, "국제대회 쿠폰 이벤트"), KEY, now.minusHours(1));
+
+        CafeSyncResult r = service(client(summary, bodyHtml("보상"))).syncNow();
+
+        assertThat(r.created()).isZero();
+        assertThat(r.skipped()).isEqualTo(1);
+        verify(collect, never()).saveDraft(any());
+    }
 }

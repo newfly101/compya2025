@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -40,8 +41,11 @@ import java.util.function.Supplier;
 public class CafeSyncServiceImpl implements CafeSyncService {
 
     private static final ZoneId KST = ZoneId.of("Asia/Seoul");
-    /** [이벤트]가 아닌 글(쿠폰 글 등)은 새 글일 때만 보므로, 이 기간 안에 올라온 글만 쿠폰 표를 확인한다 */
-    private static final int NON_EVENT_LOOKBACK_DAYS = 2;
+    /**
+     * 쿠폰 글은 site_events 행이 남지 않고, 쿠폰 번호는 글 올라온 뒤 나중에 공개되기도 한다.
+     * 그래서 행 없는 글은 작성일이 이 기간 안이면 매 실행 상세를 다시 읽어 쿠폰만 등록한다 (중복은 coupon_code UNIQUE 가 무시).
+     */
+    private static final int RECHECK_LOOKBACK_DAYS = 45;
 
     private final CafeClient client;
     private final CafeSyncProperties props;
@@ -101,10 +105,16 @@ public class CafeSyncServiceImpl implements CafeSyncService {
         Set<Long> existing = new HashSet<>(eventRepository.findExistingSourceArticleIds(
                 mine.stream().map(CafeArticleSummary::articleId).toList()));
 
+        List<EventEntity> manualPool = new ArrayList<>(); // 수동 등록 행 후보 — 필요할 때 한 번만 읽는다
+        boolean[] manualLoaded = {false};
         for (CafeArticleSummary a : mine) {
             if (existing.contains(a.articleId())) continue;
             try {
-                collectNew(a, now, c);
+                if (!manualLoaded[0] && CafeArticleParser.isEventSubject(a.subject())) {
+                    manualPool.addAll(eventRepository.findManualEventCandidates());
+                    manualLoaded[0] = true;
+                }
+                collectNew(a, now, c, manualPool);
             } catch (Exception e) {
                 c.failed++;
                 log.error("[CAFE-SYNC] 새 글 처리 실패 articleId={}: {}", a.articleId(), e.getMessage(), e);
@@ -123,10 +133,10 @@ public class CafeSyncServiceImpl implements CafeSyncService {
 
     // ---------------- 새 글 ----------------
 
-    private void collectNew(CafeArticleSummary a, LocalDateTime now, Counter c) {
+    private void collectNew(CafeArticleSummary a, LocalDateTime now, Counter c, List<EventEntity> manualPool) {
         boolean eventSubject = CafeArticleParser.isEventSubject(a.subject());
-        if (!eventSubject && (a.writtenAt() == null || a.writtenAt().isBefore(now.minusDays(NON_EVENT_LOOKBACK_DAYS)))) {
-            c.skipped++; // 이벤트도 아니고 새 글도 아님 — 다시 읽지 않는다
+        if (!eventSubject && (a.writtenAt() == null || a.writtenAt().isBefore(now.minusDays(RECHECK_LOOKBACK_DAYS)))) {
+            c.skipped++; // 이벤트도 아니고 조회 기간 밖의 글 — 다시 읽지 않는다
             return;
         }
         CafeTitle title = CafeArticleParser.parseTitle(a.subject(), a.writtenAt());
@@ -137,11 +147,26 @@ public class CafeSyncServiceImpl implements CafeSyncService {
         CafeArticle art = fetchWithDelay(a.articleId());
         c.coupons += registerCoupons(art.contentHtml(), now);
         if (!eventSubject) return;
+        // 쿠폰 글(표가 있거나 제목에 "쿠폰")은 이벤트 행으로 만들지도 병합하지도 않는다 — 쿠폰으로만 등록하고 45일 재조회로 번호를 계속 잡는다
+        String plainName = title.name().isBlank() ? a.subject() : title.name();
+        if ((plainName != null && plainName.contains("쿠폰"))
+                || !CafeArticleParser.extractCoupons(art.contentHtml(), now).isEmpty()) {
+            c.skipped++;
+            return;
+        }
 
         CafeBody body = CafeArticleParser.extractBody(art.contentHtml(), a.writtenAt());
+        if (!body.found()) {
+            c.skipped++; // 본문 구간을 못 찾으면 행을 만들지 않는다 (쿠폰은 위에서 이미 등록)
+            return;
+        }
         LocalDateTime expire = title.expireAt() != null ? title.expireAt()
                 : body.periodEnd() != null ? body.periodEnd() : CafeSyncRules.UNCONFIRMED_EXPIRE;
-        if (!CafeSyncRules.UNCONFIRMED_EXPIRE.equals(expire) && expire.isBefore(now)) {
+        if (CafeSyncRules.UNCONFIRMED_EXPIRE.equals(expire)) {
+            c.skipped++; // 마감을 확인하지 못하면 행을 만들지 않는다 — 다음 실행에서 다시 본다
+            return;
+        }
+        if (expire.isBefore(now)) {
             c.skipped++;
             return;
         }
@@ -151,21 +176,26 @@ public class CafeSyncServiceImpl implements CafeSyncService {
             start = expire.minusDays(1); // DB 제약(expire > start) 보호
         }
 
-        String contentHtml = null;
-        String hash = null;
-        if (body.found()) {
-            UploadedHtml uploaded = withS3Images(body, a.articleId());
-            if (uploaded.failed() > 0) {
-                log.warn("[CAFE-SYNC] 초안 이미지 업로드 실패 {}건 articleId={} — 관리자 '본문 갱신' 으로 다시 시도", uploaded.failed(), a.articleId());
-            }
-            contentHtml = uploaded.html();
-            hash = CafeArticleParser.contentHash(contentHtml);
+        String name = title.name().isBlank() ? a.subject() : title.name();
+        EventEntity manual = findManualMatch(manualPool, a.articleId(), name);
+        if (manual != null) {
+            mergeIntoManual(manual, a, body, now);
+            manualPool.remove(manual);
+            c.updated++;
+            return;
         }
+
+        UploadedHtml uploaded = withS3Images(body, a.articleId());
+        if (uploaded.failed() > 0) {
+            log.warn("[CAFE-SYNC] 초안 이미지 업로드 실패 {}건 articleId={} — 관리자 '본문 갱신' 으로 다시 시도", uploaded.failed(), a.articleId());
+        }
+        String contentHtml = uploaded.html();
+        String hash = CafeArticleParser.contentHash(contentHtml);
         String banner = uploadBanner(body.bannerImage(), a.articleId());
 
         EventEntity draft = EventEntity.builder()
                 .eventType(EventType.OFFICIAL)
-                .title(cut(title.name().isBlank() ? a.subject() : title.name(), 255))
+                .title(cut(name, 255))
                 .startAt(start)
                 .expireAt(expire)
                 .imageUrl(banner != null ? banner : "")
@@ -178,6 +208,30 @@ public class CafeSyncServiceImpl implements CafeSyncService {
                 .build();
         collectService.saveDraft(draft);
         c.created++;
+    }
+
+    // ---------------- 수동 등록분 병합 ----------------
+
+    /** 관리자가 손으로 등록한 행 중 이 글과 짝인 것 — 주소가 글번호로 끝나거나 이름이 같다. 여러 개면 id 가 큰 쪽 */
+    private static EventEntity findManualMatch(List<EventEntity> pool, long articleId, String collectedName) {
+        String wanted = CafeSyncRules.normalizeEventName(collectedName);
+        return pool.stream()
+                .filter(m -> CafeSyncRules.linkEndsWithArticleId(m.getExternalLink(), articleId)
+                        || (!wanted.isEmpty() && wanted.equals(CafeSyncRules.normalizeEventName(m.getTitle()))))
+                .max(Comparator.comparing(EventEntity::getId))
+                .orElse(null);
+    }
+
+    /** 제목·기간·노출·링크는 수동 값을 두고 본문·해시·글번호(·비어 있을 때만 배너)를 채운다 */
+    private void mergeIntoManual(EventEntity manual, CafeArticleSummary a, CafeBody body, LocalDateTime now) {
+        UploadedHtml uploaded = withS3Images(body, a.articleId());
+        if (uploaded.failed() > 0) {
+            log.warn("[CAFE-SYNC] 병합 이미지 업로드 실패 {}건 articleId={} eventId={} — 관리자 '본문 갱신' 으로 다시 시도", uploaded.failed(), a.articleId(), manual.getId());
+        }
+        String banner = manual.getImageUrl() == null || manual.getImageUrl().isBlank()
+                ? uploadBanner(body.bannerImage(), a.articleId()) : null;
+        collectService.mergeCollected(manual.getId(), a.articleId(), uploaded.html(),
+                CafeArticleParser.contentHash(uploaded.html()), banner);
     }
 
     // ---------------- 진행 중 수집 이벤트 재확인 ----------------

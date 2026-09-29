@@ -191,6 +191,32 @@
         WHERE id = #{id}
     </update>
 
+    <select id="selectManualEventCandidates"
+            resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        SELECT
+            id,
+            title,
+            external_link AS externalLink,
+            image_url     AS imageUrl
+        FROM site_events
+        WHERE source_article_id IS NULL
+        ORDER BY id DESC
+    </select>
+
+    <!-- 수동 등록 행 병합: 제목·기간·노출·링크는 건드리지 않고, 배너는 비어 있을 때만 채운다 -->
+    <update id="updateMergeCollected">
+        UPDATE site_events
+        SET
+            source_article_id = #{sourceArticleId},
+            content_html = #{contentHtml},
+            content_hash = #{contentHash},
+            image_url = CASE WHEN image_url IS NULL OR image_url = '' THEN COALESCE(#{imageUrl}, image_url) ELSE image_url END,
+            synced_at = NOW(),
+            updated_at = NOW()
+        WHERE id = #{id}
+          AND source_article_id IS NULL
+    </update>
+
     <!-- 이벤트 삭제 -->
     <delete id="deleteEventById">
         DELETE FROM site_events

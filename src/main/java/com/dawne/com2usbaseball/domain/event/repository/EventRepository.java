@@ -71,6 +71,14 @@ public class EventRepository {
         return mapper.updateCollectedHash(id, contentHash) > 0;
     }
 
+    public List<EventEntity> findManualEventCandidates() {
+        return mapper.selectManualEventCandidates();
+    }
+
+    public boolean updateMergeCollected(Long id, long sourceArticleId, String contentHtml, String contentHash, String imageUrl) {
+        return mapper.updateMergeCollected(id, sourceArticleId, contentHtml, contentHash, imageUrl) > 0;
+    }
+
     // 이벤트 삭제
     public boolean deleteEvent(Long id) {
         return mapper.deleteEventById(id) > 0;
