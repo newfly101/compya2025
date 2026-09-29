@@ -4,12 +4,6 @@
   @include card-base($radius: $radius-xl, $pad: 0);
   @include pressable;
   overflow: hidden;
-  // <button> 으로 렌더돼도 기본 버튼 모양 제거
-  width: 100%;
-  padding: 0;
-  border: none;
-  font: inherit;
-  text-align: left;
 }
 
 // ── 썸네일 ────────────────────────────────────────────────────
