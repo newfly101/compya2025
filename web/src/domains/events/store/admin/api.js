@@ -34,3 +34,14 @@ export const fetchAdminBulkUpdateEventsVisible = async (ids, visible) => {
   const { data } = await API.patch(`${EVENTS.BULK_UPDATE_EVENTS_VISIBLE}`, { ids, visible });
   return data.data;
 };
+
+// 수동 수집 — 응답 data: { created, updated, failed, ... } 건수 요약. 이미 실행 중이면 409.
+export const fetchAdminSyncCafe = async () => {
+  const { data } = await API.post(`${EVENTS.SYNC_CAFE}`);
+  return data.data;
+};
+// 수집 이벤트 본문 갱신 — 응답 data: 갱신된 이벤트 1건.
+export const fetchAdminRefreshCollected = async (id) => {
+  const { data } = await API.post(`${EVENTS.REFRESH_COLLECTED(id)}`);
+  return data.data;
+};

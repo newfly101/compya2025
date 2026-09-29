@@ -5,6 +5,7 @@ import {
   requestAdminUpdateExEvent, requestAdminUpdateExEventVisible,
   requestAdminGetAllEventList,
   requestAdminBulkDeleteEvents, requestAdminBulkUpdateEventsVisible,
+  requestAdminSyncCafe, requestAdminRefreshCollected,
 } from "@/domains/events/store/admin/thunks.js";
 import { requestGetExternalEventList } from "@/domains/events/store/public/thunks.js";
 
@@ -100,6 +101,17 @@ const eventsSlice = createSlice({
         idSet.has(Number(e.id)) ? { ...e, visible } : e
       );
     }, "mutate");
+    /* ===============================
+     * 수집 이벤트 본문 갱신 — 서버 응답 행으로 교체
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminRefreshCollected, (state, action) => {
+      const updated = action.payload;
+      state.events = state.events.map(e => (Number(e.id) === Number(updated.id) ? { ...e, ...updated } : e));
+    }, "mutate");
+    /* ===============================
+     * 지금 수집 — 목록 반영은 화면이 재조회로 처리(이 slice 는 로딩·오류만 관리)
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminSyncCafe, () => {}, "mutate");
   },
 });
 export const {} = eventsSlice.actions;

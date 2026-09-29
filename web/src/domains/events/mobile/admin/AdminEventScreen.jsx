@@ -24,7 +24,10 @@ import {
   requestAdminUploadEventImage,
   requestAdminBulkDeleteEvents,
   requestAdminBulkUpdateEventsVisible,
+  requestAdminSyncCafe,
+  requestAdminRefreshCollected,
 } from "@/domains/events/store/admin/thunks.js";
+import EventDetailModal from "@/domains/events/mobile/components/eventDetailModal/EventDetailModal.jsx";
 import styles from "./AdminEventScreen.module.scss";
 
 // DB site_events.event_type enum('OFFICIAL','INTERNAL'). 프로토타입(핸드오프)은 "출처는 공식
@@ -97,6 +100,22 @@ const VIS_OPTIONS = [
   { value: "hidden", label: "숨김" },
 ];
 
+// 수집함 = 공식 카페에서 자동 수집된 초안(source_article_id 있고 비공개). 승인 = 기존 노출 토글로 공개.
+const isCollected = (e) => e.sourceArticleId != null && !e.visible;
+
+// 수집함 행 배지 — 구간 못 찾음(본문 없음) · 원문 변경(해시 불일치) · 마감 미확인.
+const collectedBadges = (e) => {
+  const badges = [];
+  if (!e.contentHtml) badges.push("구간 못 찾음");
+  if (e.sourceChanged) badges.push("원문 변경");
+  if (e.deadlineUnconfirmed) badges.push("마감 미확인");
+  return badges;
+};
+
+// 지금 수집 결과(건수 요약) → 알림 문구. 필드가 없으면 0건으로 본다.
+const syncNotice = (r) =>
+  `수집 완료 — 새 이벤트 ${r?.created ?? 0}건 · 갱신 ${r?.updated ?? 0}건 · 새 쿠폰 ${r?.coupons ?? 0}건 · 실패 ${r?.failed ?? 0}건`;
+
 // 시각이 비면 날짜만 보낸다(서버가 기본 시각을 채움). 시각이 있으면 HH:MM 을 HH:MM:SS 로 변환해 합친다.
 const joinDateTime = (date, time) => (date && time ? `${date} ${toHHMMSS(time)}` : date ?? "");
 
@@ -135,6 +154,9 @@ export default function AdminEventScreen() {
   // v2 기본값 — 진행:전체 / 노출:전체 (스크린샷 기준 초기 진입 상태)
   const [status, setStatus] = useState("all");
   const [vis, setVis] = useState("all");
+  const [source, setSource] = useState("all"); // all | collected(수집함)
+  const [syncing, setSyncing] = useState(false);
+  const [previewEvent, setPreviewEvent] = useState(null);
   const [sortDesc, setSortDesc] = useState(true); // 기본: 기간 최신순(시작일 내림차순)
   const [form, setForm] = useState(EMPTY_FORM);
   const [imageSource, setImageSource] = useState("url");
@@ -152,7 +174,14 @@ export default function AdminEventScreen() {
     dispatch(requestAdminGetAllEventList({ page: 0, size: EVENTS_FETCH_ALL_SIZE }));
   }, [dispatch]);
 
-  const searched = events.filter((e) => e.title?.toLowerCase().includes(search.toLowerCase()));
+  const collectedCount = events.filter(isCollected).length;
+  const searched = events
+    .filter((e) => e.title?.toLowerCase().includes(search.toLowerCase()))
+    .filter((e) => source === "all" || isCollected(e));
+  const sourceOptions = [
+    { value: "all", label: "전체" },
+    { value: "collected", label: "수집함", count: collectedCount },
+  ];
 
   const statusOptions = STATUS_OPTIONS.map((opt) => ({
     ...opt,
@@ -177,7 +206,7 @@ export default function AdminEventScreen() {
   useEffect(() => {
     resetPage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, status, vis, sortDesc]);
+  }, [search, status, vis, source, sortDesc]);
 
   // 현재 페이지에 없는 행의 선택은 자동으로 떨어져 나간다(다음 페이지 이동 시 실수 방지).
   const pageIds = useMemo(() => new Set(pageItems.map((e) => e.id)), [pageItems]);
@@ -262,6 +291,35 @@ export default function AdminEventScreen() {
     dispatch(requestAdminUpdateExEventVisible({ id: event.id, visible: nextVisible }));
   };
 
+  // 승인 = 기존 노출 토글(visible)을 켠다. 수집 초안이 공개 목록으로 넘어간다.
+  const handleApprove = (event) => {
+    dispatch(requestAdminUpdateExEventVisible({ id: event.id, visible: true }));
+  };
+
+  const handleRefresh = async (event) => {
+    try {
+      await dispatch(requestAdminRefreshCollected(event.id)).unwrap();
+      setBulkNotice("본문을 원문 기준으로 갱신했습니다.");
+    } catch (err) {
+      setBulkNotice(typeof err === "string" ? err : "본문 갱신에 실패했습니다.");
+    }
+  };
+
+  // 지금 수집 — 진행 중엔 버튼 비활성, 이미 실행 중(409)이면 서버 문구로 안내. 끝나면 목록을 다시 받는다.
+  const handleSync = async () => {
+    if (syncing) return;
+    setSyncing(true);
+    try {
+      const result = await dispatch(requestAdminSyncCafe()).unwrap();
+      setBulkNotice(syncNotice(result));
+      dispatch(requestAdminGetAllEventList({ page: 0, size: EVENTS_FETCH_ALL_SIZE }));
+    } catch (err) {
+      setBulkNotice(typeof err === "string" ? err : "수집에 실패했습니다. 이미 실행 중일 수 있습니다.");
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   const handleImageFileChange = async (file) => {
     setUploading(true);
     setUploadError(null);
@@ -330,11 +388,27 @@ export default function AdminEventScreen() {
           ) : (
             <div className={styles.thumbEmpty} />
           )}
+          <div className={styles.titleCol}>
           <div className={styles.titleRow}>
             <AdminTag variant={isEnded(e, now) ? "neutral" : "green"}>
               {isEnded(e, now) ? "종료" : "진행중"}
             </AdminTag>
             <span className={styles.title}>{e.title}</span>
+          </div>
+          {isCollected(e) && (
+            <div className={styles.collectedRow}>
+              {collectedBadges(e).map((label) => (
+                <AdminTag key={label} variant="amber">{label}</AdminTag>
+              ))}
+              {e.contentHtml && (
+                <button type="button" className={styles.miniBtn} onClick={() => setPreviewEvent(e)}>본문 미리보기</button>
+              )}
+              {e.sourceChanged && (
+                <button type="button" className={styles.miniBtn} onClick={() => handleRefresh(e)}>본문 갱신</button>
+              )}
+              <button type="button" className={styles.miniBtnPrimary} onClick={() => handleApprove(e)}>승인</button>
+            </div>
+          )}
           </div>
         </div>
       ),
@@ -387,6 +461,7 @@ export default function AdminEventScreen() {
         filters={[
           { key: "status", label: "진행", options: statusOptions, value: status, onChange: setStatus },
           { key: "vis", label: "노출", options: visOptions, value: vis, onChange: setVis },
+          { key: "source", label: "출처", options: sourceOptions, value: source, onChange: setSource },
         ]}
         totalCount={filtered.length}
         totalLabel="개"
@@ -398,6 +473,10 @@ export default function AdminEventScreen() {
         onBulkDelete={handleBulkDelete}
         onBulkHide={handleBulkHide}
       />
+
+      <button type="button" className={styles.syncBtn} onClick={handleSync} disabled={syncing}>
+        {syncing ? "수집 중..." : "지금 수집"}
+      </button>
 
       {bulkNotice && (
         <div className={styles.bulkNotice}>
@@ -425,7 +504,7 @@ export default function AdminEventScreen() {
         />
       )}
       {!loading && !(error && events.length === 0) && filtered.length === 0 && (
-        <StateBox status="empty" message="이벤트가 없습니다." />
+        <StateBox status="empty" message={source === "collected" ? "수집된 초안이 없습니다" : "이벤트가 없습니다."} />
       )}
       {!(loading && events.length === 0) && !(error && events.length === 0) && filtered.length > 0 && (
         <>
@@ -548,6 +627,8 @@ export default function AdminEventScreen() {
           </div>
         </form>
       </AdminModal>
+
+      {previewEvent && <EventDetailModal event={previewEvent} onClose={() => setPreviewEvent(null)} />}
 
       <AdminConfirmDialog
         open={bulkDeleteConfirmOpen}

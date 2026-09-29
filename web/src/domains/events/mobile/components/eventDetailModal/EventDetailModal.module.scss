@@ -1,0 +1,105 @@
+.overlay {
+  @include modal-backdrop;
+}
+
+.modal {
+  position: relative;
+  width: 100%;
+  max-width: 30rem; // 480 이내
+  max-height: calc(100% - 2rem);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-modal);
+  border-radius: $radius-2xl;
+  box-shadow: 0 1.25rem 3.125rem rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.closeBtn {
+  position: absolute;
+  top: $space-2;
+  right: $space-2;
+  z-index: 1;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: $radius-full;
+  background: var(--color-overlay);
+  color: var(--color-text-primary);
+  cursor: pointer;
+}
+
+.scroll {
+  overflow-y: auto;
+  padding-bottom: $space-5;
+}
+
+.banner {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.title {
+  @include text-body;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  padding: $space-4 $space-4 $space-1;
+  word-break: keep-all;
+}
+
+.period {
+  @include text-caption;
+  color: var(--color-text-muted);
+  padding: 0 $space-4 $space-3;
+}
+
+.remain {
+  margin-left: $space-2;
+  color: var(--color-brand-violet);
+  font-weight: $font-weight-semibold;
+}
+
+.source {
+  @include text-micro;
+  color: var(--color-text-muted);
+  padding: $space-4 $space-4 $space-2;
+}
+
+.origin {
+  @include text-caption;
+  display: inline-block;
+  margin: 0 $space-4;
+  padding: $space-2 $space-3;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-brand-violet);
+  text-decoration: none;
+}
+
+// 카페 본문 — 모양을 정하는 유일한 자리. 서버가 정제한 HTML 이 들어온다.
+:global(.event-body) {
+  @include prose;
+  padding: 0 $space-4;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: $space-1 $space-2;
+    border: 1px solid var(--color-border-strong);
+    min-width: 4rem;
+  }
+}

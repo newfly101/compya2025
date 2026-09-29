@@ -6,6 +6,9 @@ export const EVENTS = {
   // v2 일괄 삭제·숨김 — BE 계약: DELETE .../bulk { ids: [] } / PATCH .../bulk/visible { ids: [], visible }.
   BULK_DELETE_EVENTS: "/admin/events/bulk",
   BULK_UPDATE_EVENTS_VISIBLE: "/admin/events/bulk/visible",
+  // 공식 카페 자동 수집(ADMIN) — 수동 수집 / 수집 이벤트 본문 갱신.
+  SYNC_CAFE: "/admin/cafe-sync",
+  REFRESH_COLLECTED: (id) => `/admin/cafe-sync/events/${id}/refresh`,
 }
 
 export const ADMIN_EVENT_ACTIONS = {
@@ -15,4 +18,6 @@ export const ADMIN_EVENT_ACTIONS = {
   UPDATE_VISIBLE: "PATCH/admin/events/updateVisible",
   BULK_DELETE: "DELETE/admin/events/bulk",
   BULK_UPDATE_VISIBLE: "PATCH/admin/events/bulk/visible",
+  SYNC_CAFE: "POST/admin/cafe-sync",
+  REFRESH_COLLECTED: "POST/admin/cafe-sync/events/refresh",
 }
