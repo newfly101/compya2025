@@ -50,9 +50,9 @@ flowchart LR
 <!-- readme-table:start -->
 | 기능 | 설명 | 상태 | 시작일 | 버전 | 문서 |
 |---|---|---|---|---|---|
-| admin | 운영자용 관리 도구(쿠폰·이벤트·공지·회원 관리) | 운영 | 2026-01-29 | 1.3.0 | [spec](features/admin/spec.md) · [design](features/admin/design.md) · [history](features/admin/history.md) |
-| coupons | 게임 쿠폰 목록·등록·조회 | 운영 | 2026-01-29 | 1.0.4 | [spec](features/coupons/spec.md) · [design](features/coupons/design.md) · [history](features/coupons/history.md) |
-| events | 이벤트 공지 목록 | 운영 | 2026-01-29 | 1.0.4 | [spec](features/events/spec.md) · [design](features/events/design.md) · [history](features/events/history.md) |
+| admin | 운영자용 관리 도구(쿠폰·이벤트·공지·회원 관리) | 운영 | 2026-01-29 | 1.4.0 | [spec](features/admin/spec.md) · [design](features/admin/design.md) · [history](features/admin/history.md) |
+| coupons | 게임 쿠폰 목록·등록·조회 | 운영 | 2026-01-29 | 1.1.0 | [spec](features/coupons/spec.md) · [design](features/coupons/design.md) · [history](features/coupons/history.md) |
+| events | 이벤트 공지 목록 | 운영 | 2026-01-29 | 2.0.0 | [spec](features/events/spec.md) · [design](features/events/design.md) · [history](features/events/history.md) |
 | notices | 공지사항 목록·상세 | 운영 | 2026-01-29 | 1.0.5 | [spec](features/notices/spec.md) · [design](features/notices/design.md) · [history](features/notices/history.md) |
 | community | 커뮤니티 게시판(쓰기 기능 동결) | 동결 | 2026-02-02 | 1.0.1 | [spec](features/community/spec.md) · [design](features/community/design.md) · [history](features/community/history.md) |
 | quiz | 퀴즈 이벤트(홈 섹션+운영자 화면 위주) | 운영 | 2026-03-29 | 1.0.3 | [spec](features/quiz/spec.md) · [design](features/quiz/design.md) · [history](features/quiz/history.md) |

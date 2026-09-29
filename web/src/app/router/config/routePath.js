@@ -5,6 +5,8 @@ export const ROUTE_PATHS = {
   authentication: "/auth/callback",
   coupons: "/coupons",
   events: "/events",
+  event_details_pattern: "/events/:id",
+  event_details: (id) => `/events/${id}`,
   notices: "/notices",
   // slug 는 서버 필드가 아니라 제목으로 매번 만든다(단방향) — 조회는 항상 id 로 한다.
   notice_details_pattern: "/notice/:slug",

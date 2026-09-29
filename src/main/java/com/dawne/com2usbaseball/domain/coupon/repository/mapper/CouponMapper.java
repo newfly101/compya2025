@@ -15,6 +15,7 @@ public interface CouponMapper {
     // admin
     List<CouponEntity> selectCouponList();
     int insertCoupon(CouponEntity coupon);
+    int insertCouponIfAbsent(CouponEntity coupon);              // 카페 수집 — 번호 중복이면 0
     CouponEntity selectCouponById(@Param("id") Long id);
     int updateCouponById(CouponEntity coupon);
     int updateCouponVisible(

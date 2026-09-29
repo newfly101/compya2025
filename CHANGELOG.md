@@ -25,6 +25,8 @@
 ## [Unreleased]
 
 ### Added
+
+- 공식 카페 이벤트·쿠폰 자동 수집(매일 11:01 + 관리자 "지금 수집") · 이벤트 상세 모달(본문·출처·원문 보기) · 관리자 이벤트 "수집함" (`docs/features/events/history.md` 2026-09-30)
 ### Changed
 ### Fixed
 ### Admin

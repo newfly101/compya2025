@@ -4,6 +4,7 @@ import {
   fetchAdminUpdateExEvent, fetchAdminUpdateExVisible,
   fetchAdminAllEventList,
   fetchAdminBulkDeleteEvents, fetchAdminBulkUpdateEventsVisible,
+  fetchAdminSyncCafe, fetchAdminRefreshCollected,
 } from "@/domains/events/store/admin/api.js";
 import { ADMIN_EVENT_ACTIONS } from "@/domains/events/store/admin/endpoints.js";
 import { baseEventDTO } from "@/domains/events/store/dto.js";
@@ -104,6 +105,27 @@ export const requestAdminBulkUpdateEventsVisible = createAsyncThunk(
   ADMIN_EVENT_ACTIONS.BULK_UPDATE_VISIBLE, async ({ ids, visible }, { rejectWithValue }) => {
     try {
       return { ...toBulkResult(await fetchAdminBulkUpdateEventsVisible(ids, visible)), visible };
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  });
+
+// 지금 수집 — 결과 건수 요약을 그대로 반환한다(호출부가 알림 문구로 만든다).
+// 목록 갱신은 호출부가 requestAdminGetAllEventList 를 다시 부른다.
+export const requestAdminSyncCafe = createAsyncThunk(
+  ADMIN_EVENT_ACTIONS.SYNC_CAFE, async (_, { rejectWithValue }) => {
+    try {
+      return await fetchAdminSyncCafe();
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  });
+
+// 수집 이벤트 본문 갱신("원문 변경" 반영) — 서버가 돌려준 이벤트로 목록 행을 교체한다.
+export const requestAdminRefreshCollected = createAsyncThunk(
+  ADMIN_EVENT_ACTIONS.REFRESH_COLLECTED, async (id, { rejectWithValue }) => {
+    try {
+      return await fetchAdminRefreshCollected(id);
     } catch (error) {
       return rejectWithValue(error.message);
     }

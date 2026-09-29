@@ -4,6 +4,9 @@ import com.dawne.com2usbaseball.domain.event.dto.mapstruct.EventMapStruct;
 import com.dawne.com2usbaseball.domain.event.dto.response.EventResponse;
 import com.dawne.com2usbaseball.domain.event.entity.EventEntity;
 import com.dawne.com2usbaseball.domain.event.repository.EventRepository;
+import com.dawne.com2usbaseball.common.support.exception.BaseException;
+import com.dawne.com2usbaseball.domain.event.enums.EventMessages;
+import org.springframework.http.HttpStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,17 @@ public class EventUserServiceImpl implements EventUserService {
     public List<EventResponse> getExternalEventList() {
         List<EventEntity> events = repository.findExternalEventsForUser();
 
-        return eventMapStruct.toResponseList(events);
+        return eventMapStruct.toResponseList(events).stream()
+                .map(EventResponse::withoutContent)
+                .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public EventResponse getPublicEvent(Long id) {
+        EventEntity event = repository.findPublicById(id)
+                .orElseThrow(() -> new BaseException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
+
+        return eventMapStruct.toResponse(event);
     }
 }

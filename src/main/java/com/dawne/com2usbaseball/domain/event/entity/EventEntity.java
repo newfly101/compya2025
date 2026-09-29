@@ -19,6 +19,10 @@ public class EventEntity {
     String imageUrl;
     String externalLink;
     boolean visible;
+    Long sourceArticleId;      // 원문 카페 글번호 (수집 이벤트만)
+    String contentHtml;        // 정제된 본문
+    String contentHash;        // 마지막으로 본 원문 구간 해시
+    LocalDateTime syncedAt;    // 마지막 수집 시각
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
 }

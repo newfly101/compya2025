@@ -48,4 +48,13 @@ public interface EventSwaggerDocs {
             )
     )
     GlobalResponse<List<EventResponse>> getExternalEventList();
+
+    @Operation(
+            summary = "이벤트 상세 조회",
+            description = "노출 중인 공식 이벤트 1건을 본문(contentHtml) 포함해 조회한다. 숨김·내부 이벤트·없는 id 는 404."
+    )
+    @ApiResponse(responseCode = "200", description = "이벤트 상세 조회 성공",
+            content = @Content(schema = @Schema(implementation = EventResponse.class)))
+    @ApiResponse(responseCode = "404", description = "EVENT_NOT_FOUND")
+    GlobalResponse<EventResponse> getEvent(Long id);
 }

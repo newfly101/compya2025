@@ -4,20 +4,28 @@
 
 <mapper namespace="com.dawne.com2usbaseball.domain.event.repository.mapper.EventMapper">
 
+    <sql id="eventColumns">
+        id,
+        event_type          AS eventType,
+        title,
+        start_at            AS startAt,
+        expire_at           AS expireAt,
+        image_url           AS imageUrl,
+        external_link       AS externalLink,
+        is_visible          AS visible,
+        source_article_id   AS sourceArticleId,
+        content_html        AS contentHtml,
+        content_hash        AS contentHash,
+        synced_at           AS syncedAt,
+        created_at          AS createdAt,
+        updated_at          AS updatedAt
+    </sql>
+
     <!-- USER -->
     <select id="selectEventByExternalForUser"
             resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
-        id,
-        event_type      AS eventType,
-        title,
-        start_at        AS startAt,
-        expire_at       AS expireAt,
-        image_url       AS imageUrl,
-        external_link   AS externalLink,
-        is_visible      AS visible,
-        created_at      AS createdAt,
-        updated_at      AS updatedAt
+        <include refid="eventColumns"/>
         FROM site_events
         <!-- INTERNAL 은 내부 이벤트(DDL 주석) — 노출 토글만으로 공개되면 안 되므로 공개 목록은 OFFICIAL 만 -->
         WHERE is_visible = true
@@ -25,36 +33,28 @@
         ORDER BY start_at DESC
     </select>
 
+    <select id="selectPublicEventById"
+            resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        SELECT
+        <include refid="eventColumns"/>
+        FROM site_events
+        WHERE id = #{id}
+          AND is_visible = true
+          AND event_type = 'OFFICIAL'
+    </select>
+
     <!-- ADMIN -->
     <select id="selectEventByExternal"
             resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
-            id,
-            event_type      AS eventType,
-            title,
-            start_at        AS startAt,
-            expire_at       AS expireAt,
-            image_url       AS imageUrl,
-            external_link   AS externalLink,
-            is_visible      AS visible,
-            created_at      AS createdAt,
-            updated_at      AS updatedAt
+        <include refid="eventColumns"/>
         FROM site_events
         ORDER BY created_at DESC
     </select>
 
     <select id="selectEventById" resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
-            id,
-            event_type      AS eventType,
-            title,
-            start_at        AS startAt,
-            expire_at       AS expireAt,
-            image_url       AS imageUrl,
-            external_link   AS externalLink,
-            is_visible      AS visible,
-            created_at      AS createdAt,
-            updated_at      AS updatedAt
+        <include refid="eventColumns"/>
         FROM site_events
         WHERE id = #{id}
     </select>
@@ -68,6 +68,10 @@
             image_url,
             external_link,
             is_visible,
+            source_article_id,
+            content_html,
+            content_hash,
+            synced_at,
             created_at,
             updated_at
         ) VALUES (
@@ -78,6 +82,10 @@
                      #{imageUrl},
                      #{externalLink},
                      #{visible},
+                     #{sourceArticleId},
+                     #{contentHtml},
+                     #{contentHash},
+                     #{syncedAt},
                      NOW(),
                      NOW()
                  )
@@ -126,16 +134,7 @@
     <select id="selectAdminEventList"
             resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
         SELECT
-            id,
-            event_type      AS eventType,
-            title,
-            start_at        AS startAt,
-            expire_at       AS expireAt,
-            image_url       AS imageUrl,
-            external_link   AS externalLink,
-            is_visible      AS visible,
-            created_at      AS createdAt,
-            updated_at      AS updatedAt
+        <include refid="eventColumns"/>
         FROM site_events
         <where>
             <if test="eventType != null">
@@ -144,10 +143,79 @@
             <if test="visible != null">
                 AND is_visible = #{visible}
             </if>
+            <if test="collected != null and collected">
+                AND source_article_id IS NOT NULL
+                AND is_visible = false
+            </if>
         </where>
         ORDER BY created_at DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
+
+    <!-- 카페 자동 수집 -->
+    <select id="selectExistingSourceArticleIds" resultType="java.lang.Long">
+        SELECT source_article_id
+        FROM site_events
+        WHERE source_article_id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="selectTrackedCollectedEvents"
+            resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        SELECT
+        <include refid="eventColumns"/>
+        FROM site_events
+        WHERE source_article_id IS NOT NULL
+          AND expire_at > NOW()
+        ORDER BY id
+    </select>
+
+    <update id="updateCollectedContent">
+        UPDATE site_events
+        SET
+            content_html = #{contentHtml},
+            content_hash = #{contentHash},
+            image_url = COALESCE(#{imageUrl}, image_url),
+            synced_at = NOW(),
+            updated_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateCollectedHash">
+        UPDATE site_events
+        SET
+            content_hash = #{contentHash},
+            synced_at = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <select id="selectManualEventCandidates"
+            resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        SELECT
+            id,
+            title,
+            external_link AS externalLink,
+            image_url     AS imageUrl
+        FROM site_events
+        WHERE source_article_id IS NULL
+        ORDER BY id DESC
+    </select>
+
+    <!-- 수동 등록 행 병합: 제목·기간·노출·링크는 건드리지 않고, 배너는 비어 있을 때만 채운다 -->
+    <update id="updateMergeCollected">
+        UPDATE site_events
+        SET
+            source_article_id = #{sourceArticleId},
+            content_html = #{contentHtml},
+            content_hash = #{contentHash},
+            image_url = CASE WHEN image_url IS NULL OR image_url = '' THEN COALESCE(#{imageUrl}, image_url) ELSE image_url END,
+            synced_at = NOW(),
+            updated_at = NOW()
+        WHERE id = #{id}
+          AND source_article_id IS NULL
+    </update>
 
     <!-- 이벤트 삭제 -->
     <delete id="deleteEventById">

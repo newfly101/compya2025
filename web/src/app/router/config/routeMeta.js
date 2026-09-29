@@ -4,6 +4,11 @@ export const ROUTE_META = {
   HOME: { path: ROUTE_PATHS.home, title: "컴프야펀 | 홈" },
   COUPONS: { path: ROUTE_PATHS.coupons, title: "컴프야펀 | 쿠폰 모아보기" },
   EVENTS: {path: ROUTE_PATHS.events, title: "컴프야펀 | 이벤트"},
+  EVENT_DETAILS: {
+    path: ROUTE_PATHS.event_details_pattern,
+    title: (eventTitle) =>
+      eventTitle ? `컴프야펀 | 이벤트 | ${eventTitle}` : "컴프야펀 | 이벤트 상세",
+  },
   NOTICES: {path: ROUTE_PATHS.notices, title: "컴프야펀 | 공지사항"},
   NOTICE_DETAILS: {
     path: ROUTE_PATHS.notice_details_pattern,

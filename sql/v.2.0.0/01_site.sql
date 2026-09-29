@@ -65,6 +65,10 @@ CREATE TABLE site_events
     expire_at     DATETIME                      NOT NULL COMMENT '이벤트 종료 일시',
     image_url     VARCHAR(500)                  NOT NULL COMMENT '이벤트 이미지 URL',
     external_link VARCHAR(500)                           COMMENT '이벤트 외부 연결 링크',
+    source_article_id BIGINT                             COMMENT '원문 카페 글번호 — 자동 수집 중복 방지·재확인 대상 식별',
+    content_html  MEDIUMTEXT                             COMMENT '정제된 이벤트 본문 HTML (이벤트 기간 ~ 감사합니다 구간)',
+    content_hash  CHAR(64)                               COMMENT '원문 구간 SHA-256 — 원문 변경 감지',
+    synced_at     DATETIME                               COMMENT '마지막 수집 시각 (KST)',
     is_visible    BOOLEAN                       NOT NULL DEFAULT TRUE COMMENT '이벤트 노출 여부',
     created_at    DATETIME                      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
     updated_at    DATETIME                      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
@@ -73,6 +77,8 @@ CREATE TABLE site_events
 
     CONSTRAINT chk_site_events_expire_after_start
         CHECK (expire_at > start_at),
+
+    UNIQUE KEY uk_site_events_source_article (source_article_id),
 
     INDEX idx_site_events_visible_period (is_visible, start_at, expire_at)
 ) COMMENT = '사이트 이벤트 정보';
