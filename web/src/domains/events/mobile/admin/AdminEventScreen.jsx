@@ -301,7 +301,9 @@ export default function AdminEventScreen() {
       await dispatch(requestAdminRefreshCollected(event.id)).unwrap();
       setBulkNotice("본문을 원문 기준으로 갱신했습니다.");
     } catch (err) {
-      setBulkNotice(typeof err === "string" ? err : "본문 갱신에 실패했습니다.");
+      // 서버는 이미지 한 장이라도 못 올리면 아무것도 저장하지 않는다(전부 아니면 전무) — 기존 본문이 남아 있음을 알린다.
+      const reason = typeof err === "string" ? err : "본문 갱신에 실패했습니다.";
+      setBulkNotice(`${reason} 기존 본문·이미지는 그대로 유지됩니다.`);
     }
   };
 

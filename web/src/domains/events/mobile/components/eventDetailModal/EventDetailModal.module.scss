@@ -77,29 +77,6 @@
   text-decoration: none;
 }
 
-// 카페 본문 — 모양을 정하는 유일한 자리. 서버가 정제한 HTML 이 들어온다.
-:global(.event-body) {
-  @include prose;
+.bodyWrap {
   padding: 0 $space-4;
-  max-width: 100%;
-  overflow-wrap: anywhere;
-
-  img {
-    max-width: 100%;
-    height: auto;
-    display: block;
-  }
-
-  table {
-    display: block;
-    max-width: 100%;
-    overflow-x: auto;
-    border-collapse: collapse;
-  }
-
-  th, td {
-    padding: $space-1 $space-2;
-    border: 1px solid var(--color-border-strong);
-    min-width: 4rem;
-  }
 }

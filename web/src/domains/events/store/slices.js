@@ -7,7 +7,7 @@ import {
   requestAdminBulkDeleteEvents, requestAdminBulkUpdateEventsVisible,
   requestAdminSyncCafe, requestAdminRefreshCollected,
 } from "@/domains/events/store/admin/thunks.js";
-import { requestGetExternalEventList } from "@/domains/events/store/public/thunks.js";
+import { requestGetExternalEventList, requestGetEventDetail } from "@/domains/events/store/public/thunks.js";
 
 // events = 관리자 목록(숨김 포함) / publicEvents = 공개 목록.
 // 한 칸을 같이 쓰면 관리자 화면을 본 뒤 공개 화면으로 이동할 때 관리자 목록이 그대로
@@ -24,6 +24,10 @@ const initialState = {
   error: null,
   publicLoading: false,
   publicError: null,
+  detail: null,
+  detailNotFound: false,
+  detailLoading: false,
+  detailError: null,
   mutateLoading: false,
   mutateError: null,
   page: 0,
@@ -41,6 +45,14 @@ const eventsSlice = createSlice({
     applyAsyncHandlers(builder, requestGetExternalEventList, (state, action) => {
       state.publicEvents = action.payload;
     }, "public");
+
+    /* ===============================
+     * 이벤트 상세 1건 (공개) — null 이면 없는·비공개 이벤트
+     * =============================== */
+    applyAsyncHandlers(builder, requestGetEventDetail, (state, action) => {
+      state.detail = action.payload;
+      state.detailNotFound = action.payload == null;
+    }, "detail");
 
     /* ===============================
      * 이벤트 신규 생성

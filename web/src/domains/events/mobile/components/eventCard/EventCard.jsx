@@ -1,18 +1,17 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import styles from "./EventCard.module.scss";
-import EventDetailModal from "@/domains/events/mobile/components/eventDetailModal/EventDetailModal.jsx";
+import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import StatusBadge from "@/global/ui/badge/StatusBadge.jsx";
 import { trackEventClick } from "@/infra/analytics/events/eventEvents.js";
 
 const EventCard = ({ event, showDetail = false, isExpired = false }) => {
-  const [detailOpen, setDetailOpen] = useState(false);
   const handleClick = () => trackEventClick(event.id, event.title, event.eventType, event.externalLink);
 
   const cardClassName = `${styles.eventCard} ${isExpired ? styles.expired : ""}`;
 
-  // 클릭 우선순위: 본문(contentHtml) 있으면 상세 모달 → 없고 externalLink 있으면 새 탭 → 둘 다 없으면 비클릭.
-  // 모달은 별도 주소가 없어 크롤러 404 우려가 없다. 링크 없는 카드는 <a> 로 감싸지 않는다.
-  const hasBody = Boolean(event.contentHtml);
+  // 클릭 우선순위: 본문 있음(hasContent, 목록 응답엔 본문 자체가 없다) → 상세 페이지(/events/:id)
+  // → 없고 externalLink 있으면 새 탭 → 둘 다 없으면 비클릭. 링크 없는 카드는 <a> 로 감싸지 않는다.
+  const hasBody = Boolean(event.hasContent);
   const hasLink = Boolean(event.externalLink);
 
   const content = (
@@ -47,17 +46,14 @@ const EventCard = ({ event, showDetail = false, isExpired = false }) => {
 
   if (hasBody) {
     return (
-      <>
-        <button
-          type="button"
-          className={cardClassName}
-          onClick={() => { handleClick(); setDetailOpen(true); }}
-          data-analytics-tracked="content-click"
-        >
-          {content}
-        </button>
-        {detailOpen && <EventDetailModal event={event} onClose={() => setDetailOpen(false)} />}
-      </>
+      <Link
+        to={ROUTE_PATHS.event_details(event.id)}
+        className={cardClassName}
+        onClick={handleClick}
+        data-analytics-tracked="content-click"
+      >
+        {content}
+      </Link>
     );
   }
 

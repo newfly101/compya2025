@@ -4,6 +4,7 @@ const AuthCallback = lazy(() => import("@/domains/authentication/callback/AuthCa
 const HomePage = lazy(() => import("@/domains/home/components/HomeScreen.jsx"));
 const CouponPage = lazy(() => import("@/domains/coupons/mobile/CouponScreen.jsx"));
 const EventPage = lazy(() => import("@/domains/events/mobile/EventScreen.jsx"));
+const EventDetailPage = lazy(() => import("@/domains/events/mobile/EventDetailScreen.jsx"));
 const NoticePage = lazy(() => import("@/domains/notices/mobile/NoticeScreen.jsx"));
 const NoticeDetailPage = lazy(() => import("@/domains/notices/mobile/NoticeDetailScreen.jsx"));
 const OddsIndexPage = lazy(() => import("@/domains/odds/mobile/OddsIndexScreen.jsx"));
@@ -30,6 +31,7 @@ export const PublicRoutes = [
   { path: ROUTE_META.AUTH_CALL_BACK.path, element: <AuthCallback /> },
   { path: ROUTE_META.COUPONS.path, element: <CouponPage />, handle: ROUTE_META.COUPONS },
   { path: ROUTE_META.EVENTS.path, element: <EventPage />, handle: ROUTE_META.EVENTS },
+  { path: ROUTE_META.EVENT_DETAILS.path, element: <EventDetailPage />, handle: ROUTE_META.EVENT_DETAILS },
   { path: ROUTE_META.NOTICES.path, element: <NoticePage />, handle: ROUTE_META.NOTICES },
   { path: ROUTE_META.NOTICE_DETAILS.path, element: <NoticeDetailPage />, handle: ROUTE_META.NOTICE_DETAILS },
   { path: ROUTE_META.ODDS.path, element: <OddsIndexPage />, handle: ROUTE_META.ODDS },
