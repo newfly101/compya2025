@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import AdminSegmented from "@/global/ui/admin/fields/AdminSegmented.jsx";
-import AdminDateRange from "@/global/ui/admin/fields/AdminDateRange.jsx";
 import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
 import "@/global/ui/admin/admin.tokens.scss";
 import {
@@ -10,7 +9,6 @@ import {
   requestAdminAnalyticsTrend,
   requestAdminAnalyticsAggregate,
 } from "@/domains/admin/store/admin/thunks.js";
-import { setAdminAnalyticsRange } from "@/domains/admin/store/slices.js";
 import {
   getYesterdayKst,
   getTodayKst,
@@ -28,129 +26,195 @@ import {
   SIGNUP_COLOR,
   countRows,
 } from "./analyticsChartConfig.js";
-import { RatioBars, TrendBars } from "./AnalyticsCharts.jsx";
+import { RatioBars } from "./AnalyticsCharts.jsx";
+import AnalyticsSummaryCard from "./AnalyticsSummaryCard.jsx";
+import AnalyticsTrendCard from "./AnalyticsTrendCard.jsx";
+import { pathToTitle } from "./pathTitle.js";
+import { deltaOf } from "./analyticsDelta.js";
+import { previousPeriodOf, formatPeriodLabel } from "./periodMath.js";
 
-const RANGE_OPTIONS = [
-  { value: "TODAY", label: "오늘" },
-  { value: "WEEK", label: "7일" },
-  { value: "MONTH", label: "30일" },
-  { value: "CUSTOM", label: "기간" },
+// AnalyticsDateValidator(BE) 와 같은 값 — 이보다 이전으로는 직전 구간 비교를 요청하지 않는다.
+const SERVICE_START_DATE = "2026-01-29";
+
+const TOP_PATH_MODE_OPTIONS = [
+  { value: "title", label: "제목" },
+  { value: "path", label: "경로" },
 ];
 
-const TREND_GRANULARITY_OPTIONS = [
-  { value: "day", label: "일별" },
-  { value: "hour", label: "시간대별" },
+const JUMP_TARGETS = [
+  { id: "analytics-summary", label: "개요" },
+  { id: "analytics-toppages", label: "상위 경로" },
+  { id: "analytics-trend", label: "추이" },
+  { id: "analytics-visitors", label: "방문자 구성" },
+  { id: "analytics-referrers", label: "외부 유입" },
 ];
+
+// mode(TODAY|DATE|RANGE) + 입력값 → 실제 조회 구간(from~to). 셀렉트 이벤트 핸들러가
+// setState 직후 곧바로 새 값으로 조회해야 해서(리액트 state 는 비동기 반영) 컴포넌트
+// state 를 읽지 않는 순수 함수로 뺐다.
+const periodOf = (mode, dateValue, rangeFrom, rangeTo) => {
+  if (mode === "TODAY") return { from: getTodayKst(), to: getTodayKst() };
+  if (mode === "DATE") return { from: dateValue, to: dateValue };
+  return { from: rangeFrom, to: rangeTo };
+};
+
+const summaryArgsOf = (mode, dateValue, rangeFrom, rangeTo) => {
+  if (mode === "TODAY") return { range: "TODAY" };
+  if (mode === "DATE") {
+    return dateValue === getTodayKst()
+      ? { range: "TODAY" }
+      : { range: "CUSTOM", from: dateValue, to: dateValue };
+  }
+  return { range: "CUSTOM", from: rangeFrom, to: rangeTo };
+};
 
 // 어드민 셸의 "통계" 탭 패널. AdminCacheSyncTab 과 같은 상태분기 패턴(!loading && error,
-// !loading && !error && 데이터 없음)을 따른다. range 는 캐시하지 않고 바뀔 때마다 새로 조회한다 —
-// 탭을 옮겨 다시 돌아왔을 때는(재마운트) 이미 받은 summary 를 그대로 보여준다(재요청 없음).
-// FN-7: 개요/상위경로/추이/방문자구성/외부유입 5개 box 를 가로 스크롤로 배치, 수동 재집계 CTA 만
-// 스크롤 밖(맨 아래)에 남긴다.
+// !loading && !error && 데이터 없음)을 따른다.
+// 5개 카드(개요·상위경로·추이·방문자구성·외부유입)는 상단에서 고른 기간 하나를 그대로 따른다 —
+// 개요/상위경로/방문자구성/외부유입은 summary 응답 하나를 같이 쓰니 이미 같은 기간이고, 추이만
+// 예전엔 별도 날짜를 가졌던 것을 이번에 없앴다. 직전 같은 길이 구간과 비교(previousSummary·
+// previousTrendDay)는 별도 API 없이 같은 thunk 를 from/to 만 바꿔 한 번 더 호출한다
+// (ponytail: 요청이 2배가 되지만 어드민 전용 화면이라 허용, slices.js 참고).
 export default function AdminAnalyticsTab() {
   const dispatch = useDispatch();
   const {
     summary,
+    previousSummary,
     loading,
     error,
-    range,
     trend,
+    previousTrendDay,
     trendLoading,
     trendError,
     mutateLoading,
     mutateError,
   } = useSelector((s) => s.adminAnalytics);
 
-  const [aggregateDate, setAggregateDate] = useState(getYesterdayKst());
-  const [customFrom, setCustomFrom] = useState(getKstDateOffset(-6));
-  const [customTo, setCustomTo] = useState(getTodayKst());
+  const [rangeMode, setRangeMode] = useState("TODAY");
+  const [dateValue, setDateValue] = useState(getYesterdayKst());
+  const [rangeFrom, setRangeFrom] = useState(getKstDateOffset(-7));
+  const [rangeTo, setRangeTo] = useState(getYesterdayKst());
   const [trendGranularity, setTrendGranularity] = useState("day");
-  const [trendFrom, setTrendFrom] = useState(getKstDateOffset(-6));
-  const [trendTo, setTrendTo] = useState(getTodayKst());
+  const [topPathMode, setTopPathMode] = useState("title");
+  const [aggregateDate, setAggregateDate] = useState(getYesterdayKst());
 
-  useEffect(() => {
-    if (!summary && !loading) dispatch(requestAdminAnalyticsSummary({ range }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- 마운트 시 1회만, range 변경은 handleRangeChange 가 직접 처리
-  }, []);
-
-  useEffect(() => {
-    if (trend.day.length === 0 && !trendLoading) {
-      dispatch(requestAdminAnalyticsTrend({ from: trendFrom, to: trendTo, granularity: "day" }));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- 마운트 시 1회만, 이후는 트렌드 핸들러가 직접 처리
-  }, []);
-
-  const handleRetry = () =>
-    dispatch(
-      requestAdminAnalyticsSummary(
-        range === "CUSTOM" ? { range, from: customFrom, to: customTo } : { range },
-      ),
-    );
-
-  const handleRangeChange = (value) => {
-    dispatch(setAdminAnalyticsRange(value));
-    if (value === "CUSTOM") return; // 기간 확정("조회" 클릭) 전까지는 요청하지 않는다
-    dispatch(requestAdminAnalyticsSummary({ range: value }));
-  };
-
-  const handleCustomApply = () => {
-    if (!customFrom || !customTo) return;
-    dispatch(requestAdminAnalyticsSummary({ range: "CUSTOM", from: customFrom, to: customTo }));
-  };
-
-  const fetchTrend = (from = trendFrom, to = trendTo, granularity = trendGranularity) =>
-    dispatch(requestAdminAnalyticsTrend({ from, to, granularity }));
-
-  const handleTrendGranularityChange = (value) => {
-    setTrendGranularity(value);
-    let from = trendFrom;
-    if (value === "hour") {
+  const fetchTrendCurrent = (from, to, granularity) => {
+    // 시간대별은 원본 보관 경계(오늘-3개월) 밖을 조회하면 400 — 화면 값은 그대로 두고
+    // 서버에 보낼 from 만 클램프한다.
+    let effectiveFrom = from;
+    if (granularity === "hour") {
       const minDate = getKstMonthsAgo(3);
-      if (from < minDate) {
-        from = minDate;
-        setTrendFrom(from);
-      }
+      if (effectiveFrom < minDate) effectiveFrom = minDate;
     }
-    fetchTrend(from, trendTo, value);
+    dispatch(requestAdminAnalyticsTrend({ from: effectiveFrom, to, granularity }));
   };
+
+  const fetchPrevious = (from, to, includeTrend) => {
+    const prev = previousPeriodOf({ from, to });
+    if (prev.from < SERVICE_START_DATE) return; // 서비스 시작일 이전 — 비교 자체를 요청하지 않는다
+    dispatch(
+      requestAdminAnalyticsSummary({ range: "CUSTOM", from: prev.from, to: prev.to, isPrevious: true }),
+    );
+    if (includeTrend) {
+      dispatch(
+        requestAdminAnalyticsTrend({
+          from: prev.from,
+          to: prev.to,
+          granularity: "day",
+          isPrevious: true,
+        }),
+      );
+    }
+  };
+
+  const fetchForSelection = (mode, date, from, to, granularity) => {
+    dispatch(requestAdminAnalyticsSummary(summaryArgsOf(mode, date, from, to)));
+    const period = periodOf(mode, date, from, to);
+    fetchTrendCurrent(period.from, period.to, granularity);
+    fetchPrevious(period.from, period.to, granularity === "day");
+  };
+
+  useEffect(() => {
+    if (!summary && !loading) fetchForSelection(rangeMode, dateValue, rangeFrom, rangeTo, trendGranularity);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 마운트 시 1회만, 이후는 각 핸들러가 처리
+  }, []);
+
+  const handleModeChange = (value) => {
+    setRangeMode(value);
+    fetchForSelection(value, dateValue, rangeFrom, rangeTo, trendGranularity);
+  };
+
+  const handleDateChange = (value) => {
+    setDateValue(value);
+    fetchForSelection("DATE", value, rangeFrom, rangeTo, trendGranularity);
+  };
+
+  const handleApplyRange = () => fetchForSelection("RANGE", dateValue, rangeFrom, rangeTo, trendGranularity);
+
+  const handleQuickRange = (days) => {
+    const to = getYesterdayKst();
+    const from = getKstDateOffset(-days);
+    setRangeFrom(from);
+    setRangeTo(to);
+    fetchForSelection("RANGE", dateValue, from, to, trendGranularity);
+  };
+
+  const handleGranularityChange = (value) => {
+    setTrendGranularity(value);
+    const period = periodOf(rangeMode, dateValue, rangeFrom, rangeTo);
+    fetchTrendCurrent(period.from, period.to, value);
+    if (value === "day") fetchPrevious(period.from, period.to, true);
+  };
+
+  const handleRetry = () => fetchForSelection(rangeMode, dateValue, rangeFrom, rangeTo, trendGranularity);
 
   // dispatch(thunk) 는 unwrap() 없이는 reject 되지 않는다 — .catch 는 도달 불가라 제거.
   // 실패는 mutateError(슬라이스 상태)로 이미 화면에 노출된다.
   const handleAggregate = () => {
     dispatch(requestAdminAnalyticsAggregate(aggregateDate)).then((result) => {
       if (result.meta.requestStatus === "fulfilled") {
-        dispatch(
-          requestAdminAnalyticsSummary(
-            range === "CUSTOM" ? { range, from: customFrom, to: customTo } : { range },
-          ),
-        );
+        fetchForSelection(rangeMode, dateValue, rangeFrom, rangeTo, trendGranularity);
       }
     });
   };
 
-  const eventRows = summary
-    ? Object.entries(summary.eventCounts).map(([type, count]) => ({
-        type,
-        label: EVENT_TYPE_LABEL[type] ?? type,
-        count,
-      }))
-    : [];
+  const handleJump = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  // should 5: pageViews=0 이라도 이벤트 건수가 하나라도 있으면(SEARCH 등) 표를 계속 보여준다.
+  const eventRowsRaw = summary ? Object.entries(summary.eventCounts ?? {}) : [];
   const isEmpty =
     !summary ||
     (summary.pageViews === 0 &&
       (summary.topPages?.length ?? 0) === 0 &&
-      Object.values(summary.eventCounts).every((v) => v === 0));
+      Object.values(summary.eventCounts ?? {}).every((v) => v === 0));
+
+  const period = periodOf(rangeMode, dateValue, rangeFrom, rangeTo);
+  const periodLabel = formatPeriodLabel(period.from, period.to);
+  const prevPeriod = previousPeriodOf(period);
+  const comparisonAvailable = prevPeriod.from >= SERVICE_START_DATE;
+
+  const eventRows = eventRowsRaw.map(([type, count]) => ({
+    type,
+    label: EVENT_TYPE_LABEL[type] ?? type,
+    count,
+    delta: comparisonAvailable ? deltaOf(count, previousSummary?.eventCounts?.[type]) : null,
+  }));
 
   const trendPoints = trend[trendGranularity] ?? [];
-  const trendMinDate = trendGranularity === "hour" ? getKstMonthsAgo(3) : undefined;
+  const dayOverlayAvailable = comparisonAvailable && previousTrendDay.length > 0;
 
   return (
     <div className={styles.tab}>
       <div className={styles.head}>
         <b className={styles.title}>방문 · 이벤트 통계</b>
         <p className={styles.subtitle}>수집된 사용자 행동 데이터를 기간별로 봅니다.</p>
+      </div>
+
+      <div className={styles.jumpRow}>
+        {JUMP_TARGETS.map((t) => (
+          <button key={t.id} type="button" className={styles.jumpChip} onClick={() => handleJump(t.id)}>
+            {t.label}
+          </button>
+        ))}
       </div>
 
       {loading && <StateBox status="loading" message="통계를 불러오는 중..." />}
@@ -160,77 +224,48 @@ export default function AdminAnalyticsTab() {
       )}
 
       {!loading && !error && summary && !isEmpty && (
-        <div className={styles.articleScroll}>
+        <div className={styles.cardList}>
           {/* 개요 */}
-          <section className={styles.box}>
-            <b className={styles.boxTitle}>개요</b>
-            {/* 제목과 나란히 두면 480 에서 세그먼트 4개가 눌려 글자가 세로로 쪼개진다 — 아래 줄로 내림. */}
-            <div className={styles.rangeRow}>
-              <AdminSegmented
-                options={RANGE_OPTIONS}
-                value={range}
-                onChange={handleRangeChange}
-                name="통계 기간"
-              />
-            </div>
-            {range === "CUSTOM" && (
-              <div className={styles.customRow}>
-                <AdminDateRange
-                  start={customFrom}
-                  end={customTo}
-                  onStartChange={setCustomFrom}
-                  onEndChange={setCustomTo}
-                  max={getTodayKst()}
-                  name="customRange"
-                />
-                <button type="button" className={styles.applyButton} onClick={handleCustomApply}>
-                  조회
-                </button>
-              </div>
-            )}
-
-            <div className={styles.summaryCards}>
-              <div className={styles.summaryCard}>
-                <span className={styles.cardLabel}>순방문자</span>
-                <span className={styles.cardValue}>{summary.uniqueVisitors.toLocaleString()}</span>
-              </div>
-              <div className={styles.summaryCard}>
-                <span className={styles.cardLabel}>페이지뷰</span>
-                <span className={styles.cardValue}>{summary.pageViews.toLocaleString()}</span>
-              </div>
-            </div>
-
-            <div className={styles.section}>
-              <b className={styles.sectionTitle}>이벤트 종류별 건수</b>
-              <AdminTable
-                columns={[
-                  { key: "label", label: "이벤트", align: "left" },
-                  {
-                    key: "count",
-                    label: "건수",
-                    width: 90,
-                    render: (row) => row.count.toLocaleString(),
-                  },
-                ]}
-                rows={eventRows}
-                rowKey={(row) => row.type}
-              />
-            </div>
-
-            <div className={styles.section}>
-              <b className={styles.sectionTitle}>세션당 페이지뷰</b>
-              <div className={styles.summaryCard}>
-                <span className={styles.cardValue}>{summary.pageViewsPerSession ?? "-"}</span>
-              </div>
-            </div>
-          </section>
+          <AnalyticsSummaryCard
+            periodLabel={periodLabel}
+            summary={summary}
+            previousSummary={previousSummary}
+            comparisonAvailable={comparisonAvailable}
+            eventRows={eventRows}
+            rangeMode={rangeMode}
+            dateValue={dateValue}
+            rangeFrom={rangeFrom}
+            rangeTo={rangeTo}
+            onModeChange={handleModeChange}
+            onDateChange={handleDateChange}
+            onRangeFromChange={setRangeFrom}
+            onRangeToChange={setRangeTo}
+            onApplyRange={handleApplyRange}
+            onQuickRange={handleQuickRange}
+          />
 
           {/* 상위 경로 */}
-          <section className={styles.box}>
-            <b className={styles.boxTitle}>상위 경로 Top 10</b>
+          <section id="analytics-toppages" className={styles.box}>
+            <div className={styles.boxHead}>
+              <b className={styles.boxTitle}>상위 경로 Top 10</b>
+              <span className={styles.periodLabel}>{periodLabel}</span>
+            </div>
+            <div className={styles.rangeRow}>
+              <AdminSegmented
+                options={TOP_PATH_MODE_OPTIONS}
+                value={topPathMode}
+                onChange={setTopPathMode}
+                name="상위 경로 표시"
+              />
+            </div>
             <AdminTable
               columns={[
-                { key: "pagePath", label: "경로", align: "left" },
+                {
+                  key: "pagePath",
+                  label: topPathMode === "path" ? "경로" : "제목",
+                  align: "left",
+                  render: (row) => (topPathMode === "path" ? row.pagePath : pathToTitle(row.pagePath)),
+                },
                 {
                   key: "count",
                   label: "조회수",
@@ -250,52 +285,32 @@ export default function AdminAnalyticsTab() {
                   render: (row) => (row.returningRate == null ? "-" : `${row.returningRate}%`),
                 },
               ]}
-              rows={summary.topPages}
+              rows={summary.topPages ?? []}
               rowKey={(row) => row.pagePath}
             />
           </section>
 
           {/* 추이 */}
-          <section className={styles.box}>
-            <b className={styles.boxTitle}>추이</b>
-            <div className={styles.rangeRow}>
-              <AdminSegmented
-                options={TREND_GRANULARITY_OPTIONS}
-                value={trendGranularity}
-                onChange={handleTrendGranularityChange}
-                name="추이 단위"
-              />
-            </div>
-            <div className={styles.customRow}>
-              <AdminDateRange
-                start={trendFrom}
-                end={trendTo}
-                onStartChange={setTrendFrom}
-                onEndChange={setTrendTo}
-                min={trendMinDate}
-                max={getTodayKst()}
-                name="trendRange"
-              />
-              <button type="button" className={styles.applyButton} onClick={() => fetchTrend()}>
-                조회
-              </button>
-            </div>
-
-            {trendLoading && <StateBox status="loading" message="추이를 불러오는 중..." />}
-            {!trendLoading && trendError && (
-              <StateBox status="error" message={trendError} onRetry={() => fetchTrend()} />
-            )}
-            {!trendLoading && !trendError && trendPoints.length === 0 && (
-              <StateBox status="empty" message="집계된 추이가 없습니다." />
-            )}
-            {!trendLoading && !trendError && trendPoints.length > 0 && (
-              <TrendBars points={trendPoints} granularity={trendGranularity} />
-            )}
-          </section>
+          <AnalyticsTrendCard
+            periodLabel={periodLabel}
+            granularity={trendGranularity}
+            onGranularityChange={handleGranularityChange}
+            loading={trendLoading}
+            error={trendError}
+            onRetry={() => handleGranularityChange(trendGranularity)}
+            points={trendPoints}
+            period={period}
+            prevPeriod={prevPeriod}
+            previousPoints={previousTrendDay}
+            dayOverlayAvailable={dayOverlayAvailable}
+          />
 
           {/* 방문자 구성 */}
-          <section className={styles.box}>
-            <b className={styles.boxTitle}>방문자 구성</b>
+          <section id="analytics-visitors" className={styles.box}>
+            <div className={styles.boxHead}>
+              <b className={styles.boxTitle}>방문자 구성</b>
+              <span className={styles.periodLabel}>{periodLabel}</span>
+            </div>
             <div className={styles.section}>
               <span className={styles.sectionTitle}>기기 비율</span>
               <RatioBars rows={countRows(summary.deviceRatio, DEVICE_TYPE_LABEL, DEVICE_TYPE_COLOR)} />
@@ -313,8 +328,11 @@ export default function AdminAnalyticsTab() {
           </section>
 
           {/* 외부 유입 */}
-          <section className={styles.box}>
-            <b className={styles.boxTitle}>외부 유입 상위</b>
+          <section id="analytics-referrers" className={styles.box}>
+            <div className={styles.boxHead}>
+              <b className={styles.boxTitle}>외부 유입 상위</b>
+              <span className={styles.periodLabel}>{periodLabel}</span>
+            </div>
             <AdminTable
               columns={[
                 { key: "referrerHost", label: "유입 경로", align: "left" },
@@ -332,7 +350,7 @@ export default function AdminAnalyticsTab() {
         </div>
       )}
 
-      {/* 수동 재집계 — 가로 스크롤 밖(맨 아래) 고정 위치 유지 */}
+      {/* 수동 재집계 — 카드 목록 밖(맨 아래) 고정 위치 유지 */}
       {!loading && !error && summary && !isEmpty && (
         <div className={styles.section}>
           <b className={styles.sectionTitle}>수동 재집계</b>

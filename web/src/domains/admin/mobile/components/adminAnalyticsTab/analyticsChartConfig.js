@@ -50,8 +50,6 @@ export const countRows = (countMap, labelOf, colorOf) =>
     color: colorOf[key] ?? colorOf.unknown ?? "var(--color-admin-tag-neutral-text)",
   }));
 
-// 일별 bucket("yyyy-MM-dd") 은 좁은 box 폭에 맞춰 "MM.DD" 로 다듬는다. 시간대별 bucket("00".."23")은 그대로.
-export const dayBucketLabel = (bucket) => {
-  const [, m, d] = (bucket ?? "").split("-");
-  return m && d ? `${m}.${d}` : bucket;
-};
+// 시간대별 분포(HourlyList) 가 채워 그리는 0~23시 라벨 — 활동 없는 시각도 0건 행으로 남기려면
+// API 응답과 별개로 24개 시각을 직접 나열해야 한다.
+export const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));

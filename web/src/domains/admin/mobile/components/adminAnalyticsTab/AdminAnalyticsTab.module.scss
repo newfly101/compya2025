@@ -14,25 +14,31 @@
   min-width: 0;
 }
 
-// AdminSegmented 는 그대로 두고 배치만 — 제목과 한 줄로 안 쓰니 폭 여유가 생겨 4개 옵션이
-// 안 눌린다(FN-5, CUSTOM 추가로 3→4개). white-space 는 라디오 버튼(role="radio") 자체
-// 속성으로 걸어 컴포넌트 내부 클래스를 건드리지 않는다.
-.rangeRow {
-  [role="radio"] {
-    white-space: nowrap;
-  }
+// 상단 바로가기 — 카드 5개 제목을 칩으로 나열, 누르면 해당 카드로 스크롤한다(scrollIntoView).
+// 가로 스크롤이 아니라 줄바꿈 허용 — 칩이 넘치면 다음 줄로 내려간다.
+.jumpRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
 }
 
-// FN-7 — 개요/상위경로/추이/방문자구성/외부유입 5개 box 를 가로 스크롤로. scroll-row 믹스인
-// (global/styles/mixins/_layout.scss)의 스크롤바 숨김 관례를 그대로 쓴다.
-.articleScroll {
-  @include scroll-row($space-3, 0);
-  padding-bottom: $space-1; // 아래 그림자/스크롤바 여백
+.jumpChip {
+  @include chip-base(md, var(--color-bg-card), var(--color-text-secondary));
+  @include pressable;
+  border: 1px solid var(--color-border-strong);
+  font: inherit;
+  cursor: pointer;
 }
 
-// box peek — 320px 고정폭이라 480 프레임에서 다음 box 가장자리가 소량 노출된다(fe-design.md 참고, 🟨).
+// 카드 5개(개요/상위경로/추이/방문자구성/외부유입) 세로 나열 — 가로 스크롤(peek) 폐기,
+// 폭은 컨테이너 100%.
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
 .box {
-  flex: 0 0 320px;
   display: flex;
   flex-direction: column;
   gap: $space-3;
@@ -42,16 +48,60 @@
   background: var(--color-bg-card);
 }
 
+.boxHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $space-2;
+}
+
 .boxTitle {
   @include text-body-bold;
   color: var(--color-text-primary);
 }
 
-// CUSTOM 기간(FN-5) · 추이 날짜범위(FN-6) 공통 — 날짜범위 인풋 아래 "조회" 버튼.
+// 카드 헤더 옆 현재 적용 구간 표기(예: "09-24 ~ 09-30") — 5개 카드가 전부 같은 기간을 따른다는
+// 신호를 준다.
+.periodLabel {
+  @include text-caption;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+// 기간 선택기(AnalyticsRangePicker) — 3버튼(오늘/특정 일자/기간) + 하위 입력.
+.rangePicker {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+// AdminSegmented 배치만 — 제목과 한 줄로 안 쓰니 폭 여유가 생겨 옵션이 안 눌린다.
+// white-space 는 라디오 버튼(role="radio") 자체 속성으로 걸어 컴포넌트 내부 클래스를 건드리지 않는다.
+.rangeRow {
+  [role="radio"] {
+    white-space: nowrap;
+  }
+}
+
+// "특정 일자" 단일 입력 · "기간" 날짜범위+조회 버튼 공통.
 .customRow {
   display: flex;
   flex-direction: column;
   gap: $space-2;
+}
+
+// "기간" 모드의 빠른 선택(7일·30일).
+.quickRow {
+  display: flex;
+  gap: $space-2;
+}
+
+.quickButton {
+  @include chip-base(md, var(--color-bg-elevated), var(--color-text-secondary));
+  @include pressable;
+  border: 1px solid var(--color-border-strong);
+  font: inherit;
+  cursor: pointer;
 }
 
 .title {
@@ -92,6 +142,25 @@
   color: var(--color-admin-accent);
 }
 
+// 증감률 배지(▲/▼/-) — 개요 카드 순방문자·페이지뷰·이벤트별 건수·세션당 페이지뷰 공통.
+// 상태 축 토큰만 사용(신규 색 없음) — 상승은 success, 하락은 danger, 비교 불가는 muted.
+.deltaUp {
+  @include text-caption;
+  color: var(--color-success);
+  font-weight: $font-weight-semibold;
+}
+
+.deltaDown {
+  @include text-caption;
+  color: var(--color-danger);
+  font-weight: $font-weight-semibold;
+}
+
+.deltaFlat {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
 .section {
   display: flex;
   flex-direction: column;
@@ -103,6 +172,7 @@
   color: var(--color-text-primary);
 }
 
+// 방문자 구성(RatioBars) — 기기 비율·신규/재방문·가입 전환 공통.
 .deviceBars {
   display: flex;
   flex-direction: column;
@@ -141,8 +211,7 @@
 
 // AdminDateRange 와 같은 어드민 날짜 입력 관례(admin-date-range-row) — input[type=date]에
 // flex:1 + min-width:0 을 줘서 좁은 폭에서 입력이 줄어들고, 고정폭 버튼과 나란히 둬도
-// 가로 스크롤이 생기지 않는다. 기존엔 flex:0 0 auto 로 입력을 고정폭 취급해 320px 근처에서
-// 밀려났다.
+// 가로 스크롤이 생기지 않는다.
 .aggregateRow {
   @include admin-date-range-row;
 }
@@ -151,7 +220,7 @@
   @include admin-input;
 }
 
-// 재집계 · CUSTOM 기간 조회 · 추이 조회 3곳이 같은 버튼 모양을 쓴다(%placeholder 로 중복 제거).
+// 재집계 · "특정 일자" 단일 입력 · 기간 조회 3곳이 같은 버튼 모양을 쓴다(%placeholder 로 중복 제거).
 %analyticsPrimaryButton {
   display: flex;
   align-items: center;
@@ -177,13 +246,26 @@
   flex: 0 0 auto;
 }
 
-// CUSTOM 기간(FN-5) · 추이 날짜범위(FN-6) 조회 버튼 — customRow 안에서 오른쪽 정렬.
+// "기간" 조회 버튼 — customRow 안에서 오른쪽 정렬.
 .applyButton {
   @extend %analyticsPrimaryButton;
   align-self: flex-end;
 }
 
-// 추이(FN-5/6) 막대 — 일별/시간대별 공통. box 폭(320px) 안에서 가로 스크롤.
+/* ── 추이 카드 ───────────────────────────────────────────────── */
+
+.trendWrap {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+// 추이·시간대별 목록 공통 — 막대가 어느 지표 기준인지 밝히는 범례 한 줄.
+.chartLegendText {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
 .trendBars {
   display: flex;
   align-items: flex-end;
@@ -212,8 +294,15 @@
   white-space: nowrap;
 }
 
+// 이번 구간·직전 구간 막대를 나란히 — 직전 구간이 없으면(dayOverlayAvailable=false) 트랙 1개만 렌더.
+.trendBarPair {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
 .trendBarTrack {
-  width: 16px;
+  width: 14px;
   height: 80px;
   border-radius: $radius-full;
   background: var(--color-bg-elevated);
@@ -229,9 +318,73 @@
   background: var(--color-admin-accent);
 }
 
+// 직전 구간 — 같은 색을 옅게(불투명도) 써서 새 토큰을 추가하지 않는다.
+.trendBarFillPrev {
+  background: var(--color-admin-accent);
+  opacity: 0.35;
+}
+
 .trendBarLabel {
   @include text-caption;
   color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+/* ── 시간대별 목록(HourlyList) ───────────────────────────────── */
+
+.hourlyList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.hourlyHead,
+.hourlyRow {
+  display: grid;
+  grid-template-columns: 36px 1fr 52px 60px;
+  align-items: center;
+  gap: $space-2;
+}
+
+.hourlyHead {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.hourlyHeadHour {
+  text-align: left;
+}
+
+.hourlyHeadVisitors,
+.hourlyHeadViews {
+  text-align: right;
+}
+
+.hourlyHourLabel {
+  @include text-caption;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.hourlyTrack {
+  height: 10px;
+  border-radius: $radius-full;
+  background: var(--color-bg-elevated);
+  overflow: hidden;
+}
+
+// 기기 비율 막대의 모바일 색과 같은 토큰 재사용(analyticsChartConfig.js DEVICE_TYPE_COLOR.mobile).
+.hourlyFill {
+  height: 100%;
+  border-radius: $radius-full;
+  background: var(--color-admin-tag-purple-text);
+}
+
+.hourlyVisitors,
+.hourlyViews {
+  @include text-caption;
+  color: var(--color-text-primary);
+  text-align: right;
   white-space: nowrap;
 }
 
