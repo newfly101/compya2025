@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface EventUserService {
     List<EventResponse> getExternalEventList();
+
+    EventResponse getPublicEvent(Long id);
 }

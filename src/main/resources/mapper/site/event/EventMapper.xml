@@ -33,6 +33,16 @@
         ORDER BY start_at DESC
     </select>
 
+    <select id="selectPublicEventById"
+            resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">
+        SELECT
+        <include refid="eventColumns"/>
+        FROM site_events
+        WHERE id = #{id}
+          AND is_visible = true
+          AND event_type = 'OFFICIAL'
+    </select>
+
     <!-- ADMIN -->
     <select id="selectEventByExternal"
             resultType="com.dawne.com2usbaseball.domain.event.entity.EventEntity">

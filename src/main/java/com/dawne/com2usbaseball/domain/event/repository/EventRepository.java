@@ -19,6 +19,10 @@ public class EventRepository {
         return mapper.selectEventByExternalForUser();
     }
 
+    public Optional<EventEntity> findPublicById(Long id) {
+        return Optional.ofNullable(mapper.selectPublicEventById(id));
+    }
+
     // admin
 
     public List<EventEntity> findExternalEvents() {

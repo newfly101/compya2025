@@ -154,7 +154,11 @@ public class CafeSyncServiceImpl implements CafeSyncService {
         String contentHtml = null;
         String hash = null;
         if (body.found()) {
-            contentHtml = withS3Images(body, a.articleId());
+            UploadedHtml uploaded = withS3Images(body, a.articleId());
+            if (uploaded.failed() > 0) {
+                log.warn("[CAFE-SYNC] 초안 이미지 업로드 실패 {}건 articleId={} — 관리자 '본문 갱신' 으로 다시 시도", uploaded.failed(), a.articleId());
+            }
+            contentHtml = uploaded.html();
             hash = CafeArticleParser.contentHash(contentHtml);
         }
         String banner = uploadBanner(body.bannerImage(), a.articleId());
@@ -211,9 +215,19 @@ public class CafeSyncServiceImpl implements CafeSyncService {
         if (!body.found()) {
             throw new BaseException(EventMessages.EVENT_CAFE_BODY_NOT_FOUND, HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        String html = withS3Images(body, e.getSourceArticleId());
-        String banner = e.getImageUrl() == null || e.getImageUrl().isBlank()
-                ? uploadBanner(body.bannerImage(), e.getSourceArticleId()) : null;
+        // 전부 아니면 전무 — 이미지 한 장이라도 S3 에 못 올리면 저장하지 않는다.
+        // 반쪽 결과(카페 주소가 남은 이미지는 우리 도메인에서 403 으로 깨진다)로 기존 본문을 덮지 않기 위해서다.
+        UploadedHtml uploaded = withS3Images(body, e.getSourceArticleId());
+        String banner = null;
+        if (e.getImageUrl() == null || e.getImageUrl().isBlank()) {
+            banner = uploadBanner(body.bannerImage(), e.getSourceArticleId());
+            if (banner == null && body.bannerImage() != null) uploaded = uploaded.withFailure();
+        }
+        if (uploaded.failed() > 0) {
+            log.error("[CAFE-SYNC] 본문 갱신 중단 eventId={} — 이미지 업로드 실패 {}건, 기존 본문·이미지 유지", id, uploaded.failed());
+            throw new BaseException(EventMessages.EVENT_CAFE_IMAGE_UPLOAD_FAILED, HttpStatus.BAD_GATEWAY);
+        }
+        String html = uploaded.html();
         collectService.applyContent(id, html, CafeArticleParser.contentHash(html), banner);
         EventEntity fresh = eventRepository.findById(id)
                 .orElseThrow(() -> new BaseException(EventMessages.EVENT_NOT_FOUND, HttpStatus.NOT_FOUND));
@@ -232,14 +246,23 @@ public class CafeSyncServiceImpl implements CafeSyncService {
 
     // ---------------- 이미지 ----------------
 
-    private String withS3Images(CafeBody body, long articleId) {
+    /** 본문 이미지를 S3 로 옮긴 결과 — failed 는 올리지 못한 이미지 수(그 이미지는 카페 주소가 남는다) */
+    private record UploadedHtml(String html, int failed) {
+        UploadedHtml withFailure() {
+            return new UploadedHtml(html, failed + 1);
+        }
+    }
+
+    private UploadedHtml withS3Images(CafeBody body, long articleId) {
         Map<String, String> replaced = new LinkedHashMap<>();
+        int failed = 0;
         for (String src : body.images()) {
             if (replaced.containsKey(src)) continue;
             String url = uploadImage(src, articleId);
             if (url != null) replaced.put(src, url);
+            else failed++;
         }
-        return CafeArticleParser.rewriteImages(body.html(), replaced);
+        return new UploadedHtml(CafeArticleParser.rewriteImages(body.html(), replaced), failed);
     }
 
     private String uploadBanner(String src, long articleId) {

@@ -36,6 +36,7 @@ public interface EventMapStruct {
 
     @Mapping(target = "sourceChanged", expression = "java(com.dawne.com2usbaseball.domain.event.service.support.CafeSyncRules.isSourceChanged(entity))")
     @Mapping(target = "deadlineUnconfirmed", expression = "java(com.dawne.com2usbaseball.domain.event.service.support.CafeSyncRules.isDeadlineUnconfirmed(entity))")
+    @Mapping(target = "hasContent", expression = "java(entity.getContentHtml() != null && !entity.getContentHtml().isBlank())")
     EventResponse toResponse(EventEntity entity);
 
     List<EventResponse> toResponseList(List<EventEntity> entities);

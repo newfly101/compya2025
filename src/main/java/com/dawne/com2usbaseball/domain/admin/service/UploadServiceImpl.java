@@ -119,7 +119,8 @@ public class UploadServiceImpl implements UploadService {
         String key;
         try {
             byte[] digest = java.security.MessageDigest.getInstance("SHA-256").digest(content);
-            key = "events/" + articleId + "/" + java.util.HexFormat.of().formatHex(digest, 0, 8) + "." + extension;
+            // 업로더 IAM 정책이 uploads/images/ 아래만 쓰기 허용 — 버킷 루트 events/ 는 403 (2026-09-30 실측)
+            key = EVENT_KEY_PREFIX + "events/" + articleId + "/" + java.util.HexFormat.of().formatHex(digest, 0, 8) + "." + extension;
         } catch (java.security.NoSuchAlgorithmException e) {
             return null;
         }

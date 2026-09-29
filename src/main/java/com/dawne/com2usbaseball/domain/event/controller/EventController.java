@@ -24,4 +24,10 @@ public class EventController implements EventSwaggerDocs {
 
         return GlobalResponse.success(EventMessages.EVENT_SUCCESS, eventList);
     }
+
+    @Override
+    @GetMapping("/{id}")
+    public GlobalResponse<EventResponse> getEvent(@PathVariable Long id) {
+        return GlobalResponse.success(EventMessages.EVENT_SUCCESS, eventUserService.getPublicEvent(id));
+    }
 }
