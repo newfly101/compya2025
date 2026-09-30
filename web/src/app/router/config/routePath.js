@@ -27,6 +27,8 @@ export const ROUTE_PATHS = {
   },
   // 레전드 재료
   legend_stats: "/legend-stats",
+  // 레전드 재료 보유 현황 — ?tab=all|mine
+  legend_collections: "/legend-collections",
   // 히스토리 재료 탐색기 — 평점표에서 ?legend={레전드명} 으로 진입한다
   history_legend: "/history-mode/legend",
   community: "/community",
