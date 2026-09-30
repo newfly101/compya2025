@@ -25,6 +25,7 @@ import {
   SIGNUP_LABEL,
   SIGNUP_COLOR,
   countRows,
+  regionRows,
 } from "./analyticsChartConfig.js";
 import { RatioBars } from "./AnalyticsCharts.jsx";
 import AnalyticsSummaryCard from "./AnalyticsSummaryCard.jsx";
@@ -324,6 +325,21 @@ export default function AdminAnalyticsTab() {
             <div className={styles.section}>
               <span className={styles.sectionTitle}>가입 전환</span>
               <RatioBars rows={countRows(summary.signupConversion, SIGNUP_LABEL, SIGNUP_COLOR)} />
+            </div>
+            {/* 지역 분포 — 라벨이 기간마다 달라지는 지역명이라 직전 구간 비교 배지는 붙이지 않는다.
+                구버전 서버는 필드 자체가 없을 수 있고, 보존 경계(3개월) 밖 기간은 빈 객체로 온다 —
+                두 경우 모두 "데이터 없음" 한 줄로 처리(카드 전체는 정상 렌더). */}
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>지역 분포</span>
+              {Object.keys(summary.regionRatio ?? {}).length > 0 ? (
+                <RatioBars
+                  rows={regionRows(summary.regionRatio)}
+                  rowClassName={styles.regionBarRow}
+                  labelClassName={styles.regionBarLabel}
+                />
+              ) : (
+                <p className={styles.subtitle}>지역 데이터 없음(최근 3개월 안 기간에서만 집계)</p>
+              )}
             </div>
           </section>
 

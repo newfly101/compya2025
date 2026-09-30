@@ -50,6 +50,18 @@ export const countRows = (countMap, labelOf, colorOf) =>
     color: colorOf[key] ?? colorOf.unknown ?? "var(--color-admin-tag-neutral-text)",
   }));
 
+// regionRatio(FN-지역 분포) 는 키 자체가 라벨("수원시 팔달구" · "JP" · "기타" · "알수없음") —
+// device/visitor/signup 처럼 고정 라벨 딕셔너리가 없다. 값 내림차순은 BE 가 이미 정렬해서 주므로
+// 여기서 다시 정렬하지 않는다(삽입 순서 유지).
+const REGION_BAR_COLOR = "var(--color-admin-tag-purple-text)";
+export const regionRows = (regionRatio) =>
+  Object.entries(regionRatio ?? {}).map(([label, count]) => ({
+    key: label,
+    label,
+    count,
+    color: REGION_BAR_COLOR,
+  }));
+
 // 시간대별 분포(HourlyList) 가 채워 그리는 0~23시 라벨 — 활동 없는 시각도 0건 행으로 남기려면
 // API 응답과 별개로 24개 시각을 직접 나열해야 한다.
 export const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
