@@ -305,3 +305,41 @@ CREATE TABLE site_user_event_daily_referrer (
   event_count   BIGINT       NOT NULL COMMENT '그 호스트에서 시작한 PAGE_VIEW 수',
   PRIMARY KEY (event_date, referrer_host)
 ) COMMENT '일별 외부 유입 상위 — 새벽 집계 배치가 채운다';
+
+-- ============================================================================
+-- 레전드 재료 보유 현황 저장 테이블 3종 (2026-09-29 추가, legendCollections)
+-- 운영 반영 완료(2026-09-29) — 적용 스크립트: sql/v.2.0.0/applied/legend_collection_tables.sql
+-- ============================================================================
+CREATE TABLE site_legend_material_states
+(
+    user_id     BIGINT      NOT NULL COMMENT 'site_users.id',
+    material_id CHAR(36)    NOT NULL COMMENT 'data_player_legend_material.id (마스터 원본은 읽기만, FK 없음 — 재적재 금지)',
+    state       ENUM ('HAVE','INSERTED') NOT NULL COMMENT '재료 칸 상태. 미보유는 행 없음',
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
+    updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
+    PRIMARY KEY (user_id, material_id),
+    CONSTRAINT fk_legend_material_states_user FOREIGN KEY (user_id) REFERENCES site_users (id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT '이용자별 레전드 재료 칸 상태 (보유/삽입)';
+
+CREATE TABLE site_legend_states
+(
+    user_id    BIGINT   NOT NULL COMMENT 'site_users.id',
+    legend_id  CHAR(36) NOT NULL COMMENT 'data_player_legend.id (FK 없음)',
+    status     ENUM ('FRAME','OWNED') NOT NULL COMMENT '레전드 상태. 미보유는 행 없음',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
+    PRIMARY KEY (user_id, legend_id),
+    CONSTRAINT fk_legend_states_user FOREIGN KEY (user_id) REFERENCES site_users (id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT '이용자별 레전드 상태 (액자/보유중)';
+
+CREATE TABLE site_legend_preferences
+(
+    user_id    BIGINT   NOT NULL COMMENT 'site_users.id',
+    legend_id  CHAR(36) NOT NULL COMMENT 'data_player_legend.id (FK 없음)',
+    rank_no    TINYINT  NOT NULL COMMENT '선호 순위 1~10',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
+    PRIMARY KEY (user_id, legend_id),
+    UNIQUE KEY uk_legend_preferences_rank (user_id, rank_no),
+    CONSTRAINT fk_legend_preferences_user FOREIGN KEY (user_id) REFERENCES site_users (id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT '이용자별 선호 레전드 순위 (최대 10)';
