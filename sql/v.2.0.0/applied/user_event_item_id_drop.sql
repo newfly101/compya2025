@@ -1,4 +1,4 @@
--- 미반영 · 사용자 직접 실행 대상 (2026-09-30 작성, decision.md 승인 완료)
+-- 운영 DB 적용 완료 (2026-09-30, 사용자 직접 실행). 이력 보존용 — sql/v.2.0.0/ 에서 applied/ 로 이동. ⚠️ test DB = prod DB
 -- 목적: 내부 통계 4차(FN-3) — 쓰이지 않던 상품 식별자 컬럼 제거, content_id 로 일원화.
 --   item_id 는 2026-09-29 추가됐지만 FE 가 끝까지 채운 적이 없다(applied/event_columns_
 --   session_device.sql 주석 "이번 라운드 FE 미사용" 참고). 코드(AnalyticsEventEntity·

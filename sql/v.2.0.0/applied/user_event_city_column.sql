@@ -1,4 +1,4 @@
--- 미반영 · 사용자 직접 실행 대상 (2026-09-30 작성, decision.md 승인 완료)
+-- 운영 DB 적용 완료 (2026-09-30, 사용자 직접 실행). 이력 보존용 — sql/v.2.0.0/ 에서 applied/ 로 이동. ⚠️ test DB = prod DB
 -- 목적: 내부 통계 4차(FN-2) — GeoIP(MaxMind) 조회 결과 중 도시명을 저장할 컬럼 추가.
 --   지금까지는 country 만 저장했다(CloudFront 헤더 재사용). 이번 라운드부터 서버가
 --   직접 GeoIP DB(.mmdb) 파일로 country+city 를 조회하므로 city 컬럼이 필요하다.

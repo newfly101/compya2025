@@ -1,4 +1,4 @@
--- 미반영 · 사용자 직접 실행 대상 (2026-09-30 작성, decision.md 승인 완료)
+-- 운영 DB 적용 완료 (2026-09-30, 사용자 직접 실행). 이력 보존용 — sql/v.2.0.0/ 에서 applied/ 로 이동. ⚠️ test DB = prod DB
 -- 목적: 내부 통계 4차(FN-11) — 원본 site_user_event 를 월별 파티션으로 재구성해
 --   3개월 보관 정책을 "DROP PARTITION"(메타데이터 연산, 가벼움)으로 정리할 수 있게 한다.
 --   실제 매달 파티션 추가/삭제는 배치(RetentionPartitionServiceImpl, 매월 1일 03:40 KST)가
