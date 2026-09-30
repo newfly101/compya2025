@@ -281,6 +281,10 @@ const LegendStatsScreen = () => {
     <div className={styles.screen}>
       <GuideAccordion guide={GUIDES_BY_SLUG["legend-stats-guide"]} />
 
+      <Link to={`${ROUTE_PATHS.legend_collections}?tab=all`} className={styles.collectionLink}>
+        내 재료 보유 현황 관리하기 →
+      </Link>
+
       <div className={styles.filters}>
         <div className={styles.searchRow}>
 <svg

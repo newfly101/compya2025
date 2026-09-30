@@ -26,6 +26,11 @@ public class CouponAdminRepository {
         return mapper.insertCoupon(coupon) > 0;
     }
 
+    // 카페 수집 — coupon_code UNIQUE 중복이면 false (예외 없이 건너뜀)
+    public boolean insertCouponIfAbsent(CouponEntity coupon) {
+        return mapper.insertCouponIfAbsent(coupon) > 0;
+    }
+
     public boolean updateCoupon(CouponEntity coupon) {
         return mapper.updateCouponById(coupon) > 0;
     }

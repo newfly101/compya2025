@@ -65,6 +65,10 @@ CREATE TABLE site_events
     expire_at     DATETIME                      NOT NULL COMMENT '이벤트 종료 일시',
     image_url     VARCHAR(500)                  NOT NULL COMMENT '이벤트 이미지 URL',
     external_link VARCHAR(500)                           COMMENT '이벤트 외부 연결 링크',
+    source_article_id BIGINT                             COMMENT '원문 카페 글번호 — 자동 수집 중복 방지·재확인 대상 식별',
+    content_html  MEDIUMTEXT                             COMMENT '정제된 이벤트 본문 HTML (이벤트 기간 ~ 감사합니다 구간)',
+    content_hash  CHAR(64)                               COMMENT '원문 구간 SHA-256 — 원문 변경 감지',
+    synced_at     DATETIME                               COMMENT '마지막 수집 시각 (KST)',
     is_visible    BOOLEAN                       NOT NULL DEFAULT TRUE COMMENT '이벤트 노출 여부',
     created_at    DATETIME                      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
     updated_at    DATETIME                      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
@@ -73,6 +77,8 @@ CREATE TABLE site_events
 
     CONSTRAINT chk_site_events_expire_after_start
         CHECK (expire_at > start_at),
+
+    UNIQUE KEY uk_site_events_source_article (source_article_id),
 
     INDEX idx_site_events_visible_period (is_visible, start_at, expire_at)
 ) COMMENT = '사이트 이벤트 정보';
@@ -299,3 +305,41 @@ CREATE TABLE site_user_event_daily_referrer (
   event_count   BIGINT       NOT NULL COMMENT '그 호스트에서 시작한 PAGE_VIEW 수',
   PRIMARY KEY (event_date, referrer_host)
 ) COMMENT '일별 외부 유입 상위 — 새벽 집계 배치가 채운다';
+
+-- ============================================================================
+-- 레전드 재료 보유 현황 저장 테이블 3종 (2026-09-29 추가, legendCollections)
+-- 운영 반영 완료(2026-09-29) — 적용 스크립트: sql/v.2.0.0/applied/legend_collection_tables.sql
+-- ============================================================================
+CREATE TABLE site_legend_material_states
+(
+    user_id     BIGINT      NOT NULL COMMENT 'site_users.id',
+    material_id CHAR(36)    NOT NULL COMMENT 'data_player_legend_material.id (마스터 원본은 읽기만, FK 없음 — 재적재 금지)',
+    state       ENUM ('HAVE','INSERTED') NOT NULL COMMENT '재료 칸 상태. 미보유는 행 없음',
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
+    updated_at  DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
+    PRIMARY KEY (user_id, material_id),
+    CONSTRAINT fk_legend_material_states_user FOREIGN KEY (user_id) REFERENCES site_users (id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT '이용자별 레전드 재료 칸 상태 (보유/삽입)';
+
+CREATE TABLE site_legend_states
+(
+    user_id    BIGINT   NOT NULL COMMENT 'site_users.id',
+    legend_id  CHAR(36) NOT NULL COMMENT 'data_player_legend.id (FK 없음)',
+    status     ENUM ('FRAME','OWNED') NOT NULL COMMENT '레전드 상태. 미보유는 행 없음',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
+    PRIMARY KEY (user_id, legend_id),
+    CONSTRAINT fk_legend_states_user FOREIGN KEY (user_id) REFERENCES site_users (id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT '이용자별 레전드 상태 (액자/보유중)';
+
+CREATE TABLE site_legend_preferences
+(
+    user_id    BIGINT   NOT NULL COMMENT 'site_users.id',
+    legend_id  CHAR(36) NOT NULL COMMENT 'data_player_legend.id (FK 없음)',
+    rank_no    TINYINT  NOT NULL COMMENT '선호 순위 1~10',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
+    PRIMARY KEY (user_id, legend_id),
+    UNIQUE KEY uk_legend_preferences_rank (user_id, rank_no),
+    CONSTRAINT fk_legend_preferences_user FOREIGN KEY (user_id) REFERENCES site_users (id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT '이용자별 선호 레전드 순위 (최대 10)';

@@ -1,5 +1,5 @@
 ---
-spec_version: 1.4.0
+spec_version: 1.5.0
 created: 2026-01-29
 updated: 2026-09-30
 ---

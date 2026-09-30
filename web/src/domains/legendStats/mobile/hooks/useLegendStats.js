@@ -75,5 +75,6 @@ export const useLegendStats = () => {
     hasMaterialsResponse,
     materialsLoading,
     retry,
+    teamNameByCode,
   };
 };

@@ -1,6 +1,6 @@
 ---
 feature: admin
-version: 1.4.0
+version: 1.5.0
 status: active
 created: 2026-01-29
 updated: 2026-09-30
@@ -33,19 +33,20 @@ updated: 2026-09-30
 | REQ-ADM-06 | 업로드 예외 순서 | `/api/upload/profile`은 로그인만 요구하는 규칙을 먼저 매칭시키고, 그 뒤에 `/api/upload/**` → ADMIN 규칙을 건다. `SecurityConfig` 안 규칙 순서가 실제 적용 여부를 바꾼다 | `SecurityConfig.java:63-66` |
 | REQ-ADM-07 | 커뮤니티 모더레이션 동결 | 커뮤니티 모더레이션 6개 컨트롤러(게시판·게시글·댓글·태그연결·신고·태그)는 리디자인 전까지 클래스 레벨 `@PreAuthorize` 없이 URL 규칙 하나에만 걸린 채 진입 경로 없는 동결 상태를 유지한다 | `AdminBoardController.java` 등 6개, `SecurityConfig.java:53-68` |
 | REQ-ADM-08 | 통계 탭 | 통계 탭은 기간(오늘·7일·30일·임의 기간)을 선택해 순방문자·페이지뷰·이벤트 종류별 건수·상위 경로(+순방문자·재방문율)·기기 비율·세션당 페이지뷰·신규/재방문 비율·가입 전환율·외부 유입 상위·일별 추이·시간대별 분포(최근 3개월)를 본다. "오늘"은 원본 이벤트 테이블을, 그 외 기간은 일별 집계 테이블을 조회한다(당일 미집계). 운영자는 날짜를 지정해 재집계할 수 있다(미래·서비스 시작일 이전 날짜는 거부) | `AdminAnalyticsController.java`, `AnalyticsAggregationServiceImpl.java` |
-| REQ-ADM-09 | 검색어 수집 정비 | 검색창이 있는 화면은 검색어 추적 훅을 연결하고, 화면을 벗어날 때 남은 입력을 즉시 전송한다 | `useSearchTracking.js` |
-| REQ-ADM-10 | country/city 수집 | 이벤트 저장 시 GeoIP(MaxMind GeoLite2)로 국가·도시를 추정해 저장한다. 조회용 DB 파일이 없으면 country/city 는 비운 채 계속 저장한다 | `GeoIpService.java` |
-| REQ-ADM-11 | item_id 정리 | 콘텐츠 식별은 `content_id` 로 일원화하고 `item_id` 컬럼은 삭제한다 | `AnalyticsEventItemRequest.java` |
-| REQ-ADM-12 | 상위 경로 상세 지표 | 상위 경로 목록 각 행에 순방문자·재방문율을 함께 보여준다(오늘은 재방문율 빈칸) | `AdminAnalyticsMapper.xml` |
-| REQ-ADM-13 | 임의 기간·일별 추이 | 운영자가 시작·종료일을 직접 지정할 수 있고, 일자별 방문자·페이지뷰 추이를 본다 | `AdminAnalyticsController.getTrend` |
-| REQ-ADM-14 | 시간대별 분포 | 0~23시 방문 분포를 보여준다(최근 3개월 데이터만) | `AdminAnalyticsMapper.sumHourlyTrend` |
-| REQ-ADM-15 | 레이아웃 개편 | 통계 지표를 가로로 넘기는 묶음(article)과 각 지표 카드(box)로 재구성한다 | `AdminAnalyticsTab.jsx` |
-| REQ-ADM-16 | 기간 방문자 정확도 | 7일·30일 순방문자를 근사치가 아니라 정확한 값으로 계산한다 | `AdminAnalyticsMapper.sumRangeVisitors` |
-| REQ-ADM-17 | 세션당 페이지뷰 통일 | 오늘·기간 모두 같은 중복 제거 기준으로 세션당 페이지뷰를 계산한다 | `AdminAnalyticsMapper.sumTodaySessionStats` |
-| REQ-ADM-18 | 신규/재방문 구분 | 방문자를 신규·재방문으로 나눠 비율을 보여준다 | `AdminAnalyticsMapper.sumVisitorComposition` |
-| REQ-ADM-19 | 원본 보관정책 | 원본 이벤트는 3개월만 보관하고, 그 이후는 매달 자동으로 정리한다(집계 테이블은 영구 보관) | `RetentionPartitionServiceImpl.java` |
-| REQ-ADM-20 | 재집계 날짜 검증 | 미래 날짜나 서비스 시작일 이전 날짜로는 재집계·기간 조회·추이 조회를 할 수 없다 | `AnalyticsDateValidator.java` |
-| REQ-ADM-21 | 가입 전환율 | 익명 방문자가 나중에 회원가입으로 이어진 비율을 보여주고, 방문 당일 가입인지 이후 가입인지 구분한다 | `AnalyticsFirstSeenRepository.java` |
+| REQ-ADM-09 | 카페 수집 | ADMIN 전용 `POST /api/admin/cafe-sync` 로 수동 실행한다(매일 11:01 스케줄과 같은 코드, 동시 실행 시 409). `/api/admin/**` 경로 + 클래스 레벨 `hasRole('ADMIN')` 이중 방어. 이벤트 탭의 "지금 수집" 버튼이 호출한다 | `AdminCafeSyncController.java` |
+| REQ-ADM-10 | 검색어 수집 정비 | 검색창이 있는 화면은 검색어 추적 훅을 연결하고, 화면을 벗어날 때 남은 입력을 즉시 전송한다 | `useSearchTracking.js` |
+| REQ-ADM-11 | country/city 수집 | 이벤트 저장 시 GeoIP(MaxMind GeoLite2)로 국가·도시를 추정해 저장한다. 조회용 DB 파일이 없으면 country/city 는 비운 채 계속 저장한다 | `GeoIpService.java` |
+| REQ-ADM-12 | item_id 정리 | 콘텐츠 식별은 `content_id` 로 일원화하고 `item_id` 컬럼은 삭제한다 | `AnalyticsEventItemRequest.java` |
+| REQ-ADM-13 | 상위 경로 상세 지표 | 상위 경로 목록 각 행에 순방문자·재방문율을 함께 보여준다(오늘은 재방문율 빈칸) | `AdminAnalyticsMapper.xml` |
+| REQ-ADM-14 | 임의 기간·일별 추이 | 운영자가 시작·종료일을 직접 지정할 수 있고, 일자별 방문자·페이지뷰 추이를 본다 | `AdminAnalyticsController.getTrend` |
+| REQ-ADM-15 | 시간대별 분포 | 0~23시 방문 분포를 보여준다(최근 3개월 데이터만) | `AdminAnalyticsMapper.sumHourlyTrend` |
+| REQ-ADM-16 | 레이아웃 개편 | 통계 지표를 개요·상위 경로·추이·방문자 구성·외부 유입 5개 카드(box)로 세로 배치하고, 상단 바로가기로 카드를 오간다. 기간은 오늘·특정 일자·기간 3버튼이며 모든 카드가 같은 기간을 따른다 | `AdminAnalyticsTab.jsx` |
+| REQ-ADM-17 | 기간 방문자 정확도 | 7일·30일 순방문자를 근사치가 아니라 정확한 값으로 계산한다 | `AdminAnalyticsMapper.sumRangeVisitors` |
+| REQ-ADM-18 | 세션당 페이지뷰 통일 | 오늘·기간 모두 같은 중복 제거 기준으로 세션당 페이지뷰를 계산한다 | `AdminAnalyticsMapper.sumTodaySessionStats` |
+| REQ-ADM-19 | 신규/재방문 구분 | 방문자를 신규·재방문으로 나눠 비율을 보여준다 | `AdminAnalyticsMapper.sumVisitorComposition` |
+| REQ-ADM-20 | 원본 보관정책 | 원본 이벤트는 3개월만 보관하고, 그 이후는 매달 자동으로 정리한다(집계 테이블은 영구 보관) | `RetentionPartitionServiceImpl.java` |
+| REQ-ADM-21 | 재집계 날짜 검증 | 미래 날짜나 서비스 시작일 이전 날짜로는 재집계·기간 조회·추이 조회를 할 수 없다 | `AnalyticsDateValidator.java` |
+| REQ-ADM-22 | 가입 전환율 | 익명 방문자가 나중에 회원가입으로 이어진 비율을 보여주고, 방문 당일 가입인지 이후 가입인지 구분한다 | `AnalyticsFirstSeenRepository.java` |
 
 ## 4. 데이터
 

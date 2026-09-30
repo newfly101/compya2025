@@ -1,0 +1,152 @@
+.table {
+  width: 100%;
+}
+
+.head,
+.row {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  width: 100%;
+  padding-right: $layout-h-pad;
+  padding-left: $layout-h-pad;
+}
+
+.head {
+  padding-top: 0;
+  padding-bottom: 0;
+  border-top: 1px solid var(--color-border-strong);
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-lc-head-bg);
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  line-height: 1.5;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  min-height: $control-height-md;
+  padding-top: $space-4;
+  padding-bottom: $space-4;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-lc-row-hover);
+  }
+
+  &[data-open] {
+    background: var(--color-lc-open-bg);
+    border-bottom-color: transparent;
+  }
+
+  &[data-owned] > * {
+    opacity: 0.55;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+  }
+}
+
+.cRank {
+  flex: 0 0 $space-5;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+  line-height: 1.5;
+
+  .head & {
+    font-size: $font-size-11;
+  }
+}
+
+.cName {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: $space-2;
+  min-width: 0;
+}
+
+.cStatus {
+  display: flex;
+  flex: 0 0 rem(92);
+  gap: $space-1;
+}
+
+.cOwned {
+  flex: 0 0 rem(64);
+  text-align: right;
+
+  .head & {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .row & {
+    color: var(--color-brand);
+    font-size: $font-size-13;
+    font-weight: $font-weight-semibold;
+    line-height: 1.5;
+  }
+}
+
+.dot {
+  flex: 0 0 auto;
+  width: $space-2;
+  height: $space-2;
+  border-radius: $radius-full;
+  background: currentColor;
+}
+
+.name {
+  overflow: hidden;
+  font-size: $font-size-13;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 정렬 머리 — legendStats 표 머리의 `평점 ▼` 와 같은 모양(글자 + 브랜드색 작은 화살표)
+.sortBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  max-width: 100%;
+  min-height: $control-height-md;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &[data-active] {
+    color: var(--color-text-primary);
+    font-weight: $font-weight-semibold;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+  }
+}
+
+.arrow {
+  @include data-table-sort-arrow;
+}

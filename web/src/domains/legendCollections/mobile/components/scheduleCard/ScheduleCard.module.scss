@@ -1,0 +1,143 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: $space-4;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  background: var(--color-bg-card);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+  padding-bottom: $space-3;
+}
+
+.title {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-size: $font-size-13;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+}
+
+.when {
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+// 펼친 전체 일정은 고정된 채 화면을 다 덮지 않도록 카드 안에서 스크롤
+.scroll {
+  max-height: 50dvh;
+  overflow-y: auto;
+}
+
+.day {
+  display: flex;
+  gap: $space-4;
+  padding: $space-3 0;
+  border-top: 1px solid var(--color-bg-elevated);
+}
+
+.date {
+  display: flex;
+  flex: 0 0 rem(84);
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.dateLabel {
+  color: var(--color-text-primary);
+  font-size: $font-size-13;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+
+  &[data-today] {
+    color: var(--color-brand);
+  }
+}
+
+.sub {
+  display: flex;
+  align-items: center;
+  gap: rem(6);
+  color: var(--color-text-secondary);
+  font-size: $font-size-10;
+  line-height: 1.5;
+}
+
+.entries {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: $space-2;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: rem(10);
+  }
+}
+
+.dot {
+  flex: 0 0 auto;
+  width: $space-2;
+  height: $space-2;
+  border-radius: $radius-full;
+  background: currentColor;
+}
+
+.legend {
+  flex: 0 0 rem(60);
+  color: var(--color-text-primary);
+  font-size: $font-size-13;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 $space-3;
+  min-width: 0;
+  color: var(--color-text-primary);
+  font-size: $font-size-12;
+  line-height: 1.5;
+}
+
+.empty {
+  margin: 0;
+  padding: $space-3 0;
+  border-top: 1px solid var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  font-size: $font-size-12;
+  line-height: 1.5;
+}
+
+.toggle {
+  min-height: $control-height-md;
+  padding: $space-3 0 0;
+  border: 0;
+  border-top: 1px solid var(--color-bg-elevated);
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-family: inherit;
+  font-size: $font-size-11;
+  line-height: 1.5;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}

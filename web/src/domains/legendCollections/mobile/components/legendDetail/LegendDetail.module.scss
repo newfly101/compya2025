@@ -1,0 +1,84 @@
+// 펼친 행은 legendStats 상세 행과 같은 면(--color-bg-elevated 계열)
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-2 $layout-h-pad $space-5;
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-lc-open-bg);
+}
+
+// 내 목표 카드 안에 들어갈 때 — 카드 면을 그대로 쓰고 자체 면·여백·아래선을 없앤다
+.detail[data-embedded] {
+  padding: 0;
+  border-bottom: 0;
+  background: transparent;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-2 $space-3;
+  min-height: $space-8;
+}
+
+.name {
+  color: var(--color-text-primary);
+  font-size: $font-size-15;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+}
+
+.meta,
+.caption {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  line-height: 1.5;
+}
+
+.spacer {
+  flex: 1 1 0;
+}
+
+.note {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: $font-size-10;
+  line-height: 1.5;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: $space-2;
+}
+
+.reset {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+
+  button {
+    flex: 0 0 auto;
+    min-height: $space-8;
+    padding: $space-2 $space-3;
+    border: 1px solid var(--color-danger);
+    border-radius: $radius-md;
+    background: transparent;
+    color: var(--color-danger);
+    font-family: inherit;
+    font-size: $font-size-9;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-danger);
+      outline-offset: 2px;
+    }
+  }
+}

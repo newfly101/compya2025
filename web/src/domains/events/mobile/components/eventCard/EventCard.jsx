@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import styles from "./EventCard.module.scss";
+import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import StatusBadge from "@/global/ui/badge/StatusBadge.jsx";
 import { trackEventClick } from "@/infra/analytics/events/eventEvents.js";
 
@@ -7,9 +9,9 @@ const EventCard = ({ event, showDetail = false, isExpired = false }) => {
 
   const cardClassName = `${styles.eventCard} ${isExpired ? styles.expired : ""}`;
 
-  // external_link 는 nullable 이라 링크 없는 이벤트가 등록될 수 있다.
-  // 그 경우 이동할 상세 화면이 아직 없으므로 링크로 감싸지 않는다 —
-  // <a> 로 두면 크롤러가 따라가 404 를 만난다.
+  // 클릭 우선순위: 본문 있음(hasContent, 목록 응답엔 본문 자체가 없다) → 상세 페이지(/events/:id)
+  // → 없고 externalLink 있으면 새 탭 → 둘 다 없으면 비클릭. 링크 없는 카드는 <a> 로 감싸지 않는다.
+  const hasBody = Boolean(event.hasContent);
   const hasLink = Boolean(event.externalLink);
 
   const content = (
@@ -36,11 +38,24 @@ const EventCard = ({ event, showDetail = false, isExpired = false }) => {
         }
         {isExpired
           ? <p className={styles.expiredText}>종료된 이벤트입니다</p>
-          : hasLink ? <p className={styles.more}>상세 보기 →</p> : null
+          : (hasBody || hasLink) ? <p className={styles.more}>상세 보기 →</p> : null
         }
       </div>
     </>
   );
+
+  if (hasBody) {
+    return (
+      <Link
+        to={ROUTE_PATHS.event_details(event.id)}
+        className={cardClassName}
+        onClick={handleClick}
+        data-analytics-tracked="content-click"
+      >
+        {content}
+      </Link>
+    );
+  }
 
   if (hasLink) {
     return (
