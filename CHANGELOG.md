@@ -25,7 +25,7 @@
 ## [Unreleased]
 
 ### Added
-
+- 레전드 재료 보유 현황(`/legend-collections`)을 새로 만들었다 — 로그인하면 레전드 상태(액자·보유중)와 재료 8칸(보유·삽입)을 저장하고, 선호 레전드 10명의 오늘·14일 획득 일정을 본다 (`docs/features/legendCollections/history.md` 2026-09-29)
 - 공식 카페 이벤트·쿠폰 자동 수집(매일 11:01 + 관리자 "지금 수집") · 이벤트 상세 모달(본문·출처·원문 보기) · 관리자 이벤트 "수집함" (`docs/features/events/history.md` 2026-09-30)
 ### Changed
 ### Fixed
