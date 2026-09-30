@@ -60,6 +60,9 @@ dependencies {
 
 //	XSS 공격과 HTML 새니타이징
 	implementation 'org.jsoup:jsoup:1.17.2'
+
+//	GeoIP (MaxMind GeoLite2, 무료 · 자체 서버 조회. DB 파일 미배치 시 country/city 수집 스킵)
+	implementation 'com.maxmind.geoip2:geoip2:4.2.1'
 }
 
 tasks.named('test') {

@@ -12,6 +12,8 @@ public record AdminAnalyticsSummaryResponse(
         Long sessionCount,
         Map<String, Long> deviceRatio,
         List<TopReferrerResponse> topReferrers,
-        Double pageViewsPerSession
+        Double pageViewsPerSession,
+        Map<String, Long> visitorComposition,
+        Map<String, Long> signupConversion
 ) {
 }

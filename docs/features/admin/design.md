@@ -1,5 +1,5 @@
 ---
-spec_version: 1.4.0
+spec_version: 1.5.0
 created: 2026-01-29
 updated: 2026-09-30
 ---
@@ -12,7 +12,7 @@ updated: 2026-09-30
 |---|---|---|
 | SC-01-01 | 어드민 셸 | 상단 탭바(가로 스크롤, 8개: 홈·퀴즈·이벤트·쿠폰·공지·유저·통계·동기화) + 탭 콘텐츠 영역(선택된 탭 1개만 렌더) |
 | SC-01-01 내부 · 홈 탭 | 홈 | 제목 블록("빠른 이동") + 카드 그리드(홈 제외 7개, 탭 이동용) + "지금 홈에 노출 중" 요약 카드(퀴즈·이벤트·쿠폰·고정공지) |
-| SC-01-01 내부 · 통계 탭 | 통계 | 기간 토글(오늘·7일·30일) + 요약 카드 2개(순방문자·페이지뷰) + 이벤트 종류별 건수 표 + 상위 경로 Top 10 표 + 기기 비율 막대(mobile/tablet/pc + unknown 회색) + 세션당 페이지뷰 카드 + 외부 유입 상위 표 + 재집계(날짜 선택+버튼) — 전 구간 실측(2026-09-29부터 7일·30일도 실값) |
+| SC-01-01 내부 · 통계 탭 | 통계 | 가로 스크롤 article 안에 box 5개(개요·상위경로·추이·방문자구성·외부유입) 배치, 수동 재집계 CTA 만 스크롤 밖(맨 아래) 고정. 개요 box: 기간 세그먼트(오늘·7일·30일·기간, CUSTOM 은 날짜 피커 2개+조회) + 요약 카드 2개(순방문자·페이지뷰) + 이벤트 종류별 건수 표 + 세션당 페이지뷰 카드. 상위경로 box: Top 10 표(경로·조회수·순방문·재방문율, 오늘은 재방문율 "-"). 추이 box: 일별/시간대별 세그먼트 + 날짜 피커(시간대별은 최근 3개월로 클램프) + 막대 그래프. 방문자구성 box: 기기 비율·신규/재방문·가입 전환 막대 3단(같은 라벨/막대/카운트 모양). 외부유입 box: 유입 경로 표 |
 | SC-01-01 내부 · 동기화 탭 | 동기화 | 헤더(제목+설명+전체 동기화 버튼) + 대상 목록(라벨·설명·마지막 동기화 시각·동기화 버튼) + 전체 동기화 확인창 |
 | SC-01-01 내부 · 퀴즈/이벤트/쿠폰/공지/유저 탭 | 각 콘텐츠 관리 화면 | 해당 도메인이 소유한 `Admin*Screen.jsx`를 그대로 배치. 화면 구조는 각 기능 문서 소관 |
 | SC-04-03 | 공지 글쓰기(셸 밖 예외) | 전체 화면, Tiptap 에디터. 화면 구조는 공지 기능 문서 소관 — 여기서는 진입점만 |
@@ -29,8 +29,11 @@ updated: 2026-09-30
 | 상한 도달 | 회원·이벤트 목록이 전량 조회 상한(1000건)에 닿음 | 탭 배지·홈 카드 숫자 대신 "–"(틀린 숫자 대신 숨김) |
 | 모르는 탭 키 | `/admin/{오타}` 등 정의되지 않은 tab 접근 | 조용히 홈 탭으로 흡수 — 빈 화면 없음 |
 | 통계 불러오는 중 | `requestAdminAnalyticsSummary` pending | `StateBox status="loading"` |
-| 통계 조회 오류 | 요청 실패 | `StateBox status="error"` + 다시 시도 |
+| 통계 조회 오류 | 요청 실패(날짜 검증 400 포함 — 서버는 코드만 내려주고 문구가 없어 클라이언트 공용 안내문으로 대체돼 원인이 구체적으로 안 보인다) | `StateBox status="error"` + 다시 시도 |
 | 통계 데이터 없음 | 선택 기간에 이벤트가 없음(배포 직후 등) | `StateBox status="empty"` "집계된 데이터가 없습니다." |
+| 추이 불러오는 중 | `requestAdminAnalyticsTrend` pending(일별/시간대별 각자 상태) | `StateBox status="loading"` |
+| 추이 조회 오류 | 요청 실패 | `StateBox status="error"` + 다시 시도 |
+| 추이 데이터 없음 | 선택 구간에 추이 점이 없음 | `StateBox status="empty"` "집계된 추이가 없습니다." |
 
 ## 3. 흐름
 
@@ -61,6 +64,8 @@ flowchart TD
 - 태그/배지 5색(퀴즈 노출중·이벤트 공식·쿠폰 만료 강조·공지 사이트/공식·유저 상태): `--color-admin-tag-purple-*`, `-green-*`, `-amber-*`, `-rose-*`, `-neutral-*`
 - 위 토큰은 전부 `web/src/global/ui/admin/admin.tokens.scss`(도메인 로컬 토큰, side-effect import) 소유이며 전역 `_colors.scss`/`semantic/_color.scss` 값을 그대로 변경하지 않는다
 - 기기 비율 막대: 신규 토큰 없이 재사용 — mobile `--color-admin-tag-purple-500`, tablet `-green-500`, pc `-amber-500`, unknown `-neutral-500`
+- 신규/재방문·가입 전환 막대(2026-09-30): 기기 비율과 같은 "라벨/막대/카운트" 모양, 색도 관리자 태그 팔레트 재사용(신규 토큰 없음)
+- box 폭 320(단위 px, 가로 스크롤, 다음 box 가장자리 소량 노출) — 🟨 임시값, designer 트랙 확정 전까지 변경 가능(spec.md §6)
 
 ## 5. 서버와 주고받는 것
 
@@ -70,8 +75,10 @@ flowchart TD
 | `POST /api/admin/cache-sync/{targetId}/sync` | `CacheSyncResultResponse` | 해당 대상 행에만 실패 메시지 표시, 다른 대상은 영향 없음 |
 | `POST /api/admin/cache-sync/sync-all` | `List<CacheSyncResultResponse>`(부분 실패 개별 결과 포함) | 대상별 결과에 실패가 섞여 와도 성공한 대상은 정상 표시, 요청 자체 실패는 `allSyncError` 문구 |
 | (셸 마운트 1회) 퀴즈·이벤트·쿠폰·공지·유저 목록 조회 | 각 도메인 리스트 | 실패한 도메인만 탭 배지·홈 카드가 "–"로 남고 나머지는 정상 |
-| `GET /api/admin/analytics/summary?range=TODAY\|WEEK\|MONTH` | `AdminAnalyticsSummaryResponse`(+ pageViewsPerSession, deviceRatio·topReferrers·sessionCount 이제 전 구간 실값) | `StateBox status="error"` + 다시 시도 버튼 |
+| `GET /api/admin/analytics/summary?range=TODAY\|WEEK\|MONTH\|CUSTOM(+from/to)` | `AdminAnalyticsSummaryResponse`(topPages 에 uniqueVisitors·returningRate, visitorComposition·signupConversion 추가) | `StateBox status="error"` + 다시 시도 버튼 |
+| `GET /api/admin/analytics/trend?from&to&granularity=day\|hour` | `AnalyticsTrendPointResponse[]`(bucket·uniqueVisitors·pageViews) | `StateBox status="error"` + 다시 시도 버튼(추이 box 단독, 개요 조회와 무관) |
 | `POST /api/admin/analytics/aggregate?date=YYYY-MM-DD` | 성공 시 알림 모달("YYYY-MM-DD 재집계했습니다") + 현재 보던 range 재조회 | 버튼 옆 인라인 에러 텍스트 |
+| 날짜 검증 실패(위 세 요청 공통) | `ANALYTICS_DATE_OUT_OF_RANGE`(400) | 서버가 문구를 내려주지 않아 client.js 공용 400 안내문("데이터를 받지 못했습니다...")로 대체 표시 — 날짜 범위 문제라는 구체적 원인은 화면에 드러나지 않는다(2026-09-30 확인) |
 
 ## 6. Figma
 

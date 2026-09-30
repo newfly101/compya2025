@@ -17,8 +17,13 @@ export const fetchCacheSyncAll = async () => {
   return data.data;
 };
 
-export const fetchAdminAnalyticsSummary = async (range) => {
-  const { data } = await API.get(ADMIN_ANALYTICS.GET_SUMMARY(range));
+export const fetchAdminAnalyticsSummary = async ({ range, from, to }) => {
+  const { data } = await API.get(ADMIN_ANALYTICS.GET_SUMMARY(range, from, to));
+  return data.data;
+};
+
+export const fetchAdminAnalyticsTrend = async ({ from, to, granularity }) => {
+  const { data } = await API.get(ADMIN_ANALYTICS.GET_TREND(from, to, granularity));
   return data.data;
 };
 

@@ -6,6 +6,7 @@ import com.dawne.com2usbaseball.domain.analytics.dto.AnalyticsClientContext;
 import com.dawne.com2usbaseball.domain.analytics.dto.request.AnalyticsEventRequest;
 import com.dawne.com2usbaseball.domain.analytics.enums.AnalyticsMessages;
 import com.dawne.com2usbaseball.domain.analytics.service.AnalyticsEventService;
+import com.dawne.com2usbaseball.domain.analytics.service.support.GeoIpService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,13 +30,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class AnalyticsController {
 
     private final AnalyticsEventService analyticsEventService;
+    private final GeoIpService geoIpService;
 
     @PostMapping("/events")
     public ResponseEntity<GlobalResponse<Void>> collect(@RequestBody(required = false) AnalyticsEventRequest request,
                                                           HttpServletRequest httpRequest) {
+        // CloudFront-Viewer-Country 헤더가 애초에 안 붙어와 GeoIP 직접 조회로 대체(null-causes.md §1).
+        GeoIpService.GeoLookupResult geo = geoIpService.lookup(ClientInfoExtractor.getClientIp(httpRequest));
         AnalyticsClientContext context = new AnalyticsClientContext(
                 (Long) httpRequest.getAttribute("userId"),
-                ClientInfoExtractor.getCountry(httpRequest),
+                geo.country() == null ? "-" : geo.country(),
+                geo.city(),
                 httpRequest.getHeader("User-Agent") // isBot() 의 null/공백 판정을 위해 safe() 미적용(원문 그대로 전달)
         );
 

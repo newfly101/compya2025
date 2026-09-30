@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.domain.analytics.service;
 
 import com.dawne.com2usbaseball.domain.analytics.repository.AnalyticsEventDailyRepository;
+import com.dawne.com2usbaseball.domain.analytics.service.support.AnalyticsDateValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,6 +36,8 @@ public class AnalyticsAggregationServiceImpl implements AnalyticsAggregationServ
     @Override
     @Transactional
     public void aggregateDailyEvents(LocalDate date) {
+        // 미래·서비스 시작일 이전 재집계 요청을 막는다 — summary(CUSTOM)·trend 와 같은 validator(FN-12).
+        AnalyticsDateValidator.validateRange(date, date);
         analyticsEventDailyRepository.aggregatePageEvents(date);
         analyticsEventDailyRepository.aggregateContentEvents(date);
         analyticsEventDailyRepository.aggregateDeviceDaily(date);
