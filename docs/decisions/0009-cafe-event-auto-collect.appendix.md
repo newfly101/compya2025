@@ -1,7 +1,7 @@
 ---
 adr: 0009
 title: 0009 부록 — 카페 수집 실측 결과
-status: proposed
+status: accepted
 date: 2026-09-30
 created: 2026-09-30
 updated: 2026-09-30

@@ -1,10 +1,10 @@
 ---
 adr: 0007
-title: 시각 기준을 한국 시간(KST)으로 명시한다 — 3단계 DB 반영 완료 · 2단계 설정은 배포 대기
-status: partial
+title: 시각 기준을 한국 시간(KST)으로 명시한다 — 3단계 전부 완료(2026-09-30 accepted)
+status: accepted
 date: 2026-09-27
 created: 2026-09-27
-updated: 2026-09-29
+updated: 2026-09-30
 scope: web/src/domains/{coupons,events,admin}/**, src/main/java/**, application*.properties
 related: rules/be/be-convention.md § 5
 ---
@@ -22,7 +22,7 @@ related: rules/be/be-convention.md § 5
 | 단계 | 범위 | 되돌릴 수 있나 | 상태 |
 |---|---|---|---|
 | 1단계 (화면만) | FE 3파일의 `toISOString().slice(0,10)` 을 기존 `dateUtils` 유틸(KST 명시)로 교체 | 예 — FE 배포 롤백만으로 즉시 복원 | **완료** |
-| 2단계 (+ 서버·DB 연결) | `spring.jackson.time-zone=Asia/Seoul`, JDBC URL `timezone=+09:00`(이름 `Asia/Seoul` 은 시간대 테이블이 없는 MariaDB 에서 세션 초기화가 실패해 **모든 쿼리가 500** — 2026-09-29 로컬 재현 후 오프셋으로 교체)(mariadb-java-client 3.3.3, 3.x 형식), `-Duser.timezone=Asia/Seoul` | 예 — 설정값 롤백으로 원복 | **설정 파일 반영 완료, 배포 대기** — `application.properties`·`application-prod.properties` 수정됨, EC2 systemd 기동 커맨드에 JVM 옵션 추가는 `.claude/references/deploy-runbook.md` § 3 참고, 아직 미실행 |
+| 2단계 (+ 서버·DB 연결) | `spring.jackson.time-zone=Asia/Seoul`, JDBC URL `timezone=+09:00`(이름 `Asia/Seoul` 은 시간대 테이블이 없는 MariaDB 에서 세션 초기화가 실패해 **모든 쿼리가 500** — 2026-09-29 로컬 재현 후 오프셋으로 교체)(mariadb-java-client 3.3.3, 3.x 형식), `-Duser.timezone=Asia/Seoul` | 예 — 설정값 롤백으로 원복 | **완료** (v2.1.0 배포, PR #37 오프셋 방식 · 운영 EC2 OS 타임존 KST 전환 확인 2026-09-30) |
 | 3단계 (+ DB 스키마) | `site_coupons`/`site_notices` 의 `created_at`/`updated_at` 을 `TIMESTAMP` → `DATETIME` 으로 통일 | 아니오 — `ALTER TABLE` 은 즉시 반영 | **완료** (2026-09-28 실행, `information_schema` 로 TIMESTAMP 잔존 0건 확인 — `applied/kst_timestamp_to_datetime.sql`) |
 
 1단계부터 착수한 이유: 사용자가 실제로 본 증상을 정확히 이 3파일이 일으키고 있었고, 같은 도메인 안에 이미 정답 패턴(`formatNow()`)이 있어 새 코드 작성이 거의 필요 없었으며, DB·서버를 안 건드려 위험이 0에 가까웠다.
@@ -46,9 +46,9 @@ related: rules/be/be-convention.md § 5
 ## 영향받는 곳
 
 - `web/src/domains/{admin,coupons,events}/mobile/**` — 1단계 완료분
-- `application.properties` · `application-prod.properties` — 2단계, 설정 반영 완료(배포 전까지 효력 없음)
+- `application.properties` · `application-prod.properties` — 2단계, v2.1.0 으로 배포 완료
 - `sql/v.2.0.0/01_site.sql` (`site_coupons`, `site_notices`) — 3단계 반영 완료, DDL 은 DATETIME
-- `sql/draft/kst-timezone/` — 3단계 실행용 SQL 7개(00_check~99_rollback), 사용자가 직접 실행
+- `sql/v.2.0.0/applied/kst_timestamp_to_datetime.sql` — 3단계 실행 SQL(적용 완료). `sql/draft/kst-timezone/` 은 전 단계 완료로 2026-09-30 삭제
 - `rules/be/be-convention.md` § 5 — "시각 명시는 ❓ D8, 확정 전 `TIMESTAMP` 컬럼 신설 금지, `DATETIME` 만" → "`DATETIME` 만 쓴다(0007 확정)" 로 갱신
 
 ## 아직 미정인 것 (❓ D8)
