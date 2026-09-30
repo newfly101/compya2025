@@ -53,7 +53,7 @@ related: rules/be/be-convention.md § 5
 
 ## 아직 미정인 것 (❓ D8)
 
-1. **운영 EC2 인스턴스의 OS 타임존이 실제로 무엇인가** — 저장소 파일만으로는 확인 불가. `timedatectl` 로 직접 확인 필요
+1. ~~운영 EC2 인스턴스의 OS 타임존이 실제로 무엇인가~~ → 확정(2026-09-30): KST 로 변경 완료
 2. ~~JDBC 타임존 파라미터 도입 시 기존 `TIMESTAMP` 값 해석 변경 여부~~ → 결정됨: `timezone=Asia/Seoul` 적용(mariadb-java-client 3.3.3 형식). 적용 전후 값 비교는 실제 배포 시 `sql/draft/kst-timezone/00_check.sql`·`04_verify.sql` 대조로 수행
-3. 3단계 대상에 `site_coupons`/`site_notices` 외에 레거시 `users`/`coupons`/`events`(현재 dual-write 중)도 포함할지, 그 정리가 끝난 뒤로 미룰지
-4. admin 날짜 보정 정책 — 종료 시각을 리터럴 `23:59:59` 로 할지 기존 관례 `23:59:00`(분 단위) 로 유지할지, 백필 실행 여부
+3. ~~3단계 대상에 `site_coupons`/`site_notices` 외에 레거시 `users`/`coupons`/`events`(현재 dual-write 중)도 포함할지, 그 정리가 끝난 뒤로 미룰지~~ → 확정(2026-09-30): 레거시 테이블 포함 KST 정리 완료
+4. ~~admin 날짜 보정 정책 — 종료 시각을 리터럴 `23:59:59` 로 할지 기존 관례 `23:59:00`(분 단위) 로 유지할지, 백필 실행 여부~~ → 확정(2026-09-30): 종료 시각 `23:59:59` 로 수정 완료 확인
