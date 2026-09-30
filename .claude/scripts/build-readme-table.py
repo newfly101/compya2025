@@ -19,6 +19,7 @@ FEATURES = [
     "admin", "coupons", "events", "notices", "community", "quiz", "home",
     "authentication", "users", "odds", "players", "error", "policy",
     "historyLegend", "legendStats", "mileage", "playerSkills", "guides",
+    "legendCollections",
 ]
 STATUS_KO = {"active": "운영", "frozen": "동결", "deprecated": "중단"}
 STATUS_OVERRIDE = {"mileage": "개발중"}  # roadmap.md 현재값 — frontmatter status 는 active

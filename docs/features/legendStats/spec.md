@@ -48,6 +48,6 @@ updated: 2026-09-28
 
 ## 6. 확인 필요
 
-❓ 미정 — `GET /api/legends`, `GET /api/legends/{id}/materials` 코드 제거 작업이 아직 착수되지 않았다.
+확정(2026-09-30) — `GET /api/legends`, `GET /api/legends/{id}/materials` 제거를 확정한다 — 미구현, 릴리스 뒤 별도 작업.
 
 🟨 가정 — 레전드의 복합 포지션(슬래시 결합) 7건은 필터·집계 로직이 `includes()` 포함 검색으로 정상 처리한다고 확인됐으나, 화면 표시 문구(슬래시 그대로 노출)가 최종 사양인지는 별도 확인이 필요하다.

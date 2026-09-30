@@ -3,7 +3,7 @@ feature: legendCollections
 version: 1.0.4
 status: active
 created: 2026-09-29
-updated: 2026-09-29
+updated: 2026-09-30
 ---
 
 # legendCollections
