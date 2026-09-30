@@ -209,6 +209,23 @@
   text-align: right;
 }
 
+// 지역 분포(regionRows) 전용 — 라벨이 "수원시 팔달구" 처럼 길어질 수 있어 기기 비율의
+// 56px 라벨 칸(.deviceBarRow)보다 넓게 잡고, 그래도 넘치면 말줄임으로 막대와 겹치지 않게 한다.
+.regionBarRow {
+  display: grid;
+  grid-template-columns: 104px 1fr 48px;
+  align-items: center;
+  gap: $space-2;
+}
+
+.regionBarLabel {
+  @include text-caption;
+  color: var(--color-text-secondary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 // AdminDateRange 와 같은 어드민 날짜 입력 관례(admin-date-range-row) — input[type=date]에
 // flex:1 + min-width:0 을 줘서 좁은 폭에서 입력이 줄어들고, 고정폭 버튼과 나란히 둬도
 // 가로 스크롤이 생기지 않는다.

@@ -34,9 +34,14 @@ public final class AnalyticsDateValidator {
 
     /** 시간대별 분포(FN-6)는 원본 보관 경계(오늘-3개월) 이전 조회를 막는다. */
     public static void validateWithinRetention(LocalDate from) {
-        LocalDate boundary = LocalDate.now(KST).minusMonths(RETENTION_MONTHS);
-        if (from == null || from.isBefore(boundary)) {
+        if (!isWithinRetention(from)) {
             throw new BaseException(AnalyticsMessages.ANALYTICS_DATE_OUT_OF_RANGE, HttpStatus.BAD_REQUEST);
         }
+    }
+
+    /** 지역 분포는 경계 밖이면 400 이 아니라 빈 결과로 넘긴다(호출부에서 이 값으로 분기). */
+    public static boolean isWithinRetention(LocalDate from) {
+        LocalDate boundary = LocalDate.now(KST).minusMonths(RETENTION_MONTHS);
+        return from != null && !from.isBefore(boundary);
     }
 }

@@ -5,13 +5,16 @@
 import { HOURS } from "./analyticsChartConfig.js";
 import styles from "./AdminAnalyticsTab.module.scss";
 
-export const RatioBars = ({ rows }) => {
+// rowClassName/labelClassName — 지역 분포(regionRows)는 라벨이 고정 사전이 아니라 "수원시
+// 팔달구" 처럼 길어질 수 있어 기기 비율과 같은 56px 라벨 칸이 겹친다. 기본값은 기존 기기
+// 비율 모양 그대로 유지하고, 넓은 라벨이 필요한 자리만 다른 칸 폭 클래스를 넘긴다.
+export const RatioBars = ({ rows, rowClassName, labelClassName }) => {
   const total = rows.reduce((sum, row) => sum + row.count, 0);
   return (
     <div className={styles.deviceBars}>
       {rows.map((row) => (
-        <div key={row.key} className={styles.deviceBarRow}>
-          <span className={styles.deviceBarLabel}>{row.label}</span>
+        <div key={row.key} className={rowClassName ?? styles.deviceBarRow}>
+          <span className={labelClassName ?? styles.deviceBarLabel}>{row.label}</span>
           <div className={styles.deviceBarTrack}>
             <div
               className={styles.deviceBarFill}

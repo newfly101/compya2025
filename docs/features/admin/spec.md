@@ -1,6 +1,6 @@
 ---
 feature: admin
-version: 1.5.0
+version: 1.6.0
 status: active
 created: 2026-01-29
 updated: 2026-09-30
@@ -47,6 +47,7 @@ updated: 2026-09-30
 | REQ-ADM-20 | 원본 보관정책 | 원본 이벤트는 3개월만 보관하고, 그 이후는 매달 자동으로 정리한다(집계 테이블은 영구 보관) | `RetentionPartitionServiceImpl.java` |
 | REQ-ADM-21 | 재집계 날짜 검증 | 미래 날짜나 서비스 시작일 이전 날짜로는 재집계·기간 조회·추이 조회를 할 수 없다 | `AnalyticsDateValidator.java` |
 | REQ-ADM-22 | 가입 전환율 | 익명 방문자가 나중에 회원가입으로 이어진 비율을 보여주고, 방문 당일 가입인지 이후 가입인지 구분한다 | `AnalyticsFirstSeenRepository.java` |
+| REQ-ADM-23 | 지역 분포 | 접속 IP 를 GeoIP 로 시·구 단위 라벨(도 생략, 광역시는 시 이름)로 저장하고, 방문자 구성에 기간 내 지역별 순방문자 상위 10 을 보여준다(원본 보존 3개월 안) | `GeoIpService.regionLabel` |
 
 ## 4. 데이터
 
@@ -56,7 +57,7 @@ updated: 2026-09-30
 | 캐시 동기화 | `GET /api/admin/cache-sync/targets`, `POST /api/admin/cache-sync/{id}/sync`, `POST /api/admin/cache-sync/sync-all` | admin 도메인이 직접 소유하는 유일한 API. `CacheSyncServiceImpl.definitions()`가 대상을 테이블 기반으로 관리 |
 | 업로드 | `/api/upload/**`(`/profile` 제외 ADMIN) | admin 패키지 소유(`UploadController`), 콘텐츠 도메인 이미지 등록에 쓰임 |
 | 6개 콘텐츠 목록 조회 | 퀴즈·이벤트·쿠폰·공지·유저·캐시대상 각 1회 | 셸 마운트 시 `useAdminCounts`가 한 번만 불러와 탭 배지·홈 카드에 공급. 각 도메인 CRUD 상세는 해당 기능 문서 소관 |
-| 통계 조회 | `GET /api/admin/analytics/summary?range=`(+`from/to`), `GET /api/admin/analytics/trend?from&to&granularity=`(신규), `POST /api/admin/analytics/aggregate?date=`(재집계). 테이블 `site_user_event`·`site_user_event_daily`·`site_user_event_daily_device`·`_session`·`_referrer`·`site_user_first_seen`(신규, 전부 `site_` 접두 유지 — 사용자 결정) | admin 도메인이 API 는 소유(캐시 동기화와 같은 결)하되 테이블은 analytics 도메인 소유. 상위 경로에 순방문자·재방문율, 방문자 구성에 신규/재방문·가입전환율 추가(2026-09-30). `site_user_first_seen` 신규 테이블과 `site_user_event.city` 컬럼·`item_id` 삭제는 DDL 승인만 됐고 실제 반영은 사용자 실행 대기 — 반영 전 호출 시 DB 오류 위험(§6) |
+| 통계 조회 | `GET /api/admin/analytics/summary?range=`(+`from/to`), `GET /api/admin/analytics/trend?from&to&granularity=`(신규), `POST /api/admin/analytics/aggregate?date=`(재집계). 테이블 `site_user_event`·`site_user_event_daily`·`site_user_event_daily_device`·`_session`·`_referrer`·`site_user_first_seen`(신규, 전부 `site_` 접두 유지 — 사용자 결정) | admin 도메인이 API 는 소유(캐시 동기화와 같은 결)하되 테이블은 analytics 도메인 소유. 상위 경로에 순방문자·재방문율, 방문자 구성에 신규/재방문·가입전환율·지역 분포 추가(2026-09-30). `site_user_event.city` 는 이제 시·구 단위 라벨(예: "수원시 팔달구", 도는 생략)이다. `site_user_first_seen` 신규 테이블과 `site_user_event.city` 컬럼·`item_id` 삭제는 DDL 승인만 됐고 실제 반영은 사용자 실행 대기 — 반영 전 호출 시 DB 오류 위험(§6) |
 
 ## 5. 하지 않는 것
 
