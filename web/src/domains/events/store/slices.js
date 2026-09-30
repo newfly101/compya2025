@@ -5,8 +5,9 @@ import {
   requestAdminUpdateExEvent, requestAdminUpdateExEventVisible,
   requestAdminGetAllEventList,
   requestAdminBulkDeleteEvents, requestAdminBulkUpdateEventsVisible,
+  requestAdminSyncCafe, requestAdminRefreshCollected,
 } from "@/domains/events/store/admin/thunks.js";
-import { requestGetExternalEventList } from "@/domains/events/store/public/thunks.js";
+import { requestGetExternalEventList, requestGetEventDetail } from "@/domains/events/store/public/thunks.js";
 
 // events = 관리자 목록(숨김 포함) / publicEvents = 공개 목록.
 // 한 칸을 같이 쓰면 관리자 화면을 본 뒤 공개 화면으로 이동할 때 관리자 목록이 그대로
@@ -23,6 +24,10 @@ const initialState = {
   error: null,
   publicLoading: false,
   publicError: null,
+  detail: null,
+  detailNotFound: false,
+  detailLoading: false,
+  detailError: null,
   mutateLoading: false,
   mutateError: null,
   page: 0,
@@ -40,6 +45,14 @@ const eventsSlice = createSlice({
     applyAsyncHandlers(builder, requestGetExternalEventList, (state, action) => {
       state.publicEvents = action.payload;
     }, "public");
+
+    /* ===============================
+     * 이벤트 상세 1건 (공개) — null 이면 없는·비공개 이벤트
+     * =============================== */
+    applyAsyncHandlers(builder, requestGetEventDetail, (state, action) => {
+      state.detail = action.payload;
+      state.detailNotFound = action.payload == null;
+    }, "detail");
 
     /* ===============================
      * 이벤트 신규 생성
@@ -100,6 +113,17 @@ const eventsSlice = createSlice({
         idSet.has(Number(e.id)) ? { ...e, visible } : e
       );
     }, "mutate");
+    /* ===============================
+     * 수집 이벤트 본문 갱신 — 서버 응답 행으로 교체
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminRefreshCollected, (state, action) => {
+      const updated = action.payload;
+      state.events = state.events.map(e => (Number(e.id) === Number(updated.id) ? { ...e, ...updated } : e));
+    }, "mutate");
+    /* ===============================
+     * 지금 수집 — 목록 반영은 화면이 재조회로 처리(이 slice 는 로딩·오류만 관리)
+     * =============================== */
+    applyAsyncHandlers(builder, requestAdminSyncCafe, () => {}, "mutate");
   },
 });
 export const {} = eventsSlice.actions;

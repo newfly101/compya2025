@@ -1,7 +1,7 @@
 ---
-spec_version: 1.0.4
+spec_version: 1.1.0
 created: 2026-01-29
-updated: 2026-09-28
+updated: 2026-09-30
 ---
 
 # coupons — 설계

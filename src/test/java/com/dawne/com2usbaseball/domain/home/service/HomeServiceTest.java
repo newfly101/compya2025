@@ -41,7 +41,7 @@ class HomeServiceTest {
     void 모두_성공하면_실패목록이_빈다() {
         HomeService service = new HomeService(
                 () -> List.of(COUPON),
-                List::of,
+                eventService(),
                 noticeService(List.of(), null),
                 () -> QUIZ
         );
@@ -59,7 +59,7 @@ class HomeServiceTest {
     void 한_섹션이_터져도_나머지는_살아남는다() {
         HomeService service = new HomeService(
                 () -> { throw new IllegalStateException("쿠폰 조회 실패"); },
-                List::of,
+                eventService(),
                 noticeService(List.of(), null),
                 () -> { throw new IllegalStateException("퀴즈 없음"); }
         );
@@ -71,5 +71,19 @@ class HomeServiceTest {
         assertThat(result.quiz()).isNull();
         assertThat(result.notices()).isEmpty();
         assertThat(result.events()).isEmpty();
+    }
+
+    private static com.dawne.com2usbaseball.domain.event.service.EventUserService eventService() {
+        return new com.dawne.com2usbaseball.domain.event.service.EventUserService() {
+            @Override
+            public List<com.dawne.com2usbaseball.domain.event.dto.response.EventResponse> getExternalEventList() {
+                return List.of();
+            }
+
+            @Override
+            public com.dawne.com2usbaseball.domain.event.dto.response.EventResponse getPublicEvent(Long id) {
+                throw new UnsupportedOperationException();
+            }
+        };
     }
 }

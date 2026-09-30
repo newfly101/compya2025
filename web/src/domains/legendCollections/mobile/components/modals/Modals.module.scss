@@ -1,0 +1,368 @@
+// 가운데 카드형 모달 (fe-design § 6 — 바텀시트 금지). Figma 03 · 05.
+// 채움 버튼 위 글자는 Figma 그대로 --color-bg-card (두 테마에서 채움과 반대 밝기).
+
+.overlay {
+  @include modal-backdrop;
+  padding: $layout-h-pad;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  width: 100%;
+  max-width: $layout-card-width;
+  max-height: calc(100dvh - #{$space-8});
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: $space-5 $layout-h-pad $space-4;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  background: var(--color-bg-modal);
+  color: var(--color-text-primary);
+  box-shadow: 0 1rem 2.5rem rgba(23, 15, 38, 0.2); // 화면 덮는 판 — Figma Modal 그림자
+  z-index: $z-modal;
+
+  > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+.title {
+  margin: 0;
+  font-size: $font-size-15;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+}
+
+.message {
+  margin: 0 0 $space-2;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+  line-height: 1.5;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
+.actions {
+  display: flex;
+  gap: $space-3;
+  padding-top: $space-2;
+
+  button {
+    flex: 1 1 0;
+    min-height: $control-height-md;
+    padding: $space-3 0;
+    border: 1px solid transparent;
+    border-radius: $radius-lg;
+    font-family: inherit;
+    font-size: $font-size-13;
+    font-weight: $font-weight-semibold;
+    line-height: 1.5;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brand);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.secondary {
+  border-color: var(--color-border) !important;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+}
+
+.primary {
+  background: var(--color-brand);
+  color: var(--color-bg-card);
+}
+
+.danger {
+  background: var(--color-danger);
+  color: var(--color-bg-card);
+}
+
+/* ── 선호 고르기 ───────────────────────────────────────── */
+
+.prefs {
+  gap: $space-3;
+}
+
+.prefsHead {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+
+  .title {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+.sub,
+.label {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  line-height: 1.5;
+}
+
+.label {
+  margin: 0;
+}
+
+.count {
+  flex: 0 0 auto;
+  color: var(--color-brand);
+  font-size: $font-size-13;
+  font-weight: $font-weight-semibold;
+}
+
+.close,
+.iconBtn {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-width: $space-8;
+  min-height: $space-8;
+  margin: (-$space-1);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-family: inherit;
+  font-size: $font-size-13;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+  }
+}
+
+.picked {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3;
+    border-radius: $radius-lg;
+    background: var(--color-lc-open-bg);
+    touch-action: none; // 줄 전체를 끌어 순서를 바꾼다
+    cursor: grab;
+    user-select: none;
+
+    &[data-dragging] {
+      outline: 1px solid var(--color-brand);
+      cursor: grabbing;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brand);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.rankNo {
+  flex: 0 0 auto;
+  min-width: $space-3;
+  color: var(--color-brand);
+  font-size: $font-size-13;
+  font-weight: $font-weight-semibold;
+}
+
+.dot {
+  flex: 0 0 auto;
+  width: $space-2;
+  height: $space-2;
+  border-radius: $radius-full;
+  background: currentColor;
+}
+
+.pickName {
+  flex: 0 0 auto;
+  font-size: $font-size-13;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.meta {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta0 {
+  grid-column: 6; // 액자 뱃지가 없어도 n/8 은 항상 오른쪽 끝 칸
+  justify-self: end;
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+}
+
+.frameBtn {
+  flex: 0 0 auto;
+  min-height: rem(28);
+  padding: $space-1 $space-2;
+  border: 1px solid var(--color-lc-toggle-off-border);
+  border-radius: $radius-sm;
+  background: var(--color-lc-toggle-off-bg);
+  color: var(--color-lc-toggle-off-text);
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-family: inherit;
+  font-size: $font-size-9;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  cursor: pointer;
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-lc-chip-on-border);
+    background: var(--color-lc-chip-on-bg);
+    color: var(--color-lc-chip-on-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  background: var(--color-lc-card-bg);
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+
+  input {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: $control-height-md;
+    border: 0;
+    background: transparent;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: $font-size-12;
+    outline: none;
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+  }
+
+  &:focus-within {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+// 후보 목록 — 폭은 검색창(.search)과 같은 좌우 범위 안에 둔다.
+// 줄은 grid 로 잡아 이름·구단·포지션이 길어도 가운데 칸(구단·포지션)만 말줄임되고 줄 자체는 넘치지 않는다.
+.candidates {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-height: 30dvh;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  list-style: none;
+
+  li {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  li > button {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, auto) minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: $space-3;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: $control-height-md;
+    padding: $space-3 $space-4;
+    overflow: hidden;
+    border: 0;
+    border-bottom: 1px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    text-align: left;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brand);
+      outline-offset: -2px;
+    }
+  }
+}
+
+.check {
+  flex: 0 0 auto;
+  width: $space-5;
+  height: $space-5;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-sm;
+  background: var(--color-bg-card);
+}
+
+.candName {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: $font-size-12;
+  line-height: 1.5;
+}
+
+.emptyPick {
+  margin: 0;
+  padding: $space-3 0;
+  color: var(--color-text-muted);
+  font-size: $font-size-12;
+}
+
+.notice {
+  margin: 0;
+  color: var(--color-danger);
+  font-size: $font-size-11;
+}
+
+.foot {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: $font-size-10;
+  line-height: 1.5;
+}

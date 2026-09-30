@@ -1,0 +1,40 @@
+.toggles {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: rem(6);
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    min-height: $space-8;
+    padding: $space-1 $space-3;
+    border: 1px solid var(--color-lc-toggle-off-border);
+    border-radius: $radius-md;
+    background: var(--color-lc-toggle-off-bg);
+    color: var(--color-lc-toggle-off-text);
+    flex-shrink: 0;
+    white-space: nowrap;
+    font-family: inherit;
+    font-size: $font-size-9;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      border-color: var(--color-lc-chip-on-border);
+      background: var(--color-lc-chip-on-bg);
+      color: var(--color-lc-chip-on-text);
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brand);
+      outline-offset: 2px;
+    }
+  }
+}

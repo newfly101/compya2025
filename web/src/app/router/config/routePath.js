@@ -5,6 +5,8 @@ export const ROUTE_PATHS = {
   authentication: "/auth/callback",
   coupons: "/coupons",
   events: "/events",
+  event_details_pattern: "/events/:id",
+  event_details: (id) => `/events/${id}`,
   notices: "/notices",
   // slug 는 서버 필드가 아니라 제목으로 매번 만든다(단방향) — 조회는 항상 id 로 한다.
   notice_details_pattern: "/notice/:slug",
@@ -25,6 +27,8 @@ export const ROUTE_PATHS = {
   },
   // 레전드 재료
   legend_stats: "/legend-stats",
+  // 레전드 재료 보유 현황 — ?tab=all|mine
+  legend_collections: "/legend-collections",
   // 히스토리 재료 탐색기 — 평점표에서 ?legend={레전드명} 으로 진입한다
   history_legend: "/history-mode/legend",
   community: "/community",

@@ -17,6 +17,7 @@ class AnalyticsRangeTest {
         assertThat(AnalyticsRange.fromValue("TODAY")).isEqualTo(AnalyticsRange.TODAY);
         assertThat(AnalyticsRange.fromValue("week")).isEqualTo(AnalyticsRange.WEEK);
         assertThat(AnalyticsRange.fromValue("Month")).isEqualTo(AnalyticsRange.MONTH);
+        assertThat(AnalyticsRange.fromValue("custom")).isEqualTo(AnalyticsRange.CUSTOM);
     }
 
     @Test

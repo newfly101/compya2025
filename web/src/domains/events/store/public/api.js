@@ -6,3 +6,9 @@ export const fetchGetUserExternalEvent = async () => {
   const { data } = await API.get(`${EVENTS.GET_EVENTS}`);
   return data.data;
 };
+
+// 상세 1건. 없는·비공개 id 는 404 — 호출부(thunk)가 status 로 구분한다.
+export const fetchGetUserEventDetail = async (id) => {
+  const { data } = await API.get(EVENTS.GET_EVENT(id));
+  return data.data;
+};

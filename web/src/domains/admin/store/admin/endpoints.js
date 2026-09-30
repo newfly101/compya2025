@@ -12,13 +12,22 @@ export const ADMIN_CACHE_SYNC_ACTIONS = {
   SYNC_ALL:    "POST/admin/cache-sync/sync-all",
 };
 
-// 관리자 통계 탭 — 방문·이벤트 요약. range 는 TODAY|WEEK|MONTH.
+// 관리자 통계 탭 — 방문·이벤트 요약. range 는 TODAY|WEEK|MONTH|CUSTOM(from/to 동반).
 export const ADMIN_ANALYTICS = {
-  GET_SUMMARY: (range) => `/admin/analytics/summary?range=${range}`,
+  GET_SUMMARY: (range, from, to) => {
+    const params = new URLSearchParams({ range });
+    if (from) params.set("from", from);
+    if (to) params.set("to", to);
+    return `/admin/analytics/summary?${params.toString()}`;
+  },
+  // 일별/시간대별 추이 — range 개념 없이 항상 from/to 명시(요약과 독립된 기간).
+  GET_TREND:   (from, to, granularity) =>
+    `/admin/analytics/trend?from=${from}&to=${to}&granularity=${granularity}`,
   AGGREGATE:   (date) => `/admin/analytics/aggregate?date=${date}`,
 };
 
 export const ADMIN_ANALYTICS_ACTIONS = {
   GET_SUMMARY: "GET/admin/analytics/summary",
+  GET_TREND:   "GET/admin/analytics/trend",
   AGGREGATE:   "POST/admin/analytics/aggregate",
 };

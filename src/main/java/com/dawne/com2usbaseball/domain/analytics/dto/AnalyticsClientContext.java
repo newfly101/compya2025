@@ -8,6 +8,7 @@ package com.dawne.com2usbaseball.domain.analytics.dto;
 public record AnalyticsClientContext(
         Long userId,
         String country,
+        String city,
         String userAgent
 ) {
 }

@@ -50,9 +50,9 @@ flowchart LR
 <!-- readme-table:start -->
 | 기능 | 설명 | 상태 | 시작일 | 버전 | 문서 |
 |---|---|---|---|---|---|
-| admin | 운영자용 관리 도구(쿠폰·이벤트·공지·회원 관리) | 운영 | 2026-01-29 | 1.3.0 | [spec](features/admin/spec.md) · [design](features/admin/design.md) · [history](features/admin/history.md) |
-| coupons | 게임 쿠폰 목록·등록·조회 | 운영 | 2026-01-29 | 1.0.4 | [spec](features/coupons/spec.md) · [design](features/coupons/design.md) · [history](features/coupons/history.md) |
-| events | 이벤트 공지 목록 | 운영 | 2026-01-29 | 1.0.4 | [spec](features/events/spec.md) · [design](features/events/design.md) · [history](features/events/history.md) |
+| admin | 운영자용 관리 도구(쿠폰·이벤트·공지·회원 관리) | 운영 | 2026-01-29 | 1.5.0 | [spec](features/admin/spec.md) · [design](features/admin/design.md) · [history](features/admin/history.md) |
+| coupons | 게임 쿠폰 목록·등록·조회 | 운영 | 2026-01-29 | 1.1.0 | [spec](features/coupons/spec.md) · [design](features/coupons/design.md) · [history](features/coupons/history.md) |
+| events | 이벤트 공지 목록 | 운영 | 2026-01-29 | 2.0.0 | [spec](features/events/spec.md) · [design](features/events/design.md) · [history](features/events/history.md) |
 | notices | 공지사항 목록·상세 | 운영 | 2026-01-29 | 1.0.5 | [spec](features/notices/spec.md) · [design](features/notices/design.md) · [history](features/notices/history.md) |
 | community | 커뮤니티 게시판(쓰기 기능 동결) | 동결 | 2026-02-02 | 1.0.1 | [spec](features/community/spec.md) · [design](features/community/design.md) · [history](features/community/history.md) |
 | quiz | 퀴즈 이벤트(홈 섹션+운영자 화면 위주) | 운영 | 2026-03-29 | 1.0.3 | [spec](features/quiz/spec.md) · [design](features/quiz/design.md) · [history](features/quiz/history.md) |
@@ -68,6 +68,7 @@ flowchart LR
 | mileage | 마일리지 적립·저격 경로 계산 | 개발중 | 2026-09-05 | 1.0.1 | [spec](features/mileage/spec.md) · [design](features/mileage/design.md) · [history](features/mileage/history.md) |
 | playerSkills | 선수 스킬 백과사전 | 운영 | 2026-09-09 | 1.0.0 | [spec](features/playerSkills/spec.md) · [design](features/playerSkills/design.md) · [history](features/playerSkills/history.md) |
 | guides | 게임 이용 가이드(12편) | 운영 | 2026-09-13 | 1.0.2 | [spec](features/guides/spec.md) · [design](features/guides/design.md) · [history](features/guides/history.md) |
+| legendCollections | - | 운영 | 2026-09-29 | 1.0.4 | [spec](features/legendCollections/spec.md) · [design](features/legendCollections/design.md) · [history](features/legendCollections/history.md) |
 <!-- readme-table:end -->
 
 시작일은 각 FE 도메인 폴더의 최초 커밋일이다. 상태·버전 등 현황 갱신은 [roadmap.md](roadmap.md)에서 다룬다. 아직 코드가 없는 계획 중 기능(account·analytics·gamification)은 이 표에 없다 — [roadmap.md § 5](roadmap.md) 참고.

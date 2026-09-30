@@ -25,6 +25,7 @@ import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { useHistoryLegend } from "./hooks/useHistoryLegend";
+import { useSearchTracking } from "@/infra/analytics/hooks/useSearchTracking.js";
 import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import "./historyLegend.tokens.scss";
@@ -65,6 +66,7 @@ const HistoryLegendScreen = () => {
   const [type, setType] = useState(ALL);
   const [pos, setPos] = useState(ALL);
   const [query, setQuery] = useState("");
+  useSearchTracking(query);
   const [sort, setSort] = useState(SORT_DEFAULT[VIEW.LEGEND]);
   const [dir, setDir] = useState(-1);
   const [openId, setOpenId] = useState(null);

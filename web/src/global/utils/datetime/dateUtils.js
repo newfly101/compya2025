@@ -58,3 +58,21 @@ export const formatNow = (date = new Date()) => {
  * 24시간을 그대로 빼도 KST 는 고정 오프셋(DST 없음)이라 달력상 하루 전이 정확히 나온다.
  */
 export const getYesterdayKst = () => formatNow(new Date(Date.now() - 24 * 60 * 60 * 1000)).slice(0, 10);
+
+/** KST 기준 "오늘" 날짜 (yyyy-MM-dd). */
+export const getTodayKst = () => formatNow().slice(0, 10);
+
+/** KST 기준 오늘로부터 days 일 뒤(음수면 전) 날짜 (yyyy-MM-dd). 짧은 상대 기간(최근 N일 기본값)용. */
+export const getKstDateOffset = (days) =>
+  formatNow(new Date(Date.now() + days * 24 * 60 * 60 * 1000)).slice(0, 10);
+
+/**
+ * KST 기준 오늘로부터 months 개월 전 날짜 (yyyy-MM-dd). 달마다 일수가 달라 고정 오프셋으로
+ * 계산할 수 없어 Date.setUTCMonth 로 달 단위 계산 — 원본 보관정책(3개월) 클램프용 근사치라
+ * 화면 클램프 목적으로 충분하고, 실제 검증은 서버가 한다.
+ */
+export const getKstMonthsAgo = (months) => {
+  const d = new Date();
+  d.setUTCMonth(d.getUTCMonth() - months);
+  return formatNow(d).slice(0, 10);
+};

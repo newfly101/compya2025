@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.analytics.repository.mapper.AnalyticsFirstSeenMapper">
+
+    <!--
+      site_user_first_seen(신규 DDL 대상, 실행은 사용자) 은 anon_id PK 다. 이미 있으면
+      최초 관측일을 절대 덮어쓰지 않아야 하므로 ON DUPLICATE KEY UPDATE 를 무동작(anon_id = anon_id)
+      트릭으로 둔다.
+    -->
+    <insert id="upsertFirstSeen">
+        INSERT INTO site_user_first_seen (anon_id, first_seen_date)
+        VALUES (#{anonId}, #{firstSeenDate})
+        ON DUPLICATE KEY UPDATE anon_id = anon_id
+    </insert>
+
+    <!-- 이미 전환 기록이 있으면 건너뛴다(최초 전환만 남긴다) — WHERE 조건이 그 역할. -->
+    <update id="markConverted">
+        UPDATE site_user_first_seen
+        SET converted_user_id = #{userId}, converted_at = #{convertedAt}
+        WHERE anon_id = #{anonId} AND converted_user_id IS NULL
+    </update>
+
+    <!--
+      immediate = 첫 방문일에 바로 가입, returningThenSignup = 재방문 이후 가입.
+      converted_at 이 [start,end] 안에 든 건만 이 기간의 "전환"으로 집계한다.
+    -->
+    <select id="sumSignupConversion" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.SignupConversionRow">
+        SELECT CASE WHEN DATE(converted_at) = first_seen_date THEN 'immediate' ELSE 'returningThenSignup' END AS conversionType,
+               COUNT(*) AS count
+        FROM site_user_first_seen
+        WHERE converted_at IS NOT NULL
+          AND converted_at >= #{start}
+          AND converted_at &lt; #{end} + INTERVAL 1 DAY
+        GROUP BY conversionType
+    </select>
+
+</mapper>

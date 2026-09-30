@@ -7,6 +7,7 @@ import { useCallback, useMemo, useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { requestGetSniperTargets } from "@/domains/mileage/store/public/thunks.js";
 import { filterRows, sortRows, toTargetListModel } from "@/domains/mileage/config/mileageTargetList.js";
+import { useSearchTracking } from "@/infra/analytics/hooks/useSearchTracking.js";
 
 export function useMileageTargetList() {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ export function useMileageTargetList() {
   }, [dispatch, loaded]);
 
   const [query, setQuery] = useState("");
+  useSearchTracking(query);
   const [mode, setMode] = useState("pos"); // 'pos'(재료) | 'legend'
   const [pos, setPos] = useState(null); // null = 전체
   const [sortKey, setSortKey] = useState("pos");

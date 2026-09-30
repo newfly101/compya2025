@@ -6,117 +6,215 @@ import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
 import "@/global/ui/admin/admin.tokens.scss";
 import {
   requestAdminAnalyticsSummary,
+  requestAdminAnalyticsTrend,
   requestAdminAnalyticsAggregate,
 } from "@/domains/admin/store/admin/thunks.js";
-import { setAdminAnalyticsRange } from "@/domains/admin/store/slices.js";
-import { getYesterdayKst } from "@/global/utils/datetime/dateUtils.js";
+import {
+  getYesterdayKst,
+  getTodayKst,
+  getKstDateOffset,
+  getKstMonthsAgo,
+} from "@/global/utils/datetime/dateUtils.js";
 import styles from "./AdminAnalyticsTab.module.scss";
+import {
+  EVENT_TYPE_LABEL,
+  DEVICE_TYPE_LABEL,
+  DEVICE_TYPE_COLOR,
+  VISITOR_TYPE_LABEL,
+  VISITOR_TYPE_COLOR,
+  SIGNUP_LABEL,
+  SIGNUP_COLOR,
+  countRows,
+} from "./analyticsChartConfig.js";
+import { RatioBars } from "./AnalyticsCharts.jsx";
+import AnalyticsSummaryCard from "./AnalyticsSummaryCard.jsx";
+import AnalyticsTrendCard from "./AnalyticsTrendCard.jsx";
+import { pathToTitle } from "./pathTitle.js";
+import { deltaOf } from "./analyticsDelta.js";
+import { previousPeriodOf, formatPeriodLabel } from "./periodMath.js";
 
-const RANGE_OPTIONS = [
-  { value: "TODAY", label: "오늘" },
-  { value: "WEEK", label: "7일" },
-  { value: "MONTH", label: "30일" },
+// AnalyticsDateValidator(BE) 와 같은 값 — 이보다 이전으로는 직전 구간 비교를 요청하지 않는다.
+const SERVICE_START_DATE = "2026-01-29";
+
+const TOP_PATH_MODE_OPTIONS = [
+  { value: "title", label: "제목" },
+  { value: "path", label: "경로" },
 ];
 
-// BE event_type 4종(AnalyticsRange 와 별개, 수집 이벤트 종류) 한글 라벨.
-// 코드가 여기 없는 값도 그대로 노출 — BE 가 종류를 추가해도 화면이 죽지 않는다.
-const EVENT_TYPE_LABEL = {
-  PAGE_VIEW: "페이지 조회",
-  OUTBOUND_CLICK: "외부 링크 클릭",
-  CONTENT_CLICK: "콘텐츠 클릭",
-  SEARCH: "검색",
+const JUMP_TARGETS = [
+  { id: "analytics-summary", label: "개요" },
+  { id: "analytics-toppages", label: "상위 경로" },
+  { id: "analytics-trend", label: "추이" },
+  { id: "analytics-visitors", label: "방문자 구성" },
+  { id: "analytics-referrers", label: "외부 유입" },
+];
+
+// mode(TODAY|DATE|RANGE) + 입력값 → 실제 조회 구간(from~to). 셀렉트 이벤트 핸들러가
+// setState 직후 곧바로 새 값으로 조회해야 해서(리액트 state 는 비동기 반영) 컴포넌트
+// state 를 읽지 않는 순수 함수로 뺐다.
+const periodOf = (mode, dateValue, rangeFrom, rangeTo) => {
+  if (mode === "TODAY") return { from: getTodayKst(), to: getTodayKst() };
+  if (mode === "DATE") return { from: dateValue, to: dateValue };
+  return { from: rangeFrom, to: rangeTo };
 };
 
-// device_type 서버 파생값(AnalyticsEventGuard.detectDeviceType) 한글 라벨.
-// unknown 은 실제로는 나오지 않지만(§ FN-19 COALESCE 방어) 스키마 계약상 대비해 둔다.
-const DEVICE_TYPE_LABEL = {
-  mobile: "모바일",
-  tablet: "태블릿",
-  pc: "PC",
-  unknown: "알 수 없음",
-};
-
-// 기기 비율 막대 색 — 신규 토큰 없이 관리자 태그 팔레트 재사용(admin.tokens.scss).
-const DEVICE_TYPE_COLOR = {
-  mobile: "var(--color-admin-tag-purple-text)",
-  tablet: "var(--color-admin-tag-green-text)",
-  pc: "var(--color-admin-tag-amber-text)",
-  unknown: "var(--color-admin-tag-neutral-text)",
+const summaryArgsOf = (mode, dateValue, rangeFrom, rangeTo) => {
+  if (mode === "TODAY") return { range: "TODAY" };
+  if (mode === "DATE") {
+    return dateValue === getTodayKst()
+      ? { range: "TODAY" }
+      : { range: "CUSTOM", from: dateValue, to: dateValue };
+  }
+  return { range: "CUSTOM", from: rangeFrom, to: rangeTo };
 };
 
 // 어드민 셸의 "통계" 탭 패널. AdminCacheSyncTab 과 같은 상태분기 패턴(!loading && error,
-// !loading && !error && 데이터 없음)을 따른다. range 는 캐시하지 않고 바뀔 때마다 새로 조회한다 —
-// 탭을 옮겨 다시 돌아왔을 때는(재마운트) 이미 받은 summary 를 그대로 보여준다(재요청 없음).
+// !loading && !error && 데이터 없음)을 따른다.
+// 5개 카드(개요·상위경로·추이·방문자구성·외부유입)는 상단에서 고른 기간 하나를 그대로 따른다 —
+// 개요/상위경로/방문자구성/외부유입은 summary 응답 하나를 같이 쓰니 이미 같은 기간이고, 추이만
+// 예전엔 별도 날짜를 가졌던 것을 이번에 없앴다. 직전 같은 길이 구간과 비교(previousSummary·
+// previousTrendDay)는 별도 API 없이 같은 thunk 를 from/to 만 바꿔 한 번 더 호출한다
+// (ponytail: 요청이 2배가 되지만 어드민 전용 화면이라 허용, slices.js 참고).
 export default function AdminAnalyticsTab() {
   const dispatch = useDispatch();
-  const { summary, loading, error, range, mutateLoading, mutateError } = useSelector(
-    (s) => s.adminAnalytics
-  );
+  const {
+    summary,
+    previousSummary,
+    loading,
+    error,
+    trend,
+    previousTrendDay,
+    trendLoading,
+    trendError,
+    mutateLoading,
+    mutateError,
+  } = useSelector((s) => s.adminAnalytics);
+
+  const [rangeMode, setRangeMode] = useState("TODAY");
+  const [dateValue, setDateValue] = useState(getYesterdayKst());
+  const [rangeFrom, setRangeFrom] = useState(getKstDateOffset(-7));
+  const [rangeTo, setRangeTo] = useState(getYesterdayKst());
+  const [trendGranularity, setTrendGranularity] = useState("day");
+  const [topPathMode, setTopPathMode] = useState("title");
   const [aggregateDate, setAggregateDate] = useState(getYesterdayKst());
 
+  const fetchTrendCurrent = (from, to, granularity) => {
+    // 시간대별은 원본 보관 경계(오늘-3개월) 밖을 조회하면 400 — 화면 값은 그대로 두고
+    // 서버에 보낼 from 만 클램프한다.
+    let effectiveFrom = from;
+    if (granularity === "hour") {
+      const minDate = getKstMonthsAgo(3);
+      if (effectiveFrom < minDate) effectiveFrom = minDate;
+    }
+    dispatch(requestAdminAnalyticsTrend({ from: effectiveFrom, to, granularity }));
+  };
+
+  const fetchPrevious = (from, to, includeTrend) => {
+    const prev = previousPeriodOf({ from, to });
+    if (prev.from < SERVICE_START_DATE) return; // 서비스 시작일 이전 — 비교 자체를 요청하지 않는다
+    dispatch(
+      requestAdminAnalyticsSummary({ range: "CUSTOM", from: prev.from, to: prev.to, isPrevious: true }),
+    );
+    if (includeTrend) {
+      dispatch(
+        requestAdminAnalyticsTrend({
+          from: prev.from,
+          to: prev.to,
+          granularity: "day",
+          isPrevious: true,
+        }),
+      );
+    }
+  };
+
+  const fetchForSelection = (mode, date, from, to, granularity) => {
+    dispatch(requestAdminAnalyticsSummary(summaryArgsOf(mode, date, from, to)));
+    const period = periodOf(mode, date, from, to);
+    fetchTrendCurrent(period.from, period.to, granularity);
+    fetchPrevious(period.from, period.to, granularity === "day");
+  };
+
   useEffect(() => {
-    if (!summary && !loading) dispatch(requestAdminAnalyticsSummary(range));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- 마운트 시 1회만, range 변경은 handleRangeChange 가 직접 처리
+    if (!summary && !loading) fetchForSelection(rangeMode, dateValue, rangeFrom, rangeTo, trendGranularity);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- 마운트 시 1회만, 이후는 각 핸들러가 처리
   }, []);
 
-  const handleRetry = () => dispatch(requestAdminAnalyticsSummary(range));
-
-  const handleRangeChange = (value) => {
-    dispatch(setAdminAnalyticsRange(value));
-    dispatch(requestAdminAnalyticsSummary(value));
+  const handleModeChange = (value) => {
+    setRangeMode(value);
+    fetchForSelection(value, dateValue, rangeFrom, rangeTo, trendGranularity);
   };
+
+  const handleDateChange = (value) => {
+    setDateValue(value);
+    fetchForSelection("DATE", value, rangeFrom, rangeTo, trendGranularity);
+  };
+
+  const handleApplyRange = () => fetchForSelection("RANGE", dateValue, rangeFrom, rangeTo, trendGranularity);
+
+  const handleQuickRange = (days) => {
+    const to = getYesterdayKst();
+    const from = getKstDateOffset(-days);
+    setRangeFrom(from);
+    setRangeTo(to);
+    fetchForSelection("RANGE", dateValue, from, to, trendGranularity);
+  };
+
+  const handleGranularityChange = (value) => {
+    setTrendGranularity(value);
+    const period = periodOf(rangeMode, dateValue, rangeFrom, rangeTo);
+    fetchTrendCurrent(period.from, period.to, value);
+    if (value === "day") fetchPrevious(period.from, period.to, true);
+  };
+
+  const handleRetry = () => fetchForSelection(rangeMode, dateValue, rangeFrom, rangeTo, trendGranularity);
 
   // dispatch(thunk) 는 unwrap() 없이는 reject 되지 않는다 — .catch 는 도달 불가라 제거.
   // 실패는 mutateError(슬라이스 상태)로 이미 화면에 노출된다.
   const handleAggregate = () => {
     dispatch(requestAdminAnalyticsAggregate(aggregateDate)).then((result) => {
       if (result.meta.requestStatus === "fulfilled") {
-        dispatch(requestAdminAnalyticsSummary(range));
+        fetchForSelection(rangeMode, dateValue, rangeFrom, rangeTo, trendGranularity);
       }
     });
   };
 
-  const eventRows = summary
-    ? Object.entries(summary.eventCounts).map(([type, count]) => ({
-        type,
-        label: EVENT_TYPE_LABEL[type] ?? type,
-        count,
-      }))
-    : [];
+  const handleJump = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  // should 5: pageViews=0 이라도 이벤트 건수가 하나라도 있으면(SEARCH 등) 표를 계속 보여준다.
+  const eventRowsRaw = summary ? Object.entries(summary.eventCounts ?? {}) : [];
   const isEmpty =
     !summary ||
     (summary.pageViews === 0 &&
       (summary.topPages?.length ?? 0) === 0 &&
-      Object.values(summary.eventCounts).every((v) => v === 0));
+      Object.values(summary.eventCounts ?? {}).every((v) => v === 0));
 
-  const deviceRatioRows = summary
-    ? Object.entries(summary.deviceRatio ?? {}).map(([type, count]) => ({
-        type,
-        label: DEVICE_TYPE_LABEL[type] ?? type,
-        count,
-      }))
-    : [];
-  const deviceTotal = deviceRatioRows.reduce((sum, row) => sum + row.count, 0);
+  const period = periodOf(rangeMode, dateValue, rangeFrom, rangeTo);
+  const periodLabel = formatPeriodLabel(period.from, period.to);
+  const prevPeriod = previousPeriodOf(period);
+  const comparisonAvailable = prevPeriod.from >= SERVICE_START_DATE;
+
+  const eventRows = eventRowsRaw.map(([type, count]) => ({
+    type,
+    label: EVENT_TYPE_LABEL[type] ?? type,
+    count,
+    delta: comparisonAvailable ? deltaOf(count, previousSummary?.eventCounts?.[type]) : null,
+  }));
+
+  const trendPoints = trend[trendGranularity] ?? [];
+  const dayOverlayAvailable = comparisonAvailable && previousTrendDay.length > 0;
 
   return (
     <div className={styles.tab}>
       <div className={styles.head}>
-        <div className={styles.headText}>
-          <b className={styles.title}>방문 · 이벤트 통계</b>
-          <p className={styles.subtitle}>수집된 사용자 행동 데이터를 기간별로 봅니다.</p>
-        </div>
-        {/* 제목 줄과 나란히 두면 480 에서 세그먼트 3개가 눌려 글자가 세로로 쪼개진다 —
-            아래 줄로 내려 전체 폭을 준다(AdminSegmented 자체는 수정하지 않음). */}
-        <div className={styles.rangeRow}>
-          <AdminSegmented
-            options={RANGE_OPTIONS}
-            value={range}
-            onChange={handleRangeChange}
-            name="통계 기간"
-          />
-        </div>
+        <b className={styles.title}>방문 · 이벤트 통계</b>
+        <p className={styles.subtitle}>수집된 사용자 행동 데이터를 기간별로 봅니다.</p>
+      </div>
+
+      <div className={styles.jumpRow}>
+        {JUMP_TARGETS.map((t) => (
+          <button key={t.id} type="button" className={styles.jumpChip} onClick={() => handleJump(t.id)}>
+            {t.label}
+          </button>
+        ))}
       </div>
 
       {loading && <StateBox status="loading" message="통계를 불러오는 중..." />}
@@ -126,82 +224,115 @@ export default function AdminAnalyticsTab() {
       )}
 
       {!loading && !error && summary && !isEmpty && (
-        <>
-          <div className={styles.summaryCards}>
-            <div className={styles.summaryCard}>
-              <span className={styles.cardLabel}>순방문자</span>
-              <span className={styles.cardValue}>{summary.uniqueVisitors.toLocaleString()}</span>
-            </div>
-            <div className={styles.summaryCard}>
-              <span className={styles.cardLabel}>페이지뷰</span>
-              <span className={styles.cardValue}>{summary.pageViews.toLocaleString()}</span>
-            </div>
-          </div>
+        <div className={styles.cardList}>
+          {/* 개요 */}
+          <AnalyticsSummaryCard
+            periodLabel={periodLabel}
+            summary={summary}
+            previousSummary={previousSummary}
+            comparisonAvailable={comparisonAvailable}
+            eventRows={eventRows}
+            rangeMode={rangeMode}
+            dateValue={dateValue}
+            rangeFrom={rangeFrom}
+            rangeTo={rangeTo}
+            onModeChange={handleModeChange}
+            onDateChange={handleDateChange}
+            onRangeFromChange={setRangeFrom}
+            onRangeToChange={setRangeTo}
+            onApplyRange={handleApplyRange}
+            onQuickRange={handleQuickRange}
+          />
 
-          <div className={styles.section}>
-            <b className={styles.sectionTitle}>이벤트 종류별 건수</b>
+          {/* 상위 경로 */}
+          <section id="analytics-toppages" className={styles.box}>
+            <div className={styles.boxHead}>
+              <b className={styles.boxTitle}>상위 경로 Top 10</b>
+              <span className={styles.periodLabel}>{periodLabel}</span>
+            </div>
+            <div className={styles.rangeRow}>
+              <AdminSegmented
+                options={TOP_PATH_MODE_OPTIONS}
+                value={topPathMode}
+                onChange={setTopPathMode}
+                name="상위 경로 표시"
+              />
+            </div>
             <AdminTable
               columns={[
-                { key: "label", label: "이벤트", align: "left" },
                 {
-                  key: "count",
-                  label: "건수",
-                  width: 90,
-                  render: (row) => row.count.toLocaleString(),
+                  key: "pagePath",
+                  label: topPathMode === "path" ? "경로" : "제목",
+                  align: "left",
+                  render: (row) => (topPathMode === "path" ? row.pagePath : pathToTitle(row.pagePath)),
                 },
-              ]}
-              rows={eventRows}
-              rowKey={(row) => row.type}
-            />
-          </div>
-
-          <div className={styles.section}>
-            <b className={styles.sectionTitle}>상위 경로 Top 10</b>
-            <AdminTable
-              columns={[
-                { key: "pagePath", label: "경로", align: "left" },
                 {
                   key: "count",
                   label: "조회수",
-                  width: 90,
+                  width: 64,
                   render: (row) => row.count.toLocaleString(),
                 },
+                {
+                  key: "uniqueVisitors",
+                  label: "순방문",
+                  width: 64,
+                  render: (row) => row.uniqueVisitors.toLocaleString(),
+                },
+                {
+                  key: "returningRate",
+                  label: "재방문율",
+                  width: 64,
+                  render: (row) => (row.returningRate == null ? "-" : `${row.returningRate}%`),
+                },
               ]}
-              rows={summary.topPages}
+              rows={summary.topPages ?? []}
               rowKey={(row) => row.pagePath}
             />
-          </div>
+          </section>
 
-          <div className={styles.section}>
-            <b className={styles.sectionTitle}>기기 비율</b>
-            <div className={styles.deviceBars}>
-              {deviceRatioRows.map((row) => (
-                <div key={row.type} className={styles.deviceBarRow}>
-                  <span className={styles.deviceBarLabel}>{row.label}</span>
-                  <div className={styles.deviceBarTrack}>
-                    <div
-                      className={styles.deviceBarFill}
-                      style={{
-                        width: deviceTotal ? `${(row.count / deviceTotal) * 100}%` : 0,
-                        background: DEVICE_TYPE_COLOR[row.type] ?? DEVICE_TYPE_COLOR.unknown,
-                      }}
-                    />
-                  </div>
-                  <span className={styles.deviceBarCount}>{row.count.toLocaleString()}</span>
-                </div>
-              ))}
+          {/* 추이 */}
+          <AnalyticsTrendCard
+            periodLabel={periodLabel}
+            granularity={trendGranularity}
+            onGranularityChange={handleGranularityChange}
+            loading={trendLoading}
+            error={trendError}
+            onRetry={() => handleGranularityChange(trendGranularity)}
+            points={trendPoints}
+            period={period}
+            prevPeriod={prevPeriod}
+            previousPoints={previousTrendDay}
+            dayOverlayAvailable={dayOverlayAvailable}
+          />
+
+          {/* 방문자 구성 */}
+          <section id="analytics-visitors" className={styles.box}>
+            <div className={styles.boxHead}>
+              <b className={styles.boxTitle}>방문자 구성</b>
+              <span className={styles.periodLabel}>{periodLabel}</span>
             </div>
-          </div>
-
-          <div className={styles.section}>
-            <b className={styles.sectionTitle}>세션당 페이지뷰</b>
-            <div className={styles.summaryCard}>
-              <span className={styles.cardValue}>{summary.pageViewsPerSession ?? "-"}</span>
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>기기 비율</span>
+              <RatioBars rows={countRows(summary.deviceRatio, DEVICE_TYPE_LABEL, DEVICE_TYPE_COLOR)} />
             </div>
-          </div>
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>신규 · 재방문</span>
+              <RatioBars
+                rows={countRows(summary.visitorComposition, VISITOR_TYPE_LABEL, VISITOR_TYPE_COLOR)}
+              />
+            </div>
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>가입 전환</span>
+              <RatioBars rows={countRows(summary.signupConversion, SIGNUP_LABEL, SIGNUP_COLOR)} />
+            </div>
+          </section>
 
-          <div className={styles.section}>
-            <b className={styles.sectionTitle}>외부 유입 상위</b>
+          {/* 외부 유입 */}
+          <section id="analytics-referrers" className={styles.box}>
+            <div className={styles.boxHead}>
+              <b className={styles.boxTitle}>외부 유입 상위</b>
+              <span className={styles.periodLabel}>{periodLabel}</span>
+            </div>
             <AdminTable
               columns={[
                 { key: "referrerHost", label: "유입 경로", align: "left" },
@@ -215,30 +346,33 @@ export default function AdminAnalyticsTab() {
               rows={summary.topReferrers ?? []}
               rowKey={(row) => row.referrerHost}
             />
-          </div>
+          </section>
+        </div>
+      )}
 
-          <div className={styles.section}>
-            <b className={styles.sectionTitle}>수동 재집계</b>
-            <p className={styles.subtitle}>날짜를 골라 그날의 일별 집계를 다시 계산합니다.</p>
-            <div className={styles.aggregateRow}>
-              <input
-                type="date"
-                className={styles.aggregateInput}
-                value={aggregateDate}
-                onChange={(e) => setAggregateDate(e.target.value)}
-              />
-              <button
-                type="button"
-                className={styles.aggregateButton}
-                disabled={mutateLoading}
-                onClick={handleAggregate}
-              >
-                {mutateLoading ? "집계 중..." : "재집계"}
-              </button>
-            </div>
-            {mutateError && <p className={styles.aggregateError}>{mutateError}</p>}
+      {/* 수동 재집계 — 카드 목록 밖(맨 아래) 고정 위치 유지 */}
+      {!loading && !error && summary && !isEmpty && (
+        <div className={styles.section}>
+          <b className={styles.sectionTitle}>수동 재집계</b>
+          <p className={styles.subtitle}>날짜를 골라 그날의 일별 집계를 다시 계산합니다.</p>
+          <div className={styles.aggregateRow}>
+            <input
+              type="date"
+              className={styles.aggregateInput}
+              value={aggregateDate}
+              onChange={(e) => setAggregateDate(e.target.value)}
+            />
+            <button
+              type="button"
+              className={styles.aggregateButton}
+              disabled={mutateLoading}
+              onClick={handleAggregate}
+            >
+              {mutateLoading ? "집계 중..." : "재집계"}
+            </button>
           </div>
-        </>
+          {mutateError && <p className={styles.aggregateError}>{mutateError}</p>}
+        </div>
       )}
     </div>
   );

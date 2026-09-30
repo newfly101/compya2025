@@ -6,6 +6,7 @@ import com.dawne.com2usbaseball.domain.analytics.dto.request.AnalyticsEventReque
 import com.dawne.com2usbaseball.domain.analytics.entity.AnalyticsEventEntity;
 import com.dawne.com2usbaseball.domain.analytics.enums.AnalyticsEventType;
 import com.dawne.com2usbaseball.domain.analytics.repository.AnalyticsEventRepository;
+import com.dawne.com2usbaseball.domain.analytics.repository.AnalyticsFirstSeenRepository;
 import com.dawne.com2usbaseball.domain.analytics.service.support.AnalyticsEventGuard;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +14,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 수집이 서비스를 망치면 안 된다 — 이 클래스의 유일한 목적.
@@ -32,6 +36,7 @@ import java.util.List;
 public class AnalyticsEventServiceImpl implements AnalyticsEventService {
 
     private final AnalyticsEventRepository analyticsEventRepository;
+    private final AnalyticsFirstSeenRepository analyticsFirstSeenRepository;
 
     @Override
     @Async("analyticsEventExecutor")
@@ -79,6 +84,30 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
         } catch (Exception e) {
             log.error("[ANALYTICS] 이벤트 저장 실패 ({}건 시도): {}", entities.size(), e.getMessage(), e);
         }
+
+        try {
+            updateFirstSeen(entities, context);
+        } catch (Exception e) {
+            log.error("[ANALYTICS] 최초 방문일 갱신 실패: {}", e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 배치 내 고유 anonId 별로 site_user_first_seen 을 갱신한다 — 없으면 최초 방문일 기록,
+     * 로그인 사용자면(회원가입/로그인 전환) converted_user_id 를 채운다(이미 채워졌으면 갱신 안 함).
+     */
+    private void updateFirstSeen(List<AnalyticsEventEntity> entities, AnalyticsClientContext context) {
+        LocalDate today = LocalDate.now(ZoneId.of("Asia/Seoul"));
+        Set<String> anonIds = new LinkedHashSet<>();
+        for (AnalyticsEventEntity entity : entities) {
+            anonIds.add(entity.getAnonId());
+        }
+        for (String anonId : anonIds) {
+            analyticsFirstSeenRepository.upsertFirstSeen(anonId, today);
+            if (context.userId() != null) {
+                analyticsFirstSeenRepository.markConverted(anonId, context.userId(), LocalDateTime.now());
+            }
+        }
     }
 
     /** 개별 이벤트가 이상하면 null 을 반환한다 — 호출부가 그 이벤트만 건너뛴다. */
@@ -118,6 +147,7 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                 .searchKeyword(AnalyticsEventGuard.truncate(item.searchKeyword(), AnalyticsEventGuard.SEARCH_KEYWORD_MAX_LENGTH))
                 .referrer(AnalyticsEventGuard.truncate(item.referrer(), AnalyticsEventGuard.REFERRER_MAX_LENGTH))
                 .country(AnalyticsEventGuard.truncate(context.country(), AnalyticsEventGuard.COUNTRY_MAX_LENGTH))
+                .city(AnalyticsEventGuard.truncate(context.city(), AnalyticsEventGuard.CITY_MAX_LENGTH))
                 .userAgent(AnalyticsEventGuard.truncate(userAgent, AnalyticsEventGuard.USER_AGENT_MAX_LENGTH))
                 .sessionId(item.sessionId())
                 .navType(AnalyticsEventGuard.truncate(item.navType(), AnalyticsEventGuard.NAV_TYPE_MAX_LENGTH))
@@ -125,7 +155,6 @@ public class AnalyticsEventServiceImpl implements AnalyticsEventService {
                 .deviceType(AnalyticsEventGuard.detectDeviceType(userAgent, item.screenW()))
                 .os(AnalyticsEventGuard.detectOs(userAgent))
                 .browser(AnalyticsEventGuard.detectBrowser(userAgent))
-                .itemId(item.itemId())
                 .createdAt(parseOccurredAt(item.occurredAt()))
                 .build();
     }

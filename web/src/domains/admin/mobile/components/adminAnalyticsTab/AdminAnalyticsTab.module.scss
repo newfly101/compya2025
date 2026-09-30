@@ -7,27 +7,101 @@
   gap: $space-4;
 }
 
-// 제목 줄(전체 폭) + 기간 토글 줄(전체 폭) 2행 — AdminToolbar 의 행 쌓기 관례와 같은 $space-2.
 .head {
-  display: flex;
-  flex-direction: column;
-  gap: $space-2;
-}
-
-.headText {
   display: flex;
   flex-direction: column;
   gap: 2px;
   min-width: 0;
 }
 
-// AdminSegmented 는 그대로 두고 배치만 — 제목과 한 줄로 안 쓰니 폭 여유가 생겨 3개 옵션이
-// 안 눌린다. white-space 는 라디오 버튼(role="radio") 자체 속성으로 걸어 컴포넌트 내부
-// 클래스를 건드리지 않는다.
+// 상단 바로가기 — 카드 5개 제목을 칩으로 나열, 누르면 해당 카드로 스크롤한다(scrollIntoView).
+// 가로 스크롤이 아니라 줄바꿈 허용 — 칩이 넘치면 다음 줄로 내려간다.
+.jumpRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+}
+
+.jumpChip {
+  @include chip-base(md, var(--color-bg-card), var(--color-text-secondary));
+  @include pressable;
+  border: 1px solid var(--color-border-strong);
+  font: inherit;
+  cursor: pointer;
+}
+
+// 카드 5개(개요/상위경로/추이/방문자구성/외부유입) 세로 나열 — 가로 스크롤(peek) 폐기,
+// 폭은 컨테이너 100%.
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-4;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-xl;
+  background: var(--color-bg-card);
+}
+
+.boxHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: $space-2;
+}
+
+.boxTitle {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+// 카드 헤더 옆 현재 적용 구간 표기(예: "09-24 ~ 09-30") — 5개 카드가 전부 같은 기간을 따른다는
+// 신호를 준다.
+.periodLabel {
+  @include text-caption;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+// 기간 선택기(AnalyticsRangePicker) — 3버튼(오늘/특정 일자/기간) + 하위 입력.
+.rangePicker {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+// AdminSegmented 배치만 — 제목과 한 줄로 안 쓰니 폭 여유가 생겨 옵션이 안 눌린다.
+// white-space 는 라디오 버튼(role="radio") 자체 속성으로 걸어 컴포넌트 내부 클래스를 건드리지 않는다.
 .rangeRow {
   [role="radio"] {
     white-space: nowrap;
   }
+}
+
+// "특정 일자" 단일 입력 · "기간" 날짜범위+조회 버튼 공통.
+.customRow {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+// "기간" 모드의 빠른 선택(7일·30일).
+.quickRow {
+  display: flex;
+  gap: $space-2;
+}
+
+.quickButton {
+  @include chip-base(md, var(--color-bg-elevated), var(--color-text-secondary));
+  @include pressable;
+  border: 1px solid var(--color-border-strong);
+  font: inherit;
+  cursor: pointer;
 }
 
 .title {
@@ -68,6 +142,25 @@
   color: var(--color-admin-accent);
 }
 
+// 증감률 배지(▲/▼/-) — 개요 카드 순방문자·페이지뷰·이벤트별 건수·세션당 페이지뷰 공통.
+// 상태 축 토큰만 사용(신규 색 없음) — 상승은 success, 하락은 danger, 비교 불가는 muted.
+.deltaUp {
+  @include text-caption;
+  color: var(--color-success);
+  font-weight: $font-weight-semibold;
+}
+
+.deltaDown {
+  @include text-caption;
+  color: var(--color-danger);
+  font-weight: $font-weight-semibold;
+}
+
+.deltaFlat {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
 .section {
   display: flex;
   flex-direction: column;
@@ -79,6 +172,7 @@
   color: var(--color-text-primary);
 }
 
+// 방문자 구성(RatioBars) — 기기 비율·신규/재방문·가입 전환 공통.
 .deviceBars {
   display: flex;
   flex-direction: column;
@@ -117,8 +211,7 @@
 
 // AdminDateRange 와 같은 어드민 날짜 입력 관례(admin-date-range-row) — input[type=date]에
 // flex:1 + min-width:0 을 줘서 좁은 폭에서 입력이 줄어들고, 고정폭 버튼과 나란히 둬도
-// 가로 스크롤이 생기지 않는다. 기존엔 flex:0 0 auto 로 입력을 고정폭 취급해 320px 근처에서
-// 밀려났다.
+// 가로 스크롤이 생기지 않는다.
 .aggregateRow {
   @include admin-date-range-row;
 }
@@ -127,10 +220,11 @@
   @include admin-input;
 }
 
-.aggregateButton {
-  flex: 0 0 auto;
+// 재집계 · "특정 일자" 단일 입력 · 기간 조회 3곳이 같은 버튼 모양을 쓴다(%placeholder 로 중복 제거).
+%analyticsPrimaryButton {
   display: flex;
   align-items: center;
+  justify-content: center;
   height: $control-height-sm;
   padding: 0 $space-4;
   border: 1px solid var(--color-admin-accent);
@@ -145,6 +239,153 @@
     opacity: 0.6;
     cursor: default;
   }
+}
+
+.aggregateButton {
+  @extend %analyticsPrimaryButton;
+  flex: 0 0 auto;
+}
+
+// "기간" 조회 버튼 — customRow 안에서 오른쪽 정렬.
+.applyButton {
+  @extend %analyticsPrimaryButton;
+  align-self: flex-end;
+}
+
+/* ── 추이 카드 ───────────────────────────────────────────────── */
+
+.trendWrap {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+// 추이·시간대별 목록 공통 — 막대가 어느 지표 기준인지 밝히는 범례 한 줄.
+.chartLegendText {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.trendBars {
+  display: flex;
+  align-items: flex-end;
+  gap: $space-2;
+  overflow-x: auto;
+  padding-bottom: $space-1;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.trendBarCol {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 0 0 32px;
+}
+
+.trendBarValue {
+  @include font-size-rem(9);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+// 이번 구간·직전 구간 막대를 나란히 — 직전 구간이 없으면(dayOverlayAvailable=false) 트랙 1개만 렌더.
+.trendBarPair {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.trendBarTrack {
+  width: 14px;
+  height: 80px;
+  border-radius: $radius-full;
+  background: var(--color-bg-elevated);
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.trendBarFill {
+  width: 100%;
+  min-height: 2px;
+  border-radius: $radius-full;
+  background: var(--color-admin-accent);
+}
+
+// 직전 구간 — 같은 색을 옅게(불투명도) 써서 새 토큰을 추가하지 않는다.
+.trendBarFillPrev {
+  background: var(--color-admin-accent);
+  opacity: 0.35;
+}
+
+.trendBarLabel {
+  @include text-caption;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+/* ── 시간대별 목록(HourlyList) ───────────────────────────────── */
+
+.hourlyList {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.hourlyHead,
+.hourlyRow {
+  display: grid;
+  grid-template-columns: 36px 1fr 52px 60px;
+  align-items: center;
+  gap: $space-2;
+}
+
+.hourlyHead {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.hourlyHeadHour {
+  text-align: left;
+}
+
+.hourlyHeadVisitors,
+.hourlyHeadViews {
+  text-align: right;
+}
+
+.hourlyHourLabel {
+  @include text-caption;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.hourlyTrack {
+  height: 10px;
+  border-radius: $radius-full;
+  background: var(--color-bg-elevated);
+  overflow: hidden;
+}
+
+// 기기 비율 막대의 모바일 색과 같은 토큰 재사용(analyticsChartConfig.js DEVICE_TYPE_COLOR.mobile).
+.hourlyFill {
+  height: 100%;
+  border-radius: $radius-full;
+  background: var(--color-admin-tag-purple-text);
+}
+
+.hourlyVisitors,
+.hourlyViews {
+  @include text-caption;
+  color: var(--color-text-primary);
+  text-align: right;
+  white-space: nowrap;
 }
 
 .aggregateError {

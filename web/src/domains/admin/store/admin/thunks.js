@@ -4,6 +4,7 @@ import {
   fetchCacheSyncOne,
   fetchCacheSyncAll,
   fetchAdminAnalyticsSummary,
+  fetchAdminAnalyticsTrend,
   fetchAdminAnalyticsAggregate,
 } from "@/domains/admin/store/admin/api.js";
 import {
@@ -49,12 +50,25 @@ export const requestCacheSyncAll = createAsyncThunk(
   }
 );
 
-// 관리자 통계 탭 — range(TODAY|WEEK|MONTH) 별 요약 조회. 캐시하지 않고 매번 새 요청.
+// 관리자 통계 탭 — range(TODAY|WEEK|MONTH|CUSTOM) 별 요약 조회. 캐시하지 않고 매번 새 요청.
+// CUSTOM 일 때만 from/to 를 함께 보낸다.
 export const requestAdminAnalyticsSummary = createAsyncThunk(
   ADMIN_ANALYTICS_ACTIONS.GET_SUMMARY,
-  async (range, { rejectWithValue }) => {
+  async ({ range, from, to } = {}, { rejectWithValue }) => {
     try {
-      return await fetchAdminAnalyticsSummary(range);
+      return await fetchAdminAnalyticsSummary({ range, from, to });
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
+// 방문 추이 — range 와 독립적으로 항상 from/to 를 명시(일별/시간대별 공통).
+export const requestAdminAnalyticsTrend = createAsyncThunk(
+  ADMIN_ANALYTICS_ACTIONS.GET_TREND,
+  async ({ from, to, granularity }, { rejectWithValue }) => {
+    try {
+      return await fetchAdminAnalyticsTrend({ from, to, granularity });
     } catch (error) {
       return rejectWithValue(error.message);
     }

@@ -66,6 +66,27 @@
         )
     </insert>
 
+    <!-- 카페 자동 수집 — coupon_code UNIQUE 가 이미 있으면 조용히 건너뛴다 (영향 행 0) -->
+    <insert id="insertCouponIfAbsent" useGeneratedKeys="true" keyProperty="id">
+        INSERT IGNORE INTO site_coupons (
+            coupon_code,
+            title,
+            detail,
+            expire_at,
+            is_visible,
+            created_at,
+            updated_at
+        ) VALUES (
+            #{couponCode},
+            #{title},
+            #{detail},
+            #{expireAt},
+            #{visible},
+            NOW(),
+            NOW()
+        )
+    </insert>
+
     <update id="updateCouponById" parameterType="com.dawne.com2usbaseball.domain.coupon.entity.CouponEntity">
         UPDATE site_coupons
         <set>

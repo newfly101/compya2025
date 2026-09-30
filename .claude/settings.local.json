@@ -1,14 +1,31 @@
 {
   "permissions": {
     "allow": [
-      "mcp__claude_ai_Figma__get_design_context",
-      "PowerShell(Remove-Item *)",
-      "PowerShell(npm *)",
       "Bash(claude mcp *)",
       "Bash(findstr *)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(powershell *)"
+      "Bash(powershell *)",
+      "PowerShell(Remove-Item *)",
+      "PowerShell(npm *)",
+      "mcp__Figma",
+      "mcp__Figma__*",
+      "mcp__claude_ai_Figma",
+      "mcp__claude_ai_Figma__*",
+      "mcp__claude_ai_Figma__get_design_context"
+    ]
+  },
+  "hooks": {
+    "PermissionRequest": [
+      {
+        "matcher": "mcp__Figma__.*|mcp__claude_ai_Figma__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PermissionRequest\",\"decision\":{\"behavior\":\"allow\"}}}'"
+          }
+        ]
+      }
     ]
   }
 }

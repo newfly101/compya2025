@@ -19,15 +19,37 @@ public interface EventMapper {
     List<EventEntity> selectAdminEventList(
             @Param("eventType") EventType eventType,
             @Param("visible") Boolean visible,
+            @Param("collected") Boolean collected,
             @Param("limit") int limit,
             @Param("offset") int offset);                       // 전체 목록 (필터)
     int insertEvent(EventEntity event);                         // 이벤트 추가
     EventEntity selectEventById(Long id);
+
+    EventEntity selectPublicEventById(Long id);
     int updateEventByExternal(EventEntity event);               // 이벤트 수정
     int updateEventVisible(
             @Param("id") Long id,
             @Param("visible") boolean visible);                 // 이벤트 노출 값 수정
     int deleteEventById(@Param("id") Long id);                  // 이벤트 삭제 (hard delete)
+
+    // 카페 자동 수집
+    List<Long> selectExistingSourceArticleIds(@Param("ids") List<Long> ids);
+    List<EventEntity> selectTrackedCollectedEvents();           // 마감 전 수집 이벤트 (재확인 대상)
+    int updateCollectedContent(
+            @Param("id") Long id,
+            @Param("contentHtml") String contentHtml,
+            @Param("contentHash") String contentHash,
+            @Param("imageUrl") String imageUrl);                // 본문·해시 반영 (본문 갱신)
+    int updateCollectedHash(
+            @Param("id") Long id,
+            @Param("contentHash") String contentHash);          // 원문 변경 표시용 — 본문은 그대로
+    List<EventEntity> selectManualEventCandidates();            // 수동 등록 행 후보 (source_article_id 없음, id 큰 순)
+    int updateMergeCollected(
+            @Param("id") Long id,
+            @Param("sourceArticleId") long sourceArticleId,
+            @Param("contentHtml") String contentHtml,
+            @Param("contentHash") String contentHash,
+            @Param("imageUrl") String imageUrl);                // 수동 행에 수집 데이터 병합
 
     // 일괄 작업
     List<Long> selectExistingEventIds(@Param("ids") List<Long> ids);

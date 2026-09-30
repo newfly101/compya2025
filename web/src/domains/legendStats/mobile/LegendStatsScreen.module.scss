@@ -646,3 +646,19 @@ td.cStat {
     color: var(--color-text-primary);
   }
 }
+
+// 재료 보유 현황(legendCollections) 진입 링크
+.collectionLink {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  margin: 0 16px;
+  color: var(--color-ls-chip-on-text);
+  font-size: $font-size-12;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}

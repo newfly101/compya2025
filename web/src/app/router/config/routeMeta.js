@@ -4,6 +4,11 @@ export const ROUTE_META = {
   HOME: { path: ROUTE_PATHS.home, title: "컴프야펀 | 홈" },
   COUPONS: { path: ROUTE_PATHS.coupons, title: "컴프야펀 | 쿠폰 모아보기" },
   EVENTS: {path: ROUTE_PATHS.events, title: "컴프야펀 | 이벤트"},
+  EVENT_DETAILS: {
+    path: ROUTE_PATHS.event_details_pattern,
+    title: (eventTitle) =>
+      eventTitle ? `컴프야펀 | 이벤트 | ${eventTitle}` : "컴프야펀 | 이벤트 상세",
+  },
   NOTICES: {path: ROUTE_PATHS.notices, title: "컴프야펀 | 공지사항"},
   NOTICE_DETAILS: {
     path: ROUTE_PATHS.notice_details_pattern,
@@ -22,6 +27,7 @@ export const ROUTE_META = {
   },
   PLAYERS: {path: ROUTE_PATHS.players, title: "컴프야펀 | 선수 백과사전"},
   LEGEND_STATS: {path: ROUTE_PATHS.legend_stats, title: "컴프야펀 | 레전드 재료 검색"},
+  LEGEND_COLLECTIONS: {path: ROUTE_PATHS.legend_collections, title: "컴프야펀 | 레전드 재료 보유 현황"},
   HISTORY_LEGEND: {path: ROUTE_PATHS.history_legend, title: "컴프야펀 | 히스토리 재료"},
   COMMUNITY: {path: ROUTE_PATHS.community, title: "컴프야펀 | 커뮤니티"},
   PRIVACY: {path: ROUTE_PATHS.privacy, title: "컴프야펀 | 개인정보처리방침"},

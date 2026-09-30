@@ -1,9 +1,9 @@
 ---
 feature: coupons
-version: 1.0.4
+version: 1.1.0
 status: active
 created: 2026-01-29
-updated: 2026-09-28
+updated: 2026-09-30
 ---
 
 # coupons
@@ -38,6 +38,7 @@ updated: 2026-09-28
 | REQ-CP-11 | 캐시 갱신 시점 | 실제 쓰기가 있는 6개 메서드 전부 트랜잭션 커밋 후에 캐시를 비운다(`@CacheEvictAfterCommit`) — 프로젝트에서 이 패턴을 유일하게 전 메서드에 적용한 도메인 | `AdminCouponServiceImpl.java` |
 | REQ-CP-12 | 새로고침(refresh) | 관리자가 DB에 직접 넣은 값을 캐시만 비워 즉시 반영시키는 용도. 쓰기가 없는 읽기 전용 메서드라 즉시 evict 방식이어도 안전하다 | `AdminCouponServiceImpl.java` |
 | REQ-CP-13 | 상태 칸 분리 | 관리자 목록(`coupons`, 숨김 포함)과 공개 목록(`publicCoupons`)을 Redux에서 별도 칸에 저장한다 — 한 칸을 공유하면 관리자 화면을 거친 뒤 공개 화면에 숨김 쿠폰이 보인다 | `store/slices.js:12` |
+| REQ-CP-14 | 자동 등록 | 공식 카페 새 글·진행 중 수집 이벤트 본문의 "쿠폰 번호" 칸 표에서 새 쿠폰 번호만 승인 없이 바로 공개(`is_visible=true`)로 등록한다. 번호가 이미 있거나(UNIQUE), 기한이 지났거나, 번호 형식이 아닌 행("추후 공개" 등, 다음 배치에서 재확인)·칸 수가 어긋난 행은 건너뛴다. 바로가기 링크는 저장하지 않는다 | `CouponCollectServiceImpl.java` |
 
 ## 4. 데이터
 

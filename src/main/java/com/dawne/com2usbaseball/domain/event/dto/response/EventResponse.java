@@ -15,5 +15,16 @@ public record EventResponse(
         LocalDateTime expireAt,
         String imageUrl,
         String externalLink,
-        boolean visible
-) { }
+        boolean visible,
+        Long sourceArticleId,
+        String contentHtml,
+        boolean sourceChanged,
+        boolean deadlineUnconfirmed,
+        boolean hasContent
+) {
+    /** 목록용 — 본문은 비우고 hasContent 로만 알린다(페이로드 경감). */
+    public EventResponse withoutContent() {
+        return new EventResponse(id, eventType, title, startAt, expireAt, imageUrl, externalLink, visible,
+                sourceArticleId, null, sourceChanged, deadlineUnconfirmed, hasContent);
+    }
+}
