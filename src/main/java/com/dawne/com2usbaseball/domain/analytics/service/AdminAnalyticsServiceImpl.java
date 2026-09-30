@@ -4,6 +4,7 @@ import com.dawne.com2usbaseball.domain.analytics.dto.response.AdminAnalyticsSumm
 import com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsEventCountRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsTrendPointResponse;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.DeviceCountRow;
+import com.dawne.com2usbaseball.domain.analytics.dto.response.RegionCountRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.SessionStatsRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.SignupConversionRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.VisitorCompositionRow;
@@ -50,7 +51,8 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
                     adminAnalyticsRepository.sumTodayTopReferrers(TOP_PAGES_LIMIT),
                     pageViewsPerSession(dedupedStats.sessionCount(), dedupedStats.pageViewCount()),
                     toVisitorMap(adminAnalyticsRepository.sumVisitorComposition(today, today)),
-                    toSignupMap(analyticsFirstSeenRepository.sumSignupConversion(today, today))
+                    toSignupMap(analyticsFirstSeenRepository.sumSignupConversion(today, today)),
+                    toRegionMap(adminAnalyticsRepository.sumRegionRatio(today, today))
             );
         }
 
@@ -78,7 +80,10 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
                 adminAnalyticsRepository.sumRangeTopReferrers(start, end, TOP_PAGES_LIMIT),
                 pageViewsPerSession(sessionStats.sessionCount(), sessionStats.pageViewCount()),
                 toVisitorMap(adminAnalyticsRepository.sumVisitorComposition(start, end)),
-                toSignupMap(analyticsFirstSeenRepository.sumSignupConversion(start, end))
+                toSignupMap(analyticsFirstSeenRepository.sumSignupConversion(start, end)),
+                AnalyticsDateValidator.isWithinRetention(start)
+                        ? toRegionMap(adminAnalyticsRepository.sumRegionRatio(start, end))
+                        : new LinkedHashMap<>()
         );
     }
 
@@ -128,6 +133,14 @@ public class AdminAnalyticsServiceImpl implements AdminAnalyticsService {
         Map<String, Long> result = new LinkedHashMap<>();
         for (SignupConversionRow row : rows) {
             result.put(row.conversionType(), row.count());
+        }
+        return result;
+    }
+
+    private Map<String, Long> toRegionMap(List<RegionCountRow> rows) {
+        Map<String, Long> result = new LinkedHashMap<>();
+        for (RegionCountRow row : rows) {
+            result.put(row.region(), row.count());
         }
         return result;
     }

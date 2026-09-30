@@ -214,4 +214,34 @@
           AND f.first_seen_date &lt; #{start}
     </select>
 
+    <!--
+      지역 분포(GeoIP): city(시·구 라벨) 없으면 country, 둘 다 없으면 '알수없음'. 원본
+      직접 집계 후 순방문자 내림차순 상위 10만 개별 라벨로 남기고 나머지는 '기타' 로 합친다.
+      TODAY 는 start=end=오늘 창으로도 그대로 쓰인다(FN-8 과 같은 원본 직접 조회 방식).
+    -->
+    <select id="sumRegionRatio" resultType="com.dawne.com2usbaseball.domain.analytics.dto.response.RegionCountRow">
+        SELECT
+            CASE WHEN rn &lt;= 10 THEN region ELSE '기타' END AS region,
+            SUM(cnt) AS count
+        FROM (
+            SELECT region, cnt, ROW_NUMBER() OVER (ORDER BY cnt DESC) AS rn
+            FROM (
+                SELECT
+                    CASE
+                        WHEN city IS NOT NULL AND city &lt;&gt; '' AND city &lt;&gt; '-' THEN city
+                        WHEN country IS NOT NULL AND country &lt;&gt; '' AND country &lt;&gt; '-' THEN country
+                        ELSE '알수없음'
+                    END AS region,
+                    COUNT(DISTINCT anon_id) AS cnt
+                FROM site_user_event
+                WHERE event_type = 'PAGE_VIEW'
+                  AND created_at >= #{start}
+                  AND created_at &lt; #{end} + INTERVAL 1 DAY
+                GROUP BY region
+            ) grouped
+        ) ranked
+        GROUP BY CASE WHEN rn &lt;= 10 THEN region ELSE '기타' END
+        ORDER BY MIN(rn)
+    </select>
+
 </mapper>

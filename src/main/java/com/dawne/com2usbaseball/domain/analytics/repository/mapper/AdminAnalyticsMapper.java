@@ -3,6 +3,7 @@ package com.dawne.com2usbaseball.domain.analytics.repository.mapper;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsEventCountRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsTrendPointResponse;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.DeviceCountRow;
+import com.dawne.com2usbaseball.domain.analytics.dto.response.RegionCountRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.SessionStatsRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.TopPageResponse;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.TopReferrerResponse;
@@ -56,4 +57,7 @@ public interface AdminAnalyticsMapper {
 
     /** site_user_first_seen 기반 신규/재방문 구성. start==end 이면 TODAY 창(하루)으로도 쓰인다. */
     List<VisitorCompositionRow> sumVisitorComposition(@Param("start") LocalDate start, @Param("end") LocalDate end);
+
+    /** GeoIP 지역 라벨(city, 없으면 country)별 순방문자 상위 10 + 나머지 "기타". start==end 면 TODAY 창으로도 쓰인다. */
+    List<RegionCountRow> sumRegionRatio(@Param("start") LocalDate start, @Param("end") LocalDate end);
 }
