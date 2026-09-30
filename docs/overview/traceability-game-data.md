@@ -65,4 +65,4 @@ updated: 2026-09-30
 | REQ-PSK-02 | playerSkills | 필터·강화 티어 선택 | SC-17-01 | GET /api/player-skills/{hitters|pitchers} | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-09-28 |
 | REQ-PSK-03 | playerSkills | 목록 정렬 | SC-17-01 | GET /api/player-skills/{hitters|pitchers} | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-09-28 |
 | REQ-PSK-04 | playerSkills | 라벨(표 행 이름) | SC-17-01 | GET /api/player-skills/{hitters|pitchers} | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-09-28 |
-| REQ-PSK-05 | playerSkills | 원 문자 그룹 표기 (미구현) | SC-17-01 | GET /api/player-skills/{hitters|pitchers} | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-09-28 |
+| REQ-PSK-05 | playerSkills | 원 문자 그룹 표기 | SC-17-01 | GET /api/player-skills/{hitters|pitchers} | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-09-28 |
