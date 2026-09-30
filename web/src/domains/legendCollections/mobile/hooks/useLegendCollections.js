@@ -45,12 +45,12 @@ export const useLegendCollections = () => {
   const [saveError, setSaveError] = useState(null);
 
   useEffect(() => {
-    if (isAuthenticated && !me.loaded && !me.loading) dispatch(requestGetMyCollection());
-  }, [dispatch, isAuthenticated, me.loaded, me.loading]);
+    if (isAuthenticated && !me.loaded && !me.loading && !me.error) dispatch(requestGetMyCollection());
+  }, [dispatch, isAuthenticated, me.loaded, me.loading, me.error]);
 
   useEffect(() => {
-    if (isAuthenticated && !schedule.loaded && !schedule.loading) dispatch(requestGetSchedule());
-  }, [dispatch, isAuthenticated, schedule.loaded, schedule.loading]);
+    if (isAuthenticated && !schedule.loaded && !schedule.loading && !schedule.error) dispatch(requestGetSchedule());
+  }, [dispatch, isAuthenticated, schedule.loaded, schedule.loading, schedule.error]);
 
   // 서버가 재료 상태에 레전드 id 를 주지 않아, 기록이 있으면 레전드별 재료를 받아 소속을 채운다.
   // 한 번 받은 레전드는 thunk 가 다시 요청하지 않는다.

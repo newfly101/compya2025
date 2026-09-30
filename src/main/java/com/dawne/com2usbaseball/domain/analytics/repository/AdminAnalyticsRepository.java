@@ -3,6 +3,7 @@ package com.dawne.com2usbaseball.domain.analytics.repository;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsEventCountRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.AnalyticsTrendPointResponse;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.DeviceCountRow;
+import com.dawne.com2usbaseball.domain.analytics.dto.response.RegionCountRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.SessionStatsRow;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.TopPageResponse;
 import com.dawne.com2usbaseball.domain.analytics.dto.response.TopReferrerResponse;
@@ -90,5 +91,9 @@ public class AdminAnalyticsRepository {
 
     public List<VisitorCompositionRow> sumVisitorComposition(LocalDate start, LocalDate end) {
         return adminAnalyticsMapper.sumVisitorComposition(start, end);
+    }
+
+    public List<RegionCountRow> sumRegionRatio(LocalDate start, LocalDate end) {
+        return adminAnalyticsMapper.sumRegionRatio(start, end);
     }
 }

@@ -14,6 +14,7 @@ public record AdminAnalyticsSummaryResponse(
         List<TopReferrerResponse> topReferrers,
         Double pageViewsPerSession,
         Map<String, Long> visitorComposition,
-        Map<String, Long> signupConversion
+        Map<String, Long> signupConversion,
+        Map<String, Long> regionRatio
 ) {
 }
