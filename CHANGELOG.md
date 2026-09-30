@@ -25,6 +25,19 @@
 ## [Unreleased]
 
 ### Added
+### Changed
+### Fixed
+### Admin
+### Platform
+### Internal
+
+---
+
+## [v2.2.0] (platform-3.1) — 2026-09-30
+
+> 태그 `v2.2.0` (플랫폼 `platform-3.1` 유지). dev → master squash 머지 기준. 기능은 MINOR(레전드 재료 보유 현황·카페 자동 수집·어드민 통계 탭 확장), 플랫폼 변화 없음(GeoIP 라이브러리 추가·DDL 은 기능 축). 상세 근거: `docs/features/{legendCollections,events,admin}/history.md`, `docs/decisions/0009`
+
+### Added
 - 레전드 재료 보유 현황(`/legend-collections`)을 새로 만들었다 — 로그인하면 레전드 상태(액자·보유중)와 재료 8칸(보유·삽입)을 저장하고, 선호 레전드 10명의 오늘·14일 획득 일정을 본다 (`docs/features/legendCollections/history.md` 2026-09-29)
 - 공식 카페 이벤트·쿠폰 자동 수집(매일 11:01 + 관리자 "지금 수집") · 이벤트 상세 모달(본문·출처·원문 보기) · 관리자 이벤트 "수집함" (`docs/features/events/history.md` 2026-09-30)
 ### Changed
@@ -33,6 +46,7 @@
 - 통계 탭을 개요·상위 경로·추이·방문자 구성·외부 유입 5개 카드로 재구성했다. 기간을 오늘·특정 일자(기본 어제)·기간(7일/30일 빠른 선택) 으로 고르면 모든 카드가 그 기간을 따르고, 직전 같은 길이 구간과 비교한 증감 배지·겹침 그래프를 보여준다. 상위 경로에 순방문자·재방문율(경로/제목 토글), 방문자 구성에 신규/재방문·가입 전환율, 일별·시간대별(최근 3개월) 추이를 추가했다. 접속자 국가·도시 판정을 GeoIP 조회로 바꾸고 쓰이지 않던 상품 식별자 컬럼을 정리했으며 원본 접속 기록은 3개월만 보관한다(관련 DB 반영은 사용자가 별도 실행) (`docs/features/admin/history.md` 2026-09-30)
 ### Platform
 ### Internal
+- 운영 반영이 끝난 DDL 을 `sql/v.2.0.0/applied/` 로 모았다 — legendCollections 테이블 3종, 카페 수집 `site_events` 컬럼 4개, 통계 4건(`site_user_first_seen` 신설 · `city` 추가 · `item_id` 삭제 · 원본 월별 파티션). ADR 0009 는 `accepted`
 
 ---
 
