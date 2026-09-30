@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+  재료·레전드 마스터(data_player_legend, data_player_legend_material)는 SELECT 만 한다.
+  수정·재적재 금지 — 유저 기록이 재료 id 를 열쇠로 물고 있다.
+-->
+<mapper namespace="com.dawne.com2usbaseball.domain.legendCollection.repository.mapper.LegendCollectionMapper">
+
+    <select id="findAllLegendIds" resultType="string">
+        SELECT id FROM data_player_legend
+    </select>
+
+    <select id="findAllMaterialRefs"
+            resultType="com.dawne.com2usbaseball.domain.legendCollection.entity.MaterialRefEntity">
+        SELECT id, legend_id AS legendId FROM data_player_legend_material
+    </select>
+
+    <select id="findMaterialStates"
+            resultType="com.dawne.com2usbaseball.domain.legendCollection.entity.MaterialStateEntity">
+        SELECT material_id AS materialId, state
+        FROM site_legend_material_states
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findLegendStates"
+            resultType="com.dawne.com2usbaseball.domain.legendCollection.entity.LegendStateEntity">
+        SELECT legend_id AS legendId, status
+        FROM site_legend_states
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findPreferences"
+            resultType="com.dawne.com2usbaseball.domain.legendCollection.entity.PreferenceEntity">
+        SELECT legend_id AS legendId, rank_no AS rankNo
+        FROM site_legend_preferences
+        WHERE user_id = #{userId}
+        ORDER BY rank_no
+    </select>
+
+    <select id="findLatestUpdatedAt" resultType="java.time.LocalDateTime">
+        SELECT MAX(t.updated_at)
+        FROM (SELECT updated_at FROM site_legend_material_states WHERE user_id = #{userId}
+              UNION ALL
+              SELECT updated_at FROM site_legend_states WHERE user_id = #{userId}
+              UNION ALL
+              SELECT updated_at FROM site_legend_preferences WHERE user_id = #{userId}) t
+    </select>
+
+    <delete id="deleteMaterialStatesByLegendIds">
+        DELETE FROM site_legend_material_states
+        WHERE user_id = #{userId}
+          AND material_id IN (SELECT id FROM data_player_legend_material
+                              WHERE legend_id IN
+                              <foreach collection="legendIds" item="legendId" open="(" separator="," close=")">
+                                  #{legendId}
+                              </foreach>)
+    </delete>
+
+    <delete id="deleteMaterialState">
+        DELETE FROM site_legend_material_states
+        WHERE user_id = #{userId} AND material_id = #{materialId}
+    </delete>
+
+    <insert id="upsertMaterialState">
+        INSERT INTO site_legend_material_states (user_id, material_id, state)
+        VALUES (#{userId}, #{materialId}, #{state})
+        ON DUPLICATE KEY UPDATE state = VALUES(state)
+    </insert>
+
+    <delete id="deleteLegendState">
+        DELETE FROM site_legend_states
+        WHERE user_id = #{userId} AND legend_id = #{legendId}
+    </delete>
+
+    <insert id="upsertLegendState">
+        INSERT INTO site_legend_states (user_id, legend_id, status)
+        VALUES (#{userId}, #{legendId}, #{status})
+        ON DUPLICATE KEY UPDATE status = VALUES(status)
+    </insert>
+
+    <delete id="deleteAllPreferences">
+        DELETE FROM site_legend_preferences WHERE user_id = #{userId}
+    </delete>
+
+    <insert id="insertPreference">
+        INSERT INTO site_legend_preferences (user_id, legend_id, rank_no)
+        VALUES (#{userId}, #{legendId}, #{rankNo})
+    </insert>
+
+    <!--
+      선호 레전드의 "내가 아직 안 가진" 선수 재료가 히스토리 명단 어디(일차·라운드)에서 나오는가.
+      행이 있는 재료(보유·삽입)는 제외한다. 코치 세트는 선수 이름이 없어 연결되지 않는다.
+    -->
+    <select id="findSchedule"
+            resultType="com.dawne.com2usbaseball.domain.legendCollection.entity.ScheduleItemEntity">
+        SELECT d.day_no       AS dayNo,
+               d.round_no     AS roundNo,
+               d.round_label  AS roundLabel,
+               l.id           AS legendId,
+               l.legend_name  AS legendName,
+               p.rank_no      AS rankNo,
+               COALESCE(ls.status, 'NONE') AS legendStatus,
+               m.id           AS materialId,
+               m.player_name  AS playerName,
+               m.season_year  AS seasonYear
+        FROM site_legend_preferences p
+                 JOIN data_player_legend l ON l.id = p.legend_id
+                 JOIN data_player_legend_material m
+                      ON m.legend_id = l.id AND m.material_type = 'PLAYER'
+                 JOIN data_history_roster r
+                      ON r.player_name = m.player_name AND r.season_year = m.season_year
+                 JOIN data_history_round d ON d.id = r.round_id
+                 LEFT JOIN site_legend_states ls ON ls.user_id = p.user_id AND ls.legend_id = l.id
+                 LEFT JOIN site_legend_material_states ms ON ms.user_id = p.user_id AND ms.material_id = m.id
+        WHERE p.user_id = #{userId}
+          AND ms.material_id IS NULL
+        ORDER BY d.day_no, d.round_no, p.rank_no, m.slot_no
+    </select>
+
+</mapper>
