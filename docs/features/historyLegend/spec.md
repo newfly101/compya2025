@@ -1,9 +1,9 @@
 ---
 feature: historyLegend
-version: 1.0.3
+version: 1.0.4
 status: active
 created: 2026-09-02
-updated: 2026-09-28
+updated: 2026-10-02
 ---
 
 # historyLegend

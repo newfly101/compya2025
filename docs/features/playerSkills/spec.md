@@ -1,6 +1,6 @@
 ---
-feature: playerSkills
-version: 1.0.1
+version: 1.0.2
+version: 1.0.2
 status: active
 created: 2026-09-09
 updated: 2026-10-02

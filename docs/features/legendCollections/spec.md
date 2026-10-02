@@ -1,6 +1,6 @@
 ---
 feature: legendCollections
-version: 1.0.5
+version: 1.1.0
 status: active
 created: 2026-09-29
 updated: 2026-10-02
@@ -48,6 +48,11 @@ updated: 2026-10-02
 | REQ-LCOL-18 | 내 목표 화면 | 탭 아래 **"이번 주기 일정"** 은 기본이 접힘이다. 접힘: 오늘 선호 레전드 재료가 히스토리 명단에 있으면 오늘 줄 하나만, 없으면 "오늘 획득할 수 있는 선호 레전드 재료 카드가 없습니다" 문구만 보인다. 접힘 상태는 스크롤해도 화면 상단에 붙어 있다. `전체 일정 펼치기` 를 누르면 14일 주기 전체 일정이 펼쳐지고 `접기` 로 닫는다. 일정의 각 날짜 아래 한 줄은 **레전드 이름(굵게)과 재료 카드 두 칸**이다(예: `● 최동원   김민호'92`, 구분 기호 없음). 그 아래 필터는 `전체` · `액자 보유` · `미보유` 세 개. **`전체` 는 선호 순위대로 한 줄로 나열**하고, `액자 보유`/`미보유` 를 고를 때만 그 묶음만 보인다. 선호 레전드 카드는 진행률과 남은 재료를 보여 주고, 남은 재료는 열람 화면과 같은 **2열 재료 카드**(`마`·`히` 태그 포함)로 펼친다 | 사용자 확정 2026-09-29 |
 | REQ-LCOL-19 | 히스토리 일차 계산 | 히스토리 모드는 14일 주기(1일차=월요일, `historyLegend` REQ-HL-06). 코드에 고정 기준일 **2026-09-28(월) = 1일차** 를 두고 `(오늘 - 기준일) mod 14 + 1` 로 오늘 일차를 구한다. 2주마다 돌아오는 월요일은 항상 1일차다. 날짜는 한국 시간(KST) **00:00** 에 바뀐다 | 사용자 확정 2026-09-29 |
 | REQ-LCOL-20 | 홈 오늘 안내 | 홈에 "오늘 히스토리 모드" 카드를 둔다. 대상은 선호 레전드 전체의 미보유 재료 중 오늘 일차 명단(`data_history_roster`, 선수 이름+연도로 재료와 연결)에 있는 것. 액자 있는 레전드의 재료를 먼저, 그 아래 액자 없는 레전드의 재료를 **접지 않고 모두** 보여 준다(카드가 길어져도 한눈에 보이는 것을 우선). 한 줄 = 라운드 · 카드 · 필요한 레전드. 누르면 히스토리 재료 화면(`historyLegend`)으로 간다. 해당 재료가 없거나 비로그인·선호 0명이면 카드를 숨긴다 | 사용자 확정 2026-09-29 |
+| REQ-LCOL-21 | 획득일 | 레전드마다 날짜 두 개를 둔다: 보유 획득일(보유중이 된 날) · 액자 획득일. 보유중은 둘 다, 액자는 액자 획득일만 입력·수정한다(미보유는 불가). 오늘(KST)보다 미래 날짜는 거절한다. 날짜 입력 근처에 게임 내 '도전과제 › 컬렉션 › 레전드 컬렉션' 에서 확인할 수 있다고 안내한다. 이미 보유·액자였던 기존 기록은 날짜가 비어 있다 | 사용자 확정 2026-10-02 |
+| REQ-LCOL-22 | 상태 변경일 | 편집으로 레전드 상태를 바꿔 저장할 때 변경일을 입력한다(기본 오늘, 미래 불가). 액자→보유중이면 액자 획득일은 그대로 두고 보유 획득일만 새로 넣는다 | 사용자 확정 2026-10-02 |
+| REQ-LCOL-23 | 획득일 열·정렬 | 표에 `획득일` 열을 더한다(보유중은 보유 획득일, 액자는 액자 획득일). 머리를 눌러 정렬하며 날짜가 없는 행은 방향과 상관없이 항상 뒤에 둔다 | 사용자 확정 2026-10-02 |
+| REQ-LCOL-24 | 상태 변경 로그 | 레전드 상태가 실제로 바뀔 때마다 (이용자, 레전드, 이전 상태, 새 상태, 변경일, 기록 시각)을 로그로 한 줄 덧붙인다. 덧붙임 전용이며 화면에는 아직 보여 주지 않는다 | 사용자 확정 2026-10-02 |
+| REQ-LCOL-25 | 필터 접기 | 필터 묶음은 공용 접이식 구역으로 머리를 눌러 접고 편다. 접히면 적용 중인 필터 요약과 개수가 머리에 보이고 펼침 상태는 브라우저에 기억한다 | 사용자 확정 2026-10-02 |
 
 ## 4. 데이터
 
@@ -57,10 +62,12 @@ updated: 2026-10-02
 | 재료 마스터 | `data_player_legend_material` (레전드당 8행, `uk_dplm_slot` 로 칸 고정) | 읽기만. 재료 id 가 유저 기록의 열쇠 |
 | 재료 상태 저장 🟨 | 신규 테이블 `site_legend_material_states`, 1행 = (유저, 재료 id, 상태 보유·삽입) | 유저는 `site_users.id`. 미보유는 행이 없다. 유저 삭제 시 함께 삭제(연쇄 삭제), 재료 마스터에는 연결(FK)을 걸지 않는다(조회만, 재적재 금지는 운영 규칙) |
 | 레전드 상태 저장 🟨 | 신규 테이블 `site_legend_states`, 1행 = (유저, 레전드 id, 상태 `FRAME`·`OWNED`) | 행이 없으면 미보유(`NONE` 은 행으로 저장하지 않는다). 상태는 한 컬럼(ENUM) 하나라 겹칠 수 없다 |
+| 획득일 칸 | `site_legend_states` 에 `acquired_at`(보유 획득일) · `frame_acquired_at`(액자 획득일) 두 칸 추가 | 기존 행은 비어 있다 |
+| 상태 변경 로그 | 신규 `site_legend_state_logs` (덧붙임 전용) | 상태가 실제로 바뀔 때만 1행 |
 | 선호 레전드 저장 🟨 | 신규 테이블 `site_legend_preferences`, 1행 = (유저, 레전드 id, 순위 1~10) | 유저당 최대 10행, (유저, 순위) 유일 |
 | 히스토리 명단 | `data_history_round` · `data_history_roster` | 읽기만. 재료와는 (선수 이름, 연도)로 연결 — 이미 `idx_dhro_card` 인덱스가 있다 |
 | 오늘 안내 API 🟨 | `GET /api/legend-collections/schedule` (오늘 일차 + 14일 주기 전체의 내 선호 미보유 재료 · 라운드) | 로그인 필요. 홈 카드는 오늘 일차만, 내 목표의 주기 일정은 전체를 쓴다 |
-| API 🟨 | `GET /api/legend-collections` (내 상태 전체 조회) · `PUT /api/legend-collections/changes` (재료 + 레전드 상태 + 초기화할 레전드 목록) · `PUT /api/legend-collections/preferences` (선호 순위 + 액자 토글) · `GET /api/legend-collections/schedule` | 이름 계약: FE `legendCollections` · BE 패키지 `legendCollection` · 주소 `/legend-collections` (`domain-naming.md` § 1) |
+| API 🟨 | `GET /api/legend-collections` (내 상태 전체 조회) · `PUT /api/legend-collections/changes` (재료 + 레전드 상태 + 초기화할 레전드 목록) · `PUT /api/legend-collections/preferences` (선호 순위 + 액자 토글) · `GET /api/legend-collections/schedule` · `PUT /api/legend-collections/{legendId}/acquired-at` (`frameAcquiredAt`·`acquiredAt`, 미래 날짜 거절) · GET 응답 레전드 항목에 `acquiredAt`·`frameAcquiredAt` · `changes` 의 `legends[].acquiredOn` | 이름 계약: FE `legendCollections` · BE 패키지 `legendCollection` · 주소 `/legend-collections` (`domain-naming.md` § 1) |
 
 ## 5. 하지 않는 것
 

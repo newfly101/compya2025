@@ -1,9 +1,9 @@
 ---
 feature: mileage
-version: 1.0.1
+version: 1.0.2
 status: active
 created: 2026-09-05
-updated: 2026-09-28
+updated: 2026-10-02
 ---
 
 # 마일리지
