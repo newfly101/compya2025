@@ -15,6 +15,7 @@ export const MENU_GROUPS = [
     items: [
       { icon: '🧩', label: '레전드 재료',     to: '/legend-stats',
         tag: { variant: 'hot' } },
+      { icon: '📝', label: '내 레전드 스킬 기록', to: ROUTE_PATHS.legend_collection_skills, loginRequired: true },
       { icon: '🎯', label: '히스토리 재료',   to: '/history-mode/legend' },
       { icon: '🧭', label: '마일리지 저격',   to: '/mileage',
         tag: { variant: 'catNew' } },

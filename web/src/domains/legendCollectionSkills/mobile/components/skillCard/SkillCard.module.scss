@@ -1,0 +1,88 @@
+// 카드 안은 항상 사진 위 — 글자는 인게임 톤(흰색), 두 테마 같은 값. 글자 크기는 카드 폭에 비례(320 보호용 하한 9px).
+.card {
+  container-type: inline-size;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  aspect-ratio: 2 / 3;
+  width: 100%;
+  padding: 6% 7% 5%;
+  border-radius: $radius-lg;
+  background-color: var(--color-bg-deepest);
+  background-position: center;
+  background-size: cover;
+  color: var(--color-lcsk-grade-on-strong);
+  font-size: clamp(0.5625rem, 6.4cqw, 0.75rem);
+  line-height: 1.4;
+}
+
+.title {
+  margin: 0;
+  padding: 3% 4%;
+  border-radius: $radius-sm;
+  background: var(--color-overlay);
+  font-size: 1.08em;
+  font-weight: $font-weight-semibold;
+  text-align: center;
+}
+
+.bottom {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 3%;
+}
+
+.count {
+  align-self: flex-end;
+  padding: 1% 4%;
+  border: 1px solid var(--color-text-muted);
+  border-radius: $radius-sm;
+  background: var(--color-overlay);
+  font-size: 0.92em;
+}
+
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: 3%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.skill {
+  padding: 3% 4%;
+  border: 1px solid var(--color-text-secondary);
+  border-radius: $radius-sm;
+  background: linear-gradient(180deg, var(--g-start), var(--g-end));
+  font-size: 1.08em;
+  font-weight: $font-weight-semibold;
+  text-align: center;
+  white-space: nowrap;
+
+  &[data-grade="legend"] { --g-start: var(--color-lcsk-grade-legend); --g-end: var(--color-lcsk-grade-legend-end); }
+  &[data-grade="platinum"] { --g-start: var(--color-lcsk-grade-platinum); --g-end: var(--color-lcsk-grade-platinum-end); }
+  &[data-grade="hero"] { --g-start: var(--color-lcsk-grade-hero); --g-end: var(--color-lcsk-grade-hero-end); }
+  &[data-grade="normal"] { --g-start: var(--color-lcsk-grade-normal); --g-end: var(--color-lcsk-grade-normal-end); }
+}
+
+.empty {
+  margin: 0;
+  padding: 8% 4%;
+  border-radius: $radius-sm;
+  background: var(--color-overlay);
+  font-size: 0.92em;
+  text-align: center;
+}
+
+.pos {
+  align-self: flex-end;
+  padding: 1% 4%;
+  border-radius: $radius-sm;
+  background: var(--color-overlay);
+  font-size: 0.75em;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}

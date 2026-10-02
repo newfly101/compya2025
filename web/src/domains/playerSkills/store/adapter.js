@@ -183,6 +183,8 @@ export function toScreenSkill(serverSkill) {
     // 화면 정렬(skillsUtils.js 의 idNumber)이 "b46"/"p46" 형태를 전제로 하므로
     // 서버 UUID 대신 role+sortOrder 로 같은 모양의 id 를 재구성한다.
     id: `${ROLE_TO_ID_PREFIX[playerRole]}${sortOrder}`,
+    // 서버 원본 id — 다른 도메인(legendCollectionSkills)이 스킬을 저장할 때 쓴다. 화면 id 와 별개
+    serverId: serverSkill.id,
     type: ROLE_TO_TYPE[playerRole],
     grade: GRADE_TO_LABEL[skillGrade],
     name: skillName,
