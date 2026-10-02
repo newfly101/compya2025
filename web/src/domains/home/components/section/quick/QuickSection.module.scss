@@ -1,10 +1,34 @@
 // ── HomeScreen - 퀵메뉴 ────────────────────────────────────────────────
 .quickMenu {
+  @include flex-col($space-2);
+  padding: $layout-h-pad;
+  background-color: var(--color-bg-deep);
+}
+
+.grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: $space-2;
-  padding: $layout-h-pad;
-  background-color: var(--color-bg-deep);
+}
+
+.head {
+  @include flex-between;
+}
+
+.headTitle {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+// 보이는 글자는 작아도 누르는 영역은 44 (안쪽 여백으로 확보)
+.edit {
+  @include text-caption;
+  @include tap-target;
+  @include flex-center;
+  padding: 0 $space-2;
+  margin-right: -#{$space-2};
+  color: var(--color-text-secondary);
+  @include pressable;
 }
 
 .quickItem {

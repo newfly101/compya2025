@@ -9,12 +9,14 @@ const LOGIN_URL = window.location.hostname === "localhost"
 
 export const useAuthentication = () => {
   const dispatch = useDispatch();
-  const { user, userRole } = useSelector(state => state.auth);
+  const { user, userRole, initialized } = useSelector(state => state.auth);
   const isAuthenticated = user !== null;
   const isAdmin = userRole === "ADMIN";
 
   const login = () => {
-    sessionStorage.setItem("redirectPath", window.location.pathname);
+    // 쿼리·해시까지 저장해 로그인 뒤 보던 화면(예: ?tab=mine)으로 그대로 돌아온다 (REQ-AUTH-13)
+    const { pathname, search, hash } = window.location;
+    sessionStorage.setItem("redirectPath", pathname + search + hash);
     // 로그인 이벤트는 실제로 로그인이 끝나는 AuthCallBack 에서만 기록한다 (여기서 쏘면 취소해도 집계됨)
     window.location.href = LOGIN_URL;
   };
@@ -26,5 +28,5 @@ export const useAuthentication = () => {
     window.location.replace("/");
   };
 
-  return { isAuthenticated, user, userRole, isAdmin, login, logout };
+  return { initialized, isAuthenticated, user, userRole, isAdmin, login, logout };
 };

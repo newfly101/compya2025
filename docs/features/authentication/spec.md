@@ -1,9 +1,9 @@
 ---
 feature: authentication
-version: 1.0.8
+version: 1.1.0
 status: active
 created: 2026-04-17
-updated: 2026-09-28
+updated: 2026-10-03
 ---
 
 # authentication
@@ -36,6 +36,7 @@ updated: 2026-09-28
 | REQ-AUTH-10 | 동시 가입 경합 | 같은 네이버 계정으로 동시에 처음 로그인하는 경합이 나면, 진 쪽은 409로 안내하고 다시 로그인하면 정상 처리된다(고아 회원 없음) | `UserServiceImpl.java:56,66-75`(`createUserWithOAuthAccount` `DuplicateKeyException` 처리) |
 | REQ-AUTH-11 | 네이버 오류 흡수 | 네이버 사용자정보 조회가 실패(HTTP 200 + 빈 값 포함)하면 502로 통일해 안내한다 | `NaverOAuthService.java:89,93-95` `parseUserInfo()` |
 | REQ-AUTH-12 | 라우트 보호 | `AuthGuard`가 라우트 단위로 막는다. 비로그인 접근은 현재 경로를 `sessionStorage.redirectPath`에 저장하고 `/`로 리다이렉트(로그인 후 콜백에서 이 경로로 복귀). 로그인했지만 역할이 `allow` 목록에 없으면(예: USER가 `/admin` 진입) 동일하게 `/`로 리다이렉트한다 | `AuthGuard.jsx:11-20` |
+| REQ-AUTH-13 | 로그인 안내 모달 | 로그인이 필요한 기능을 비로그인이 눌렀을 때(서랍 메뉴·홈 바로가기·화면 안 `선호`·`관리` 버튼·안내 화면의 시작 버튼) 띄우는 안내 모달은 **공용 부품 하나**(`global/ui/loginRequiredModal`, 훅 `useLoginRequiredModal`)다. 문구: 제목 "로그인이 필요해요" · 보조 "로그인하면 지금 보던 화면으로 돌아와요." · 버튼 "닫기" / "로그인". 본문은 진입 지점의 사유 키(`holdings` · `skills` · `edit`)마다 다르다 — 내 재료 보유 현황: "내 재료 보유 현황은 로그인하면 쓸 수 있어요. 보유·액자·획득일이 내 계정에 저장돼요." / 내 레전드 스킬 기록: "내 레전드 스킬 기록은 로그인하면 쓸 수 있어요. 등록한 스킬과 강화 기록이 내 계정에 저장돼요." / 편집: "로그인하면 편집할 수 있어요. 보유·삽입 기록은 로그인한 계정에 저장돼요." / 사유 없음: "로그인한 회원만 쓸 수 있는 메뉴예요. 로그인하고 이용해 보세요." 처리 방식 구분: 메뉴·버튼에서 누름 = 이 모달 / 주소로 직접 들어온 비로그인 화면(`/legend-collection-skills`·`…/:id/edit`·`/legend-collections/manage`) = 화면 안 안내 + 시작 버튼(누르면 이 모달) / 라우트 가드(REQ-AUTH-12) = 역할 제한 화면(관리자·`/home/shortcuts`·`/mypage`)에만. 로그인 버튼을 누르면 **로그인 뒤 원래 보던 화면으로 돌아온다** — 로그인 시작 때 `pathname + search + hash` 를 `sessionStorage.redirectPath` 에 저장하고 콜백이 읽어 이동한다(`/` 로 시작하지 않거나 `//` 로 시작하면 `/`) | `loginReasons.js`, `useAuthentication.js:18-19`, `AuthCallBack.jsx:35-38`, `0010` |
 
 ## 4. 데이터
 

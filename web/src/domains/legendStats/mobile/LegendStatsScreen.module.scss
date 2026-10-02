@@ -15,75 +15,14 @@
   position: sticky;
   top: 0;
   z-index: $z-sticky;
-  padding-bottom: 8px;
+  padding: $space-3 $layout-h-pad 8px;
   background: linear-gradient(var(--color-bg-deepest) 82%, transparent);
-}
-
-.searchRow {
-  position: relative;
-  padding: 4px 16px 2px;
-
-  input {
-    width: 100%;
-    padding: 10px 34px;
-    border: 1px solid var(--color-border-strong);
-    border-radius: 10px;
-    background: var(--color-bg-card);
-    color: var(--color-text-primary);
-    font-family: inherit;
-    font-size: $font-size-13;
-
-    &::placeholder {
-      color: var(--color-text-muted);
-    }
-  }
-
-  // 브라우저 기본 clear(×)를 죽인다. 커스텀 버튼과 겹쳐 두 개로 보인다
-  input[type="search"] {
-    appearance: none;
-
-    &::-webkit-search-cancel-button,
-    &::-webkit-search-decoration,
-    &::-webkit-search-results-button {
-      display: none;
-      appearance: none;
-    }
-
-    &::-ms-clear {
-      display: none;
-      width: 0;
-      height: 0;
-    }
-  }
-}
-
-// 폰트 문자(⌕)는 서체마다 크기가 달라 SVG 로 그린다
-.searchIcon {
-  position: absolute;
-  left: 26px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--color-text-muted);
-  pointer-events: none;
-}
-
-.clearButton {
-  position: absolute;
-  right: 26px;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 2px 6px;
-  border: 0;
-  background: none;
-  color: var(--color-text-muted);
-  font-size: $font-size-17;
-  cursor: pointer;
 }
 
 .chipRow {
   display: flex;
   gap: $space-2;
-  padding: 6px 16px;
+  padding: 6px 0;
   overflow-x: auto;
   scrollbar-width: none;
 
@@ -130,7 +69,7 @@
 .segment {
   display: flex;
   gap: 8px;
-  padding: 2px 16px 0;
+  padding: 2px 0 0;
 
   button {
     flex: 1;
@@ -156,7 +95,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 16px 6px;
+  padding: 10px 0 6px;
   color: var(--color-text-muted);
   font-size: $font-size-12;
 
@@ -647,18 +586,3 @@ td.cStat {
   }
 }
 
-// 재료 보유 현황(legendCollections) 진입 링크
-.collectionLink {
-  display: flex;
-  align-items: center;
-  min-height: 44px;
-  margin: 0 16px;
-  color: var(--color-ls-chip-on-text);
-  font-size: $font-size-12;
-  text-decoration: none;
-
-  &:focus-visible {
-    outline: 2px solid var(--color-brand);
-    outline-offset: 2px;
-  }
-}

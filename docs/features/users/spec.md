@@ -1,9 +1,9 @@
 ---
 feature: users
-version: 1.0.1
+version: 1.1.0
 status: active
 created: 2026-05-31
-updated: 2026-09-28
+updated: 2026-10-03
 ---
 
 # users
@@ -31,6 +31,7 @@ updated: 2026-09-28
 | REQ-USR-06 | 전량 조회 | 회원 목록 조회는 검색·정렬·페이지 이동을 화면(클라이언트) 쪽에서 처리하는 구조라, 요청 시점에 전량(최대 1000명)을 받아온다 | `users/store/admin/thunks.js`(`LIST_ALL_PARAMS = { page: 0, size: 1000 }`) |
 | REQ-USR-07 | 자기 자신 보호 | 관리자는 자기 자신의 권한·상태를 스스로 변경할 수 없다 | `AdminUserServiceImpl.java:90-92` |
 | REQ-USR-08 | 페이지네이션 UI | 회원 수가 7페이지를 넘으면 번호 버튼을 현재±1·처음·끝만 남기고 "…"로 축약한다 | `AdminPagination.jsx:5-12`(`buildPageWindow`) |
+| REQ-USR-09 | 내 선호 레전드 링크 | 마이페이지에 "내 선호 레전드" 링크를 둔다. 누르면 `/legend-collections?tab=mine`(내 재료 보유 현황, `선호` 칩이 켜진 채 열림, `legendCollections` REQ-LCOL-17·18)으로 이동한다. 선호 레전드가 0명이면 "선호 레전드가 없어요 … `선호` 버튼에서 골라 주세요" 빈 안내가 보인다. 마이페이지에 별도 선호 화면은 만들지 않는다 | `MyPageScreen.jsx` `.goalLink`, `0010` |
 
 ## 4. 데이터
 

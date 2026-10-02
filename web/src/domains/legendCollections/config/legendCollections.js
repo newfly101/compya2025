@@ -1,7 +1,7 @@
 // legendCollections 순수 함수 · 상수. 서버 통신 없음.
 // 상태 값은 서버와 같다: 재료 NONE/HAVE/INSERTED, 레전드 NONE/FRAME/OWNED.
 
-import { getTodayKst } from "@/global/utils/datetime/dateUtils.js";
+import { getTodayKst } from "../../../global/utils/datetime/dateUtils.js";
 
 export const MATERIAL = { NONE: "NONE", HAVE: "HAVE", INSERTED: "INSERTED" };
 export const LEGEND = { NONE: "NONE", FRAME: "FRAME", OWNED: "OWNED" };
@@ -10,7 +10,8 @@ export const MAX_PREFERENCES = 10;
 export const SLOT_COUNT = 8;
 
 export const FRAME_FILTERS = ["전체", "액자 O", "액자 X"];
-export const GOAL_FILTERS = ["전체", "액자 보유", "미보유"];
+/** 액자 칩 줄의 4번째 칩(로그인 시만) — 선호 레전드만 순위대로 */
+export const PREF_FILTER = "내 선호";
 
 // 히스토리 모드 14일 주기 — 기준일 2026-09-28(월) = 1일차 (REQ-LCOL-19)
 const BASE_UTC_DAY = Date.UTC(2026, 8, 28) / 86400000;
@@ -220,12 +221,6 @@ export const matchFrameFilter = (status, filter) => {
   return true;
 };
 
-export const matchGoalFilter = (status, filter) => {
-  if (filter === "액자 보유") return status === LEGEND.FRAME;
-  if (filter === "미보유") return status === LEGEND.NONE;
-  return true;
-};
-
 /** 기본 정렬: 보유중이 아닌 레전드 중 보유 칸이 많은 순, 보유중은 뒤 */
 export const sortByProgress = (legends, countOf, statusOf) =>
   [...legends].sort((a, b) => {
@@ -235,9 +230,9 @@ export const sortByProgress = (legends, countOf, statusOf) =>
     return countOf(b) - countOf(a) || a.name.localeCompare(b.name, "ko");
   });
 
-/* ── 표 머리 정렬 — 레전드 · 상태 · 보유 (# 는 정렬 없음) ───────────── */
+/* ── 표 머리 정렬 — 레전드 · 상태 · 선호 · 획득일 · 보유 (# 는 정렬 없음) ───────────── */
 
-export const SORT = { OWNED: "owned", NAME: "name", STATUS: "status", DATE: "date" };
+export const SORT = { OWNED: "owned", NAME: "name", STATUS: "status", DATE: "date", PREF: "pref" };
 
 /** 획득일 비교 — 날짜 없음(null)은 방향과 무관하게 항상 뒤, 같으면 0(안정 정렬이 기존 순서 유지). dir 1 오름 · -1 내림 */
 export const compareDates = (a, b, dir) => {
@@ -245,36 +240,53 @@ export const compareDates = (a, b, dir) => {
   return a === b ? 0 : dir * (a < b ? -1 : 1);
 };
 
-/** 상태 정렬이 도는 순서 — 클릭마다 다음 칸: 미보유 먼저 → 액자 먼저 → 보유중 먼저 → 다시 처음 */
-export const STATUS_ORDER = [
-  { first: LEGEND.NONE, label: "미보유" },
-  { first: LEGEND.FRAME, label: "액자" },
-  { first: LEGEND.OWNED, label: "보유중" },
-];
+/** 상태 정렬은 3단계 순환 — 머리를 누를 때마다 미보유 먼저 → 액자 먼저 → 보유중 먼저 → … (원형 회전). sort.first = 맨 앞에 오는 상태 */
+const STATUS_CYCLE = [LEGEND.NONE, LEGEND.FRAME, LEGEND.OWNED];
+const STATUS_FIRST_TEXT = { [LEGEND.NONE]: "미보유 먼저", [LEGEND.FRAME]: "액자 먼저", [LEGEND.OWNED]: "보유중 먼저" };
 
 /** 기본값 = 기존 기본 정렬 (모은 칸 많은 순). dir: 1 오름차순 · -1 내림차순 */
-export const DEFAULT_SORT = { key: SORT.OWNED, dir: -1, mode: 0 };
+export const DEFAULT_SORT = { key: SORT.OWNED, dir: -1 };
+/** 선호 레전드만 볼 때(내 목표 칩) 기본 — 선호 순위 */
+export const PREF_SORT = { key: SORT.PREF, dir: 1 };
 
-/** 머리를 눌렀을 때의 다음 정렬. 같은 머리를 다시 누르면 방향(상태는 순서 칸)을 돌린다 */
+/** 머리를 눌렀을 때의 다음 정렬. 같은 머리를 다시 누르면 방향을 돌린다. 처음 누르는 방향: 이름·선호 오름, 나머지 내림 */
 export const nextSort = (cur, key) => {
   if (key === SORT.STATUS) {
-    return { key, dir: 1, mode: cur?.key === key ? (cur.mode + 1) % STATUS_ORDER.length : 0 };
+    const i = cur?.key === key ? STATUS_CYCLE.indexOf(cur.first) + 1 : 0;
+    return { key, dir: -1, first: STATUS_CYCLE[i % 3] }; // dir -1 = 머리 표시(▼) 고정용
   }
   if (cur?.key === key) return { ...cur, dir: -cur.dir };
-  return { key, dir: key === SORT.NAME ? 1 : -1, mode: 0 };
+  return { key, dir: key === SORT.NAME || key === SORT.PREF ? 1 : -1 };
 };
 
-/** 머리 글자 옆 표시 — 이름·보유만 ▲▼. 상태 머리는 방향 표시 없이 굵기·색만 바뀐다 */
+/** 머리 글자 옆 표시 — 정렬 중인 머리만 ▲▼ */
 export const sortMark = (sort, key) => {
-  if (!sort || sort.key !== key || key === SORT.STATUS) return "";
+  if (!sort || sort.key !== key) return "";
   return sort.dir < 0 ? "▼" : "▲";
 };
 
+const SORT_TEXT = {
+  [SORT.OWNED]: ["보유 적은 순", "보유 많은 순"],
+  [SORT.NAME]: ["이름 오름차순", "이름 내림차순"],
+  [SORT.DATE]: ["획득일 오래된 순", "획득일 최신순"],
+  [SORT.PREF]: ["선호 순위순", "선호 낮은 순"],
+};
+
+/** 표 위 요약 줄 오른쪽에 쓰는 현재 정렬 기준 글자 — dir 1 오름 · -1 내림 */
+export const sortText = (sort) => {
+  if (!sort) return "";
+  if (sort.key === SORT.STATUS) return STATUS_FIRST_TEXT[sort.first];
+  return SORT_TEXT[sort.key][sort.dir < 0 ? 1 : 0];
+};
+
+/** 선호 열 글자 — rank 1~10 → "선호1", 없으면 "-" */
+export const prefLabel = (rank) => (rank > 0 ? `선호${rank}` : "-");
+
 /**
  * 표 머리 정렬. 보유중 레전드는 재료가 0/8 이라 "보유" 정렬에서는 어느 방향이든 뒤로 보낸다.
- * 같은 값끼리는 기본 정렬(보유 많은 순 → 이름) 을 따른다.
+ * 같은 값끼리는 기본 정렬(보유 많은 순 → 이름) 을 따른다. prefOf(l) = 선호 순위(1~) 또는 0 — 선호 없는 행은 항상 뒤.
  */
-export const sortLegends = (legends, sort, countOf, statusOf, dateOf) => {
+export const sortLegends = (legends, sort, countOf, statusOf, dateOf, prefOf = () => 0) => {
   const byProgress = (a, b) => {
     const ao = statusOf(a) === LEGEND.OWNED ? 1 : 0;
     const bo = statusOf(b) === LEGEND.OWNED ? 1 : 0;
@@ -284,9 +296,16 @@ export const sortLegends = (legends, sort, countOf, statusOf, dateOf) => {
   return [...legends].sort((a, b) => {
     if (sort.key === SORT.NAME) return sort.dir * byName(a, b);
     if (sort.key === SORT.DATE) return compareDates(dateOf(a), dateOf(b), sort.dir);
+    if (sort.key === SORT.PREF) {
+      const pa = prefOf(a);
+      const pb = prefOf(b);
+      if (!pa || !pb) return !pa && !pb ? byProgress(a, b) : !pa ? 1 : -1;
+      return sort.dir * (pa - pb);
+    }
     if (sort.key === SORT.STATUS) {
-      const order = [STATUS_ORDER[sort.mode].first, ...STATUS_ORDER.map((o) => o.first).filter((f) => f !== STATUS_ORDER[sort.mode].first)];
-      return order.indexOf(statusOf(a)) - order.indexOf(statusOf(b)) || byProgress(a, b);
+      // first 부터 원형으로 센 순번 비교 — 같은 상태는 0(안정 정렬이 기존 순서 유지)
+      const at = (l) => (STATUS_CYCLE.indexOf(statusOf(l)) - STATUS_CYCLE.indexOf(sort.first) + 3) % 3;
+      return at(a) - at(b);
     }
     if (sort.dir < 0) return byProgress(a, b);
     const ao = statusOf(a) === LEGEND.OWNED ? 1 : 0;

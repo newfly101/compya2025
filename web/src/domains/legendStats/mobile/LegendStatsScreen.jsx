@@ -24,7 +24,7 @@ import { useLegendStats } from "./hooks/useLegendStats";
 import { useHistoryBadge } from "./hooks/useHistoryBadge";
 import { useMileageBadge } from "./hooks/useMileageBadge";
 import { useSearchTracking } from "@/infra/analytics/hooks/useSearchTracking.js";
-import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
+import LegendTabs from "@/global/ui/mobile/legendTabs/LegendTabs.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
 import { AD_SLOTS, ADS_ENABLED } from "@/infra/ads/adConfig.js";
@@ -280,50 +280,12 @@ const LegendStatsScreen = () => {
 
   return (
     <div className={styles.screen}>
-      <GuideAccordion guide={GUIDES_BY_SLUG["legend-stats-guide"]} />
-
-      <Link to={`${ROUTE_PATHS.legend_collections}?tab=all`} className={styles.collectionLink}>
-        내 재료 보유 현황 관리하기 →
-      </Link>
+      <LegendTabs guide={GUIDES_BY_SLUG["legend-stats-guide"]} />
 
       <div className={styles.filters}>
-        <div className={styles.searchRow}>
-<svg
-            className={styles.searchIcon}
-            viewBox="0 0 16 16"
-            width="15"
-            height="15"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.7"
-            aria-hidden="true"
-          >
-            <circle cx="7" cy="7" r="4.6" />
-            <path d="M10.6 10.6 L14 14" strokeLinecap="round" />
-          </svg>
-          <input
-            type="search"
-            value={query}
-            placeholder="레전드 이름 검색"
-            autoComplete="off"
-            onChange={(e) => changeQuery(e.target.value)}
-          />
-          {query && (
-            <button
-              type="button"
-              className={styles.clearButton}
-              aria-label="검색어 지우기"
-              onClick={() => changeQuery("")}
-            >
-              ×
-            </button>
-          )}
-        </div>
-
         <FilterSection
-          storageKey="legendStats.filterOpen"
-          count={[team, type, pos].filter((v) => v !== ALL).length}
-          summary={[team, type, pos].filter((v) => v !== ALL).join(" · ")}
+          collapsible={false}
+          search={{ value: query, onChange: changeQuery }}
         >
         <div className={styles.chipRow}>
           {teams.map((t) => (

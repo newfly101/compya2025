@@ -1,0 +1,77 @@
+// 홈 내 컬렉션 카드 (Figma legendContentFlow 03 · 04)
+
+// 네이버 브랜드 그린 — 로그인 버튼 전용, 두 테마 공용 고정값 (토큰 미적용. Drawer·LoginRequiredModal 과 동일)
+$color-naver-background: #03c75a;
+.card {
+  @include flex-col($space-3);
+  @include card-base($pad: $space-4);
+  margin: $space-3 $layout-h-pad;
+}
+
+.eyebrow {
+  @include text-caption;
+  color: var(--color-brand);
+}
+
+.title {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+  margin: 0;
+  word-break: keep-all;
+}
+
+.text {
+  @include text-caption;
+  color: var(--color-text-secondary);
+  margin: 0;
+  word-break: keep-all;
+}
+
+.login {
+  @include reset-button;
+  @include text-body-bold;
+  min-height: $control-height-md;
+  border-radius: $radius-lg;
+  background-color: $color-naver-background;
+  color: $color-white-100;
+  @include pressable;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-2;
+}
+
+.stat {
+  @include flex-col-center;
+  gap: $space-1;
+}
+
+.num {
+  @include text-page-title;
+  color: var(--color-text-primary);
+}
+
+.label {
+  @include text-caption;
+  color: var(--color-text-secondary);
+}
+
+.links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-2;
+}
+
+.link {
+  @include flex-center;
+  @include text-caption;
+  min-height: $control-height-md;
+  padding: 0 $space-2;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  color: var(--color-text-primary);
+  text-align: center;
+  @include pressable;
+}

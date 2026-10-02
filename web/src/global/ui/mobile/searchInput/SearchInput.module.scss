@@ -1,0 +1,58 @@
+// 공용 검색 입력 — FilterSection 과 선호 모달이 같이 쓴다
+.search {
+  position: relative;
+
+  svg {
+    position: absolute;
+    top: 50%;
+    left: $space-4;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  input {
+    width: 100%;
+    min-height: $control-height-md;
+    padding: 0 $space-8 0 $space-8;
+    border: 1px solid var(--color-border-strong);
+    border-radius: $radius-lg;
+    background: var(--color-bg-card);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: $font-size-13;
+    appearance: none;
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    // 브라우저 기본 clear(×)는 커스텀 버튼과 겹쳐 두 개로 보인다
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-decoration,
+    &::-webkit-search-results-button {
+      display: none;
+      appearance: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brand);
+      outline-offset: 2px;
+    }
+  }
+
+  button {
+    position: absolute;
+    top: 50%;
+    right: $space-1;
+    transform: translateY(-50%);
+    min-width: $control-height-md;
+    min-height: $control-height-md;
+    border: 0;
+    background: none;
+    color: var(--color-text-muted);
+    font-size: $font-size-17;
+    cursor: pointer;
+  }
+}
+

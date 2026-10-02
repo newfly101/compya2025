@@ -251,40 +251,7 @@
   }
 }
 
-.search {
-  display: flex;
-  align-items: center;
-  gap: $space-3;
-  padding: 0 $space-4;
-  border: 1px solid var(--color-border);
-  border-radius: $radius-lg;
-  background: var(--color-lc-card-bg);
-  color: var(--color-text-secondary);
-  font-size: $font-size-12;
-
-  input {
-    flex: 1 1 0;
-    min-width: 0;
-    min-height: $control-height-md;
-    border: 0;
-    background: transparent;
-    color: var(--color-text-primary);
-    font-family: inherit;
-    font-size: $font-size-12;
-    outline: none;
-
-    &::placeholder {
-      color: var(--color-text-muted);
-    }
-  }
-
-  &:focus-within {
-    outline: 2px solid var(--color-brand);
-    outline-offset: 2px;
-  }
-}
-
-// 후보 목록 — 폭은 검색창(.search)과 같은 좌우 범위 안에 둔다.
+// 후보 목록 — 폭은 모달 안쪽 좌우 범위 안에 둔다.
 // 줄은 grid 로 잡아 이름·구단·포지션이 길어도 가운데 칸(구단·포지션)만 말줄임되고 줄 자체는 넘치지 않는다.
 .candidates {
   box-sizing: border-box;

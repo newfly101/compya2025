@@ -6,7 +6,7 @@
 .row {
   display: flex;
   align-items: center;
-  gap: $space-3;
+  gap: $space-1;
   width: 100%;
   padding-right: $layout-h-pad;
   padding-left: $layout-h-pad;
@@ -73,36 +73,34 @@
 
 .cName {
   display: flex;
-  flex: 1 1 0;
+  flex: 1.6 1 0; // 나머지 4열(1:1)보다 넓게 — 360 에서 약 82px
   align-items: center;
   gap: $space-2;
   min-width: 0;
 }
 
-.cStatus {
+// # 만 고정 폭, 나머지 4열은 1:1 균등. 레전드만 왼쪽, 선호·상태·획득일·보유는 머리·셀 모두 가운데
+.cStatus,
+.cPref,
+.cDate,
+.cOwned {
   display: flex;
-  flex: 0 0 rem(52);
-  gap: $space-1;
-}
-
-// 획득일 — 현재 상태 기준 날짜 하나 "26.10.02". 480 에서 이름 칸이 줄지 않게 좁게
-.cDate {
-  flex: 0 0 rem(48);
-  color: var(--color-text-secondary);
-  font-size: $font-size-11;
-  line-height: 1.5;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  text-align: center;
   white-space: nowrap;
 }
 
+.cPref,
+.cDate {
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  line-height: 1.5;
+}
+
 .cOwned {
-  flex: 0 0 rem(48);
-  text-align: right;
-
-  .head & {
-    display: flex;
-    justify-content: flex-end;
-  }
-
   .row & {
     color: var(--color-brand);
     font-size: $font-size-13;

@@ -19,11 +19,25 @@ $color-naver-font: $color-white-100;
   animation: fadeUp 0.18s ease-out;
 }
 
-.message {
-  @include font-size-rem(15, 1.5);
+.title {
+  @include font-size-rem(17, 1.5);
+  font-weight: $font-weight-bold;
   color: var(--color-text-primary);
-  margin: 0 0 $space-5;
+  margin: 0 0 $space-3;
+}
+
+.message {
+  @include font-size-rem(13, 1.5);
+  color: var(--color-text-primary);
+  margin: 0 0 $space-2;
   white-space: pre-line;
+  word-break: keep-all;
+}
+
+.sub {
+  @include font-size-rem(12, 1.5);
+  color: var(--color-text-muted);
+  margin: 0 0 $space-5;
 }
 
 .actions {

@@ -31,7 +31,9 @@ const AuthCallback = () => {
         setUserProperties(data.userRole);
         trackLogin(data.userRole);
         // 리다이렉트는 성공했을 때만 한다 — finally 에 두면 실패도 게스트 상태로 조용히 넘어간다.
-        const redirectPath = sessionStorage.getItem("redirectPath") ?? "/";
+        // 같은 사이트 안 경로만 허용한다 ("//evil.com" 같은 열린 리다이렉트 차단)
+        const saved = sessionStorage.getItem("redirectPath");
+        const redirectPath = saved && saved.startsWith("/") && !saved.startsWith("//") ? saved : "/";
         sessionStorage.removeItem("redirectPath");
         window.location.replace(redirectPath);
       })

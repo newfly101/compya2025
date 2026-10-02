@@ -18,6 +18,11 @@ import EventListHorizontal from "@/domains/events/mobile/containers/public/Event
 import { useHomeSections } from "@/domains/home/hooks/useHomeSections.js";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
+import MyCollectionSection from "@/domains/home/components/section/myCollection/MyCollectionSection.jsx";
+import TodayHistoryCard from "@/domains/legendCollections/mobile/containers/public/TodayHistoryCard.jsx";
+import ScheduleCardSection from "@/domains/legendCollections/mobile/containers/public/ScheduleCardSection.jsx";
+import { useMyCollectionSummary } from "@/domains/legendCollections/mobile/hooks/useMyCollectionSummary.js";
+import { useMySkillSummary } from "@/domains/legendCollectionSkills/mobile/hooks/useMySkillSummary.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
 import { AD_SLOTS } from "@/infra/ads/adConfig.js";
 
@@ -45,6 +50,10 @@ const HomeScreen = () => {
     couponError, eventError, noticeError, quizError,
   } = useHomeSections();
 
+  // 내 컬렉션·오늘 히스토리 카드가 나눠 쓰는 요약 — 로그인했을 때만 요청한다 (비로그인은 요청 0)
+  const collection = useMyCollectionSummary();
+  const skills = useMySkillSummary();
+
   // 재방문마다 스켈레톤이 깜빡이지 않게 "한 번도 못 받은 상태" 만 로딩으로 본다.
   const firstLoading = loading && !loaded;
 
@@ -56,6 +65,19 @@ const HomeScreen = () => {
 
       <HeroSection />
       <QuickSection />
+
+      {/* ── 공지사항 ── */}
+      <SectionBlock
+        title={`공지사항`}
+        to={"/notices"}
+        children={<NoticeSection notices={notices} loading={firstLoading} error={noticeError} retry={retry} />}
+      />
+
+      {/* ── 오늘 히스토리(선호 레전드) → 내 컬렉션 (REQ-HM-11~13) — 요청 실패·해당 없음이면 각자 숨는다 ── */}
+      <TodayHistoryCard summary={collection} />
+      <ScheduleCardSection summary={collection} />
+      <MyCollectionSection collection={collection} skills={skills} />
+
       <SupportSection />
 
       {/* ── 퀴즈 ── */}
@@ -82,13 +104,6 @@ const HomeScreen = () => {
 
       {/* ── 광고 슬롯 (쿠폰 섹션과 공지 섹션 사이) — 쿠폰이 1건 이상 렌더된 경우에만 ── */}
       {activeCoupons.length > 0 && <AdSlot slot={AD_SLOTS.HOME} />}
-
-      {/* ── 공지사항 ── */}
-      <SectionBlock
-        title={`공지사항`}
-        to={"/notices"}
-        children={<NoticeSection notices={notices} loading={firstLoading} error={noticeError} retry={retry} />}
-      />
 
       {/* ── 진행 중인 이벤트 ── */}
       <SectionBlock

@@ -15,135 +15,37 @@
   padding: $space-4 $layout-h-pad $space-3;
 }
 
-.intro {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: $space-2;
-}
-
-.introText {
-  display: flex;
-  flex-direction: column;
-  gap: $space-1;
-  min-width: 0;
-}
-
-.back {
-  align-self: flex-start;
-  color: var(--color-text-secondary);
-  font-size: $font-size-11;
-  line-height: 1.5;
-  text-decoration: none;
+// 검색 줄 오른쪽 버튼(선호 · 관리) — compact, 360px 에서도 한 줄
+.action {
+  flex: 0 0 auto;
+  min-height: $control-height-md;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: $font-size-12;
+  font-weight: $font-weight-semibold;
+  white-space: nowrap;
+  cursor: pointer;
 
   &:focus-visible {
     outline: 2px solid var(--color-brand);
     outline-offset: 2px;
   }
-}
-
-.title {
-  margin: 0;
-  font-size: $font-size-15;
-  font-weight: $font-weight-semibold;
-  line-height: 1.5;
-  white-space: nowrap;
-}
-
-.introActions {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: $space-2;
-}
-
-.dirty {
-  padding: $space-1 $space-2;
-  border-radius: $radius-sm;
-  background: var(--color-brand-alpha-15);
-  color: var(--color-brand);
-  font-size: $font-size-9;
-  font-weight: $font-weight-semibold;
-  letter-spacing: 0.04em;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.primary,
-.ghost {
-  min-height: $control-height-md;
-  padding: $space-2 $space-3;
-  border: 1px solid transparent;
-  border-radius: $radius-md;
-  font-family: inherit;
-  font-size: $font-size-13;
-  font-weight: $font-weight-semibold;
-  line-height: 1.5;
-  white-space: nowrap;
-  cursor: pointer;
 
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
-
-  &:focus-visible {
-    outline: 2px solid var(--color-brand);
-    outline-offset: 2px;
-  }
 }
 
-.primary {
-  padding: $space-2 $space-4;
+// 관리 화면의 저장 버튼
+.actionPrimary {
+  border-color: transparent;
   background: var(--color-brand);
   color: var(--color-bg-card);
-}
-
-.ghost {
-  border-color: var(--color-border);
-  background: var(--color-bg-card);
-  color: var(--color-text-primary);
-}
-
-.tempNote {
-  margin: (-$space-1) 0 0;
-  color: var(--color-text-muted);
-  font-size: $font-size-10;
-  line-height: 1.5;
-}
-
-// 내 목표 · 전체 — Figma 04 Tabs (세그먼트형)
-.tabs {
-  display: flex;
-  gap: $space-1;
-  padding: $space-1;
-  border-radius: $radius-lg;
-  background: var(--color-lc-open-bg);
-
-  button {
-    flex: 1 1 0;
-    min-height: $control-height-md;
-    padding: $space-2 0;
-    border: 0;
-    border-radius: $radius-md;
-    background: transparent;
-    color: var(--color-text-secondary);
-    font-family: inherit;
-    font-size: $font-size-13;
-    font-weight: $font-weight-semibold;
-    line-height: 1.5;
-    cursor: pointer;
-
-    &[aria-selected="true"] {
-      background: var(--color-lc-chip-on-bg);
-      color: var(--color-lc-chip-on-text);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--color-brand);
-      outline-offset: -2px;
-    }
-  }
 }
 
 .skeleton {

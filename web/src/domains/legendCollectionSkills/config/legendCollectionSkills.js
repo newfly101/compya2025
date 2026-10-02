@@ -93,6 +93,49 @@ export const sortByOwned = (rows) =>
   [...rows].sort((a, b) => (b.item.status === "OWNED") - (a.item.status === "OWNED"));
 export const isEditLocked =(usage, bulkMode) => usageTotal(usage) > 0 || !!bulkMode;
 
+// ── 목록 머리 정렬 (보유 현황 LegendTable 과 같은 방식: 머리 클릭, 같은 머리 다시 클릭하면 방향 반전) ──
+export const SKSORT = { NAME: "name", ENH: "enh", STATUS: "status", REG: "reg" };
+/** 기본 = 상태 · 보유중 먼저 (기존 sortByOwned 와 같은 결과) */
+export const DEFAULT_SKSORT = { key: SKSORT.STATUS, dir: -1 };
+
+/** 머리를 눌렀을 때 다음 정렬. 처음 누르는 방향: 이름 오름, 나머지 내림(강화 높은 순 · 보유중/등록 먼저) */
+export const nextSkillSort = (cur, key) =>
+  cur?.key === key ? { key, dir: -cur.dir } : { key, dir: key === SKSORT.NAME ? 1 : -1 };
+
+/** 머리 글자 옆 표시 — 정렬 중인 머리만 ▲▼ */
+export const skillSortMark = (sort, key) => (sort?.key !== key ? "" : sort.dir < 0 ? "▼" : "▲");
+
+const SKSORT_TEXT = {
+  [SKSORT.NAME]: ["이름 오름차순", "이름 내림차순"],
+  [SKSORT.ENH]: ["강화 낮은 순", "강화 높은 순"],
+  [SKSORT.STATUS]: ["상태 · 액자 먼저", "상태 · 보유중 먼저"],
+  [SKSORT.REG]: ["등록여부 · 미등록 먼저", "등록여부 · 등록 먼저"],
+};
+/** 요약 줄 오른쪽 현재 정렬 기준 글자 */
+export const skillSortText = (sort) => (sort ? SKSORT_TEXT[sort.key][sort.dir < 0 ? 1 : 0] : "");
+
+// 강화 점수 = 3슬롯 현재 등급(E=0 … S=5) 합. 미등록은 null
+const enhanceScore = (r) => (isRegistered(r.item.slots) ? r.item.slots.reduce((sum, s) => sum + idx(s.currentGrade), 0) : null);
+
+/** 정렬 — 같은 값은 입력 순서 유지(안정). 강화는 미등록이 방향과 무관하게 항상 뒤. rows: [{ legend, item }] */
+export const sortSkillRows = (rows, sort) => {
+  const dir = sort.dir;
+  const flag = {
+    [SKSORT.STATUS]: (r) => (r.item.status === "OWNED" ? 1 : 0),
+    [SKSORT.REG]: (r) => (isRegistered(r.item.slots) ? 1 : 0),
+  }[sort.key];
+  return [...rows].sort((a, b) => {
+    if (sort.key === SKSORT.NAME) return dir * a.legend.name.localeCompare(b.legend.name, "ko");
+    if (sort.key === SKSORT.ENH) {
+      const x = enhanceScore(a);
+      const y = enhanceScore(b);
+      if (x === null || y === null) return x === y ? 0 : x === null ? 1 : -1;
+      return dir * (x - y);
+    }
+    return dir * (flag(a) - flag(b));
+  });
+};
+
 /** 등록 = 3칸 모두 스킬·태생 등급이 있다. 서버가 미등록에 칸마다 필드 null 객체를 줘도 미등록이다 */
 export const isRegistered = (slots) =>
   Array.isArray(slots) && slots.length === SLOT_COUNT && slots.every((s) => s?.skillId != null && s?.baseGrade != null);
