@@ -4,6 +4,7 @@ import com.dawne.com2usbaseball.domain.legendCollection.entity.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -36,7 +37,16 @@ public interface LegendCollectionMapper {
     int deleteLegendState(@Param("userId") Long userId, @Param("legendId") String legendId);
 
     int upsertLegendState(@Param("userId") Long userId, @Param("legendId") String legendId,
-                          @Param("status") String status);
+                          @Param("status") String status, @Param("acquiredAt") LocalDate acquiredAt,
+                          @Param("frameAcquiredAt") LocalDate frameAcquiredAt);
+
+    int updateAcquiredDates(@Param("userId") Long userId, @Param("legendId") String legendId,
+                            @Param("setFrame") boolean setFrame, @Param("frameAcquiredAt") LocalDate frameAcquiredAt,
+                            @Param("setAcquired") boolean setAcquired, @Param("acquiredAt") LocalDate acquiredAt);
+
+    /** 상태 변경 로그 한 줄. from/to 가 null 이면 미보유. */
+    int insertLegendStateLog(@Param("userId") Long userId, @Param("legendId") String legendId,
+                             @Param("fromStatus") String fromStatus, @Param("toStatus") String toStatus);
 
     int deleteAllPreferences(@Param("userId") Long userId);
 

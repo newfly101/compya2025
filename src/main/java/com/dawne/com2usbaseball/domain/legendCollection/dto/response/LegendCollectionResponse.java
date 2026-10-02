@@ -15,7 +15,8 @@ public record LegendCollectionResponse(
         List<MaterialItem> materials,
         List<PreferenceItem> preferences
 ) {
-    public record LegendItem(String legendId, LegendStatus status) {
+    /** acquiredAt(보유중이 된 날) · frameAcquiredAt(액자로 얻은 날): "yyyy-MM-dd" 또는 null. */
+    public record LegendItem(String legendId, LegendStatus status, String acquiredAt, String frameAcquiredAt) {
     }
 
     public record MaterialItem(String materialId, MaterialState state) {
@@ -30,7 +31,9 @@ public record LegendCollectionResponse(
                                               List<PreferenceEntity> preferences) {
         return new LegendCollectionResponse(
                 version,
-                legends.stream().map(e -> new LegendItem(e.getLegendId(), e.getStatus())).toList(),
+                legends.stream().map(e -> new LegendItem(e.getLegendId(), e.getStatus(),
+                        e.getAcquiredAt() == null ? null : e.getAcquiredAt().toString(),
+                        e.getFrameAcquiredAt() == null ? null : e.getFrameAcquiredAt().toString())).toList(),
                 materials.stream().map(e -> new MaterialItem(e.getMaterialId(), e.getState())).toList(),
                 preferences.stream().map(e -> new PreferenceItem(e.getLegendId(), e.getRankNo())).toList());
     }

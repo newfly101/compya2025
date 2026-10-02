@@ -7,6 +7,7 @@ import com.dawne.com2usbaseball.domain.legendCollection.repository.mapper.Legend
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -59,8 +60,25 @@ public class LegendCollectionRepository {
         mapper.deleteLegendState(userId, legendId);
     }
 
-    public void upsertLegendState(Long userId, String legendId, LegendStatus status) {
-        mapper.upsertLegendState(userId, legendId, status.name());
+    public void upsertLegendState(Long userId, String legendId, LegendStatus status,
+                                  LocalDate acquiredAt, LocalDate frameAcquiredAt) {
+        mapper.upsertLegendState(userId, legendId, status.name(), acquiredAt, frameAcquiredAt);
+    }
+
+    /** setXxx 가 true 인 날짜만 갱신(값 null 이면 비움). */
+    public void updateAcquiredDates(Long userId, String legendId, boolean setFrame, LocalDate frameAcquiredAt,
+                                    boolean setAcquired, LocalDate acquiredAt) {
+        if (!setFrame && !setAcquired) {
+            return;
+        }
+        mapper.updateAcquiredDates(userId, legendId, setFrame, frameAcquiredAt, setAcquired, acquiredAt);
+    }
+
+    /** NONE(미보유)은 로그에 null 로 남는다. */
+    public void insertLegendStateLog(Long userId, String legendId, LegendStatus from, LegendStatus to) {
+        mapper.insertLegendStateLog(userId, legendId,
+                from == LegendStatus.NONE ? null : from.name(),
+                to == LegendStatus.NONE ? null : to.name());
     }
 
     public void deleteAllPreferences(Long userId) {

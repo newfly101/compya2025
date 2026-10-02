@@ -27,7 +27,8 @@
 
     <select id="findLegendStates"
             resultType="com.dawne.com2usbaseball.domain.legendCollection.entity.LegendStateEntity">
-        SELECT legend_id AS legendId, status
+        SELECT legend_id AS legendId, status, acquired_at AS acquiredAt,
+               frame_acquired_at AS frameAcquiredAt
         FROM site_legend_states
         WHERE user_id = #{userId}
     </select>
@@ -76,9 +77,24 @@
     </delete>
 
     <insert id="upsertLegendState">
-        INSERT INTO site_legend_states (user_id, legend_id, status)
-        VALUES (#{userId}, #{legendId}, #{status})
-        ON DUPLICATE KEY UPDATE status = VALUES(status)
+        INSERT INTO site_legend_states (user_id, legend_id, status, acquired_at, frame_acquired_at)
+        VALUES (#{userId}, #{legendId}, #{status}, #{acquiredAt}, #{frameAcquiredAt})
+        ON DUPLICATE KEY UPDATE status = VALUES(status), acquired_at = VALUES(acquired_at),
+                                frame_acquired_at = COALESCE(VALUES(frame_acquired_at), frame_acquired_at)
+    </insert>
+
+    <update id="updateAcquiredDates">
+        UPDATE site_legend_states
+        <set>
+            <if test="setFrame">frame_acquired_at = #{frameAcquiredAt},</if>
+            <if test="setAcquired">acquired_at = #{acquiredAt},</if>
+        </set>
+        WHERE user_id = #{userId} AND legend_id = #{legendId}
+    </update>
+
+    <insert id="insertLegendStateLog">
+        INSERT INTO site_legend_state_logs (user_id, legend_id, from_status, to_status)
+        VALUES (#{userId}, #{legendId}, #{fromStatus}, #{toStatus})
     </insert>
 
     <delete id="deleteAllPreferences">
