@@ -326,11 +326,25 @@ CREATE TABLE site_legend_states
     user_id    BIGINT   NOT NULL COMMENT 'site_users.id',
     legend_id  CHAR(36) NOT NULL COMMENT 'data_player_legend.id (FK 없음)',
     status     ENUM ('FRAME','OWNED') NOT NULL COMMENT '레전드 상태. 미보유는 행 없음',
+    acquired_at DATE NULL COMMENT '레전드 획득일 (사용자 입력)',
+    frame_acquired_at DATE NULL COMMENT '액자 획득일 (사용자 입력)',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '생성 일시',
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '수정 일시',
     PRIMARY KEY (user_id, legend_id),
     CONSTRAINT fk_legend_states_user FOREIGN KEY (user_id) REFERENCES site_users (id) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT '이용자별 레전드 상태 (액자/보유중)';
+
+CREATE TABLE site_legend_state_logs
+(
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id     BIGINT   NOT NULL COMMENT 'site_users.id',
+    legend_id   CHAR(36) NOT NULL COMMENT 'data_player_legend.id (FK 없음)',
+    from_status ENUM ('FRAME','OWNED') NULL COMMENT '변경 전 상태. NULL = 미보유',
+    to_status   ENUM ('FRAME','OWNED') NULL COMMENT '변경 후 상태. NULL = 미보유',
+    created_at  DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '변경 일시',
+    INDEX idx_legend_state_logs_user_legend (user_id, legend_id),
+    CONSTRAINT fk_legend_state_logs_user FOREIGN KEY (user_id) REFERENCES site_users (id) ON DELETE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT '이용자별 레전드 상태 변경 로그 (덧붙임 전용)';
 
 CREATE TABLE site_legend_preferences
 (
