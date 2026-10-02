@@ -1,6 +1,7 @@
 package com.dawne.com2usbaseball.domain.legendCollection.service;
 
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
+import com.dawne.com2usbaseball.domain.legendCollection.dto.request.SaveAcquiredAtRequest;
 import com.dawne.com2usbaseball.domain.legendCollection.dto.request.SaveChangesRequest;
 import com.dawne.com2usbaseball.domain.legendCollection.dto.request.SavePreferencesRequest;
 import com.dawne.com2usbaseball.domain.legendCollection.dto.response.LegendCollectionResponse;
@@ -66,11 +67,14 @@ public class LegendCollectionServiceImpl implements LegendCollectionService {
 
         // 같은 id 가 두 번 오면 마지막 값이 이긴다
         Map<String, LegendStatus> reqLegend = new LinkedHashMap<>();
+        Map<String, LocalDate> reqOn = new HashMap<>();
         for (var c : orEmpty(request.legends())) {
             if (!legendIds.contains(c.legendId())) {
                 throw bad(LEGEND_COLLECTION_LEGEND_NOT_FOUND);
             }
+            checkNotFuture(c.acquiredOn());
             reqLegend.put(c.legendId(), c.status());
+            reqOn.put(c.legendId(), c.acquiredOn());
         }
         Map<String, MaterialState> reqMaterial = new LinkedHashMap<>();
         for (var c : orEmpty(request.materials())) {
@@ -130,13 +134,8 @@ public class LegendCollectionServiceImpl implements LegendCollectionService {
                 repository.upsertMaterialState(userId, materialId, state);
             }
         });
-        reqLegend.forEach((legendId, status) -> {
-            if (status == LegendStatus.NONE) {
-                repository.deleteLegendState(userId, legendId);
-            } else {
-                repository.upsertLegendState(userId, legendId, status);
-            }
-        });
+        reqLegend.forEach((legendId, status) ->
+                changeLegend(userId, legendId, curLegend.getOrDefault(legendId, LegendStatus.NONE), status, reqOn.get(legendId)));
 
         // 보유중 해제 → 스킬 기록 삭제, 로그는 유지 (legendCollectionSkills REQ-LCSK-17)
         List<String> released = reqLegend.entrySet().stream()
@@ -189,13 +188,9 @@ public class LegendCollectionServiceImpl implements LegendCollectionService {
             }
             frames.put(f.legendId(), f.frame());
         }
-        frames.forEach((legendId, frame) -> {
-            if (frame) {
-                repository.upsertLegendState(userId, legendId, LegendStatus.FRAME);
-            } else {
-                repository.deleteLegendState(userId, legendId);
-            }
-        });
+        frames.forEach((legendId, frame) -> changeLegend(userId, legendId,
+                curLegend.getOrDefault(legendId, LegendStatus.NONE),
+                frame ? LegendStatus.FRAME : LegendStatus.NONE, null));
 
         // 순위는 1부터 빈틈없이 다시 매긴다
         repository.deleteAllPreferences(userId);
@@ -208,6 +203,30 @@ public class LegendCollectionServiceImpl implements LegendCollectionService {
     }
 
     @Override
+    @Transactional
+    public LegendCollectionResponse saveAcquiredAt(Long userId, String legendId, SaveAcquiredAtRequest request) {
+        LegendStateEntity state = repository.findLegendStates(userId).stream()
+                .filter(s -> s.getLegendId().equals(legendId)).findFirst().orElse(null);
+        if (state == null) {
+            throw bad(LEGEND_COLLECTION_ACQUIRED_AT_NOT_OWNED);
+        }
+        if (state.getStatus() == LegendStatus.FRAME && request.isAcquiredSet()) {
+            throw bad(LEGEND_COLLECTION_ACQUIRED_AT_NOT_OWNED);
+        }
+        checkNotFuture(request.getFrameAcquiredAt());
+        checkNotFuture(request.getAcquiredAt());
+        repository.updateAcquiredDates(userId, legendId, request.isFrameSet(), request.getFrameAcquiredAt(),
+                request.isAcquiredSet(), request.getAcquiredAt());
+        return getMyCollection(userId);
+    }
+
+    private static void checkNotFuture(LocalDate date) {
+        if (date != null && date.isAfter(LocalDate.now(KST))) {
+            throw bad(LEGEND_COLLECTION_ACQUIRED_AT_FUTURE);
+        }
+    }
+
+    @Override
     public LegendScheduleResponse getSchedule(Long userId) {
         int today = dayNoOf(LocalDate.now(KST));
         return LegendScheduleResponse.of(today, repository.findSchedule(userId));
@@ -216,6 +235,25 @@ public class LegendCollectionServiceImpl implements LegendCollectionService {
     /** (오늘 - 기준일) mod 14 + 1. 기준일 이전 날짜도 음수 없이 1~14 로 나온다. */
     static int dayNoOf(LocalDate date) {
         return (int) Math.floorMod(ChronoUnit.DAYS.between(DAY_ONE, date), (long) CYCLE_DAYS) + 1;
+    }
+
+    /**
+     * 상태가 실제로 바뀔 때만 로그 1행. on 이 없으면 오늘(KST).
+     * 미보유→액자는 액자 획득일=on, 보유중이 되면 보유일=on(액자 획득일은 유지), 보유중→액자는 보유일 비움(액자 획득일 유지).
+     */
+    private void changeLegend(Long userId, String legendId, LegendStatus from, LegendStatus to, LocalDate on) {
+        if (from == to) {
+            return;
+        }
+        repository.insertLegendStateLog(userId, legendId, from, to);
+        if (to == LegendStatus.NONE) {
+            repository.deleteLegendState(userId, legendId);
+            return;
+        }
+        LocalDate day = on != null ? on : LocalDate.now(KST);
+        boolean owned = to == LegendStatus.OWNED;
+        repository.upsertLegendState(userId, legendId, to, owned ? day : null,
+                !owned && from == LegendStatus.NONE ? day : null);
     }
 
     private void removeFromPreferences(Long userId, Set<String> removed) {

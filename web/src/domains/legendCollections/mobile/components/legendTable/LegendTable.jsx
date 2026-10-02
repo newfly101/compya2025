@@ -1,5 +1,5 @@
 import { teamColor } from "@/domains/legendStats/config/legendStats.js";
-import { LEGEND, SORT, legendStatus, ownedCount, sortMark } from "@/domains/legendCollections/config/legendCollections.js";
+import { LEGEND, SORT, displayAcquiredDate, legendStatus, ownedCount, shortDate, sortMark } from "@/domains/legendCollections/config/legendCollections.js";
 import LegendBadge from "@/domains/legendCollections/mobile/components/legendBadge/LegendBadge.jsx";
 import LegendDetail from "@/domains/legendCollections/mobile/components/legendDetail/LegendDetail.jsx";
 import styles from "./LegendTable.module.scss";
@@ -20,6 +20,7 @@ const LegendTable = ({ rows, rankOf, sort, onSort, openId, onToggle, c, historyC
         {[
           [SORT.NAME, "레전드", styles.cName],
           [SORT.STATUS, "상태", styles.cStatus],
+          [SORT.DATE, "획득일", styles.cDate],
           [SORT.OWNED, "보유", styles.cOwned],
         ].map(([key, text, col]) => {
           const mark = sortMark(sort, key);
@@ -57,6 +58,7 @@ const LegendTable = ({ rows, rankOf, sort, onSort, openId, onToggle, c, historyC
                   {st === LEGEND.FRAME && <LegendBadge>액자</LegendBadge>}
                   {st === LEGEND.OWNED && <LegendBadge fill>보유중</LegendBadge>}
                 </span>
+                <span className={styles.cDate}>{shortDate(displayAcquiredDate(l.id, server))}</span>
                 <span className={styles.cOwned}>{`${ownedCount(l.id, server, draft)}/8`}</span>
               </button>
               {open && (

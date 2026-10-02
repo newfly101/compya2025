@@ -6,6 +6,7 @@ import { useHistoryBadge } from "@/domains/legendStats/mobile/hooks/useHistoryBa
 import { useMileageBadge } from "@/domains/legendStats/mobile/hooks/useMileageBadge.js";
 import {
   DEFAULT_SORT,
+  displayAcquiredDate,
   EMPTY_DRAFT,
   FRAME_FILTERS,
   LEGEND,
@@ -91,6 +92,7 @@ const LegendCollectionsScreen = () => {
       sort,
       (l) => ownedCount(l.id, server, basis),
       (l) => legendStatus(l.id, server, basis),
+      (l) => displayAcquiredDate(l.id, server),
     );
   }, [pool, query, team, type, frameFilter, statusOf, sort, editing, server, draft]);
 

@@ -3,8 +3,12 @@
 /** GET /legend-collections → 조회 편의 맵 */
 export const toMyCollection = (data) => {
   const legends = {};
+  const acquiredAt = {}; // 보유중 날짜
+  const frameAcquiredAt = {}; // 액자 날짜
   (data?.legends ?? []).forEach((l) => {
     legends[l.legendId] = l.status;
+    if (l.acquiredAt) acquiredAt[l.legendId] = l.acquiredAt;
+    if (l.frameAcquiredAt) frameAcquiredAt[l.legendId] = l.frameAcquiredAt;
   });
   const materials = {};
   const materialLegend = {}; // 재료 id → 레전드 id (응답에 legendId 가 있으면 채운다. 없으면 훅이 재료 조회로 채움)
@@ -15,7 +19,7 @@ export const toMyCollection = (data) => {
   const preferences = [...(data?.preferences ?? [])]
     .sort((a, b) => a.rank - b.rank)
     .map((p) => p.legendId);
-  return { version: data?.version ?? null, legends, materials, materialLegend, preferences };
+  return { version: data?.version ?? null, legends, acquiredAt, frameAcquiredAt, materials, materialLegend, preferences };
 };
 
 /** GET /legend-collections/schedule → { todayDayNo, items[] }. 카드 표기는 `선수'연도` */

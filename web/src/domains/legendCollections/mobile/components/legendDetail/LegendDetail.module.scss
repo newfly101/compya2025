@@ -82,3 +82,50 @@
     }
   }
 }
+
+.acquired {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-2;
+
+  input {
+    min-height: $space-8;
+    padding: $space-1 $space-2;
+    border: 1px solid var(--color-border);
+    border-radius: $radius-md;
+    background: transparent;
+    color: inherit;
+    font-family: inherit;
+    font-size: $font-size-10;
+  }
+
+  button {
+    min-height: $space-8;
+    padding: $space-1 $space-2;
+    border: 0;
+    background: transparent;
+    color: var(--color-text-muted);
+    font-family: inherit;
+    font-size: $font-size-10;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .note {
+    flex: 1 0 100%;
+  }
+}
+
+// 액자·보유 두 칸 — 좁으면 줄바꿈
+.acqField {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-2;
+
+  .note {
+    flex: 0 0 auto;
+  }
+}

@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.domain.legendCollection.controller;
 
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
+import com.dawne.com2usbaseball.domain.legendCollection.dto.request.SaveAcquiredAtRequest;
 import com.dawne.com2usbaseball.domain.legendCollection.dto.request.SaveChangesRequest;
 import com.dawne.com2usbaseball.domain.legendCollection.dto.request.SavePreferencesRequest;
 import com.dawne.com2usbaseball.domain.legendCollection.enums.LegendCollectionMessages;
@@ -43,6 +44,15 @@ public class LegendCollectionController {
         return ResponseEntity.ok(GlobalResponse.success(
                 LegendCollectionMessages.LEGEND_COLLECTION_PREFERENCES_SAVE_SUCCESS,
                 legendCollectionService.savePreferences(requireUserId(http), request)));
+    }
+
+    @PutMapping("/{legendId}/acquired-at")
+    public ResponseEntity<GlobalResponse<?>> saveAcquiredAt(@PathVariable String legendId,
+                                                            @RequestBody SaveAcquiredAtRequest request,
+                                                            HttpServletRequest http) {
+        return ResponseEntity.ok(GlobalResponse.success(
+                LegendCollectionMessages.LEGEND_COLLECTION_ACQUIRED_AT_SAVE_SUCCESS,
+                legendCollectionService.saveAcquiredAt(requireUserId(http), legendId, request)));
     }
 
     @GetMapping("/schedule")

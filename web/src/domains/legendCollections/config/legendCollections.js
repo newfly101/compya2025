@@ -1,6 +1,8 @@
 // legendCollections 순수 함수 · 상수. 서버 통신 없음.
 // 상태 값은 서버와 같다: 재료 NONE/HAVE/INSERTED, 레전드 NONE/FRAME/OWNED.
 
+import { getTodayKst } from "@/global/utils/datetime/dateUtils.js";
+
 export const MATERIAL = { NONE: "NONE", HAVE: "HAVE", INSERTED: "INSERTED" };
 export const LEGEND = { NONE: "NONE", FRAME: "FRAME", OWNED: "OWNED" };
 
@@ -68,7 +70,8 @@ export const toSlots = (detail, teamNameByCode = {}) =>
 
 /* ── 초안(draft) — 서버 값 위에 덮어쓴 것만 담는다 ─────────────────── */
 
-export const EMPTY_DRAFT = { legends: {}, materials: {}, resets: [] };
+// dates: 상태를 바꾼 레전드의 획득일 { legendId: "yyyy-MM-dd" } — 안 고르면 저장 때 오늘
+export const EMPTY_DRAFT = { legends: {}, materials: {}, resets: [], dates: {} };
 
 export const legendStatus = (legendId, server, draft) =>
   draft.legends[legendId] ?? server.legends[legendId] ?? LEGEND.NONE;
@@ -105,10 +108,29 @@ export const setMaterial = (draft, server, materialId, next) => ({
   materials: dropIfSame(draft.materials, materialId, next, server.materials[materialId] ?? MATERIAL.NONE),
 });
 
-export const setLegendStatus = (draft, server, legendId, next) => ({
-  ...draft,
-  legends: dropIfSame(draft.legends, legendId, next, server.legends[legendId] ?? LEGEND.NONE),
-});
+// 상태를 바꾸면 이전에 고른 획득일은 버린다 (새 상태 기준으로 다시 고르거나 오늘)
+export const setLegendStatus = (draft, server, legendId, next) => {
+  const dates = { ...draft.dates };
+  delete dates[legendId];
+  return {
+    ...draft,
+    legends: dropIfSame(draft.legends, legendId, next, server.legends[legendId] ?? LEGEND.NONE),
+    dates,
+  };
+};
+
+export const setLegendDate = (draft, legendId, date) => ({ ...draft, dates: { ...draft.dates, [legendId]: date } });
+
+/** 획득일 열 값 — 보유중→acquiredAt, 액자→frameAcquiredAt, 없으면 null. 저장된 상태 기준 */
+export const displayAcquiredDate = (legendId, server) => {
+  const st = server.legends[legendId];
+  if (st === LEGEND.OWNED) return server.acquiredAt?.[legendId] ?? null;
+  if (st === LEGEND.FRAME) return server.frameAcquiredAt?.[legendId] ?? null;
+  return null;
+};
+
+/** "2026-10-02" → "26.10.02", 없으면 "-" */
+export const shortDate = (date) => (date ? `${date.slice(2, 4)}.${date.slice(5, 7)}.${date.slice(8, 10)}` : "-");
 
 /** 재료 8칸만 미보유로, 레전드 상태는 유지 (REQ-LCOL-11) */
 export const resetMaterials = (draft, server, legendId, materialIds) => {
@@ -127,11 +149,13 @@ export const changeCount = (draft) =>
 export const hasInsertChange = (draft) =>
   Object.values(draft.materials).some((s) => s === MATERIAL.INSERTED);
 
-/** PUT /changes 본문 */
-export const buildChangesBody = (draft, version) => ({
+/** PUT /changes 본문 — 액자·보유중으로 바꾼 레전드에는 acquiredOn(고른 날짜, 없으면 today) */
+export const buildChangesBody = (draft, version, today = getTodayKst()) => ({
   version,
   materials: Object.entries(draft.materials).map(([materialId, state]) => ({ materialId, state })),
-  legends: Object.entries(draft.legends).map(([legendId, status]) => ({ legendId, status })),
+  legends: Object.entries(draft.legends).map(([legendId, status]) =>
+    status === LEGEND.NONE ? { legendId, status } : { legendId, status, acquiredOn: draft.dates?.[legendId] || today },
+  ),
   resetLegendIds: draft.resets,
 });
 
@@ -213,7 +237,13 @@ export const sortByProgress = (legends, countOf, statusOf) =>
 
 /* ── 표 머리 정렬 — 레전드 · 상태 · 보유 (# 는 정렬 없음) ───────────── */
 
-export const SORT = { OWNED: "owned", NAME: "name", STATUS: "status" };
+export const SORT = { OWNED: "owned", NAME: "name", STATUS: "status", DATE: "date" };
+
+/** 획득일 비교 — 날짜 없음(null)은 방향과 무관하게 항상 뒤, 같으면 0(안정 정렬이 기존 순서 유지). dir 1 오름 · -1 내림 */
+export const compareDates = (a, b, dir) => {
+  if (!a || !b) return !a && !b ? 0 : !a ? 1 : -1;
+  return a === b ? 0 : dir * (a < b ? -1 : 1);
+};
 
 /** 상태 정렬이 도는 순서 — 클릭마다 다음 칸: 미보유 먼저 → 액자 먼저 → 보유중 먼저 → 다시 처음 */
 export const STATUS_ORDER = [
@@ -244,7 +274,7 @@ export const sortMark = (sort, key) => {
  * 표 머리 정렬. 보유중 레전드는 재료가 0/8 이라 "보유" 정렬에서는 어느 방향이든 뒤로 보낸다.
  * 같은 값끼리는 기본 정렬(보유 많은 순 → 이름) 을 따른다.
  */
-export const sortLegends = (legends, sort, countOf, statusOf) => {
+export const sortLegends = (legends, sort, countOf, statusOf, dateOf) => {
   const byProgress = (a, b) => {
     const ao = statusOf(a) === LEGEND.OWNED ? 1 : 0;
     const bo = statusOf(b) === LEGEND.OWNED ? 1 : 0;
@@ -253,6 +283,7 @@ export const sortLegends = (legends, sort, countOf, statusOf) => {
   const byName = (a, b) => a.name.localeCompare(b.name, "ko");
   return [...legends].sort((a, b) => {
     if (sort.key === SORT.NAME) return sort.dir * byName(a, b);
+    if (sort.key === SORT.DATE) return compareDates(dateOf(a), dateOf(b), sort.dir);
     if (sort.key === SORT.STATUS) {
       const order = [STATUS_ORDER[sort.mode].first, ...STATUS_ORDER.map((o) => o.first).filter((f) => f !== STATUS_ORDER[sort.mode].first)];
       return order.indexOf(statusOf(a)) - order.indexOf(statusOf(b)) || byProgress(a, b);
@@ -273,7 +304,7 @@ export const loadDraft = () => {
     const raw = sessionStorage.getItem(DRAFT_KEY);
     if (!raw) return null;
     const d = JSON.parse(raw);
-    return { legends: d.legends ?? {}, materials: d.materials ?? {}, resets: d.resets ?? [] };
+    return { legends: d.legends ?? {}, materials: d.materials ?? {}, resets: d.resets ?? [], dates: d.dates ?? {} };
   } catch {
     return null;
   }
