@@ -6,6 +6,7 @@
 // "레전드 미정" 카운터는 만들지 않는다 — BE 쿼리가 INNER JOIN 이라 실데이터로는 항상
 // 0건이라 존재할 수 없는 상태의 UI를 만들지 않기로 했다(design-spec §0 HITL 결정).
 
+import FilterSection from "@/global/ui/mobile/filterSection/FilterSection.jsx";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import { formatPosition } from "@/domains/players/config/position.js";
 import { POS_ROWS, SORT_LABEL, teamDotColor } from "@/domains/mileage/config/mileageTargetList.js";
@@ -73,6 +74,7 @@ const TargetListTab = ({
         </div>
       </div>
 
+      <FilterSection storageKey="mileage.filterOpen" count={pos ? 1 : 0} summary={pos ?? ""}>
       <div className={styles.posGrid}>
         <button type="button" className={styles.chip} aria-pressed={pos === null} onClick={() => selectPos(null)}>
           전체
@@ -99,6 +101,7 @@ const TargetListTab = ({
           ))}
         </div>
       </div>
+      </FilterSection>
 
       <div className={styles.counter}>
         <span className={styles.counterLeft}>

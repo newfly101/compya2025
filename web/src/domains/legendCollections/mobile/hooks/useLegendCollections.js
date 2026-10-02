@@ -6,6 +6,7 @@ import {
   requestGetLegendMaterials,
   requestGetMyCollection,
   requestGetSchedule,
+  requestPutAcquiredAt,
   requestPutChanges,
   requestPutPreferences,
 } from "@/domains/legendCollections/store/public/thunks.js";
@@ -21,6 +22,7 @@ import {
   loadDraft,
   resetMaterials,
   saveDraft,
+  setLegendDate,
   setLegendStatus,
   setMaterial,
   toSlots,
@@ -75,8 +77,15 @@ export const useLegendCollections = () => {
         materialLegend[m.id] = legendId;
       }),
     );
-    return { legends: me.legends, materials: me.materials, materialLegend, preferences: me.preferences };
-  }, [me.legends, me.materials, me.materialLegend, me.preferences, byId]);
+    return {
+      legends: me.legends,
+      acquiredAt: me.acquiredAt,
+      frameAcquiredAt: me.frameAcquiredAt,
+      materials: me.materials,
+      materialLegend,
+      preferences: me.preferences,
+    };
+  }, [me.legends, me.acquiredAt, me.frameAcquiredAt, me.materials, me.materialLegend, me.preferences, byId]);
 
   const loadSlots = useCallback(
     (legendId) => {
@@ -109,6 +118,8 @@ export const useLegendCollections = () => {
     (legendId, next) => setDraft((d) => setLegendStatus(d, server, legendId, next)),
     [server],
   );
+
+  const changeLegendDate = useCallback((legendId, date) => setDraft((d) => setLegendDate(d, legendId, date)), []);
 
   const resetLegend = useCallback(
     (legendId) =>
@@ -154,6 +165,15 @@ export const useLegendCollections = () => {
     [dispatch, server, me.version],
   );
 
+  /** 획득일 저장 — patch: { frameAcquiredAt?, acquiredAt? } (null 이면 지우기). 성공하면 null, 실패하면 오류 정보 */
+  const saveAcquiredAt = useCallback(
+    async (legendId, patch) => {
+      const result = await dispatch(requestPutAcquiredAt({ legendId, ...patch }));
+      return requestPutAcquiredAt.rejected.match(result) ? (result.payload ?? { message: "저장하지 못했습니다." }) : null;
+    },
+    [dispatch],
+  );
+
   const retryMe = useCallback(() => dispatch(requestGetMyCollection()), [dispatch]);
 
   return {
@@ -176,10 +196,12 @@ export const useLegendCollections = () => {
     cancelEdit,
     changeMaterial,
     changeLegend,
+    changeLegendDate,
     resetLegend,
     save,
     resolveConflict,
     savePreferences,
+    saveAcquiredAt,
     loadSlots,
     slotsOf,
     slotsLoading: useSelector((state) => state.legendCollections.materials.loading),

@@ -81,12 +81,21 @@
 
 .cStatus {
   display: flex;
-  flex: 0 0 rem(92);
+  flex: 0 0 rem(52);
   gap: $space-1;
 }
 
+// 획득일 — 현재 상태 기준 날짜 하나 "26.10.02". 480 에서 이름 칸이 줄지 않게 좁게
+.cDate {
+  flex: 0 0 rem(48);
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
 .cOwned {
-  flex: 0 0 rem(64);
+  flex: 0 0 rem(48);
   text-align: right;
 
   .head & {

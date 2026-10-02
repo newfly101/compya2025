@@ -19,6 +19,12 @@ export const fetchPutPreferences = async (body) => {
   return data.data;
 };
 
+/** 획득일 — { frameAcquiredAt?, acquiredAt? } "yyyy-MM-dd" | null. 보낸 필드만 바뀐다 */
+export const fetchPutAcquiredAt = async (legendId, body) => {
+  const { data } = await API.put(LEGEND_COLLECTIONS.putAcquiredAt(legendId), body);
+  return data.data;
+};
+
 export const fetchGetSchedule = async () => {
   const { data } = await API.get(LEGEND_COLLECTIONS.GET_SCHEDULE);
   return data.data;

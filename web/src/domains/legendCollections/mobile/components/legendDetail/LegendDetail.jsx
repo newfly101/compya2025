@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   LEGEND,
   MATERIAL,
@@ -7,6 +8,7 @@ import {
   legendStatus,
   materialState,
 } from "@/domains/legendCollections/config/legendCollections.js";
+import { getTodayKst } from "@/global/utils/datetime/dateUtils.js";
 import MaterialCard from "@/domains/legendCollections/mobile/components/materialCard/MaterialCard.jsx";
 import LegendBadge from "@/domains/legendCollections/mobile/components/legendBadge/LegendBadge.jsx";
 import ProgressBar from "@/domains/legendCollections/mobile/components/progressBar/ProgressBar.jsx";
@@ -24,6 +26,17 @@ const LegendDetail = ({ legend, c, historyCards, mileageBadge, onReset, material
   const slots = slotsOf(legend.id);
   const status = legendStatus(legend.id, server, draft);
   const owned = status === LEGEND.OWNED;
+  const savedOwned = server.legends[legend.id] === LEGEND.OWNED; // 획득일 칸은 저장된 상태 기준: 액자=액자 칸, 보유중=둘 다
+  const savedFrame = server.legends[legend.id] === LEGEND.FRAME;
+  const acquiredAt = server.acquiredAt?.[legend.id] ?? "";
+  const frameAcquiredAt = server.frameAcquiredAt?.[legend.id] ?? "";
+  const pendingDate = draft.legends[legend.id] === LEGEND.FRAME || draft.legends[legend.id] === LEGEND.OWNED; // 편집 중 새로 바꾼 상태
+  const [acqError, setAcqError] = useState(null);
+  const [today] = useState(getTodayKst);
+  const changeAcquiredAt = async (field, value) => {
+    const error = await c.saveAcquiredAt(legend.id, { [field]: value || null });
+    setAcqError(error?.message ?? null);
+  };
   const { inserted, have, left } = legendCounts(legend.id, server, draft);
   const players = slots.filter((s) => !s.coach);
   const coaches = slots.filter((s) => s.coach);
@@ -69,6 +82,55 @@ const LegendDetail = ({ legend, c, historyCards, mileageBadge, onReset, material
             {owned ? "보유중 레전드 — 재료는 0/8 로 저장돼요" : `삽입 ${inserted} · 보유 ${have} · 남은 ${left}칸`}
           </p>
         </>
+      )}
+
+      {editing && pendingDate && (
+        <div className={styles.acquired}>
+          <label className={styles.caption} htmlFor={`acq-new-${legend.id}`}>
+            {status === LEGEND.OWNED ? "보유 획득일" : "액자 획득일"}
+          </label>
+          <input
+            id={`acq-new-${legend.id}`}
+            type="date"
+            value={draft.dates?.[legend.id] || today}
+            max={today}
+            onChange={(e) => c.changeLegendDate(legend.id, e.target.value || today)}
+          />
+        </div>
+      )}
+
+      {(savedFrame || savedOwned) && c.isAuthenticated && (
+        <div className={styles.acquired}>
+          {[
+            ["frameAcquiredAt", "액자 획득일", frameAcquiredAt, true],
+            ["acquiredAt", "보유 획득일", acquiredAt, savedOwned],
+          ]
+            .filter(([, , , show]) => show)
+            .map(([field, label, value]) => (
+              <div key={field} className={styles.acqField}>
+                <label className={styles.caption} htmlFor={`acq-${field}-${legend.id}`}>
+                  {label}
+                </label>
+                <input
+                  id={`acq-${field}-${legend.id}`}
+                  type="date"
+                  value={value}
+                  max={today}
+                  disabled={c.saving}
+                  onChange={(e) => changeAcquiredAt(field, e.target.value)}
+                />
+                {value ? (
+                  <button type="button" onClick={() => changeAcquiredAt(field, "")} disabled={c.saving}>
+                    지우기
+                  </button>
+                ) : (
+                  <span className={styles.note}>미입력</span>
+                )}
+              </div>
+            ))}
+          <p className={styles.note}>게임 내 도전과제 › 컬렉션 › 레전드 컬렉션에서 해당 레전드의 획득일을 확인할 수 있어요</p>
+          {acqError && <p className={styles.note} role="alert">{acqError}</p>}
+        </div>
       )}
 
       {slots.length === 0 ? (

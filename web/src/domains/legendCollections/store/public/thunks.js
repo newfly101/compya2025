@@ -4,6 +4,7 @@ import {
   fetchGetLegendMaterials,
   fetchGetMyCollection,
   fetchGetSchedule,
+  fetchPutAcquiredAt,
   fetchPutChanges,
   fetchPutPreferences,
 } from "@/domains/legendCollections/store/public/api.js";
@@ -46,6 +47,19 @@ export const requestPutPreferences = createAsyncThunk(
   async (body, { rejectWithValue }) => {
     try {
       return (await fetchPutPreferences(body)) ?? {};
+    } catch (error) {
+      return rejectWithValue(failure(error));
+    }
+  },
+);
+
+/** arg: { legendId, frameAcquiredAt?, acquiredAt? } — 성공하면 슬라이스가 보낸 필드만 반영한다 */
+export const requestPutAcquiredAt = createAsyncThunk(
+  LEGEND_COLLECTION_ACTIONS.PUT_ACQUIRED_AT,
+  async ({ legendId, ...dates }, { rejectWithValue }) => {
+    try {
+      await fetchPutAcquiredAt(legendId, dates);
+      return { legendId, ...dates };
     } catch (error) {
       return rejectWithValue(failure(error));
     }

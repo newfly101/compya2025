@@ -1,3 +1,4 @@
+import FilterSection from "@/global/ui/mobile/filterSection/FilterSection.jsx";
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -319,6 +320,11 @@ const LegendStatsScreen = () => {
           )}
         </div>
 
+        <FilterSection
+          storageKey="legendStats.filterOpen"
+          count={[team, type, pos].filter((v) => v !== ALL).length}
+          summary={[team, type, pos].filter((v) => v !== ALL).join(" · ")}
+        >
         <div className={styles.chipRow}>
           {teams.map((t) => (
             <button
@@ -364,6 +370,7 @@ const LegendStatsScreen = () => {
             ))}
           </div>
         )}
+        </FilterSection>
 
         <div className={styles.meta}>
           <span className={styles.metaLeft}>
