@@ -1,9 +1,9 @@
 ---
 feature: legendCollections
-version: 1.0.4
+version: 1.0.5
 status: active
 created: 2026-09-29
-updated: 2026-09-30
+updated: 2026-10-02
 ---
 
 # legendCollections

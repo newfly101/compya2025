@@ -27,12 +27,14 @@ class LegendCollectionServiceImplTest {
 
     private LegendCollectionRepository repo;
     private LegendCollectionServiceImpl service;
+    private com.dawne.com2usbaseball.domain.legendCollectionSkill.service.LegendCollectionSkillService skillService;
     private static final Long U = 1L;
 
     @BeforeEach
     void setUp() {
         repo = Mockito.mock(LegendCollectionRepository.class);
-        service = new LegendCollectionServiceImpl(repo);
+        skillService = Mockito.mock(com.dawne.com2usbaseball.domain.legendCollectionSkill.service.LegendCollectionSkillService.class);
+        service = new LegendCollectionServiceImpl(repo, skillService);
         when(repo.findAllLegendIds()).thenReturn(List.of("L1", "L2"));
         when(repo.findAllMaterialRefs()).thenReturn(List.of(
                 new MaterialRefEntity("M1", "L1"), new MaterialRefEntity("M2", "L1"),

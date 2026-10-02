@@ -1,7 +1,7 @@
 ---
-spec_version: 1.0.0
+spec_version: 1.0.1
 created: 2026-09-09
-updated: 2026-09-28
+updated: 2026-10-02
 ---
 
 # playerSkills — 설계

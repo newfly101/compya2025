@@ -23,7 +23,7 @@ import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import GoalPanel from "./components/goalPanel/GoalPanel.jsx";
 import CollectionFilters from "./components/collectionFilters/CollectionFilters.jsx";
 import LegendTable from "./components/legendTable/LegendTable.jsx";
-import ConfirmModal from "./components/modals/ConfirmModal.jsx";
+import ConfirmModal from "@/global/ui/confirmModal/ConfirmModal.jsx";
 import PreferenceModal from "./components/modals/PreferenceModal.jsx";
 import SaveErrorModal from "./components/modals/SaveErrorModal.jsx";
 import { useLegendCollections } from "./hooks/useLegendCollections";
@@ -206,6 +206,11 @@ const LegendCollectionsScreen = () => {
               ← 레전드 재료 검색
             </Link>
             <h1 className={styles.title}>{title}</h1>
+            {isAuthenticated && !editing && (
+              <Link to={ROUTE_PATHS.legend_collection_skills} className={styles.back}>
+                내 레전드 스킬 기록 →
+              </Link>
+            )}
           </div>
           <div className={styles.introActions}>
             {editing ? (

@@ -1,0 +1,194 @@
+.screen {
+  min-height: 100%;
+  background: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-4 $layout-h-pad $space-3;
+}
+
+.back {
+  align-self: flex-start;
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  line-height: 1.5;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.title {
+  margin: 0;
+  font-size: $font-size-15;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+}
+
+.skeleton {
+  padding: 0 $layout-h-pad;
+}
+
+// 표 — legendCollections LegendTable (Figma 01 Table) 과 같은 모양: # · 레전드 · 상태 · 스킬
+.head,
+.row {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  width: 100%;
+  padding-right: $layout-h-pad;
+  padding-left: $layout-h-pad;
+}
+
+.head {
+  padding-top: $space-3;
+  padding-bottom: $space-3;
+  border-top: 1px solid var(--color-border-strong);
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-lc-head-bg);
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  font-weight: $font-weight-bold;
+  line-height: 1.5;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  min-height: $control-height-md;
+  padding-top: $space-4;
+  padding-bottom: $space-4;
+  border: 0;
+  border-bottom: 1px solid var(--color-border);
+  background: transparent;
+  color: var(--color-text-primary);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--color-lc-row-hover);
+  }
+
+  &[data-open] {
+    border-bottom-color: transparent;
+    background: var(--color-lc-open-bg);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+  }
+}
+
+.cRank {
+  flex: 0 0 $space-5;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+  line-height: 1.5;
+
+  .head & {
+    font-size: $font-size-11;
+  }
+}
+
+.cName {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: $space-2;
+  min-width: 0;
+}
+
+.cStatus {
+  display: flex;
+  flex: 1 1 0;
+  gap: $space-1;
+  justify-content: center;
+  min-width: 0;
+}
+
+// 강화 열 — 3슬롯 현재 등급 글자를 등급색 채움 칩으로. 칩 색은 두 테마 같은 구조(tokens 의 chip 토큰)
+.cEnh {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: rem(2);
+  min-width: 0;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  text-align: center;
+
+  .row & {
+    color: var(--color-text-muted);
+    font-size: $font-size-13;
+    line-height: 1.5;
+  }
+}
+
+.g {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(18);
+  height: rem(18);
+  border-radius: $radius-sm;
+  font-size: $font-size-12;
+  font-weight: $font-weight-regular;
+  line-height: 1;
+  &[data-grade="legend"] { background: var(--color-lcsk-chip-legend-bg); color: var(--color-lcsk-chip-legend-fg); }
+  &[data-grade="platinum"] { background: var(--color-lcsk-chip-platinum-bg); color: var(--color-lcsk-chip-platinum-fg); }
+  &[data-grade="hero"] { background: var(--color-lcsk-chip-hero-bg); color: var(--color-lcsk-chip-hero-fg); }
+  &[data-grade="normal"] { background: var(--color-lcsk-chip-normal-bg); color: var(--color-lcsk-chip-normal-fg); }
+}
+
+.cReg {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+
+  .row & {
+    color: var(--color-text-muted);
+    font-size: $font-size-13;
+    line-height: 1.5;
+  }
+
+  .row &[data-on] {
+    color: var(--color-brand);
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.dot {
+  flex: 0 0 auto;
+  width: $space-2;
+  height: $space-2;
+  border-radius: $radius-full;
+  background: currentColor;
+}
+
+.name {
+  overflow: hidden;
+  font-size: $font-size-13;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

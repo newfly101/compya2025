@@ -1,4 +1,4 @@
-import ConfirmModal from "./ConfirmModal.jsx";
+import ConfirmModal from "@/global/ui/confirmModal/ConfirmModal.jsx";
 
 /**
  * 저장 실패 안내 — 409 충돌(내 값 유지 / 서버 값 가져오기) · 로그인 만료(임시값 보존, 재로그인) · 그 밖의 실패.

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!--
+  스킬·레전드 마스터(data_player_skill, data_player_legend)와 site_legend_states 는 SELECT 만 한다.
+  로그(site_user_legend_skill_logs)는 INSERT 위주 — 보유 해제 때는 지우지 않고,
+  되돌리기(마지막 SAVE 이후)·초기화(전부) 때만 그 레전드 로그를 정리한다.
+-->
+<mapper namespace="com.dawne.com2usbaseball.domain.legendCollectionSkill.repository.mapper.LegendCollectionSkillMapper">
+
+    <select id="findTargetLegends" resultType="map">
+        SELECT legend_id AS legendId, status
+        FROM site_legend_states
+        WHERE user_id = #{userId} AND status IN ('FRAME', 'OWNED')
+    </select>
+
+    <select id="findTargetStatus" resultType="string">
+        SELECT status
+        FROM site_legend_states
+        WHERE user_id = #{userId} AND legend_id = #{legendId} AND status IN ('FRAME', 'OWNED')
+    </select>
+
+    <select id="findLegendRole" resultType="string">
+        SELECT player_role FROM data_player_legend WHERE id = #{legendId}
+    </select>
+
+    <sql id="stateColumns">
+        user_id AS userId, legend_id AS legendId,
+        skill1_id AS skill1Id, skill1_base AS skill1Base, skill1_current AS skill1Current,
+        skill2_id AS skill2Id, skill2_base AS skill2Base, skill2_current AS skill2Current,
+        skill3_id AS skill3Id, skill3_base AS skill3Base, skill3_current AS skill3Current
+    </sql>
+
+    <select id="findStates"
+            resultType="com.dawne.com2usbaseball.domain.legendCollectionSkill.entity.UserLegendSkillEntity">
+        SELECT <include refid="stateColumns"/>
+        FROM site_user_legend_skills
+        WHERE user_id = #{userId}
+    </select>
+
+    <select id="findState"
+            resultType="com.dawne.com2usbaseball.domain.legendCollectionSkill.entity.UserLegendSkillEntity">
+        SELECT <include refid="stateColumns"/>
+        FROM site_user_legend_skills
+        WHERE user_id = #{userId} AND legend_id = #{legendId}
+    </select>
+
+    <select id="findSkills"
+            resultType="com.dawne.com2usbaseball.domain.legendCollectionSkill.entity.SkillMasterEntity">
+        SELECT id, player_role AS playerRole, skill_grade AS skillGrade
+        FROM data_player_skill
+        WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+
+    <select id="findLogs"
+            resultType="com.dawne.com2usbaseball.domain.legendCollectionSkill.entity.SkillLogEntity">
+        SELECT legend_id AS legendId, action
+        FROM site_user_legend_skill_logs
+        WHERE user_id = #{userId}
+        <if test="legendId != null">AND legend_id = #{legendId}</if>
+        ORDER BY id
+    </select>
+
+    <insert id="upsertState">
+        INSERT INTO site_user_legend_skills
+            (user_id, legend_id,
+             skill1_id, skill1_base, skill1_current,
+             skill2_id, skill2_base, skill2_current,
+             skill3_id, skill3_base, skill3_current)
+        VALUES (#{e.userId}, #{e.legendId},
+                #{e.skill1Id}, #{e.skill1Base}, #{e.skill1Current},
+                #{e.skill2Id}, #{e.skill2Base}, #{e.skill2Current},
+                #{e.skill3Id}, #{e.skill3Base}, #{e.skill3Current})
+        ON DUPLICATE KEY UPDATE
+            skill1_id = VALUES(skill1_id), skill1_base = VALUES(skill1_base), skill1_current = VALUES(skill1_current),
+            skill2_id = VALUES(skill2_id), skill2_base = VALUES(skill2_base), skill2_current = VALUES(skill2_current),
+            skill3_id = VALUES(skill3_id), skill3_base = VALUES(skill3_base), skill3_current = VALUES(skill3_current)
+    </insert>
+
+    <delete id="deleteStates">
+        DELETE FROM site_user_legend_skills
+        WHERE user_id = #{userId} AND legend_id IN
+        <foreach collection="legendIds" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </delete>
+
+    <delete id="deleteLogsAfterLastSave">
+        DELETE FROM site_user_legend_skill_logs
+        WHERE user_id = #{userId} AND legend_id = #{legendId}
+          AND id > (SELECT last_id FROM (
+                      SELECT COALESCE(MAX(id), 0) AS last_id
+                      FROM site_user_legend_skill_logs
+                      WHERE user_id = #{userId} AND legend_id = #{legendId} AND action = 'SAVE') t)
+    </delete>
+
+    <delete id="deleteLogs">
+        DELETE FROM site_user_legend_skill_logs
+        WHERE user_id = #{userId} AND legend_id = #{legendId}
+    </delete>
+
+    <insert id="insertLog">
+        INSERT INTO site_user_legend_skill_logs (user_id, legend_id, action, slot, snapshot)
+        VALUES (#{userId}, #{legendId}, #{action}, #{slot}, #{snapshot})
+    </insert>
+</mapper>

@@ -1,6 +1,6 @@
 ---
-created: 2026-09-30
-updated: 2026-09-30
+created: 2026-10-02
+updated: 2026-10-02
 ---
 
 <!-- 생성 파일: python .claude/scripts/build-traceability.py — 손으로 고치지 말 것 -->
@@ -35,29 +35,30 @@ updated: 2026-09-30
 | historyLegend | HL | 14 | 운영 | 1.0.3 |
 | legendStats | LS | 15 | 운영 | 1.0.1 |
 | mileage | MLG | 16 | 개발중 | 1.0.1 |
-| playerSkills | PSK | 17 | 운영 | 1.0.0 |
+| playerSkills | PSK | 17 | 운영 | 1.0.1 |
 | guides | GD | 18 | 운영 | 1.0.2 |
-| legendCollections | LCOL | 19 | 운영 | 1.0.4 |
+| legendCollections | LCOL | 19 | 운영 | 1.0.5 |
+| legendCollectionSkills | LCSK | 20 | 운영 | 1.0.0 |
 
 ## 3. 추적표 본문
 
-192개 REQ 전부를 담으면 150줄 상한을 넘어 기능 그룹 4개로 나눴다(`file-split.md` § 2 의미 단위 분리).
+214개 REQ 전부를 담으면 150줄 상한을 넘어 기능 그룹 4개로 나눴다(`file-split.md` § 2 의미 단위 분리).
 
 | 그룹 | 파일 | 기능 | REQ 수 |
 |---|---|---|---|
 | 콘텐츠·운영 | [traceability-content-ops.md](./traceability-content-ops.md) | admin·coupons·events·notices·quiz·home | 91 |
 | 계정·인증 | [traceability-account.md](./traceability-account.md) | authentication·users·community | 24 |
-| 게임 데이터 | [traceability-game-data.md](./traceability-game-data.md) | historyLegend·legendStats·legendCollections·mileage·players·playerSkills | 55 |
+| 게임 데이터 | [traceability-game-data.md](./traceability-game-data.md) | historyLegend·legendStats·legendCollections·legendCollectionSkills·mileage·players·playerSkills | 77 |
 | 정적·기타 | [traceability-static.md](./traceability-static.md) | odds·guides·policy·error | 22 |
 
 ## 4. 집계
 
 | 항목 | 값 |
 |---|---|
-| REQ 총수 | 192 |
-| 코드 확인 비율(근거에 `.java`/`.jsx`/`.xml`/`.sql` 파일·줄 참조가 있는 REQ) | 117/192 (60.9%) |
+| REQ 총수 | 214 |
+| 코드 확인 비율(근거에 `.java`/`.jsx`/`.xml`/`.sql` 파일·줄 참조가 있는 REQ) | 118/214 (55.1%) |
 | API 없는 REQ 수(서버 없는 기능) | 22 |
-| 미결(❓·🔴) 수(18개 기능 spec·design 합산) | 18 |
+| 미결(❓·🔴) 수(18개 기능 spec·design 합산) | 31 |
 
 ## 5. 빈 자리
 

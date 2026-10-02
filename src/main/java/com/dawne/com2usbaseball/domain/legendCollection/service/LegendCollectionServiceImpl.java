@@ -12,6 +12,7 @@ import com.dawne.com2usbaseball.domain.legendCollection.entity.PreferenceEntity;
 import com.dawne.com2usbaseball.domain.legendCollection.enums.LegendStatus;
 import com.dawne.com2usbaseball.domain.legendCollection.enums.MaterialState;
 import com.dawne.com2usbaseball.domain.legendCollection.repository.LegendCollectionRepository;
+import com.dawne.com2usbaseball.domain.legendCollectionSkill.service.LegendCollectionSkillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,7 @@ public class LegendCollectionServiceImpl implements LegendCollectionService {
     private static final int MAX_PREFERENCES = 10;
 
     private final LegendCollectionRepository repository;
+    private final LegendCollectionSkillService skillService;
 
     @Override
     public LegendCollectionResponse getMyCollection(Long userId) {
@@ -135,6 +137,14 @@ public class LegendCollectionServiceImpl implements LegendCollectionService {
                 repository.upsertLegendState(userId, legendId, status);
             }
         });
+
+        // 보유중 해제 → 스킬 기록 삭제, 로그는 유지 (legendCollectionSkills REQ-LCSK-17)
+        List<String> released = reqLegend.entrySet().stream()
+                .filter(e -> e.getValue() != LegendStatus.OWNED && curLegend.get(e.getKey()) == LegendStatus.OWNED)
+                .map(Map.Entry::getKey).toList();
+        if (!released.isEmpty()) {
+            skillService.deleteByLegends(userId, released);
+        }
 
         if (!newlyOwned.isEmpty()) {
             removeFromPreferences(userId, newlyOwned);
