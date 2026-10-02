@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { teamColor } from "@/domains/legendStats/config/legendStats.js";
+import { ALL, TYPE_FILTERS, teamColor } from "@/domains/legendStats/config/legendStats.js";
 import { LEGEND, MAX_PREFERENCES } from "@/domains/legendCollections/config/legendCollections.js";
+import SearchInput from "@/global/ui/mobile/searchInput/SearchInput.jsx";
+import FilterChips from "@/domains/legendCollections/mobile/components/filterChips/FilterChips.jsx";
 import LegendBadge from "@/domains/legendCollections/mobile/components/legendBadge/LegendBadge.jsx";
 import styles from "./Modals.module.scss";
 
+const TYPE_OPTIONS = TYPE_FILTERS.map((t) => ({ value: t }));
 const metaOf = (l) => [l.team, ...l.pos].filter(Boolean).join(" · ");
 
 /**
@@ -17,6 +20,7 @@ const PreferenceModal = ({ legends, server, countOf, onSave, onClose }) => {
     Object.fromEntries(legends.map((l) => [l.id, server.legends[l.id] === LEGEND.FRAME])),
   );
   const [query, setQuery] = useState("");
+  const [type, setType] = useState(ALL); // 후보 목록만 거른다 — 고른 순위 목록은 그대로
   const [notice, setNotice] = useState("");
   const [saving, setSaving] = useState(false);
   const [dragging, setDragging] = useState(null);
@@ -31,7 +35,7 @@ const PreferenceModal = ({ legends, server, countOf, onSave, onClose }) => {
   const byId = new Map(legends.map((l) => [l.id, l]));
   const q = query.trim();
   const candidates = legends.filter(
-    (l) => server.legends[l.id] !== LEGEND.OWNED && !picked.includes(l.id) && (!q || l.name.includes(q)),
+    (l) => server.legends[l.id] !== LEGEND.OWNED && !picked.includes(l.id) && (type === ALL || l.type === type) && (!q || l.name.includes(q)),
   );
 
   const add = (id) => {
@@ -120,7 +124,7 @@ const PreferenceModal = ({ legends, server, countOf, onSave, onClose }) => {
 
         <p className={styles.label}>내 순위</p>
         {picked.length === 0 ? (
-          <p className={styles.emptyPick}>아래에서 목표로 삼을 레전드를 골라 주세요.</p>
+          <p className={styles.emptyPick}>아래에서 모으고 싶은 레전드를 골라 주세요.</p>
         ) : (
           <ol className={styles.picked} ref={listRef}>
             {picked.map((id, i) => {
@@ -160,16 +164,8 @@ const PreferenceModal = ({ legends, server, countOf, onSave, onClose }) => {
           </ol>
         )}
 
-        <label className={styles.search}>
-          <span aria-hidden="true">⌕</span>
-          <input
-            type="search"
-            value={query}
-            placeholder="미보유 레전드 추가 — 이름 검색"
-            autoComplete="off"
-            onChange={(e) => setQuery(e.target.value)}
-          />
-        </label>
+        <SearchInput value={query} onChange={setQuery} placeholder="미보유 레전드 이름 검색" />
+        <FilterChips label="타자·투수" variant="seg" options={TYPE_OPTIONS} value={type} onChange={setType} />
 
         <ul className={styles.candidates}>
           {candidates.map((l) => (

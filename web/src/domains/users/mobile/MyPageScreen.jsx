@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { Avatar, pickProfileImageSrc } from "@/global/ui/avatar";
+import PinnedBadge from "@/global/ui/badge/PinnedBadge.jsx";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import {
   requestGetMyInfo,
@@ -235,6 +236,15 @@ export default function MyPageScreen() {
           <span className={styles.fieldValueMuted}>{profile.lastLoginAt ?? "-"}</span>
         </div>
       </section>
+
+      {/* 내 선호 레전드는 보유 현황의 '내 선호' 칩이 켜진 목록으로 간다 (REQ-USR-09) */}
+      <Link to={`${ROUTE_PATHS.legend_collections}?tab=mine`} className={styles.goalLink}>
+        <span className={styles.goalText}>
+          <strong className={styles.goalTitle}>내 선호 레전드 <PinnedBadge variant="catNew" /></strong>
+          <span className={styles.goalSub}>선호 레전드의 보유 현황을 모아 봐요</span>
+        </span>
+        <span className={styles.goalChevron} aria-hidden="true">›</span>
+      </Link>
 
       <section className={styles.dangerZone}>
         <button type="button" className={styles.withdrawBtn} onClick={openWithdraw}>

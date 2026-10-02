@@ -44,7 +44,16 @@ export const ROUTE_SEO = {
 // 는 기능 자체라 색인 대상으로 남기고, 섹션 상세만 제외한다.
 // /auth/callback: OAuth 리다이렉트 중계용 화면이라 사용자에게 보여줄 고유 콘텐츠가 없다.
 // AdSense 반려 사유("콘텐츠 없는 화면") 대응 — 크롤러 색인에서 제외한다(2026-09-13).
-export const NOINDEX_PATHS = ["/community", "/probability/:sectionId", "/auth/callback"];
+// /legend-collection-skills: 비로그인에게는 로그인 안내 화면뿐이라 고유 콘텐츠가 없다(REQ-LCSK-24).
+// /legend-collections/manage · /legend-collection-skills/:legendId/edit: 로그인 전용 관리 화면 (2026-10-02).
+export const NOINDEX_PATHS = [
+  "/community",
+  "/probability/:sectionId",
+  "/auth/callback",
+  "/legend-collection-skills",
+  "/legend-collections/manage",
+  "/legend-collection-skills/:legendId/edit",
+];
 
 // 쿼리스트링은 location.pathname 자체에 포함되지 않으므로 별도 정규화 불필요.
 // (예: /players?team=..&year=.. → location.pathname 은 이미 "/players")

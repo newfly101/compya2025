@@ -87,3 +87,21 @@
     transition: none;
   }
 }
+
+// 검색 + 오른쪽 버튼 한 줄 (searchActions) — 버튼은 compact 로 360px 에서도 한 줄
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  > :first-child {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+}
+
+// collapsible={false} — 접기 헤더 없이 검색 줄 아래에 칩 줄이 바로 붙는다
+.inner[data-flat] {
+  padding-top: $space-2;
+  overflow: visible;
+}

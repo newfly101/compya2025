@@ -27,9 +27,12 @@ export const ROUTE_PATHS = {
   },
   // 레전드 재료
   legend_stats: "/legend-stats",
-  // 레전드 재료 보유 현황 — ?tab=all|mine
+  // 내 재료 보유 현황(조회) — ?tab=mine 이면 '내 선호' 칩이 선택된 채로 열린다
   legend_collections: "/legend-collections",
+  legend_collection_manage: "/legend-collections/manage",
   legend_collection_skills: "/legend-collection-skills",
+  legend_collection_skill_edit_pattern: "/legend-collection-skills/:legendId/edit",
+  legend_collection_skill_edit: (legendId) => `/legend-collection-skills/${legendId}/edit`,
   // 히스토리 재료 탐색기 — 평점표에서 ?legend={레전드명} 으로 진입한다
   history_legend: "/history-mode/legend",
   community: "/community",
@@ -39,6 +42,8 @@ export const ROUTE_PATHS = {
   contact: "/contact",
   about: "/about",
   mypage: "/mypage",
+  // 홈 바로가기 편집 — 로그인 사용자 전용 (REQ-HM-14)
+  home_shortcuts: "/home/shortcuts",
   // admin — 단일 셸 + 상단 탭. 기존 경로 문자열은 그대로 두고(북마크 호환) :tab 파라미터로 매칭한다.
   admin: "/admin",
   admin_tab_pattern: "/admin/:tab",

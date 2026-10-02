@@ -12,34 +12,29 @@
   padding: $space-4 $layout-h-pad $space-3;
 }
 
-.back {
-  align-self: flex-start;
+.skeleton {
+  padding: 0 $layout-h-pad;
+}
+
+// 목록 머리 — 이 목록이 어디서 오는지, 어디서 바꾸는지
+.basis {
+  margin: 0;
   color: var(--color-text-secondary);
   font-size: $font-size-11;
   line-height: 1.5;
-  text-decoration: none;
 
-  &:focus-visible {
-    outline: 2px solid var(--color-brand);
-    outline-offset: 2px;
+  a {
+    display: inline-block;
+    padding: $space-2 0;
+    color: var(--color-brand);
+    font-weight: $font-weight-semibold;
+    text-decoration: none;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brand);
+      outline-offset: 2px;
+    }
   }
-}
-
-.intro {
-  display: flex;
-  flex-direction: column;
-  gap: $space-1;
-}
-
-.title {
-  margin: 0;
-  font-size: $font-size-15;
-  font-weight: $font-weight-semibold;
-  line-height: 1.5;
-}
-
-.skeleton {
-  padding: 0 $layout-h-pad;
 }
 
 // 표 — legendCollections LegendTable (Figma 01 Table) 과 같은 모양: # · 레전드 · 상태 · 스킬
@@ -81,6 +76,7 @@
   color: var(--color-text-primary);
   font-family: inherit;
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
 
   &:hover {
@@ -191,4 +187,36 @@
   line-height: 1.5;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+// 정렬 머리 — 보유 현황 LegendTable 머리와 같은 모양(글자 + 브랜드색 작은 화살표)
+.sortBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  max-width: 100%;
+  min-height: $control-height-md;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &[data-active] {
+    color: var(--color-text-primary);
+    font-weight: $font-weight-semibold;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+  }
+}
+
+.arrow {
+  @include data-table-sort-arrow;
 }

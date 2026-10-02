@@ -1,8 +1,8 @@
 import React from "react";
 import { createPortal } from "react-dom";
 import styles from "./LoginRequiredModal.module.scss";
+import { DEFAULT_LOGIN_REASON } from "./loginReasons.js";
 
-const DEFAULT_MESSAGE = "로그인한 회원만 볼 수 있는 메뉴예요.\n로그인하고 확인해보세요.";
 
 const LoginRequiredModal = ({ isOpen, onClose, onLogin, message }) => {
   if (!isOpen) return null;
@@ -21,7 +21,9 @@ const LoginRequiredModal = ({ isOpen, onClose, onLogin, message }) => {
         className={styles.modal}
         onClick={(e) => e.stopPropagation()}
       >
-        <p className={styles.message}>{message ?? DEFAULT_MESSAGE}</p>
+        <h2 className={styles.title}>로그인이 필요해요</h2>
+        <p className={styles.message}>{message ?? DEFAULT_LOGIN_REASON}</p>
+        <p className={styles.sub}>로그인하면 지금 보던 화면으로 돌아와요.</p>
         <div className={styles.actions}>
           <button
             type="button"
@@ -36,7 +38,7 @@ const LoginRequiredModal = ({ isOpen, onClose, onLogin, message }) => {
               className={styles.loginBtn}
               onClick={handleLogin}
             >
-              N 로그인
+              로그인
             </button>
           )}
         </div>

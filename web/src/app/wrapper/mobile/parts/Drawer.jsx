@@ -6,18 +6,22 @@ import styles from "./Drawer.module.scss";
 import { MENU_GROUPS, ADMIN_MENU_GROUPS } from "@/app/wrapper/mobile/config/MENU_GROUPS.js";
 import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
 import { RenewalNoticeModal } from "@/global/ui/renewalNoticeModal";
-import { LoginRequiredModal } from "@/global/ui/loginRequiredModal";
+import { useLoginRequiredModal } from "@/domains/authentication/hooks/useLoginRequiredModal.jsx";
 import PinnedBadge from "@/global/ui/badge/PinnedBadge.jsx";
 import { Avatar, pickProfileImageSrc } from "@/global/ui/avatar";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 
 
+const COLLAPSED_KEY = "drawerCollapsed";
+
 const Drawer = () => {
   const { isDrawerOpen, closeDrawer } = useTopBar();
   const location = useLocation();
   const { user, isAuthenticated, isAdmin, login } = useAuthentication();
+  const { askLogin, loginModal } = useLoginRequiredModal();
   const [renewalOpen, setRenewalOpen] = useState(false);
-  const [loginRequiredOpen, setLoginRequiredOpen] = useState(false);
+  // 접이식 부모 행(id)별 접힘 상태 — 탭을 닫으면 다시 펼침 (sessionStorage, REQ-HM-15)
+  const [collapsed, setCollapsed] = useState(() => new Set(JSON.parse(sessionStorage.getItem(COLLAPSED_KEY) ?? "[]")));
 
 
   // 폐기 도메인 (comingSoon) 클릭 시 navigate 차단 + 모달 표시. drawer 도 함께 닫음.
@@ -28,16 +32,67 @@ const Drawer = () => {
   };
 
   // 로그인 필요 (loginRequired) 메뉴, 비로그인 클릭 시 navigate 차단 + 안내 모달 표시. drawer 도 함께 닫음.
-  const handleLoginRequiredClick = (e) => {
-    e.preventDefault();
-    closeDrawer();
-    setLoginRequiredOpen(true);
-  };
-
   const getClickHandler = (item) => {
     if (item.comingSoon) return handleComingSoonClick;
-    if (item.loginRequired && !isAuthenticated) return handleLoginRequiredClick;
+    if (item.loginRequired && !isAuthenticated) {
+      return (e) => {
+        e.preventDefault();
+        closeDrawer();
+        askLogin(item.loginReason);
+      };
+    }
     return closeDrawer;
+  };
+
+  const toggleGroup = (id) => {
+    const next = new Set(collapsed);
+    if (!next.delete(id)) next.add(id);
+    sessionStorage.setItem(COLLAPSED_KEY, JSON.stringify([...next]));
+    setCollapsed(next);
+  };
+
+  const renderLink = (item, sub = false) => (
+    <li key={item.to}>
+      <Link
+        to={item.to}
+        className={`${styles.menuItem} ${sub ? styles.menuSub : ""} ${location.pathname === item.to ? styles.menuItemActive : ""}`}
+        onClick={getClickHandler(item)}
+      >
+        <span className={styles.menuIcon}>{item.icon}</span>
+        <span className={styles.menuLabel}>{item.label}</span>
+        {item.loginRequired && !isAuthenticated && <span className={styles.menuLock} aria-label="로그인 필요">🔒</span>}
+        {item.tag && (
+          <span className={styles.menuTag}>
+            <PinnedBadge variant={item.tag.variant} label={item.tag.label} />
+          </span>
+        )}
+      </Link>
+    </li>
+  );
+
+  const renderGroupRow = (item) => {
+    const open = !collapsed.has(item.id);
+    return (
+      <li key={item.id}>
+        <button
+          type="button"
+          className={styles.menuItem}
+          aria-expanded={open}
+          aria-controls={`drawer-${item.id}`}
+          onClick={() => toggleGroup(item.id)}
+        >
+          <span className={styles.menuIcon}>{item.icon}</span>
+          <span className={styles.menuLabel}>{item.label}</span>
+          {item.tag && (
+            <span className={styles.menuTag}>
+              <PinnedBadge variant={item.tag.variant} label={item.tag.label} />
+            </span>
+          )}
+          <span className={styles.menuChevron} aria-hidden="true">{open ? "▾" : "▸"}</span>
+        </button>
+        {open && <ul id={`drawer-${item.id}`} className={styles.menuList}>{item.children.map((c) => renderLink(c, true))}</ul>}
+      </li>
+    );
   };
 
   return (
@@ -84,26 +139,7 @@ const Drawer = () => {
             <div key={group.label} className={styles.group}>
               <span className={styles.groupLabel}>{group.label}</span>
               <ul className={styles.menuList}>
-                {group.items.map((item) => {
-                  const isActive = location.pathname === item.to;
-                  return (
-                    <li key={item.to}>
-                      <Link
-                        to={item.to}
-                        className={`${styles.menuItem} ${isActive ? styles.menuItemActive : ""}`}
-                        onClick={getClickHandler(item)}
-                      >
-                        <span className={styles.menuIcon}>{item.icon}</span>
-                        <span className={styles.menuLabel}>{item.label}</span>
-                        {item.tag && (
-                          <span className={styles.menuTag}>
-                            <PinnedBadge variant={item.tag.variant} label={item.tag.label} />
-                          </span>
-                        )}
-                      </Link>
-                    </li>
-                  );
-                })}
+                {group.items.map((item) => (item.children ? renderGroupRow(item) : renderLink(item)))}
               </ul>
             </div>
           ))}
@@ -115,11 +151,7 @@ const Drawer = () => {
         isOpen={renewalOpen}
         onClose={() => setRenewalOpen(false)}
       />
-      <LoginRequiredModal
-        isOpen={loginRequiredOpen}
-        onClose={() => setLoginRequiredOpen(false)}
-        onLogin={login}
-      />
+      {loginModal}
     </>
   );
 };

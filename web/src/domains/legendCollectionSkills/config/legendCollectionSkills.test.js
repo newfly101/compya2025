@@ -1,6 +1,6 @@
 // 실행: node src/domains/legendCollectionSkills/config/legendCollectionSkills.test.js (프로젝트에 테스트 러너 없음 — assert 기반)
 import assert from "node:assert/strict";
-import { ACTION, BULK, applyActions, showEnhanceControls, bulkEnabled, calcNeed, canEnhance, enhanceEnabled, enhanceSummary, gradeColorKey, groupSkillsByGrade, isEditLocked, isRecommended, isRegistered, slotCanTake, sortByOwned } from "./legendCollectionSkills.js";
+import { ACTION, BULK, applyActions, showEnhanceControls, bulkEnabled, calcNeed, canEnhance, enhanceEnabled, enhanceSummary, gradeColorKey, groupSkillsByGrade, isEditLocked, isRecommended, isRegistered, slotCanTake, sortByOwned, SKSORT, DEFAULT_SKSORT, nextSkillSort, skillSortMark, skillSortText, sortSkillRows } from "./legendCollectionSkills.js";
 
 // spec REQ-LCSK-05 예: 위압감 D·캡틴 E(레전드) · 배팅머신 C → 3+4+3−7 = 고추강 3, 고고각 2
 assert.deepEqual(
@@ -126,4 +126,26 @@ console.log("legendCollectionSkills config: ok");
   assert.equal(isRecommended(sk("스프레이 히터", "플래티넘")), true);
   assert.equal(isRecommended(sk("스프레이히터", "플래티넘")), false);
   assert.deepEqual(g.map((x) => x.grade), ["레전드", "플래티넘"]);
+}
+
+// 목록 머리 정렬
+{
+  const reg = (g) => [0, 1, 2].map((i) => ({ skillId: i, baseGrade: "E", currentGrade: g[i] }));
+  const row = (name, status, g) => ({ legend: { name }, item: { status, slots: g ? reg(g) : [{}, {}, {}] } });
+  const rows = [row("다", "FRAME", ["E", "E", "E"]), row("가", "OWNED", null), row("나", "OWNED", ["S", "S", "A"]), row("라", "FRAME", ["A", "A", "A"])];
+  const names = (s) => sortSkillRows(rows, s).map((r) => r.legend.name).join("");
+  assert.equal(names(DEFAULT_SKSORT), "가나다라"); // 보유중 먼저, 같은 상태는 입력 순서
+  assert.equal(names({ key: SKSORT.STATUS, dir: 1 }), "다라가나"); // 액자 먼저
+  assert.equal(names({ key: SKSORT.NAME, dir: 1 }), "가나다라");
+  assert.equal(names({ key: SKSORT.NAME, dir: -1 }), "라다나가");
+  assert.equal(names({ key: SKSORT.ENH, dir: -1 }), "나라다가"); // 미등록(가) 항상 뒤
+  assert.equal(names({ key: SKSORT.ENH, dir: 1 }), "다라나가"); // 오름차순도 미등록은 뒤
+  assert.equal(names({ key: SKSORT.REG, dir: -1 }), "다나라가"); // 등록 먼저(입력 순서 유지)
+  assert.equal(names({ key: SKSORT.REG, dir: 1 }), "가다나라"); // 미등록 먼저
+  assert.deepEqual(nextSkillSort(DEFAULT_SKSORT, SKSORT.STATUS), { key: "status", dir: 1 });
+  assert.deepEqual(nextSkillSort(DEFAULT_SKSORT, SKSORT.NAME), { key: "name", dir: 1 });
+  assert.deepEqual(nextSkillSort(DEFAULT_SKSORT, SKSORT.ENH), { key: "enh", dir: -1 });
+  assert.equal(skillSortMark(DEFAULT_SKSORT, SKSORT.STATUS), "▼");
+  assert.equal(skillSortMark(DEFAULT_SKSORT, SKSORT.NAME), "");
+  assert.equal(skillSortText(DEFAULT_SKSORT), "상태 · 보유중 먼저");
 }

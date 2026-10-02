@@ -9,7 +9,7 @@ const AuthGuard = ({ allow }) => {
   if (!initialized) return null;
 
   if (!isAuthenticated) {
-    sessionStorage.setItem("redirectPath", window.location.pathname)
+    sessionStorage.setItem("redirectPath", window.location.pathname + window.location.search + window.location.hash)
     return <Navigate to="/" replace />
   }
 

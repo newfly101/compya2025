@@ -2,6 +2,7 @@ import { useState } from "react";
 import {
   LEGEND,
   MATERIAL,
+  shortDate,
   canSetMaterial,
   isLockedInsert,
   legendCounts,
@@ -99,7 +100,15 @@ const LegendDetail = ({ legend, c, historyCards, mileageBadge, onReset, material
         </div>
       )}
 
-      {(savedFrame || savedOwned) && c.isAuthenticated && (
+      {(savedFrame || savedOwned) && c.isAuthenticated && !editing && (
+        <p className={styles.note}>
+          {savedFrame
+            ? `액자 획득일 ${shortDate(frameAcquiredAt)}`
+            : `액자 획득일 ${shortDate(frameAcquiredAt)} · 보유 획득일 ${shortDate(acquiredAt)}`}
+        </p>
+      )}
+
+      {(savedFrame || savedOwned) && c.isAuthenticated && editing && (
         <div className={styles.acquired}>
           {[
             ["frameAcquiredAt", "액자 획득일", frameAcquiredAt, true],
