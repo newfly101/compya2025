@@ -25,6 +25,7 @@
 ## [Unreleased]
 
 ### Added
+- 내 레전드 스킬 기록 — 보유중·액자 레전드의 스킬 3개와 등급을 저장하고 기본 강화·고추강·고고각 버튼으로 현재 등급을 기록, 풀업 필요 재화 계산 (cdc8cae1, baa3c066, 086c49aa) → [history](docs/features/legendCollectionSkills/history.md)
 ### Changed
 ### Fixed
 - 레전드 재료 보유 현황에서 내 기록·일정 조회가 실패하면 화면이 같은 요청을 끝없이 다시 보내던 문제를 고쳤다 — 실패하면 멈추고 "다시 시도" 로만 재요청한다 (18f21cb5, #48)
