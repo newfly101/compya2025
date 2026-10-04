@@ -19,7 +19,6 @@ import { useHomeSections } from "@/domains/home/hooks/useHomeSections.js";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import Skeleton from "@/global/ui/mobile/stateBox/Skeleton.jsx";
 import MyCollectionSection from "@/domains/home/components/section/myCollection/MyCollectionSection.jsx";
-import TodayHistoryCard from "@/domains/legendCollections/mobile/containers/public/TodayHistoryCard.jsx";
 import ScheduleCardSection from "@/domains/legendCollections/mobile/containers/public/ScheduleCardSection.jsx";
 import { useMyCollectionSummary } from "@/domains/legendCollections/mobile/hooks/useMyCollectionSummary.js";
 import { useMySkillSummary } from "@/domains/legendCollectionSkills/mobile/hooks/useMySkillSummary.js";
@@ -50,7 +49,7 @@ const HomeScreen = () => {
     couponError, eventError, noticeError, quizError,
   } = useHomeSections();
 
-  // 내 컬렉션·오늘 히스토리 카드가 나눠 쓰는 요약 — 로그인했을 때만 요청한다 (비로그인은 요청 0)
+  // 내 컬렉션·주기 일정 카드가 나눠 쓰는 요약 — 로그인했을 때만 요청한다 (비로그인은 요청 0)
   const collection = useMyCollectionSummary();
   const skills = useMySkillSummary();
 
@@ -73,10 +72,9 @@ const HomeScreen = () => {
         children={<NoticeSection notices={notices} loading={firstLoading} error={noticeError} retry={retry} />}
       />
 
-      {/* ── 오늘 히스토리(선호 레전드) → 내 컬렉션 (REQ-HM-11~13) — 요청 실패·해당 없음이면 각자 숨는다 ── */}
-      <TodayHistoryCard summary={collection} />
-      <ScheduleCardSection summary={collection} />
+      {/* ── 내 컬렉션 → 이번 주기 일정 — 요청 실패·해당 없음이면 각자 숨는다 ── */}
       <MyCollectionSection collection={collection} skills={skills} />
+      <ScheduleCardSection summary={collection} />
 
       <SupportSection />
 
