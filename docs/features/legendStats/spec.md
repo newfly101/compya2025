@@ -1,9 +1,9 @@
 ---
 feature: legendStats
-version: 1.0.1
+version: 1.1.0
 status: active
 created: 2026-09-02
-updated: 2026-09-28
+updated: 2026-10-03
 ---
 
 # legendStats
@@ -16,7 +16,7 @@ updated: 2026-09-28
 
 | 화면 | 주소 | 어디서 들어오나 |
 |---|---|---|
-| 레전드 재료 평점표 (SC-15-01) | `/legend-stats` | 홈 퀵메뉴 "레전드 재료", 하단 드로어 메뉴, `/about` 소개 화면, `/guides` 안내 링크 |
+| 재료 검색 (SC-15-01, 옛 이름 "레전드 재료 평점표") | `/legend-stats` | 같은 화면군의 공용 탭(REQ-LS-09), 홈 퀵메뉴 "레전드 재료", 서랍 "레전드 재료 › 재료 검색", `/about` 소개 화면, `/guides` 안내 링크 |
 
 ## 3. 규칙
 
@@ -24,10 +24,13 @@ updated: 2026-09-28
 |---|---|---|---|
 | REQ-LS-01 | 조회 | 비로그인 사용자가 레전드 74명의 태생 스탯·커뮤니티 평점을 표로 볼 수 있다. 진입 즉시 스탯·구종마스터·팀 한글명 3개 요청을 독립적으로 보낸다 — 하나가 실패해도 나머지로 코드값 그대로 화면이 살아 있다 | `GET /api/legend-stats`, `useLegendStats.js:13-38` |
 | REQ-LS-02 | 재료 조회 | 행을 펼치면 그 순간 처음으로 재료 8건(선수 6 + 코치 2)을 단건 조회로 받는다. 재요청은 thunk가 막는다 | `GET /api/legends/{id}`, `useLegendStats.js:45-50` |
-| REQ-LS-03 | 필터·정렬 | 검색(이름)·구단 칩·타입(전체/타자/투수) 칩·포지션 칩(타입이 "전체"면 칩 자체가 없음)으로 필터링하고, 컬럼 헤더 클릭으로 재정렬한다. 평점 미정은 정렬 방향과 무관하게 항상 맨 아래(tie-break: OVR 내림차순) | `LegendStatsScreen.jsx`, `config/legendStats.js` |
+| REQ-LS-03 | 필터·정렬 | **검색을 품은 공용 필터 바**(검색창이 필터 영역 안에 있고 칩 묶음은 항상 펼침 — 접기 기능 없음, `legendCollections` REQ-LCOL-25)에서 검색(이름)·구단 칩·타입(전체/타자/투수) 칩·포지션 칩(타입이 "전체"면 칩 자체가 없음)으로 필터링하고, 컬럼 헤더 클릭으로 재정렬한다. 평점 미정은 정렬 방향과 무관하게 항상 맨 아래(tie-break: OVR 내림차순) | `LegendStatsScreen.jsx`, `config/legendStats.js` |
 | REQ-LS-04 | 저격 배지 링크 | 재료 카드에 "히"(historyLegend에서 저격 가능)/"마"(mileage에서 저격 가능) 배지가 있으면 각 도메인으로 이동하는 링크가 붙는다 | `LegendStatsScreen.jsx:220-243` |
 | REQ-LS-05 | 미사용 API 정리 (미구현) | `GET /api/legends`(목록), `GET /api/legends/{id}/materials`(재료 단독) 2개는 v1 화면 잔존 코드로 삭제가 확정됐으나 아직 코드에 남아 있다. `GET /api/legends/{id}`(단건, 재료 조회에 실사용 중)는 남긴다 — 컨트롤러 통째 삭제는 하지 않는다 | `FunPlayerLegendController.java`, 확정 2026-09-27 |
 | REQ-LS-06 | OVR 계산 | OVR(태생 5스탯 평균)은 응답에 없다 — DB STORED 컬럼과 FE 계산식이 같아 값은 일치한다 | `config/legendStats.js:45-48` |
+| REQ-LS-08 | 이름 | 상단바 제목은 세 레전드 재료 화면 모두 **"레전드 재료"** 이고(`routeMeta` title 동일), 이 화면의 이름은 탭 라벨 **"재료 검색"** 이다(서랍 "레전드 재료 › 재료 검색"). **본문 부제는 두지 않는다.** 주소·SEO 문구·가이드 제목의 "평점표" 는 유지한다 | `useDomainTopBar`, `LegendTabs.jsx`, `0010` |
+| REQ-LS-09 | 공용 탭·가이드 | 상단바 바로 아래에 레전드 재료 화면 공통 탭 바 [재료 검색 \| 내 보유 현황 \| 스킬 기록](**탭 3개**)을 둔다. 각 탭은 고유 주소(`/legend-stats` · `/legend-collections` · `/legend-collection-skills`)이고 지금 화면 탭이 켜진다(`/legend-collections/manage`·`/legend-collection-skills/:id/edit` 에서도 해당 탭이 켜진다). 탭 바로 아래에 "이 페이지 활용 가이드" 아코디언을 같은 위치에 둔다(공용 `GuideAccordion`, 본문은 항상 DOM 에 있음). 비로그인도 이 화면을 그대로 보며, 다른 두 탭을 눌러도 이동은 되고 조작 시점에 로그인 안내 모달(`authentication` REQ-AUTH-13)이 뜬다 | `LegendTabs.jsx`, `0010` |
+| REQ-LS-10 | 표 위 요약 줄 | 표 바로 위 한 줄에 **왼쪽은 집계("N명 · 평점 미정 n"), 오른쪽은 현재 정렬 기준 텍스트**(예 "OVR 높은순")를 양끝 정렬로 둔다. `legendCollections` REQ-LCOL-33 과 같은 패턴 | `LegendStatsScreen.jsx` `.meta` |
 
 ## 4. 데이터
 

@@ -1,0 +1,115 @@
+// 홈 바로가기 편집 (Figma legendContentFlow 05 · 05b)
+.screen {
+  @include flex-col($space-3);
+  padding: $space-4 $layout-h-pad $space-12;
+}
+
+.guide {
+  @include text-caption;
+  color: var(--color-text-secondary);
+  margin: 0;
+  word-break: keep-all;
+}
+
+.heading {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+  margin: $space-3 0 0;
+}
+
+.empty {
+  @include text-caption;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.list {
+  @include flex-col($space-2);
+}
+
+.row {
+  @include flex-row($space-2);
+  @include card-base($radius: $radius-lg, $pad: 0 $space-2);
+  min-height: $control-height-md;
+
+  // 끌고 있는 행 = 놓일 자리. 점선 테두리로 표시 (Figma 05b 의 점선 칸)
+  &[data-dragging] {
+    border-style: dashed;
+    border-color: var(--color-brand);
+    background-color: var(--color-brand-alpha-15);
+  }
+}
+
+// 끌기 손잡이 — 터치 스크롤과 겹치지 않게 touch-action 을 끈다
+.handle {
+  @include reset-button;
+  @include tap-target;
+  @include flex-center;
+  @include text-body-bold;
+  color: var(--color-text-muted);
+  touch-action: none;
+  cursor: grab;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+    border-radius: $radius-md;
+  }
+}
+
+.icon {
+  @include text-section-title;
+  flex-shrink: 0;
+  width: $space-6;
+  text-align: center;
+}
+
+.label {
+  @include text-body;
+  flex: 1;
+  min-width: 0;
+  color: var(--color-text-primary);
+  @include text-ellipsis;
+}
+
+.action {
+  @include reset-button;
+  @include tap-target;
+  @include text-caption;
+  padding: 0 $space-3;
+  color: var(--color-brand);
+
+  &:disabled {
+    color: var(--color-text-placeholder);
+    cursor: default;
+  }
+}
+
+.actions {
+  @include flex-row($space-2);
+  margin-top: $space-4;
+}
+
+.ghost,
+.primary {
+  @include reset-button;
+  @include text-body-bold;
+  flex: 1;
+  min-height: $control-height-md;
+  border-radius: $radius-lg;
+}
+
+.ghost {
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-text-secondary);
+}
+
+.primary {
+  background-color: var(--color-brand);
+  color: var(--color-bg-card); // 채움 버튼 위 글자 — legendCollections 와 같은 관례
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}

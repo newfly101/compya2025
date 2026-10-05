@@ -19,7 +19,7 @@ TODAY = date.today().isoformat()
 GROUPS = [
     ("content-ops", "콘텐츠·운영", ["admin", "coupons", "events", "notices", "quiz", "home"]),
     ("account", "계정·인증", ["authentication", "users", "community"]),
-    ("game-data", "게임 데이터", ["historyLegend", "legendStats", "legendCollections", "mileage", "players", "playerSkills"]),
+    ("game-data", "게임 데이터", ["historyLegend", "legendStats", "legendCollections", "legendCollectionSkills", "mileage", "players", "playerSkills"]),
     ("static", "정적·기타", ["odds", "guides", "policy", "error"]),
 ]
 ALL_FEATURES = [f for _, _, fs in GROUPS for f in fs]

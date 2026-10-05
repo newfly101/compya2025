@@ -179,6 +179,35 @@ $color-naver-font: $color-white-100;
   margin-left: auto;
 }
 
+// 접이식 부모 행은 <button> — 링크 행과 같은 모양으로 맞춘다
+button.menuItem {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+// 하위 메뉴 — 들여쓰기만 다르고 높이는 탭 대상 44 유지
+.menuSub {
+  height: $control-height-md;
+  padding-left: $space-10;
+}
+
+.menuLock {
+  @include text-micro;
+  flex-shrink: 0;
+}
+
+// 접힘 표시 — 글자는 작아도 행 전체가 버튼이라 탭 영역은 52
+.menuChevron {
+  @include text-caption;
+  flex-shrink: 0;
+  margin-left: $space-1;
+  color: var(--color-text-muted);
+}
+
 // ── 뱃지 ──────────────────────────────────────────────────────
 .badge {
   @include flex-center;

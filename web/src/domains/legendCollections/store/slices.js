@@ -4,6 +4,7 @@ import {
   requestGetLegendMaterials,
   requestGetMyCollection,
   requestGetSchedule,
+  requestPutAcquiredAt,
   requestPutChanges,
   requestPutPreferences,
 } from "@/domains/legendCollections/store/public/thunks.js";
@@ -14,6 +15,8 @@ const meSlice = createSlice({
   initialState: {
     version: null,
     legends: {},
+    acquiredAt: {},
+    frameAcquiredAt: {},
     materials: {},
     materialLegend: {},
     preferences: [],
@@ -32,6 +35,16 @@ const meSlice = createSlice({
     });
     applyAsyncHandlers(builder, requestPutChanges, () => {}, "mutate");
     applyAsyncHandlers(builder, requestPutPreferences, () => {}, "mutate");
+    applyAsyncHandlers(
+      builder,
+      requestPutAcquiredAt,
+      (state, action) => {
+        const { legendId } = action.payload;
+        if ("acquiredAt" in action.payload) state.acquiredAt[legendId] = action.payload.acquiredAt;
+        if ("frameAcquiredAt" in action.payload) state.frameAcquiredAt[legendId] = action.payload.frameAcquiredAt;
+      },
+      "mutate",
+    );
   },
 });
 

@@ -31,6 +31,7 @@ import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import AdSlot from "@/infra/ads/AdSlot.jsx";
 import { AD_SLOTS, ADS_ENABLED } from "@/infra/ads/adConfig.js";
 import PlayerCard from "./components/playerCard/PlayerCard";
+import FilterSection from "@/global/ui/mobile/filterSection/FilterSection.jsx";
 import FilterSheet from "./components/filterSheet/FilterSheet";
 import StatsTable from "./components/statsTable/StatsTable";
 import TableHelpModal from "./components/tableHelpModal/TableHelpModal";
@@ -399,6 +400,11 @@ const PlayerEncyclopediaScreen = () => {
         </button>
       </div>
 
+      <FilterSection
+        title="구단·연도"
+        storageKey="players.filterOpen"
+        summary={selectorDisabled ? `${teamAllLabel} · ${yearAllLabel}` : `${effectiveTeam} · ${effectiveYear}`}
+      >
       <div className={styles.selectRow} style={{ opacity: selectorDisabled ? 0.45 : 1 }}>
         <select
           className={styles.select}
@@ -427,6 +433,7 @@ const PlayerEncyclopediaScreen = () => {
           ))}
         </select>
       </div>
+      </FilterSection>
 
       <div className={styles.tabToggleRow}>
         <div className={styles.tabs}>

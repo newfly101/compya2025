@@ -6,6 +6,7 @@ import {
   requestGetLegendMaterials,
   requestGetMyCollection,
   requestGetSchedule,
+  requestPutAcquiredAt,
   requestPutChanges,
   requestPutPreferences,
 } from "@/domains/legendCollections/store/public/thunks.js";
@@ -21,6 +22,7 @@ import {
   loadDraft,
   resetMaterials,
   saveDraft,
+  setLegendDate,
   setLegendStatus,
   setMaterial,
   toSlots,
@@ -30,9 +32,10 @@ const EMPTY_SLOTS = [];
 
 /**
  * 재료 보유 현황 — 레전드 목록(legendStats 재사용) + 내 기록 + 편집 초안.
- * 서버 호출은 저장 버튼을 눌렀을 때만 일어난다. 초안은 sessionStorage 에 잠시 보관한다.
+ * edit=false(조회 화면)는 초안을 읽지도 쓰지도 않는다. edit=true(/manage)는 항상 편집 상태이고 초안을 sessionStorage 에 잠시 보관한다.
+ * 서버 호출은 저장 버튼을 눌렀을 때만 일어난다.
  */
-export const useLegendCollections = () => {
+export const useLegendCollections = ({ edit = false } = {}) => {
   const dispatch = useDispatch();
   const { isAuthenticated, login } = useAuthentication();
   const stats = useLegendStats();
@@ -40,8 +43,8 @@ export const useLegendCollections = () => {
   const schedule = useSelector((state) => state.legendCollections.schedule);
   const { byId } = useSelector((state) => state.legendCollections.materials);
 
-  const [draft, setDraft] = useState(() => loadDraft() ?? EMPTY_DRAFT);
-  const [editing, setEditing] = useState(() => changeCount(loadDraft() ?? EMPTY_DRAFT) > 0);
+  const [draft, setDraft] = useState(() => (edit ? loadDraft() : null) ?? EMPTY_DRAFT);
+  const editing = edit;
   const [saveError, setSaveError] = useState(null);
 
   useEffect(() => {
@@ -63,9 +66,9 @@ export const useLegendCollections = () => {
 
   // 비로그인이면 남아 있던 초안을 쓰지 않는다
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !edit) return;
     saveDraft(draft);
-  }, [draft, isAuthenticated]);
+  }, [draft, isAuthenticated, edit]);
 
   // 펼쳐서 받은 재료의 레전드 소속도 합쳐 초안 칸의 레전드를 알 수 있게 한다
   const server = useMemo(() => {
@@ -75,8 +78,15 @@ export const useLegendCollections = () => {
         materialLegend[m.id] = legendId;
       }),
     );
-    return { legends: me.legends, materials: me.materials, materialLegend, preferences: me.preferences };
-  }, [me.legends, me.materials, me.materialLegend, me.preferences, byId]);
+    return {
+      legends: me.legends,
+      acquiredAt: me.acquiredAt,
+      frameAcquiredAt: me.frameAcquiredAt,
+      materials: me.materials,
+      materialLegend,
+      preferences: me.preferences,
+    };
+  }, [me.legends, me.acquiredAt, me.frameAcquiredAt, me.materials, me.materialLegend, me.preferences, byId]);
 
   const loadSlots = useCallback(
     (legendId) => {
@@ -90,12 +100,10 @@ export const useLegendCollections = () => {
     [byId, stats.teamNameByCode],
   );
 
-  const startEdit = useCallback(() => setEditing(true), []);
-
+  /** 초안 버리기 — 편집 화면은 그대로 열려 있다 */
   const cancelEdit = useCallback(() => {
     setDraft(EMPTY_DRAFT);
     clearDraft();
-    setEditing(false);
     setSaveError(null);
   }, []);
 
@@ -109,6 +117,8 @@ export const useLegendCollections = () => {
     (legendId, next) => setDraft((d) => setLegendStatus(d, server, legendId, next)),
     [server],
   );
+
+  const changeLegendDate = useCallback((legendId, date) => setDraft((d) => setLegendDate(d, legendId, date)), []);
 
   const resetLegend = useCallback(
     (legendId) =>
@@ -129,7 +139,6 @@ export const useLegendCollections = () => {
     dispatch(requestGetSchedule());
     setDraft(EMPTY_DRAFT);
     clearDraft();
-    setEditing(false);
     return null;
   }, [dispatch, draft, me.version]);
 
@@ -154,6 +163,15 @@ export const useLegendCollections = () => {
     [dispatch, server, me.version],
   );
 
+  /** 획득일 저장 — patch: { frameAcquiredAt?, acquiredAt? } (null 이면 지우기). 성공하면 null, 실패하면 오류 정보 */
+  const saveAcquiredAt = useCallback(
+    async (legendId, patch) => {
+      const result = await dispatch(requestPutAcquiredAt({ legendId, ...patch }));
+      return requestPutAcquiredAt.rejected.match(result) ? (result.payload ?? { message: "저장하지 못했습니다." }) : null;
+    },
+    [dispatch],
+  );
+
   const retryMe = useCallback(() => dispatch(requestGetMyCollection()), [dispatch]);
 
   return {
@@ -172,14 +190,15 @@ export const useLegendCollections = () => {
     dirty: changeCount(draft),
     saving: me.mutateLoading,
     saveError,
-    startEdit,
     cancelEdit,
     changeMaterial,
     changeLegend,
+    changeLegendDate,
     resetLegend,
     save,
     resolveConflict,
     savePreferences,
+    saveAcquiredAt,
     loadSlots,
     slotsOf,
     slotsLoading: useSelector((state) => state.legendCollections.materials.loading),

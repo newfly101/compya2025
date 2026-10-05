@@ -1,3 +1,4 @@
+import FilterSection from "@/global/ui/mobile/filterSection/FilterSection.jsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
@@ -190,6 +191,8 @@ const HistoryLegendScreen = () => {
       })}
     </div>
   );
+
+  const applied = (view === VIEW.ROUND ? [week, day] : [team, type, pos]).filter((v) => v !== ALL);
 
   const renderFilters = () =>
     view === VIEW.ROUND ? (
@@ -443,7 +446,9 @@ const HistoryLegendScreen = () => {
           </button>
         </div>
 
-        {renderFilters()}
+        <FilterSection storageKey="historyLegend.filterOpen" count={applied.length} summary={applied.join(" · ")}>
+          {renderFilters()}
+        </FilterSection>
 
         <div className={styles.meta}>
           <span>

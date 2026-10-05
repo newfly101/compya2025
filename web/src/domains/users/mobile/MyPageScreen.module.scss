@@ -185,6 +185,35 @@
 }
 
 /* 위험 영역(탈퇴) */
+/* 내 레전드 목표 링크 — 행 전체가 링크 */
+.goalLink {
+  @include flex-row($space-3);
+  @include card-base($radius: $radius-xl, $pad: $space-3 $space-4);
+  min-height: $control-height-lg;
+  color: var(--color-text-primary);
+  @include pressable;
+}
+
+.goalText {
+  @include flex-col($space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.goalTitle {
+  @include text-body-bold;
+}
+
+.goalSub {
+  @include text-caption;
+  color: var(--color-text-secondary);
+}
+
+.goalChevron {
+  @include text-section-title;
+  color: var(--color-text-muted);
+}
+
 .dangerZone {
   display: flex;
   justify-content: center;

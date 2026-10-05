@@ -11,4 +11,6 @@ import com.dawne.com2usbaseball.domain.legendCollection.enums.LegendStatus;
 public class LegendStateEntity {
     private String legendId;
     private LegendStatus status;
+    private java.time.LocalDate acquiredAt;
+    private java.time.LocalDate frameAcquiredAt;
 }

@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -23,6 +24,7 @@ public record SaveChangesRequest(
     public record MaterialChange(@NotBlank String materialId, @NotNull MaterialState state) {
     }
 
-    public record LegendChange(@NotBlank String legendId, @NotNull LegendStatus status) {
+    /** acquiredOn: 선택. 액자/보유중이 된 날짜(없으면 오늘 KST). */
+    public record LegendChange(@NotBlank String legendId, @NotNull LegendStatus status, LocalDate acquiredOn) {
     }
 }

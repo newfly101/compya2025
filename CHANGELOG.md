@@ -25,7 +25,14 @@
 ## [Unreleased]
 
 ### Added
+- 홈 바로가기 편집(로그인 시 최대 8개 선택·드래그 순서, 브라우저 저장) · 오늘 히스토리 카드 · 내 컬렉션 카드(비로그인은 로그인 유도) → [ADR 0010](docs/decisions/0010-legend-content-flow.md) · [history](docs/features/home/history.md)
+- 내 레전드 스킬 기록 — 보유중·액자 레전드의 스킬 3개와 등급을 저장하고 기본 강화·고추강·고고각 버튼으로 현재 등급을 기록, 풀업 필요 재화 계산 (cdc8cae1, baa3c066, 086c49aa) → [history](docs/features/legendCollectionSkills/history.md)
 ### Changed
+- 레전드 화면 이름 정리 — "재료 검색" · "내 재료 보유 현황" · "내 레전드 스킬 기록", 서랍 "레전드 재료" 아래 하위 메뉴 3개, 세 화면 공용 탭 [재료 검색 | 내 보유 현황 | 스킬 기록] + 활용 가이드 아코디언, 마이페이지 "내 선호 레전드" 링크 → [ADR 0010](docs/decisions/0010-legend-content-flow.md)
+- 레전드 보유 현황·스킬 기록을 조회(읽기 전용)와 관리(`/legend-collections/manage` · `/legend-collection-skills/:id/edit`)로 분리, 선호 10명은 모달, 보유 현황 표에 선호 열 · 상태 3단계 정렬, 이번 주기 일정은 홈 섹션으로만 → [ADR 0010](docs/decisions/0010-legend-content-flow.md) · [history](docs/features/legendCollections/history.md)
+- 로그인 안내 모달을 하나로 통일하고, 로그인 뒤 쿼리·해시까지 원래 화면으로 복귀. 스킬 기록은 비로그인에게 홈 이동 대신 안내 화면을 보여 주고 검색엔진에는 노출하지 않음 → [history](docs/features/authentication/history.md)
+- 레전드 컬렉션에 보유·액자 획득일, 편집 시 변경일 입력, 획득일 열·정렬, 상태 변경 로그 추가 (b5158388, 151ec2c5, b1f10528) → [history](docs/features/legendCollections/history.md)
+- 필터 묶음을 접고 펼 수 있게 함 — 선수·마일리지 등 여러 화면 (b1f10528). 레전드 재료 3화면은 검색을 필터 영역 안에 두고 항상 펼침으로 되돌림
 ### Fixed
 - 레전드 재료 보유 현황에서 내 기록·일정 조회가 실패하면 화면이 같은 요청을 끝없이 다시 보내던 문제를 고쳤다 — 실패하면 멈추고 "다시 시도" 로만 재요청한다 (18f21cb5, #48)
 ### Admin

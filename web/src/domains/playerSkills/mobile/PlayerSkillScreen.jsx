@@ -1,3 +1,4 @@
+import FilterSection from "@/global/ui/mobile/filterSection/FilterSection.jsx";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { useSearchTracking } from "@/infra/analytics/hooks/useSearchTracking.js";
@@ -71,6 +72,8 @@ const PlayerSkillScreen = () => {
     }
   };
 
+  const applied = [cat !== "전체" && cat, type === "hitter" ? "타자" : "투수", `${grade}등급`].filter(Boolean);
+
   return (
     <div className={styles.screen}>
       <GuideAccordion guide={GUIDES_BY_SLUG["player-skills-guide"]} />
@@ -109,6 +112,7 @@ const PlayerSkillScreen = () => {
           )}
         </div>
 
+        <FilterSection storageKey="playerSkills.filterOpen" count={applied.length} summary={applied.join(" · ")}>
         <div className={styles.tierRow}>
           {TIER_FILTERS.map((t) => (
             <button
@@ -149,6 +153,7 @@ const PlayerSkillScreen = () => {
             </button>
           ))}
         </div>
+        </FilterSection>
 
         <div className={styles.meta}>
           <span>

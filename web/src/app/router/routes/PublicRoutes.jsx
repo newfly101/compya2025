@@ -12,6 +12,11 @@ const OddsSectionPage = lazy(() => import("@/domains/odds/mobile/OddsSectionScre
 const PlayerEncyclopediaPage = lazy(() => import("@/domains/players/mobile/PlayerEncyclopediaScreen.jsx"));
 const LegendStatsPage = lazy(() => import("@/domains/legendStats/mobile/LegendStatsScreen.jsx"));
 const LegendCollectionsPage = lazy(() => import("@/domains/legendCollections/mobile/LegendCollectionsScreen.jsx"));
+// 관리·선호 설정·스킬 편집은 라우트 가드로 튕기지 않는다 — 비로그인은 같은 주소에서 안내 화면을 본다 (REQ-LCSK-24)
+const LegendCollectionManagePage = lazy(() => import("@/domains/legendCollections/mobile/LegendCollectionManageScreen.jsx"));
+const LegendCollectionSkillEditPage = lazy(() => import("@/domains/legendCollectionSkills/mobile/LegendCollectionSkillEditScreen.jsx"));
+// 스킬 기록은 라우트 가드로 튕기지 않는다 — 비로그인은 같은 주소에서 안내 화면을 본다 (REQ-LCSK-24)
+const LegendCollectionSkillsPage = lazy(() => import("@/domains/legendCollectionSkills/mobile/LegendCollectionSkillsScreen.jsx"));
 const HistoryLegendPage = lazy(() => import("@/domains/historyLegend/mobile/HistoryLegendScreen.jsx"));
 const PrivacyPolicyPage = lazy(() => import("@/domains/policy/mobile/PrivacyPolicyScreen.jsx"));
 const TermsPage = lazy(() => import("@/domains/policy/mobile/TermsScreen.jsx"));
@@ -40,6 +45,9 @@ export const PublicRoutes = [
   { path: ROUTE_META.PLAYERS.path, element: <PlayerEncyclopediaPage />, handle: ROUTE_META.PLAYERS },
   { path: ROUTE_META.LEGEND_STATS.path, element: <LegendStatsPage />, handle: ROUTE_META.LEGEND_STATS },
   { path: ROUTE_META.LEGEND_COLLECTIONS.path, element: <LegendCollectionsPage />, handle: ROUTE_META.LEGEND_COLLECTIONS },
+  { path: ROUTE_META.LEGEND_COLLECTION_MANAGE.path, element: <LegendCollectionManagePage />, handle: ROUTE_META.LEGEND_COLLECTION_MANAGE },
+  { path: ROUTE_META.LEGEND_COLLECTION_SKILLS.path, element: <LegendCollectionSkillsPage />, handle: ROUTE_META.LEGEND_COLLECTION_SKILLS },
+  { path: ROUTE_META.LEGEND_COLLECTION_SKILL_EDIT.path, element: <LegendCollectionSkillEditPage />, handle: ROUTE_META.LEGEND_COLLECTION_SKILL_EDIT },
   { path: ROUTE_META.HISTORY_LEGEND.path, element: <HistoryLegendPage />, handle: ROUTE_META.HISTORY_LEGEND },
   { path: ROUTE_META.PRIVACY.path, element: <PrivacyPolicyPage />, handle: ROUTE_META.PRIVACY },
   { path: ROUTE_META.TERMS.path, element: <TermsPage />, handle: ROUTE_META.TERMS },

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
-import styles from "./Modals.module.scss";
+import styles from "./ConfirmModal.module.scss";
 
 /**
  * 가운데 확인 카드 (Figma 03 팝업 모음) — 제목 · 설명 · [보조(테두리)] [주(채움)].

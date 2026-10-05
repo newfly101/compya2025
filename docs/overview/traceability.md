@@ -1,6 +1,6 @@
 ---
-created: 2026-09-30
-updated: 2026-09-30
+created: 2026-10-03
+updated: 2026-10-03
 ---
 
 <!-- 생성 파일: python .claude/scripts/build-traceability.py — 손으로 고치지 말 것 -->
@@ -25,44 +25,45 @@ updated: 2026-09-30
 | notices | NTC | 04 | 운영 | 1.0.5 |
 | community | CMT | 05 | 동결 | 1.0.1 |
 | quiz | QZ | 06 | 운영 | 1.0.3 |
-| home | HM | 07 | 운영 | 1.0.4 |
-| authentication | AUTH | 08 | 운영 | 1.0.8 |
-| users | USR | 09 | 운영 | 1.0.1 |
+| home | HM | 07 | 운영 | 1.1.0 |
+| authentication | AUTH | 08 | 운영 | 1.1.0 |
+| users | USR | 09 | 운영 | 1.1.0 |
 | odds | ODD | 10 | 운영 | 1.0.1 |
-| players | PLR | 11 | 운영 | 1.0.1 |
+| players | PLR | 11 | 운영 | 1.0.2 |
 | error | ERR | 12 | 운영 | 1.0.1 |
 | policy | PLC | 13 | 운영 | 1.0.0 |
-| historyLegend | HL | 14 | 운영 | 1.0.3 |
-| legendStats | LS | 15 | 운영 | 1.0.1 |
-| mileage | MLG | 16 | 개발중 | 1.0.1 |
-| playerSkills | PSK | 17 | 운영 | 1.0.0 |
+| historyLegend | HL | 14 | 운영 | 1.0.4 |
+| legendStats | LS | 15 | 운영 | 1.1.0 |
+| mileage | MLG | 16 | 개발중 | 1.0.2 |
+| playerSkills | PSK | 17 | 운영 | 1.0.2 |
 | guides | GD | 18 | 운영 | 1.0.2 |
-| legendCollections | LCOL | 19 | 운영 | 1.0.4 |
+| legendCollections | LCOL | 19 | 운영 | 1.3.0 |
+| legendCollectionSkills | LCSK | 20 | 운영 | 1.2.0 |
 
 ## 3. 추적표 본문
 
-192개 REQ 전부를 담으면 150줄 상한을 넘어 기능 그룹 4개로 나눴다(`file-split.md` § 2 의미 단위 분리).
+243개 REQ 전부를 담으면 150줄 상한을 넘어 기능 그룹 4개로 나눴다(`file-split.md` § 2 의미 단위 분리).
 
 | 그룹 | 파일 | 기능 | REQ 수 |
 |---|---|---|---|
-| 콘텐츠·운영 | [traceability-content-ops.md](./traceability-content-ops.md) | admin·coupons·events·notices·quiz·home | 91 |
-| 계정·인증 | [traceability-account.md](./traceability-account.md) | authentication·users·community | 24 |
-| 게임 데이터 | [traceability-game-data.md](./traceability-game-data.md) | historyLegend·legendStats·legendCollections·mileage·players·playerSkills | 55 |
+| 콘텐츠·운영 | [traceability-content-ops.md](./traceability-content-ops.md) | admin·coupons·events·notices·quiz·home | 97 |
+| 계정·인증 | [traceability-account.md](./traceability-account.md) | authentication·users·community | 26 |
+| 게임 데이터 | [traceability-game-data.md](./traceability-game-data.md) | historyLegend·legendStats·legendCollections·legendCollectionSkills·mileage·players·playerSkills | 98 |
 | 정적·기타 | [traceability-static.md](./traceability-static.md) | odds·guides·policy·error | 22 |
 
 ## 4. 집계
 
 | 항목 | 값 |
 |---|---|
-| REQ 총수 | 192 |
-| 코드 확인 비율(근거에 `.java`/`.jsx`/`.xml`/`.sql` 파일·줄 참조가 있는 REQ) | 117/192 (60.9%) |
+| REQ 총수 | 243 |
+| 코드 확인 비율(근거에 `.java`/`.jsx`/`.xml`/`.sql` 파일·줄 참조가 있는 REQ) | 143/243 (58.8%) |
 | API 없는 REQ 수(서버 없는 기능) | 22 |
-| 미결(❓·🔴) 수(18개 기능 spec·design 합산) | 18 |
+| 미결(❓·🔴) 수(18개 기능 spec·design 합산) | 29 |
 
 ## 5. 빈 자리
 
 - **community**(REQ-CMT-01~REQ-CMT-04, 테이블 열) — 전용 테이블 없음 (`features/community/spec.md` § 4)
-- **home**(REQ-HM-01~REQ-HM-10, 테이블 열) — 전용 테이블 없음 (`features/home/spec.md` § 4)
+- **home**(REQ-HM-01~REQ-HM-16, 테이블 열) — 전용 테이블 없음 (`features/home/spec.md` § 4)
 - **odds**(REQ-ODD-01~REQ-ODD-05, 테이블 열) — 전용 테이블 없음 (`features/odds/spec.md` § 4)
 - **error**(REQ-ERR-01~REQ-ERR-06, 테이블 열) — 전용 테이블 없음 (`features/error/spec.md` § 4)
 - **policy**(REQ-PLC-01~REQ-PLC-05, 테이블 열) — 전용 테이블 없음 (`features/policy/spec.md` § 4)
