@@ -75,8 +75,12 @@
     ],
     "WorktreeCreate": [
       {
-        "type": "command",
-        "command": "bash .claude/hooks/worktree-create.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/worktree-create.sh"
+          }
+        ]
       }
     ]
   }
