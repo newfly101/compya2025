@@ -11,12 +11,15 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
+    /** CORS 와 WebSocket(/ws) 이 같이 쓰는 허용 출처 */
+    public static final List<String> ALLOWED_ORIGINS = List.of("http://localhost:3000", "https://compyafun.com");
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
         // 🔥 프론트 주소 (중요)
-        config.setAllowedOrigins(List.of("http://localhost:3000", "https://compyafun.com"));
+        config.setAllowedOrigins(ALLOWED_ORIGINS);
 
         // 🔥 쿠키 허용 (핵심)
         config.setAllowCredentials(true);
