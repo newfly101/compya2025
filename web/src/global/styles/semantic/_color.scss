@@ -142,6 +142,9 @@
   // D3=a: 신규 raw 색 직접 정의 (analysis § 8.5 — 사용자 확정 2026-05-31)
   --color-bg-modal: #{$color-bg-modal};
   --color-overlay: rgba(0, 0, 0, 0.55);
+
+  // 펀톡: 브랜드 면(내 말풍선·플로팅 버튼) 위 글자·아이콘. 테마 무관 흰색 고정 (grade-on-strong 과 같은 원색)
+  --color-chat-on-brand: #ffffff;
 }
 
 // ============================================================
@@ -255,4 +258,6 @@
   // 모달은 흰색으로 띄우고, 바닥 막은 밝은톤에서도 어둡게 둔다 (뒤 화면을 눌러야 하므로)
   --color-bg-modal: #ffffff;
   --color-overlay:  rgba(24, 16, 38, 0.45);
+
+  --color-chat-on-brand: #ffffff; // 라이트에서도 흰색 고정 (브랜드 보라 면 위)
 }
