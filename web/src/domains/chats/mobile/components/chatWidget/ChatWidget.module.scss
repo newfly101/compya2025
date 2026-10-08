@@ -1,0 +1,227 @@
+// 480 컨테이너 우측 끝 기준 — 넓은 화면에서도 모바일 프레임 안쪽에 붙는다.
+$edge: max(#{$space-4}, calc((100vw - #{$layout-wrapper-max}) / 2 + #{$space-4}));
+
+.fab {
+  position: fixed;
+  right: $edge;
+  bottom: calc(#{$space-4} + env(safe-area-inset-bottom, 0px));
+  z-index: $z-sticky;
+  @include flex-center;
+  width: $control-height-lg;
+  height: $control-height-lg;
+  padding: 0;
+  border: 0;
+  border-radius: $radius-full;
+  background: var(--color-brand-dark);
+  color: var(--color-chat-on-brand);
+  cursor: pointer;
+
+  &:focus-visible { outline: 2px solid var(--color-text-primary); outline-offset: 2px; }
+}
+
+// 펼침 모션 — 버튼 자리(우측 하단)에서 커지며 올라온다. 줄임 설정이면 끈다.
+@keyframes panelIn { from { opacity: 0; transform: scale(0.92); } }
+@keyframes scrimIn { from { opacity: 0; } }
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal-bg;
+  background: var(--color-overlay);
+  animation: scrimIn 200ms ease-out;
+}
+
+.panel {
+  position: fixed;
+  right: $edge;
+  bottom: calc(#{$space-4} + env(safe-area-inset-bottom, 0px) + var(--kb-inset, 0px));
+  z-index: $z-modal;
+  @include flex-col;
+  transform-origin: bottom right;
+  animation: panelIn 200ms ease-out; // 플로팅 카드 — FAB 자리 기준 scale+fade
+  width: min(calc(100% - #{$space-8}), 25rem); // fixed 의 100% = 스크롤바 뺀 뷰포트 (100vw 는 스크롤바 포함이라 왼쪽 여백이 사라짐)
+  height: min(70dvh, 35rem);
+  max-height: calc(var(--vv-height, 100dvh) - #{$space-8});
+  overflow: hidden;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-2xl;
+  background: var(--color-bg-card);
+  box-shadow: 0 8px 24px var(--color-overlay);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrim, .panel { animation: none; }
+}
+
+.head {
+  @include flex-row($space-2, center, space-between);
+  flex: none;
+  padding: $space-2 $space-3 $space-2 $space-4;
+}
+
+.title { @include text-body-bold; color: var(--color-text-primary); }
+
+.close {
+  @include flex-center;
+  width: $control-height-md;
+  height: $control-height-md;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+
+  &:focus-visible { outline: 2px solid var(--color-brand); outline-offset: -2px; }
+}
+
+.notice {
+  flex: none;
+  padding: 0 $space-4 $space-2;
+  color: var(--color-text-muted);
+  @include text-caption;
+}
+
+.conn {
+  flex: none;
+  padding: $space-1 $space-4;
+  background: var(--color-warning-dim);
+  color: var(--color-warning);
+  @include text-caption;
+}
+
+.listWrap {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: $space-2 $space-4;
+  border-top: 1px solid var(--color-border);
+}
+
+.list { @include flex-col($space-3); margin: 0; padding: 0; list-style: none; }
+
+.item, .itemBot, .itemMine { @include flex-col($space-1); max-width: 85%; align-self: flex-start; }
+
+.itemMine { align-self: flex-end; align-items: flex-end; }
+
+.itemBot {
+  padding: $space-2 $space-3;
+  border-left: 2px solid var(--color-brand);
+  border-radius: $radius-lg;
+  background: var(--color-brand-alpha-15);
+}
+
+.meta { @include flex-row($space-2); }
+.nick { color: var(--color-text-secondary); @include text-caption; font-weight: 600; }
+.time { color: var(--color-text-muted); @include text-micro; }
+
+.botTag {
+  padding: $space-1;
+  border: 1px solid var(--color-brand);
+  border-radius: $radius-sm;
+  color: var(--color-brand);
+  @include text-badge;
+}
+
+.body {
+  padding: $space-2 $space-3;
+  border-radius: $radius-lg;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-primary);
+  @include text-body;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: keep-all;
+}
+
+// 봇 글은 바깥 면(.itemBot)이 말풍선 — 안쪽 말풍선 면을 걷는다
+.itemBot .body { padding: 0; background: none; }
+.itemMine .body { background: var(--color-brand-dark); color: var(--color-chat-on-brand); }
+
+.state, .stateError {
+  margin: 0;
+  padding: $space-8 0;
+  text-align: center;
+  @include text-body;
+  color: var(--color-text-muted);
+}
+.stateError { color: var(--color-danger); }
+
+.toast {
+  flex: none;
+  margin: 0;
+  padding: $space-1 $space-4;
+  background: var(--color-danger-dim);
+  color: var(--color-danger);
+  @include text-caption;
+}
+
+.form {
+  flex: none;
+  @include flex-row($space-2);
+  align-items: flex-end; // 입력이 여러 줄로 커져도 카운터·전송 버튼은 우측 하단에
+  padding: $space-2 $space-3;
+  border-top: 1px solid var(--color-border);
+}
+
+// textarea + 카운터 묶음 — 카운터를 입력 영역 안 우측 하단에 겹쳐 둔다
+.field {
+  position: relative;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  min-height: $control-height-md;
+  max-height: calc(#{$control-height-md} * 2.5); // 약 4줄, 넘치면 안에서 스크롤
+  padding: $space-2 $space-3 calc(#{$space-2} + #{$space-4}); // 아래는 카운터 자리
+  resize: none;
+  overflow-y: auto;
+  line-height: 1.5;
+  font-family: inherit;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-md;
+  background: var(--color-bg-deep);
+  color: var(--color-text-primary);
+  // 16px 미만이면 iOS 가 포커스 시 화면을 확대한다
+  @include font-size-rem(16);
+
+  &::placeholder { color: var(--color-text-placeholder); }
+  &:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 1px; }
+  &:disabled { opacity: 0.6; }
+}
+
+.counter, .counterMax {
+  position: absolute;
+  right: $space-3;
+  bottom: $space-1;
+  pointer-events: none; // 카운터를 눌러도 입력 커서가 잡히게
+  color: var(--color-text-muted);
+  @include text-micro;
+}
+.counterMax { color: var(--color-danger); }
+
+.sendBtn, .gateBtn {
+  flex: none;
+  min-width: $control-height-md;
+  height: $control-height-md;
+  padding: 0 $space-3;
+  border: 0;
+  border-radius: $radius-md;
+  background: var(--color-brand-dark);
+  color: var(--color-chat-on-brand);
+  @include text-body-bold;
+  cursor: pointer;
+
+  &:disabled { opacity: 0.5; cursor: default; }
+  &:focus-visible { outline: 2px solid var(--color-text-primary); outline-offset: 2px; }
+}
+
+.gate {
+  flex: none;
+  @include flex-row($space-2, center, space-between);
+  padding: $space-2 $space-3 $space-2 $space-4;
+  border-top: 1px solid var(--color-border);
+}
+.gateText { margin: 0; color: var(--color-text-secondary); @include text-body; }
