@@ -17,7 +17,9 @@ import com.dawne.com2usbaseball.domain.legendCollectionSkill.service.support.Ski
 import com.dawne.com2usbaseball.domain.legendCollectionSkill.service.support.SkillRules.Progress;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.dawne.com2usbaseball.common.support.event.ActivitySavedEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,7 @@ public class LegendCollectionSkillServiceImpl implements LegendCollectionSkillSe
     private static final List<SlotItem> EMPTY_SLOTS = List.of(SkillRules.EMPTY, SkillRules.EMPTY, SkillRules.EMPTY);
 
     private final LegendCollectionSkillRepository repository;
+    private final ApplicationEventPublisher events;
 
     @Override
     public List<LegendSkillResponse> getMySkills(Long userId) {
@@ -95,6 +98,7 @@ public class LegendCollectionSkillServiceImpl implements LegendCollectionSkillSe
 
         repository.upsertState(toEntity(userId, legendId, slots));
         repository.insertLog(userId, legendId, SkillAction.SAVE, null, snapshot(slots));
+        events.publishEvent(new ActivitySavedEvent(userId)); // 저장 XP — 커밋 후 gamification 이 받는다
         return toResponse(legendId, status, slots, SkillRules.progress(List.of(SkillAction.SAVE)), List.of());
     }
 

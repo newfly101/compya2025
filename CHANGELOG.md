@@ -25,9 +25,11 @@
 ## [Unreleased]
 
 ### Added
+- 등급·포인트·칭호 — 하루 첫 방문·저장 활동으로 XP/포인트 적립, 10단계 등급, 칭호 장착, 마이페이지 "활동" 섹션, 운영자 지급·회수·얼리어답터 일괄 지급(시험 실행 기본). 테이블 적용 전에는 동작하지 않음 → [history](docs/features/gamification/history.md)
 - 홈 바로가기 편집(로그인 시 최대 8개 선택·드래그 순서, 브라우저 저장) · 오늘 히스토리 카드 · 내 컬렉션 카드(비로그인은 로그인 유도) → [ADR 0010](docs/decisions/0010-legend-content-flow.md) · [history](docs/features/home/history.md)
 - 내 레전드 스킬 기록 — 보유중·액자 레전드의 스킬 3개와 등급을 저장하고 기본 강화·고추강·고고각 버튼으로 현재 등급을 기록, 풀업 필요 재화 계산 (cdc8cae1, baa3c066, 086c49aa) → [history](docs/features/legendCollectionSkills/history.md)
 ### Changed
+- 등급·포인트·칭호 2차 — 마이페이지 등급 카드·이동 행, 등급표·칭호 등록 모달, 활동 내역(`/mypage/history`), 출석 토스트, 등급 색 5단계, 안내 가이드. 현재 관리자만 노출 → [history](docs/features/gamification/history.md)
 - 레전드 화면 이름 정리 — "재료 검색" · "내 재료 보유 현황" · "내 레전드 스킬 기록", 서랍 "레전드 재료" 아래 하위 메뉴 3개, 세 화면 공용 탭 [재료 검색 | 내 보유 현황 | 스킬 기록] + 활용 가이드 아코디언, 마이페이지 "내 선호 레전드" 링크 → [ADR 0010](docs/decisions/0010-legend-content-flow.md)
 - 레전드 보유 현황·스킬 기록을 조회(읽기 전용)와 관리(`/legend-collections/manage` · `/legend-collection-skills/:id/edit`)로 분리, 선호 10명은 모달, 보유 현황 표에 선호 열 · 상태 3단계 정렬, 이번 주기 일정은 홈 섹션으로만 → [ADR 0010](docs/decisions/0010-legend-content-flow.md) · [history](docs/features/legendCollections/history.md)
 - 로그인 안내 모달을 하나로 통일하고, 로그인 뒤 쿼리·해시까지 원래 화면으로 복귀. 스킬 기록은 비로그인에게 홈 이동 대신 안내 화면을 보여 주고 검색엔진에는 노출하지 않음 → [history](docs/features/authentication/history.md)

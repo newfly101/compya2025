@@ -197,7 +197,7 @@ class LegendCollectionSkillRulesTest {
     @BeforeEach
     void setUp() {
         repo = Mockito.mock(LegendCollectionSkillRepository.class);
-        service = new LegendCollectionSkillServiceImpl(repo);
+        service = new LegendCollectionSkillServiceImpl(repo, e -> { });
         when(repo.findTargetStatus(U, L)).thenReturn(Optional.of("OWNED"));
         when(repo.findLegendRole(L)).thenReturn(Optional.of("HITTER"));
         when(repo.findLogs(U, L)).thenReturn(List.of());

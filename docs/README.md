@@ -56,7 +56,7 @@ flowchart LR
 | notices | 공지사항 목록·상세 | 운영 | 2026-01-29 | 1.0.5 | [spec](features/notices/spec.md) · [design](features/notices/design.md) · [history](features/notices/history.md) |
 | community | 커뮤니티 게시판(쓰기 기능 동결) | 동결 | 2026-02-02 | 1.0.1 | [spec](features/community/spec.md) · [design](features/community/design.md) · [history](features/community/history.md) |
 | quiz | 퀴즈 이벤트(홈 섹션+운영자 화면 위주) | 운영 | 2026-03-29 | 1.0.3 | [spec](features/quiz/spec.md) · [design](features/quiz/design.md) · [history](features/quiz/history.md) |
-| home | 첫 화면 — 최신 소식·후원 섹션 모아보기 | 운영 | 2026-04-14 | 1.1.0 | [spec](features/home/spec.md) · [design](features/home/design.md) · [history](features/home/history.md) |
+| home | 첫 화면 — 최신 소식·후원 섹션 모아보기 | 운영 | 2026-04-14 | 1.1.1 | [spec](features/home/spec.md) · [design](features/home/design.md) · [history](features/home/history.md) |
 | authentication | 로그인/회원가입, 네이버 소셜 로그인(OAuth) | 운영 | 2026-04-17 | 1.1.0 | [spec](features/authentication/spec.md) · [design](features/authentication/design.md) · [history](features/authentication/history.md) |
 | users | 마이페이지 — 내 정보·활동 조회 | 운영 | 2026-05-31 | 1.1.0 | [spec](features/users/spec.md) · [design](features/users/design.md) · [history](features/users/history.md) |
 | odds | 확률형 아이템 확률 공시(법정 의무, 정적) | 운영 | 2026-08-22 | 1.0.1 | [spec](features/odds/spec.md) · [design](features/odds/design.md) · [history](features/odds/history.md) |
