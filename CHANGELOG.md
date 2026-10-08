@@ -25,9 +25,22 @@
 ## [Unreleased]
 
 ### Added
+### Changed
+### Fixed
+### Admin
+### Platform
+### Internal
+
+---
+
+## [v2.3.0] (platform-3.1) — 2026-10-08
+
+> 태그 `v2.3.0` (플랫폼 `platform-3.1` 유지). master `ccd09bdc` 기준 — #50 · #56 · #60 (dev → master squash). 기능은 MINOR(펀톡 · 등급·포인트·칭호 · 내 레전드 스킬 기록), 플랫폼 변화 없음(Valkey·WebSocket 도입은 펀톡 기능 축)
+
+### Added
 - 펀톡 — 사이트 어디서나 우측 하단 버튼으로 여는 단체 채팅. 비로그인은 읽기만, 최근 100개만 잠시 보관, 200자·5줄·태그 차단 (7f74601c, ec10af18) → [history](docs/features/chats/history.md)
-- 등급·포인트·칭호 — 하루 첫 방문·저장 활동으로 XP/포인트 적립, 10단계 등급, 칭호 장착, 마이페이지 "활동" 섹션, 운영자 지급·회수·얼리어답터 일괄 지급(시험 실행 기본). 테이블 적용 전에는 동작하지 않음 → [history](docs/features/gamification/history.md)
-- 홈 바로가기 편집(로그인 시 최대 8개 선택·드래그 순서, 브라우저 저장) · 오늘 히스토리 카드 · 내 컬렉션 카드(비로그인은 로그인 유도) → [ADR 0010](docs/decisions/0010-legend-content-flow.md) · [history](docs/features/home/history.md)
+- 등급·포인트·칭호 — 하루 첫 방문·저장 활동으로 XP/포인트 적립, 10단계 등급, 칭호 장착, 마이페이지 "활동" 섹션, 운영자 지급·회수·얼리어답터 일괄 지급(시험 실행 기본) → [history](docs/features/gamification/history.md)
+- 홈 바로가기 편집(로그인 시 최대 8개 선택·드래그 순서, 브라우저 저장) · 로그인 홈에 레전드 주기 일정 섹션(비로그인은 로그인 유도) → [ADR 0010](docs/decisions/0010-legend-content-flow.md) · [history](docs/features/home/history.md)
 - 내 레전드 스킬 기록 — 보유중·액자 레전드의 스킬 3개와 등급을 저장하고 기본 강화·고추강·고고각 버튼으로 현재 등급을 기록, 풀업 필요 재화 계산 (cdc8cae1, baa3c066, 086c49aa) → [history](docs/features/legendCollectionSkills/history.md)
 ### Changed
 - 등급·포인트·칭호 2차 — 마이페이지 등급 카드·이동 행, 등급표·칭호 등록 모달, 활동 내역(`/mypage/history`), 출석 토스트, 등급 색 5단계, 안내 가이드. 현재 관리자만 노출 → [history](docs/features/gamification/history.md)
