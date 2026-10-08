@@ -14,7 +14,9 @@ import com.dawne.com2usbaseball.domain.legendCollection.enums.LegendStatus;
 import com.dawne.com2usbaseball.domain.legendCollection.enums.MaterialState;
 import com.dawne.com2usbaseball.domain.legendCollection.repository.LegendCollectionRepository;
 import com.dawne.com2usbaseball.domain.legendCollectionSkill.service.LegendCollectionSkillService;
+import com.dawne.com2usbaseball.common.support.event.ActivitySavedEvent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +43,7 @@ public class LegendCollectionServiceImpl implements LegendCollectionService {
 
     private final LegendCollectionRepository repository;
     private final LegendCollectionSkillService skillService;
+    private final ApplicationEventPublisher events;
 
     @Override
     public LegendCollectionResponse getMyCollection(Long userId) {
@@ -148,6 +151,7 @@ public class LegendCollectionServiceImpl implements LegendCollectionService {
         if (!newlyOwned.isEmpty()) {
             removeFromPreferences(userId, newlyOwned);
         }
+        events.publishEvent(new ActivitySavedEvent(userId)); // 저장 XP — 커밋 후 gamification 이 받는다
         return getMyCollection(userId);
     }
 

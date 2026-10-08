@@ -35,7 +35,7 @@ class LegendCollectionServiceImplTest {
     void setUp() {
         repo = Mockito.mock(LegendCollectionRepository.class);
         skillService = Mockito.mock(com.dawne.com2usbaseball.domain.legendCollectionSkill.service.LegendCollectionSkillService.class);
-        service = new LegendCollectionServiceImpl(repo, skillService);
+        service = new LegendCollectionServiceImpl(repo, skillService, e -> { });
         when(repo.findAllLegendIds()).thenReturn(List.of("L1", "L2"));
         when(repo.findAllMaterialRefs()).thenReturn(List.of(
                 new MaterialRefEntity("M1", "L1"), new MaterialRefEntity("M2", "L1"),
