@@ -13,6 +13,8 @@ import {
 } from "@/domains/users/store/public/thunks.js";
 import { useProfileImageUpload } from "@/domains/users/mobile/hooks/useProfileImageUpload.js";
 import { resetAuthSession } from "@/domains/authentication/store/thunks.js";
+import GamificationSection from "@/domains/gamification/mobile/containers/public/GamificationSection.jsx";
+import { ProfileChips } from "@/domains/gamification/mobile/containers/public/DrawerProfile.jsx";
 import styles from "./MyPageScreen.module.scss";
 
 const NICKNAME_MAX_LENGTH = 20;
@@ -22,6 +24,7 @@ export default function MyPageScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { profile, loading, error } = useSelector((s) => s.myPage);
+  const userRole = useSelector((s) => s.auth.userRole);
   const fileInputRef = useRef(null);
   const {
     previewUrl: imagePreviewUrl,
@@ -224,6 +227,8 @@ export default function MyPageScreen() {
               </button>
             </div>
           )}
+          {/* ponytail: 시범 운영 — 관리자만 노출 */}
+          {userRole === "ADMIN" && <ProfileChips />}
         </div>
 
         <div className={styles.field}>
@@ -236,6 +241,9 @@ export default function MyPageScreen() {
           <span className={styles.fieldValueMuted}>{profile.lastLoginAt ?? "-"}</span>
         </div>
       </section>
+
+      {/* ponytail: 시범 운영 — 관리자만 노출. 전체 공개 시 조건 제거 */}
+      {userRole === "ADMIN" && <GamificationSection />}
 
       {/* 내 선호 레전드는 보유 현황의 '내 선호' 칩이 켜진 목록으로 간다 (REQ-USR-09) */}
       <Link to={`${ROUTE_PATHS.legend_collections}?tab=mine`} className={styles.goalLink}>

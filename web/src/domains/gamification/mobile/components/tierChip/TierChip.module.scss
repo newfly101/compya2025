@@ -1,0 +1,19 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  padding: $space-1 $space-2;
+  border-radius: $radius-full;
+  background: var(--chip-bg);
+  color: var(--chip-text);
+  white-space: nowrap;
+  @include text-caption;
+  font-weight: $font-weight-semibold;
+
+  @for $t from 1 through 5 {
+    &[data-tier="#{$t}"] {
+      --chip-bg: var(--color-tier-t#{$t}-chip-bg);
+      --chip-text: var(--color-tier-t#{$t}-chip-text);
+    }
+  }
+}

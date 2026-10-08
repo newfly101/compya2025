@@ -3,12 +3,14 @@ import ResponseListener from "@/app/store/operation/ResponseListener.jsx";
 import { store } from "@/app/store/store.js";
 import { Provider } from "react-redux";
 import AuthProvider from "@/app/provider/AuthProvider.jsx";
+import CheckInToast from "@/domains/gamification/mobile/containers/public/CheckInToast.jsx";
 
 const AppProvider = ({ children }) => {
   return (
     <>
       <Provider store={store}>
         <ResponseListener />
+        <CheckInToast />
         <AuthProvider>
           {children}
         </AuthProvider>

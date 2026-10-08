@@ -18,6 +18,7 @@ import { couponGuide } from "@/domains/guides/content/couponGuide.js";
 import { eventGuide } from "@/domains/guides/content/eventGuide.js";
 import { noticeGuide } from "@/domains/guides/content/noticeGuide.js";
 import { homeGuide } from "@/domains/guides/content/homeGuide.js";
+import { gamificationGuide } from "@/domains/guides/content/gamification.js";
 
 // 노출 순서 — 기획서 우선순위(11번이 1순위) 그대로. 시드가 있는 2~7번 계열이 뒤를 잇고,
 // 신규 작성 계열(1·8·9·10·12번)이 마지막을 잇는다.
@@ -34,6 +35,8 @@ export const GUIDES = [
   noticeGuide,
   homeGuide,
   start,
+  // hidden: 목록(/guides)에는 안 나오고 slug 링크로만 들어온다(등급 모달의 "전체 안내 보기"). 프리렌더·사이트맵은 수동 목록이라 자동 제외.
+  gamificationGuide,
 ];
 
 export const GUIDES_BY_SLUG = Object.fromEntries(GUIDES.map((g) => [g.slug, g]));

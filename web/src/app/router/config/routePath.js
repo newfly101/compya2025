@@ -42,6 +42,7 @@ export const ROUTE_PATHS = {
   contact: "/contact",
   about: "/about",
   mypage: "/mypage",
+  mypage_history: "/mypage/history",
   // 홈 바로가기 편집 — 로그인 사용자 전용 (REQ-HM-14)
   home_shortcuts: "/home/shortcuts",
   // admin — 단일 셸 + 상단 탭. 기존 경로 문자열은 그대로 두고(북마크 호환) :tab 파라미터로 매칭한다.
