@@ -1,6 +1,6 @@
 ---
-created: 2026-10-03
-updated: 2026-10-03
+created: 2026-10-08
+updated: 2026-10-08
 ---
 
 <!-- 생성 파일: python .claude/scripts/build-traceability.py — 손으로 고치지 말 것 -->
@@ -37,3 +37,13 @@ updated: 2026-10-03
 | REQ-CMT-02 | community | 외부 링크 이동 | SC-05-01 | GET /api/boards; GET /api/boards/{id}; GET /api/boards/code/{code}; GET /api/posts/boards/{boardId}; GET /api/posts/{id} | - | [spec §3](../features/community/spec.md) · 2026-09-28 |
 | REQ-CMT-03 | community | 카운트 조작 방지 | SC-05-01 | GET /api/boards; GET /api/boards/{id}; GET /api/boards/code/{code}; GET /api/posts/boards/{boardId}; GET /api/posts/{id} | - | [spec §3](../features/community/spec.md) · 2026-09-28 |
 | REQ-CMT-04 | community | 관리자 화면 이중 방어 | SC-05-01 | GET /api/boards; GET /api/boards/{id}; GET /api/boards/code/{code}; GET /api/posts/boards/{boardId}; GET /api/posts/{id} | - | [spec §3](../features/community/spec.md) · 2026-09-28 |
+| REQ-GM-01 | gamification | 하루 첫 방문 | SC-09-01, SC-09-02, SC-09-03, SC-09-04 | - | site_reward_rules, site_reward_levels, site_titles, site_reward_ledger, site_reward_activity, site_user_titles | [spec §3](../features/gamification/spec.md) · 2026-10-08 |
+| REQ-GM-02 | gamification | 저장 | SC-09-01, SC-09-02, SC-09-03, SC-09-04 | - | site_reward_rules, site_reward_levels, site_titles, site_reward_ledger, site_reward_activity, site_user_titles | [spec §3](../features/gamification/spec.md) · 2026-10-08 |
+| REQ-GM-03 | gamification | 연속 출석 | SC-09-01, SC-09-02, SC-09-03, SC-09-04 | - | site_reward_rules, site_reward_levels, site_titles, site_reward_ledger, site_reward_activity, site_user_titles | [spec §3](../features/gamification/spec.md) · 2026-10-08 |
+| REQ-GM-04 | gamification | 등급 | SC-09-01, SC-09-02, SC-09-03, SC-09-04 | - | site_reward_rules, site_reward_levels, site_titles, site_reward_ledger, site_reward_activity, site_user_titles | [spec §3](../features/gamification/spec.md) · 2026-10-08 |
+| REQ-GM-05 | gamification | 칭호 | SC-09-01, SC-09-02, SC-09-03, SC-09-04 | - | site_reward_rules, site_reward_levels, site_titles, site_reward_ledger, site_reward_activity, site_user_titles | [spec §3](../features/gamification/spec.md) · 2026-10-08 |
+| REQ-GM-06 | gamification | 얼리어답터 | SC-09-01, SC-09-02, SC-09-03, SC-09-04 | - | site_reward_rules, site_reward_levels, site_titles, site_reward_ledger, site_reward_activity, site_user_titles | [spec §3](../features/gamification/spec.md) · 2026-10-08 |
+| REQ-GM-07 | gamification | 원장 | SC-09-01, SC-09-02, SC-09-03, SC-09-04 | - | site_reward_rules, site_reward_levels, site_titles, site_reward_ledger, site_reward_activity, site_user_titles | [spec §3](../features/gamification/spec.md) · 2026-10-08 |
+| REQ-GM-08 | gamification | 운영 | SC-09-01, SC-09-02, SC-09-03, SC-09-04 | - | site_reward_rules, site_reward_levels, site_titles, site_reward_ledger, site_reward_activity, site_user_titles | [spec §3](../features/gamification/spec.md) · 2026-10-08 |
+| REQ-GM-09 | gamification | 등급·칭호 조회 | SC-09-01, SC-09-02, SC-09-03, SC-09-04 | - | site_reward_rules, site_reward_levels, site_titles, site_reward_ledger, site_reward_activity, site_user_titles | [spec §3](../features/gamification/spec.md) · 2026-10-08 |
+| REQ-GM-10 | gamification | 출석 알림 | SC-09-01, SC-09-02, SC-09-03, SC-09-04 | - | site_reward_rules, site_reward_levels, site_titles, site_reward_ledger, site_reward_activity, site_user_titles | [spec §3](../features/gamification/spec.md) · 2026-10-08 |

@@ -44,6 +44,7 @@ const ANALYSIS = {
     beTasks: { type: 'array', items: { type: 'string' } },
     blockers: { type: 'array', items: { type: 'object', properties: { kind: { type: 'string' }, desc: { type: 'string' } }, required: ['kind', 'desc'] } },
     summary: { type: 'string' },
+    analysisMd: { type: 'string' }, specDeltaMd: { type: 'string' },
   },
   required: ['needsFE', 'needsBE', 'analysisPath', 'blockers', 'summary'],
 }
@@ -85,10 +86,14 @@ const analysis = await agent(
 developer-analyze 역할. 입력: ${drafts}/ 의 모든 파일(html·md·xlsx 이름과 내용), 현재 ${featDocs}/spec.md·design.md(없으면 신규 기능 — .claude/templates/spec.md·design.md 로 초안을 ${progress}/ 에 만든다), 관련 코드.
 산출: ${progress}/analysis.md (템플릿 .claude/templates/analysis.md + 기능 분해 §), ${progress}/spec-delta.md (spec/design 에서 바뀔 § 만 "대상 파일 · § · 바뀐 뒤 본문"), ${progress}/decisions.log.
 🔴 항목(DB DDL — test DB = prod DB · 법무 문구 · 권한 모델 변경 · 외부 자산 도입 · 운영 배포)은 가정값으로 진행하지 말고 blockers 에 넣는다. 🟨·❓ 는 가정값으로 진행하고 decisions.log 에 남긴다.
-반환: needsFE/needsBE, feTasks/beTasks(각 1줄, analysis.md 의 § 3/§ 4 항목 번호 포함), blockers, summary(3줄).`,
+반환: needsFE/needsBE, feTasks/beTasks(각 1줄, analysis.md 의 § 3/§ 4 항목 번호 포함), blockers, summary(3줄).
+analysis.md·spec-delta.md 는 파일로 쓰지 말고 본문 전체를 analysisMd·specDeltaMd 로 반환한다 (서브에이전트는 보고서 파일 쓰기가 막혀 있다 — 메인 세션이 대신 쓴다). decisions.log 는 평소대로 쓴다.`,
   { label: `analyze:${feature}`, phase: '분석', model: MODEL, agentType: 'developer-analyze', schema: ANALYSIS })
 if (!analysis) throw new Error('분석 agent 가 결과를 내지 못했다')
 // 이미 결정된 kind 는 정지선에서 제외한다
+if (!args.analysisWritten) {
+  return { status: 'needs-write', stage: '분석', analysisPath: analysis.analysisPath, specDeltaPath: analysis.specDeltaPath, analysisMd: analysis.analysisMd, specDeltaMd: analysis.specDeltaMd, blockers: analysis.blockers, summary: analysis.summary }
+}
 const openBlockers = analysis.blockers.filter(b => !decisions.some(d => d.kind === b.kind))
 log(`분석 완료 — FE ${analysis.needsFE ? '필요' : '없음'} · BE ${analysis.needsBE ? '필요' : '없음'} · 🔴 ${openBlockers.length}건 (결정됨 ${analysis.blockers.length - openBlockers.length})`)
 if (openBlockers.length) {

@@ -1,6 +1,6 @@
 ---
-created: 2026-10-03
-updated: 2026-10-03
+created: 2026-10-08
+updated: 2026-10-08
 ---
 
 <!-- 생성 파일: python .claude/scripts/build-traceability.py — 손으로 고치지 말 것 -->
@@ -92,19 +92,19 @@ updated: 2026-10-03
 | REQ-QZ-11 | quiz | 삭제 방식 | SC-01-01, SC-07-01 | GET /api/quiz/latest; GET /api/admin/quiz; POST /api/admin/quiz; PATCH /api/admin/quiz/{id}; DELETE /api/admin/quiz/{id}; DELETE /api/admin/quiz/bulk; POST /api/upload/events | fun_quiz | [spec §3](../features/quiz/spec.md) · 2026-09-28 |
 | REQ-QZ-12 | quiz | 캐시 갱신 시점 | SC-01-01, SC-07-01 | GET /api/quiz/latest; GET /api/admin/quiz; POST /api/admin/quiz; PATCH /api/admin/quiz/{id}; DELETE /api/admin/quiz/{id}; DELETE /api/admin/quiz/bulk; POST /api/upload/events | fun_quiz | [spec §3](../features/quiz/spec.md) · 2026-09-28 |
 | REQ-QZ-13 | quiz | 정답 이미지 공개 시점 통제 없음 | SC-01-01, SC-07-01 | GET /api/quiz/latest; GET /api/admin/quiz; POST /api/admin/quiz; PATCH /api/admin/quiz/{id}; DELETE /api/admin/quiz/{id}; DELETE /api/admin/quiz/bulk; POST /api/upload/events | fun_quiz | [spec §3](../features/quiz/spec.md) · 2026-09-28 |
-| REQ-HM-01 | home | 통합 조회 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-02 | home | 섹션 실패 격리 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-03 | home | 오류 표시 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-04 | home | 고정 공지 우선 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-05 | home | 최초 로딩만 스켈레톤 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-06 | home | 퀴즈 제목 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-07 | home | 0건 처리 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-08 | home | 후원 클릭 기록 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-09 | home | 퀵메뉴 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-10 | home | 광고 미노출 문구 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-11 | home | 내 컬렉션 카드 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-12 | home | 비로그인 유도 카드 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-13 | home | 홈 섹션 순서 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-14 | home | 바로가기 설정 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-15 | home | 서랍 메뉴 구조 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
-| REQ-HM-16 | home | 이번 주기 일정 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-02 |
+| REQ-HM-01 | home | 통합 조회 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-02 | home | 섹션 실패 격리 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-03 | home | 오류 표시 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-04 | home | 고정 공지 우선 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-05 | home | 최초 로딩만 스켈레톤 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-06 | home | 퀴즈 제목 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-07 | home | 0건 처리 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-08 | home | 후원 클릭 기록 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-09 | home | 퀵메뉴 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-10 | home | 광고 미노출 문구 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-11 | home | 내 컬렉션 카드 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-12 | home | 비로그인 유도 카드 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-13 | home | 홈 섹션 순서 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-14 | home | 바로가기 설정 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-15 | home | 서랍 메뉴 구조 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |
+| REQ-HM-16 | home | 이번 주기 일정 | SC-07-01 | GET /api/home | - | [spec §3](../features/home/spec.md) · 2026-10-05 |

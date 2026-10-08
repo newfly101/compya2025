@@ -87,10 +87,64 @@
   // 성공 칩 배경 — danger-dim / warning-dim 과 같은 역할
   --color-success-dim: rgba(3, 199, 90, 0.15);
 
+  // ── Tier 등급 (gamification) — T1 Lv1-2 · T2 Lv3-4 · T3 Lv5-6 · T4 Lv7-8 · T5 Lv9-10 ──
+  // 다크가 기본. 공·실밥·링은 두 테마 같은 값(공 자체가 밝은 물체), 카드·칩·글자만 다크 값이 다르다.
+  --color-tier-t1-seam: #{$tier-8f80c4};
+  --color-tier-t1-ball: #{$tier-faf8ff};
+  --color-tier-t2-seam: #{$tier-d1632a};
+  --color-tier-t2-edge: #{$tier-d9d2ee};
+  --color-tier-t3-seam: #{$tier-5b50c8};
+  --color-tier-t3-fill: #{$tier-f5f3ff};
+  --color-tier-t3-fill-end: #{$tier-9aa5ff};
+  --color-tier-t3-fill-flat: #{$tier-c3c8ff};
+  --color-tier-t3-ring: #{$tier-818cf8};
+  --color-tier-t3-card: #{$tier-2b2f6b};
+  --color-tier-t3-card-end: #{$tier-1e2150};
+  --color-tier-t4-seam: #{$tier-b45309};
+  --color-tier-t4-fill: #{$tier-ffe27a};
+  --color-tier-t4-fill-end: #{$tier-f59e0b};
+  --color-tier-t4-fill-flat: #{$tier-fbbf24};
+  --color-tier-t4-ring: #{$tier-fcd34d};
+  --color-tier-t4-ring-end: #{$tier-d97706};
+  --color-tier-t4-card: #{$tier-4a3200};
+  --color-tier-t4-card-end: #{$tier-6b4700};
+  --color-tier-t4-text: #{$tier-ffe08a};
+  --color-tier-t4-text-sub: #{$tier-ffe9a8};
+  --color-tier-t5-seam: #{$tier-2e1065};
+  --color-tier-t5-holo-1: #{$tier-22d3ee};
+  --color-tier-t5-holo-2: #{$tier-6d28d9};
+  --color-tier-t5-holo-3: #{$tier-e879f9};
+  --color-tier-t5-glow: #{$tier-c026d3};
+  --color-tier-t5-spark: #{$tier-d946ef};
+  --color-tier-t5-flat: #{$tier-a855f7};
+  --color-tier-t5-ring: #{$tier-a78bfa};
+  --color-tier-t5-bg: #{$tier-2a1a8f};
+  --color-tier-t5-text: #{$tier-67e8f9};
+  --color-tier-t5-text-end: #{$tier-f0abfc};
+  --color-tier-t5-sub: #{$tier-ddd6fe};
+  --color-tier-t1-chip-bg: #{$tier-35295a};
+  --color-tier-t1-chip-text: #{$tier-ddd6fe};
+  --color-tier-t2-chip-bg: #{$tier-4a2412};
+  --color-tier-t2-chip-text: #{$tier-ffd5b8};
+  --color-tier-t3-chip-bg: #{$tier-2b2f6b};
+  --color-tier-t3-chip-text: #{$tier-e0e7ff};
+  --color-tier-t4-chip-bg: #{$tier-4a3200};
+  --color-tier-t4-chip-text: #{$tier-ffe9a8};
+  --color-tier-t5-chip-bg: #{$tier-4c2aa8};
+  --color-tier-t5-chip-text: #{$tier-e9d5ff};
+  --color-tier-t3-text: #{$tier-1c1626};
+  --color-tier-t3-text-sub: #{$tier-4d4560};
+  --color-tier-t3-xp-track: #{$tier-26225a};
+  --color-tier-t3-xp-fill: #{$tier-a5b4fc};
+  --color-tier-t3-xp-label: #{$tier-1c1626};
+
   // ── Modal / Overlay ────────────────────────────────────────
   // D3=a: 신규 raw 색 직접 정의 (analysis § 8.5 — 사용자 확정 2026-05-31)
   --color-bg-modal: #{$color-bg-modal};
   --color-overlay: rgba(0, 0, 0, 0.55);
+
+  // 펀톡: 브랜드 면(내 말풍선·플로팅 버튼) 위 글자·아이콘. 테마 무관 흰색 고정 (grade-on-strong 과 같은 원색)
+  --color-chat-on-brand: #ffffff;
 }
 
 // ============================================================
@@ -180,8 +234,30 @@
   --color-brand-alpha-50: rgba(109, 40, 217, 0.65); // 3px 액센트 선. 흰 면 3.45:1 (0.5 는 2.50:1 미달이라 올렸다)
   --color-success-dim:    rgba(15, 122, 61, 0.1);   // 그 위 --color-success 글자 4.73:1
 
+  // ── Tier 등급 — 다크와 값이 다른 것만 덮는다 ──
+  --color-tier-t3-card: #{$tier-f5f3ff};
+  --color-tier-t3-card-end: #{$tier-c7d2fe};
+  --color-tier-t4-card: #{$tier-fff4c2};
+  --color-tier-t4-card-end: #{$tier-fcd34d};
+  --color-tier-t4-text: #{$tier-6b3a00};
+  --color-tier-t4-text-sub: #{$tier-5e3000};
+  --color-tier-t5-bg: #{$tier-1e1065};
+  --color-tier-t1-chip-bg: #{$tier-ede9fe};
+  --color-tier-t1-chip-text: #{$tier-5b21b6};
+  --color-tier-t2-chip-bg: #{$tier-ffe4d1};
+  --color-tier-t2-chip-text: #{$tier-8a3510};
+  --color-tier-t3-chip-bg: #{$tier-e0e7ff};
+  --color-tier-t3-chip-text: #{$tier-3730a3};
+  --color-tier-t4-chip-bg: #{$tier-fff4c2};
+  --color-tier-t4-chip-text: #{$tier-5e3000};
+  --color-tier-t5-chip-bg: #{$tier-3b1d8f};
+  --color-tier-t3-xp-track: #{$tier-e9e4f4};
+  --color-tier-t3-xp-fill: #{$tier-5b50c8};
+
   // ── Modal / Overlay ────────────────────────────────────────
   // 모달은 흰색으로 띄우고, 바닥 막은 밝은톤에서도 어둡게 둔다 (뒤 화면을 눌러야 하므로)
   --color-bg-modal: #ffffff;
   --color-overlay:  rgba(24, 16, 38, 0.45);
+
+  --color-chat-on-brand: #ffffff; // 라이트에서도 흰색 고정 (브랜드 보라 면 위)
 }

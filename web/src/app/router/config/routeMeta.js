@@ -38,6 +38,7 @@ export const ROUTE_META = {
   CONTACT: {path: ROUTE_PATHS.contact, title: "컴프야펀 | 문의하기"},
   ABOUT: {path: ROUTE_PATHS.about, title: "컴프야펀 | 사이트 소개"},
   MYPAGE: {path: ROUTE_PATHS.mypage, title: "컴프야펀 | 마이페이지"},
+  MYPAGE_HISTORY: {path: ROUTE_PATHS.mypage_history, title: "컴프야펀 | 활동 내역"},
   HOME_SHORTCUTS: {path: ROUTE_PATHS.home_shortcuts, title: "컴프야펀 | 바로가기 편집"},
   AUTH_CALL_BACK: {path: ROUTE_PATHS.authentication},
   // admin — 단일 셸(AdminShellScreen). title 이 함수라 useDocumentMeta 는 건너뛰고,

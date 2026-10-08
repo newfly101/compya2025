@@ -7,6 +7,8 @@ import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { GUIDES } from "@/domains/guides/content/index.js";
 import styles from "./GuidesScreen.module.scss";
 
+const LISTED_GUIDES = GUIDES.filter((g) => !g.hidden);
+
 const GuidesScreen = () => {
   useDomainTopBar("가이드");
 
@@ -19,11 +21,11 @@ const GuidesScreen = () => {
         </p>
       </div>
 
-      {GUIDES.length === 0 ? (
+      {LISTED_GUIDES.length === 0 ? (
         <StateBox status="empty" message="등록된 가이드가 없습니다." />
       ) : (
         <ul className={styles.list}>
-          {GUIDES.map((guide) => (
+          {LISTED_GUIDES.map((guide) => (
             <li key={guide.slug} className={styles.item}>
               <Link to={`/guides/${guide.slug}`} className={styles.link}>
                 <span className={styles.title}>{guide.title}</span>

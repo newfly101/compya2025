@@ -9,6 +9,8 @@ import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import AdminConfirmDialog from "@/global/ui/admin/confirmDialog/AdminConfirmDialog.jsx";
 import AdminTag from "@/global/ui/admin/tag/AdminTag.jsx";
 import AdminSegmented from "@/global/ui/admin/fields/AdminSegmented.jsx";
+import AdminUserTitles from "@/domains/gamification/mobile/containers/public/AdminUserTitles.jsx";
+import AdminEarlyAdopterPanel from "@/domains/gamification/mobile/containers/public/AdminEarlyAdopterPanel.jsx";
 import "@/global/ui/admin/admin.tokens.scss";
 import {
   requestAdminGetUserList,
@@ -237,6 +239,7 @@ export default function AdminUserScreen() {
 
   return (
     <div className={styles.page}>
+      <AdminEarlyAdopterPanel />
       <AdminToolbar
         search={search}
         onSearchChange={setSearch}
@@ -348,6 +351,8 @@ export default function AdminUserScreen() {
                 onChange={isSelf || saving ? undefined : setStatusDraft}
               />
             </div>
+
+            <AdminUserTitles key={activeUser.publicId} publicId={activeUser.publicId} nickname={activeUser.nickname ?? "이 유저"} />
 
             {saveError && <p className={styles.errorText}>{saveError}</p>}
           </div>

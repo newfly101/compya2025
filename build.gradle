@@ -55,6 +55,10 @@ dependencies {
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
 
+//	chat: STOMP WebSocket + Valkey(Redis 프로토콜) LIST/Pub-Sub
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
 //	swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 

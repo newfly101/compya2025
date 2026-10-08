@@ -1,0 +1,40 @@
+// 티어 카드 면 — data-tier 로 면·글자·XP 바 색을 정한다. SummaryCard · DrawerProfile 공용.
+// T1·T2 는 모드를 따라가는 면, T3~T5 는 고정색 면이라 전용 글자 토큰을 쓴다(fe-design § 4).
+// 사용: .card { @include tier-surface; }  → 내부에서 var(--ts-bg|text|sub|track|fill) 참조
+@mixin tier-surface {
+  background: var(--ts-bg);
+  color: var(--ts-text);
+  border: 1px solid var(--ts-border, transparent);
+
+  &[data-tier="1"], &[data-tier="2"] {
+    --ts-bg: var(--color-bg-deep);
+    --ts-border: var(--color-border);
+    --ts-text: var(--color-text-primary);
+    --ts-sub: var(--color-text-secondary);
+    --ts-track: var(--color-border-strong);
+  }
+  &[data-tier="1"] { --ts-fill: var(--color-tier-t1-seam); }
+  &[data-tier="2"] { --ts-fill: var(--color-tier-t2-seam); }
+  &[data-tier="3"] {
+    --ts-bg: linear-gradient(135deg, var(--color-tier-t3-card), var(--color-tier-t3-card-end));
+    --ts-text: var(--color-tier-t3-text);
+    --ts-sub: var(--color-tier-t3-text-sub);
+    --ts-track: var(--color-tier-t3-xp-track);
+    --ts-fill: var(--color-tier-t3-xp-fill);
+  }
+  &[data-tier="4"] {
+    --ts-bg: linear-gradient(135deg, var(--color-tier-t4-card), var(--color-tier-t4-card-end));
+    --ts-text: var(--color-tier-t4-text);
+    --ts-sub: var(--color-tier-t4-text-sub);
+    // 흰 반투명 트랙 — 고정색 면 위라 테마 무관 리터럴(Figma 도 변수 없이 흰 투명)
+    --ts-track: rgba(255, 255, 255, 0.6);
+    --ts-fill: var(--color-tier-t4-seam);
+  }
+  &[data-tier="5"] {
+    --ts-bg: var(--color-tier-t5-bg);
+    --ts-text: var(--color-tier-t5-text);
+    --ts-sub: var(--color-tier-t5-sub);
+    --ts-track: rgba(255, 255, 255, 0.2);
+    --ts-fill: var(--color-tier-t5-text);
+  }
+}

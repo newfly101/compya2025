@@ -5,6 +5,7 @@ import { TopBarProvider } from "@/app/provider/TopBarProvider";
 import TopBar from "@/app/wrapper/mobile/parts/TopBar";
 import Drawer from "@/app/wrapper/mobile/parts/Drawer.jsx";
 import Footer from "@/app/wrapper/mobile/parts/Footer.jsx";
+import ChatWidget from "@/domains/chats/mobile/components/chatWidget/ChatWidget.jsx";
 import ErrorBoundary from "@/app/wrapper/mobile/parts/ErrorBoundary.jsx";
 
 const MobileLayout = () => {
@@ -86,6 +87,7 @@ const MobileLayout = () => {
               크롤러도 페이지 DOM 안에서 정책 링크를 그대로 발견할 수 있다. */}
           <Footer />
         </div>
+        <ChatWidget />
       </div>
     </TopBarProvider>
   );

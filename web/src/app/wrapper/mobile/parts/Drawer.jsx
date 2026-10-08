@@ -10,6 +10,7 @@ import { useLoginRequiredModal } from "@/domains/authentication/hooks/useLoginRe
 import PinnedBadge from "@/global/ui/badge/PinnedBadge.jsx";
 import { Avatar, pickProfileImageSrc } from "@/global/ui/avatar";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
+import DrawerProfile from "@/domains/gamification/mobile/containers/public/DrawerProfile.jsx";
 
 
 const COLLAPSED_KEY = "drawerCollapsed";
@@ -111,15 +112,25 @@ const Drawer = () => {
         {user ?
           <Link
             to={ROUTE_PATHS.mypage}
-            className={`${styles.profile} ${styles.profileLink}`}
+            className={`${styles.profile} ${styles.profileLink} ${isAdmin ? styles.profileTier : ""}`}
             onClick={closeDrawer}
           >
-            <Avatar src={pickProfileImageSrc(user)} nickname={user?.nickname} size={44} alt="" />
-            <div className={styles.userInfo}>
-              <span className={styles.userName}>{user?.nickname}</span>
-              <span className={styles.userStatus}>{user?.email}</span>
-            </div>
-            <span className={styles.profileChevron}>›</span>
+            {/* ponytail: 시범 운영 — 관리자만 등급 카드. 전체 공개 시 isAdmin 조건 제거 */}
+            {isAdmin ? (
+              <DrawerProfile
+                avatar={<Avatar src={pickProfileImageSrc(user)} nickname={user?.nickname} size={48} alt="" />}
+                nickname={user?.nickname}
+              />
+            ) : (
+              <>
+                <Avatar src={pickProfileImageSrc(user)} nickname={user?.nickname} size={44} alt="" />
+                <div className={styles.userInfo}>
+                  <span className={styles.userName}>{user?.nickname}</span>
+                  <span className={styles.userStatus}>{user?.email}</span>
+                </div>
+              </>
+            )}
+            {!isAdmin && <span className={styles.profileChevron}>›</span>}
           </Link>
           :
           <div className={styles.profile}>

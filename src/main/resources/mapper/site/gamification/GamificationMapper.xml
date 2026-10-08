@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dawne.com2usbaseball.domain.gamification.repository.mapper.GamificationMapper">
+
+    <select id="selectRules" resultType="com.dawne.com2usbaseball.domain.gamification.entity.RewardRuleEntity">
+        SELECT activity_type, xp, point, daily_limit, once_per_account FROM site_reward_rules
+    </select>
+
+    <select id="selectLevels" resultType="com.dawne.com2usbaseball.domain.gamification.entity.RewardLevelEntity">
+        SELECT level, name, required_xp, levelup_bonus_point FROM site_reward_levels ORDER BY level
+    </select>
+
+    <!-- reward_key UNIQUE 로 같은 보상은 한 번만 들어간다 (이미 있으면 0행) -->
+    <insert id="insertLedgerIfAbsent">
+        INSERT IGNORE INTO site_reward_ledger
+            (user_id, reward_key, source_type, xp_delta, point_delta, reward_date, ref_code, reason, created_at)
+        VALUES
+            (#{userId}, #{rewardKey}, #{sourceType}, #{xpDelta}, #{pointDelta}, #{rewardDate}, #{refCode}, #{reason}, NOW())
+    </insert>
+
+    <select id="selectSums" resultType="com.dawne.com2usbaseball.domain.gamification.entity.LedgerEntity">
+        SELECT COALESCE(SUM(xp_delta), 0) AS xp_delta, COALESCE(SUM(point_delta), 0) AS point_delta
+        FROM site_reward_ledger WHERE user_id = #{userId}
+    </select>
+
+    <select id="selectLedger" resultType="com.dawne.com2usbaseball.domain.gamification.entity.LedgerEntity">
+        SELECT id, user_id, reward_key, source_type, xp_delta, point_delta, reward_date, ref_code, reason, created_at
+        FROM site_reward_ledger WHERE user_id = #{userId}
+        ORDER BY id DESC LIMIT #{size}
+    </select>
+
+    <!-- ponytail: idx_ledger_user_date 로 시범 규모(관리자 1명) 충분. 사용자 수천 명·내역 수만 행이면 (user_id, id) 인덱스 DDL 을 승인받아 추가 -->
+    <select id="selectLedgerPage" resultType="com.dawne.com2usbaseball.domain.gamification.entity.LedgerEntity">
+        SELECT id, user_id, reward_key, source_type, xp_delta, point_delta, reward_date, ref_code, reason, created_at
+        FROM site_reward_ledger WHERE user_id = #{userId}
+        <if test="type == 'XP'">AND xp_delta &lt;&gt; 0</if>
+        <if test="type == 'POINT'">AND point_delta &lt;&gt; 0</if>
+        ORDER BY id DESC LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="selectCheckinDates" resultType="java.time.LocalDate">
+        SELECT reward_date FROM site_reward_ledger
+        WHERE user_id = #{userId} AND source_type = 'CHECKIN'
+        ORDER BY reward_date DESC LIMIT #{limit}
+    </select>
+
+    <insert id="insertActivity">
+        INSERT INTO site_reward_activity (user_id, activity_type, reward_date, created_at)
+        VALUES (#{userId}, #{type}, #{date}, NOW())
+    </insert>
+
+    <select id="countActivity" resultType="int">
+        SELECT COUNT(*) FROM site_reward_activity
+        WHERE user_id = #{userId} AND activity_type = #{type}
+        <if test="date != null">AND reward_date = #{date}</if>
+    </select>
+
+    <select id="selectTitleByCode" resultType="com.dawne.com2usbaseball.domain.gamification.entity.TitleEntity">
+        SELECT id, code, name, category, bonus_point, signup_from, signup_to, grant_end
+        FROM site_titles WHERE code = #{code}
+    </select>
+
+    <select id="selectAllTitles" resultType="com.dawne.com2usbaseball.domain.gamification.entity.TitleEntity">
+        SELECT id, code, name, category, bonus_point FROM site_titles ORDER BY id
+    </select>
+
+    <select id="selectOwnedTitles" resultType="com.dawne.com2usbaseball.domain.gamification.entity.TitleEntity">
+        SELECT t.id, t.code, t.name, t.category, t.bonus_point, ut.equipped, ut.granted_at
+        FROM site_user_titles ut JOIN site_titles t ON t.id = ut.title_id
+        WHERE ut.user_id = #{userId}
+        ORDER BY ut.granted_at, t.id
+    </select>
+
+    <insert id="insertUserTitleIfAbsent">
+        INSERT IGNORE INTO site_user_titles (user_id, title_id, equipped, granted_at)
+        VALUES (#{userId}, #{titleId}, 0, NOW())
+    </insert>
+
+    <delete id="deleteUserTitle">
+        DELETE FROM site_user_titles WHERE user_id = #{userId} AND title_id = #{titleId}
+    </delete>
+
+    <update id="clearEquipped">
+        UPDATE site_user_titles SET equipped = 0 WHERE user_id = #{userId} AND equipped = 1
+    </update>
+
+    <update id="updateEquipped">
+        UPDATE site_user_titles SET equipped = 1 WHERE user_id = #{userId} AND title_id = #{titleId}
+    </update>
+
+    <select id="selectUserIdByPublicId" resultType="java.lang.Long">
+        SELECT id FROM site_users WHERE public_id = #{publicId}
+    </select>
+
+    <select id="selectUserRole" resultType="java.lang.String">
+        SELECT user_role FROM site_users WHERE id = #{userId}
+    </select>
+
+    <select id="selectPublicIdByUserId" resultType="java.lang.String">
+        SELECT public_id FROM site_users WHERE id = #{userId}
+    </select>
+
+    <!-- 얼리어답터 후보: 활성 계정 중 가입일이 창 안. 방문 조건은 서비스에서 합집합으로 판정 -->
+    <select id="selectEarlyCandidates" resultType="com.dawne.com2usbaseball.domain.gamification.entity.EarlyCandidateEntity">
+        SELECT id, public_id, created_at, last_login_at FROM site_users
+        WHERE user_status = 'ACTIVE' AND created_at &gt;= #{from} AND created_at &lt; #{to}
+    </select>
+
+    <select id="selectVisitedUserIds" resultType="java.lang.Long">
+        SELECT DISTINCT user_id FROM site_user_event
+        WHERE created_at &gt;= #{since} AND user_id IS NOT NULL
+    </select>
+</mapper>

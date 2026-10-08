@@ -80,6 +80,15 @@ $color-naver-font: $color-white-100;
   @include pressable;
 }
 
+// 관리자 — 안쪽 DrawerProfile 이 티어 카드 면을 직접 그리므로 바깥 카드 틀은 걷는다.
+.profileTier {
+  padding: 0;
+  margin: $space-3 $space-3 0;   // 서랍 최대 250px — 카드 폭 226 (Figma 300 기준보다 좁아 여백 16→12)
+  border: none;
+  background: none;
+  gap: 0;
+}
+
 .profileChevron {
   @include text-section-title;
   color: var(--color-text-muted);

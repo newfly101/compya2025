@@ -17,7 +17,9 @@ import playerSkillsReducer from "@/domains/playerSkills/store/slices.js";
 import mileageReducer from "@/domains/mileage/store/slices.js";
 import playersReducer from "@/domains/players/store/slices.js";
 import cacheSyncReducer, { adminAnalyticsReducer } from "@/domains/admin/store/slices.js";
+import chatsReducer from "@/domains/chats/store/slices.js";
 import homeReducer from "@/domains/home/store/slices.js";
+import gamificationReducer from "@/domains/gamification/store/slices.js";
 import { setAuthResetDispatcher } from "@/infra/http/client.js";
 import { resetAuthSession } from "@/domains/authentication/store/thunks.js";
 
@@ -26,12 +28,14 @@ export const store = configureStore({
     operation: operationReducer,
     auth: authReducer,
     home: homeReducer,
+    gamification: gamificationReducer,
     events: eventsReducer,
     coupon: couponReducer,
     community: communityReducer,
     upload: upLoadReducer,
     quiz: quizReducer,
     notices: noticesReducer,
+    chats: chatsReducer,
     adminUsers: adminUsersReducer,
     myPage: myPageReducer,
     legendStat: legendStatReducer,
