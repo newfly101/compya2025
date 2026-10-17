@@ -1,6 +1,8 @@
 package com.dawne.com2usbaseball.domain.chat.config;
 
 import com.dawne.com2usbaseball.config.CorsConfig;
+import com.dawne.com2usbaseball.domain.chat.service.ChatGuestService;
+import com.dawne.com2usbaseball.domain.chat.service.support.ChatGuestPrincipal;
 import com.dawne.com2usbaseball.security.cookie.AuthCookieFactory;
 import com.dawne.com2usbaseball.security.provider.JwtProvider;
 import jakarta.servlet.http.Cookie;
@@ -31,7 +33,7 @@ import java.util.Map;
 
 /**
  * STOMP /ws. 인증은 핸드셰이크의 ACCESS_TOKEN HttpOnly 쿠키(브라우저 JS 는 토큰을 못 읽는다).
- * 쿠키가 없거나 무효면 익명(구독만).
+ * 쿠키가 없거나 무효면 CHAT_GUEST 쿠키로 게스트 번호를 찾고(게스트 Principal), 그것도 없으면 Principal 없음(구독만).
  */
 @Slf4j
 @Configuration
@@ -41,7 +43,10 @@ public class ChatWebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private static final String TOKEN_ATTR = "chatToken";
 
+    private static final String GUEST_ATTR = "chatGuest";
+
     private final JwtProvider jwtProvider;
+    private final ChatGuestService chatGuestService;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -55,6 +60,8 @@ public class ChatWebSocketConfig implements WebSocketMessageBrokerConfigurer {
                             for (Cookie c : s.getServletRequest().getCookies()) {
                                 if (AuthCookieFactory.ACCESS_TOKEN.equals(c.getName())) {
                                     attrs.put(TOKEN_ATTR, c.getValue());
+                                } else if (AuthCookieFactory.CHAT_GUEST.equals(c.getName())) {
+                                    attrs.put(GUEST_ATTR, c.getValue());
                                 }
                             }
                         }
@@ -81,7 +88,7 @@ public class ChatWebSocketConfig implements WebSocketMessageBrokerConfigurer {
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
                 StompHeaderAccessor acc = MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
                 if (acc != null && StompCommand.CONNECT.equals(acc.getCommand())) {
-                    String token = resolveToken(acc);
+                    String token = resolveAttr(acc, TOKEN_ATTR);
                     if (token != null) {
                         try {
                             Long userId = jwtProvider.getUserId(token);
@@ -89,7 +96,13 @@ public class ChatWebSocketConfig implements WebSocketMessageBrokerConfigurer {
                             acc.setUser(new UsernamePasswordAuthenticationToken(
                                     userId, null, List.of(new SimpleGrantedAuthority("ROLE_" + role))));
                         } catch (Exception e) {
-                            log.debug("chat: 무효 토큰 — 익명으로 연결");
+                            log.debug("chat: 무효 토큰 — 게스트로 연결");
+                        }
+                    }
+                    if (acc.getUser() == null) {
+                        String name = chatGuestService.findName(resolveAttr(acc, GUEST_ATTR));
+                        if (name != null) {
+                            acc.setUser(new ChatGuestPrincipal(name));
                         }
                     }
                 }
@@ -98,8 +111,8 @@ public class ChatWebSocketConfig implements WebSocketMessageBrokerConfigurer {
         });
     }
 
-    private String resolveToken(StompHeaderAccessor acc) {
+    private String resolveAttr(StompHeaderAccessor acc, String key) {
         Map<String, Object> attrs = acc.getSessionAttributes();
-        return attrs == null ? null : (String) attrs.get(TOKEN_ATTR);
+        return attrs == null ? null : (String) attrs.get(key);
     }
 }
