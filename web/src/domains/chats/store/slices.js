@@ -6,7 +6,7 @@ const MAX = 100;
 const byId = (list) => [...new Map(list.map((m) => [m.id, m])).values()];
 
 // 오래된 → 최신. 실시간 수신분과 REST 목록은 id 로 합친다.
-const initialState = { messages: [], loading: false, error: null, loaded: false };
+const initialState = { messages: [], loading: false, error: null, loaded: false, onlineCount: null };
 
 const slice = createSlice({
   name: "chats",
@@ -14,6 +14,10 @@ const slice = createSlice({
   reducers: {
     appendMessage(state, action) {
       state.messages = byId([...state.messages, action.payload]).slice(-MAX);
+    },
+    // 접속자 수 — 모르면 null(화면에서 숨김)
+    setOnlineCount(state, action) {
+      state.onlineCount = Number.isFinite(action.payload) ? action.payload : null;
     },
     removeMessage(state, action) {
       state.messages = state.messages.filter((m) => m.id !== action.payload);

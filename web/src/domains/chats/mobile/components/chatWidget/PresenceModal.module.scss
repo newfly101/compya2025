@@ -1,0 +1,58 @@
+.layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  @include flex-col;
+  background: var(--color-bg-card);
+}
+
+.head {
+  @include flex-row($space-2, center, space-between);
+  flex: none;
+  padding: $space-2 $space-3 $space-2 $space-4;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title { @include text-body-bold; color: var(--color-text-primary); }
+
+.close {
+  @include flex-center;
+  width: $control-height-md;
+  height: $control-height-md;
+  border: 0;
+  background: transparent;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+
+  &:focus-visible { outline: 2px solid var(--color-brand); outline-offset: -2px; }
+}
+
+.content {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: $space-3 $space-4;
+}
+
+.sub { margin: $space-3 0 $space-1; color: var(--color-text-secondary); @include text-caption; font-weight: 600; }
+
+.list { @include flex-col($space-1); margin: 0; padding: 0; list-style: none; }
+
+.row { @include flex-row($space-2, center, space-between); }
+
+.name { color: var(--color-text-primary); @include text-caption; }
+.id { color: var(--color-text-muted); @include text-micro; }
+
+.badge {
+  padding: $space-1;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-sm;
+  color: var(--color-text-muted);
+  @include text-micro;
+}
+
+.anon { margin: $space-3 0 0; color: var(--color-text-muted); @include text-caption; }
+
+.state, .stateError { margin: $space-4 0; text-align: center; color: var(--color-text-muted); @include text-caption; }
+.stateError { color: var(--color-danger); }

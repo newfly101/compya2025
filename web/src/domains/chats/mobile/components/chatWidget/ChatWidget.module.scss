@@ -61,6 +61,23 @@ $edge: max(#{$space-4}, calc((100vw - #{$layout-wrapper-max}) / 2 + #{$space-4})
 
 .title { @include text-body-bold; color: var(--color-text-primary); }
 
+.online { flex: 1 1 auto; min-width: 0; color: var(--color-text-muted); @include text-caption; }
+
+.presenceBtn {
+  flex: none;
+  padding: $space-1 $space-2;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-sm;
+  background: transparent;
+  color: var(--color-text-secondary);
+  @include text-caption;
+  cursor: pointer;
+
+  &:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
+}
+
+.guestName { color: var(--color-text-muted); }
+
 .close {
   @include flex-center;
   width: $control-height-md;
