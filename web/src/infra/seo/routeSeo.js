@@ -53,6 +53,7 @@ export const NOINDEX_PATHS = [
   "/legend-collection-skills",
   "/legend-collections/manage",
   "/legend-collection-skills/:legendId/edit",
+  "/simulators/gsb",
 ];
 
 // 쿼리스트링은 location.pathname 자체에 포함되지 않으므로 별도 정규화 불필요.

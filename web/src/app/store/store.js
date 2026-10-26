@@ -20,6 +20,7 @@ import cacheSyncReducer, { adminAnalyticsReducer } from "@/domains/admin/store/s
 import chatsReducer from "@/domains/chats/store/slices.js";
 import homeReducer from "@/domains/home/store/slices.js";
 import gamificationReducer from "@/domains/gamification/store/slices.js";
+import simulatorsReducer from "@/domains/simulators/store/slices.js";
 import { setAuthResetDispatcher } from "@/infra/http/client.js";
 import { resetAuthSession } from "@/domains/authentication/store/thunks.js";
 
@@ -29,6 +30,7 @@ export const store = configureStore({
     auth: authReducer,
     home: homeReducer,
     gamification: gamificationReducer,
+    simulators: simulatorsReducer,
     events: eventsReducer,
     coupon: couponReducer,
     community: communityReducer,

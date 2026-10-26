@@ -25,6 +25,7 @@
 ## [Unreleased]
 
 ### Added
+- 스킬 시뮬레이터(고스변·선변) 화면 `/simulators/gsb` — 레전드 선수별 변경권 모의 · 내 기록 서버 저장 · 이미지 저장 (`docs/features/simulators/history.md`)
 ### Changed
 ### Fixed
 ### Admin

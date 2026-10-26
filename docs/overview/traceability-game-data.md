@@ -1,6 +1,6 @@
 ---
-created: 2026-10-08
-updated: 2026-10-08
+created: 2026-10-27
+updated: 2026-10-27
 ---
 
 <!-- 생성 파일: python .claude/scripts/build-traceability.py — 손으로 고치지 말 것 -->
@@ -109,3 +109,12 @@ updated: 2026-10-08
 | REQ-PSK-03 | playerSkills | 목록 정렬 | SC-17-01 | GET /api/player-skills/{hitters|pitchers} | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-10-02 |
 | REQ-PSK-04 | playerSkills | 라벨(표 행 이름) | SC-17-01 | GET /api/player-skills/{hitters|pitchers} | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-10-02 |
 | REQ-PSK-05 | playerSkills | 원 문자 그룹 표기 | SC-17-01 | GET /api/player-skills/{hitters|pitchers} | data_player_skill, data_player_skill_tier, data_player_skill_tier_value | [spec §3](../features/playerSkills/spec.md) · 2026-10-02 |
+| REQ-SIM-01 | simulators | 고스변 등급 조합 | SC-19-01 | PUT /api/simulators/gsb; DELETE /api/simulators/gsb/{legendId}; POST /api/simulators/gsb/saves | site_user_simulator_saves | [spec §3](../features/simulators/spec.md) · 2026-10-27 |
+| REQ-SIM-02 | simulators | 칸별 추첨 | SC-19-01 | PUT /api/simulators/gsb; DELETE /api/simulators/gsb/{legendId}; POST /api/simulators/gsb/saves | site_user_simulator_saves | [spec §3](../features/simulators/spec.md) · 2026-10-27 |
+| REQ-SIM-03 | simulators | 같은 이름 금지 | SC-19-01 | PUT /api/simulators/gsb; DELETE /api/simulators/gsb/{legendId}; POST /api/simulators/gsb/saves | site_user_simulator_saves | [spec §3](../features/simulators/spec.md) · 2026-10-27 |
+| REQ-SIM-04 | simulators | 독립 시행 | SC-19-01 | PUT /api/simulators/gsb; DELETE /api/simulators/gsb/{legendId}; POST /api/simulators/gsb/saves | site_user_simulator_saves | [spec §3](../features/simulators/spec.md) · 2026-10-27 |
+| REQ-SIM-05 | simulators | 선변 | SC-19-01 | PUT /api/simulators/gsb; DELETE /api/simulators/gsb/{legendId}; POST /api/simulators/gsb/saves | site_user_simulator_saves | [spec §3](../features/simulators/spec.md) · 2026-10-27 |
+| REQ-SIM-06 | simulators | 기록 보관 | SC-19-01 | PUT /api/simulators/gsb; DELETE /api/simulators/gsb/{legendId}; POST /api/simulators/gsb/saves | site_user_simulator_saves | [spec §3](../features/simulators/spec.md) · 2026-10-27 |
+| REQ-SIM-07 | simulators | 묶음 저장 | SC-19-01 | PUT /api/simulators/gsb; DELETE /api/simulators/gsb/{legendId}; POST /api/simulators/gsb/saves | site_user_simulator_saves | [spec §3](../features/simulators/spec.md) · 2026-10-27 |
+| REQ-SIM-08 | simulators | 저장 기록 | SC-19-01 | PUT /api/simulators/gsb; DELETE /api/simulators/gsb/{legendId}; POST /api/simulators/gsb/saves | site_user_simulator_saves | [spec §3](../features/simulators/spec.md) · 2026-10-27 |
+| REQ-SIM-09 | simulators | 공유 링크 없음 | SC-19-01 | PUT /api/simulators/gsb; DELETE /api/simulators/gsb/{legendId}; POST /api/simulators/gsb/saves | site_user_simulator_saves | [spec §3](../features/simulators/spec.md) · 2026-10-27 |

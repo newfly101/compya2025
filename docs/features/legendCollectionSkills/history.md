@@ -1,10 +1,24 @@
 ---
 feature: legendCollectionSkills
 created: 2026-10-02
-updated: 2026-10-03
+updated: 2026-10-27
 ---
 
 # legendCollectionSkills — 변경 이력
+
+## 2026-10-27 — 스킬 카드 부품을 공용 폴더로 이동 (동작 그대로)
+
+- 버전: 1.2.0 (유지 — 동작 불변 이동)
+- 커밋: 38af6d47
+
+**고친 것**
+
+- `SkillCard` 를 `domains/legendCollectionSkills/mobile/components/skillCard/` 에서 `global/ui/skillCard/` 로 옮겼다. 스킬 시뮬레이터(`simulators`)가 같은 카드를 쓰기 때문이다. `SkillEditor` · `SkillsLoginGuide` 의 import 경로만 바뀌었고 화면은 그대로다.
+- 카드에 선택 옵션(강화 횟수 숨김 · 누적 박스 · 닉네임 · 칸 선택)이 생겼지만 이 화면은 쓰지 않는다.
+
+**손대지 말 것**
+
+- 카드 모양을 바꾸면 스킬 시뮬레이터 화면과 이미지 저장 카드도 같이 바뀐다.
 
 ## 2026-10-02 — 조회와 편집 분리 · 공용 탭 · 비로그인 안내 화면
 

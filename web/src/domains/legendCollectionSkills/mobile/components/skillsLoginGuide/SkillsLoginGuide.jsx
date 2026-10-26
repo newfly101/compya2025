@@ -2,7 +2,7 @@ import { useDomainTopBar } from "@/app/wrapper/mobile/hooks/useDomainTopBar";
 import { useLoginRequiredModal } from "@/domains/authentication/hooks/useLoginRequiredModal.jsx";
 import LegendTabs from "@/global/ui/mobile/legendTabs/LegendTabs.jsx";
 import { skillsGuide } from "@/domains/legendCollectionSkills/config/skillsGuide.js";
-import SkillCard from "@/domains/legendCollectionSkills/mobile/components/skillCard/SkillCard.jsx";
+import SkillCard from "@/global/ui/skillCard/SkillCard.jsx";
 import "@/domains/legendCollectionSkills/mobile/legendCollectionSkills.tokens.scss";
 import styles from "./SkillsLoginGuide.module.scss";
 

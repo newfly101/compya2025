@@ -123,6 +123,7 @@ grep -o '"canonical": "#[0-9a-f]*"' .impeccable/design.json | sort -u   # 각 �
 | `.sr-only` | `1px` | 접근성 클립 기법 |
 | 탭 선택 표시 | `margin-bottom: -1px` | 1px 테두리 보정 |
 | 긴 글 렌더러 | `0.9em` | 부모 대비 비율 |
+| 스킬 시뮬레이터 `고유능력 선택 변경권` 버튼 (`simulators`) | 등급 축 플래티넘 금색(`--color-grade-platinum`) 테두리 + 면 `--color-grade-platinum-alpha-15` | 게임의 선택 변경권 아이템 색. 등급 색을 등급 밖에 쓰는 유일한 자리 — 사용자 허용 2026-10-26. 토큰은 `simulators.tokens.scss`(다크 #e5b83a / 밝은톤 #a97b12), 코드 주석 `SimulatorPanel.module.scss .sel` |
 | CSS 로 도형 그리는 아이콘 내부 (`GuideView.module.scss .viewIconGrid/.viewIconList`) | 소수점 px 포함 | 격자는 레이아웃용. 14×14 안에서 4px 로 올리면 그림이 뭉갠다. **예외는 도형 내부 값 한정** — 이웃과의 간격은 격자를 따른다 |
 
 **예외를 늘릴 때는 코드에 근거 주석을 남긴다.** 안 남기면 다음 사람이 위반으로 알고 고친다 — 이번에 실제로 그럴 뻔했다.

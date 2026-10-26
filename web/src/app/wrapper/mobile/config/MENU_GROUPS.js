@@ -28,13 +28,13 @@ export const MENU_GROUPS = [
       { key: 'history',   icon: '🎯', label: '히스토리 재료',   to: '/history-mode/legend' },
       { key: 'mileage',   icon: '🧭', label: '마일리지 저격',   to: '/mileage',
         tag: { variant: 'catNew' } },
+      { key: 'simulator', icon: '🎮', label: '스킬 시뮬레이터', to: ROUTE_PATHS.simulator_gsb,
+        tag: { variant: 'catNew' } },
       { key: 'players',   icon: '⚾', label: '선수 백과사전',   to: '/players',
         tag: { variant: 'beta' } },
       { key: 'skills',    icon: '📖', label: '스킬 백과사전',   to: ROUTE_PATHS.player_skills },
       { key: 'odds',      icon: '📊', label: '확률 공시',      to: '/probability' },
       { key: 'guides',    icon: '📚', label: '가이드',        to: ROUTE_PATHS.guides },
-      { key: 'simulator', icon: '🎮', label: '스킬 시뮬레이터', to: '/skill', comingSoon: true,
-        tag: { variant: 'neutral', label: '준비중' } },
     ]
   },
   // 커뮤니티 그룹 — AdSense 심사 대응으로 드로어 노출에서 제외(2026-09-13).

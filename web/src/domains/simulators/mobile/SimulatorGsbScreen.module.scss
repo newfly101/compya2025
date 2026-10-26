@@ -1,0 +1,14 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  min-height: 100%;
+  padding-top: $space-4;
+  background: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.skeleton {
+  padding: 0 $layout-h-pad;
+}
