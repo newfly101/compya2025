@@ -9,10 +9,13 @@ import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import {
   requestGetMyInfo,
   requestUpdateMyNickname,
+  requestCheckNickname,
   requestDeleteMyAccount,
 } from "@/domains/users/store/public/thunks.js";
 import { useProfileImageUpload } from "@/domains/users/mobile/hooks/useProfileImageUpload.js";
 import { resetAuthSession } from "@/domains/authentication/store/thunks.js";
+import { patchUser } from "@/domains/authentication/store/slices.js";
+import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
 import GamificationSection from "@/domains/gamification/mobile/containers/public/GamificationSection.jsx";
 import { ProfileChips } from "@/domains/gamification/mobile/containers/public/DrawerProfile.jsx";
 import styles from "./MyPageScreen.module.scss";
@@ -25,6 +28,7 @@ export default function MyPageScreen() {
   const navigate = useNavigate();
   const { profile, loading, error } = useSelector((s) => s.myPage);
   const userRole = useSelector((s) => s.auth.userRole);
+  const { nicknameUnset } = useAuthentication();
   const fileInputRef = useRef(null);
   const {
     previewUrl: imagePreviewUrl,
@@ -38,6 +42,10 @@ export default function MyPageScreen() {
   const [nicknameInput, setNicknameInput] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState(null);
+  // 중복 확인 결과 — checked = 사용 가능으로 확인된 값. 입력이 이 값과 다르면 저장할 수 없다.
+  const [checked, setChecked] = useState(null);
+  const [checkMsg, setCheckMsg] = useState(null); // { ok, text }
+  const [isChecking, setIsChecking] = useState(false);
 
   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
   const [agreeChecked, setAgreeChecked] = useState(false);
@@ -51,6 +59,8 @@ export default function MyPageScreen() {
   const startEdit = () => {
     setNicknameInput(profile?.nickname ?? "");
     setSaveError(null);
+    setChecked(null);
+    setCheckMsg(null);
     setIsEditing(true);
   };
 
@@ -59,21 +69,57 @@ export default function MyPageScreen() {
     setSaveError(null);
   };
 
-  const handleSave = async () => {
+  const handleNicknameChange = (value) => {
+    setNicknameInput(value);
+    setChecked(null);
+    setCheckMsg(null);
+    setSaveError(null);
+  };
+
+  const validateNickname = (trimmed) => {
+    if (!trimmed) return "닉네임을 입력해 주세요.";
+    if (trimmed.length > NICKNAME_MAX_LENGTH) return `닉네임은 ${NICKNAME_MAX_LENGTH}자 이내로 입력해 주세요.`;
+    return null;
+  };
+
+  const handleCheck = async () => {
     const trimmed = nicknameInput.trim();
-    if (!trimmed) {
-      setSaveError("닉네임을 입력해 주세요.");
+    const invalid = validateNickname(trimmed);
+    if (invalid) {
+      setCheckMsg({ ok: false, text: invalid });
       return;
     }
-    if (trimmed.length > NICKNAME_MAX_LENGTH) {
-      setSaveError(`닉네임은 ${NICKNAME_MAX_LENGTH}자 이내로 입력해 주세요.`);
+    setIsChecking(true);
+    setChecked(null);
+    try {
+      const available = await dispatch(requestCheckNickname(trimmed)).unwrap();
+      if (available) setChecked(trimmed);
+      setCheckMsg({ ok: available, text: available ? "사용 가능한 닉네임입니다." : "이미 사용 중인 닉네임입니다." });
+    } catch (e) {
+      setCheckMsg({ ok: false, text: e === "FORMAT" ? "사용할 수 없는 형식의 닉네임입니다." : "중복 확인에 실패했습니다." });
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
+  const handleSave = async () => {
+    const trimmed = nicknameInput.trim();
+    const invalid = validateNickname(trimmed);
+    if (invalid) {
+      setSaveError(invalid);
+      return;
+    }
+    if (checked !== trimmed) {
+      setSaveError("중복 확인을 먼저 해 주세요.");
       return;
     }
 
     setIsSaving(true);
     setSaveError(null);
     try {
-      await dispatch(requestUpdateMyNickname(trimmed)).unwrap();
+      const updated = await dispatch(requestUpdateMyNickname(trimmed)).unwrap();
+      // 전역 닉네임 가드가 새로고침 없이 풀리도록 로그인 사용자 정보도 갱신한다.
+      dispatch(patchUser({ nickname: updated?.nickname ?? trimmed, nicknameSet: true }));
       setIsEditing(false);
     } catch (e) {
       setSaveError(typeof e === "string" ? e : "닉네임 변경에 실패했습니다.");
@@ -190,15 +236,27 @@ export default function MyPageScreen() {
 
         <div className={styles.field}>
           <span className={styles.fieldLabel}>닉네임</span>
+          {nicknameUnset && <p className={styles.fieldNotice}>닉네임을 설정해 주세요</p>}
           {isEditing ? (
             <div className={styles.editRow}>
               <input
                 className={styles.input}
                 value={nicknameInput}
                 maxLength={NICKNAME_MAX_LENGTH}
-                onChange={(e) => setNicknameInput(e.target.value)}
+                onChange={(e) => handleNicknameChange(e.target.value)}
                 disabled={isSaving}
               />
+              <button
+                type="button"
+                className={styles.checkBtn}
+                onClick={handleCheck}
+                disabled={isSaving || isChecking}
+              >
+                {isChecking ? "확인 중..." : "중복 확인"}
+              </button>
+              {checkMsg && (
+                <p className={checkMsg.ok ? styles.fieldOk : styles.fieldError}>{checkMsg.text}</p>
+              )}
               <div className={styles.editActions}>
                 <button
                   type="button"
@@ -212,7 +270,7 @@ export default function MyPageScreen() {
                   type="button"
                   className={styles.saveBtn}
                   onClick={handleSave}
-                  disabled={isSaving}
+                  disabled={isSaving || checked !== nicknameInput.trim()}
                 >
                   {isSaving ? "저장 중..." : "저장"}
                 </button>

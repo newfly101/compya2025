@@ -6,6 +6,7 @@ import TopBar from "@/app/wrapper/mobile/parts/TopBar";
 import Drawer from "@/app/wrapper/mobile/parts/Drawer.jsx";
 import Footer from "@/app/wrapper/mobile/parts/Footer.jsx";
 import ChatWidget from "@/domains/chats/mobile/components/chatWidget/ChatWidget.jsx";
+import NicknameGuard from "@/app/wrapper/mobile/parts/NicknameGuard.jsx";
 import ErrorBoundary from "@/app/wrapper/mobile/parts/ErrorBoundary.jsx";
 
 const MobileLayout = () => {
@@ -88,6 +89,7 @@ const MobileLayout = () => {
           <Footer />
         </div>
         <ChatWidget />
+        <NicknameGuard />
       </div>
     </TopBarProvider>
   );

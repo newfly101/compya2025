@@ -14,6 +14,7 @@ public interface UserMapStruct {
      */
     @Mapping(target = "publicId", source = "publicId")
     @Mapping(target = "nickname", source = "nickname")
+    @Mapping(target = "nicknameSet", expression = "java(com.dawne.com2usbaseball.domain.oauth.service.support.NicknamePolicy.isSet(entity.getNickname()))")
     @Mapping(target = "email", source = "oauthEmail")
     @Mapping(target = "profileImage", source = "profileImage")
     @Mapping(target = "oauthProfileImage", source = "oauthProfileImage")
