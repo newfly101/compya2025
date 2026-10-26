@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
-import { requestPutGsb } from "@/domains/simulators/store/public/thunks.js";
+import { requestDeleteGsb, requestPutGsb } from "@/domains/simulators/store/public/thunks.js";
 
 const DEBOUNCE_MS = 10000; // 마지막 변경 뒤 이 시간이 지나면 한 번에 저장
 const MAX_ITEMS = 100; // BE 한 번에 받는 상한
@@ -16,6 +16,7 @@ export const useGsbSync = (entriesRef) => {
   const timer = useRef(null);
   const inflight = useRef(false);
   const again = useRef(false);
+  const pending = useRef(Promise.resolve()); // 지금 나가 있는 PUT — 초기화(DELETE)는 이것이 끝난 뒤에 보낸다
 
   const flush = useCallback(async () => {
     clearTimeout(timer.current);
@@ -32,10 +33,13 @@ export const useGsbSync = (entriesRef) => {
     if (items.length === 0) return;
 
     inflight.current = true;
+    const put = dispatch(requestPutGsb(items)).unwrap();
+    pending.current = put.catch(() => {});
     try {
-      await dispatch(requestPutGsb(items)).unwrap();
+      await put;
     } catch {
-      ids.forEach((id) => dirty.current.add(id)); // 실패 — 다음 트리거에 다시
+      // 실패 — 다음 트리거에 다시. 그사이 초기화한 선수는 되살리지 않는다
+      ids.filter((id) => entriesRef.current[id]).forEach((id) => dirty.current.add(id));
     } finally {
       inflight.current = false;
       if (again.current) {
@@ -54,8 +58,16 @@ export const useGsbSync = (entriesRef) => {
     [flush],
   );
 
-  // 초기화한 선수는 보낼 필요가 없다
-  const forget = useCallback((legendId) => dirty.current.delete(legendId), []);
+  // 초기화 — 보낼 목록에서 빼고, 나가 있는 PUT 이 끝난 뒤 DELETE 를 보낸다.
+  // 순서를 지키지 않으면 늦게 도착한 PUT 이 지운 기록을 되살린다. 실패는 화면에 영향 없음
+  const remove = useCallback(
+    async (legendId) => {
+      dirty.current.delete(legendId);
+      await pending.current;
+      await dispatch(requestDeleteGsb(legendId)).unwrap().catch(() => {});
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     const onHide = () => document.visibilityState === "hidden" && flush();
@@ -66,5 +78,5 @@ export const useGsbSync = (entriesRef) => {
     };
   }, [flush]);
 
-  return { markDirty, forget, flush };
+  return { markDirty, remove, flush };
 };

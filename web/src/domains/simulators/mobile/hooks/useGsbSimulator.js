@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLegendStats } from "@/domains/legendStats/mobile/hooks/useLegendStats.js";
 import { usePlayerSkills } from "@/domains/playerSkills/mobile/hooks/usePlayerSkills.js";
 import { buildPools, emptyEntry, randTier, rollGsb, rollSelect } from "@/domains/simulators/config/gsb.js";
-import { requestDeleteGsb, requestGetGsb, requestPostGsbSave } from "@/domains/simulators/store/public/thunks.js";
+import { requestGetGsb, requestPostGsbSave } from "@/domains/simulators/store/public/thunks.js";
 import { deliverImage, drawShareCard } from "@/domains/simulators/mobile/utils/drawShareCard.js";
 import { useGsbSync } from "./useGsbSync.js";
 
@@ -28,7 +28,7 @@ export const useGsbSimulator = () => {
   const [unauthorized, setUnauthorized] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState(false);
-  const { markDirty, forget } = useGsbSync(entriesRef);
+  const { markDirty, remove } = useGsbSync(entriesRef);
 
   const load = useCallback(() => {
     dispatch(requestGetGsb())
@@ -101,9 +101,8 @@ export const useGsbSimulator = () => {
     delete rest[legend.id];
     entriesRef.current = rest;
     setEntries(rest);
-    forget(legend.id);
     setPick(null);
-    dispatch(requestDeleteGsb(legend.id)).unwrap().catch(() => {}); // 서버 삭제 실패는 화면에 영향 없음
+    remove(legend.id); // 나가 있는 자동 저장이 끝난 뒤 삭제한다
   };
 
   // 이미지 저장 — 서버 기록(POST)은 결과를 기다리지도 신경 쓰지도 않는다. 이미지는 이 기기에서 만든다
