@@ -56,15 +56,6 @@ class AdminGamificationServiceTest {
     }
 
     @Test
-    @DisplayName("시범 대상이 아닌 유저는 400 — 아무것도 기록하지 않는다")
-    void 시범_대상_아님_400() {
-        stub(2L, title(5, "BUG_HUNTER", "MANUAL", 100));
-        assertError(GamificationMessages.GAMIFICATION_PILOT_ONLY, HttpStatus.BAD_REQUEST,
-                () -> service.grantTitle(new TitleActionRequest("p", "BUG_HUNTER"), 1L));
-        verifyNoInteractions(gamificationService);
-    }
-
-    @Test
     @DisplayName("GM 은 대상이 관리자가 아니면 403")
     void GM_비관리자_403() {
         stub(1L, title(6, "GM", "MANUAL", 0));

@@ -103,7 +103,6 @@ public class AdminGamificationService {
     public TitleGrantResponse grantTitle(TitleActionRequest request, Long adminUserId) {
         Long userId = requireUserId(request.publicId());
         TitleEntity title = requireManualTitle(request.code());
-        RewardService.requirePilot(userId);
         if ("GM".equals(title.getCode()) && !"ADMIN".equals(repository.findUserRole(userId))) {
             throw new BaseException(GAMIFICATION_GM_ADMIN_ONLY, HttpStatus.FORBIDDEN);
         }
@@ -122,7 +121,6 @@ public class AdminGamificationService {
     public TitleRevokeResponse revokeTitle(TitleActionRequest request, Long adminUserId) {
         Long userId = requireUserId(request.publicId());
         TitleEntity title = requireManualTitle(request.code());
-        RewardService.requirePilot(userId);
         boolean revoked = repository.deleteUserTitle(userId, title.getId());
         if (revoked && title.getBonusPoint() > 0) {
             rewardService.grant(userId, "TITLE_REVOKE:" + userId + ":" + title.getCode() + ":" + UUID.randomUUID(),

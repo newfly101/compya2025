@@ -27,7 +27,6 @@ export default function MyPageScreen() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { profile, loading, error } = useSelector((s) => s.myPage);
-  const userRole = useSelector((s) => s.auth.userRole);
   const { nicknameUnset } = useAuthentication();
   const fileInputRef = useRef(null);
   const {
@@ -285,8 +284,7 @@ export default function MyPageScreen() {
               </button>
             </div>
           )}
-          {/* ponytail: 시범 운영 — 관리자만 노출 */}
-          {userRole === "ADMIN" && <ProfileChips />}
+          <ProfileChips />
         </div>
 
         <div className={styles.field}>
@@ -300,8 +298,7 @@ export default function MyPageScreen() {
         </div>
       </section>
 
-      {/* ponytail: 시범 운영 — 관리자만 노출. 전체 공개 시 조건 제거 */}
-      {userRole === "ADMIN" && <GamificationSection />}
+      <GamificationSection />
 
       {/* 내 선호 레전드는 보유 현황의 '내 선호' 칩이 켜진 목록으로 간다 (REQ-USR-09) */}
       <Link to={`${ROUTE_PATHS.legend_collections}?tab=mine`} className={styles.goalLink}>
