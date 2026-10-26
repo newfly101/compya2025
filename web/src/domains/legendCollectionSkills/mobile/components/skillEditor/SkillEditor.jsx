@@ -16,7 +16,7 @@ import {
 } from "@/domains/legendCollectionSkills/config/legendCollectionSkills.js";
 import ConfirmModal from "@/global/ui/confirmModal/ConfirmModal.jsx";
 import LegendBadge from "@/domains/legendCollections/mobile/components/legendBadge/LegendBadge.jsx";
-import SkillCard from "@/domains/legendCollectionSkills/mobile/components/skillCard/SkillCard.jsx";
+import SkillCard from "@/global/ui/skillCard/SkillCard.jsx";
 import SkillSelect from "@/domains/legendCollectionSkills/mobile/components/skillSelect/SkillSelect.jsx";
 import styles from "./SkillEditor.module.scss";
 
