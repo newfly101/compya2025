@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Client } from "@stomp/stompjs";
 import { API_BASE_URL } from "@/config/env.js";
 import { CHAT_STOMP } from "@/domains/chats/store/public/endpoints.js";
-import { requestGetChatMessages } from "@/domains/chats/store/public/thunks.js";
+import { requestGetChatGuest, requestGetChatMessages, requestGetChatOnline } from "@/domains/chats/store/public/thunks.js";
 import { actions } from "@/domains/chats/store/slices.js";
 
 // http(s)://host/api → ws(s)://host/ws  (native WebSocket, SockJS 아님)
@@ -25,19 +25,24 @@ const ERROR_TEXT = {
   CHAT_RATE_LIMITED: "잠시 후 다시 보내주세요.",
 };
 
-// 패널이 열려 있는 동안만 연결한다. 인증은 httpOnly 쿠키라 JS 가 토큰을 못 읽는다 —
+// 사이트에 들어오면 패널과 무관하게 연결한다 — 접속자 수가 채팅을 연 사람이 아니라 방문자 전체가 되도록. 인증은 httpOnly 쿠키라 JS 가 토큰을 못 읽는다 —
 // 쿠키가 WS 업그레이드 요청에 실려 가며, Authorization 헤더는 JS 가 토큰을 갖게 되면 connectHeaders 에 추가.
 // authKey 가 바뀌면(로그인 상태 변화) 재연결한다.
 export const useChatRoom = (open, authKey) => {
   const dispatch = useDispatch();
-  const { messages, loading, error } = useSelector((s) => s.chats);
+  const { messages, loading, error, onlineCount } = useSelector((s) => s.chats);
   const [status, setStatus] = useState("connecting"); // connecting | connected | disconnected
   const [notice, setNotice] = useState(null);
+  const [guestName, setGuestName] = useState(null);
+  const [presenceTick, setPresenceTick] = useState(0); // PRESENCE 수신마다 +1 — 관리자 모달 재조회 신호
   const clientRef = useRef(null);
 
   useEffect(() => {
     if (!open) return undefined;
-    const client = new Client({
+    let cancelled = false;
+    let client = null;
+    const connect = () => {
+    client = new Client({
       brokerURL: WS_URL,
       reconnectDelay: 3000,
       heartbeatIncoming: 10000,
@@ -50,6 +55,10 @@ export const useChatRoom = (open, authKey) => {
         try { evt = JSON.parse(frame.body); } catch { return; }
         if (evt.type === "MESSAGE" && evt.message) dispatch(actions.appendMessage(evt.message));
         else if (evt.type === "DELETE") dispatch(actions.removeMessage(evt.id));
+        else if (evt.type === "PRESENCE") {
+          dispatch(actions.setOnlineCount(Number(evt.presence?.count)));
+          setPresenceTick((n) => n + 1);
+        }
       });
       client.subscribe(CHAT_STOMP.SUBSCRIBE_ERRORS, (frame) => {
         try {
@@ -59,14 +68,29 @@ export const useChatRoom = (open, authKey) => {
       });
       // 구독 뒤에 받아야 사이에 낀 글을 놓치지 않는다. 최초·재연결 모두 여기서 메운다.
       dispatch(requestGetChatMessages());
+      dispatch(requestGetChatOnline()).unwrap()
+        .then((res) => dispatch(actions.setOnlineCount(Number(res?.count))))
+        .catch(() => { /* 실패하면 숫자만 숨김 */ });
     };
     client.onWebSocketClose = () => setStatus("disconnected");
     client.onStompError = () => setStatus("disconnected");
     client.activate();
     clientRef.current = client;
+    };
+    // 비로그인이면 연결 전에 게스트 번호를 먼저 받는다(쿠키 세팅). 실패해도 연결은 한다.
+    if (authKey) {
+      connect();
+    } else {
+      dispatch(requestGetChatGuest()).unwrap()
+        .then((res) => { if (!cancelled) setGuestName(res?.name ?? null); })
+        .catch(() => { /* 번호 없는 게스트로 진행 */ })
+        .finally(() => { if (!cancelled) connect(); });
+    }
     return () => {
+      cancelled = true;
       clientRef.current = null;
-      client.deactivate();
+      client?.deactivate();
+      dispatch(actions.setOnlineCount(null));
       setStatus("connecting"); // 다음 연결(재오픈·재로그인) 대비 초기화
     };
   }, [open, authKey, dispatch]);
@@ -79,5 +103,5 @@ export const useChatRoom = (open, authKey) => {
     return true;
   }, []);
 
-  return { messages, status, loading, error, notice, send };
+  return { messages, status, loading, error, notice, send, onlineCount, guestName, presenceTick };
 };

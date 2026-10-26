@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.domain.chat.controller;
 
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.chat.dto.request.ChatSendRequest;
+import com.dawne.com2usbaseball.domain.chat.service.ChatPresenceService;
 import com.dawne.com2usbaseball.domain.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
@@ -21,7 +22,8 @@ public class ChatStompController {
 
     @MessageMapping("/chats.send")
     public void send(ChatSendRequest request, Principal principal) {
-        Long userId = principal == null ? null : Long.valueOf(principal.getName());
+        // 게스트 Principal·Principal 없음 모두 userId null → 서비스가 CHAT_UNAUTHORIZED
+        Long userId = ChatPresenceService.userIdOf(principal);
         chatService.send(userId, request == null ? null : request.body());
     }
 

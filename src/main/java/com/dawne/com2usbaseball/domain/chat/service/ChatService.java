@@ -5,7 +5,9 @@ import com.dawne.com2usbaseball.domain.chat.dto.response.ChatEnvelope;
 import com.dawne.com2usbaseball.domain.chat.dto.response.ChatMessageResponse;
 import com.dawne.com2usbaseball.domain.chat.enums.ChatMessages;
 import com.dawne.com2usbaseball.domain.chat.repository.ChatRepository;
+import com.dawne.com2usbaseball.domain.chat.service.support.ChatBadgeReader;
 import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
+import com.dawne.com2usbaseball.domain.oauth.enums.UserRole;
 import com.dawne.com2usbaseball.domain.oauth.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/** Valkey 만 쓰므로 @Transactional 없음(DB 는 닉네임 조회 1회). 단일 클래스 — public 메서드 3개. */
+/** Valkey 만 쓰므로 @Transactional 없음(DB 는 닉네임·레벨·칭호 조회). 단일 클래스 — public 메서드 3개. */
 @Service
 @RequiredArgsConstructor
 public class ChatService {
@@ -30,6 +32,7 @@ public class ChatService {
 
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
+    private final ChatBadgeReader badgeReader;
     private final ObjectMapper objectMapper;
 
     /** userId 가 null 이면 익명. 실패는 BaseException(코드 = STOMP 오류 코드). 화면 전달은 Pub/Sub 리스너 몫. */
@@ -58,7 +61,7 @@ public class ChatService {
         if (!chatRepository.acquireRateLimit(userId)) {
             throw new BaseException(ChatMessages.CHAT_RATE_LIMITED, HttpStatus.TOO_MANY_REQUESTS);
         }
-        ChatMessageResponse message = ChatMessageResponse.ofUser(nickname, body);
+        ChatMessageResponse message = ChatMessageResponse.ofUser(user.getUserRole() == UserRole.ADMIN, nickname, badgeReader.levelOf(userId), badgeReader.titleOf(userId), body);
         chatRepository.push(toJson(message));
         chatRepository.publish(toJson(ChatEnvelope.message(message)));
     }

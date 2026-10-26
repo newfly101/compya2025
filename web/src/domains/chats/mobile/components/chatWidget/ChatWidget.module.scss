@@ -39,8 +39,8 @@ $edge: max(#{$space-4}, calc((100vw - #{$layout-wrapper-max}) / 2 + #{$space-4})
   @include flex-col;
   transform-origin: bottom right;
   animation: panelIn 200ms ease-out; // 플로팅 카드 — FAB 자리 기준 scale+fade
-  width: min(calc(100% - #{$space-8}), 25rem); // fixed 의 100% = 스크롤바 뺀 뷰포트 (100vw 는 스크롤바 포함이라 왼쪽 여백이 사라짐)
-  height: min(70dvh, 35rem);
+  width: min(calc(100% - #{$space-8}), 22rem); // fixed 의 100% = 스크롤바 뺀 뷰포트 (100vw 는 스크롤바 포함이라 왼쪽 여백이 사라짐)
+  height: min(60dvh, 30rem);
   max-height: calc(var(--vv-height, 100dvh) - #{$space-8});
   overflow: hidden;
   border: 1px solid var(--color-border-strong);
@@ -61,6 +61,23 @@ $edge: max(#{$space-4}, calc((100vw - #{$layout-wrapper-max}) / 2 + #{$space-4})
 
 .title { @include text-body-bold; color: var(--color-text-primary); }
 
+.online { flex: 1 1 auto; min-width: 0; color: var(--color-text-muted); @include text-caption; }
+
+.presenceBtn {
+  flex: none;
+  padding: $space-1 $space-2;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-sm;
+  background: transparent;
+  color: var(--color-text-secondary);
+  @include text-caption;
+  cursor: pointer;
+
+  &:focus-visible { outline: 2px solid var(--color-brand); outline-offset: 2px; }
+}
+
+.guestName { color: var(--color-text-muted); }
+
 .close {
   @include flex-center;
   width: $control-height-md;
@@ -71,13 +88,6 @@ $edge: max(#{$space-4}, calc((100vw - #{$layout-wrapper-max}) / 2 + #{$space-4})
   cursor: pointer;
 
   &:focus-visible { outline: 2px solid var(--color-brand); outline-offset: -2px; }
-}
-
-.notice {
-  flex: none;
-  padding: 0 $space-4 $space-2;
-  color: var(--color-text-muted);
-  @include text-caption;
 }
 
 .conn {
@@ -113,6 +123,14 @@ $edge: max(#{$space-4}, calc((100vw - #{$layout-wrapper-max}) / 2 + #{$space-4})
 .meta { @include flex-row($space-2); }
 .nick { color: var(--color-text-secondary); @include text-caption; font-weight: 600; }
 .time { color: var(--color-text-muted); @include text-micro; }
+.level { color: var(--color-brand); @include text-micro; font-weight: 600; }
+.title {
+  padding: 0 $space-1;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-sm;
+  color: var(--color-text-secondary);
+  @include text-badge;
+}
 
 .botTag {
   padding: $space-1;
@@ -136,6 +154,9 @@ $edge: max(#{$space-4}, calc((100vw - #{$layout-wrapper-max}) / 2 + #{$space-4})
 // 봇 글은 바깥 면(.itemBot)이 말풍선 — 안쪽 말풍선 면을 걷는다
 .itemBot .body { padding: 0; background: none; }
 .itemMine .body { background: var(--color-brand-dark); color: var(--color-chat-on-brand); }
+// 관리자 글 — 누가 보든 주황 말풍선 (내 글이어도 보라 대신 주황)
+.admin .body { background: var(--color-chat-admin); color: var(--color-chat-on-brand); }
+.admin .nick { color: var(--color-chat-admin-text); }
 
 .state, .stateError {
   margin: 0;
