@@ -145,6 +145,9 @@
 
   // 펀톡: 브랜드 면(내 말풍선·플로팅 버튼) 위 글자·아이콘. 테마 무관 흰색 고정 (grade-on-strong 과 같은 원색)
   --color-chat-on-brand: #ffffff;
+  // 펀톡 관리자 말풍선 면(흰 글자 5.18:1) · 닉네임 글자(다크 면 위 밝은 주황). 테마 무관 면 고정
+  --color-chat-admin:      #c2410c;
+  --color-chat-admin-text: #fb923c;
 }
 
 // ============================================================
@@ -260,4 +263,6 @@
   --color-overlay:  rgba(24, 16, 38, 0.45);
 
   --color-chat-on-brand: #ffffff; // 라이트에서도 흰색 고정 (브랜드 보라 면 위)
+  --color-chat-admin:      #c2410c;
+  --color-chat-admin-text: #c2410c; // 흰 면 위 5.18:1
 }

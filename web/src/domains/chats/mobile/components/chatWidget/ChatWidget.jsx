@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
 import { ROUTE_PATHS } from "@/app/router/config/routePath.js";
 import { MARKUP_RE, MARKUP_TEXT, MAX_LENGTH, MAX_LINES, useChatRoom } from "@/domains/chats/mobile/hooks/useChatRoom.js";
+import { formatNow } from "@/global/utils/datetime/dateUtils.js";
+import PresenceModal from "./PresenceModal.jsx";
 import styles from "./ChatWidget.module.scss";
 
 const NEAR_BOTTOM_PX = 48;
@@ -10,7 +12,7 @@ const NEAR_BOTTOM_PX = 48;
 const formatTime = (iso) => {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleTimeString("ko-KR", { hour: "2-digit", minute: "2-digit", hour12: false });
+  return formatNow(d).slice(5, 16).replace("-", "/"); // MM/DD HH:MM (KST)
 };
 
 // 키보드가 올라오면 visualViewport 가 줄어든다 — 패널을 그 안에 맞춰 입력창이 가려지지 않게 한다.
@@ -40,10 +42,11 @@ const useKeyboardInset = (open) => {
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { initialized, isAuthenticated, user, login } = useAuthentication();
-  const { messages, status, loading, error, notice, send } = useChatRoom(open && initialized, isAuthenticated);
+  const { initialized, isAuthenticated, isAdmin, user, login } = useAuthentication();
+  const { messages, status, loading, error, notice, send, onlineCount, guestName, presenceTick } = useChatRoom(initialized, isAuthenticated);
   const inset = useKeyboardInset(open);
   const [text, setText] = useState("");
+  const [presenceOpen, setPresenceOpen] = useState(false);
   const listRef = useRef(null);
   const inputRef = useRef(null);
   const stickRef = useRef(true);
@@ -114,10 +117,12 @@ export default function ChatWidget() {
           const bot = m.senderType === "BOT";
           const mine = !bot && !!myNick && m.nickname === myNick;
           return (
-            <li key={m.id} className={bot ? styles.itemBot : mine ? styles.itemMine : styles.item}>
+            <li key={m.id} className={`${bot ? styles.itemBot : mine ? styles.itemMine : styles.item} ${m.senderType === "ADMIN" ? styles.admin : ""}`}>
               <span className={styles.meta}>
                 {!mine && <span className={styles.nick}>{m.nickname}</span>}
                 {bot && <span className={styles.botTag}>봇</span>}
+                {m.level != null && <span className={styles.level}>Lv.{m.level}</span>}
+                {m.title && <span className={styles.title}>{m.title}</span>}
                 <time className={styles.time}>{formatTime(m.createdAt)}</time>
               </span>
               {/* 텍스트 노드로만 렌더 — HTML 해석·링크 자동연결 없음 (REQ-CHAT-13) */}
@@ -133,7 +138,10 @@ export default function ChatWidget() {
   if (!isAuthenticated) {
     footer = (
       <div className={styles.gate}>
-        <p className={styles.gateText}>로그인하면 채팅할 수 있어요</p>
+        <p className={styles.gateText}>
+          로그인하면 채팅할 수 있어요
+          {guestName && <span className={styles.guestName}> · 나는 {guestName}</span>}
+        </p>
         <button type="button" className={styles.gateBtn} onClick={login}>로그인</button>
       </div>
     );
@@ -188,11 +196,14 @@ export default function ChatWidget() {
         <section className={styles.panel} style={panelStyle} aria-label="펀톡">
           <div className={styles.head}>
             <strong className={styles.title}>펀톡</strong>
+            {onlineCount != null && <span className={styles.online}>현재 {onlineCount}명 접속 중</span>}
+            {isAdmin && (
+              <button type="button" className={styles.presenceBtn} onClick={() => setPresenceOpen(true)}>접속 목록</button>
+            )}
             <button type="button" className={styles.close} onClick={() => setOpen(false)} aria-label="펀톡 닫기">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 9L12 15L18 9" /></svg>
             </button>
           </div>
-          <p className={styles.notice}>펀톡은 최근 100개만 잠시 보관돼요</p>
           {status !== "connected" && (
             <p className={styles.conn} role="status">
               {status === "connecting" ? "연결 중…" : "연결이 끊겼어요. 다시 연결 중…"}
@@ -201,6 +212,7 @@ export default function ChatWidget() {
           <div className={styles.listWrap} ref={listRef} onScroll={onScroll}>{listBody}</div>
           {(hasMarkup || notice) && <p className={styles.toast} role="alert">{hasMarkup ? MARKUP_TEXT : notice}</p>}
           {footer}
+          {isAdmin && presenceOpen && <PresenceModal tick={presenceTick} onClose={() => setPresenceOpen(false)} />}
         </section>
       )}
     </>
