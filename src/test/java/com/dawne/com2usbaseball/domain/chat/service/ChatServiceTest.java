@@ -5,6 +5,7 @@ import com.dawne.com2usbaseball.domain.chat.dto.response.ChatEnvelope;
 import com.dawne.com2usbaseball.domain.chat.dto.response.ChatMessageResponse;
 import com.dawne.com2usbaseball.domain.chat.enums.ChatMessages;
 import com.dawne.com2usbaseball.domain.chat.repository.ChatRepository;
+import com.dawne.com2usbaseball.domain.chat.service.support.ChatBadgeReader;
 import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
 import com.dawne.com2usbaseball.domain.oauth.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,7 +33,7 @@ class ChatServiceTest {
     void setUp() {
         repo = mock(ChatRepository.class);
         users = mock(UserRepository.class);
-        service = new ChatService(repo, users, om);
+        service = new ChatService(repo, users, mock(ChatBadgeReader.class), om);
         when(repo.acquireRateLimit(anyLong())).thenReturn(true);
         when(users.findById(1L)).thenReturn(Optional.of(UserEntity.builder().id(1L).nickname("홍길동").build()));
     }
@@ -124,8 +125,8 @@ class ChatServiceTest {
     @Test
     @DisplayName("관리자 삭제: 해당 id 항목만 LREM 하고 DELETE 발행, 없으면 404 코드")
     void 관리자_삭제() throws Exception {
-        String a = om.writeValueAsString(new ChatMessageResponse("a", "USER", "n", "x", "t"));
-        String b = om.writeValueAsString(new ChatMessageResponse("b", "USER", "n", "y", "t"));
+        String a = om.writeValueAsString(new ChatMessageResponse("a", "USER", "n", null, null, "x", "t"));
+        String b = om.writeValueAsString(new ChatMessageResponse("b", "USER", "n", null, null, "y", "t"));
         when(repo.findAll()).thenReturn(List.of(a, b));
 
         service.delete("b");

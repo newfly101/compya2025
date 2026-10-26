@@ -12,6 +12,8 @@ public class AuthCookieFactory {
     public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     public static final String REFRESH_TOKEN = "REFRESH_TOKEN";
     public static final String OAUTH_STATE = "OAUTH_STATE";
+    /** 채팅 게스트 번호 토큰 (HttpOnly, 웹소켓 핸드셰이크에도 실려야 하므로 path=/) */
+    public static final String CHAT_GUEST = "CHAT_GUEST";
 
     /** refresh / oauth state cookie 는 /api/auth 경로에만 노출 */
     private static final String AUTH_COOKIE_PATH = "/api/auth";
@@ -24,6 +26,16 @@ public class AuthCookieFactory {
                 ResponseCookie.from(ACCESS_TOKEN, token)
                         .httpOnly(true)
                         .path("/"),
+                request
+        ).build();
+    }
+
+    public ResponseCookie createChatGuest(String token, Duration ttl, HttpServletRequest request) {
+        return applyEnvOptions(
+                ResponseCookie.from(CHAT_GUEST, token)
+                        .httpOnly(true)
+                        .path("/")
+                        .maxAge(ttl),
                 request
         ).build();
     }
