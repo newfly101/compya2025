@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.chat.service;
 
+import com.dawne.com2usbaseball.domain.oauth.service.support.NicknamePolicy;
 import com.dawne.com2usbaseball.domain.chat.dto.response.ChatAdminPresenceResponse;
 import com.dawne.com2usbaseball.domain.chat.dto.response.ChatEnvelope;
 import com.dawne.com2usbaseball.domain.chat.dto.response.ChatPresenceEntry;
@@ -48,7 +49,7 @@ public class ChatPresenceService {
 
     /** 닉네임 null 이거나 *** 로 끝나면 미설정 (ChatService.send 와 같은 기준) */
     public static boolean isNicknameSet(String nickname) {
-        return nickname != null && !nickname.endsWith("***");
+        return NicknamePolicy.isSet(nickname);
     }
 
     public ChatPresenceEntry resolveEntry(Principal principal) {

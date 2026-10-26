@@ -22,8 +22,7 @@ const AuthProvider = ({ children }) => {
     dispatch(requestUserHealthCheck())
       .unwrap()
       .then((data) => {
-        // ponytail: 시범 운영 — 관리자만 체크인. 전체 공개 시 이 조건을 !data 로 되돌린다
-        if (data?.userRole !== "ADMIN") return;
+        if (!data) return;
         // 출석 체크인 — 실패해도 로그인 흐름에 영향 없음(서버가 하루 1회 멱등 처리)
         dispatch(requestCheckIn()).unwrap().catch(() => {});
       })

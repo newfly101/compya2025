@@ -3,6 +3,7 @@ package com.dawne.com2usbaseball.domain.oauth.controller;
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.domain.oauth.controller.docs.UserSwaggerDocs;
 import com.dawne.com2usbaseball.domain.oauth.dto.request.UserMeUpdateRequest;
+import com.dawne.com2usbaseball.domain.oauth.dto.response.NicknameCheckResponse;
 import com.dawne.com2usbaseball.domain.oauth.dto.response.UserMeResponse;
 import com.dawne.com2usbaseball.domain.oauth.entity.UserEntity;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
@@ -47,6 +48,15 @@ public class UserController implements UserSwaggerDocs {
         UserMeResponse data = userService.updateMe(userId, body.nickname(), body.profileImage());
 
         return GlobalResponse.success(AuthMessages.AUTH_NICKNAME_UPDATED, data);
+    }
+
+    @GetMapping("/nickname/check")
+    public GlobalResponse<NicknameCheckResponse> checkNickname(HttpServletRequest request, @RequestParam String nickname) {
+        Long userId = requireUserId(request);
+
+        boolean available = userService.isNicknameAvailable(userId, nickname);
+
+        return GlobalResponse.success(AuthMessages.AUTH_SUCCESS, new NicknameCheckResponse(available));
     }
 
     @Override

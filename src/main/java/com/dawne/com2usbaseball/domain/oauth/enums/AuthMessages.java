@@ -27,6 +27,8 @@ public enum AuthMessages {
     AUTH_NICKNAME_UPDATED,
     // 닉네임 형식 오류 (빈 값/공백만/20자 초과)
     AUTH_INVALID_NICKNAME,
+    // 닉네임 중복 (다른 사용자가 이미 사용 중)
+    AUTH_NICKNAME_DUPLICATED,
     // 프로필 이미지 주소 오류 (우리 업로드 경로가 아닌 임의의 URL)
     AUTH_INVALID_PROFILE_IMAGE,
     // 회원 탈퇴 성공

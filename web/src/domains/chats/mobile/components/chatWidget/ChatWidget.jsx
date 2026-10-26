@@ -42,7 +42,7 @@ const useKeyboardInset = (open) => {
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  const { initialized, isAuthenticated, isAdmin, user, login } = useAuthentication();
+  const { initialized, isAuthenticated, isAdmin, user, nicknameUnset, login } = useAuthentication();
   const { messages, status, loading, error, notice, send, onlineCount, guestName, presenceTick } = useChatRoom(initialized, isAuthenticated);
   const inset = useKeyboardInset(open);
   const [text, setText] = useState("");
@@ -59,7 +59,7 @@ export default function ChatWidget() {
     el.style.height = `${el.scrollHeight}px`;
   }, [text]);
 
-  const maskedNickname = isAuthenticated && String(user?.nickname ?? "").endsWith("***");
+  const maskedNickname = isAuthenticated && nicknameUnset;
   const connected = status === "connected";
   const hasMarkup = MARKUP_RE.test(text);
 

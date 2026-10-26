@@ -1,8 +1,9 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { USERS_ME_ACTIONS } from "@/domains/users/store/public/endpoints.js";
+import { USERS_ME_ACTIONS, USERS_NICKNAME_ACTIONS } from "@/domains/users/store/public/endpoints.js";
 import {
   fetchMyInfo,
   patchMyNickname,
+  fetchNicknameAvailable,
   patchMyProfileImage,
   deleteMyAccount,
 } from "@/domains/users/store/public/api.js";
@@ -28,6 +29,18 @@ export const requestUpdateMyNickname = createAsyncThunk(
       return await patchMyNickname(nickname);
     } catch (error) {
       return rejectWithValue(error.message);
+    }
+  }
+);
+
+// 형식 오류(400)는 reject → 화면이 "형식 오류" 문구를 보여준다. 결과는 slice 가 아닌 화면이 unwrap 으로 받는다.
+export const requestCheckNickname = createAsyncThunk(
+  USERS_NICKNAME_ACTIONS.CHECK,
+  async (nickname, { rejectWithValue }) => {
+    try {
+      return await fetchNicknameAvailable(nickname);
+    } catch (error) {
+      return rejectWithValue(error.response?.status === 400 ? "FORMAT" : error.message);
     }
   }
 );

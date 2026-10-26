@@ -64,6 +64,14 @@
         WHERE id = #{id}
     </update>
 
+    <!-- 닉네임 중복 수 — 본인 제외, 비교는 DB collation 그대로 -->
+    <select id="countByNicknameExceptUser" resultType="int">
+        SELECT COUNT(*)
+        FROM site_users
+        WHERE service_nickname = #{nickname}
+          AND id != #{userId}
+    </select>
+
     <!-- 닉네임(service_nickname) 수정 -->
     <update id="updateNickname">
         UPDATE site_users

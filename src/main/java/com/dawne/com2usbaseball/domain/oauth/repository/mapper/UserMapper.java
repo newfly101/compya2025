@@ -21,6 +21,8 @@ public interface UserMapper {
 
     void updateUserLogin(@Param("id") Long id);
 
+    int countByNicknameExceptUser(@Param("nickname") String nickname, @Param("userId") Long userId);
+
     int updateNickname(@Param("id") Long id, @Param("nickname") String nickname);
 
     int updateProfileImage(@Param("id") Long id, @Param("profileImage") String profileImage);

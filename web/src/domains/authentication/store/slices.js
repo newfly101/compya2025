@@ -37,7 +37,10 @@ const authSlice = createSlice({
       state.userRole = null;
       state.initialized = true;
     },
-
+    // 마이페이지 닉네임 저장 성공 뒤 — 전역 닉네임 가드가 새로고침 없이 풀리게 한다.
+    patchUser(state, action) {
+      if (state.user) state.user = { ...state.user, ...action.payload };
+    },
   },
   extraReducers: (builder) => {
     /* ── 세션 확인 ─────────────────────────────────────────────
@@ -59,5 +62,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { clearUser, setGuestInitialized } = authSlice.actions;
+export const { clearUser, setGuestInitialized, patchUser } = authSlice.actions;
 export default authSlice.reducer;

@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { requestUserLogout } from "@/domains/authentication/store/thunks.js";
+import { isNicknameUnset } from "@/global/utils/nickname/isNicknameUnset.js";
 import { trackLogout } from "@/infra/analytics/events/authEvents.js";
 
 // 로그인 시작을 BE 로 넘긴다 — BE 가 state 를 만들어 쿠키에 심고 네이버로 보낸다 (콜백에서 대조)
@@ -11,6 +12,7 @@ export const useAuthentication = () => {
   const dispatch = useDispatch();
   const { user, userRole, initialized } = useSelector(state => state.auth);
   const isAuthenticated = user !== null;
+  const nicknameUnset = isNicknameUnset(user);
   const isAdmin = userRole === "ADMIN";
 
   const login = () => {
@@ -28,5 +30,5 @@ export const useAuthentication = () => {
     window.location.replace("/");
   };
 
-  return { initialized, isAuthenticated, user, userRole, isAdmin, login, logout };
+  return { initialized, isAuthenticated, user, userRole, isAdmin, nicknameUnset, login, logout };
 };
