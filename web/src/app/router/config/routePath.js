@@ -33,6 +33,8 @@ export const ROUTE_PATHS = {
   legend_collection_skills: "/legend-collection-skills",
   legend_collection_skill_edit_pattern: "/legend-collection-skills/:legendId/edit",
   legend_collection_skill_edit: (legendId) => `/legend-collection-skills/${legendId}/edit`,
+  // 스킬 시뮬레이터 — 이번 범위는 고스변. 선택·보호 변경권은 같은 /simulators 아래로 이어진다
+  simulator_gsb: "/simulators/gsb",
   // 히스토리 재료 탐색기 — 평점표에서 ?legend={레전드명} 으로 진입한다
   history_legend: "/history-mode/legend",
   community: "/community",

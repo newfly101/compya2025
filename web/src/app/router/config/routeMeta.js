@@ -31,6 +31,7 @@ export const ROUTE_META = {
   LEGEND_COLLECTION_MANAGE: {path: ROUTE_PATHS.legend_collection_manage, title: "컴프야펀 | 내 기록 관리"},
   LEGEND_COLLECTION_SKILLS: {path: ROUTE_PATHS.legend_collection_skills, title: "컴프야펀 | 레전드 재료"},
   LEGEND_COLLECTION_SKILL_EDIT: {path: ROUTE_PATHS.legend_collection_skill_edit_pattern, title: "컴프야펀 | 스킬 기록 편집"},
+  SIMULATOR_GSB: {path: ROUTE_PATHS.simulator_gsb, title: "컴프야펀 | 스킬 시뮬레이션"},
   HISTORY_LEGEND: {path: ROUTE_PATHS.history_legend, title: "컴프야펀 | 히스토리 재료"},
   COMMUNITY: {path: ROUTE_PATHS.community, title: "컴프야펀 | 커뮤니티"},
   PRIVACY: {path: ROUTE_PATHS.privacy, title: "컴프야펀 | 개인정보처리방침"},
