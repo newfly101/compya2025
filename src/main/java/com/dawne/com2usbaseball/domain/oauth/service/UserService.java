@@ -17,5 +17,8 @@ public interface UserService {
      */
     UserMeResponse updateMe(Long userId, String nickname, PatchableString profileImage);
 
+    /** 닉네임 사용 가능 여부 (형식 위반 400, 본인 현재 닉네임은 true) */
+    boolean isNicknameAvailable(Long userId, String nickname);
+
     void withdraw(Long userId);
 }

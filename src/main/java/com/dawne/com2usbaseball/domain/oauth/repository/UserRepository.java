@@ -38,6 +38,10 @@ public class UserRepository {
         mapper.updateUserLogin(userId);
     }
 
+    public boolean existsNicknameExceptUser(String nickname, Long userId) {
+        return mapper.countByNicknameExceptUser(nickname, userId) > 0;
+    }
+
     public boolean updateNickname(Long userId, String nickname) {
         return mapper.updateNickname(userId, nickname) > 0;
     }

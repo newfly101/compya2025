@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.oauth.service;
 
+import com.dawne.com2usbaseball.domain.oauth.service.support.NicknamePolicy;
 import com.dawne.com2usbaseball.common.support.dto.PatchableString;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.admin.service.UploadService;
@@ -30,7 +31,6 @@ import java.util.UUID;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
-    private static final int NICKNAME_MAX_LENGTH = 20;
     private static final int WITHDRAW_RETENTION_MONTHS = 1;
 
     private final UserRepository repository;
@@ -115,9 +115,9 @@ public class UserServiceImpl implements UserService {
 
         // nickname == null → 키 자체를 안 보낸 것과 같은 취급 → 건드리지 않는다 (기존 "닉네임만 보내는" 요청 호환)
         if (nickname != null) {
-            String trimmed = nickname.trim();
-            if (trimmed.isEmpty() || trimmed.length() > NICKNAME_MAX_LENGTH) {
-                throw new BaseException(AuthMessages.AUTH_INVALID_NICKNAME, HttpStatus.BAD_REQUEST);
+            String trimmed = validNickname(nickname);
+            if (repository.existsNicknameExceptUser(trimmed, userId)) {
+                throw new BaseException(AuthMessages.AUTH_NICKNAME_DUPLICATED, HttpStatus.CONFLICT);
             }
             repository.updateNickname(userId, trimmed);
             user.setNickname(trimmed);
@@ -145,6 +145,19 @@ public class UserServiceImpl implements UserService {
         }
 
         return userMapStruct.toHealthResponse(user);
+    }
+
+    @Override
+    public boolean isNicknameAvailable(Long userId, String nickname) {
+        return !repository.existsNicknameExceptUser(validNickname(nickname), userId);
+    }
+
+    private String validNickname(String raw) {
+        String trimmed = raw == null ? "" : raw.trim();
+        if (!NicknamePolicy.isValid(trimmed)) {
+            throw new BaseException(AuthMessages.AUTH_INVALID_NICKNAME, HttpStatus.BAD_REQUEST);
+        }
+        return trimmed;
     }
 
     // 캐시 무효화 쿼리스트링을 뗀 실제 S3 키가 같은지 비교

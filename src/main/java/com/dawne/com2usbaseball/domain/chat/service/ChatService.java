@@ -1,5 +1,6 @@
 package com.dawne.com2usbaseball.domain.chat.service;
 
+import com.dawne.com2usbaseball.domain.oauth.service.support.NicknamePolicy;
 import com.dawne.com2usbaseball.common.support.exception.BaseException;
 import com.dawne.com2usbaseball.domain.chat.dto.response.ChatEnvelope;
 import com.dawne.com2usbaseball.domain.chat.dto.response.ChatMessageResponse;
@@ -43,7 +44,7 @@ public class ChatService {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new BaseException(ChatMessages.CHAT_UNAUTHORIZED, HttpStatus.UNAUTHORIZED));
         String nickname = user.getNickname();
-        if (nickname == null || nickname.endsWith("***")) {
+        if (!NicknamePolicy.isSet(nickname)) {
             throw new BaseException(ChatMessages.CHAT_NICKNAME_REQUIRED, HttpStatus.FORBIDDEN);
         }
         String body = rawBody == null ? "" : rawBody.trim();
