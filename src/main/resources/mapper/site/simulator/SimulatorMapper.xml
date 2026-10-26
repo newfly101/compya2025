@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- data_player_legend · data_player_skill 은 존재 확인(SELECT)만. 기록 테이블은 INSERT 전용. -->
+<mapper namespace="com.dawne.com2usbaseball.domain.simulator.repository.mapper.SimulatorMapper">
+
+    <select id="selectEmailByUserId" resultType="string">
+        SELECT oauth_email
+        FROM site_user_oauth_accounts
+        WHERE user_id = #{userId} AND oauth_email IS NOT NULL
+        ORDER BY id
+        LIMIT 1
+    </select>
+
+    <select id="countLegend" resultType="int">
+        SELECT COUNT(*) FROM data_player_legend WHERE id = #{legendId}
+    </select>
+
+    <select id="countSkills" resultType="int">
+        SELECT COUNT(*) FROM data_player_skill WHERE id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+
+    <insert id="insertSave" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO site_user_simulator_saves
+            (user_id, legend_id, gsb_count, sel_count, skill_id_1, skill_id_2, skill_id_3, skill_tier_1, skill_tier_2, skill_tier_3)
+        VALUES
+            (#{userId}, #{legendId}, #{gsbCount}, #{selCount}, #{skillId1}, #{skillId2}, #{skillId3}, #{skillTier1}, #{skillTier2}, #{skillTier3})
+    </insert>
+</mapper>

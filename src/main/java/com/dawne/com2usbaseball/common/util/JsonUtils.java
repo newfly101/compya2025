@@ -26,6 +26,15 @@ public final class JsonUtils {
         }
     }
 
+    /** 객체 → JSON 문자열 */
+    public static String toJson(Object value) {
+        try {
+            return objectMapper.writeValueAsString(value);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("JSON 직렬화 실패: " + value.getClass().getSimpleName(), e);
+        }
+    }
+
     /** JSON 객체 → 지정한 타입 */
     public static <T> T toObject(String json, Class<T> clazz) {
         if (json == null || json.isBlank()) {
