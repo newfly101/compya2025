@@ -1,0 +1,16 @@
+// ============================================================
+// mixins/_media.scss
+// MEDIA QUERY HELPERS
+// ============================================================
+
+@use '../variables/breakpoints' as *;
+
+// ── 모바일 우선 (min-width) ───────────────────────────────────
+@mixin from-tablet {
+  @media screen and (min-width: #{$bp-tablet}) { @content; }
+}
+
+// ── 소형 모바일 ───────────────────────────────────────────────
+@mixin small-mobile {
+  @media screen and (max-width: #{$bp-mobile-sm}) { @content; }
+}

@@ -1,0 +1,124 @@
+// ============================================================
+// app/wrapper/mobile/parts/TopBar.module.scss
+// C/TopBar — variant: home | page | section
+// ============================================================
+
+@use 'styles/mixins/flex' as *;
+@use 'styles/mixins/layout' as *;
+@use 'styles/variables/spacing' as *;
+@use 'styles/variables/font' as *;
+@use 'styles/variables/zindex' as *;
+
+// 네이버 브랜드 그린 — 로그인 버튼 전용, 두 테마 공용 고정값 (토큰 미적용)
+$color-naver-background: #03c75a;
+$color-naver-font: $color-white-100;
+
+
+// ── Base ──────────────────────────────────────────────────────
+.topBar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: $layout-wrapper-max;  // mobile-frame.md § 2 — body / page-layout 와 정합
+  height: $layout-topbar-height;
+  padding: 0 $layout-h-pad;
+  background-color: var(--color-bg-deepest);
+  border-bottom: 1px solid var(--color-border);
+  z-index: $z-sticky;
+}
+
+// ── 좌측 ──────────────────────────────────────────────────────
+.left {
+  @include flex-row;
+  justify-content: flex-start;
+}
+
+// ── 우측 ──────────────────────────────────────────────────────
+.right {
+  @include flex-row;
+  justify-content: flex-end;
+}
+
+// ── 버거 버튼 ─────────────────────────────────────────────────
+.burger {
+  @include flex-col($space-1);
+  width: $space-6;            // 24px
+  flex-shrink: 0;
+
+  span {
+    display: block;
+    width: 100%;
+    height: 2px;              // hairline — 토큰화 대상 아님 (mobile-frame § 4.3 예외)
+    border-radius: $radius-xs;
+    background-color: var(--color-text-primary);
+    transition: opacity 0.2s ease;
+  }
+}
+
+// ── 로고 ──────────────────────────────────────────────────────
+.logo {
+  @include flex-row($space-1, center, center);
+  @include text-topBar;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+// ── 로그인 / 로그아웃 버튼 (공통 베이스) ───────────────────
+.loginBtn,
+.logoutBtn {
+  height: rem(28);             // mobile-frame § 4.3 — 토큰 외 size, rem 강제
+  padding: 0 $space-3;
+  border-radius: $radius-sm;
+  @include text-micro;
+  white-space: nowrap;
+  flex-shrink: 0;
+  @include pressable;
+}
+
+.loginBtn {
+  color: $color-naver-font;
+  background-color: $color-naver-background;
+}
+
+.logoutBtn {
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-card);
+}
+
+// ── 뒤로가기 버튼 ─────────────────────────────────────────────
+.backBtn {
+  @include flex-center;
+  width: $control-height-sm;   // 36px
+  aspect-ratio: 1 / 1;
+  margin-left: -$space-1;
+  flex-shrink: 0;
+  color: var(--color-text-primary);
+}
+
+.backIcon {
+  @include text-page-title;
+  color: var(--color-text-primary);
+}
+
+// ── 페이지 타이틀 ─────────────────────────────────────────────
+.pageTitle {
+  @include text-topBar;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  max-width: rem(200);         // 컨텐츠 의도 (긴 타이틀 영역 한도) — rem 강제
+}
+
+// ── 우측 액션 슬롯 ────────────────────────────────────────────
+.rightAction {
+  @include flex-row($space-2);
+  justify-content: flex-end;
+}
+

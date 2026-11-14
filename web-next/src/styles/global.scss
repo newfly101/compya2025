@@ -1,0 +1,23 @@
+// ============================================================
+//  global.scss — main.jsx 에서 단 한 번만 import
+//
+//  CSS 규칙(셀렉터/출력)을 적용하는 유일한 진입점입니다.
+//  여기서 로드된 스타일은 전역으로 한 번만 적용됩니다.
+// ============================================================
+
+// 1. CSS 변수 주입 (:root custom properties)
+//    → var(--color-*) 를 전역에서 참조할 수 있게 됩니다
+@use "semantic/color";
+
+// 2. Reset & 기본 요소 스타일 + 유틸 클래스
+//    → *, html, body, a, button, input ... + .sr-only .ellipsis 등
+@use "base/base";
+
+// 3. 타이포그래피 클래스
+//    → .text-hero .text-body .text-caption .text-brand 등
+@use "base/typography";
+
+// [PC] body 배경 — 추후 삭제
+body {
+  background: var(--color-bg-deepest);   // 추후 삭제
+}

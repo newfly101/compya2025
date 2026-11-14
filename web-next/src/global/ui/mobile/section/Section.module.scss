@@ -1,0 +1,29 @@
+// ── 공통 섹션 ──────────────────────────────────────────────
+.section {
+  padding: $layout-h-pad;       // $space-4
+  @include flex-col($space-3);
+}
+
+.sectionHead {
+  @include flex-between;
+}
+
+.sectionTitle {
+  @include flex-row($space-2, center);
+  @include text-section-title;
+  color: var(--color-text-primary);
+}
+
+.accent {
+  color: var(--color-brand);
+  font-weight: $font-weight-bold;
+}
+
+.more {
+  @include text-caption;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  transition: color 0.15s ease;
+
+  &:active { color: var(--color-text-secondary); }
+}

@@ -1,0 +1,42 @@
+
+// key: 홈 바로가기가 항목을 가리키는 안정된 id (저장값에 쓰이므로 바꾸지 않는다 — home/config/quickShortcuts.js)
+// children: 접이식 하위 메뉴. 부모 행은 이동하지 않고 접고 펴기만 한다. 선택지로는 children 의 항목이 쓰인다.
+// loginRequired: 비로그인 클릭 시 navigate 차단 + 공용 로그인 안내 모달 (loginReason = LOGIN_REASONS 키)
+// TODO(next-migration): admin 메뉴(ADMIN_MENU_GROUPS)는 권한 의존 — 미이전
+export const MENU_GROUPS = [
+  {
+    label: '메인',
+    items: [
+      { key: 'home',    icon: '🏠', label: '홈',           to: '/' },
+      { key: 'events',  icon: '🎪', label: '이벤트',        to: '/events' },
+      { key: 'coupons', icon: '🎫', label: '쿠폰 코드',     to: '/coupons' },
+      { key: 'notices', icon: '📢', label: '공지사항',      to: '/notices' },
+    ]
+  },
+  {
+    label: '컨텐츠',
+    items: [
+      { id: 'legend', icon: '🧩', label: '레전드 재료',
+        tag: { variant: 'hot' },
+        children: [
+          { key: 'legend-stats',       icon: '🔎', label: '재료 검색',            to: '/legend-stats' },
+          { key: 'legend-collections', icon: '🗂️', label: '내 재료 보유 현황',    to: '/legend-collections',
+            loginRequired: true, loginReason: 'holdings' },
+          { key: 'legend-skills',      icon: '📝', label: '내 레전드 스킬 기록',  to: '/legend-collection-skills',
+            loginRequired: true, loginReason: 'skills' },
+        ] },
+      { key: 'history',   icon: '🎯', label: '히스토리 재료',   to: '/history-mode/legend' },
+      { key: 'mileage',   icon: '🧭', label: '마일리지 저격',   to: '/mileage',
+        tag: { variant: 'catNew' } },
+      { key: 'simulator', icon: '🎮', label: '스킬 시뮬레이터', to: '/simulators/gsb',
+        tag: { variant: 'catNew' } },
+      { key: 'players',   icon: '⚾', label: '선수 백과사전',   to: '/players',
+        tag: { variant: 'beta' } },
+      { key: 'skills',    icon: '📖', label: '스킬 백과사전',   to: '/skills' },
+      { key: 'odds',      icon: '📊', label: '확률 공시',      to: '/probability' },
+      { key: 'guides',    icon: '📚', label: '가이드',        to: '/guides' },
+    ]
+  },
+  // 커뮤니티 그룹 — AdSense 심사 대응으로 드로어 노출에서 제외(2026-09-13).
+  // 라우트 자체는 유지(직접 URL 접근 가능), infra/seo/routeSeo.js NOINDEX_PATHS 로 색인만 차단.
+]

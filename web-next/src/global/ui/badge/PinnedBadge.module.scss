@@ -1,0 +1,50 @@
+// ============================================================
+// PinnedBadge.module.scss
+// 이벤트성 하이라이트 강조 배지 — alpha 채우기 + border
+// LabelBadge와 동일한 색상 팔레트, border 추가로 강조 효과
+// 참조: global/styles/components/primitive/_Badge.module.scss
+// ============================================================
+
+// ── badge-specific color tokens ───────────────────────────────
+// community(동결 도메인) 호출부가 쓰는 값 — PostRow.jsx 가 여기 걸려 있어 재색칠하지 않는다.
+$pinned-yellow-bg:    rgba(254, 204, 26, 0.18);
+$pinned-yellow-border:#fecc1a;
+$pinned-red-bg:       rgba(248, 113, 113, 0.18);
+$pinned-red-border:   #f87171;
+$pinned-hot-bg:       rgba(239, 68, 68, 0.28);
+$pinned-hot-border:   #ef4444;
+
+// ── Base ──────────────────────────────────────────────────────
+.badge {
+  @include text-badge;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  // 글자 수가 달라도 폭이 같아야 목록에서 오른쪽 끝이 맞는다.
+  // 가장 긴 축(공사중 = 한글 3자) 기준. 그보다 긴 라벨은 자연히 늘어난다
+  min-width: 42px;
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  border-width: 0.5px;
+  border-style: solid;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ── Variants — community 호출부(동결) 는 옛 값 그대로 둔다 ──────
+.important { background-color: $pinned-yellow-bg;  border-color: $pinned-yellow-border;  color: $pinned-yellow-border; } // PostRow "공지" 전용
+.mustread  { background-color: $pinned-red-bg;     border-color: $pinned-red-border;     color: $pinned-red-border; } // PostRow "인기"/"고정" 전용
+.new       { background-color: $pinned-red-bg;     border-color: $pinned-red-border;     color: $pinned-red-border; } // PostRow "new" 전용
+
+// 레전드 재료 HOT 뱃지용 — 폐기 확정(코드 제거는 별도 세션), 값만 유지
+.hot       { background-color: $pinned-hot-bg;     border-color: $pinned-hot-border;     color: $pinned-hot-border; }
+
+// ── Variants — 분류 축 토큰(semantic/_color.scss --color-cat-*) ─
+.cafe,
+.neutral,
+.beta      { background-color: var(--color-cat-neutral-dim); border-color: var(--color-cat-neutral); color: var(--color-cat-neutral); }
+
+.mark      { background-color: var(--color-cat-mark-dim);    border-color: var(--color-cat-mark);    color: var(--color-cat-mark); }
+
+// 메뉴 "NEW" 전용 — 분류 빨강은 이 배지에서만, 불투명 채움 + 흰 글자
+.catNew    { background-color: var(--color-cat-new); border-color: var(--color-cat-new); color: #fff; }

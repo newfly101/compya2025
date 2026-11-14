@@ -1,0 +1,33 @@
+// ============================================================
+//  index.scss — vite.config.js additionalData 전용
+//
+//  ⚠️  이 파일은 모든 .module.scss 에 자동 주입됩니다.
+//      CSS 출력(셀렉터 / 규칙)이 있는 파일은 절대 @forward 하지 마세요.
+//      변수(tokens) 와 믹스인(mixins) 만 포함해야 합니다.
+// ============================================================
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+//  [MOBILE] 신규 토큰 & 믹스인
+//  mobile .module.scss 에서 @use 없이 바로 사용 가능
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+// ── Functions ─────────────────────────────────────────────
+@forward "functions/rem";          // rem($px) — px → rem 변환 (mobile-frame § 4 / § 6.4)
+
+// ── Variables (tokens) ────────────────────────────────────
+@forward "variables/colors";       // $color-bg-900 ~ $color-warning-100
+@forward "variables/font";         // $font-size-9 ~ $font-size-28, weight, line-height
+@forward "variables/spacing";      // $space-1 ~ $space-12, layout constants
+@forward "variables/radius";       // $radius-sm ~ $radius-full
+@forward "variables/breakpoints"; // $bp-mobile-sm, $bp-tablet
+@forward "variables/zindex";      // $z-base ~ $z-sheet
+
+// ── Mixins ────────────────────────────────────────────────
+@forward "mixins/flex";    // flex-row, flex-col, flex-center, flex-between
+@forward "mixins/layout";  // page-layout, page-content, h-pad, scroll-row, overlay
+@forward "mixins/media";   // from-tablet, small-mobile
+@forward "mixins/table";   // list-row, section-header
+@forward "mixins/background";   // bg-*
+@forward "mixins/typography";   // text-*
+@forward "mixins/admin-field";  // admin-input, admin-textarea, admin-field-label, admin-date-range-row (어드민 모달 폼 전용)
+@forward "mixins/prose";        // prose — Tiptap HTML 렌더 규칙(RichEditor 편집영역 ↔ RichContent 뷰어 공유)

@@ -1,0 +1,32 @@
+// ============================================================
+// _spacing.scss
+// 간격 규칙 — 짝수 px, 1px 은 선·테두리 두께 전용, 2px 이상 홀수 금지, 4의 배수 권장. space-N 으로만 참조
+// ============================================================
+
+// ── Scale ─────────────────────────────────────────────────────
+$space-1:  4px;   // space-1  — 4px  : 아이콘 내부, 뱃지 패딩
+$space-2:  8px;   // space-2  — 8px  : 섹션 구분선, gap 최소
+$space-3:  12px;  // space-3  — 12px : 인풋 내부 패딩
+$space-4:  16px;  // space-4  — 16px : 화면 수평 패딩 (H_PAD)
+$space-5:  20px;  // space-5  — 20px : 카드 내부 상하 패딩
+$space-6:  24px;  // space-6  — 24px : 섹션 간 gap
+$space-8:  32px;  // space-8  — 32px : 섹션 상단 여백
+$space-10: 40px;  // space-10 — 40px
+$space-12: 48px;  // space-12 — 48px : 페이지 상단 여백
+
+// ── Layout Constants ──────────────────────────────────────────
+$layout-wrapper-max:     480px;  // 코드 wrapper 한도 (mobile-frame.md § 1 / § 2 — 480 단일, body / page-layout / TopBar / Drawer 공용)
+$layout-card-width:      448px;  // 480 - 16×2 (mobile-frame.md § 2 — 480 정합)
+$layout-h-pad:           16px;   // $space-4 동일
+$layout-h-pad-sm:        12px;   // 320 미만 보호용 (mobile-frame.md § 3.2)
+$layout-topbar-height:   52px;
+$layout-bottombar-height:56px;
+$layout-section-sep:     8px;    // $space-2 동일
+
+// ── Control Heights (tap-target 호환, 4의 배수) ──────────────
+$control-height-sm: 36px;   // 검색 input / chip row trigger / autocomplete trigger
+$control-height-md: 44px;   // tap-target 표준 (mobile-frame.md § 5)
+$control-height-lg: 52px;   // drawer menu item / quick icon
+
+// ── Z-index ───────────────────────────────────────────────────
+// → _zindex.scss 참고

@@ -1,0 +1,254 @@
+// ============================================================
+// app/wrapper/mobile/parts/Drawer.module.scss
+// ============================================================
+
+
+// 네이버 브랜드 그린 — 로그인 버튼 전용, 두 테마 공용 고정값 (토큰 미적용)
+$color-naver-background: #03c75a;
+$color-naver-font: $color-white-100;
+
+// ── 오버레이 ──────────────────────────────────────────────────
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: var(--color-overlay);   // 0.55 alpha (mobile-frame § 3.1 D3 정합)
+  z-index: $z-drawer - 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+
+  &.overlayVisible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  @include from-tablet {
+    left: calc(50% - #{$layout-wrapper-max} / 2);  // mobile-frame.md § 2 — wrapper 한도와 정합
+    width: $layout-wrapper-max;
+    position: absolute;
+    inset: 0;
+  }
+}
+
+// ── 패널 ──────────────────────────────────────────────────────
+.drawer {
+  top: $layout-topbar-height;  // 52px 아래부터 시작
+  height: calc(100dvh - #{$layout-topbar-height});
+  position: fixed;
+  left: 0;
+  width: 75%;
+  max-width: rem(250);                       // mobile-frame § 4.3 — 토큰 외 size, rem 강제
+  background-color: var(--color-bg-deep);
+  z-index: $z-drawer;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+
+  &.drawerOpen {
+    transform: translateX(0);
+  }
+
+  @include from-tablet {
+    left: calc(50% - #{$layout-wrapper-max} / 2);  // mobile-frame.md § 2
+    position: absolute;
+    transform: translateX(-100%);
+    clip-path: inset(0 0 0 100%);
+    transition: transform 0.25s ease, clip-path 0s 0.25s;
+
+    &.drawerOpen {
+      clip-path: inset(0);
+      transform: translateX(0);
+      transition: transform 0.25s ease, clip-path 0s 0s;
+    }
+  }
+}
+
+// ── 유저 프로필 ───────────────────────────────────────────────
+.profile {
+  @include flex-row($space-3);
+  padding: $space-3;
+  margin: $space-3 $space-4 0 $space-4;
+  @include card-base($radius: $radius-xl, $pad: $space-3);
+}
+
+// 로그인 상태 전용 — 박스 자체가 마이페이지로 가는 링크라 눌림 피드백과 chevron 을 더한다.
+.profileLink {
+  @include pressable;
+}
+
+// 관리자 — 안쪽 DrawerProfile 이 티어 카드 면을 직접 그리므로 바깥 카드 틀은 걷는다.
+.profileTier {
+  padding: 0;
+  margin: $space-3 $space-3 0;   // 서랍 최대 250px — 카드 폭 226 (Figma 300 기준보다 좁아 여백 16→12)
+  border: none;
+  background: none;
+  gap: 0;
+}
+
+.profileChevron {
+  @include text-section-title;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.userInfo {
+  @include flex-col($space-1);
+  flex: 1;
+  overflow: hidden;
+}
+
+.userName {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.userStatus {
+  @include text-micro;
+  color: var(--color-text-muted);
+  @include text-ellipsis;
+}
+
+// ── 네비게이션 ────────────────────────────────────────────────
+.nav {
+  @include flex-col;
+  padding: $space-3 0 $space-8;
+  flex: 1;
+}
+
+// ── 그룹 ──────────────────────────────────────────────────────
+.group {
+  @include flex-col;
+}
+
+.groupLabel {
+  @include text-micro;
+  color: var(--color-text-muted);
+  padding: $space-4 $space-4 $space-2;
+  text-transform: uppercase;
+}
+
+// ── 메뉴 아이템 ───────────────────────────────────────────────
+.menuList {
+  @include flex-col;
+}
+
+.menuItem {
+  @include flex-row($space-3);
+  color: var(--color-text-secondary);
+  position: relative;
+  height: $control-height-lg;  // 52px
+  padding: 0 $space-4;
+  transition: background-color 0.15s ease, color 0.15s ease;
+
+  &:active {
+    background-color: var(--color-bg-overlay);
+  }
+
+  &.menuItemActive {
+    color: var(--color-text-primary);
+    background-color: var(--color-bg-overlay);
+
+    // 좌측 액센트 바
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;            // 액센트 strip (콘텐츠 의도, 토큰화 대상 아님)
+      height: $space-6;      // 24px
+      border-radius: 0 $radius-sm $radius-sm 0;
+      background-color: var(--color-brand-violet);
+    }
+  }
+}
+
+.menuIcon {
+  font-size: $font-size-17;   // 17px (허용 스케일 정합, 18px → 17px)
+  flex-shrink: 0;
+  // 이모지는 글자마다 폭이 달라(⚾ vs 🎮) 그대로 두면 라벨 시작점이 어긋난다
+  width: 1.375rem;       // 22px
+  text-align: center;
+}
+
+.menuLabel {
+  flex: 1;
+  min-width: 0;
+  @include text-body-bold;
+}
+
+// 뱃지 자리 — 있고 없고에 따라 라벨 폭만 달라지고 위치는 고정된다
+.menuTag {
+  display: inline-flex;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+// 접이식 부모 행은 <button> — 링크 행과 같은 모양으로 맞춘다
+button.menuItem {
+  width: 100%;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+// 하위 메뉴 — 들여쓰기만 다르고 높이는 탭 대상 44 유지
+.menuSub {
+  height: $control-height-md;
+  padding-left: $space-10;
+}
+
+.menuLock {
+  @include text-micro;
+  flex-shrink: 0;
+}
+
+// 접힘 표시 — 글자는 작아도 행 전체가 버튼이라 탭 영역은 52
+.menuChevron {
+  @include text-caption;
+  flex-shrink: 0;
+  margin-left: $space-1;
+  color: var(--color-text-muted);
+}
+
+// ── 뱃지 ──────────────────────────────────────────────────────
+.badge {
+  @include flex-center;
+  @include text-badge;
+  min-width: $space-5;   // 20px
+  aspect-ratio: 1/1;
+  padding: 0 $space-1;
+  border-radius: $radius-full;
+  background-color: var(--color-brand-violet);
+}
+
+// ── 비로그인 프로필 ───────────────────────────────────────────
+.guestInfo {
+  @include flex-col($space-1);
+  flex: 1;
+  overflow: hidden;
+}
+
+.guestTitle {
+  @include text-body;
+  @include text-ellipsis;
+  color: var(--color-text-primary);
+}
+
+.loginBtn {
+  height: rem(28);                           // mobile-frame § 4.3 — 토큰 외 size, rem 강제
+  padding: 0 $space-3;
+  border-radius: $radius-sm;
+  background-color: $color-naver-background;
+  color: $color-naver-font;
+  @include text-micro;
+  white-space: nowrap;
+  flex-shrink: 0;
+  @include pressable;
+}
