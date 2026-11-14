@@ -1,0 +1,60 @@
+// ── 전체 레이아웃 ──────────────────────────────────────────────
+.screen {
+  @include flex-col($space-2);
+  width: 100%;
+}
+
+// ── 상단 안내 문단 ────────────────────────────────────────────
+.intro {
+  @include flex-col($space-3);
+  @include h-pad;
+  padding-top: $space-5;
+  padding-bottom: $space-5;
+  background-color: var(--color-bg-overlay);
+  border-bottom: 1px solid var(--color-border);
+}
+
+// ── 조항 본문 ─────────────────────────────────────────────────
+.sectionBody {
+  @include flex-col($space-3);
+  @include h-pad;
+  padding-bottom: $space-2;
+}
+
+.p {
+  @include text-body;
+  @include hangul-safe;
+  color: var(--color-text-secondary);
+  line-height: $line-height-relaxed;
+}
+
+.ul {
+  @include flex-col($space-2);
+  @include hangul-safe;
+  padding-left: $space-5;
+  color: var(--color-text-secondary);
+
+  li {
+    @include text-body;
+    line-height: $line-height-relaxed;
+    list-style: disc;
+  }
+}
+
+.link {
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+// ── 미확정 사실 정보 표시 ─────────────────────────────────────
+// 법적 책임이 있는 문서 — 추측 금지, 운영자 확인 전까지 눈에 띄게 표시
+.todoNote {
+  @include text-caption;
+  display: inline-block;
+  font-weight: $font-weight-semibold;
+  color: var(--color-warning);
+  background-color: var(--color-warning-dim);
+  border-radius: $radius-sm;
+  padding: $space-1 $space-2;
+}
