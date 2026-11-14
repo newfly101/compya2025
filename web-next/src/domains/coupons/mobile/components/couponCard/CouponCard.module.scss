@@ -1,0 +1,80 @@
+// ── Coupon Card ───────────────────────────────────────────────
+.couponCard {
+  @include card-base($radius: $radius-xl, $pad: $space-3 $space-4);
+  @include flex-col($space-2);
+}
+
+.expired {
+  background-color: var(--color-bg-deep);
+  border-color: transparent;
+  opacity: 0.55;
+}
+
+.couponTop {
+  @include flex-between;
+  gap: $space-2;
+}
+
+.couponCode {
+  @include text-micro;
+  @include text-ellipsis;
+  color: var(--color-text-code);
+  background: var(--color-bg-elevated);
+  padding: $space-1 $space-2;
+  letter-spacing: $letter-spacing-wide;
+}
+
+.couponGoBtn {
+  @include text-badge;
+  @include pressable;
+  background-color: var(--color-brand-dark);
+  flex-shrink: 0;
+  height: $space-6;        // 24px
+  padding: 0 $space-2;
+  border-radius: $radius-sm;
+  color: #fff;                                 // brand-dark 배경, 두 테마 모두 대비 확보
+  white-space: nowrap;
+}
+
+.expiredBtn {
+  background-color: var(--color-coupon-expired-bg);
+  border-color: var(--color-border);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.couponTitle {
+  @include text-body;
+  @include hangul-safe;
+  color: var(--color-text-primary);
+}
+
+.couponBody {
+  @include flex-col($space-1);
+  padding: $space-2 0;
+  @include text-caption;
+  color: var(--color-text-muted);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+
+  & > p {
+    @include text-caption;
+  }
+}
+
+.couponExpire {
+  @include text-micro;
+  @include flex-row($space-1);
+  color: var(--color-text-muted);
+}
+
+.expireDot {
+  @include text-badge;
+  align-items: center;
+  color: var(--color-text-muted);
+}
+
+.couponExplain {
+  @include text-micro;
+  color: var(--color-text-muted);
+}
