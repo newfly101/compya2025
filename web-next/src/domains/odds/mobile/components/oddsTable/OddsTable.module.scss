@@ -1,0 +1,120 @@
+// ── 공용 셀 스타일 ────────────────────────────────────────────
+.th {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-overlay);
+  padding: $space-2 $space-3;
+  border-bottom: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  text-align: center;
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.cell {
+  @include text-body;
+  @include hangul-safe;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-card);
+  padding: $space-2 $space-3;
+  border-bottom: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
+  text-align: center;
+  white-space: pre-line;
+  vertical-align: middle;
+  min-height: $control-height-sm;
+
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.cellLink {
+  color: var(--color-brand);
+  text-decoration: underline;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+tr:last-child > .cell {
+  border-bottom: none;
+}
+
+// ── narrow (2~4열, wide === false) — 가로 스크롤 없음 ───────────
+.fixedWrap {
+  width: 100%;
+  overflow: hidden;
+  border-radius: $radius-md;
+  border: 1px solid var(--color-border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+// 첫 행(head 또는 rows[0])의 colSpan 합이 colCount 와 일치할 때만 적용.
+// 병합 셀 때문에 불일치하면 .autoTable 로 폴백 (열 폭 붕괴 방지)
+.fixedTable {
+  table-layout: fixed;
+}
+
+.autoTable {
+  table-layout: auto;
+}
+
+// ── wide (5열+, wide === true) — 가로 스크롤 + sticky 첫 열 ─────
+.wideWrap {
+  @include flex-col($space-1);
+  width: 100%;
+}
+
+.tableArea {
+  position: relative;
+  width: 100%;
+}
+
+.scrollWrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: $radius-md;
+  border: 1px solid var(--color-border);
+  -webkit-overflow-scrolling: touch;
+}
+
+.wideTable {
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: max-content;
+}
+
+.wideCell {
+  min-width: 5.5rem;
+  white-space: pre-line;
+}
+
+// sticky 는 위치 고정만 담당 — 배경/글자/여백은 .th, .cell 을 그대로 물려받는다
+// (다른 열과 구분되는 시각 장식을 따로 두지 않는다)
+.sticky {
+  position: sticky;
+  left: 0;
+  z-index: $z-above;
+}
+
+.fade {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: $space-8;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, var(--color-bg-deepest));
+}
+
+.scrollHint {
+  @include text-micro;
+  color: var(--color-text-muted);
+  text-align: right;
+}

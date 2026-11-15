@@ -1,0 +1,47 @@
+.noteList {
+  @include flex-col($space-1);
+  margin: 0;
+  padding-left: $space-5;
+  list-style: disc;
+}
+
+.noteItem {
+  @include text-caption;
+  @include hangul-safe;
+  color: var(--color-text-secondary);
+  white-space: pre-line;
+}
+
+.text {
+  @include text-body;
+  @include hangul-safe;
+  color: var(--color-text-primary);
+  white-space: pre-line;
+}
+
+.noteLink {
+  color: var(--color-brand);
+  text-decoration: underline;
+}
+
+// ── link 블록 (외부 확률표로 나가는 링크) ────────────────────────
+.linkBlock {
+  @include flex-row($space-1);
+  @include text-body-bold;
+  @include hangul-safe;
+  color: var(--color-brand);
+  text-decoration: none;
+  width: fit-content;
+  padding: $space-3 $space-4;
+  border-radius: $radius-md;
+  background-color: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+}
+
+.linkText {
+  @include hangul-safe;
+}
+
+.linkIcon {
+  flex-shrink: 0;
+}
