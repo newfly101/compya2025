@@ -1,0 +1,10 @@
+// 재료 검색 표 위 요약 줄(.meta)과 같은 모양 — 왼쪽 집계, 오른쪽 현재 정렬 기준
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $space-2;
+  color: var(--color-text-muted);
+  font-size: $font-size-12;
+  line-height: 1.5;
+}

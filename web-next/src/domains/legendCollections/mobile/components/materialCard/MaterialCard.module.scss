@@ -1,0 +1,170 @@
+// Figma C/LC/MatCard (418:387). 색은 전역 의미 토큰만 — 두 테마 모두 같은 이름이 값을 바꾼다.
+// 칩·상태 위 글자는 Figma 그대로 --color-bg-card (다크: 옅은 보라 위 짙은 글자 / 밝은톤: 진한 보라 위 흰 글자).
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  min-width: 0;
+  min-height: $space-12;
+  padding: $space-2 $space-3;
+  border: 1px solid var(--color-lc-card-border);
+  border-radius: $radius-lg;
+  background: var(--color-lc-card-bg);
+  color: var(--color-text-primary);
+
+  &[data-editing] {
+    gap: rem(6);
+    padding: $space-2 rem(10);
+  }
+
+  &[data-state="HAVE"] {
+    border-color: var(--color-brand);
+  }
+
+  &[data-state="INSERTED"] {
+    border-color: var(--color-lc-chip-on-border);
+    background: var(--color-lc-chip-on-bg);
+  }
+
+  &[data-state="locked"] {
+    border-color: var(--color-lc-card-border);
+    background: var(--color-lc-open-bg);
+  }
+}
+
+.team {
+  flex: 0 0 auto;
+  padding: rem(2) $space-2;
+  min-width: rem(38);
+  border: 1px solid var(--color-lc-tag-border);
+  border-radius: $radius-sm;
+  color: var(--color-lc-tag-text);
+  font-size: $font-size-10;
+  text-align: center;
+  line-height: 1.5;
+  white-space: nowrap;
+
+  .card[data-editing] & {
+    padding: rem(2) rem(6);
+  }
+}
+
+.name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-size: $font-size-12;
+  line-height: 1.5;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  flex: 0 0 auto;
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  font-size: $font-size-9;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.inserted {
+  background: var(--color-brand);
+  color: var(--color-bg-card);
+}
+
+.have {
+  background: var(--color-brand-alpha-15);
+  color: var(--color-brand);
+}
+
+.tags {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: $space-1;
+}
+
+// 마 = 채움 + 테두리, 히 = 테두리만 (분류 축 route 색)
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: rem(2) $space-1;
+  border: 1px solid var(--color-cat-route);
+  border-radius: $radius-sm;
+  color: var(--color-cat-route);
+  font-size: $font-size-9;
+  font-weight: $font-weight-semibold;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+.mileage {
+  background: var(--color-cat-route-dim);
+}
+
+.lock {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: rem(4);
+  color: var(--color-text-muted);
+  font-size: $font-size-10;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.seg {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: rem(2);
+  padding: rem(2);
+  border-radius: $radius-md;
+  background: var(--color-lc-open-bg);
+
+  button {
+    min-height: $space-6;
+    padding: $space-1 rem(6);
+    border: 0;
+    border-radius: $radius-sm;
+    background: transparent;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: $font-size-9;
+    font-weight: $font-weight-semibold;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      background: var(--color-lc-chip-on-bg);
+      box-shadow: none;
+      color: var(--color-lc-chip-on-text);
+    }
+
+    // 없음 선택은 흰 판(카드 면) 위 기본 글자 — Figma opt/미보유
+    &[data-opt="NONE"][aria-pressed="true"] {
+      background: var(--color-lc-card-bg);
+      color: var(--color-text-primary);
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brand);
+      outline-offset: -2px;
+    }
+  }
+}

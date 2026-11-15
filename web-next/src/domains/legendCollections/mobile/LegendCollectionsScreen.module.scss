@@ -1,0 +1,53 @@
+// 색은 legendCollections.tokens.scss(legendStats 와 같은 톤) + 전역 의미 토큰만.
+// 채움 버튼 위 글자는 Figma 그대로 --color-bg-card (다크: 옅은 보라 위 짙은 글자 / 밝은톤: 진한 보라 위 흰 글자).
+
+.screen {
+  min-height: 100%;
+  background: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  padding: $space-4 $layout-h-pad $space-3;
+}
+
+// 검색 줄 오른쪽 버튼(선호 · 관리) — compact, 360px 에서도 한 줄
+.action {
+  flex: 0 0 auto;
+  min-height: $control-height-md;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: $font-size-12;
+  font-weight: $font-weight-semibold;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+// 관리 화면의 저장 버튼
+.actionPrimary {
+  border-color: transparent;
+  background: var(--color-brand);
+  color: var(--color-bg-card);
+}
+
+.skeleton {
+  padding: 0 $layout-h-pad;
+}

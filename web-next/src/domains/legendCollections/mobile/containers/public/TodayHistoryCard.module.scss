@@ -1,0 +1,101 @@
+// 홈 오늘 히스토리 카드 (Figma legendCollections v2 / 06)
+.card {
+  @include flex-col($space-3);
+  @include card-base($pad: $space-4);
+  margin: $space-3 $layout-h-pad;
+}
+
+.head {
+  @include flex-between;
+  align-items: flex-start;
+  gap: $space-2;
+}
+
+.title {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.sub {
+  @include text-caption;
+  color: var(--color-text-secondary);
+  margin: $space-1 0 0;
+}
+
+.date {
+  @include text-caption;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.group {
+  @include flex-col($space-2);
+}
+
+.groupTitle {
+  @include text-caption;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.rows {
+  @include flex-col;
+}
+
+.row {
+  @include flex-row($space-3);
+  @include tap-target;
+  padding: $space-2 0;
+  border-top: 1px solid var(--color-border);
+  color: inherit;
+  @include pressable;
+}
+
+.round {
+  @include text-caption;
+  flex: 0 0 auto;
+  min-width: $space-8;
+  padding: $space-1 $space-2;
+  border-radius: $radius-sm;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.main {
+  @include flex-col($space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.cardName {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.need {
+  @include text-caption;
+  color: var(--color-text-secondary);
+}
+
+.foot {
+  @include flex-between;
+  gap: $space-2;
+  padding-top: $space-2;
+  border-top: 1px solid var(--color-border);
+}
+
+.next {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.goal {
+  @include text-caption;
+  @include tap-target;
+  @include flex-center;
+  color: var(--color-brand);
+  margin-left: auto;
+  @include pressable;
+}

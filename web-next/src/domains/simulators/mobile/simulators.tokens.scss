@@ -1,0 +1,14 @@
+// simulators 로컬 토큰 — Screen 에서 side-effect import 로 1회 주입.
+// 선변(고유능력 선택 변경권) 버튼 색 = 등급 축 플래티넘 금색. 게임의 선택 변경권 아이템 색이라 등급 색을 등급 밖에 쓰는 유일한 자리
+// (fe-design-audit § 5 예외, 사용자 허용 2026-10-26). 고스변 버튼은 brand 로 같은 모양·다른 색 계열.
+// 대비(UI 부품 3:1 이상, 테두리 기준): 다크 #e5b83a on bg-deepest #181320 급 → 9:1 이상 / 라이트 #a97b12 on #f2f0f7 → 3.3:1 (흰 면 3.80).
+// 면 alpha-15 는 부모 면 위 반투명 틴트 — 그 위 글자는 --color-text-primary (두 테마 모두 7:1 이상).
+:root {
+  --color-grade-platinum: #e5b83a;
+  --color-grade-platinum-alpha-15: rgba(229, 184, 58, 0.15);
+}
+
+:root[data-theme="light"] {
+  --color-grade-platinum: #a97b12;
+  --color-grade-platinum-alpha-15: rgba(169, 123, 18, 0.15);
+}

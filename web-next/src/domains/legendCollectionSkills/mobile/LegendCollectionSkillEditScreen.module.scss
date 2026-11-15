@@ -1,0 +1,42 @@
+.screen {
+  min-height: 100%;
+  background: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  min-height: $control-height-md;
+  padding: 0 $layout-h-pad;
+  color: var(--color-text-secondary);
+  font-size: $font-size-13;
+  font-weight: $font-weight-semibold;
+  text-decoration: none;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+  }
+}
+
+.skeleton {
+  padding: 0 $layout-h-pad;
+}
+
+.more {
+  margin: 0;
+  padding: 0 $layout-h-pad;
+  text-align: center;
+
+  a {
+    display: inline-block;
+    padding: $space-3 0;
+    color: var(--color-brand);
+    font-size: $font-size-12;
+    font-weight: $font-weight-semibold;
+    text-decoration: none;
+  }
+}

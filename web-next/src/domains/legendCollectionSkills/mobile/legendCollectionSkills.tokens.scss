@@ -1,0 +1,42 @@
+// legendCollectionSkills 로컬 토큰 — Screen 에서 side-effect import 로 1회 주입.
+// 스킬 등급 색(레전드 보라 · 플래티넘 금 · 히어로 초록 · 노말 회청) 위→아래 그라데이션. 카드 스킬 블록에만 쓴다.
+// 게임 화면 톤 눈대중 값 — 정식 등급 축 편입은 사용자 결정(design.md § 7). 카드는 항상 어두운 사진 위라 두 테마 같은 값.
+:root {
+  --color-lcsk-grade-legend: #8b5cf6;
+  --color-lcsk-grade-legend-end: #5b21b6;
+  --color-lcsk-grade-platinum: #e5b83a;
+  --color-lcsk-grade-platinum-end: #a97b12;
+  --color-lcsk-grade-hero: #5fbf5f;
+  --color-lcsk-grade-hero-end: #2f7d32;
+  --color-lcsk-grade-normal: #8b9bb0;
+  --color-lcsk-grade-normal-end: #566679;
+  --color-lcsk-grade-on-strong: #ffffff;
+  --color-lcsk-chip-on-bg: var(--color-brand-alpha-15);
+}
+
+// 목록 '강화' 열 칩 — 글자마다 등급색 채움 칩. 칩 배경/글자 대비 4.5:1 이상(계산: legend 5.70 · platinum 7.35 · hero 8.05 · normal 5.81 / 다크 hero 6.70 · normal 6.32)
+:root {
+  --color-lcsk-chip-legend-bg: #7c3aed;
+  --color-lcsk-chip-legend-fg: #ffffff;
+  --color-lcsk-chip-platinum-bg: #e5b83a;
+  --color-lcsk-chip-platinum-fg: #3d2a00;
+  --color-lcsk-chip-hero-bg: #5fbf5f;
+  --color-lcsk-chip-hero-fg: #0f2a0f;
+  --color-lcsk-chip-normal-bg: #8b9bb0;
+  --color-lcsk-chip-normal-fg: #101820;
+}
+
+:root[data-theme="light"] {
+  --color-lcsk-chip-hero-bg: #7ccf5a;
+  --color-lcsk-chip-normal-bg: #5b6678;
+  --color-lcsk-chip-normal-fg: #ffffff;
+}
+
+// '추천' 글자 빨강 — 다크는 danger(#e84141) 대비 부족(4.25/3.48)해 밝게. 대비(기본/hover): 다크 6.72/5.49 · 라이트(danger #c0272d) 5.88/4.82
+:root {
+  --color-lcsk-rec: #ff7a7a;
+}
+
+:root[data-theme="light"] {
+  --color-lcsk-rec: var(--color-danger);
+}

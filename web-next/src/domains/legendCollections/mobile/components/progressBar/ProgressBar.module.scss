@@ -1,0 +1,20 @@
+.bar {
+  display: flex;
+  gap: $space-1;
+  width: 100%;
+
+  span {
+    flex: 1 1 0;
+    height: rem(6);
+    border-radius: $radius-sm;
+    background: var(--color-lc-progress-track);
+
+    &[data-kind="inserted"] {
+      background: var(--color-brand);
+    }
+
+    &[data-kind="have"] {
+      background: var(--color-brand-alpha-15);
+    }
+  }
+}

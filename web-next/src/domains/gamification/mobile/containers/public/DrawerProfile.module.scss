@@ -1,0 +1,126 @@
+@use '@/domains/gamification/mobile/tierSurface' as *;
+
+.card {
+  @include tier-surface;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding: $space-3;
+  border-radius: $radius-xl;
+
+  // 티어 링 — T3 이상만(T1·T2 는 링 없음). 아바타를 감싼 span 의 outline 으로 그린다.
+  &[data-tier="3"] { --ring: var(--color-tier-t3-ring); }
+  &[data-tier="4"] { --ring: var(--color-tier-t4-ring); }
+  &[data-tier="5"] { --ring: var(--color-tier-t5-ring); }
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.avatar {
+  flex-shrink: 0;
+  display: flex;
+  border-radius: $radius-full;
+  outline: 2px solid var(--ring, transparent);
+  outline-offset: 2px;
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+}
+
+.name {
+  @include text-body-bold;
+  color: var(--ts-text);
+  @include text-ellipsis;
+}
+
+.levelRow {
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  min-height: 16px;
+}
+
+.level {
+  @include text-caption;
+  color: var(--ts-sub);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: $space-1;
+  min-height: 24px;
+}
+
+// TierChip 과 같은 칩 규격(패딩·글자·모서리) — 높이·세로 중앙 일치
+.titleChip {
+  display: inline-flex;
+  align-items: center;
+  padding: $space-1 $space-2;
+  border-radius: $radius-full;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  @include text-caption;
+  font-weight: $font-weight-semibold;
+}
+
+// 칭호 없음 — 같은 크기에 보조색
+.titleNone {
+  color: var(--color-text-secondary);
+}
+
+// 카드 안(티어 면) 칭호 칩은 티어 칩 색
+.card[data-tier] .titleChip {
+  background: var(--tc-bg);
+  color: var(--tc-text);
+}
+
+@for $t from 1 through 5 {
+  .card[data-tier="#{$t}"] {
+    --tc-bg: var(--color-tier-t#{$t}-chip-bg);
+    --tc-text: var(--color-tier-t#{$t}-chip-text);
+  }
+}
+
+.card[data-tier] .titleNone {
+  opacity: 0.6;
+}
+
+.xpRow {
+  display: flex;
+  justify-content: space-between;
+  gap: $space-2;
+  min-height: 16px;
+  @include text-caption;
+  color: var(--ts-sub);
+  white-space: nowrap;
+
+  > :first-child { min-width: 0; @include text-ellipsis; }
+  > :last-child { flex-shrink: 0; }
+}
+
+.track {
+  height: $space-2;
+  border-radius: $radius-full;
+  background: var(--ts-track);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: $radius-full;
+  background: var(--ts-fill);
+}

@@ -1,0 +1,75 @@
+.row {
+  @include card-base($radius: $radius-xl, $pad: $space-3 $space-4);
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  cursor: pointer;
+  @include pressable;
+
+  // 가로 스크롤 X — 모든 자식 min-width: 0 + overflow hidden
+  overflow: hidden;
+}
+
+.nickname {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badges {
+  display: flex;
+  gap: $space-1;
+  flex-shrink: 0;
+}
+
+.chip {
+  @include chip-base($size: sm);
+  flex-shrink: 0;
+}
+
+.roleAdmin {
+  background-color: var(--color-brand-alpha-20);
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
+
+.roleUser {
+  background-color: var(--color-bg-elevated);
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.statusActive {
+  background-color: var(--color-success-dim);
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.statusBlocked {
+  background-color: var(--color-danger-dim);
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.statusWithdrawn {
+  background-color: var(--color-bg-elevated);
+  border-color: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+.statusSuspended {
+  background-color: var(--color-warning-dim);
+  border-color: var(--color-warning);
+  color: var(--color-warning);
+}
+
+.lastLogin {
+  @include text-micro;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  white-space: nowrap;
+}

@@ -1,0 +1,366 @@
+"use client";
+import { useRef, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { ROUTE_PATHS } from "@/config/routePath.js";
+import { Avatar, pickProfileImageSrc } from "@/global/ui/avatar";
+import PinnedBadge from "@/global/ui/badge/PinnedBadge.jsx";
+import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
+import {
+  useCheckNicknameMutation,
+  useDeleteAccountMutation,
+  useMyInfoQuery,
+  useUpdateNicknameMutation,
+} from "@/domains/users/store/public/queries.js";
+import { useProfileImageUpload } from "@/domains/users/mobile/hooks/useProfileImageUpload.js";
+import { resetAuthSession } from "@/domains/authentication/store/session.js";
+import { useAuthStore } from "@/store/authStore.js";
+import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
+import GamificationSection from "@/domains/gamification/mobile/containers/public/GamificationSection.jsx";
+import { ProfileChips } from "@/domains/gamification/mobile/containers/public/DrawerProfile.jsx";
+import styles from "./MyPageScreen.module.scss";
+
+const NICKNAME_MAX_LENGTH = 20;
+
+export default function MyPageScreen() {
+  const router = useRouter();
+  const myInfo = useMyInfoQuery();
+  const profile = myInfo.data ?? null;
+  const loading = myInfo.isFetching;
+  const error = myInfo.error?.message ?? null;
+  const patchUser = useAuthStore((s) => s.patchUser);
+  const checkNickname = useCheckNicknameMutation();
+  const updateNickname = useUpdateNicknameMutation();
+  const deleteAccount = useDeleteAccountMutation();
+  const { nicknameUnset } = useAuthentication();
+  const fileInputRef = useRef(null);
+  const {
+    previewUrl: imagePreviewUrl,
+    busy: imageBusy,
+    error: imageError,
+    selectFile: selectProfileImageFile,
+    resetToDefault: resetProfileImageToDefault,
+  } = useProfileImageUpload();
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [nicknameInput, setNicknameInput] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  // 중복 확인 결과 — checked = 사용 가능으로 확인된 값. 입력이 이 값과 다르면 저장할 수 없다.
+  const [checked, setChecked] = useState(null);
+  const [checkMsg, setCheckMsg] = useState(null); // { ok, text }
+  const [isChecking, setIsChecking] = useState(false);
+
+  const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+  const [agreeChecked, setAgreeChecked] = useState(false);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
+  const [withdrawError, setWithdrawError] = useState(null);
+
+  const startEdit = () => {
+    setNicknameInput(profile?.nickname ?? "");
+    setSaveError(null);
+    setChecked(null);
+    setCheckMsg(null);
+    setIsEditing(true);
+  };
+
+  const cancelEdit = () => {
+    setIsEditing(false);
+    setSaveError(null);
+  };
+
+  const handleNicknameChange = (value) => {
+    setNicknameInput(value);
+    setChecked(null);
+    setCheckMsg(null);
+    setSaveError(null);
+  };
+
+  const validateNickname = (trimmed) => {
+    if (!trimmed) return "닉네임을 입력해 주세요.";
+    if (trimmed.length > NICKNAME_MAX_LENGTH) return `닉네임은 ${NICKNAME_MAX_LENGTH}자 이내로 입력해 주세요.`;
+    return null;
+  };
+
+  const handleCheck = async () => {
+    const trimmed = nicknameInput.trim();
+    const invalid = validateNickname(trimmed);
+    if (invalid) {
+      setCheckMsg({ ok: false, text: invalid });
+      return;
+    }
+    setIsChecking(true);
+    setChecked(null);
+    try {
+      const available = await checkNickname.mutateAsync(trimmed);
+      if (available) setChecked(trimmed);
+      setCheckMsg({ ok: available, text: available ? "사용 가능한 닉네임입니다." : "이미 사용 중인 닉네임입니다." });
+    } catch (e) {
+      setCheckMsg({ ok: false, text: e?.message === "FORMAT" ? "사용할 수 없는 형식의 닉네임입니다." : "중복 확인에 실패했습니다." });
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
+  const handleSave = async () => {
+    const trimmed = nicknameInput.trim();
+    const invalid = validateNickname(trimmed);
+    if (invalid) {
+      setSaveError(invalid);
+      return;
+    }
+    if (checked !== trimmed) {
+      setSaveError("중복 확인을 먼저 해 주세요.");
+      return;
+    }
+
+    setIsSaving(true);
+    setSaveError(null);
+    try {
+      const updated = await updateNickname.mutateAsync(trimmed);
+      // 전역 닉네임 가드가 새로고침 없이 풀리도록 로그인 사용자 정보도 갱신한다.
+      patchUser({ nickname: updated?.nickname ?? trimmed, nicknameSet: true });
+      setIsEditing(false);
+    } catch (e) {
+      setSaveError(e?.message || "닉네임 변경에 실패했습니다.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const openWithdraw = () => {
+    setAgreeChecked(false);
+    setWithdrawError(null);
+    setIsWithdrawOpen(true);
+  };
+
+  const closeWithdraw = () => {
+    if (isWithdrawing) return;
+    setIsWithdrawOpen(false);
+  };
+
+  const handleWithdraw = async () => {
+    setIsWithdrawing(true);
+    setWithdrawError(null);
+    try {
+      await deleteAccount.mutateAsync();
+      // BE 가 refresh token 삭제 + 쿠키 만료까지 처리한다.
+      // FE 는 별도 로그아웃 API 호출 없이 인증 상태만 정리한다 — 세션 마커까지 함께 비운다.
+      resetAuthSession();
+      router.replace(ROUTE_PATHS.home);
+    } catch (e) {
+      setWithdrawError(e?.message || "탈퇴 처리에 실패했습니다.");
+      setIsWithdrawing(false);
+    }
+  };
+
+  // 상태 분기 — 최초 조회 중
+  if (loading && !profile) {
+    return (
+      <div className={styles.page}>
+        <StateBox status="loading" message="불러오는 중..." />
+      </div>
+    );
+  }
+
+  // 상태 분기 — 조회 실패
+  if (error && !profile) {
+    return (
+      <div className={styles.page}>
+        <StateBox status="error" message={error} onRetry={() => myInfo.refetch()} />
+      </div>
+    );
+  }
+
+  // 상태 분기 — 데이터 없음 (방어적)
+  if (!profile) {
+    return (
+      <div className={styles.page}>
+        <StateBox status="empty" message="회원 정보를 찾을 수 없습니다." />
+      </div>
+    );
+  }
+
+  // 상태 분기 — 정상
+  return (
+    <div className={styles.page}>
+      <section className={styles.card}>
+        <div className={styles.avatarSection}>
+          <button
+            type="button"
+            className={styles.avatarBtn}
+            onClick={() => fileInputRef.current?.click()}
+            disabled={imageBusy}
+            aria-label="프로필 이미지 변경"
+          >
+            <Avatar
+              src={imagePreviewUrl || pickProfileImageSrc(profile)}
+              nickname={profile.nickname}
+              size={72}
+              alt="프로필 이미지"
+            />
+            {imageBusy && <span className={styles.avatarSpinner}>업로드 중...</span>}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className={styles.hiddenFileInput}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              // 같은 파일을 다시 골라도 onChange 가 뜨도록 값을 비운다.
+              e.target.value = "";
+              if (file) selectProfileImageFile(file);
+            }}
+          />
+          <div className={styles.avatarActions}>
+            <button
+              type="button"
+              className={styles.avatarChangeBtn}
+              onClick={() => fileInputRef.current?.click()}
+              disabled={imageBusy}
+            >
+              이미지 변경
+            </button>
+            <button
+              type="button"
+              className={styles.avatarResetBtn}
+              onClick={resetProfileImageToDefault}
+              disabled={imageBusy}
+            >
+              기본 이미지로
+            </button>
+          </div>
+          {imageError && <p className={styles.fieldError}>{imageError}</p>}
+        </div>
+
+        <div className={styles.field}>
+          <span className={styles.fieldLabel}>닉네임</span>
+          {nicknameUnset && <p className={styles.fieldNotice}>닉네임을 설정해 주세요</p>}
+          {isEditing ? (
+            <div className={styles.editRow}>
+              <input
+                className={styles.input}
+                value={nicknameInput}
+                maxLength={NICKNAME_MAX_LENGTH}
+                onChange={(e) => handleNicknameChange(e.target.value)}
+                disabled={isSaving}
+              />
+              <button
+                type="button"
+                className={styles.checkBtn}
+                onClick={handleCheck}
+                disabled={isSaving || isChecking}
+              >
+                {isChecking ? "확인 중..." : "중복 확인"}
+              </button>
+              {checkMsg && (
+                <p className={checkMsg.ok ? styles.fieldOk : styles.fieldError}>{checkMsg.text}</p>
+              )}
+              <div className={styles.editActions}>
+                <button
+                  type="button"
+                  className={styles.cancelBtn}
+                  onClick={cancelEdit}
+                  disabled={isSaving}
+                >
+                  취소
+                </button>
+                <button
+                  type="button"
+                  className={styles.saveBtn}
+                  onClick={handleSave}
+                  disabled={isSaving || checked !== nicknameInput.trim()}
+                >
+                  {isSaving ? "저장 중..." : "저장"}
+                </button>
+              </div>
+              {saveError && <p className={styles.fieldError}>{saveError}</p>}
+            </div>
+          ) : (
+            <div className={styles.viewRow}>
+              <span className={styles.fieldValue}>{profile.nickname}</span>
+              <button type="button" className={styles.editBtn} onClick={startEdit}>
+                수정
+              </button>
+            </div>
+          )}
+          <ProfileChips />
+        </div>
+
+        <div className={styles.field}>
+          <span className={styles.fieldLabel}>이메일</span>
+          <span className={styles.fieldValueMuted}>{profile.email}</span>
+        </div>
+
+        <div className={styles.field}>
+          <span className={styles.fieldLabel}>마지막 로그인</span>
+          <span className={styles.fieldValueMuted}>{profile.lastLoginAt ?? "-"}</span>
+        </div>
+      </section>
+
+      <GamificationSection />
+
+      {/* 내 선호 레전드는 보유 현황의 '내 선호' 칩이 켜진 목록으로 간다 (REQ-USR-09) */}
+      <Link href={`${ROUTE_PATHS.legend_collections}?tab=mine`} className={styles.goalLink}>
+        <span className={styles.goalText}>
+          <strong className={styles.goalTitle}>내 선호 레전드 <PinnedBadge variant="catNew" /></strong>
+          <span className={styles.goalSub}>선호 레전드의 보유 현황을 모아 봐요</span>
+        </span>
+        <span className={styles.goalChevron} aria-hidden="true">›</span>
+      </Link>
+
+      <section className={styles.dangerZone}>
+        <button type="button" className={styles.withdrawBtn} onClick={openWithdraw}>
+          회원 탈퇴
+        </button>
+      </section>
+
+      {isWithdrawOpen && (
+        <div className={styles.overlay} onClick={closeWithdraw}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <h3 className={styles.modalTitle}>정말 탈퇴하시겠어요?</h3>
+            <p className={styles.modalDesc}>
+              탈퇴 후 1개월간 계정 정보가 보관되며, 그 기간 안에 다시 네이버로
+              로그인하면 계정이 복구됩니다. 1개월이 지나면 계정 정보는 완전히
+              삭제되며 되돌릴 수 없습니다.
+            </p>
+            {/* 문구를 span 으로 감싼다 — 감싸지 않으면 익명 flex 항목이 되어
+                전역 리셋의 input { width: 100% } 가 체크박스를 늘려 문구가
+                오른쪽으로 밀리고 줄바꿈도 어긋난다. */}
+            <label className={styles.agreeLabel}>
+              <input
+                type="checkbox"
+                className={styles.agreeCheckbox}
+                checked={agreeChecked}
+                onChange={(e) => setAgreeChecked(e.target.checked)}
+              />
+              <span className={styles.agreeText}>
+                안내 사항을 확인했으며 탈퇴에 동의합니다.
+              </span>
+            </label>
+            {withdrawError && <p className={styles.fieldError}>{withdrawError}</p>}
+            <div className={styles.modalActions}>
+              <button
+                type="button"
+                className={styles.modalCancelBtn}
+                onClick={closeWithdraw}
+                disabled={isWithdrawing}
+              >
+                닫기
+              </button>
+              <button
+                type="button"
+                className={styles.modalConfirmBtn}
+                onClick={handleWithdraw}
+                disabled={!agreeChecked || isWithdrawing}
+              >
+                {isWithdrawing ? "처리 중..." : "탈퇴하기"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

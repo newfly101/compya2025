@@ -1,0 +1,35 @@
+.row {
+  @include reset-button;
+  @include pressable;
+  @include card-base($radius: $radius-xl, $pad: $space-3 $space-4);
+  width: 100%;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  text-align: left;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: $space-1;
+  min-width: 0;
+}
+
+.title {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.sub {
+  @include text-caption;
+  color: var(--color-text-secondary);
+}
+
+.chevron {
+  @include text-section-title;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}

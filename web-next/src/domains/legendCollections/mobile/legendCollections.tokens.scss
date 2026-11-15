@@ -1,0 +1,34 @@
+// legendCollections 도메인 로컬 토큰 — Screen 에서 side-effect import 로 1회 주입.
+// 레전드 재료 검색(legendStats.tokens.scss + LegendStatsScreen.module.scss)과 같은 뜻의 이름을
+// 같은 전역 토큰에 연결만 한다. 값을 새로 만들지 않으므로 raw hex 는 없고,
+// 밝은톤은 참조하는 전역 토큰이 스스로 뒤집혀서 legendStats 밝은톤과 똑같이 따라간다.
+
+:root {
+  // 표 머리 — legendStats: @include data-table-skin 기본값(--color-table-head-bg)
+  --color-lc-head-bg: var(--color-table-head-bg);
+  // 행 hover — legendStats: .row:hover td (--color-row-hover-soft)
+  --color-lc-row-hover: var(--color-row-hover-soft);
+  // 펼친 행·펼침 패널 — legendStats: .row.open td / .detailRow td (--color-bg-elevated)
+  --color-lc-open-bg: var(--color-bg-elevated);
+  // 재료 카드 면·테두리 — legendStats: .material (bg-card / border-strong)
+  --color-lc-card-bg: var(--color-bg-card);
+  --color-lc-card-border: var(--color-border-strong);
+  // 팀 태그 테두리·글자 — legendStats: .materialTeam
+  --color-lc-tag-border: var(--color-border-strong);
+  --color-lc-tag-text: var(--color-text-muted);
+  // 칩·세그먼트 — 기본(.chip) 과 선택(aria-pressed)
+  --color-lc-chip-bg: var(--color-bg-card);
+  --color-lc-chip-border: var(--color-border-strong);
+  --color-lc-chip-text: var(--color-text-secondary);
+  --color-lc-chip-on-bg: var(--color-brand-alpha-15);
+  --color-lc-chip-on-border: var(--color-brand-dark);
+  --color-lc-chip-on-text: var(--color-chip-on-text);
+  // 꺼진 토글(액자·보유중) — 무채색 회색 면. 분류 축 중립색(--color-cat-neutral-dim, 회색 18%)이라
+  // 다크는 어두운 회색, 밝은톤은 옅은 회색으로 따라간다. 검은 칩 면(bg-card) 대신 쓴다
+  --color-lc-toggle-off-bg: var(--color-cat-neutral-dim);
+  --color-lc-toggle-off-border: var(--color-border-strong);
+  --color-lc-toggle-off-text: var(--color-text-secondary);
+  // 진행 막대 빈 칸 — 펼친 면(bg-elevated)·카드 면(bg-card) 어디서든 보이도록 옅은 글자색을 투명하게 섞는다.
+  // 채움(--color-brand)·보유(brand-alpha) 와 색상이 달라 구분되고, 다크·밝은톤은 참조 토큰이 스스로 뒤집힌다
+  --color-lc-progress-track: color-mix(in srgb, var(--color-text-muted) 32%, transparent);
+}

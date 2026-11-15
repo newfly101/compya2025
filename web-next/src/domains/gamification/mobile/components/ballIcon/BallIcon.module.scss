@@ -1,0 +1,79 @@
+// 티어별 공 색 — 변수 3개(채움 a/b/c) + 단색 + 링 + 실밥. 값은 전부 --color-tier-* (semantic/_color.scss).
+.ball {
+  flex-shrink: 0;
+  display: block;
+
+  &[data-tier="1"] {
+    --ball-flat: var(--color-tier-t1-ball); --ball-a: var(--color-tier-t1-ball); --ball-b: var(--color-tier-t1-ball); --ball-c: var(--color-tier-t1-ball);
+    --ball-ring: var(--color-tier-t1-seam); --ball-seam: var(--color-tier-t1-seam);
+  }
+  &[data-tier="2"] {
+    --ball-flat: var(--color-tier-t1-ball); --ball-a: var(--color-tier-t1-ball); --ball-b: var(--color-tier-t1-ball); --ball-c: var(--color-tier-t1-ball);
+    --ball-ring: var(--color-tier-t2-edge); --ball-seam: var(--color-tier-t2-seam);
+  }
+  &[data-tier="3"] {
+    --ball-flat: var(--color-tier-t3-fill-flat); --ball-a: var(--color-tier-t3-fill); --ball-b: var(--color-tier-t3-fill); --ball-c: var(--color-tier-t3-fill-end);
+    --ball-ring: var(--color-tier-t3-ring); --ball-seam: var(--color-tier-t3-seam);
+  }
+  &[data-tier="4"] {
+    --ball-flat: var(--color-tier-t4-fill-flat); --ball-a: var(--color-tier-t4-fill); --ball-b: var(--color-tier-t4-fill); --ball-c: var(--color-tier-t4-fill-end);
+    --ball-ring: var(--color-tier-t4-ring); --ball-seam: var(--color-tier-t4-seam);
+  }
+  &[data-tier="5"] {
+    --ball-flat: var(--color-tier-t5-flat); --ball-a: var(--color-tier-t5-holo-1); --ball-b: var(--color-tier-t5-holo-2); --ball-c: var(--color-tier-t5-holo-3);
+    --ball-ring: var(--color-tier-t5-ring); --ball-seam: var(--color-tier-t5-seam);
+  }
+}
+
+.body {
+  fill: var(--ball-flat);
+  stroke: var(--ball-ring);
+  stroke-width: 1px;
+}
+
+.seam {
+  fill: none;
+  stroke: var(--ball-seam);
+  stroke-width: 1px;
+  stroke-linecap: round;
+}
+
+.stopA { stop-color: var(--ball-a); }
+.stopB { stop-color: var(--ball-b); }
+.stopC { stop-color: var(--ball-c); }
+
+// 48px 이상에서만 효과. 반짝임 하이라이트는 T4·T5 에만 보인다.
+.spark { display: none; }
+
+.large {
+  .body { stroke-width: 0.75px; }
+
+  &[data-tier="5"] {
+    // 글로우 — 홀로그램 공 둘레
+    filter: drop-shadow(0 0 3px var(--color-tier-t5-glow));
+    animation: holo 6s linear infinite;
+  }
+  &[data-tier="4"] .spark,
+  &[data-tier="5"] .spark {
+    display: block;
+    // 흰 반짝임 — 공 면 위 고정 하이라이트(테마 무관). 근거: 공은 밝은 물체라 두 테마 같은 값.
+    fill: #ffffff;
+    opacity: 0.6;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+}
+
+@keyframes holo {
+  to { filter: drop-shadow(0 0 3px var(--color-tier-t5-glow)) hue-rotate(360deg); }
+}
+
+@keyframes shimmer {
+  50% { opacity: 0.15; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .large,
+  .large .spark {
+    animation: none;
+  }
+}

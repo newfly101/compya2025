@@ -1,0 +1,125 @@
+.root {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.btn {
+  width: 100%;
+  min-height: $control-height-md;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  font-size: $font-size-12;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  span:not(.chip) {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // 화살표
+  &::after {
+    content: "";
+    flex: none;
+    width: 0;
+    height: 0;
+    margin-left: auto;
+    border-top: rem(5) solid currentcolor;
+    border-right: rem(4) solid transparent;
+    border-left: rem(4) solid transparent;
+  }
+
+  &[data-empty] {
+    color: var(--color-text-secondary);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 2px;
+  }
+}
+
+.list {
+  position: absolute;
+  z-index: 10;
+  top: 100%;
+  right: 0;
+  left: 0;
+  max-height: rem(240);
+  margin-top: $space-1;
+  padding: $space-1;
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+
+  [role="option"] {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-2 $space-3;
+    border-radius: $radius-md;
+    cursor: pointer;
+
+    &[data-active] {
+      background: var(--color-lcsk-chip-on-bg);
+    }
+
+    &[aria-selected="true"] {
+      font-weight: bold;
+    }
+
+    &[aria-disabled="true"] {
+      opacity: 0.4;
+      cursor: default;
+    }
+  }
+}
+
+// 스킬명 = 등급색 칩 (버튼·목록 공통). 색은 강화 열 칩과 같은 토큰. 선택됨은 칩 테두리
+.chip {
+  display: inline-block;
+  max-width: 100%;
+  padding: rem(1) $space-2;
+  overflow: hidden;
+  border: 1px solid transparent;
+  border-radius: $radius-md;
+  font-size: $font-size-12;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: middle;
+  &[data-grade="legend"] { background: var(--color-lcsk-chip-legend-bg); color: var(--color-lcsk-chip-legend-fg); }
+  &[data-grade="platinum"] { background: var(--color-lcsk-chip-platinum-bg); color: var(--color-lcsk-chip-platinum-fg); }
+  &[data-grade="hero"] { background: var(--color-lcsk-chip-hero-bg); color: var(--color-lcsk-chip-hero-fg); }
+  &[data-grade="normal"] { background: var(--color-lcsk-chip-normal-bg); color: var(--color-lcsk-chip-normal-fg); }
+}
+
+[aria-selected="true"] > .chip {
+  border-color: var(--color-text-primary);
+  font-weight: bold;
+}
+
+// '추천' — 빨간 굵은 글자만 (테두리·배경 없음)
+.rec {
+  flex: none;
+  margin-left: $space-2;
+  color: var(--color-lcsk-rec);
+  font-size: $font-size-12;
+  font-weight: bold;
+  line-height: 1.4;
+}

@@ -1,0 +1,51 @@
+// 스킬 기록 비로그인 안내 (Figma legendContentFlow 07)
+
+// 네이버 브랜드 그린 — 로그인 버튼 전용, 두 테마 공용 고정값 (토큰 미적용. Drawer·LoginRequiredModal 과 동일)
+$color-naver-background: #03c75a;
+
+.screen {
+  @include flex-col($space-3);
+  padding: $space-6 $layout-h-pad $space-12;
+}
+
+.title {
+  @include text-section-title;
+  color: var(--color-text-primary);
+  margin: 0;
+  word-break: keep-all;
+}
+
+.text {
+  @include text-body;
+  color: var(--color-text-secondary);
+  margin: 0;
+  word-break: keep-all;
+}
+
+.label {
+  @include text-caption;
+  color: var(--color-text-muted);
+  margin: $space-3 0 0;
+}
+
+.example {
+  max-width: 100%;
+}
+
+.login {
+  @include reset-button;
+  @include text-body-bold;
+  min-height: $control-height-md;
+  margin-top: $space-3;
+  border-radius: $radius-lg;
+  background-color: $color-naver-background;
+  color: $color-white-100;
+  @include pressable;
+}
+
+.hint {
+  @include text-caption;
+  color: var(--color-text-muted);
+  margin: 0;
+  text-align: center;
+}

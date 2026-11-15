@@ -1,0 +1,10 @@
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $space-2;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: $font-size-12;
+  line-height: 1.5;
+}

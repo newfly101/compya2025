@@ -1,0 +1,55 @@
+.page {
+  @include page-layout;
+  padding: $space-4;
+  gap: $space-3;
+}
+
+.tabs {
+  display: flex;
+  gap: $space-2;
+}
+
+.tab {
+  @include reset-button;
+  flex: 1;
+  height: $control-height-md;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  @include text-body-bold;
+  color: var(--color-text-secondary);
+}
+
+.tabOn {
+  background: var(--color-bg-card);
+  border-color: var(--color-brand);
+  color: var(--color-brand);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  @include card-base($pad: 0);
+  overflow: hidden;
+}
+
+.error {
+  margin: 0;
+  @include text-caption;
+  color: var(--color-danger);
+  text-align: center;
+}
+
+.moreBtn {
+  @include reset-button;
+  @include pressable;
+  height: $control-height-md;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  @include text-body-bold;
+  color: var(--color-text-primary);
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
