@@ -19,14 +19,15 @@ export const legendStatKeys = {
 };
 
 /** 스탯은 응답 그대로 — 표시용 조립은 훅이 한다 */
-export const useLegendStatsQuery = () =>
-  useQuery({ queryKey: legendStatKeys.stats, queryFn: async () => (await fetchGetLegendStats()) ?? [], ...STATIC });
+// initialData: 서버 컴포넌트가 이미 받은 값 — 주면 첫 렌더가 그 값으로 그려지고(SSR HTML 에 표 포함) staleTime 안에는 재요청하지 않는다.
+export const useLegendStatsQuery = (initialData) =>
+  useQuery({ queryKey: legendStatKeys.stats, queryFn: async () => (await fetchGetLegendStats()) ?? [], initialData, ...STATIC });
 
-export const usePitchTypesQuery = () =>
-  useQuery({ queryKey: legendStatKeys.pitchTypes, queryFn: async () => buildPitchNameByCode((await fetchGetPitchTypes()) ?? []), ...STATIC });
+export const usePitchTypesQuery = (initialData) =>
+  useQuery({ queryKey: legendStatKeys.pitchTypes, queryFn: async () => buildPitchNameByCode((await fetchGetPitchTypes()) ?? []), initialData, ...STATIC });
 
-export const useTeamsQuery = () =>
-  useQuery({ queryKey: legendStatKeys.teams, queryFn: async () => buildTeamNameByCode((await fetchGetTeams()) ?? []), ...STATIC });
+export const useTeamsQuery = (initialData) =>
+  useQuery({ queryKey: legendStatKeys.teams, queryFn: async () => buildTeamNameByCode((await fetchGetTeams()) ?? []), initialData, ...STATIC });
 
 // 재료 — 요청한 레전드(ids)만, 한 번 받은 레전드는 캐시에서 쓴다. byId: { [legendId]: 응답 }
 const combineMaterials = (results) => ({

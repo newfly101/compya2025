@@ -1,0 +1,472 @@
+// 핸드오프 히스토리_재료_탐색기.html 스타일 이식.
+// 색은 변수로만 쓴다 (공통 토큰 우선, 대체 불가한 것만 --color-hl-*).
+// 상단 바는 글로벌 MobileLayout TopBar 를 쓴다.
+
+.screen {
+  min-height: 100%;
+  background: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 필터 ─────────────────────────────────────────────── */
+
+.filters {
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
+  padding-bottom: 8px;
+  background: linear-gradient(var(--color-bg-deepest) 84%, transparent);
+}
+
+.searchRow {
+  position: relative;
+  padding: 4px 16px 2px;
+
+  input {
+    width: 100%;
+    padding: 10px 34px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 10px;
+    background: var(--color-bg-card);
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: $font-size-13;
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+  }
+
+  // 브라우저 기본 clear(×)를 죽인다. 커스텀 버튼과 겹쳐 두 개로 보인다
+  input[type="search"] {
+    appearance: none;
+
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-decoration,
+    &::-webkit-search-results-button {
+      display: none;
+      appearance: none;
+    }
+
+    &::-ms-clear {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+  }
+}
+
+// 폰트 문자(⌕)는 서체마다 크기가 달라 SVG 로 그린다
+.searchIcon {
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-muted);
+  pointer-events: none;
+}
+
+.clearButton {
+  position: absolute;
+  right: 26px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 2px 6px;
+  border: 0;
+  background: none;
+  color: var(--color-text-muted);
+  font-size: $font-size-17;
+  cursor: pointer;
+}
+
+.chipRow {
+  display: flex;
+  gap: $space-2;
+  padding: $space-2 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+// 라벨 글자 수가 달라도 칩 시작 x 가 항상 같아야 한다
+.chipLabel {
+  flex: 0 0 40px;
+  width: 40px;
+  align-self: center;
+  margin-right: $space-1;
+  color: var(--color-text-muted);
+  font-size: $font-size-11;
+  text-align: left;
+}
+
+.chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  font-family: inherit;
+  font-size: $font-size-12;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-brand-dark);
+    background: var(--color-brand-alpha-15);
+    color: var(--color-hl-chip-on-text);
+
+    .chipCount {
+      color: var(--color-hl-chip-count-on);
+    }
+  }
+}
+
+.chipCount {
+  color: var(--color-text-muted);
+  font-size: $font-size-11;
+}
+
+.segment {
+  display: flex;
+  gap: 8px;
+  padding: 2px 16px 0;
+
+  button {
+    flex: 1;
+    padding: $space-2 0;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 10px;
+    background: var(--color-bg-card);
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: $font-size-13;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      border-color: var(--color-brand-dark);
+      background: var(--color-brand-alpha-15);
+      color: var(--color-hl-chip-on-text);
+    }
+  }
+}
+
+.segCount {
+  margin-left: 4px;
+  color: var(--color-text-muted);
+  font-size: $font-size-11;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: $space-2 16px $space-1;
+  color: var(--color-text-muted);
+  font-size: $font-size-12;
+
+  b {
+    color: var(--color-text-secondary);
+    font-weight: $font-weight-medium;
+  }
+}
+
+/* ── 표 ───────────────────────────────────────────────── */
+
+// 표 뼈대(박스/th·td/헤더 sticky/정렬 표시/고정 열)는 global/styles/mixins/_table.scss
+// 의 data-table-* 공용 믹스인을 쓴다(2026-09-13 공용화, legendStats 기준). 열 폭·말줄임처럼
+// 이 화면에만 있는 성질만 아래 이어서 로컬로 남긴다.
+.tableBox {
+  @include data-table-box;
+}
+
+.table {
+  @include data-table-skin(var(--hl-row-h), var(--hl-head-h));
+  // 남는 폭은 폭을 지정하지 않은 마지막 칸(등장 일차 / 대상 레전드)이 흡수한다.
+  // 모든 칸에 폭을 주면 남는 만큼 비례 분배돼 내용이 한쪽으로 몰린다.
+  // auto 면 긴 텍스트(대상 레전드)가 지정 폭을 밀어내 표가 행마다 늘었다 줄었다 한다.
+  // fixed 로 두면 아래 지정 폭이 그대로 지켜지고, 넘치는 글자는 말줄임으로 처리된다.
+  table-layout: fixed;
+
+  th,
+  td {
+    // 좁은 화면에서 한 칸이라도 더 벌기 위해 좌우 여백을 최소로 둔다
+    padding: 0 $space-1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.sortable {
+  @include data-table-sortable;
+}
+
+.arrowMark {
+  @include data-table-sort-arrow;
+}
+
+.sticky {
+  @include data-table-sticky-col;
+}
+
+thead .sticky {
+  @include data-table-sticky-head;
+}
+
+// .table th / .table td 의 center 를 이기려면 같은 요소 선택자를 써야 한다
+th.alignLeft,
+td.alignLeft {
+  padding-left: $space-1;
+  text-align: left;
+}
+
+/* ── 행 ───────────────────────────────────────────────── */
+
+.row {
+  cursor: pointer;
+
+  // filter 는 배경이 있는 칸만 밝아진다. 투명한 칸은 반응이 없어 행이 반쪽만 켜진다
+  &:hover td {
+    background: var(--color-hl-row-hover-soft);
+  }
+
+  // 고정 칸은 스크롤 시 뒤가 비치면 안 되므로 불투명하게 덮는다
+  &:hover td.sticky {
+    background: var(--color-hl-row-hover);
+  }
+
+  &.open td {
+    background: var(--color-bg-elevated) !important;
+    border-bottom-color: transparent;
+  }
+}
+
+// 일차 홀짝 — 행 순서가 아니라 일차 기준이라 정렬을 바꿔도 유지된다
+.dayOdd td {
+  background: var(--color-hl-row-odd);
+}
+
+.dayEven td {
+  background: var(--color-hl-row-even);
+}
+
+.dayOdd .dayBadge {
+  background: var(--color-hl-day-odd-bg);
+  color: var(--color-hl-day-odd-text);
+}
+
+.dayEven .dayBadge {
+  background: var(--color-hl-day-even-bg);
+  color: var(--color-hl-day-even-text);
+}
+
+.dayBadge {
+  display: inline-block;
+  min-width: 26px;
+  padding: 2px $space-1;
+  border-radius: 5px;
+  background: var(--color-hl-day-odd-bg);
+  color: var(--color-hl-day-odd-text);
+  font-size: $font-size-11;
+  font-weight: $font-weight-semibold;
+}
+
+.dim {
+  color: var(--color-text-muted);
+}
+
+.muted {
+  color: var(--color-text-secondary);
+}
+
+.accent {
+  color: var(--color-hl-accent-text);
+  font-weight: $font-weight-semibold;
+}
+
+.nameInner {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+}
+
+.dot {
+  flex: 0 0 auto;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+// 등장 일차 막대 — D7 과 D8 사이를 벌려 주차를 가른다
+.bar {
+  display: inline-flex;
+  gap: 2px;
+  align-items: center;
+
+  i {
+    display: block;
+    width: 7px;
+    height: 15px;
+    border-radius: 2px;
+    background: var(--color-hl-bar-off);
+  }
+}
+
+.barOn {
+  background: var(--color-brand) !important;
+}
+
+.barGap {
+  width: 9px !important;
+  background: none !important;
+}
+
+/* ── 행 상세 ──────────────────────────────────────────── */
+
+.detailRow td {
+  padding: 0;
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-bg-elevated);
+}
+
+.detail {
+  padding: $space-3 14px 14px;
+  text-align: left;
+  white-space: normal;
+}
+
+.detailHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  margin-bottom: $space-2;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+
+  strong {
+    color: var(--color-text-primary);
+    font-size: $font-size-15;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.detailSub {
+  display: flex;
+  gap: 6px;
+  align-items: baseline;
+  margin: $space-3 0 $space-1;
+  color: var(--color-text-muted);
+  font-size: $font-size-11;
+}
+
+.detailNote {
+  color: var(--color-text-muted);
+  font-size: $font-size-12;
+}
+
+.materials {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: $space-1;
+}
+
+// grid 로 열을 맞춘다. flex 로 짜면 카드명 길이에 따라 화살표가 행마다 어긋난다
+.materialRow {
+  display: grid;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  background: var(--color-hl-card-bg);
+  font-size: $font-size-12;
+}
+
+.mapRow {
+  grid-template-columns: 1fr 14px minmax(0, 1.05fr);
+}
+
+.needRow {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+// 획득 가능한 라운드가 여럿이면 배지를 나란히 둔다
+.dayGroup {
+  display: inline-flex;
+  gap: $space-1;
+}
+
+.card {
+  overflow: hidden;
+  color: var(--color-text-primary);
+  text-overflow: ellipsis;
+}
+
+// 여러 라운드에서 얻을 수 있는 카드 — 어느 쪽에서 먹어도 된다
+.cardMulti {
+  color: var(--color-hl-card-multi);
+  font-weight: $font-weight-semibold;
+}
+
+.arrow {
+  color: var(--color-text-muted);
+  text-align: center;
+}
+
+.to {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.legendName {
+  color: var(--color-text-primary);
+  font-weight: $font-weight-medium;
+}
+
+.subText {
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: $font-size-11;
+  text-overflow: ellipsis;
+}
+
+/* ── 상태 ─────────────────────────────────────────────── */
+
+.empty {
+  padding: 44px 16px;
+  color: var(--color-text-muted);
+  font-size: $font-size-13;
+  text-align: center;
+}
+
+.foot {
+  padding: 16px;
+  color: var(--color-text-muted);
+  font-size: $font-size-11;
+  line-height: 1.7;
+
+  p {
+    margin: 0 0 4px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

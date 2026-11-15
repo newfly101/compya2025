@@ -3,10 +3,11 @@ import { fetchGetHistoryRounds } from "@/domains/historyLegend/store/public/api.
 import { toHistoryRoundModel } from "@/domains/historyLegend/config/historyLegend.js";
 
 // 라운드 70개 + 25인 로스터 — 응답을 화면 모델로 바꿔 캐시한다(카드 표시 문자열 조립까지).
-// TODO(next-migration): 히스토리 재료 화면 이전 시 이 파일을 확장한다 (지금은 레전드 평점표 배지용 조회만)
-export const useHistoryRoundsQuery = () =>
+// initialData: 서버 컴포넌트가 이미 모델로 바꿔 받은 값(선택) — 주면 SSR HTML 에 표가 들어간다.
+export const useHistoryRoundsQuery = (initialData) =>
   useQuery({
     queryKey: ["historyLegend", "rounds"],
     queryFn: async () => ((await fetchGetHistoryRounds()) ?? []).map(toHistoryRoundModel),
+    initialData,
     staleTime: 30 * 60 * 1000,
   });

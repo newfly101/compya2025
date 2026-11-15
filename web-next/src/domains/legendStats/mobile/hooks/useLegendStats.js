@@ -18,11 +18,12 @@ const EMPTY_MAP = {};
  * lookup 이 늦거나 실패해도 표는 코드값으로 살아 있다.
  * 재료는 목록에 없고 행을 펼친 레전드만 따로 받는다(loadMaterials).
  */
-export const useLegendStats = () => {
+// initial: { stats, teamNameByCode, pitchNameByCode } — 서버가 받아 둔 값(선택). 없으면 브라우저에서 받는다.
+export const useLegendStats = (initial) => {
   const qc = useQueryClient();
-  const stats = useLegendStatsQuery();
-  const teams = useTeamsQuery();
-  const pitches = usePitchTypesQuery();
+  const stats = useLegendStatsQuery(initial?.stats);
+  const teams = useTeamsQuery(initial?.teamNameByCode);
+  const pitches = usePitchTypesQuery(initial?.pitchNameByCode);
   const items = stats.data ?? EMPTY_LIST;
   const teamNameByCode = teams.data ?? EMPTY_MAP;
   const pitchNameByCode = pitches.data ?? EMPTY_MAP;

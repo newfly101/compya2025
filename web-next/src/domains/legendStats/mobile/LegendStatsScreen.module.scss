@@ -1,0 +1,588 @@
+// 핸드오프 legend-table.reference.html 스타일 이식.
+// 색은 변수로만 쓴다 (공통 토큰 우선, 대체 불가한 것만 --color-ls-*).
+// 상단 바는 글로벌 MobileLayout TopBar 를 쓴다.
+
+.screen {
+  min-height: 100%;
+  background: var(--color-bg-deepest);
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 필터 ─────────────────────────────────────────────── */
+
+.filters {
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
+  padding: $space-3 $layout-h-pad 8px;
+  background: linear-gradient(var(--color-bg-deepest) 82%, transparent);
+}
+
+.chipRow {
+  display: flex;
+  gap: $space-2;
+  padding: 6px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.chip {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px $space-3;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 999px;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  font-family: inherit;
+  font-size: $font-size-12;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-brand-dark);
+    background: var(--color-brand-alpha-15);
+    color: var(--color-ls-chip-on-text);
+  }
+}
+
+.chipDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.segment {
+  display: flex;
+  gap: 8px;
+  padding: 2px 0 0;
+
+  button {
+    flex: 1;
+    padding: 10px 0;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 10px;
+    background: var(--color-bg-card);
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: $font-size-13;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+
+    &[aria-pressed="true"] {
+      border-color: var(--color-brand-dark);
+      background: var(--color-brand-alpha-15);
+      color: var(--color-ls-chip-on-text);
+    }
+  }
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0 6px;
+  color: var(--color-text-muted);
+  font-size: $font-size-12;
+
+  b {
+    color: var(--color-text-secondary);
+    font-weight: $font-weight-medium;
+  }
+}
+
+.metaLeft {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+// 아이콘만 두면 눌러볼 수 있다는 걸 모른다. 라벨을 붙여 버튼처럼 보이게 한다
+.badgeHelp {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: $space-1 8px $space-1 $space-1;
+  border: 1px solid var(--color-brand-dark);
+  border-radius: 999px;
+  background: var(--color-brand-alpha-15);
+  color: var(--color-ls-chip-on-text);
+  font-family: inherit;
+  font-size: $font-size-11;
+  font-weight: $font-weight-medium;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.badgeHelpMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  color: var(--color-bg-deepest);
+  font-size: $font-size-10;
+  font-weight: $font-weight-bold;
+}
+
+/* ── 표 ───────────────────────────────────────────────── */
+
+// 표 뼈대(박스/th·td/헤더 sticky/정렬 표시/고정 열)는 global/styles/mixins/_table.scss
+// 의 data-table-* 공용 믹스인을 쓴다(2026-09-13 공용화). 열 폭·정렬·강조색 등
+// 레전드에만 있는 성질만 아래 이어서 로컬로 남긴다.
+.tableBox {
+  @include data-table-box;
+}
+
+.table {
+  @include data-table-skin(var(--ls-row-h), var(--ls-head-h));
+}
+
+.sortable {
+  @include data-table-sortable;
+}
+
+.arrow {
+  @include data-table-sort-arrow;
+}
+
+// 가로 스크롤 시 이름이 사라지면 안 된다. 아래 고정 폭·left 는 서로 맞물려 있다.
+.sticky {
+  @include data-table-sticky-col;
+}
+
+thead .sticky {
+  @include data-table-sticky-head;
+}
+
+.cRank {
+  left: 0;
+  width: 26px;
+}
+
+.cScore {
+  left: 26px;
+  width: 48px;
+}
+
+// .table th / .table td 의 center 를 이기려면 같은 요소 선택자를 써야 한다
+.cName {
+  left: 74px;
+  width: 82px;
+}
+
+th.cName,
+td.cName {
+  padding-left: 6px;
+  text-align: left;
+}
+
+.cPos {
+  width: 58px;
+}
+
+.cOvr {
+  width: 46px;
+}
+
+.cStat {
+  width: 34px;
+}
+
+/* ── 셀 ───────────────────────────────────────────────── */
+
+.row {
+  cursor: pointer;
+
+  &:hover td:not(.sticky) {
+    background: var(--color-row-hover-soft);
+  }
+
+  &:hover td.sticky {
+    background: var(--color-ls-row-hover);
+  }
+
+  &.open td {
+    background: var(--color-bg-elevated) !important;
+    border-bottom-color: transparent;
+  }
+
+  // 평점 미정 — 숨기지 않고 이름만 구분
+  &.provisional .cName {
+    color: var(--color-ls-prov);
+  }
+}
+
+td.cRank {
+  color: var(--color-text-muted);
+  font-size: $font-size-11;
+}
+
+td.cScore {
+  color: var(--color-text-primary);
+  font-size: $font-size-13;
+  font-weight: $font-weight-bold;
+
+  &.na {
+    color: var(--color-text-muted);
+    font-weight: $font-weight-medium;
+  }
+}
+
+td.cName {
+  font-weight: $font-weight-medium;
+}
+
+.nameInner {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-1;
+}
+
+.nameDot {
+  flex: 0 0 auto;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.materialName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// 히스토리 모드에서 얻을 수 있다는 표시 겸 그 화면으로 가는 링크
+.historyBadge {
+  flex: 0 0 auto;
+  // 카드 오른쪽 끝에 붙인다
+  margin-left: auto;
+  padding: 0 $space-1;
+  border: 1px solid var(--color-ls-history-border);
+  border-radius: 3px;
+  background: var(--color-ls-history-bg);
+  color: var(--color-ls-history);
+  font-size: $font-size-10;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+  text-decoration: none;
+
+  &:hover {
+    background: var(--color-ls-history);
+    color: var(--color-bg-deepest);
+  }
+}
+
+// 마·히가 한 카드에 같이 붙을 때 나란히 두는 감싸개.
+// margin-left:auto 를 배지 각각이 아니라 여기 하나로 모아야 auto 여백이 둘로
+// 쪼개지지 않는다(안 그러면 두 배지 사이가 벌어진다).
+.badgeGroup {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+
+  .historyBadge {
+    margin-left: 0;
+  }
+}
+
+// 히스토리(파랑)와 구분되는 마일리지 배지 색
+.mileage {
+  border-color: var(--color-ls-mileage-border);
+  background: var(--color-ls-mileage-bg);
+  color: var(--color-ls-mileage);
+
+  &:hover {
+    background: var(--color-ls-mileage);
+    color: var(--color-bg-deepest);
+  }
+}
+
+.helpPoints {
+  margin: 10px 0 12px;
+  padding: 0 0 0 14px;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+  line-height: 1.6;
+
+  li {
+    margin-bottom: $space-1;
+    list-style: none;
+    text-indent: -10px;
+
+    &::before {
+      content: "- ";
+      color: var(--color-text-muted);
+    }
+  }
+}
+
+.badgeList {
+  margin: 10px 0 14px;
+  padding: 0;
+  list-style: none;
+
+  // 표에서는 카드 오른쪽 끝에 붙이려고 margin-left:auto 를 쓰는데,
+  // 안내 목록에서는 설명 앞에 와야 하므로 되돌린다
+  .historyBadge {
+    margin-left: 0;
+  }
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: $space-2;
+    color: var(--color-text-secondary);
+    font-size: $font-size-12;
+  }
+}
+
+.badgeNote {
+  color: var(--color-text-muted);
+  font-style: normal;
+}
+
+td.cPos {
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+  letter-spacing: -0.02em;
+}
+
+td.cOvr {
+  background: var(--color-ls-ovr-bg);
+  color: var(--color-ls-ovr-text);
+  font-weight: $font-weight-semibold;
+}
+
+td.cStat {
+  color: var(--color-text-primary);
+
+  &.hi {
+    color: var(--color-ls-good);
+    font-weight: $font-weight-semibold;
+  }
+
+  &.lo {
+    color: var(--color-ls-dim);
+  }
+}
+
+/* ── 행 상세 ──────────────────────────────────────────── */
+
+.detailRow td {
+  padding: 0;
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-bg-elevated);
+}
+
+/* ── in-feed 광고 행 ──────────────────────────────────────── */
+
+.adRow td {
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--color-border-strong);
+  background: var(--color-bg-elevated);
+}
+
+.detail {
+  padding: 10px 14px 14px;
+  text-align: left;
+  white-space: normal;
+}
+
+.detailHead {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: baseline;
+  margin-bottom: 10px;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+
+  strong {
+    color: var(--color-text-primary);
+    font-size: $font-size-15;
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.detailSub {
+  margin: 12px 0 $space-1;
+  color: var(--color-text-muted);
+  font-size: $font-size-11;
+}
+
+.pitches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-1;
+}
+
+.pitch {
+  padding: $space-1 $space-2;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 6px;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+
+  b {
+    margin-left: $space-1;
+    color: var(--color-text-primary);
+    font-weight: $font-weight-semibold;
+  }
+
+  // 수치 없이 등급만 아는 구종
+  &.gradeOnly b {
+    color: var(--color-ls-warn);
+  }
+}
+
+.materials {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+// 재료 요청 전/실패 시
+.detailNote {
+  padding: $space-3 0;
+  color: var(--color-text-muted);
+  font-size: $font-size-12;
+}
+
+.material {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: $space-2;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  background: var(--color-bg-card);
+  font-size: $font-size-12;
+}
+
+// 가장 긴 약칭(쌍방울·태평양·빙그레 = 한글 3자)에 폭을 맞춰 고정한다.
+// 내용대로 두면 카드마다 이름 시작 위치가 어긋난다
+.materialTeam {
+  flex: 0 0 auto;
+  min-width: 38px;
+  padding: 2px $space-1;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 4px;
+  color: var(--color-text-muted);
+  font-size: $font-size-10;
+  text-align: center;
+}
+
+/* ── 상태 ─────────────────────────────────────────────── */
+
+.empty {
+  padding: 44px 16px;
+  color: var(--color-text-muted);
+  font-size: $font-size-13;
+  text-align: center;
+}
+
+.foot {
+  padding: 16px;
+  color: var(--color-text-muted);
+  font-size: $font-size-11;
+  line-height: 1.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chip,
+  .segment button {
+    transition: none;
+  }
+}
+
+/* ── 평점 출처 도움말 ─────────────────────────────────── */
+
+// th 안에 들어가므로 클릭이 정렬로 새지 않게 JSX 에서 stopPropagation 한다
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: $z-modal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--color-overlay-strong);
+}
+
+.helpCard {
+  width: 100%;
+  max-width: 320px;
+  padding: 18px 18px 14px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 14px;
+  background: var(--color-bg-card);
+  text-align: left;
+}
+
+.helpTitle {
+  margin: 0 0 10px;
+  color: var(--color-text-primary);
+  font-size: $font-size-15;
+  font-weight: $font-weight-semibold;
+  text-align: center;
+}
+
+.helpBody {
+  margin: 0 0 8px;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+  line-height: 1.6;
+
+  b {
+    color: var(--color-text-primary);
+    font-weight: $font-weight-semibold;
+  }
+}
+
+.helpLink {
+  display: inline-block;
+  margin: 4px 0 12px;
+  color: var(--color-brand);
+  font-size: $font-size-12;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.helpClose {
+  width: 100%;
+  padding: $space-2 0;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 9px;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  font-family: inherit;
+  font-size: $font-size-12;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--color-text-primary);
+  }
+}
+
