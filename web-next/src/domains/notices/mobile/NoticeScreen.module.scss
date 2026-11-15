@@ -1,0 +1,8 @@
+.screen {
+  @include flex-col;
+  width: 100%;
+}
+
+.sep {
+  @include section-sep;
+}

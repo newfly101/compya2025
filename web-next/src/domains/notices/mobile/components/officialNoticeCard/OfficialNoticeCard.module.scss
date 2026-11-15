@@ -1,0 +1,38 @@
+// ── Official Notice Card (공식 공지) ───────────────────────────
+.card {
+  @include flex-col($space-1);
+  @include card-base(
+    $bg: var(--color-bg-deepest),
+    $radius: $radius-lg,
+    $pad: $space-3 $space-4
+  );
+  @include pressable;
+}
+
+.cardTop {
+  @include flex-between;
+  margin-bottom: $space-1;
+}
+
+.externalLabel {
+  @include text-micro;
+  color: var(--color-text-muted);
+}
+
+.title {
+  @include text-body-bold;
+  @include hangul-safe;
+  color: var(--color-text-secondary);
+}
+
+.summary {
+  @include text-caption;
+  @include text-ellipsis;
+  color: var(--color-text-muted);
+}
+
+.date {
+  @include text-micro;
+  color: var(--color-text-muted);
+  margin-top: $space-1;
+}

@@ -1,0 +1,112 @@
+// ── Featured Card (중요 공지) ──────────────────────────────────
+.featuredCard {
+  @include flex-col;
+  @include card-base($radius: $radius-xl, $pad: 0);
+  @include pressable;
+  overflow: hidden;
+}
+
+.featuredThumb {
+  position: relative;
+  width: 100%;
+  height: 10rem;          // 160px — 중요 공지(pinned) 표준 높이
+  background-color: var(--color-brand-tint);
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.thumbEmpty {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, var(--color-brand-tint), var(--color-bg-deep));
+}
+
+// 사이트 공지 목록 카드는 중요 공지(기본 10rem)보다 살짝 작게 — 같은 배너형이어도 섹션 위계가 보이게 한다.
+.listBanner .featuredThumb {
+  height: 7.5rem; // 120px
+}
+
+.pinnedBadge {
+  position: absolute;
+  top: $space-2;
+  left: $space-2;
+}
+
+// 제목과 chevron 을 한 행에 묶어 세로 중심을 맞춘다 (flex-row 의 align-items: center 활용)
+.featuredTitleRow {
+  @include flex-row($space-2);
+  padding: $space-2 $space-4 0;
+}
+
+.metaDate {
+  @include text-micro;
+  color: var(--color-text-muted);
+  padding: $space-1 $space-4 0;
+}
+
+.chevron {
+  @include text-section-title;
+  color: var(--color-text-muted);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.featuredTitle {
+  @include text-section-title;
+  @include hangul-safe;
+  @include line-clamp(2);
+  color: var(--color-text-primary);
+  flex: 1;
+  min-width: 0;
+}
+
+.featuredSummary {
+  @include text-body;
+  @include text-ellipsis;
+  color: var(--color-text-muted);
+  padding: $space-1 $space-4 $space-4;
+}
+
+// ── Regular Card (사이트 공지) ─────────────────────────────────
+.card {
+  @include flex-col($space-1);
+  @include card-base(
+    $bg: var(--color-bg-overlay),
+    $radius: $radius-lg,
+    $pad: $space-4 $space-4 $space-3
+  );
+  @include pressable;
+}
+
+.cardContent {
+  @include flex-col($space-1);
+  min-width: 0;
+}
+
+.title {
+  @include text-body-bold;
+  @include hangul-safe;
+  color: var(--color-text-primary);
+}
+
+.summary {
+  @include text-body;
+  @include text-ellipsis;
+  color: var(--color-text-muted);
+}
+
+.cardBottom {
+  @include flex-between;
+}
+
+.date {
+  @include text-micro;
+  color: var(--color-text-muted);
+}
