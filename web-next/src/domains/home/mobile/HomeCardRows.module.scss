@@ -1,0 +1,18 @@
+.couponScroll {
+  @include scroll-row($space-3, $layout-h-pad);
+
+  & > * {
+    flex-shrink: 0;
+    width: rem(200);
+  }
+}
+
+.eventScroll {
+  @include scroll-row($space-3, $layout-h-pad);
+
+  & > * {
+    flex-shrink: 0;
+    width: rem(160);
+    --thumb-height: #{rem(72)};
+  }
+}

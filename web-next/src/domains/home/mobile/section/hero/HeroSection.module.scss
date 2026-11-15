@@ -1,0 +1,57 @@
+// ── HomeScreen - 히어로 배너 ────────────────────────────────────────────
+.hero {
+  position: relative;
+  width: 100%;
+  height: 10rem;                  // 160px (rem)
+  background-image: url("./compyafun2026.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  @include flex-col($justify: flex-end);
+  padding: $space-5 $layout-h-pad;
+  overflow: hidden;
+
+  // 오버레이는 ::before 로
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.06), var(--color-bg-deepest));
+    z-index: $z-base;
+  }
+
+  // 텍스트 콘텐츠가 오버레이 위에 오도록
+  > * {
+    position: relative;
+    z-index: $z-above;
+  }
+}
+
+// ── 표준 StatusBadge wrapper (B1 치환) ──────────────────────
+// StatusBadge 자체는 inline-flex 라 width:fit-content 라 그대로 사용
+// hero 안에서 z-index/위치만 보장
+.heroBadgeSlot {
+  position: relative;
+  z-index: $z-above;
+}
+
+.heroTitle {
+  position: relative;
+  @include text-hero;
+  color: var(--color-text-primary);
+  z-index: $z-above;
+
+  // 320 미만 보호 (mobile-frame § 5.1 P5)
+  @include small-mobile {
+    @include font-size-rem(22);   // mobile-frame § 4.3 — font-size rem 강제
+  }
+}
+
+.heroSub {
+  position: relative;
+  @include text-caption;
+  color: var(--color-text-secondary);
+  z-index: $z-above;
+  margin-top: $space-1;
+}
