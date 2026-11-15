@@ -30,14 +30,6 @@ export default function CouponsPage() {
 async function CouponsBody() {
   const coupons = await fetchCoupons();
 
-  if (coupons === null) {
-    return (
-      <SectionBlock title="쿠폰">
-        <StateBox status="error" message="쿠폰을 불러오지 못했습니다. 잠시 후 다시 접속해 주세요." compact />
-      </SectionBlock>
-    );
-  }
-
   const now = formatNow();
   return (
     <>
