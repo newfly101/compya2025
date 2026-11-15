@@ -1,0 +1,220 @@
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding-bottom: $space-2;
+}
+
+.searchRow {
+  position: relative;
+}
+
+.searchInput {
+  width: 100%;
+  height: $control-height-md;
+  padding: 0 $space-8 0 $space-4;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-xl;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+  font-family: inherit;
+  @include text-body;
+  box-sizing: border-box;
+
+  &::placeholder {
+    color: var(--color-text-placeholder);
+  }
+
+  // 브라우저 기본 clear(×)를 죽인다. 커스텀 버튼과 겹쳐 두 개로 보인다
+  &[type="search"] {
+    appearance: none;
+
+    &::-webkit-search-cancel-button,
+    &::-webkit-search-decoration,
+    &::-webkit-search-results-button {
+      display: none;
+      appearance: none;
+    }
+
+    &::-ms-clear {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+  }
+}
+
+.clearButton {
+  @include reset-button;
+  position: absolute;
+  right: $space-2;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: $space-1 $space-2;
+  color: var(--color-text-muted);
+  font-size: $font-size-17;
+}
+
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.filterLabel {
+  flex: 0 0 auto;
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.chipRow {
+  display: flex;
+  gap: $space-2;
+  flex-wrap: wrap;
+}
+
+// chip-base(sm) 은 h20/radius4 배지형이라 레전드·히스토리의 필터 칩(알약형, h36 대)과
+// 결이 달라 여기서 재정의한다 — border-radius/height/active 톤을 레전드에 맞춘다.
+.chip {
+  @include chip-base($size: sm);
+  height: auto;
+  min-height: $control-height-sm;
+  padding: $space-2 $space-3;
+  border-radius: $radius-full;
+  border-color: var(--color-border-strong);
+  gap: $space-1;
+  @include text-body;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+
+  &[aria-pressed="true"] {
+    border-color: var(--color-admin-accent-line);
+    background-color: var(--color-admin-accent-soft);
+    color: var(--color-admin-accent-active-text);
+  }
+}
+
+// 라벨 뒤 건수(10px, 보조색) — 활성 칩에서는 흰색 위에서도 읽히도록 살짝 밝힌다
+.chipCount {
+  color: var(--color-text-muted);
+  font-size: $font-size-10;
+
+  [aria-pressed="true"] & {
+    color: var(--color-admin-accent-active-text-soft);
+  }
+}
+
+// 정보 행: 좌 총계 · 우 정렬 라벨 + "+ 등록"
+.infoRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+  min-height: $control-height-sm;
+}
+
+.total {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  color: var(--color-text-secondary);
+  @include text-caption;
+
+  b {
+    color: var(--color-text-primary);
+    font-weight: $font-weight-bold;
+  }
+}
+
+// 일괄 선택 상태 — 총계 옆에 붙는다(v2: "{N}개 선택" + 선택 삭제 + 숨김)
+.selection {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+}
+
+.selectionCount {
+  color: var(--color-admin-accent);
+  font-weight: $font-weight-semibold;
+  white-space: nowrap;
+}
+
+.bulkDeleteBtn {
+  @include reset-button;
+  height: 22px;
+  padding: 0 $space-2;
+  border: 1px solid var(--color-danger);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-danger);
+  font-size: $font-size-10;
+  font-weight: $font-weight-bold;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.bulkHideBtn {
+  @include reset-button;
+  height: 22px;
+  padding: 0 $space-2;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-md;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: $font-size-10;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.infoRight {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+
+.sortLabel {
+  @include reset-button;
+  color: var(--color-text-muted);
+  @include text-caption;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    color: var(--color-text-secondary);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+}
+
+// 캐시 동기화 — "+ 등록"(채움) 옆 보조 액션. 다른 탭에는 onRefresh 를 안 넘기므로 옵션 렌더.
+.refreshBtn {
+  height: $control-height-sm;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  background: transparent;
+  color: var(--color-text-secondary);
+  @include text-body;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+}
+
+// v2 원본 — 채운 솔리드 퍼플 버튼(흰 텍스트). 칩/토글바 버튼(control-height-sm)보다
+// 살짝 크게, 유일한 주요 CTA라 유일하게 배경을 채운다.
+.addBtn {
+  height: $control-height-sm;
+  padding: 0 $space-4;
+  border: 1px solid var(--color-admin-accent);
+  border-radius: $radius-lg;
+  background: var(--color-admin-accent);
+  color: #fff;                                 // 진한 보라 배경, 두 테마 모두 대비 확보
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+}

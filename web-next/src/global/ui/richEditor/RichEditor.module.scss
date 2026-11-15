@@ -1,0 +1,83 @@
+// 도메인 비의존 Tiptap 래퍼 스타일 — 전역 토큰만 사용(어드민 전용 --color-admin-* 미사용).
+.wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
+  display: flex;
+  gap: 2px;
+  padding: $space-2 $space-3;
+  background: var(--color-bg-deep);
+  border-bottom: 1px solid var(--color-border);
+  overflow-x: auto;
+
+  &::-webkit-scrollbar { display: none; }
+}
+
+.toolBtn {
+  @include reset-button;
+  flex: none;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 $space-2;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-13;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover:not(:disabled) { background: var(--color-bg-elevated); }
+  &:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  &[aria-pressed="true"] {
+    background: var(--color-bg-elevated);
+    color: var(--color-brand);
+  }
+}
+
+.toolBtnLabel {
+  position: relative;
+  overflow: hidden;
+
+  &:hover { background: var(--color-bg-elevated); }
+}
+
+.toolBtnDisabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.hiddenFileInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+
+  &:disabled { cursor: not-allowed; }
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.content {
+  // 편집영역 타이포/여백은 뷰어(RichContent)와 동일한 prose mixin 을 공유한다 —
+  // "쓴 대로 보인다" 를 보장하는 단일 스타일 소스(§ 작업 2).
+  @include prose;
+  padding: $space-4 $space-4 120px;
+
+  :global(.ProseMirror) {
+    outline: none;
+    min-height: 200px;
+  }
+}
