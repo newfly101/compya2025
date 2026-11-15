@@ -1,0 +1,62 @@
+/* ResponseModal.module.scss */
+
+.overlay {
+  @include modal-backdrop;       // var(--color-overlay) + $z-modal-bg
+}
+
+.modal {
+  width: 20rem;                                // 320px (rem)
+  max-width: calc(100% - 2rem);                // 320 보호 (mobile-frame § 5.1 P11)
+  background-color: var(--color-bg-modal);
+  border-radius: $radius-2xl;                  // 12px (14 → 12 정합)
+  padding: $space-6 $space-5;                  // 24px 20px
+  text-align: center;
+  box-shadow: 0 1.25rem 3.125rem rgba(0, 0, 0, 0.4);
+  animation: fadeUp 0.18s ease-out;
+}
+
+.iconSuccess {
+  // 글자 스케일(최대 28px) 예외 — 본문이 아니라 화면에 하나뿐인 큰 기호다.
+  // 규칙 위반 아니니 스케일에 맞춰 내리지 마라. (.iconFail 도 동일 사유)
+  font-size: 2.625rem;                         // 42px → rem (mobile-frame § 6.4)
+  color: var(--color-success);
+  margin-bottom: $space-3;
+}
+
+.iconFail {
+  // 스케일 예외 사유는 .iconSuccess 주석 참조
+  font-size: 2.625rem;
+  color: var(--color-danger);
+  margin-bottom: $space-3;
+}
+
+.message {
+  @include font-size-rem(15, 1.5);   // mobile-frame § 4.3 — font-size rem 강제 (line-height: 1.5)
+  color: var(--color-text-primary);
+  margin-bottom: $space-5;
+}
+
+.confirmBtn {
+  width: 100%;
+  padding: $space-3 0;                         // 12px (10 → 12 정합 8pt)
+  border-radius: $radius-lg;                   // 8px
+  border: none;
+  background-color: var(--color-brand-violet);
+  color: var(--color-text-primary);
+  font-weight: $font-weight-semibold;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover { opacity: 0.85; }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

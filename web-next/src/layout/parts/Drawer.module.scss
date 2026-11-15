@@ -69,6 +69,7 @@ $color-naver-font: $color-white-100;
 
 // ── 유저 프로필 ───────────────────────────────────────────────
 .profile {
+  min-height: rem(76);   // 확인 전 placeholder · 게스트 · 로그인 상태가 같은 높이 — 자리 고정
   @include flex-row($space-3);
   padding: $space-3;
   margin: $space-3 $space-4 0 $space-4;

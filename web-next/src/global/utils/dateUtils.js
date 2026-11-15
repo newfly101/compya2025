@@ -14,3 +14,6 @@ export const formatNow = (date = new Date()) => {
   const hh = get("hour") === "24" ? "00" : get("hour");
   return `${get("year")}-${get("month")}-${get("day")} ${hh}:${get("minute")}:${get("second")}`;
 };
+
+/** KST 기준 "오늘" 날짜 (yyyy-MM-dd). */
+export const getTodayKst = () => formatNow().slice(0, 10);

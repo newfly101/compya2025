@@ -2,7 +2,6 @@
 // key: 홈 바로가기가 항목을 가리키는 안정된 id (저장값에 쓰이므로 바꾸지 않는다 — home/config/quickShortcuts.js)
 // children: 접이식 하위 메뉴. 부모 행은 이동하지 않고 접고 펴기만 한다. 선택지로는 children 의 항목이 쓰인다.
 // loginRequired: 비로그인 클릭 시 navigate 차단 + 공용 로그인 안내 모달 (loginReason = LOGIN_REASONS 키)
-// TODO(next-migration): admin 메뉴(ADMIN_MENU_GROUPS)는 권한 의존 — 미이전
 export const MENU_GROUPS = [
   {
     label: '메인',
@@ -39,4 +38,17 @@ export const MENU_GROUPS = [
   },
   // 커뮤니티 그룹 — AdSense 심사 대응으로 드로어 노출에서 제외(2026-09-13).
   // 라우트 자체는 유지(직접 URL 접근 가능), infra/seo/routeSeo.js NOINDEX_PATHS 로 색인만 차단.
+]
+
+// 홈 바로가기 선택지 = 서랍 메뉴의 이동 가능한 항목 전체 (부모 행은 제외, 하위 항목은 펼쳐서 포함)
+export const MENU_LEAVES = MENU_GROUPS.flatMap((g) => g.items.flatMap((i) => i.children ?? [i]));
+
+// admin role 한정 노출 — Drawer 가 isAdmin 일 때 MENU_GROUPS 뒤에 append. (/admin 화면은 다른 라운드)
+export const ADMIN_MENU_GROUPS = [
+  {
+    label: '어드민 사이트 관리',
+    items: [
+      { icon: '🛠️', label: 'Admin', to: '/admin' },
+    ]
+  },
 ]

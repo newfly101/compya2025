@@ -1,0 +1,39 @@
+.wrap {
+  padding: $space-3 $layout-h-pad 0;
+}
+
+.tabs {
+  display: flex;
+  min-width: 0;
+  margin-bottom: $space-3;
+  gap: $space-1;
+  padding: $space-1;
+  border-radius: $radius-lg;
+  background: var(--color-bg-card);
+}
+
+.tab {
+  display: flex;
+  flex: 1 1 0;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
+  min-height: $control-height-md;
+  border-radius: $radius-md;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+
+  &[data-active] {
+    background: var(--color-brand-alpha-15);
+    color: var(--color-brand);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-brand);
+    outline-offset: -2px;
+  }
+}

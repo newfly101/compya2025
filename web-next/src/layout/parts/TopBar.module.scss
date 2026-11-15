@@ -90,6 +90,14 @@ $color-naver-font: $color-white-100;
   background-color: var(--color-bg-card);
 }
 
+// 로그인 영역 고정 슬롯 — placeholder · 로그인 · 로그아웃이 같은 크기라 상단바가 흔들리지 않는다
+.authSlot {
+  display: inline-block;
+  width: rem(104);
+  height: rem(28);
+  flex-shrink: 0;
+}
+
 // ── 뒤로가기 버튼 ─────────────────────────────────────────────
 .backBtn {
   @include flex-center;

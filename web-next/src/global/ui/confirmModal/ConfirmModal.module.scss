@@ -1,0 +1,91 @@
+// 가운데 카드형 모달 (fe-design § 6 — 바텀시트 금지). Figma 03 · 05.
+// 채움 버튼 위 글자는 Figma 그대로 --color-bg-card (두 테마에서 채움과 반대 밝기).
+
+.overlay {
+  @include modal-backdrop;
+  padding: $layout-h-pad;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+  width: 100%;
+  max-width: $layout-card-width;
+  max-height: calc(100dvh - #{$space-8});
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: $space-5 $layout-h-pad $space-4;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  background: var(--color-bg-modal);
+  color: var(--color-text-primary);
+  box-shadow: 0 1rem 2.5rem rgba(23, 15, 38, 0.2); // 화면 덮는 판 — Figma Modal 그림자
+  z-index: $z-modal;
+
+  > * {
+    min-width: 0;
+    max-width: 100%;
+  }
+}
+
+.title {
+  margin: 0;
+  font-size: $font-size-15;
+  font-weight: $font-weight-semibold;
+  line-height: 1.5;
+}
+
+.message {
+  margin: 0 0 $space-2;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+  line-height: 1.5;
+  white-space: pre-line;
+  word-break: keep-all;
+}
+
+.actions {
+  display: flex;
+  gap: $space-3;
+  padding-top: $space-2;
+
+  button {
+    flex: 1 1 0;
+    min-height: $control-height-md;
+    padding: $space-3 0;
+    border: 1px solid transparent;
+    border-radius: $radius-lg;
+    font-family: inherit;
+    font-size: $font-size-13;
+    font-weight: $font-weight-semibold;
+    line-height: 1.5;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-brand);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.secondary {
+  border-color: var(--color-border) !important;
+  background: var(--color-bg-card);
+  color: var(--color-text-primary);
+}
+
+.primary {
+  background: var(--color-brand);
+  color: var(--color-bg-card);
+}
+
+.danger {
+  background: var(--color-danger);
+  color: var(--color-bg-card);
+}

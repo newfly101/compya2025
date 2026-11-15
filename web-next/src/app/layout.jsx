@@ -1,6 +1,7 @@
 import "@/styles/global.scss";
 import MobileLayout from "@/layout/MobileLayout.jsx";
 import { SITE_URL } from "@/config/env.js";
+import AppProvider from "@/providers/AppProvider.jsx";
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),
@@ -14,7 +15,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="ko">
       <body>
-        <MobileLayout>{children}</MobileLayout>
+        <AppProvider>
+          <MobileLayout>{children}</MobileLayout>
+        </AppProvider>
+        {/* 모달 포털 자리 — 원본 index.html 의 #modal */}
+        <div id="modal" />
       </body>
     </html>
   );

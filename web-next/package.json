@@ -3,16 +3,20 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -p 3000",
     "build": "next build",
-    "start": "next start -p 3001",
+    "start": "next start -p 3000",
     "lint": "eslint ."
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.0",
+    "axios": "^1.13.2",
+    "isomorphic-dompurify": "^4.7.0",
     "next": "^16.4.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "sass": "^1.97.1"
+    "sass": "^1.97.1",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "eslint": "^9.39.1",
