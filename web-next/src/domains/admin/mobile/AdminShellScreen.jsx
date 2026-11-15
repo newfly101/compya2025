@@ -4,7 +4,7 @@
 // 그 리마운트가 검색어·칩·선택 상태를 자연히 초기화한다. 상단바는 페이지(PageShell)가 소유한다.
 import { useParams, useRouter } from "next/navigation";
 import { ADMIN_TABS } from "@/domains/admin/mobile/ADMIN_TABS.js";
-import { ADMIN_PATHS } from "@/domains/admin/config/adminPaths.js";
+import { ROUTE_PATHS } from "@/config/routePath.js";
 import { useAdminCounts } from "@/domains/admin/mobile/hooks/useAdminCounts.js";
 import AdminHomeTab from "@/domains/admin/mobile/components/adminHomeTab/AdminHomeTab.jsx";
 import AdminCacheSyncTab from "@/domains/admin/mobile/components/adminCacheSyncTab/AdminCacheSyncTab.jsx";
@@ -29,7 +29,7 @@ export default function AdminShellScreen() {
   const activeTab = TAB_KEYS.includes(tabParam) ? tabParam : "home";
 
   const handleTabClick = (key) => {
-    router.replace(key === "home" ? ADMIN_PATHS.admin : ADMIN_PATHS.admin_tab(key));
+    router.replace(key === "home" ? ROUTE_PATHS.admin : ROUTE_PATHS.admin_tab(key));
   };
 
   return (

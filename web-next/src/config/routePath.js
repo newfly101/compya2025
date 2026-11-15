@@ -26,6 +26,10 @@ export const ROUTE_PATHS = {
   contact: "/contact",
   about: "/about",
   guides: "/guides",
+  admin: "/admin",
+  admin_tab: (tab) => `/admin/${tab}`,
+  admin_notice_write: "/admin/notice/write",
+  admin_notice_write_edit: (id) => `/admin/notice/write/${id}`,
 };
 
 export const oddsSectionPath = (id) => `/probability/${id}`;

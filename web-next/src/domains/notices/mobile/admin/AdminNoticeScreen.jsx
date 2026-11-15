@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ADMIN_PATHS } from "@/domains/admin/config/adminPaths.js";
+import { ROUTE_PATHS } from "@/config/routePath.js";
 import AdminToolbar from "@/global/ui/admin/toolbar/AdminToolbar.jsx";
 import AdminTable from "@/global/ui/admin/table/AdminTable.jsx";
 import AdminPagination from "@/global/ui/admin/pagination/AdminPagination.jsx";
@@ -223,7 +223,7 @@ export default function AdminNoticeScreen() {
             className={styles.editBtn}
             onClick={(e) => {
               e.stopPropagation();
-              router.push(ADMIN_PATHS.admin_notice_write_edit(n.id));
+              router.push(ROUTE_PATHS.admin_notice_write_edit(n.id));
             }}
           >
             수정
@@ -247,7 +247,7 @@ export default function AdminNoticeScreen() {
         totalLabel="개"
         sortLabel={sortAsc ? "등록일 오래된순" : "등록일 최신순"}
         onToggleSort={() => setSortAsc((prev) => !prev)}
-        onCreate={() => router.push(ADMIN_PATHS.admin_notice_write)}
+        onCreate={() => router.push(ROUTE_PATHS.admin_notice_write)}
         createLabel="등록"
         selectedCount={selectedOnPageCount}
         onBulkDelete={handleBulkDelete}

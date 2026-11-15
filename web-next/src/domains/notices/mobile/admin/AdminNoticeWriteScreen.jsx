@@ -2,7 +2,7 @@
 import { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { useParams, useRouter } from "next/navigation";
-import { ADMIN_PATHS } from "@/domains/admin/config/adminPaths.js";
+import { ROUTE_PATHS } from "@/config/routePath.js";
 import AdminSegmented from "@/global/ui/admin/fields/AdminSegmented.jsx";
 import AdminToggleSwitch from "@/global/ui/admin/toggle/AdminToggleSwitch.jsx";
 import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
@@ -77,7 +77,7 @@ export default function AdminNoticeWriteScreen() {
 
   const setField = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
 
-  const goList = () => router.push(ADMIN_PATHS.admin_tab("notice"));
+  const goList = () => router.push(ROUTE_PATHS.admin_tab("notice"));
 
   const savingRef = useRef(false);
   const handleSave = async () => {
