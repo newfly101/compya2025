@@ -1,0 +1,489 @@
+// domains/mileage/mobile/MileageScreen.jsx
+// 마일리지 저격 경로 — 핸드오프 mileage-sniper.html 이식 (design_handoff_mileage/README.md 참조).
+// beta: UI 까지만. 서버 API·DB 연결은 다음 라운드.
+//
+// 상태(로딩/에러/빈/정상) 분기가 아니라 "메인/표" 두 화면 분기형 단일 페이지였는데,
+// 「저격 선수 리스트」 탭이 추가되며 tab(calc|list) 분기가 하나 더 생겼다(target-list-design-spec.md).
+// 기존 시뮬레이션(calc) 탭 JSX 는 이동 없이 그대로 두고 감싸기만 한다.
+
+"use client";
+import { useMemo, useRef } from "react";
+import { useQueryParams } from "./hooks/useQueryParams.js";
+import { T, TEAMS, Y, YEARS, defaultGoal, teamName, yearName } from "@/domains/mileage/config/mileage.js";
+import { formatPosition } from "@/domains/mileage/config/position.js";
+import { useMileage } from "./hooks/useMileage";
+import { useMileageRowHeight } from "./hooks/useMileageRowHeight";
+import { useMileageTargetList } from "./hooks/useMileageTargetList";
+import TargetListTab from "./components/targetListTab/TargetListTab.jsx";
+import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
+import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
+import "./mileage.tokens.scss";
+import styles from "./MileageScreen.module.scss";
+
+const pickClass = (o, styleSet) => {
+  if (o.goal) return `${styleSet.pk} ${styleSet.win}`;
+  if (o.best) return `${styleSet.pk} ${styleSet.best}`;
+  return styleSet.pk;
+};
+
+const cellClass = (cell, styleSet) => {
+  const cls = [styleSet.td];
+  if (cell.kind === "void") cls.push(styleSet.void);
+  else cls.push(styleSet.tappable);
+  if (cell.kind === "goal") cls.push(styleSet.goal);
+  if (cell.kind === "team") cls.push(styleSet.team);
+  if (cell.kind === "year") cls.push(styleSet.year);
+  if (cell.here) cls.push(styleSet.here);
+  return cls.join(" ");
+};
+
+// initialTargets: 서버가 받아 둔 저격 재료 응답 — 리스트 탭 개수·표를 첫 HTML 에 넣는다.
+const MileageScreen = ({ initialTargets }) => {
+
+  // 탭(calc|list)은 이 화면(Screen)이 소유한다 — useMileage() 는 기존 계약대로
+  // 시뮬레이션 탭 내부 상태만 다룬다(Redux 미사용 원칙도 그대로 유지).
+  const [searchParams, setSearchParams] = useQueryParams();
+  const tab = searchParams.get("tab") === "list" ? "list" : "calc"; // 하위호환: 기본값 calc(§1.2 결정)
+  const idParam = searchParams.get("id");
+
+  const targetList = useMileageTargetList(initialTargets);
+
+  const switchTab = (next) => {
+    setSearchParams((prev) => {
+      const p = new URLSearchParams(prev);
+      p.set("tab", next);
+      return p;
+    });
+  };
+
+  // 리스트 행 클릭 → 시뮬레이션 탭으로 전환 + 목표 자동 입력(핸드오프 "행 클릭→시뮬레이션 연동")
+  //
+  // ⚠️ BE 가 "어느 칸이 유일한지" mainUnique/subUnique 로 내려준다(운영 실측: 주만 104 ·
+  // 부만 7 · 둘 다 0건). 부만 유일이면 그 칸(subPos) 하나로 좁히고, 그 외(주만 유일 /
+  // 이론상 둘 다 유일 / 플래그 이상)는 전부 주포지션 하나로 — "둘 다"는 실측 0건이라
+  // 사용자가 고르게 하는 화면은 만들지 않는다(판단 근거: 코디네이터 확정 응답).
+  // 구버전 서버라 두 필드가 아예 없으면(null) "모른다" 상태이므로, 예전처럼 주·부 둘 다
+  // 넘겨 formatPosition()이 "1B/DH"로 정직하게 같이 보여주는 폴백을 유지한다(안 깨짐 우선).
+  const resolveSniperTarget = (row) => {
+    const known = row.mainUnique !== null || row.subUnique !== null;
+    if (!known) return { pos: row.pos, subPos: row.subPos, subOnly: false };
+    if (row.subUnique && !row.mainUnique) return { pos: row.subPos, subPos: null, subOnly: true };
+    return { pos: row.pos, subPos: null, subOnly: false };
+  };
+
+  const selectTargetFromList = (row) => {
+    const target = resolveSniperTarget(row);
+    setSearchParams((prev) => {
+      const p = new URLSearchParams(prev);
+      p.set("tab", "calc");
+      p.set("id", row.id);
+      p.set("team", row.team);
+      p.set("year", String(row.year));
+      p.set("pos", target.pos);
+      if (target.subPos) p.set("subPos", target.subPos);
+      else p.delete("subPos");
+      // 부포지션 칸으로 저격하는 경우 배너에 "왜 이 포지션인지" 한 줄을 남겨야 한다 —
+      // 우즈(1B/DH)를 눌렀는데 목표가 대뜸 DH 로 뜨면 "1B 아닌가?" 헷갈릴 수 있어서다.
+      if (target.subOnly) p.set("subTarget", "1");
+      else p.delete("subTarget");
+      return p;
+    });
+  };
+
+  const banner = useMemo(() => {
+    if (!idParam) return null;
+    const found = targetList.data.find((d) => d.id === idParam);
+    const team = searchParams.get("team");
+    const year = searchParams.get("year");
+    if (!team || !year) return null;
+    return {
+      name: found?.name ?? "선수 정보 없음",
+      team,
+      year,
+      pos: searchParams.get("pos"),
+      subPos: searchParams.get("subPos") || null,
+      subTarget: searchParams.get("subTarget") === "1",
+    };
+  }, [idParam, targetList.data, searchParams]);
+
+  const m = useMileage();
+  const { view, hero, grid, examples, heatmap } = m;
+
+  // 배너 × — 목표를 기본값으로 되돌린다. 이 화면의 "목표" 셀렉트엔 "미정" 항목이 없어(항상
+  // 구체적 구단/연도가 있어야 함) 핸드오프의 "미정으로 리셋"을 기본 목표(두산 2008)로 갈음한다.
+  const dismissBanner = () => {
+    setSearchParams((prev) => {
+      const p = new URLSearchParams(prev);
+      p.delete("id");
+      p.delete("team");
+      p.delete("year");
+      p.delete("pos");
+      p.delete("subPos");
+      p.delete("subTarget");
+      p.set("tab", "calc");
+      return p;
+    });
+    const def = defaultGoal();
+    m.changeGoalTeam(def.goalT);
+    m.changeGoalYear(def.goalY);
+    m.setPosition("1B");
+  };
+
+  const theadRef = useRef(null);
+  const rowH = useMileageRowHeight(view === "table", theadRef);
+
+  const tabBar = (
+    <div className={styles.tabBar} role="tablist" aria-label="마일리지 저격">
+      <button
+        type="button"
+        className={styles.tab}
+        role="tab"
+        aria-selected={tab === "calc"}
+        onClick={() => switchTab("calc")}
+      >
+        저격 시뮬레이션
+      </button>
+      <button
+        type="button"
+        className={styles.tab}
+        role="tab"
+        aria-selected={tab === "list"}
+        onClick={() => switchTab("list")}
+      >
+        저격 선수 리스트 <span className={styles.tabCount}>{targetList.total}</span>
+      </button>
+    </div>
+  );
+
+  if (tab === "list") {
+    return (
+      <div className={styles.screen}>
+        <GuideAccordion guide={GUIDES_BY_SLUG["mileage-sniping"]} />
+        {tabBar}
+        <TargetListTab
+          rows={targetList.rows}
+          total={targetList.total}
+          loading={targetList.loading}
+          loaded={targetList.loaded}
+          error={targetList.error}
+          retry={targetList.retry}
+          query={targetList.query}
+          setQuery={targetList.setQuery}
+          mode={targetList.mode}
+          changeMode={targetList.changeMode}
+          pos={targetList.pos}
+          selectPos={targetList.selectPos}
+          availablePositions={targetList.availablePositions}
+          sortKey={targetList.sortKey}
+          dir={targetList.dir}
+          toggleSort={targetList.toggleSort}
+          reverseDir={targetList.reverseDir}
+          highlightId={idParam}
+          onSelectRow={selectTargetFromList}
+        />
+      </div>
+    );
+  }
+
+  // 표 화면은 전체화면형 서브뷰라 탭 바를 숨긴다(design-spec §1 권고 — 이미 자체 닫기(✕) 버튼이 있다)
+  if (view === "table") {
+    return (
+      <div className={styles.screen}>
+        <section className={styles.board}>
+          <div className={styles.boardTop}>
+            <b>구단 × 연도</b>
+            <i className={styles.boardSub}>{`${TEAMS[m.goalT].n} ${YEARS[m.goalY]} 로 가는 길`}</i>
+            <button
+              type="button"
+              className={styles.chipClose}
+              aria-label="돌아가기"
+              onClick={m.closeTable}
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className={styles.tableControls}>
+            <button
+              type="button"
+              className={`${styles.toggleBtn} ${heatmap ? styles.toggleOn : ""}`}
+              aria-pressed={heatmap}
+              onClick={m.toggleHeatmap}
+            >
+              히트맵 {heatmap ? "켬" : "끔"}
+            </button>
+            <button
+              type="button"
+              className={styles.toggleBtn}
+              aria-pressed={m.arrowStyle === "화살표"}
+              onClick={m.toggleArrowStyle}
+            >
+              표시 {m.arrowStyle}
+            </button>
+          </div>
+
+          <div className={styles.gridScroll} style={{ "--rh": `${rowH}px` }}>
+            <table className={styles.table}>
+              <colgroup>
+                <col className={styles.ycol} />
+                <col span={T} />
+              </colgroup>
+              <thead ref={theadRef}>
+                <tr>
+                  <th />
+                  {TEAMS.map((t) => (
+                    <th key={t.c}>{t.n}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {grid?.rows.map((row) => (
+                  <tr key={row.year}>
+                    <th className={styles.yearHead}>{row.year}</th>
+                    {row.cells.map((cell) => (
+                      <td
+                        key={cell.t}
+                        className={cellClass(cell, styles)}
+                        style={
+                          cell.heatAlpha != null
+                            ? { background: `rgba(var(--color-mileage-heat-rgb), ${cell.heatAlpha.toFixed(3)})` }
+                            : undefined
+                        }
+                        title={cell.title}
+                        onClick={cell.kind !== "void" ? () => m.selectCell(cell.t, row.y) : undefined}
+                      >
+                        {cell.glyph}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className={styles.legend}>
+            <span>
+              <i>{m.arrowGlyphs.team}</i>구단 돌리기
+            </span>
+            <span>
+              <i>{m.arrowGlyphs.year}</i>연도 돌리기
+            </span>
+            <span>
+              <i className={styles.legendGoal}>●</i>목표
+            </span>
+            <span>
+              <i className={styles.legendHere}>▢</i>지금 위치
+            </span>
+          </div>
+        </section>
+        <p className={styles.caption}>
+          칸을 누르면 그 자리를 지금 위치로 놓고 다음 한 수를 다시 계산합니다.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.screen}>
+      <GuideAccordion guide={GUIDES_BY_SLUG["mileage-sniping"]} />
+      {tabBar}
+
+      {/* 리스트 탭에서 넘어온 경우에만 노출(핸드오프 §2) */}
+      {banner && (
+        <div className={styles.selectBanner}>
+          <span className={styles.selectBannerLabel}>리스트에서 선택</span>
+          <span className={styles.selectBannerBody}>
+            {banner.name}{" "}
+            <span>
+              {`${banner.team} ${banner.year}${banner.pos ? ` · ${formatPosition(banner.pos, banner.subPos)}` : ""}`}
+              {banner.subTarget && ` · 부포지션 저격`}
+            </span>
+          </span>
+          <button
+            type="button"
+            className={styles.selectBannerClose}
+            aria-label="선택 해제"
+            onClick={dismissBanner}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      <p className={styles.lead}>
+        저격할 재료의 구단 × 연도를 입력하면, 어떤 걸 먼저 작업해야 할지 알려드립니다.
+      </p>
+
+      <details className={styles.note}>
+        <summary>처음이신가요? 읽어보세요</summary>
+        <div className={styles.noteBody}>
+          <p>
+            <b>왜 포지션부터 뽑나요</b>
+            <br />
+            레전드 재료를 저격할 때는, 그 구단·연도에 해당 포지션 선수가 딱 한 명뿐인 칸을
+            노립니다. 포지션을 먼저 정해두면 구단과 연도가 맞는 순간 원하는 선수가 그대로
+            확정됩니다. 그래서 순서가 <b>포지션 → 구단·연도</b>입니다.
+          </p>
+          <p>
+            <b>DH·CP는 쓰지 마세요</b>
+            <br />
+            연도덱에 따라 아직 들어가지 않은 포지션이 있습니다. DH나 CP처럼 비어 있는 포지션을
+            먼저 골라두면 결과가 어긋나니, 이 경우에는 이 도구를 쓰지 않는 편이 낫습니다.
+          </p>
+          <p>
+            <b>화살표가 무슨 뜻인가요</b>
+            <br />↔ 는 구단을 돌리라는 뜻, ↕ 는 연도를 돌리라는 뜻입니다. 지금 위치에서 목표
+            카드까지 더 빨리 갈 수 있는 쪽을 알아서 골라줍니다.
+          </p>
+          <p>
+            <b>왜 그쪽이 더 나은가요</b>
+            <br />
+            구단 뽑기는 200, 연도 뽑기는 400입니다. 둘 다 후보 {examples.shown}개가 뜨고 그중
+            하나를 고르는 방식이라, 후보가 적을수록 원하는 게 낄 확률이 높습니다. {examples.ex1}
+          </p>
+          <p>
+            <b>구단을 바꿨더니 연도가 사라져요</b>
+            <br />
+            둘은 서로 묶여 있습니다. {examples.ex2} 게임에 없는 조합이라 아예 목록에서 뺐습니다.
+          </p>
+          <p>
+            <b>초기화는 왜 추천에 없나요</b>
+            <br />
+            초기화하려면 선수를 먼저 뽑아야 하고 거기에 1,600이 듭니다. 모든 목표를 하나씩 다
+            확인해봤는데, 처음부터 다시 하는 쪽이 이득인 경우가 한 번도 없었습니다.
+          </p>
+          <p>
+            <b>예전 저격표와 다른데요</b>
+            <br />
+            2021년에 나온 표는 후보를 고르지 못하고 하나가 그냥 정해지던 시절 기준입니다. 지금은
+            7개 중 고를 수 있어서 훨씬 수월해졌고, 그래서 화살표 방향도 곳곳이 다릅니다. 구단별
+            연도는 {examples.span}까지 반영했습니다.
+          </p>
+          <p>
+            <b>앞으로 추가할 것</b>
+            <br />
+            이번 beta는 <b>구단 × 연도 표</b>를 보는 것까지입니다. 목표로 삼을 레전드 재료는 아직
+            직접 골라야 합니다. 어떤 재료를 저격할 수 있는지 한눈에 보려면 선수 백과사전이 먼저
+            나와야 해서, 그다음 단계로 마일리지 저격과 레전드 재료를 연결할 계획입니다.
+          </p>
+        </div>
+      </details>
+
+      <div className={styles.setup}>
+        <div className={styles.setupRow}>
+          <label className={styles.fld}>
+            <span>목표 구단</span>
+            <select
+              value={m.goalT}
+              onChange={(e) => m.changeGoalTeam(Number(e.target.value))}
+            >
+              {TEAMS.map((t, i) => (
+                <option key={t.c} value={i}>
+                  {t.n}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className={styles.fld}>
+            <span>목표 연도</span>
+            <select value={m.goalY} onChange={(e) => m.changeGoalYear(Number(e.target.value))}>
+              {m.goalYearOptions.map((yi) => (
+                <option key={yi} value={yi}>
+                  {YEARS[yi]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className={styles.fld}>
+            <span>
+              포지션<em className={styles.tag}>데이터 연결 전</em>
+            </span>
+            <select value={m.position} onChange={(e) => m.setPosition(e.target.value)}>
+              {m.positions.map((p) => (
+                <option key={p}>{p}</option>
+              ))}
+            </select>
+          </label>
+        </div>
+
+        <div className={styles.setupRow}>
+          <label className={styles.fld}>
+            <span>지금 구단</span>
+            <select
+              value={m.curT}
+              onChange={(e) => m.changeCurrentTeam(Number(e.target.value))}
+            >
+              <option value={T}>미정</option>
+              {m.currentTeamOptions.map((ti) => (
+                <option key={ti} value={ti}>
+                  {TEAMS[ti].n}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label className={styles.fld}>
+            <span>지금 연도</span>
+            <select
+              value={m.curY}
+              onChange={(e) => m.changeCurrentYear(Number(e.target.value))}
+            >
+              <option value={Y}>미정</option>
+              {m.currentYearOptions.map((yi) => (
+                <option key={yi} value={yi}>
+                  {YEARS[yi]}
+                </option>
+              ))}
+            </select>
+          </label>
+          <button type="button" className={styles.mini} onClick={m.clearCurrent}>
+            둘 다 미정
+          </button>
+        </div>
+      </div>
+
+      <div className={styles.board}>
+        <div className={styles.boardTop}>
+          <b>{`${TEAMS[m.goalT].n} ${YEARS[m.goalY]}`}</b>
+          <i>
+            {m.curT < T || m.curY < Y
+              ? `지금 ${teamName(m.curT)} ${yearName(m.curY)}`
+              : "아직 아무것도 안 뽑은 상태"}
+          </i>
+        </div>
+
+        <div className={`${styles.hero} ${hero.arrived ? styles.heroDone : ""}`}>
+          <div className={styles.glyph}>{hero.glyph}</div>
+          <div className={styles.verb}>{hero.verb}</div>
+          <p className={styles.why}>{hero.why}</p>
+        </div>
+
+        {!hero.arrived && (
+          <div className={styles.picks}>
+            <h3>
+              {hero.scope} {hero.total}개 중 {hero.shownCount}개가 뜹니다 · <b>이 순서로</b> 고르세요
+            </h3>
+            <div className={styles.pkrow}>
+              {hero.picks.map((o) => (
+                <span key={`${o.rank}-${o.name}`} className={pickClass(o, styles)}>
+                  <i>{o.rank}</i>
+                  {o.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className={styles.actions}>
+        <button type="button" className={styles.primary} onClick={m.openTable}>
+          구단 × 연도 표 보기
+        </button>
+        <button type="button" onClick={m.reroll}>
+          지금 위치 무작위로
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default MileageScreen;

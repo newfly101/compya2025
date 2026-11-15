@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchGetSniperTargets } from "@/domains/mileage/store/public/api.js";
 
-// 마일리지 저격 재료 카드 — 응답 그대로. 레전드 평점표가 cardId 로 직접 대조해 쓴다.
-// TODO(next-migration): 마일리지 화면 이전 시 이 파일을 확장한다 (지금은 평점표 배지용 조회만)
-export const useSniperTargetsQuery = () =>
+// 마일리지 저격 재료 카드 — 응답 그대로. 레전드 평점표가 cardId 로 직접 대조해 쓰고, 저격 리스트 탭이 화면 모델로 바꾼다.
+// initialData: 서버 컴포넌트가 이미 받은 값(선택).
+export const useSniperTargetsQuery = (initialData) =>
   useQuery({
     queryKey: ["mileage", "sniperTargets"],
     queryFn: async () => (await fetchGetSniperTargets()) ?? [],
+    initialData,
     staleTime: 30 * 60 * 1000,
   });
