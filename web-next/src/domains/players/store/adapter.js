@@ -1,13 +1,7 @@
 // 서버 응답(player-cards API) → 화면(PlayerEncyclopediaScreen, 1단계 config/playersLoader.js)
 // 이 기대하는 카드 형태로 변환한다. 화면은 4단계에서 이 어댑터를 거친 데이터를 받는다.
 
-// 원본은 mileage 도메인 TEAMS_RAW 를 import — mileage 이전 전이라 이 도메인에 코드→표시명만 둔다.
-// TODO(next-migration): mileage 이전 후 TEAMS_RAW 재사용으로 합칠지 검토
-const TEAMS_RAW = [
-  ["DOO", "두산"], ["SAM", "삼성"], ["HAN", "한화"], ["LOT", "롯데"], ["KIA", "KIA"], ["KIW", "키움"], ["SSG", "SSG"],
-  ["LG", "LG"], ["NC", "NC"], ["KT", "KT"], ["OB", "OB"], ["MBC", "MBC"], ["BIN", "빙그레"], ["SUP", "삼미"],
-  ["HAE", "해태"], ["HYU", "현대"], ["SSA", "쌍방울"], ["CHU", "청보"], ["PAC", "태평양"], ["SK", "SK"],
-].map(([code, name]) => ({ code, name }));
+import { TEAMS_RAW } from "@/domains/mileage/config/mileage.js";
 
 // 구단 코드 → 표시명. mileage 도메인의 원본 매핑을 재사용한다(중복 정의 금지).
 // 단, KT 는 mileage 표에서만 "KT"(대문자)로 쓰고, 선수 백과사전은 design_handoff

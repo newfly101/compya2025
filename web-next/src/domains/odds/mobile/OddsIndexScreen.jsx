@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { DEFAULT_ODDS_DOC } from "@/data/odds/index.js";
-import { oddsSectionPath } from "@/domains/odds/config/oddsPaths.js";
+import { oddsSectionPath } from "@/config/routePath.js";
 import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
 import { GUIDES_BY_SLUG } from "@/domains/guides/content/index.js";
 import styles from "./OddsIndexScreen.module.scss";

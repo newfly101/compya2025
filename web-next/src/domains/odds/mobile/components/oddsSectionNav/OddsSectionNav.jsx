@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { oddsSectionPath } from "@/domains/odds/config/oddsPaths.js";
+import { oddsSectionPath } from "@/config/routePath.js";
 import styles from "./OddsSectionNav.module.scss";
 
 // 섹션 간 이전/다음 이동 — 24개 항목을 매번 목차로 왕복하는 것을 방지

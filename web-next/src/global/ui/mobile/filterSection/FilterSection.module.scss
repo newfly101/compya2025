@@ -71,6 +71,10 @@
     grid-template-rows: 1fr;
     visibility: visible;
   }
+
+  &[data-instant] {
+    transition: none;
+  }
 }
 
 .inner {

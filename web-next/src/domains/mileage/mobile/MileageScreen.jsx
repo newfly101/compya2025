@@ -10,7 +10,7 @@
 import { useMemo, useRef } from "react";
 import { useQueryParams } from "./hooks/useQueryParams.js";
 import { T, TEAMS, Y, YEARS, defaultGoal, teamName, yearName } from "@/domains/mileage/config/mileage.js";
-import { formatPosition } from "@/domains/mileage/config/position.js";
+import { formatPosition } from "@/domains/players/config/position.js";
 import { useMileage } from "./hooks/useMileage";
 import { useMileageRowHeight } from "./hooks/useMileageRowHeight";
 import { useMileageTargetList } from "./hooks/useMileageTargetList";

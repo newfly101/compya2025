@@ -28,6 +28,7 @@ export const ROUTE_PATHS = {
   guides: "/guides",
 };
 
+export const oddsSectionPath = (id) => `/probability/${id}`;
 export const NOTICE_LIST_PATH = "/notices";
 export const noticeDetailPath = (notice) => `/notice/${noticeTitleToSlug(notice?.title, notice?.id)}`;
 export const EVENT_LIST_PATH = "/events";

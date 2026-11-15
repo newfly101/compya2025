@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import PageShell from "@/layout/PageShell.jsx";
 import OddsSectionScreen from "@/domains/odds/mobile/OddsSectionScreen.jsx";
 import { DEFAULT_ODDS_DOC, findOddsSection } from "@/data/odds/index.js";
-import { oddsSectionPath } from "@/domains/odds/config/oddsPaths.js";
+import { oddsSectionPath } from "@/config/routePath.js";
 import { buildMetadata } from "@/config/seo.js";
 
 export const dynamicParams = false; // 목록 밖 sectionId 는 404

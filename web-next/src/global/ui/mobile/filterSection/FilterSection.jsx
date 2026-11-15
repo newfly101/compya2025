@@ -1,4 +1,5 @@
-import { useId, useState } from "react";
+"use client";
+import { useEffect, useId, useState } from "react";
 import SearchInput from "@/global/ui/mobile/searchInput/SearchInput.jsx";
 import styles from "./FilterSection.module.scss";
 
@@ -19,7 +20,18 @@ const read = (key, fallback) => {
  */
 const FilterSection = ({ title = "필터", summary, count = 0, storageKey, defaultOpen = false, search, searchActions, collapsible = true, children }) => {
   const id = useId();
-  const [open, setOpen] = useState(() => (storageKey ? read(storageKey, defaultOpen) : defaultOpen));
+  const [open, setOpen] = useState(defaultOpen);
+  const [hydrated, setHydrated] = useState(false);
+
+  // SSR 과 첫 렌더를 같게 두고, 마운트 후에 저장값을 반영한다 (hydration 불일치 방지). 첫 반영은 전환 없이.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- hydration 후 외부(localStorage) 값 동기화
+    if (storageKey) setOpen(read(storageKey, defaultOpen));
+  }, [storageKey, defaultOpen]);
+  useEffect(() => {
+    const raf = requestAnimationFrame(() => setHydrated(true)); // 저장값이 먼저 칠해진 다음 프레임부터 전환 허용
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   const toggle = () => {
     const next = !open;
@@ -56,7 +68,7 @@ const FilterSection = ({ title = "필터", summary, count = 0, storageKey, defau
         {!open && line && <span className={styles.summary}>{line}</span>}
         <span className={styles.chevron} aria-hidden="true" />
       </button>
-      <div id={id} className={styles.body} data-open={open || undefined} inert={!open}>
+      <div id={id} className={styles.body} data-open={open || undefined} data-instant={!hydrated || undefined} inert={!open}>
         <div className={styles.inner}>{children}</div>
       </div>
         </>

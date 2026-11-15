@@ -1,5 +1,5 @@
 "use client";
-import MountedFilterSection from "./components/mountedFilterSection/MountedFilterSection.jsx";
+import FilterSection from "@/global/ui/mobile/filterSection/FilterSection.jsx";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ALL,
@@ -446,9 +446,9 @@ const HistoryLegendScreen = ({ initial }) => {
           </button>
         </div>
 
-        <MountedFilterSection storageKey="historyLegend.filterOpen" count={applied.length} summary={applied.join(" · ")}>
+        <FilterSection storageKey="historyLegend.filterOpen" count={applied.length} summary={applied.join(" · ")}>
           {renderFilters()}
-        </MountedFilterSection>
+        </FilterSection>
 
         <div className={styles.meta}>
           <span>
