@@ -30,6 +30,14 @@ const Drawer = () => {
     useLayoutStore.persist.rehydrate();
   }, []);
 
+  // Esc 로 닫기(접근성)
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e) => e.key === "Escape" && close();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [isOpen, close]);
+
   // 로그인 필요(loginRequired) 메뉴를 비로그인이 누르면 이동을 막고 안내 모달을 띄운다. 서랍도 함께 닫는다.
   const getClickHandler = (item) => {
     if (item.loginRequired && !isAuthenticated) {
