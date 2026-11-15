@@ -1,0 +1,124 @@
+/* 관리자 이용자 탭의 게이미피케이션 부품 두 개(칭호 섹션 · 얼리어답터 패널) 공용 */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.label {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-1;
+}
+
+.muted {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.manualRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.manualName {
+  @include text-body;
+  color: var(--color-text-primary);
+}
+
+.btn {
+  min-width: 64px;
+  height: $control-height-md;
+  padding: 0 $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  @include text-caption;
+  font-weight: $font-weight-medium;
+  white-space: nowrap;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btnDanger {
+  border-color: var(--color-danger);
+  color: var(--color-danger);
+}
+
+.btnPrimary {
+  width: 100%;
+  height: $control-height-md;
+  border: 1px solid var(--color-brand-dark);
+  border-radius: $radius-md;
+  background: var(--color-brand-alpha-15);
+  color: var(--color-brand);
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.okText {
+  @include text-caption;
+  color: var(--color-success);
+  margin: 0;
+}
+
+.errorText {
+  @include text-caption;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+/* 얼리어답터 패널 */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+  padding: $space-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+}
+
+.panelHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+}
+
+.panelTitle {
+  @include text-body-bold;
+  color: var(--color-text-primary);
+}
+
+.resultBox {
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+.resultLine {
+  @include text-body;
+  color: var(--color-text-primary);
+  margin: 0;
+  word-break: break-all;
+}
