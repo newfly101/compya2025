@@ -1,0 +1,487 @@
+// design_handoff 는 좌우 12px 고정(반응형 16→12 아님) — h-pad 믹스인 대신 $layout-h-pad-sm 을 직접 쓴다.
+.screen {
+  @include flex-col;
+  width: 100%;
+  min-height: 100dvh;
+  background-color: var(--color-bg-deepest);
+  // 리스트형 표는 안에서만 좌우 스크롤돼야 한다 — 계산이 어긋나도 페이지 자체는 안 밀리게 방어.
+  overflow-x: hidden;
+}
+
+// ── 검색 + 필터 ──────────────────────────────────────────────
+.searchFilterRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: $space-2;
+  padding: $space-3 $layout-h-pad-sm 0;
+}
+
+.searchBox {
+  height: $control-height-md;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  padding: 0 $space-3;
+  background-color: var(--color-bg-overlay);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+}
+
+.searchIcon {
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  color: var(--color-text-primary);
+  @include text-body;
+  font-size: $font-size-15;
+
+  &::placeholder {
+    color: var(--color-text-muted);
+  }
+}
+
+.clearBtn {
+  @include reset-button;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filterBtn {
+  @include reset-button;
+  height: $control-height-md;
+  min-width: 72px;
+  padding: 0 $space-4;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  @include text-body-bold;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+}
+
+.filterBtnActive {
+  border-color: var(--color-brand-violet);
+  background-color: var(--color-brand-violet);
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
+}
+
+// 브랜드 버튼 위에 얹는 흰 원형 카운터 배지 — 배경 자체가 항상 흰색(테마 무관)
+.filterBadge {
+  min-width: 14px;
+  height: 14px;
+  padding: 0 $space-1;
+  border-radius: 7px;
+  background-color: #fff;
+  color: var(--color-brand);
+  font-size: $font-size-9;
+  font-weight: $font-weight-bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── 구단 / 연도 ─────────────────────────────────────────────
+.selectRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-2;
+  padding: $space-2 $layout-h-pad-sm 0;
+  transition: opacity 0.15s ease;
+}
+
+.select {
+  width: 100%;
+  height: $control-height-md;
+  padding: 0 $space-4 0 $space-3;
+  background-color: var(--color-bg-overlay);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  color: var(--color-text-primary);
+  @include text-body-bold;
+  font-size: $font-size-15;
+  appearance: none;
+  // 우측 ▾ — 이미지 없이 그라디언트 대신 배경 SVG 로 그리면 색 하드코딩이 늘어나 배경 텍스트로 대체
+}
+
+// ── 탭 + 보기 전환 ───────────────────────────────────────────
+.tabToggleRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: $space-2;
+  padding: $space-2 $layout-h-pad-sm 0;
+}
+
+.tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-1;
+}
+
+.tab {
+  @include reset-button;
+  height: $control-height-md;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  line-height: 1.1;
+
+  &:disabled {
+    color: var(--color-text-placeholder);
+    cursor: not-allowed;
+  }
+}
+
+.tabActive {
+  background-color: var(--color-brand-tint);
+  border-color: var(--color-brand);
+  color: var(--color-text-primary);
+}
+
+.tabCount {
+  font-size: $font-size-10;
+  opacity: 0.7;
+}
+
+.viewToggle {
+  height: $control-height-md;
+  display: flex;
+  padding: $space-1;
+  gap: 2px;
+  background-color: var(--color-bg-overlay);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+}
+
+.viewGrid {
+  @include reset-button;
+  width: 36px;
+  border-radius: $radius-md;
+  background: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  padding: $space-2 $space-2;
+  cursor: pointer;
+
+  span {
+    background-color: var(--color-text-muted);
+    border-radius: 1px;
+  }
+}
+
+.viewList {
+  @include reset-button;
+  width: 36px;
+  border-radius: $radius-md;
+  background: none;
+  display: grid;
+  grid-auto-rows: 2px;
+  gap: $space-1;
+  padding: $space-3 $space-2;
+  align-content: center;
+  cursor: pointer;
+
+  span {
+    background-color: var(--color-text-muted);
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+// 카드형·리스트형 공통 — 현재 선택된 쪽만 보라 배경 + 흰 아이콘
+.viewActive {
+  background-color: var(--color-brand-violet); // 인접 버튼류(filterBtnActive 등)와 채움 통일
+
+  span {
+    background-color: #fff;
+  }
+}
+
+// ── 재료만 / 최고 등급 ───────────────────────────────────────
+.toggleRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-2;
+  padding: $space-2 $layout-h-pad-sm $space-3;
+}
+
+.toggleBtn {
+  @include reset-button;
+  height: $control-height-sm;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  @include text-body-bold;
+  font-size: $font-size-13;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $space-2;
+}
+
+.toggleBtnMaterial {
+  background-color: var(--color-brand-tint);
+  border-color: var(--color-brand);
+  color: var(--color-text-primary);
+}
+
+.toggleBtnGold {
+  background-color: var(--color-pe-gold-tint-bg);
+  border-color: var(--color-pe-gold);
+  color: var(--color-pe-gold);
+}
+
+.checkbox {
+  width: 14px;
+  height: 14px;
+  border-radius: $radius-xs;
+  border: 1.5px solid currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-9;
+  line-height: 1;
+}
+
+// ── 레전드 재료 / 등급 범례 행 ───────────────────────────────
+.legendRow {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+  padding: 0 $layout-h-pad-sm $space-2;
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+}
+
+.lMarkSmall {
+  width: 14px;
+  height: 14px;
+  border-radius: $radius-xs;
+  background-color: var(--color-brand-violet);
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
+  font-size: $font-size-9;
+  font-weight: $font-weight-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gradeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: $radius-xs;
+}
+
+.legendRight {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+
+  b {
+    color: var(--color-text-primary);
+    font-weight: $font-weight-bold;
+  }
+}
+
+// 표 도움말 필 — 진입 전 「? 도움말」(helpPill, 보라)과 헷갈리지 않게 무채색으로 뺀다.
+.tableHelpPill {
+  @include reset-button;
+  height: 24px;
+  padding: 0 $space-2 0 $space-1;
+  border-radius: $radius-full;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  font-size: $font-size-11;
+  font-weight: $font-weight-bold;
+  display: flex;
+  align-items: center;
+  gap: $space-1;
+  white-space: nowrap;
+}
+
+.tableHelpMark {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--color-border-strong);
+  color: var(--color-text-primary);
+  font-size: $font-size-10;
+  font-weight: $font-weight-bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// ── 카드 그리드 — 고정 5열 (11,672장까지 다뤄 useMemo/memo 로 재계산 최소화) ──
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: $space-2;
+  padding: 0 $layout-h-pad-sm $space-6;
+}
+
+// in-feed 광고 — 그리드 세그먼트 사이에 끼우는 전체 폭 자리(좌우 여백만 그리드와 맞춘다)
+.feedAd {
+  padding: 0 $layout-h-pad-sm;
+}
+
+// ── 로딩 스켈레톤 — design_handoff README: 5×2 카드, radius 4 ────
+.skeletonGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: $space-2;
+  padding: 0 $layout-h-pad-sm $space-6;
+}
+
+.skeletonCard {
+  aspect-ratio: 2 / 3;
+  border-radius: 4px;
+  background-color: var(--color-pe-skeleton);
+  animation: pe-skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pe-skeleton-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+// ── 리스트형(스탯 표) ────────────────────────────────────────
+.listWrap {
+  @include flex-col($space-2);
+  padding: 0 $layout-h-pad-sm $space-6;
+  min-width: 0; // 자식(표)이 부모 폭을 넘지 않게 — 페이지 가로 스크롤 방지
+}
+
+// 투수 리스트형 상단 행 — 좌: 스탯/구종 세그먼트, 우: 정렬 배지(정렬 중일 때만)
+.listTopRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+  min-width: 0;
+}
+
+.segment {
+  align-self: flex-start;
+  display: flex;
+  padding: $space-1;
+  gap: 2px;
+  background-color: var(--color-bg-overlay);
+  border: 1px solid var(--color-border-strong);
+  border-radius: $radius-lg;
+  flex-shrink: 0;
+}
+
+.segmentBtn {
+  @include reset-button;
+  height: 30px;
+  padding: 0 $space-4;
+  border-radius: $radius-md;
+  background: none;
+  color: var(--color-text-secondary);
+  font-size: $font-size-12;
+  font-weight: $font-weight-bold;
+  white-space: nowrap;
+}
+
+.segmentBtnActive {
+  background-color: var(--color-brand-violet);
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
+}
+
+// 능력치·합 열로 정렬 중일 때만 뜨는 배지 — "해제" 로 기본 정렬로 되돌린다.
+// 세그먼트(스탯/구종 등급)가 없는 타자 탭에서도 단독으로 뜰 수 있어 margin-left:auto 로 우측 고정.
+.sortBadge {
+  display: flex;
+  align-items: center;
+  gap: $space-2;
+  height: 30px;
+  padding: 0 $space-2;
+  border-radius: $radius-md;
+  background-color: var(--color-brand-tint);
+  border: 1px solid var(--color-brand);
+  min-width: 0;
+  margin-left: auto;
+}
+
+.sortBadgeText {
+  @include text-ellipsis;
+  font-size: $font-size-11;
+  color: var(--color-text-secondary);
+
+  b {
+    color: var(--color-text-primary);
+  }
+}
+
+.sortBadgeClear {
+  @include reset-button;
+  flex-shrink: 0;
+  height: 20px; // 고정 높이 — border 대신 outline 으로 경계 (border-box 라 border 는 내용 영역을 줄인다)
+  padding: 0 $space-2;
+  border-radius: $radius-sm;
+  background-color: var(--color-brand-violet);
+  outline: 1px solid var(--color-brand); // sortBadge(tint) 컨테이너와의 경계 대비 확보 — 다크 2.89:1 미달 보완, 라이트 5.29:1 여유
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
+  font-size: $font-size-10;
+  font-weight: $font-weight-bold;
+  white-space: nowrap;
+}
+
+// ── 빈 상태 ──────────────────────────────────────────────────
+.emptyWrap {
+  @include flex-col($space-3, center, center);
+  padding: $space-12 $space-6;
+  color: var(--color-text-muted);
+  @include text-body;
+  text-align: center;
+}
+
+.resetAllBtn {
+  @include reset-button;
+  @include pressable;
+  height: $control-height-sm;
+  padding: 0 $space-4;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  background-color: var(--color-bg-overlay);
+  color: var(--color-text-secondary);
+  @include text-body-bold;
+}

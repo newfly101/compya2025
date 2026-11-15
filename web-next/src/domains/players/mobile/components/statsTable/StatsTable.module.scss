@@ -1,0 +1,141 @@
+// 바깥 틀은 legendStats 와 같은 data-table-box 를 쓴다 — 카드처럼 사방 테두리+radius+배경을
+// 주지 않고, 위쪽 구분선 하나만 긋고 화면 배경(--color-bg-deepest)에 그대로 붙인다.
+// 다만 이 표는 좌우 두 패널을 grid 로 나눠 각자 폭 계산으로 스크롤 없이 담는 구조라
+// mixin 의 overflow-x:auto(표 전체 가로 스크롤)는 그대로 쓰지 않고 hidden 으로 덮는다
+// — 가로 스크롤이 필요한 399px 이하 구간은 .leftPanel 이 개별로 처리한다.
+// 정렬 중 열 강조·활성 텍스트는 이미 화면 다른 곳에서 쓰는 --color-brand-tint 를 재사용한다.
+//
+// 왼쪽(auto)이 자기 내용 폭만큼만 차지하고, 남는 폭은 전부 오른쪽(1fr) 능력치 패널로
+// 간다 — 이 표는 능력치를 나란히 놓고 비교하는 게 목적이라, 화면이 넓어질수록(또는 이름이
+// 짧을수록) 이름이 아니라 숫자 열이 커져야 읽기 편하다.
+.wrap {
+  @include data-table-box;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+// 기본(400px~): 좌우 스크롤 없이 폭 계산으로 한 화면에 다 담는다. 구종 표는 능력치 10열을
+// 25px(등급 1글자 "S/A/-" 라 25px 도 안 좁다)로 줄여 400px 도 커버(실측: StatsTable.jsx 주석 참고).
+// 그 아래(399px 이하)는 왼쪽 고정 열만으로도 폭이 모자라 이 구간만 좌우 스크롤로 방어한다.
+// ⚠️ 428px→400px, 27px→25px 는 코디네이터 지시로 재검토한 값 — 사용자가 직접 본 수치는 아니다.
+.leftPanel {
+  overflow: hidden;
+  border-right: 1px solid var(--color-border-strong);
+
+  @media (max-width: 399px) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.rightPanel {
+  overflow: hidden;
+  // grid item 기본 min-width 는 auto(=내용 최소폭) 라 1fr 트랙이 좁아져도 이 밑으로는
+  // 안 줄어든다("grid blowout") — 400px 처럼 빠듯한 화면에서 표가 화면 밖으로 밀려나
+  // 마지막 열이 통째로 잘려나가는 원인이었다. 0으로 되돌려야 트랙 폭 그대로 줄어든다.
+  min-width: 0;
+}
+
+// 표 뼈대(테두리색·머리행 배경/폰트·sticky 선언)는 legendStats 와 같은 data-table-skin 을 쓴다.
+// (헤더의 position:sticky 는 이 표에서는 무해하다 — .leftPanel/.rightPanel 이 자체
+// overflow:hidden 이라 sticky 의 기준 스크롤 상자가 되는데, 그 상자 자체는 내부적으로
+// 스크롤하지 않고 페이지와 함께 움직이므로 실제로 떠다니는 헤더가 되지 않는다.)
+.table {
+  @include data-table-skin(38px, 32px); // legendStats --ls-row-h/--ls-head-h 와 동일 값
+}
+
+// idx·구단·연도·포지션·OVR·이름 전부 colgroup 으로 px 고정(이름은 statsTable.js
+// computeNameColWidth() 계산값, 세그먼트 분할 여부와 무관하게 항상 동일 — StatsTable.jsx
+// 주석 참고). table-layout:fixed 에서 표의 width 를 auto 로 두면(100% 를 되돌림) 표 전체가
+// "고정 열 합" 딱 그만큼만 차지한다(shrink-to-fit). width:100% 그대로 두면 .wrap 의 auto
+// 트랙 안에서 오른쪽 1fr 트랙을 잡아먹어 왼쪽이 거의 전체 폭을 차지해버린다(아래 .rightTable 주석 참고).
+.leftTable {
+  table-layout: fixed;
+  width: auto;
+
+  @media (max-width: 399px) {
+    table-layout: auto;
+  }
+}
+
+// 오른쪽은 반대로 남는 폭을 다 받아야 하는 쪽이다. th 폭을 px 로 고정하면 table-layout:fixed
+// 표는 그 합보다 컨테이너가 넓어도 컬럼을 늘리지 않고(오른쪽에 빈 칸만 남고), 반대로
+// 컨테이너가 좁아지면 표가 오히려 컨테이너 밖으로 밀려나 마지막 열이 통째로 잘린다(둘 다 실측
+// 확인). % 로 주면 표 자체의 실제 폭(=rightPanel 이 준 만큼)에 비례해 나뉘어 두 문제가 다
+// 없다 — rightColWidth 는 statsTable.js buildTable() 에서 1/열개수 로 계산해 내려준다.
+.rightTable {
+  width: 100%;
+}
+
+// 머리행 뼈대(높이·배경·글자색/크기·border-bottom)는 위 .table 의 data-table-skin 이
+// `.table thead th` 로 이미 낸다 — 여기서는 그 값과 안 겹치는 것만 남긴다.
+// .th 는 값이 비어도 JSX 가 이 클래스를 항상 얹으므로 지우지 않는다(아래 .thActive/.thRight
+// 결합 선택자가 여기 기대는 특이도 상승분 때문).
+.th {
+  user-select: none;
+}
+
+.sortable {
+  @include data-table-sortable;
+}
+
+// ⚠️ 특이도 트릭 — mixin 이 내는 `.table thead th`(class 1 + tag 2)를 `.thActive` 단독
+// (class 1)으로는 못 이긴다. AdminTable(.cell.alignLeft)과 같은 방식으로 항상 같이 붙는
+// 기본 클래스(.th/.td)와 묶어 class 2개(0,2,0)로 특이도를 올려서 이긴다.
+.th.thActive {
+  background-color: var(--color-brand-tint);
+  color: var(--color-text-strong);
+}
+
+.th.thRight {
+  text-align: center;
+  padding: 0 2px;
+}
+
+.arrow {
+  @include data-table-sort-arrow;
+}
+
+// 뼈대(높이·padding·border-bottom·white-space·정렬)는 mixin 이 `.table td` 로 낸다.
+.td {
+  color: var(--color-text-primary);
+  font-weight: $font-weight-bold;
+}
+
+// 이름 열은 스크롤 없이 계산한 폭이라 아주 긴 이름은 빠듯할 수 있다 — 잘리면 말줄임표로.
+.td.tdName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.td.tdRight {
+  padding: 0 2px;
+  text-align: center;
+  font-weight: $font-weight-bold;
+  background-color: transparent;
+}
+
+.td.tdActive {
+  background-color: var(--color-brand-tint);
+}
+
+// 행 hover — legendStats .row:hover 값과 같은 톤(모양만 재사용, 구조는 좌우 분리 패널 그대로 유지)
+.row:hover .td:not(.tdActive) {
+  background-color: var(--color-pe-table-row-hover);
+}
+
+.lMark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  margin-left: $space-1;
+  border-radius: $radius-xs;
+  background-color: var(--color-brand-violet);
+  color: #fff; // 브랜드 바이올렛 고정색 배경 위 글자 — 테마 무관 (--color-brand 는 다크 대비 3.51:1 미달)
+  font-size: $font-size-9;
+  font-weight: $font-weight-bold;
+  line-height: 1;
+}
