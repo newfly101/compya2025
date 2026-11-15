@@ -4,7 +4,7 @@ import { API_INTERNAL_URL } from "@/config/env.js";
 // 실패(HTTP 오류·네트워크)는 null 이 아니라 예외를 던진다 → Next 가 직전 정상 캐시를 유지하고,
 // 최초라면 app/error.jsx 로 간다(안내 문구를 캐시하지 않기 위함).
 const getData = async (path) => {
-  const res = await fetch(`${API_INTERNAL_URL}${path}`, { next: { revalidate: 300 } });
+  const res = await fetch(`${API_INTERNAL_URL}${path}`, { next: { revalidate: 300, tags: ["notices"] } });
   if (!res.ok) throw new Error(`GET ${path} → HTTP ${res.status}`);
   return (await res.json()).data;
 };
