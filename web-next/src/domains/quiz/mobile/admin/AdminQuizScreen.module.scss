@@ -1,0 +1,168 @@
+// 셸(AdminShellScreen)의 탭 콘텐츠 영역 안에 들어간다 — 자체 480px 컨테이너/100dvh 를
+// 다시 만들지 않는다(page-layout 믹스인 미사용, 이중 컨테이너 방지). 바깥 480px·position:relative
+// (모달 기준 박스)는 셸의 루트가 이미 갖고 있다.
+.page {
+  padding: $space-4;
+  display: flex;
+  flex-direction: column;
+  gap: $space-2;
+}
+
+/* 일괄 삭제 부분 실패 안내 배너(이벤트 화면과 동일 패턴) */
+.bulkNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-2;
+  padding: $space-2 $space-3;
+  border: 1px solid var(--color-warning);
+  border-radius: $radius-md;
+  background: var(--color-warning-dim);
+  color: var(--color-warning);
+  @include text-caption;
+  font-weight: $font-weight-medium;
+
+  button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: $font-size-15;
+    line-height: 1;
+    cursor: pointer;
+    @include pressable;
+  }
+}
+
+/* 행 번호(#) — 우측 정렬, 보조색 */
+.idx {
+  color: var(--color-text-muted);
+  @include text-caption;
+  text-align: right;
+}
+
+/* 회차 셀 — 회차 + 이미지 파일명(쿠폰 표의 title+code 패턴과 동일) */
+.mainCell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.round {
+  color: var(--color-text-primary);
+  font-weight: $font-weight-semibold;
+  @include text-ellipsis;
+}
+
+.fileName {
+  color: var(--color-text-muted);
+  @include text-caption;
+  @include text-ellipsis;
+}
+
+/* 이미지 셀 — 48×30 썸네일(레전드 표 행 높이에 맞춰 축소) / 없으면 점선 박스 */
+.thumbnail {
+  width: 48px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: $radius-sm;
+  border: 1px solid var(--color-border);
+}
+
+.thumbnailEmpty {
+  width: 48px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--color-border);
+  border-radius: $radius-sm;
+  color: var(--color-text-muted);
+  @include text-caption;
+}
+
+/* 표 안 관리 버튼 — v2: 수정 1개만(삭제는 체크박스 일괄 삭제로 이동) */
+.actions {
+  display: flex;
+  justify-content: center;
+}
+
+.editBtn {
+  width: 100%;
+  height: 26px;
+  padding: 0 $space-1;
+  border: 1px solid var(--color-admin-accent-line);
+  border-radius: $radius-full;
+  background: transparent;
+  color: var(--color-admin-accent-active-text);
+  @include text-caption;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  @include pressable;
+}
+
+/* 등록/수정 폼 (AdminModal children) */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+
+.label {
+  @include admin-field-label;
+}
+
+.input {
+  @include admin-input;
+}
+
+.uploadPreview {
+  width: 64px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: $radius-md;
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.uploadError {
+  @include text-caption;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.submitError {
+  @include text-caption;
+  color: var(--color-danger);
+  margin: 0;
+}
+
+.formActions {
+  display: flex;
+  gap: $space-2;
+  margin-top: $space-2;
+}
+
+.cancelBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-md;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  @include text-body;
+  cursor: pointer;
+}
+
+.submitBtn {
+  flex: 1;
+  height: $control-height-md;
+  border: 1px solid var(--color-brand-dark);
+  border-radius: $radius-md;
+  background: var(--color-brand-alpha-15);
+  color: var(--color-brand);
+  @include text-body-bold;
+  cursor: pointer;
+  @include pressable;
+}

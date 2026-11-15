@@ -1,0 +1,41 @@
+import { API } from "@/infra/http/client.js";
+import { ADMIN_COUPONS } from "@/domains/coupons/store/admin/endpoints.js";
+
+/**
+ * COUPON API
+ */
+
+// BE 는 모든 응답을 { success, code, data } 로 감싼다. 실제 payload 는 data.data.
+export const fetchAdminCouponList = async () => {
+  const { data } = await API.get(`${ADMIN_COUPONS.GET_COUPONS}`);
+  return data.data;
+};
+export const fetchAdminInsertCoupon = async (coupon) => {
+  const { data } = await API.post(`${ADMIN_COUPONS.CREATE_COUPONS}`, coupon);
+  return data.data;
+};
+export const fetchAdminUpdateCoupon = async (id, coupon) => {
+  const { data } = await API.patch(`${ADMIN_COUPONS.UPDATE_COUPONS(id)}`, coupon);
+  return data.data;
+};
+export const fetchAdminUpdateVisible = async (id, visible) => {
+  const { data } = await API.patch(`${ADMIN_COUPONS.UPDATE_COUPON_VISIBLE(id)}`, { visible });
+  return data.data;
+};
+
+// 일괄 삭제·숨김 — BE 계약: DELETE .../bulk { ids: [] } / PATCH .../bulk/visible { ids: [], visible }.
+// 응답 payload 는 { successIds, failedIds } (BulkOperationResponse) — 부분 실패를 담고 있다.
+export const fetchAdminBulkDeleteCoupons = async (ids) => {
+  const { data } = await API.delete(`${ADMIN_COUPONS.BULK_DELETE_COUPONS}`, { data: { ids } });
+  return data.data;
+};
+export const fetchAdminBulkUpdateVisible = async (ids, visible) => {
+  const { data } = await API.patch(`${ADMIN_COUPONS.BULK_UPDATE_COUPON_VISIBLE}`, { ids, visible });
+  return data.data;
+};
+
+// 캐시 동기화 — 서버 캐시를 비운 뒤 DB 최신 상태로 다시 읽어온 전체 목록을 응답한다.
+export const fetchAdminRefreshCoupons = async () => {
+  const { data } = await API.post(`${ADMIN_COUPONS.REFRESH_COUPONS}`);
+  return data.data;
+};
