@@ -1,0 +1,18 @@
+.eventListScroll {
+  @include scroll-row($space-3, $layout-h-pad);
+
+  & > * {
+    flex-shrink: 0;
+    width: rem(160);                              // 160px → 10rem
+    --thumb-height: #{rem(72)};                   // 72px → 4.5rem (CSS-var 보존)
+  }
+}
+
+.eventList {
+  @include flex-col($space-3);
+
+  & > * {
+    --thumb-height: #{rem(120)};                  // 120px → 7.5rem
+    --title-font-size: #{$font-size-15};
+  }
+}

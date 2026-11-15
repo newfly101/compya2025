@@ -1,0 +1,87 @@
+.screen {
+  @include flex-col;
+  width: 100%;
+  min-height: 100dvh;
+  background-color: var(--color-bg-deepest);
+}
+
+.banner {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.metaHeader {
+  @include flex-col($space-2);
+  @include h-pad;
+  padding-top: $space-5;
+  padding-bottom: $space-5;
+  background-color: var(--color-bg-overlay);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.title {
+  @include text-page-title;
+  @include hangul-safe;
+  color: var(--color-text-primary);
+
+  @include small-mobile {
+    font-size: $font-size-17;
+  }
+}
+
+.period {
+  @include text-caption;
+  color: var(--color-text-muted);
+}
+
+.remain {
+  margin-left: $space-2;
+  color: var(--color-brand-violet);
+  font-weight: $font-weight-semibold;
+}
+
+.content {
+  @include flex-col($space-4);
+  @include h-pad;
+  padding-top: $space-5;
+  padding-bottom: $space-5;
+  align-items: flex-start;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+
+  > * {
+    max-width: 100%;
+  }
+}
+
+.noBody {
+  @include text-body;
+  color: var(--color-text-secondary);
+}
+
+.source {
+  @include text-micro;
+  color: var(--color-text-muted);
+}
+
+.origin {
+  @include text-caption;
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem; // 탭 44px
+  padding: $space-2 $space-3;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-brand-violet);
+  text-decoration: none;
+}
+
+.backLink {
+  align-self: center;
+  margin: $space-2 0 $space-8;
+  padding: $space-3;
+  @include text-body;
+  color: var(--color-brand);
+  text-decoration: underline;
+}
