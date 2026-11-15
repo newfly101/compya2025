@@ -1,6 +1,7 @@
 import "@/styles/global.scss";
 import MobileLayout from "@/layout/MobileLayout.jsx";
 import { SITE_URL } from "@/config/env.js";
+import { DEFAULT_OG_IMAGE } from "@/config/seo.js";
 import GoogleAnalytics from "@/infra/analytics/GoogleAnalytics.jsx";
 import AppProvider from "@/providers/AppProvider.jsx";
 
@@ -22,7 +23,7 @@ export const metadata = {
     url: SITE_URL,
     title: "컴프야펀 | 컴투스 프로야구 정보 허브",
     description: "컴투스 프로야구 공식 공지·이벤트·공략을 한 곳에서 확인하세요.",
-    images: [{ url: "/compyafun2026.jpg", secureUrl: `${SITE_URL}/compyafun2026.jpg`, type: "image/jpeg", width: 1080, height: 300, alt: "컴프야펀 - 컴투스 프로야구 정보 허브" }],
+    images: [DEFAULT_OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",

@@ -4,6 +4,7 @@ import EventDetailScreen from "@/domains/events/mobile/EventDetailScreen.jsx";
 import { fetchEvents, fetchEventDetail } from "@/domains/events/api.js";
 import { eventDetailPath } from "@/config/routePath.js";
 import { stripHtml } from "@/global/ui/richContent/sanitizeHtml.js";
+import { buildMetadata } from "@/config/seo.js";
 
 export const revalidate = 300;
 export const dynamicParams = true; // 목록에 없던 이벤트는 첫 요청 때 생성(없으면 404)
@@ -23,10 +24,13 @@ export async function generateMetadata({ params }) {
   const event = await loadEvent((await params).id);
   if (!event) return {};
   return {
-    title: `이벤트 | ${event.title}`,
-    description: stripHtml(event.contentHtml).slice(0, 120) || undefined,
-    alternates: { canonical: eventDetailPath(event.id) },
-    openGraph: { type: "article", images: event.imageUrl ? [event.imageUrl] : undefined },
+    ...buildMetadata({
+      title: `이벤트 | ${event.title}`,
+      description: stripHtml(event.contentHtml).slice(0, 120) || undefined,
+      path: eventDetailPath(event.id),
+      images: event.imageUrl ? [{ url: event.imageUrl }] : undefined,
+      type: "article",
+    }),
   };
 }
 

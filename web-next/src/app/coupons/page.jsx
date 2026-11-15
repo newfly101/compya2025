@@ -4,12 +4,9 @@ import StateBox from "@/global/ui/mobile/stateBox/StateBox.jsx";
 import CouponListVertical from "@/domains/coupons/mobile/containers/public/CouponListVertical.jsx";
 import { fetchCoupons } from "@/domains/coupons/api.js";
 import { formatNow } from "@/global/utils/dateUtils.js";
+import { buildMetadata } from "@/config/seo.js";
 
-export const metadata = {
-  title: "쿠폰 모아보기",
-  description: "컴투스 프로야구 최신 쿠폰 코드와 종료된 쿠폰 이력을 모아보는 페이지입니다.",
-  alternates: { canonical: "/coupons" },
-};
+export const metadata = buildMetadata({ title: "쿠폰 모아보기", description: "컴투스 프로야구 최신 쿠폰 코드와 종료된 쿠폰 이력을 모아보는 페이지입니다.", path: "/coupons" });
 
 // TODO(next-migration): GuideAccordion(coupon-guide) · AdSlot(COUPONS_LIST) 미이전
 const renderSection = (list, isExpired, emptyMessage) =>

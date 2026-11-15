@@ -5,6 +5,7 @@ import { fetchNotices, fetchNoticeDetail } from "@/domains/notices/api.js";
 import { noticeTitleToSlug } from "@/domains/notices/mobile/noticeSlug.js";
 import { noticeDetailPath } from "@/config/routePath.js";
 import { stripHtml } from "@/global/ui/richContent/sanitizeHtml.js";
+import { buildMetadata } from "@/config/seo.js";
 
 export const revalidate = 300;
 export const dynamicParams = true; // 새 공지는 첫 요청 때 생성
@@ -46,10 +47,13 @@ export async function generateMetadata({ params }) {
   if (!notice) return {};
   const description = notice.summary || stripHtml(notice.content).slice(0, 120) || undefined;
   return {
-    title: `공지사항 | ${notice.title}`,
-    description,
-    alternates: { canonical: noticeDetailPath(notice) },
-    openGraph: { type: "article", images: notice.imageUrl ? [notice.imageUrl] : undefined },
+    ...buildMetadata({
+      title: `공지사항 | ${notice.title}`,
+      description,
+      path: noticeDetailPath(notice),
+      images: notice.imageUrl ? [{ url: notice.imageUrl }] : undefined,
+      type: "article",
+    }),
   };
 }
 
