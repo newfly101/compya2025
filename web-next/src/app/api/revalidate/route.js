@@ -1,6 +1,6 @@
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
-import { API_INTERNAL_URL } from "@/config/env.js";
+import { API_INTERNAL_URL, SITE_URL } from "@/config/env.js";
 import { REVALIDATE_TAGS } from "@/infra/http/revalidateTags.js";
 
 // 쿠키를 읽는 비캐시 POST — 공유 캐시에 올라가지 않는다.
@@ -20,7 +20,21 @@ async function isAdmin(req) {
   }
 }
 
+// CSRF 차단: 브라우저 POST 는 항상 Origin 을 싣는다 → 운영 도메인이거나 요청이 들어온 호스트(로컬)와 같을 때만 허용.
+function isSameOrigin(req) {
+  const origin = req.headers.get("origin");
+  if (!origin) return false;
+  if (origin === SITE_URL) return true;
+  const host = req.headers.get("x-forwarded-host") ?? req.headers.get("host");
+  try {
+    return new URL(origin).host === host;
+  } catch {
+    return false;
+  }
+}
+
 export async function POST(req) {
+  if (!isSameOrigin(req)) return NextResponse.json({ ok: false }, { status: 403 });
   const { status } = await isAdmin(req);
   if (status !== 200) return NextResponse.json({ ok: false }, { status });
 
