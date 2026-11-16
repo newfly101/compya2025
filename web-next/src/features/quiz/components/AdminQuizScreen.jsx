@@ -1,0 +1,366 @@
+"use client";
+import { useEffect, useMemo, useState } from "react";
+import AdminToolbar from "@/components/admin/toolbar/AdminToolbar.jsx";
+import AdminTable from "@/components/admin/table/AdminTable.jsx";
+import AdminPagination from "@/components/admin/pagination/AdminPagination.jsx";
+import useAdminPagination from "@/components/admin/pagination/useAdminPagination.js";
+import AdminModal from "@/components/admin/modal/AdminModal.jsx";
+import StateBox from "@/components/stateBox/StateBox.jsx";
+import AdminConfirmDialog from "@/components/admin/confirmDialog/AdminConfirmDialog.jsx";
+import AdminSegmented from "@/components/admin/fields/AdminSegmented.jsx";
+import AdminFilePicker from "@/components/admin/fields/AdminFilePicker.jsx";
+import useTableModal from "@/components/admin/useTableModal.js";
+import "@/components/admin/admin.tokens.scss";
+import { extractUploadedUrl, useUploadImageMutation } from "@/lib/api/uploads/queries.js";
+import {
+  useAdminQuizList,
+  useAdminQuizCreate,
+  useAdminQuizUpdate,
+  useAdminQuizBulkDelete,
+} from "@/features/quiz/store/queries.js";
+import styles from "./AdminQuizScreen.module.scss";
+
+// title 은 서버가 round 로 자동 합성한다(DB 저장값 아님) — 폼에 입력칸을 두지 않는다.
+// 회차 자동 부여 기능은 서버(QuizRequest)에 없다 — 항상 직접 입력만 받는다.
+const EMPTY_FORM = {
+  round: "",
+  imageUrl: "",
+};
+
+const formOf = (quiz) => ({
+  round: quiz.round ?? "",
+  imageUrl: quiz.imageUrl ?? "",
+});
+
+// 표시용 — 이미지 URL 마지막 경로 세그먼트를 파일명처럼 보여준다.
+const fileNameOf = (url) => {
+  if (!url) return null;
+  try {
+    const clean = url.split("?")[0];
+    const seg = clean.substring(clean.lastIndexOf("/") + 1);
+    return decodeURIComponent(seg) || null;
+  } catch {
+    return null;
+  }
+};
+
+const IMAGE_MODE_OPTIONS = [
+  { value: "url", label: "URL 입력" },
+  { value: "file", label: "파일 업로드" },
+];
+
+// 셸(AdminShellScreen)의 퀴즈 탭 패널로 렌더된다 — 자체 TopBar 를 세팅하지 않는다.
+// 셸이 상단바(제목/로그아웃)를 한 번만 소유하고, 탭 전환은 뒤로가기가 아니라 탭 클릭으로 처리된다.
+export default function AdminQuizScreen() {
+  const { data: quizAnswers = [], isPending: loading, error: queryError, refetch } = useAdminQuizList();
+  const error = queryError?.message ?? null;
+  const createQuiz = useAdminQuizCreate();
+  const updateQuiz = useAdminQuizUpdate();
+  const bulkDeleteQuiz = useAdminQuizBulkDelete();
+  const uploadImage = useUploadImageMutation();
+
+  const [search, setSearch] = useState("");
+  const [sortAsc, setSortAsc] = useState(false); // 기본: 회차 내림차순
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [imageMode, setImageMode] = useState("url");
+  const [selectedIds, setSelectedIds] = useState(() => new Set());
+  const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
+  const [bulkNotice, setBulkNotice] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState(null);
+  const [submitError, setSubmitError] = useState(null);
+  const [saving, setSaving] = useState(false);
+
+  const { editTarget, isOpen, openCreate, closeCreate, openEdit, closeEdit } = useTableModal();
+
+  const searched = quizAnswers.filter((q) => String(q.round ?? "").includes(search.trim()));
+
+  const filtered = [...searched].sort((a, b) =>
+    sortAsc ? (a.round ?? 0) - (b.round ?? 0) : (b.round ?? 0) - (a.round ?? 0),
+  );
+
+  // 번호식 페이지네이션(8개/페이지, 클라이언트 슬라이스) — 검색/정렬이 바뀌면 1페이지로.
+  const { page, pageCount, pageItems, setPage, resetPage } = useAdminPagination(filtered, 8);
+  useEffect(() => {
+    resetPage();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [search, sortAsc]);
+
+  // 현재 페이지에 없는 행의 선택은 자동으로 떨어져 나간다(다음 페이지 이동 시 실수 방지).
+  const pageIds = useMemo(() => new Set(pageItems.map((q) => q.id)), [pageItems]);
+  const selectedOnPageCount = pageItems.filter((q) => selectedIds.has(q.id)).length;
+  const allSelectedOnPage = pageItems.length > 0 && selectedOnPageCount === pageItems.length;
+
+  const toggleRow = (quiz) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(quiz.id)) next.delete(quiz.id);
+      else next.add(quiz.id);
+      return next;
+    });
+  };
+
+  const toggleAllOnPage = () => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      pageIds.forEach((id) => (allSelectedOnPage ? next.delete(id) : next.add(id)));
+      return next;
+    });
+  };
+
+  // 행 삭제 버튼 없음 — 삭제는 체크박스 일괄로만. 서버가 200 이어도 일부만 지울 수 있어
+  // (data.failedIds) 실제 지워진 successIds 만 slice 에서 반영한다 — 실패한 항목은
+  // 선택 해제된 채 목록에 그대로 남아 "지워지지 않았음"을 알려준다(별도 팝업 없음, 쿠폰 화면과 동일 방식).
+  const handleBulkDelete = () => {
+    if (selectedIds.size === 0) return;
+    setBulkDeleteConfirmOpen(true);
+  };
+
+  // .unwrap() 없이 dispatch 만 하면 실패해도 선택만 조용히 풀리고 아무 표시가 없다 — 결과를
+  // bulkNotice 로 보여준다(이벤트 화면과 동일 패턴). 서버가 { successIds, failedIds } 를 준다.
+  const confirmBulkDelete = async () => {
+    const ids = [...selectedIds];
+    setBulkDeleteConfirmOpen(false);
+    setSelectedIds(new Set());
+    try {
+      const result = await bulkDeleteQuiz.mutateAsync(ids);
+      const failedIds = result?.failedIds ?? [];
+      setBulkNotice(failedIds.length ? `${failedIds.length}개는 삭제하지 못했습니다.` : null);
+    } catch (err) {
+      setBulkNotice(err?.message ?? "일괄 삭제에 실패했습니다.");
+    }
+  };
+
+  const handleOpenCreate = () => {
+    setForm(EMPTY_FORM);
+    setImageMode("url");
+    setUploadError(null);
+    setSubmitError(null);
+    openCreate();
+  };
+
+  const handleOpenEdit = (quiz) => {
+    setForm(formOf(quiz));
+    setImageMode("url");
+    setUploadError(null);
+    setSubmitError(null);
+    openEdit(quiz);
+  };
+
+  const closeModal = () => {
+    closeCreate();
+    closeEdit();
+  };
+
+  const handleImageFileSelect = async (file) => {
+    setUploading(true);
+    setUploadError(null);
+    try {
+      const result = await uploadImage.mutateAsync({ file, directory: "events" });
+      const url = extractUploadedUrl(result);
+      if (!url) throw new Error("업로드 응답에서 URL 을 찾을 수 없습니다.");
+      setForm((prev) => ({ ...prev, imageUrl: url }));
+    } catch (err) {
+      setUploadError(typeof err === "string" ? err : err?.message ?? "이미지 업로드에 실패했습니다.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // .unwrap() 없이 dispatch 만 하면 서버가 400/500 을 줘도 모달이 그냥 닫혀 저장 성공처럼
+  // 보인다 — 성공했을 때만 모달을 닫고, 실패하면 입력값을 유지한 채 에러를 보여준다.
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (saving) return;
+    const payload = { ...form, round: Number(form.round) };
+    setSubmitError(null);
+    setSaving(true);
+    try {
+      if (editTarget) {
+        await updateQuiz.mutateAsync({ id: editTarget.id, ...payload });
+      } else {
+        await createQuiz.mutateAsync(payload);
+      }
+      closeModal();
+    } catch (err) {
+      setSubmitError(typeof err === "string" ? err : err?.message ?? "저장에 실패했습니다.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const columns = [
+    {
+      key: "idx",
+      label: "#",
+      width: 28,
+      render: (_q, index) => <span className={styles.idx}>{page * 8 + index + 1}</span>,
+    },
+    {
+      key: "round",
+      label: "회차",
+      align: "left",
+      render: (q) => (
+        <div className={styles.mainCell}>
+          <span className={styles.round}>{q.round}회차</span>
+          <span className={styles.fileName}>{fileNameOf(q.imageUrl) ?? "이미지 없음"}</span>
+        </div>
+      ),
+    },
+    {
+      key: "imageUrl",
+      label: "이미지",
+      width: 60,
+      render: (q) =>
+        q.imageUrl ? (
+          <img className={styles.thumbnail} src={q.imageUrl} alt={`${q.round}회 정답 이미지`} />
+        ) : (
+          <div className={styles.thumbnailEmpty}>없음</div>
+        ),
+    },
+    {
+      key: "actions",
+      label: "관리",
+      width: 56,
+      render: (q) => (
+        <div className={styles.actions}>
+          <button
+            type="button"
+            className={styles.editBtn}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleOpenEdit(q);
+            }}
+          >
+            수정
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <div className={styles.page}>
+      <AdminToolbar
+        search={search}
+        onSearchChange={setSearch}
+        searchPlaceholder="회차 검색"
+        totalCount={filtered.length}
+        totalLabel="개"
+        sortLabel={sortAsc ? "회차 오름차순" : "회차 내림차순"}
+        onToggleSort={() => setSortAsc((prev) => !prev)}
+        onCreate={handleOpenCreate}
+        createLabel="등록"
+        selectedCount={selectedOnPageCount}
+        onBulkDelete={handleBulkDelete}
+      />
+
+      {bulkNotice && (
+        <div className={styles.bulkNotice}>
+          <span>{bulkNotice}</span>
+          <button type="button" onClick={() => setBulkNotice(null)} aria-label="닫기">
+            ×
+          </button>
+        </div>
+      )}
+
+      {loading && <StateBox status="loading" message="불러오는 중..." />}
+      {!loading && error && (
+        <StateBox
+          status="error"
+          message={error}
+          onRetry={() => refetch()}
+        />
+      )}
+      {!loading && !error && filtered.length === 0 && (
+        <StateBox status="empty" message="등록된 퀴즈가 없습니다." />
+      )}
+      {!loading && !error && filtered.length > 0 && (
+        <>
+          <AdminTable
+            columns={columns}
+            rows={pageItems}
+            rowKey={(q) => q.id}
+            selectable
+            selectedKeys={selectedIds}
+            allSelected={allSelectedOnPage}
+            onToggleRow={toggleRow}
+            onToggleAll={toggleAllOnPage}
+          />
+          <AdminPagination page={page} pageCount={pageCount} onChange={setPage} />
+        </>
+      )}
+
+      <AdminModal open={isOpen} title={editTarget ? "퀴즈 수정" : "퀴즈 등록"} onClose={closeModal}>
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <label className={styles.label}>
+            회차
+            <input
+              className={styles.input}
+              type="number"
+              name="round"
+              min="1"
+              value={form.round}
+              onChange={handleFormChange}
+              required
+            />
+          </label>
+
+          <div className={styles.label}>
+            퀴즈 이미지
+            <AdminSegmented
+              name="imageMode"
+              options={IMAGE_MODE_OPTIONS}
+              value={imageMode}
+              onChange={setImageMode}
+            />
+            {imageMode === "url" ? (
+              <input
+                className={styles.input}
+                name="imageUrl"
+                value={form.imageUrl}
+                onChange={handleFormChange}
+                placeholder="이미지 URL 을 입력하세요"
+              />
+            ) : (
+              <AdminFilePicker
+                fileName={fileNameOf(form.imageUrl)}
+                onFileSelect={handleImageFileSelect}
+                disabled={uploading}
+                placeholder={uploading ? "업로드 중..." : "선택된 파일 없음"}
+              />
+            )}
+            {form.imageUrl && (
+              <img className={styles.uploadPreview} src={form.imageUrl} alt="정답 이미지 미리보기" />
+            )}
+            {uploadError && <p className={styles.uploadError}>{uploadError}</p>}
+          </div>
+
+          {submitError && <p className={styles.submitError}>{submitError}</p>}
+
+          <div className={styles.formActions}>
+            <button type="button" className={styles.cancelBtn} onClick={closeModal}>취소</button>
+            <button type="submit" className={styles.submitBtn} disabled={saving}>
+              {saving ? "저장 중..." : editTarget ? "수정" : "등록"}
+            </button>
+          </div>
+        </form>
+      </AdminModal>
+
+      <AdminConfirmDialog
+        open={bulkDeleteConfirmOpen}
+        title="퀴즈 일괄 삭제"
+        message={`선택한 퀴즈 ${selectedIds.size}개를 삭제하시겠습니까?`}
+        dangerous
+        confirmLabel="삭제"
+        onConfirm={confirmBulkDelete}
+        onCancel={() => setBulkDeleteConfirmOpen(false)}
+      />
+    </div>
+  );
+}

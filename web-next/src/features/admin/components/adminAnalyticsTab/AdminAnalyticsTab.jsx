@@ -1,0 +1,356 @@
+"use client";
+import { useState } from "react";
+import StateBox from "@/components/stateBox/StateBox.jsx";
+import AdminSegmented from "@/components/admin/fields/AdminSegmented.jsx";
+import AdminTable from "@/components/admin/table/AdminTable.jsx";
+import "@/components/admin/admin.tokens.scss";
+import {
+  useAdminAnalyticsSummary,
+  useAdminAnalyticsTrend,
+  useAdminAnalyticsAggregate,
+} from "@/features/admin/store/queries.js";
+import { getYesterdayKst, getTodayKst, getKstDateOffset, getKstMonthsAgo } from "./kstDate.js";
+import styles from "./AdminAnalyticsTab.module.scss";
+import {
+  EVENT_TYPE_LABEL,
+  DEVICE_TYPE_LABEL,
+  DEVICE_TYPE_COLOR,
+  VISITOR_TYPE_LABEL,
+  VISITOR_TYPE_COLOR,
+  SIGNUP_LABEL,
+  SIGNUP_COLOR,
+  countRows,
+  regionRows,
+} from "./analyticsChartConfig.js";
+import { RatioBars } from "./AnalyticsCharts.jsx";
+import AnalyticsSummaryCard from "./AnalyticsSummaryCard.jsx";
+import AnalyticsTrendCard from "./AnalyticsTrendCard.jsx";
+import { pathToTitle } from "./pathTitle.js";
+import { deltaOf } from "./analyticsDelta.js";
+import { previousPeriodOf, formatPeriodLabel } from "./periodMath.js";
+
+// AnalyticsDateValidator(BE) 와 같은 값 — 이보다 이전으로는 직전 구간 비교를 요청하지 않는다.
+const SERVICE_START_DATE = "2026-01-29";
+
+const TOP_PATH_MODE_OPTIONS = [
+  { value: "title", label: "제목" },
+  { value: "path", label: "경로" },
+];
+
+const JUMP_TARGETS = [
+  { id: "analytics-summary", label: "개요" },
+  { id: "analytics-toppages", label: "상위 경로" },
+  { id: "analytics-trend", label: "추이" },
+  { id: "analytics-visitors", label: "방문자 구성" },
+  { id: "analytics-referrers", label: "외부 유입" },
+];
+
+// mode(TODAY|DATE|RANGE) + 입력값 → 실제 조회 구간(from~to). 셀렉트 이벤트 핸들러가
+// setState 직후 곧바로 새 값으로 조회해야 해서(리액트 state 는 비동기 반영) 컴포넌트
+// state 를 읽지 않는 순수 함수로 뺐다.
+const periodOf = (mode, dateValue, rangeFrom, rangeTo) => {
+  if (mode === "TODAY") return { from: getTodayKst(), to: getTodayKst() };
+  if (mode === "DATE") return { from: dateValue, to: dateValue };
+  return { from: rangeFrom, to: rangeTo };
+};
+
+const summaryArgsOf = (mode, dateValue, rangeFrom, rangeTo) => {
+  if (mode === "TODAY") return { range: "TODAY" };
+  if (mode === "DATE") {
+    return dateValue === getTodayKst()
+      ? { range: "TODAY" }
+      : { range: "CUSTOM", from: dateValue, to: dateValue };
+  }
+  return { range: "CUSTOM", from: rangeFrom, to: rangeTo };
+};
+
+// 어드민 셸의 "통계" 탭 패널. AdminCacheSyncTab 과 같은 상태분기 패턴(!loading && error,
+// !loading && !error && 데이터 없음)을 따른다.
+// 5개 카드(개요·상위경로·추이·방문자구성·외부유입)는 상단에서 고른 기간 하나를 그대로 따른다 —
+// 개요/상위경로/방문자구성/외부유입은 summary 응답 하나를 같이 쓰니 이미 같은 기간이고, 추이만
+// 예전엔 별도 날짜를 가졌던 것을 이번에 없앴다. 직전 같은 길이 구간과 비교(previousSummary·
+// previousTrendDay)는 별도 API 없이 같은 thunk 를 from/to 만 바꿔 한 번 더 호출한다
+// (ponytail: 요청이 2배가 되지만 어드민 전용 화면이라 허용, slices.js 참고).
+export default function AdminAnalyticsTab() {
+  const [rangeMode, setRangeMode] = useState("TODAY");
+  const [dateValue, setDateValue] = useState(getYesterdayKst());
+  const [rangeFrom, setRangeFrom] = useState(getKstDateOffset(-7));
+  const [rangeTo, setRangeTo] = useState(getYesterdayKst());
+  const [trendGranularity, setTrendGranularity] = useState("day");
+  const [topPathMode, setTopPathMode] = useState("title");
+  const [aggregateDate, setAggregateDate] = useState(getYesterdayKst());
+  // 조회에 실제로 쓰는 선택값 — 입력칸을 고치는 중(rangeFrom/rangeTo)에는 조회하지 않고, 적용 시점에 여기로 옮긴다.
+  const [applied, setApplied] = useState({ mode: "TODAY", date: dateValue, from: rangeFrom, to: rangeTo });
+
+  const period = periodOf(applied.mode, applied.date, applied.from, applied.to);
+  const prevPeriod = previousPeriodOf(period);
+  const comparisonAvailable = prevPeriod.from >= SERVICE_START_DATE; // 서비스 시작일 이전은 비교 자체를 요청하지 않는다
+
+  // 시간대별은 원본 보관 경계(오늘-3개월) 밖을 조회하면 400 — 화면 값은 그대로 두고 서버에 보낼 from 만 클램프한다.
+  const trendFrom = trendGranularity === "hour" && period.from < getKstMonthsAgo(3) ? getKstMonthsAgo(3) : period.from;
+
+  const summaryQuery = useAdminAnalyticsSummary(summaryArgsOf(applied.mode, applied.date, applied.from, applied.to));
+  const trendQuery = useAdminAnalyticsTrend({ from: trendFrom, to: period.to, granularity: trendGranularity });
+  // 직전 같은 길이 구간 비교 — 별도 API 없이 같은 조회를 from/to 만 바꿔 한 번 더 호출한다
+  // (ponytail: 요청이 2배가 되지만 어드민 전용 화면이라 허용). 실패하면 조용히 숨긴다(배지는 "-").
+  const previousSummary = useAdminAnalyticsSummary({ range: "CUSTOM", from: prevPeriod.from, to: prevPeriod.to }, comparisonAvailable).data ?? null;
+  const previousTrendDay =
+    useAdminAnalyticsTrend({ from: prevPeriod.from, to: prevPeriod.to, granularity: "day" }, comparisonAvailable && trendGranularity === "day").data ?? [];
+  const aggregate = useAdminAnalyticsAggregate(aggregateDate);
+
+  const summary = summaryQuery.data ?? null;
+  const loading = summaryQuery.isPending;
+  const error = summaryQuery.error?.message ?? null;
+  const trendLoading = trendQuery.isPending;
+  const trendError = trendQuery.error?.message ?? null;
+  const mutateLoading = aggregate.isPending;
+  const mutateError = aggregate.error?.message ?? null;
+
+  const select = (mode, date, from, to) => setApplied({ mode, date, from, to });
+
+  const handleModeChange = (value) => {
+    setRangeMode(value);
+    select(value, dateValue, rangeFrom, rangeTo);
+  };
+
+  const handleDateChange = (value) => {
+    setDateValue(value);
+    select("DATE", value, rangeFrom, rangeTo);
+  };
+
+  const handleApplyRange = () => select("RANGE", dateValue, rangeFrom, rangeTo);
+
+  const handleQuickRange = (days) => {
+    const to = getYesterdayKst();
+    const from = getKstDateOffset(-days);
+    setRangeFrom(from);
+    setRangeTo(to);
+    select("RANGE", dateValue, from, to);
+  };
+
+  const handleGranularityChange = (value) => setTrendGranularity(value);
+
+  const handleRetry = () => summaryQuery.refetch();
+
+  // 재집계 성공 뒤 현재 기간을 다시 읽는다. 실패는 mutateError 로 화면에 노출된다.
+  const handleAggregate = async () => {
+    try {
+      await aggregate.mutateAsync(aggregateDate);
+      summaryQuery.refetch();
+      trendQuery.refetch();
+    } catch {
+      // mutateError 로 표시
+    }
+  };
+
+  const handleJump = (id) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+  const eventRowsRaw = summary ? Object.entries(summary.eventCounts ?? {}) : [];
+  const isEmpty =
+    !summary ||
+    (summary.pageViews === 0 &&
+      (summary.topPages?.length ?? 0) === 0 &&
+      Object.values(summary.eventCounts ?? {}).every((v) => v === 0));
+
+  const periodLabel = formatPeriodLabel(period.from, period.to);
+
+  const eventRows = eventRowsRaw.map(([type, count]) => ({
+    type,
+    label: EVENT_TYPE_LABEL[type] ?? type,
+    count,
+    delta: comparisonAvailable ? deltaOf(count, previousSummary?.eventCounts?.[type]) : null,
+  }));
+
+  const trendPoints = trendQuery.data ?? [];
+  const dayOverlayAvailable = comparisonAvailable && previousTrendDay.length > 0;
+
+  return (
+    <div className={styles.tab}>
+      <div className={styles.head}>
+        <b className={styles.title}>방문 · 이벤트 통계</b>
+        <p className={styles.subtitle}>수집된 사용자 행동 데이터를 기간별로 봅니다.</p>
+      </div>
+
+      <div className={styles.jumpRow}>
+        {JUMP_TARGETS.map((t) => (
+          <button key={t.id} type="button" className={styles.jumpChip} onClick={() => handleJump(t.id)}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {loading && <StateBox status="loading" message="통계를 불러오는 중..." />}
+      {!loading && error && <StateBox status="error" message={error} onRetry={handleRetry} />}
+      {!loading && !error && isEmpty && (
+        <StateBox status="empty" message="집계된 데이터가 없습니다." />
+      )}
+
+      {!loading && !error && summary && !isEmpty && (
+        <div className={styles.cardList}>
+          {/* 개요 */}
+          <AnalyticsSummaryCard
+            periodLabel={periodLabel}
+            summary={summary}
+            previousSummary={previousSummary}
+            comparisonAvailable={comparisonAvailable}
+            eventRows={eventRows}
+            rangeMode={rangeMode}
+            dateValue={dateValue}
+            rangeFrom={rangeFrom}
+            rangeTo={rangeTo}
+            onModeChange={handleModeChange}
+            onDateChange={handleDateChange}
+            onRangeFromChange={setRangeFrom}
+            onRangeToChange={setRangeTo}
+            onApplyRange={handleApplyRange}
+            onQuickRange={handleQuickRange}
+          />
+
+          {/* 상위 경로 */}
+          <section id="analytics-toppages" className={styles.box}>
+            <div className={styles.boxHead}>
+              <b className={styles.boxTitle}>상위 경로 Top 10</b>
+              <span className={styles.periodLabel}>{periodLabel}</span>
+            </div>
+            <div className={styles.rangeRow}>
+              <AdminSegmented
+                options={TOP_PATH_MODE_OPTIONS}
+                value={topPathMode}
+                onChange={setTopPathMode}
+                name="상위 경로 표시"
+              />
+            </div>
+            <AdminTable
+              columns={[
+                {
+                  key: "pagePath",
+                  label: topPathMode === "path" ? "경로" : "제목",
+                  align: "left",
+                  render: (row) => (topPathMode === "path" ? row.pagePath : pathToTitle(row.pagePath)),
+                },
+                {
+                  key: "count",
+                  label: "조회수",
+                  width: 64,
+                  render: (row) => row.count.toLocaleString(),
+                },
+                {
+                  key: "uniqueVisitors",
+                  label: "순방문",
+                  width: 64,
+                  render: (row) => row.uniqueVisitors.toLocaleString(),
+                },
+                {
+                  key: "returningRate",
+                  label: "재방문율",
+                  width: 64,
+                  render: (row) => (row.returningRate == null ? "-" : `${row.returningRate}%`),
+                },
+              ]}
+              rows={summary.topPages ?? []}
+              rowKey={(row) => row.pagePath}
+            />
+          </section>
+
+          {/* 추이 */}
+          <AnalyticsTrendCard
+            periodLabel={periodLabel}
+            granularity={trendGranularity}
+            onGranularityChange={handleGranularityChange}
+            loading={trendLoading}
+            error={trendError}
+            onRetry={() => handleGranularityChange(trendGranularity)}
+            points={trendPoints}
+            period={period}
+            prevPeriod={prevPeriod}
+            previousPoints={previousTrendDay}
+            dayOverlayAvailable={dayOverlayAvailable}
+          />
+
+          {/* 방문자 구성 */}
+          <section id="analytics-visitors" className={styles.box}>
+            <div className={styles.boxHead}>
+              <b className={styles.boxTitle}>방문자 구성</b>
+              <span className={styles.periodLabel}>{periodLabel}</span>
+            </div>
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>기기 비율</span>
+              <RatioBars rows={countRows(summary.deviceRatio, DEVICE_TYPE_LABEL, DEVICE_TYPE_COLOR)} />
+            </div>
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>신규 · 재방문</span>
+              <RatioBars
+                rows={countRows(summary.visitorComposition, VISITOR_TYPE_LABEL, VISITOR_TYPE_COLOR)}
+              />
+            </div>
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>가입 전환</span>
+              <RatioBars rows={countRows(summary.signupConversion, SIGNUP_LABEL, SIGNUP_COLOR)} />
+            </div>
+            {/* 지역 분포 — 라벨이 기간마다 달라지는 지역명이라 직전 구간 비교 배지는 붙이지 않는다.
+                구버전 서버는 필드 자체가 없을 수 있고, 보존 경계(3개월) 밖 기간은 빈 객체로 온다 —
+                두 경우 모두 "데이터 없음" 한 줄로 처리(카드 전체는 정상 렌더). */}
+            <div className={styles.section}>
+              <span className={styles.sectionTitle}>지역 분포</span>
+              {Object.keys(summary.regionRatio ?? {}).length > 0 ? (
+                <RatioBars
+                  rows={regionRows(summary.regionRatio)}
+                  rowClassName={styles.regionBarRow}
+                  labelClassName={styles.regionBarLabel}
+                />
+              ) : (
+                <p className={styles.subtitle}>지역 데이터 없음(최근 3개월 안 기간에서만 집계)</p>
+              )}
+            </div>
+          </section>
+
+          {/* 외부 유입 */}
+          <section id="analytics-referrers" className={styles.box}>
+            <div className={styles.boxHead}>
+              <b className={styles.boxTitle}>외부 유입 상위</b>
+              <span className={styles.periodLabel}>{periodLabel}</span>
+            </div>
+            <AdminTable
+              columns={[
+                { key: "referrerHost", label: "유입 경로", align: "left" },
+                {
+                  key: "count",
+                  label: "건수",
+                  width: 90,
+                  render: (row) => row.count.toLocaleString(),
+                },
+              ]}
+              rows={summary.topReferrers ?? []}
+              rowKey={(row) => row.referrerHost}
+            />
+          </section>
+        </div>
+      )}
+
+      {/* 수동 재집계 — 카드 목록 밖(맨 아래) 고정 위치 유지 */}
+      {!loading && !error && summary && !isEmpty && (
+        <div className={styles.section}>
+          <b className={styles.sectionTitle}>수동 재집계</b>
+          <p className={styles.subtitle}>날짜를 골라 그날의 일별 집계를 다시 계산합니다.</p>
+          <div className={styles.aggregateRow}>
+            <input
+              type="date"
+              className={styles.aggregateInput}
+              value={aggregateDate}
+              onChange={(e) => setAggregateDate(e.target.value)}
+            />
+            <button
+              type="button"
+              className={styles.aggregateButton}
+              disabled={mutateLoading}
+              onClick={handleAggregate}
+            >
+              {mutateLoading ? "집계 중..." : "재집계"}
+            </button>
+          </div>
+          {mutateError && <p className={styles.aggregateError}>{mutateError}</p>}
+        </div>
+      )}
+    </div>
+  );
+}

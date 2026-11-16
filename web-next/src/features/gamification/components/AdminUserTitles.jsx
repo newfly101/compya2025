@@ -1,0 +1,93 @@
+"use client";
+import { useState } from "react";
+import StateBox from "@/components/stateBox/StateBox.jsx";
+import AdminTag from "@/components/admin/tag/AdminTag.jsx";
+import AdminConfirmDialog from "@/components/admin/confirmDialog/AdminConfirmDialog.jsx";
+import { useAdminUserTitles, useAdminGrantTitle, useAdminRevokeTitle } from "@/features/gamification/store/adminQueries.js";
+import styles from "./AdminGamification.module.scss";
+
+// 관리자 유저 상세 모달의 "칭호" 섹션. 보유 칭호 칩 + 운영자 지급(MANUAL) 칭호의 지급/회수.
+export default function AdminUserTitles({ publicId, nickname }) {
+  const query = useAdminUserTitles(publicId);
+  const grant = useAdminGrantTitle();
+  const revoke = useAdminRevokeTitle();
+  const titles = query.data ?? [];
+  const detailLoading = query.isPending;
+  const detailError = query.error?.message ?? null;
+  const mutateLoading = grant.isPending || revoke.isPending;
+  const [pending, setPending] = useState(null); // { kind: "grant" | "revoke", title }
+  const [result, setResult] = useState(null); // { ok, text }
+
+  const owned = titles.filter((t) => t.owned);
+  const manual = titles.filter((t) => t.category === "MANUAL");
+
+  const confirm = async () => {
+    const { kind, title } = pending;
+    try {
+      await (kind === "grant" ? grant : revoke).mutateAsync({ publicId, code: title.code });
+      setResult({ ok: true, text: `'${title.name}' ${kind === "grant" ? "지급" : "회수"}을 완료했습니다.` });
+    } catch (e) {
+      setResult({ ok: false, text: e?.message ?? "처리에 실패했습니다." });
+    }
+    setPending(null);
+  };
+
+  const confirmMessage = pending
+    ? pending.kind === "grant"
+      ? `${nickname}에게 '${pending.title.name}' 지급 — 보너스 ${pending.title.bonusPoint}P 가 적립됩니다`
+      : `${nickname}에게서 '${pending.title.name}' 회수 — 보너스 ${pending.title.bonusPoint}P 를 되돌립니다`
+    : "";
+
+  return (
+    <section className={styles.section}>
+      <span className={styles.label}>칭호</span>
+
+      {detailLoading && <StateBox status="loading" message="불러오는 중..." />}
+      {!detailLoading && detailError && (
+        <StateBox status="error" message={detailError} onRetry={() => query.refetch()} />
+      )}
+      {!detailLoading && !detailError && owned.length === 0 && manual.length === 0 && (
+        <StateBox status="empty" message="보유한 칭호가 없습니다." />
+      )}
+      {!detailLoading && !detailError && (owned.length > 0 || manual.length > 0) && (
+        <>
+          <div className={styles.chips}>
+            {owned.length === 0 && <span className={styles.muted}>보유한 칭호가 없습니다.</span>}
+            {owned.map((t) => (
+              <AdminTag key={t.code} variant={t.equipped ? "purple" : "neutral"}>
+                {t.name}{t.equipped ? " · 대표" : ""}
+              </AdminTag>
+            ))}
+          </div>
+          {manual.map((t) => (
+            <div key={t.code} className={styles.manualRow}>
+              <span className={styles.manualName}>
+                {t.name} <span className={styles.muted}>(+{t.bonusPoint}P)</span>
+              </span>
+              <button
+                type="button"
+                className={`${styles.btn} ${t.owned ? styles.btnDanger : ""}`}
+                disabled={mutateLoading}
+                onClick={() => { setResult(null); setPending({ kind: t.owned ? "revoke" : "grant", title: t }); }}
+              >
+                {t.owned ? "회수" : "지급"}
+              </button>
+            </div>
+          ))}
+        </>
+      )}
+
+      {result && <p className={result.ok ? styles.okText : styles.errorText}>{result.text}</p>}
+
+      <AdminConfirmDialog
+        open={pending != null}
+        title={pending?.kind === "revoke" ? "칭호 회수" : "칭호 지급"}
+        message={confirmMessage}
+        dangerous={pending?.kind === "revoke"}
+        confirmLabel={mutateLoading ? "처리 중..." : "확인"}
+        onConfirm={confirm}
+        onCancel={() => !mutateLoading && setPending(null)}
+      />
+    </section>
+  );
+}
