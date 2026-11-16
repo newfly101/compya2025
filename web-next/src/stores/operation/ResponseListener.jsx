@@ -1,6 +1,6 @@
 "use client";
-import { ResponseModal } from "@/global/ui/responseModal/index.js";
-import { useOperationStore } from "@/store/operationStore.js";
+import { ResponseModal } from "@/components/responseModal/index.js";
+import { useOperationStore } from "@/stores/operationStore.js";
 
 const ResponseListener = () => {
   const lastOperation = useOperationStore((s) => s.lastOperation);
