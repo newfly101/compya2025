@@ -1,0 +1,146 @@
+name: Deploy Web (Next.js)
+
+# 2026-11-17 Next.js SSR 앱(web-next/) EC2 배포 — deploy-be 와 같은 방식(scp → ssh 원격 스크립트).
+#   standalone 산출물을 릴리스 폴더에 풀고 current 심볼릭 링크를 교체한다 (이전 버전 보존).
+#   필요 Secrets: EC2_HOST · EC2_USER · EC2_SSH_KEY (deploy-be 와 공용)
+#   필요 Variables: API_INTERNAL_URL · NEXT_PUBLIC_API_URL — web-next/deploy/README.md 참조
+#   기존 deploy-fe.yml(S3) 은 전환 완료 전까지 그대로 병행한다.
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'web-next/**'
+      - '.github/workflows/deploy-web-next.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: web-next-deploy
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  SERVICE_NAME: compyafun-next
+  NODE_VERSION: 22
+  MIN_TGZ_SIZE_BYTES: 1000000
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web-next
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: web-next/package-lock.json
+
+      - name: Build (npm ci && npm run build)
+        env:
+          API_INTERNAL_URL: ${{ vars.API_INTERNAL_URL }}
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+        run: |
+          npm ci
+          npm run build
+
+      - name: Verify build artifact
+        run: |
+          if [ ! -f .next/standalone/server.js ]; then
+            echo "::error::standalone server.js 가 없다"
+            exit 1
+          fi
+          if [ ! -d .next/standalone/.next/static ]; then
+            echo "::error::static 이 standalone 에 복사되지 않았다 (copy-standalone.mjs 확인)"
+            exit 1
+          fi
+
+      - name: standalone 묶기 (tar)
+        run: |
+          tar -czf /tmp/web-next.tgz -C .next/standalone .
+          SIZE=$(stat -c%s /tmp/web-next.tgz)
+          echo "묶음 크기: ${SIZE} bytes"
+          if [ "$SIZE" -lt "${{ env.MIN_TGZ_SIZE_BYTES }}" ]; then
+            echo "::error::묶음 크기가 비정상적으로 작다 (${SIZE} bytes < ${{ env.MIN_TGZ_SIZE_BYTES }})"
+            exit 1
+          fi
+
+      - name: SSH 키 준비
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: 묶음 업로드 (scp)
+        run: |
+          scp -i ~/.ssh/deploy_key /tmp/web-next.tgz \
+            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/tmp/web-next.tgz.new"
+
+      - name: 원격 배포 (ssh)
+        run: |
+          cat > /tmp/remote-deploy.sh <<'REMOTE_SCRIPT'
+          #!/usr/bin/env bash
+          set -euo pipefail
+
+          REMOTE_DIR="/opt/compyafun-next"
+          SERVICE="compyafun-next"
+          TMP_TGZ="/tmp/web-next.tgz.new"
+          STAMP="$(date +%y%m%d-%H%M)"
+          RELEASE="$REMOTE_DIR/releases/$STAMP"
+          KEEP=5
+
+          if [ ! -s "$TMP_TGZ" ]; then
+            echo "✖ 업로드된 묶음이 없거나 빈 파일: $TMP_TGZ — 기존 버전 유지, 배포 중단"
+            exit 1
+          fi
+
+          PREV="$(readlink -f "$REMOTE_DIR/current" || true)"
+          echo "▶ 현재 버전: ${PREV:-없음}"
+
+          echo "▶ 릴리스 폴더에 풀기 → $RELEASE"
+          sudo mkdir -p "$RELEASE"
+          sudo tar -xzf "$TMP_TGZ" -C "$RELEASE"
+          sudo rm -f "$TMP_TGZ"
+          if [ ! -f "$RELEASE/server.js" ]; then
+            echo "✖ server.js 없음 — 기존 버전 유지, 배포 중단"
+            exit 1
+          fi
+
+          echo "▶ 링크 교체"
+          sudo ln -sfn "$RELEASE" "$REMOTE_DIR/current"
+
+          echo "▶ 서비스 재시작"
+          sudo systemctl restart "$SERVICE"
+
+          echo "▶ 기동 확인 (10초 대기)"
+          sleep 10
+          STATUS="$(systemctl is-active "$SERVICE" || true)"
+          HTTP="$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/ || true)"
+
+          if [ "$STATUS" == "active" ] && [ "$HTTP" -ge 200 ] && [ "$HTTP" -lt 400 ]; then
+            echo "  ✔ $SERVICE active, localhost:3000 → $HTTP"
+            echo "▶ 오래된 릴리스 정리 (최근 $KEEP 개 유지)"
+            ls -1dt "$REMOTE_DIR"/releases/* | tail -n +$((KEEP + 1)) | xargs -r sudo rm -rf
+          else
+            echo "  ✖ 기동 실패 (상태: $STATUS, HTTP: $HTTP)"
+            echo "  최근 로그 40줄:"
+            sudo journalctl -u "$SERVICE" -n 40 --no-pager
+            echo ""
+            echo "▶ 롤백하려면 (EC2 상에서 직접)"
+            echo "   sudo ln -sfn ${PREV:-<이전 릴리스 경로>} $REMOTE_DIR/current && sudo systemctl restart $SERVICE"
+            exit 1
+          fi
+          REMOTE_SCRIPT
+
+          ssh -i ~/.ssh/deploy_key "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" 'bash -s' < /tmp/remote-deploy.sh
+
+      - name: SSH 키 정리
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
