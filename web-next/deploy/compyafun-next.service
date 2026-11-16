@@ -1,0 +1,19 @@
+[Unit]
+Description=Compyafun Next.js (SSR)
+After=network.target
+
+[Service]
+Type=simple
+User=ec2-user
+WorkingDirectory=/opt/compyafun-next/current
+# API_INTERNAL_URL 등 비밀 아닌 설정 — 예: API_INTERNAL_URL=http://127.0.0.1:8080
+EnvironmentFile=/etc/compyafun-next.env
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=HOSTNAME=127.0.0.1
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
