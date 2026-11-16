@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { registerBrowserQueryClient } from "@/lib/query/queryClientRef.js";
 import { useOperationStore } from "@/stores/operationStore.js";
 
 // 작업 결과 모달을 띄우는 단일 경로 — 원본 operationListener(meta.notify) 대체.
@@ -28,7 +29,7 @@ const makeClient = () =>
   });
 
 const QueryProvider = ({ children }) => {
-  const [client] = useState(makeClient); // 컴포넌트당 1회 생성 — 서버에서 요청 간 캐시가 섞이지 않는다
+  const [client] = useState(() => registerBrowserQueryClient(makeClient())); // 컴포넌트당 1회 생성 — 서버에서 요청 간 캐시가 섞이지 않는다
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 };
 

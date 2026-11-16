@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ROUTE_PATHS } from "@/lib/routePath.js";
@@ -55,6 +55,18 @@ export default function MyPageScreen() {
   const [agreeChecked, setAgreeChecked] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
   const [withdrawError, setWithdrawError] = useState(null);
+
+  // ["users","me"] 가 바뀌면(닉네임·프로필 이미지) 로그인 사용자 요약(authStore)도 같은 값으로 맞춘다.
+  const profileNickname = profile?.nickname;
+  const profileImage = profile?.profileImage;
+  useEffect(() => {
+    const u = useAuthStore.getState().user;
+    if (!u) return;
+    const patch = {};
+    if (profileNickname !== undefined && u.nickname !== profileNickname) patch.nickname = profileNickname;
+    if (profileImage !== undefined && u.profileImage !== profileImage) patch.profileImage = profileImage;
+    if (Object.keys(patch).length) patchUser(patch);
+  }, [profileNickname, profileImage, patchUser]);
 
   const startEdit = () => {
     setNicknameInput(profile?.nickname ?? "");

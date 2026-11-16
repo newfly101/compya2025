@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthentication } from "@/features/authentication/hooks/useAuthentication.js";
 import { ROUTE_PATHS } from "@/lib/routePath.js";
-import { MARKUP_RE, MARKUP_TEXT, MAX_LENGTH, MAX_LINES, useChatRoom } from "@/features/chats/useChatRoom.js";
+import { MARKUP_RE, MARKUP_TEXT, MAX_LENGTH, MAX_LINES, useChatConnection, useChatRoomState } from "@/features/chats/useChatRoom.js";
 import { formatNow } from "@/lib/utils/dateUtils.js";
 import PresenceModal from "./PresenceModal.jsx";
 import styles from "./ChatWidget.module.scss";
@@ -41,12 +41,26 @@ const useKeyboardInset = (open) => {
   return inset;
 };
 
+// 닫힌 위젯은 FAB 껍데기만 — 연결은 유지하되 메시지·접속자 이벤트는 구독하지 않아 리렌더되지 않는다.
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
+  const { initialized, isAuthenticated } = useAuthentication();
+  const send = useChatConnection(initialized, isAuthenticated);
+  const close = useCallback(() => setOpen(false), []);
+  return open ? (
+    <ChatPanel send={send} onClose={close} />
+  ) : (
+    <button type="button" className={styles.fab} onClick={() => setOpen(true)} aria-label="펀톡 열기">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path transform="translate(2 2.99)" d="M5.9 17.008C7.809 17.987 10.004 18.252 12.091 17.756C14.178 17.259 16.019 16.034 17.282 14.3C18.545 12.566 19.147 10.439 18.981 8.3C18.814 6.161 17.889 4.153 16.372 2.636C14.855 1.119 12.846 0.194 10.708 0.027C8.569-0.14 6.441 0.463 4.708 1.726C2.974 2.989 1.749 4.83 1.252 6.917C0.756 9.004 1.021 11.199 2 13.108L0 19.008L5.9 17.008Z" /></svg>
+    </button>
+  );
+}
+
+function ChatPanel({ send, onClose }) {
   const router = useRouter();
-  const { initialized, isAuthenticated, isAdmin, user, nicknameUnset, login } = useAuthentication();
-  const { messages, status, loading, error, notice, send, onlineCount, guestName, presenceTick } = useChatRoom(initialized, isAuthenticated);
-  const inset = useKeyboardInset(open);
+  const { isAuthenticated, isAdmin, user, nicknameUnset, login } = useAuthentication();
+  const { messages, status, loading, error, notice, onlineCount, guestName, presenceTick } = useChatRoomState();
+  const inset = useKeyboardInset(true);
   const [text, setText] = useState("");
   const [presenceOpen, setPresenceOpen] = useState(false);
   const listRef = useRef(null);
@@ -74,11 +88,7 @@ export default function ChatWidget() {
   useLayoutEffect(() => {
     const el = listRef.current;
     if (el && stickRef.current) el.scrollTop = el.scrollHeight;
-  }, [messages, open, inset.height]);
-
-  useEffect(() => {
-    if (open) stickRef.current = true;
-  }, [open]);
+  }, [messages, inset.height]);
 
   const submit = (e) => {
     e.preventDefault();
@@ -91,17 +101,16 @@ export default function ChatWidget() {
   };
 
   // 위치·여백은 SCSS 가 갖고, 키보드 높이만 변수로 넘긴다 (inline bottom 이 카드 여백을 덮지 않게)
-  const panelStyle = open && inset.height
+  const panelStyle = inset.height
     ? { "--kb-inset": `${inset.bottom}px`, "--vv-height": `${inset.height}px` }
     : undefined;
 
   // ESC 로 접기
   useEffect(() => {
-    if (!open) return undefined;
-    const onKey = (e) => { if (e.key === "Escape") setOpen(false); };
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open]);
+  }, [onClose]);
 
   const myNick = isAuthenticated ? user?.nickname : null;
 
@@ -151,7 +160,7 @@ export default function ChatWidget() {
     footer = (
       <div className={styles.gate}>
         <p className={styles.gateText}>닉네임을 바꾸면 채팅할 수 있어요</p>
-        <button type="button" className={styles.gateBtn} onClick={() => { setOpen(false); router.push(ROUTE_PATHS.mypage); }}>
+        <button type="button" className={styles.gateBtn} onClick={() => { onClose(); router.push(ROUTE_PATHS.mypage); }}>
           닉네임 변경
         </button>
       </div>
@@ -188,13 +197,7 @@ export default function ChatWidget() {
 
   return (
     <>
-      {!open && (
-        <button type="button" className={styles.fab} onClick={() => setOpen(true)} aria-label="펀톡 열기">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path transform="translate(2 2.99)" d="M5.9 17.008C7.809 17.987 10.004 18.252 12.091 17.756C14.178 17.259 16.019 16.034 17.282 14.3C18.545 12.566 19.147 10.439 18.981 8.3C18.814 6.161 17.889 4.153 16.372 2.636C14.855 1.119 12.846 0.194 10.708 0.027C8.569-0.14 6.441 0.463 4.708 1.726C2.974 2.989 1.749 4.83 1.252 6.917C0.756 9.004 1.021 11.199 2 13.108L0 19.008L5.9 17.008Z" /></svg>
-        </button>
-      )}
-      {open && <div className={styles.scrim} onClick={() => setOpen(false)} aria-hidden="true" />}
-      {open && (
+      <div className={styles.scrim} onClick={onClose} aria-hidden="true" />
         <section className={styles.panel} style={panelStyle} aria-label="펀톡">
           <div className={styles.head}>
             <strong className={styles.title}>펀톡</strong>
@@ -202,7 +205,7 @@ export default function ChatWidget() {
             {isAdmin && (
               <button type="button" className={styles.presenceBtn} onClick={() => setPresenceOpen(true)}>접속 목록</button>
             )}
-            <button type="button" className={styles.close} onClick={() => setOpen(false)} aria-label="펀톡 닫기">
+            <button type="button" className={styles.close} onClick={() => onClose()} aria-label="펀톡 닫기">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 9L12 15L18 9" /></svg>
             </button>
           </div>
@@ -216,7 +219,6 @@ export default function ChatWidget() {
           {footer}
           {isAdmin && presenceOpen && <PresenceModal tick={presenceTick} onClose={() => setPresenceOpen(false)} />}
         </section>
-      )}
     </>
   );
 }

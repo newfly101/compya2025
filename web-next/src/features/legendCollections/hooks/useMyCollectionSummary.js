@@ -8,9 +8,10 @@ import { LEGEND } from "@/features/legendCollections/config/legendCollections.js
  * 같은 쿼리 키라 여러 곳에서 불러도 요청은 한 번만 나간다.
  */
 export const useMyCollectionSummary = () => {
-  const { isAuthenticated } = useAuthentication();
-  const meQuery = useMyCollectionQuery(isAuthenticated);
-  const scheduleQuery = useScheduleQuery(isAuthenticated);
+  const { isAuthenticated, initialized } = useAuthentication();
+  const ready = initialized && isAuthenticated; // 세션 확인 전 발사 방지
+  const meQuery = useMyCollectionQuery(ready);
+  const scheduleQuery = useScheduleQuery(ready);
   const me = meQuery.data;
   const scheduleData = scheduleQuery.data;
   const schedule = useMemo(

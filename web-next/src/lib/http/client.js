@@ -141,11 +141,15 @@ API.interceptors.response.use(
       }
       await refreshing;
       return API(original);
-    } catch {
-      // refresh 실패 → 미인증 확정. 마커·Redux 상태를 함께 비워 다음 요청부터는
-      // 재발급을 시도하지 않게 한다. 원 요청의 에러를 그대로 reject 해
-      // 호출부(thunk)가 "로그인이 필요합니다" 문구를 낼 수 있게 한다.
-      return Promise.reject(failAuth(error, AUTH_ERROR_MESSAGE));
+    } catch (refreshError) {
+      // refresh 가 401/403 으로 거절됐을 때만 미인증 확정(마커·세션 정리).
+      // 네트워크 오류·5xx 는 일시 장애일 수 있으니 세션을 유지하고 원 요청만 실패시킨다.
+      const refreshStatus = refreshError?.response?.status;
+      if (refreshStatus === 401 || refreshStatus === 403) {
+        return Promise.reject(failAuth(error, AUTH_ERROR_MESSAGE));
+      }
+      error.message = toUserMessage(error);
+      return Promise.reject(error);
     }
   }
 );

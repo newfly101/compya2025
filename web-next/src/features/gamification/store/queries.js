@@ -9,6 +9,8 @@ import {
 } from "@/features/gamification/store/api.js";
 import { useGamificationStore } from "@/features/gamification/store/store.js";
 
+const ME_STALE_MS = 30 * 1000;
+
 export const gamificationKeys = {
   me: ["gamification", "me"],
   levels: ["gamification", "levels"],
@@ -16,9 +18,9 @@ export const gamificationKeys = {
   history: (type) => ["gamification", "history", type],
 };
 
-// 내 등급·포인트·칭호 — 마운트할 때마다 새로 읽고(staleTime 0), 응답 전엔 이전 값을 보여준다.
+// 내 등급·포인트·칭호 — 30초 안엔 캐시를 그대로 쓰고(마운트마다 재요청 방지), 갱신은 체크인·장착 뒤 setQueryData 로 한다.
 export const useMyGamificationQuery = (enabled = true) =>
-  useQuery({ queryKey: gamificationKeys.me, queryFn: fetchGetMyGamification, enabled, staleTime: 0 });
+  useQuery({ queryKey: gamificationKeys.me, queryFn: fetchGetMyGamification, enabled, staleTime: ME_STALE_MS });
 
 export const useLevelsQuery = () => useQuery({ queryKey: gamificationKeys.levels, queryFn: async () => (await fetchGetLevels()) ?? [] });
 
@@ -55,6 +57,8 @@ export const useCheckIn = () => {
       if (result?.xp > 0) {
         show(result);
         qc.removeQueries({ queryKey: ["gamification", "history"] });
+        // 체크인 응답은 증가분 — 캐시에 합산하면 진행 중인 me 요청 결과와 이중 합산된다. 진행 중 요청을 취소하고 다시 읽는다.
+        await qc.cancelQueries({ queryKey: gamificationKeys.me });
         qc.invalidateQueries({ queryKey: gamificationKeys.me });
       }
     } catch {

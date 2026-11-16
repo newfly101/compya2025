@@ -14,14 +14,15 @@ const AuthProvider = ({ children }) => {
   const [restore, setRestore] = useState(false);
 
   useEffect(() => {
-    // 캐시된 세션 요약을 먼저 반영(깜빡임 방지) — SessionRestorer 결과가 덮어쓴다
-    useAuthStore.persist.rehydrate();
     // 이미 확인이 끝났으면(클라이언트 이동으로 재마운트) 다시 돌리지 않는다
     if (useAuthStore.getState().initialized) return;
     // 로그인 콜백은 AuthCallBack 이 세션을 확인한다 — 여기서 게스트로 확정하면 상단바가 로그인→로그아웃으로 한 번 더 깜빡인다
     // (?error= 로 돌아온 실패는 확인을 안 하므로 아래로 내려가 게스트로 확정 → 재시도용 로그인 버튼이 보인다)
     const { pathname, search } = window.location;
-    if (pathname === ROUTE_PATHS.authentication && !new URLSearchParams(search).has("error")) return;
+    if (pathname === ROUTE_PATHS.authentication && !new URLSearchParams(search).has("error")) {
+      useAuthStore.persist.rehydrate(); // 캐시된 세션 요약만 먼저 반영(깜빡임 방지)
+      return;
+    }
 
     // 로그인한 적 없는 방문자(세션 마커 없음) — GET /users/me 조회 자체를 건너뛰고, 복원 코드도 받지 않는다.
     if (!hasAuthSessionMarker()) {
