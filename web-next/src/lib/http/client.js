@@ -1,6 +1,6 @@
 import axios from "axios";
-import { API_PUBLIC_URL } from "@/config/env.js";
-import { hasAuthSessionMarker } from "@/infra/http/authSessionMarker.js";
+import { API_PUBLIC_URL } from "@/lib/env.js";
+import { hasAuthSessionMarker } from "@/lib/http/authSessionMarker.js";
 
 export const API = axios.create({
   baseURL: API_PUBLIC_URL,

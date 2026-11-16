@@ -1,4 +1,4 @@
-import { noticeTitleToSlug } from "@/domains/notices/mobile/noticeSlug.js";
+import { noticeTitleToSlug } from "@/features/notices/noticeSlug.js";
 
 // 원본 web/src/app/router/config/routePath.js 중 Next 에 옮긴 화면이 참조하는 항목만
 export const ROUTE_PATHS = {

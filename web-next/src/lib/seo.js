@@ -1,7 +1,7 @@
 // 페이지 metadata: export const metadata = buildMetadata({ title: "쿠폰 모아보기", description, path: "/coupons" });
 // 동적 페이지는 generateMetadata 에서 buildMetadata({ title, description, path, images: [url], type: "article" }) — og·twitter 는 Next 가 깊은 병합을 안 하므로 반드시 이 헬퍼로.
 // title 은 짧게("쿠폰") 쓴다 — 탭 제목은 layout template("컴프야펀 | %s"), og:title 은 같은 문자열로 맞춘다. 홈처럼 접두 없이 쓰려면 absolute: true.
-import { SITE_URL } from "@/config/env.js";
+import { SITE_URL } from "@/lib/env.js";
 
 export const SITE_NAME = "컴프야펀";
 const SUFFIX = `${SITE_NAME} | `;

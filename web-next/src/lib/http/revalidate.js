@@ -1,4 +1,4 @@
-import { REVALIDATE_TAGS } from "@/infra/http/revalidateTags.js";
+import { REVALIDATE_TAGS } from "@/lib/http/revalidateTags.js";
 
 // 관리자 변경 뒤 공개 ISR 페이지를 즉시 갱신. 같은 출처 POST /api/revalidate (서버가 ADMIN 쿠키 확인).
 // 실패해도 관리자 작업은 성공 — 300초 ISR 이 안전망이다.

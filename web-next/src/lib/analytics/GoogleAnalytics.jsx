@@ -2,7 +2,7 @@
 import { useEffect, useRef } from "react";
 import Script from "next/script";
 import { usePathname } from "next/navigation";
-import { pushEvent } from "@/infra/analytics/ga.js";
+import { pushEvent } from "@/lib/analytics/ga.js";
 
 const GA_ID = "G-KCC3QTZWZW";
 const DEV_HOSTS = ["localhost", "127.0.0.1", "::1", "[::1]"];

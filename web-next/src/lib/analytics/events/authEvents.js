@@ -1,5 +1,5 @@
 // infra/analytics/events/authEvents.js
-import { pushEvent } from "@/infra/analytics/ga.js";
+import { pushEvent } from "@/lib/analytics/ga.js";
 
 const isDev = () =>
   typeof window !== "undefined" && ["localhost", "127.0.0.1"].includes(window.location.hostname);

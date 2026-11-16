@@ -1,4 +1,4 @@
-import { API } from "@/infra/http/client.js";
+import { API } from "@/lib/http/client.js";
 
 // BE 는 모든 응답을 { success, code, data } 로 감싼다. 실제 payload 는 data.data.
 export const fetchAdminUploadImageFile = async (file, path) => {

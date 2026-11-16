@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useOperationStore } from "@/store/operationStore.js";
+import { useOperationStore } from "@/stores/operationStore.js";
 
 // 작업 결과 모달을 띄우는 단일 경로 — 원본 operationListener(meta.notify) 대체.
 // query/mutation 에 meta: { notify: { success: "문구", failure: "문구" } } 를 달면 성공·실패 때 전역 모달이 뜬다.
