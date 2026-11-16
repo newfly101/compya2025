@@ -1,17 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import styles from "./Drawer.module.scss";
-import { MENU_GROUPS, ADMIN_MENU_GROUPS } from "@/layout/menuGroups.js";
-import { useDrawer } from "@/layout/DrawerContext.jsx";
-import PinnedBadge from "@/global/ui/badge/PinnedBadge.jsx";
-import { Avatar, pickProfileImageSrc } from "@/global/ui/avatar";
-import { ROUTE_PATHS } from "@/config/routePath.js";
-import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
-import { useLoginRequiredModal } from "@/domains/authentication/hooks/useLoginRequiredModal.jsx";
-import DrawerProfile from "@/domains/gamification/mobile/containers/public/DrawerProfile.jsx";
-import { useLayoutStore } from "@/store/layoutStore.js";
+import { MENU_GROUPS, ADMIN_MENU_GROUPS } from "@/components/layout/menuGroups.js";
+import { useDrawer } from "@/components/layout/DrawerContext.jsx";
+import PinnedBadge from "@/components/badge/PinnedBadge.jsx";
+import { Avatar, pickProfileImageSrc } from "@/components/avatar";
+import { ROUTE_PATHS } from "@/lib/routePath.js";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication.js";
+import { useLoginRequiredModal } from "@/features/authentication/hooks/useLoginRequiredModal.jsx";
+// 로그인 사용자만 쓰는 프로필 카드(조회 훅·axios 포함) — 비로그인 첫 화면 번들에서 뺀다.
+const DrawerProfile = dynamic(() => import("@/features/gamification/components/DrawerProfile.jsx"), { ssr: false });
+import { useLayoutStore } from "@/stores/layoutStore.js";
 
 // 메뉴 링크는 닫힌 상태에서도 DOM 에 있다(SSR HTML → 크롤러 내부 링크). 숨김은 CSS translate, 포커스 차단은 inert.
 // 로그인 영역(프로필·로그인 모달) · loginRequired 비로그인 클릭 차단 · 접힘 상태 sessionStorage · admin 메뉴.

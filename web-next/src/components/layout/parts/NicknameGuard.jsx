@@ -1,8 +1,8 @@
 "use client";
 import { usePathname, useRouter } from "next/navigation";
-import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
-import { ROUTE_PATHS } from "@/config/routePath.js";
-import ConfirmModal from "@/global/ui/confirmModal/ConfirmModal.jsx";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication.js";
+import { ROUTE_PATHS } from "@/lib/routePath.js";
+import ConfirmModal from "@/components/confirmModal/ConfirmModal.jsx";
 
 // 마이페이지(닉네임을 바꾸는 곳)와 OAuth 콜백에서는 띄우지 않는다. 로그아웃은 화면이 없어 예외 불필요.
 const isExempt = (pathname) =>

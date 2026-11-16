@@ -2,7 +2,7 @@
 import Link from "next/link";
 import styles from "./TopBar.module.scss";
 import BurgerButton from "./BurgerButton.jsx";
-import { useAuthentication } from "@/domains/authentication/hooks/useAuthentication.js";
+import { useAuthentication } from "@/features/authentication/hooks/useAuthentication.js";
 
 // title 없음 = 홈형(로고), 있음 = section형(제목). 원본의 page형(뒤로가기)은 쓰는 화면이 없어 옮기지 않았다.
 // 로그인/로그아웃은 상단바 소유 — 세션 확인 전(initialized=false)에는 버튼 자리를 비워 로그인 사용자에게 로그인 버튼이 깜빡이지 않게 한다.

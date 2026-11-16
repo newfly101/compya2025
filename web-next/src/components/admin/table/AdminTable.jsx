@@ -1,4 +1,4 @@
-import AdminCheckbox from "@/global/ui/admin/checkbox/AdminCheckbox.jsx";
+import AdminCheckbox from "@/components/admin/checkbox/AdminCheckbox.jsx";
 import styles from "./AdminTable.module.scss";
 
 // 열 정의 기반 sticky-header 표. 레전드/히스토리 재료 표의 정렬·고정폭·hover 규칙을 계승.

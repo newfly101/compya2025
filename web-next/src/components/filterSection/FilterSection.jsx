@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useId, useState } from "react";
-import SearchInput from "@/global/ui/mobile/searchInput/SearchInput.jsx";
+import SearchInput from "@/components/searchInput/SearchInput.jsx";
 import styles from "./FilterSection.module.scss";
 
 const read = (key, fallback) => {

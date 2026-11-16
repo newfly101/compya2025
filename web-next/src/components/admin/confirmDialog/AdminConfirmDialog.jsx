@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AdminModal from "@/global/ui/admin/modal/AdminModal.jsx";
+import AdminModal from "@/components/admin/modal/AdminModal.jsx";
 import styles from "./AdminConfirmDialog.module.scss";
 
 // 삭제 등 되돌릴 수 없는 조작 확인. AdminModal 위에 얹어 컨테이닝 규칙을 그대로 물려받는다.

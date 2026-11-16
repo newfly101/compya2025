@@ -4,7 +4,7 @@
 // 조건부 렌더는 절대 쓰지 않는다 — 닫힌 상태에서도 본문이 DOM에 있어야 크롤러가 읽는다.
 // 가이드 상세 화면과 같은 이유로(글로벌 부품이 도메인 데이터를 직접 아는 구조를 피하기 위해)
 // slug 조회는 하지 않는다 — 화면 쪽이 GUIDES_BY_SLUG 에서 guide 객체를 조회해 넘긴다.
-import GuideContent from "@/global/ui/guideContent/GuideContent.jsx";
+import GuideContent from "@/components/guideContent/GuideContent.jsx";
 import styles from "./GuideAccordion.module.scss";
 
 const GuideAccordion = ({ guide }) => {

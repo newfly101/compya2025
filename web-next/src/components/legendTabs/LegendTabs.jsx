@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ROUTE_PATHS } from "@/config/routePath.js";
-import GuideAccordion from "@/global/ui/guideAccordion/GuideAccordion.jsx";
+import { ROUTE_PATHS } from "@/lib/routePath.js";
+import GuideAccordion from "@/components/guideAccordion/GuideAccordion.jsx";
 import styles from "./LegendTabs.module.scss";
 
 // match: 어느 주소에서 이 탭이 켜지나 — 보유 현황은 /manage 에서도 켜진다. 스킬 기록은 /:id/edit 까지 켜진다

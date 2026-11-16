@@ -1,5 +1,5 @@
 "use client";
-import { useDrawer } from "@/layout/DrawerContext.jsx";
+import { useDrawer } from "@/components/layout/DrawerContext.jsx";
 
 const BurgerButton = ({ className }) => {
   const { open } = useDrawer();
