@@ -1,6 +1,6 @@
-import PageShell from "@/layout/PageShell.jsx";
-import AuthGate from "@/domains/authentication/mobile/AuthGate.jsx";
-import ShortcutEditScreen from "@/domains/home/mobile/shortcutEdit/ShortcutEditScreen.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import AuthGate from "@/features/authentication/AuthGate.jsx";
+import ShortcutEditScreen from "@/features/home/shortcutEdit/ShortcutEditScreen.jsx";
 
 export const metadata = { title: "바로가기 편집", robots: { index: false, follow: false } };
 

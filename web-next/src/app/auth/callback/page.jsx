@@ -1,6 +1,6 @@
-import PageShell from "@/layout/PageShell.jsx";
-import ClientOnly from "@/global/ui/clientOnly/ClientOnly.jsx";
-import AuthCallBack from "@/domains/authentication/callback/AuthCallBack.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import ClientOnly from "@/components/ClientOnly.jsx";
+import AuthCallBack from "@/features/authentication/callback/AuthCallBack.jsx";
 
 export const metadata = { title: "로그인 처리 중", robots: { index: false, follow: false } };
 

@@ -1,7 +1,7 @@
-import PageShell from "@/layout/PageShell.jsx";
-import NoticeScreen from "@/domains/notices/mobile/NoticeScreen.jsx";
-import { fetchNotices } from "@/domains/notices/api.js";
-import { buildMetadata } from "@/config/seo.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import NoticeScreen from "@/features/notices/NoticeScreen.jsx";
+import { fetchNotices } from "@/features/notices/api.js";
+import { buildMetadata } from "@/lib/seo.js";
 
 export const metadata = buildMetadata({ title: "공지사항", description: "컴투스 프로야구 공식 공지사항을 모아 확인할 수 있는 목록 페이지입니다.", path: "/notices" });
 

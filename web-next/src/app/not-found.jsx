@@ -1,5 +1,5 @@
-import PageShell from "@/layout/PageShell.jsx";
-import NotFoundScreen from "@/domains/error/mobile/NotFoundScreen.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import NotFoundScreen from "@/features/error/NotFoundScreen.jsx";
 
 export const metadata = {
   title: "페이지를 찾을 수 없음",

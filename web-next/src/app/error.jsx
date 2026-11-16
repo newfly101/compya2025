@@ -1,6 +1,6 @@
 "use client";
-import PageShell from "@/layout/PageShell.jsx";
-import ErrorScreen from "@/domains/error/mobile/ErrorScreen.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import ErrorScreen from "@/features/error/ErrorScreen.jsx";
 
 export default function Error({ error }) {
   return (

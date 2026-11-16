@@ -1,6 +1,6 @@
-import PageShell from "@/layout/PageShell.jsx";
-import AuthGate from "@/domains/authentication/mobile/AuthGate.jsx";
-import SimulatorGsbScreen from "@/domains/simulators/mobile/SimulatorGsbScreen.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import AuthGate from "@/features/authentication/AuthGate.jsx";
+import SimulatorGsbScreen from "@/features/simulators/SimulatorGsbScreen.jsx";
 
 export const metadata = { title: "스킬 시뮬레이션", robots: { index: false, follow: false } };
 

@@ -1,5 +1,5 @@
-import AuthGate from "@/domains/authentication/mobile/AuthGate.jsx";
-import { adminMetadata } from "@/domains/admin/config/adminMetadata.js";
+import AuthGate from "@/features/authentication/AuthGate.jsx";
+import { adminMetadata } from "@/features/admin/config/adminMetadata.js";
 
 export const metadata = adminMetadata();
 

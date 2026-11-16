@@ -1,6 +1,6 @@
-import PageShell from "@/layout/PageShell.jsx";
-import TermsScreen from "@/domains/policy/mobile/TermsScreen.jsx";
-import { buildMetadata } from "@/config/seo.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import TermsScreen from "@/features/policy/TermsScreen.jsx";
+import { buildMetadata } from "@/lib/seo.js";
 
 export const metadata = buildMetadata({ title: "이용약관", description: "컴프야펀 이용약관 안내 페이지입니다.", path: "/terms" });
 

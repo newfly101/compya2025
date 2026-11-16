@@ -1,7 +1,7 @@
-import PageShell from "@/layout/PageShell.jsx";
-import PlayerEncyclopediaScreen from "@/domains/players/mobile/PlayerEncyclopediaScreen.jsx";
-import { fetchPlayersInitial } from "@/domains/players/api.js";
-import { buildMetadata } from "@/config/seo.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import PlayerEncyclopediaScreen from "@/features/players/PlayerEncyclopediaScreen.jsx";
+import { fetchPlayersInitial } from "@/features/players/api.js";
+import { buildMetadata } from "@/lib/seo.js";
 
 export const metadata = buildMetadata({
   title: "선수 백과사전",

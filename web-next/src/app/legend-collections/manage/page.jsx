@@ -1,6 +1,6 @@
-import PageShell from "@/layout/PageShell.jsx";
-import AuthGate from "@/domains/authentication/mobile/AuthGate.jsx";
-import LegendCollectionManageScreen from "@/domains/legendCollections/mobile/LegendCollectionManageScreen.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import AuthGate from "@/features/authentication/AuthGate.jsx";
+import LegendCollectionManageScreen from "@/features/legendCollections/LegendCollectionManageScreen.jsx";
 
 export const metadata = { title: "내 기록 관리", robots: { index: false, follow: false } };
 

@@ -1,7 +1,7 @@
-import PageShell from "@/layout/PageShell.jsx";
-import MileageScreen from "@/domains/mileage/mobile/MileageScreen.jsx";
-import { fetchSniperTargets } from "@/domains/mileage/api.js";
-import { buildMetadata } from "@/config/seo.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import MileageScreen from "@/features/mileage/MileageScreen.jsx";
+import { fetchSniperTargets } from "@/features/mileage/api.js";
+import { buildMetadata } from "@/lib/seo.js";
 
 export const metadata = buildMetadata({
   title: "마일리지 저격 경로",

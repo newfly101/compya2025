@@ -1,9 +1,9 @@
 import "@/styles/global.scss";
-import MobileLayout from "@/layout/MobileLayout.jsx";
-import { SITE_URL } from "@/config/env.js";
-import { DEFAULT_OG_IMAGE } from "@/config/seo.js";
-import GoogleAnalytics from "@/infra/analytics/GoogleAnalytics.jsx";
-import AppProvider from "@/providers/AppProvider.jsx";
+import MobileLayout from "@/components/layout/MobileLayout.jsx";
+import { SITE_URL } from "@/lib/env.js";
+import { DEFAULT_OG_IMAGE } from "@/lib/seo.js";
+import GoogleAnalytics from "@/lib/analytics/GoogleAnalytics.jsx";
+import AppProvider from "@/lib/providers/AppProvider.jsx";
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),

@@ -1,6 +1,6 @@
-import PageShell from "@/layout/PageShell.jsx";
-import AuthGate from "@/domains/authentication/mobile/AuthGate.jsx";
-import MyPageScreen from "@/domains/users/mobile/MyPageScreen.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import AuthGate from "@/features/authentication/AuthGate.jsx";
+import MyPageScreen from "@/features/users/MyPageScreen.jsx";
 
 export const metadata = { title: "마이페이지", robots: { index: false, follow: false } };
 

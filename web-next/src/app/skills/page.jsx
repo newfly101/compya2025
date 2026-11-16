@@ -1,7 +1,7 @@
-import PageShell from "@/layout/PageShell.jsx";
-import PlayerSkillScreen from "@/domains/playerSkills/mobile/PlayerSkillScreen.jsx";
-import { fetchPlayerSkills } from "@/domains/playerSkills/api.js";
-import { buildMetadata } from "@/config/seo.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import PlayerSkillScreen from "@/features/playerSkills/PlayerSkillScreen.jsx";
+import { fetchPlayerSkills } from "@/features/playerSkills/api.js";
+import { buildMetadata } from "@/lib/seo.js";
 
 export const metadata = buildMetadata({
   title: "스킬 백과사전",

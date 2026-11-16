@@ -1,6 +1,6 @@
-import PageShell from "@/layout/PageShell.jsx";
-import AuthGate from "@/domains/authentication/mobile/AuthGate.jsx";
-import GamificationHistoryScreen from "@/domains/gamification/mobile/GamificationHistoryScreen.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import AuthGate from "@/features/authentication/AuthGate.jsx";
+import GamificationHistoryScreen from "@/features/gamification/GamificationHistoryScreen.jsx";
 
 export const metadata = { title: "활동 내역", robots: { index: false, follow: false } };
 

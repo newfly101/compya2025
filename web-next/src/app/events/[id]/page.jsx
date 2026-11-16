@@ -1,10 +1,10 @@
 import { notFound } from "next/navigation";
-import PageShell from "@/layout/PageShell.jsx";
-import EventDetailScreen from "@/domains/events/mobile/EventDetailScreen.jsx";
-import { fetchEvents, fetchEventDetail } from "@/domains/events/api.js";
-import { eventDetailPath } from "@/config/routePath.js";
-import { stripHtml } from "@/global/ui/richContent/sanitizeHtml.js";
-import { buildMetadata } from "@/config/seo.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import EventDetailScreen from "@/features/events/EventDetailScreen.jsx";
+import { fetchEvents, fetchEventDetail } from "@/features/events/api.js";
+import { eventDetailPath } from "@/lib/routePath.js";
+import { stripHtml } from "@/components/richContent/sanitizeHtml.js";
+import { buildMetadata } from "@/lib/seo.js";
 
 export const revalidate = 300;
 export const dynamicParams = true; // 목록에 없던 이벤트는 첫 요청 때 생성(없으면 404)

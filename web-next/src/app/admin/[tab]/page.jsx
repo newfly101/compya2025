@@ -1,8 +1,8 @@
-import PageShell from "@/layout/PageShell.jsx";
-import AdminShellScreen from "@/domains/admin/mobile/AdminShellScreen.jsx";
-import { ADMIN_TABS } from "@/domains/admin/mobile/ADMIN_TABS.js";
-import { adminMetadata } from "@/domains/admin/config/adminMetadata.js";
-import { ROUTE_PATHS } from "@/config/routePath.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import AdminShellScreen from "@/features/admin/AdminShellScreen.jsx";
+import { ADMIN_TABS } from "@/features/admin/ADMIN_TABS.js";
+import { adminMetadata } from "@/features/admin/config/adminMetadata.js";
+import { ROUTE_PATHS } from "@/lib/routePath.js";
 
 const TABS = ADMIN_TABS.filter((t) => t.key !== "home");
 

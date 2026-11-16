@@ -1,7 +1,7 @@
-import PageShell from "@/layout/PageShell.jsx";
-import HomeScreen from "@/domains/home/mobile/HomeScreen.jsx";
-import { fetchHome } from "@/domains/home/api.js";
-import { buildMetadata } from "@/config/seo.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import HomeScreen from "@/features/home/HomeScreen.jsx";
+import { fetchHome } from "@/features/home/api.js";
+import { buildMetadata } from "@/lib/seo.js";
 
 // 루트 page 는 layout 과 같은 세그먼트라 title.template 이 안 붙는다 → absolute
 export const metadata = buildMetadata({

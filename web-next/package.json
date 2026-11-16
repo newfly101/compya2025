@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "next dev -p 3000",
     "build": "next build && node scripts/copy-standalone.mjs",
-    "start": "next start -p 3000",
-    "start:prod": "node .next/standalone/server.js",
+    "start": "node .next/standalone/server.js",
     "lint": "eslint ."
   },
   "dependencies": {
+    "@stomp/stompjs": "^7.5.0",
     "@tanstack/react-query": "^5.90.0",
     "@tiptap/extension-image": "^2.27.3",
     "@tiptap/extension-link": "^2.27.3",

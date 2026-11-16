@@ -1,7 +1,7 @@
 import { revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
-import { API_INTERNAL_URL, SITE_URL } from "@/config/env.js";
-import { REVALIDATE_TAGS } from "@/infra/http/revalidateTags.js";
+import { API_INTERNAL_URL, SITE_URL } from "@/lib/env.js";
+import { REVALIDATE_TAGS } from "@/lib/http/revalidateTags.js";
 
 // 쿠키를 읽는 비캐시 POST — 공유 캐시에 올라가지 않는다.
 export const dynamic = "force-dynamic";

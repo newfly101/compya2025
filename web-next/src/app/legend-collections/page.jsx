@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import PageShell from "@/layout/PageShell.jsx";
-import AuthGate from "@/domains/authentication/mobile/AuthGate.jsx";
-import LegendCollectionsScreen from "@/domains/legendCollections/mobile/LegendCollectionsScreen.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import AuthGate from "@/features/authentication/AuthGate.jsx";
+import LegendCollectionsScreen from "@/features/legendCollections/LegendCollectionsScreen.jsx";
 
 export const metadata = { title: "레전드 재료 보유 현황", robots: { index: false, follow: false } };
 

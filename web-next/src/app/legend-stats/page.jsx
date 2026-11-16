@@ -1,7 +1,7 @@
-import PageShell from "@/layout/PageShell.jsx";
-import LegendStatsScreen from "@/domains/legendStats/mobile/LegendStatsScreen.jsx";
-import { fetchLegendStatsInitial } from "@/domains/legendStats/api.js";
-import { buildMetadata } from "@/config/seo.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import LegendStatsScreen from "@/features/legendStats/LegendStatsScreen.jsx";
+import { fetchLegendStatsInitial } from "@/features/legendStats/api.js";
+import { buildMetadata } from "@/lib/seo.js";
 
 export const metadata = buildMetadata({
   title: "레전드 재료",

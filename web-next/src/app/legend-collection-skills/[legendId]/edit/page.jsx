@@ -1,6 +1,6 @@
-import PageShell from "@/layout/PageShell.jsx";
-import AuthGate from "@/domains/authentication/mobile/AuthGate.jsx";
-import LegendCollectionSkillEditScreen from "@/domains/legendCollectionSkills/mobile/LegendCollectionSkillEditScreen.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import AuthGate from "@/features/authentication/AuthGate.jsx";
+import LegendCollectionSkillEditScreen from "@/features/legendCollectionSkills/LegendCollectionSkillEditScreen.jsx";
 
 export const metadata = { title: "스킬 기록 편집", robots: { index: false, follow: false } };
 

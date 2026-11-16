@@ -1,7 +1,7 @@
-import PageShell from "@/layout/PageShell.jsx";
-import HistoryLegendScreen from "@/domains/historyLegend/mobile/HistoryLegendScreen.jsx";
-import { fetchHistoryLegendInitial } from "@/domains/historyLegend/api.js";
-import { buildMetadata } from "@/config/seo.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import HistoryLegendScreen from "@/features/historyLegend/HistoryLegendScreen.jsx";
+import { fetchHistoryLegendInitial } from "@/features/historyLegend/api.js";
+import { buildMetadata } from "@/lib/seo.js";
 
 export const metadata = buildMetadata({
   title: "히스토리 재료",

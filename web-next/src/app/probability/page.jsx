@@ -1,6 +1,6 @@
-import PageShell from "@/layout/PageShell.jsx";
-import OddsIndexScreen from "@/domains/odds/mobile/OddsIndexScreen.jsx";
-import { buildMetadata } from "@/config/seo.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import OddsIndexScreen from "@/features/odds/OddsIndexScreen.jsx";
+import { buildMetadata } from "@/lib/seo.js";
 
 export const metadata = buildMetadata({
   title: "확률 공시",

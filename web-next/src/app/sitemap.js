@@ -1,8 +1,8 @@
-import { SITE_URL } from "@/config/env.js";
-import { fetchNotices } from "@/domains/notices/api.js";
-import { fetchEvents } from "@/domains/events/api.js";
-import { GUIDES } from "@/domains/guides/content/index.js";
-import { noticeDetailPath, eventDetailPath } from "@/config/routePath.js";
+import { SITE_URL } from "@/lib/env.js";
+import { fetchNotices } from "@/features/notices/api.js";
+import { fetchEvents } from "@/features/events/api.js";
+import { GUIDES } from "@/features/guides/content/index.js";
+import { noticeDetailPath, eventDetailPath } from "@/lib/routePath.js";
 
 export const revalidate = 3600;
 

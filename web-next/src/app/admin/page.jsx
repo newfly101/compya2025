@@ -1,5 +1,5 @@
-import PageShell from "@/layout/PageShell.jsx";
-import AdminShellScreen from "@/domains/admin/mobile/AdminShellScreen.jsx";
+import PageShell from "@/components/layout/PageShell.jsx";
+import AdminShellScreen from "@/features/admin/AdminShellScreen.jsx";
 
 // /admin = 홈 탭
 export default function AdminPage() {

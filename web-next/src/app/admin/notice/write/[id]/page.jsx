@@ -1,7 +1,7 @@
-import PageShell from "@/layout/PageShell.jsx";
-import AdminNoticeWriteScreen from "@/domains/notices/mobile/admin/AdminNoticeWriteScreen.jsx";
-import { adminMetadata } from "@/domains/admin/config/adminMetadata.js";
-import { ROUTE_PATHS } from "@/config/routePath.js";
+import PageShell from "@/components/layout/PageShell.jsx";
+import AdminNoticeWriteScreen from "@/features/notices/components/AdminNoticeWriteScreen.jsx";
+import { adminMetadata } from "@/features/admin/config/adminMetadata.js";
+import { ROUTE_PATHS } from "@/lib/routePath.js";
 
 export const metadata = adminMetadata("공지 글쓰기", ROUTE_PATHS.admin_notice_write);
 
