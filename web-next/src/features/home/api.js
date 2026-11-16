@@ -9,9 +9,14 @@ const byIdDesc = (a, b) => b.id - a.id;
 // 요청 실패나 섹션 일부 실패(failedSections)는 예외 → 직전 정상 캐시 유지, 최초면 app/error.jsx
 // (오류 상태가 ISR 캐시에 저장되지 않게 coupons·notices·events 와 같은 방식).
 export const fetchHome = async () => {
-  const res = await fetch(`${API_INTERNAL_URL}/home`, { next: { revalidate: 300, tags: HOME_FETCH_TAGS } });
-  if (!res.ok) throw new Error(`GET /home → HTTP ${res.status}`);
-  const data = (await res.json()).data;
+  const get = async (init) => {
+    const res = await fetch(`${API_INTERNAL_URL}/home`, init);
+    if (!res.ok) throw new Error(`GET /home → HTTP ${res.status}`);
+    return (await res.json()).data;
+  };
+  let data = await get({ next: { revalidate: 300, tags: HOME_FETCH_TAGS } });
+  // 섹션 실패도 HTTP 200 이라 data cache 에 5분간 남는다 → 캐시를 건너뛰고 한 번 더 확인
+  if (data.failedSections?.length) data = await get({ cache: "no-store" });
   if (data.failedSections?.length) throw new Error(`GET /home → 섹션 실패: ${data.failedSections.join(",")}`);
 
   const notices = (data.notices ?? [])
