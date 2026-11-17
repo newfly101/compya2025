@@ -12,5 +12,7 @@ export const fetchEventDetail = async (id) => {
   const res = await fetch(`${API_INTERNAL_URL}/events/${encodeURIComponent(id)}`, { next: { revalidate: 300, tags: ["events"] } });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`GET /events/${id} → HTTP ${res.status}`);
-  return (await res.json()).data;
+  const data = (await res.json()).data;
+  // 비공개(visible=false) 는 목록과 같이 상세도 404 처리. 관리자 미리보기는 이 함수를 쓰지 않는다(EventPreviewModal).
+  return data?.visible === false ? null : data;
 };

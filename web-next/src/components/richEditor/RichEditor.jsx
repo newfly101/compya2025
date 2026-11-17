@@ -1,9 +1,7 @@
 import { useEffect } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Underline from "@tiptap/extension-underline";
 import Image from "@tiptap/extension-image";
-import Link from "@tiptap/extension-link";
 import styles from "./RichEditor.module.scss";
 
 // 도메인 비의존 Tiptap 래퍼.
@@ -19,16 +17,21 @@ import styles from "./RichEditor.module.scss";
 // 수정 모드에서 데이터 로딩(hydrated) 완료 전에는 이 컴포넌트를 렌더하지 않는 이유).
 // 마운트 후 value 를 바꿔도 내부 콘텐츠는 재동기화되지 않는다 — 타이핑 중 매 keystroke 마다
 // setContent 를 호출하면 커서 위치가 튀는 문제를 피하기 위함이다.
+// 링크 href 는 http/https/mailto 만 허용 (javascript: 등 차단)
+const isSafeHref = (href) => /^(https?:|mailto:)/i.test(href.trim());
+
 export default function RichEditor({ value, onChange, onUploadImage, disabled = false }) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
-      Underline,
+      // v3 StarterKit 에 Link·Underline 포함
+      StarterKit.configure({
+        link: { openOnClick: false, autolink: true, isAllowedUri: (url) => isSafeHref(url) },
+      }),
       Image.configure({ inline: false, HTMLAttributes: { class: styles.contentImage } }),
-      Link.configure({ openOnClick: false, autolink: true }),
     ],
     content: value || "",
     editable: !disabled,
+    immediatelyRender: false,
     onUpdate: ({ editor: ed }) => onChange?.(ed.getHTML()),
   });
 
@@ -50,6 +53,10 @@ export default function RichEditor({ value, onChange, onUploadImage, disabled = 
     if (url === null) return;
     if (url.trim() === "") {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
+      return;
+    }
+    if (!isSafeHref(url)) {
+      window.alert("http://, https://, mailto: 로 시작하는 링크만 입력할 수 있습니다.");
       return;
     }
     editor.chain().focus().extendMarkRange("link").setLink({ href: url.trim() }).run();

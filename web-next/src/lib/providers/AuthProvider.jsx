@@ -6,7 +6,17 @@ import { hasAuthSessionMarker } from "@/lib/http/authSessionMarker.js";
 import { setUserProperties } from "@/lib/analytics/ga.js";
 import { ROUTE_PATHS } from "@/lib/routePath.js";
 
-const SessionRestorer = dynamic(() => import("./SessionRestorer.jsx"), { ssr: false });
+// 청크 로드 실패(오프라인·배포 직후 해시 불일치) 시 initialized 가 영구 false 로 남지 않게 게스트로 확정한다.
+const GuestFallback = () => {
+  useEffect(() => {
+    useAuthStore.getState().setGuestInitialized();
+  }, []);
+  return null;
+};
+const SessionRestorer = dynamic(
+  () => import("./SessionRestorer.jsx").catch(() => ({ default: GuestFallback })),
+  { ssr: false },
+);
 
 // 세션 복원 — 원본과 달리 children 을 막지 않는다(공개 페이지는 서버 렌더 HTML 을 그대로 내보낸다).
 // 로그인 사용자 화면은 <AuthGate> 가 initialized 를 기다린다.
