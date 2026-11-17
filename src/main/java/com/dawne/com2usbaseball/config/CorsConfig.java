@@ -12,7 +12,7 @@ import java.util.List;
 public class CorsConfig {
 
     /** CORS 와 WebSocket(/ws) 이 같이 쓰는 허용 출처 */
-    public static final List<String> ALLOWED_ORIGINS = List.of("http://localhost:3000", "https://compyafun.com");
+    public static final List<String> ALLOWED_ORIGINS = List.of("http://localhost:3000", "https://compyafun.com", "https://www.compyafun.com");
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
