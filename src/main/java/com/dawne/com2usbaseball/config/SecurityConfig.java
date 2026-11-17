@@ -2,6 +2,7 @@ package com.dawne.com2usbaseball.config;
 
 import com.dawne.com2usbaseball.common.support.dto.GlobalResponse;
 import com.dawne.com2usbaseball.config.filter.AccessLogFilter;
+import com.dawne.com2usbaseball.config.filter.OriginCheckFilter;
 import com.dawne.com2usbaseball.domain.oauth.enums.AuthMessages;
 import com.dawne.com2usbaseball.security.filter.JwtAuthFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 import java.io.IOException;
 
@@ -67,6 +69,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/upload/**").hasRole("ADMIN")
                         .requestMatchers("/api/**").permitAll()
                         .anyRequest().denyAll()
+                )
+                // CSRF 완화: 상태 변경 /api/** 의 Origin 검사 (CORS 필터 뒤 → 403 에도 CORS 헤더가 붙는다)
+                .addFilterAfter(
+                        new OriginCheckFilter(CorsConfig.ALLOWED_ORIGINS, objectMapper),
+                        CorsFilter.class
                 )
                 .addFilterBefore(
                         accessLogFilter,
