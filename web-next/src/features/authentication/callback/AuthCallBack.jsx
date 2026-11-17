@@ -34,9 +34,14 @@ const AuthCallback = () => {
         trackLogin(data.userRole);
         // 리다이렉트는 성공했을 때만 한다 — finally 에 두면 실패도 게스트 상태로 조용히 넘어간다.
         // 같은 사이트 안 경로만 허용한다 ("//evil.com" 같은 열린 리다이렉트 차단)
-        const saved = sessionStorage.getItem("redirectPath");
+        let saved = null;
+        try {
+          saved = sessionStorage.getItem("redirectPath");
+          sessionStorage.removeItem("redirectPath");
+        } catch {
+          /* 저장소 차단 — 홈으로 */
+        }
         const redirectPath = saved && saved.startsWith("/") && !saved.startsWith("//") ? saved : "/";
-        sessionStorage.removeItem("redirectPath");
         // 전체 재로드 없이 이동 — 채워 둔 authStore 가 유지된다. 재로드가 없으니 AuthProvider 의 출석 체크인도 여기서 한다.
         checkIn();
         router.replace(redirectPath);

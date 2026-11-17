@@ -17,7 +17,13 @@ const AuthGate = ({ guard = false, allow, children }) => {
 
   useEffect(() => {
     if (!denied) return;
-    if (user === null) sessionStorage.setItem("redirectPath", window.location.pathname + window.location.search + window.location.hash);
+    if (user === null) {
+      try {
+        sessionStorage.setItem("redirectPath", window.location.pathname + window.location.search + window.location.hash);
+      } catch {
+        /* 저장소 차단 — 로그인 뒤 홈으로 */
+      }
+    }
     router.replace("/");
   }, [denied, user, router]);
 

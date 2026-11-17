@@ -19,4 +19,10 @@ export const fetchNotices = async () => {
 };
 
 // 목록 응답에는 본문(content)이 없다.
-export const fetchNoticeDetail = (id) => getData(`/notices/${id}`);
+// 상세 404 만 null → notFound() (이벤트 상세와 같은 패턴).
+export const fetchNoticeDetail = async (id) => {
+  const res = await fetch(`${API_INTERNAL_URL}/notices/${id}`, { next: { revalidate: 300, tags: ["notices"] } });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`GET /notices/${id} → HTTP ${res.status}`);
+  return (await res.json()).data;
+};

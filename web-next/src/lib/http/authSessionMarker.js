@@ -8,12 +8,27 @@
 // 세션이 만료된 경우 기존 흐름(401 → refresh → 실패 → 마커 제거) 그대로 동작한다.
 const AUTH_SESSION_KEY = "auth:hasSession";
 
-export const hasAuthSessionMarker = () => localStorage.getItem(AUTH_SESSION_KEY) === "1";
+// 저장소가 막힌 환경(사생활 보호 모드 등)에서도 던지지 않는다 — 마커 없음으로 취급.
+export const hasAuthSessionMarker = () => {
+  try {
+    return localStorage.getItem(AUTH_SESSION_KEY) === "1";
+  } catch {
+    return false;
+  }
+};
 
 export const setAuthSessionMarker = () => {
-  localStorage.setItem(AUTH_SESSION_KEY, "1");
+  try {
+    localStorage.setItem(AUTH_SESSION_KEY, "1");
+  } catch {
+    /* noop */
+  }
 };
 
 export const clearAuthSessionMarker = () => {
-  localStorage.removeItem(AUTH_SESSION_KEY);
+  try {
+    localStorage.removeItem(AUTH_SESSION_KEY);
+  } catch {
+    /* noop */
+  }
 };

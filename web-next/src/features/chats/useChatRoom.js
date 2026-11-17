@@ -56,8 +56,10 @@ export const useChatRoomState = () => {
 // authKey 가 바뀌면(로그인 상태 변화) 재연결한다. 이 훅은 아무 상태도 구독하지 않는다(리렌더 0).
 export const useChatConnection = (open, authKey) => {
   const clientRef = useRef(null);
+  const prevAuthRef = useRef(authKey);
 
   useEffect(() => {
+    if (prevAuthRef.current !== authKey) { prevAuthRef.current = authKey; useChatStore.setState({ messages: [] }); } // 계정 전환 시 이전 메시지 비움
     if (!open) return undefined;
     let cancelled = false;
     let client = null;
@@ -120,8 +122,8 @@ export const useChatConnection = (open, authKey) => {
       clientRef.current = null;
       client?.deactivate();
       useChatStore.getState().setOnlineCount(null);
-      setRoom({ status: "connecting" }); // 다음 연결(재오픈·재로그인) 대비 초기화
-    };
+      // 다음 연결(재오픈·재로그인) 대비 초기화 — loading 은 cancelled 라 finally 가 못 쓰므로 여기서 푼다. 이전 사용자 상태도 비움
+      setRoom({ status: "connecting", loading: false, guestName: null, notice: null, error: null });    };
   }, [open, authKey]);
 
   return useCallback((body) => {

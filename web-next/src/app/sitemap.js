@@ -7,7 +7,6 @@ import { noticeDetailPath, eventDetailPath } from "@/lib/routePath.js";
 export const revalidate = 3600;
 
 // 원본 web/public/sitemap.xml 의 값 그대로. noindex 경로(로그인·마이페이지·시뮬레이터 등)는 넣지 않는다.
-// /legend-stats /history-mode/legend /mileage /players /skills /probability 는 아직 web-next 에 없다(곧 이전) — 원본 sitemap 에 있어 미리 포함.
 const STATIC = [
   ["/", "daily", 1.0],
   ["/coupons", "daily", 0.8],

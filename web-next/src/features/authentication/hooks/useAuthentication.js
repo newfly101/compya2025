@@ -17,7 +17,11 @@ export const useAuthentication = () => {
   const login = () => {
     // 쿼리·해시까지 저장해 로그인 뒤 보던 화면(예: ?tab=mine)으로 그대로 돌아온다 (REQ-AUTH-13)
     const { pathname, search, hash } = window.location;
-    sessionStorage.setItem("redirectPath", pathname + search + hash);
+    try {
+      sessionStorage.setItem("redirectPath", pathname + search + hash);
+    } catch {
+      /* 저장소 차단 — 로그인 뒤 홈으로 */
+    }
     // 로그인 이벤트는 실제로 로그인이 끝나는 AuthCallBack 에서만 기록한다 (여기서 쏘면 취소해도 집계됨)
     window.location.href = LOGIN_URL;
   };

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { registerBrowserQueryClient } from "@/lib/query/queryClientRef.js";
 import { useOperationStore } from "@/stores/operationStore.js";
@@ -29,7 +29,11 @@ const makeClient = () =>
   });
 
 const QueryProvider = ({ children }) => {
-  const [client] = useState(() => registerBrowserQueryClient(makeClient())); // 컴포넌트당 1회 생성 — 서버에서 요청 간 캐시가 섞이지 않는다
+  const [client] = useState(makeClient); // 컴포넌트당 1회 생성 — 서버에서 요청 간 캐시가 섞이지 않는다
+  // 렌더 중이 아니라 커밋 뒤에 등록 — StrictMode 가 버린 client 가 등록되지 않는다.
+  useEffect(() => {
+    registerBrowserQueryClient(client);
+  }, [client]);
   return <QueryClientProvider client={client}>{children}</QueryClientProvider>;
 };
 

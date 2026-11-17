@@ -18,6 +18,8 @@ import styles from "./RichEditor.module.scss";
 // 마운트 후 value 를 바꿔도 내부 콘텐츠는 재동기화되지 않는다 — 타이핑 중 매 keystroke 마다
 // setContent 를 호출하면 커서 위치가 튀는 문제를 피하기 위함이다.
 // 링크 href 는 http/https/mailto 만 허용 (javascript: 등 차단)
+const IMAGE_MIME = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024; // 프로필 업로드는 리사이즈 전제라 상수 공유 불가 — 에디터는 원본 업로드이므로 10MB
 const isSafeHref = (href) => /^(https?:|mailto:)/i.test(href.trim());
 
 export default function RichEditor({ value, onChange, onUploadImage, disabled = false }) {
@@ -66,6 +68,8 @@ export default function RichEditor({ value, onChange, onUploadImage, disabled = 
     const file = e.target.files?.[0];
     e.target.value = "";
     if (!file || !onUploadImage) return;
+    if (!IMAGE_MIME.includes(file.type)) return window.alert("JPG·PNG·GIF·WEBP 이미지만 올릴 수 있습니다.");
+    if (file.size > MAX_IMAGE_BYTES) return window.alert("10MB 이하 이미지만 올릴 수 있습니다.");
     try {
       const url = await onUploadImage(file);
       if (url) editor.chain().focus().setImage({ src: url }).run();

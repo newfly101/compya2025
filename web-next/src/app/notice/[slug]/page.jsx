@@ -39,7 +39,8 @@ const findNotice = async (rawSlug) => {
 const loadNotice = async (rawSlug) => {
   const found = await findNotice(rawSlug);
   if (!found) return null;
-  return { ...found, ...(await fetchNoticeDetail(found.id)) };
+  const detail = await fetchNoticeDetail(found.id);
+  return detail ? { ...found, ...detail } : null;
 };
 
 export async function generateMetadata({ params }) {
